@@ -1,4 +1,4 @@
-/** @file driver.cc    Driver for the fabrique compiler. */
+/** @file Lexer.h    Declaration of @ref Lexer. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,76 +29,39 @@
  * SUCH DAMAGE.
  */
 
-#include "Parsing/Lexer.h"
-#include "Parsing/Parser.h"
-#include "Parsing/fab.yacc.h"
+#ifndef LEXER_H
+#define LEXER_H
 
-#include "Support/Arguments.h"
-#include "Support/ostream.h"
+#include "Support/ErrorReport.h"
 
-#include <cassert>
-#include <fstream>
-#include <iostream>
-#include <memory>
+#include "lex.h"
+#include "yacc.h"
 
-using std::auto_ptr;
+#include <list>
 
 
-auto_ptr<Lexer> lex;
-
-int yyparse(Parser*);
-
-void yyerror(const char *str)
+/**
+ */
+class Lexer : public yyFlexLexer
 {
-	assert(lex.get() != NULL);
-	std::cerr << lex->Err(str);
-}
+public:
+	Lexer(const std::string& in) : inputFilename(in) {}
+	~Lexer();
 
-int yylex(void *yylval)
-{
-	assert(lex.get() != NULL);
-	return lex->yylex((YYSTYPE*) yylval);
-}
+	SourceRange CurrentTokenRange() const;
 
-int main(int argc, char *argv[]) {
-	auto_ptr<Arguments> Args(Arguments::Parse(argc, argv));
-	if (!Args.get())
-	{
-		Arguments::Usage(std::cerr, argv[0]);
-		return 1;
-	}
+	const ErrorReport& Err(const char *message);
 
-	std::ifstream infile(Args->input.c_str());
+	int yylex(YYSTYPE *yylval);
 
-	bool outputIsFile = (Args->output.length() > 0);
-	std::ofstream outfile;
-	if (outputIsFile)
-		outfile.open(Args->output.c_str());
+private:
+	void setCString(YYSTYPE *yylval);
+	void setRange(YYSTYPE *yylval);
 
-	lex.reset(new Lexer(Args->input));
-	lex->switch_streams(&infile, &(outputIsFile ? outfile : std::cout));
+	const std::string inputFilename;
+	std::list<ErrorReport*> errs;
 
-	auto_ptr<Parser> parser(new Parser(*lex));
-	int err = yyparse(parser.get());
+	Location lastTokenEnd;
+};
 
-	for (auto *err : parser->errors())
-		std::cerr << *err << std::endl;
-
-	if (err != 0)
-	{
-		std::cerr
-			<< Bold << "Fabrique:"
-			<< Red << " failed to parse "
-			<< Magenta << Args->input
-			<< ResetAll
-			<< std::endl
-			;
-
-		return 1;
-	}
-
-	auto& root = parser->getRoot();
-	std::cout << root;
-
-	return 0;
-}
+#endif

@@ -1,4 +1,4 @@
-/** @file driver.cc    Driver for the fabrique compiler. */
+/** @file literals.h    Declaration of several literal expression types. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,76 +29,56 @@
  * SUCH DAMAGE.
  */
 
-#include "Parsing/Lexer.h"
-#include "Parsing/Parser.h"
-#include "Parsing/fab.yacc.h"
-
-#include "Support/Arguments.h"
+#include "literals.h"
 #include "Support/ostream.h"
 
-#include <cassert>
-#include <fstream>
-#include <iostream>
-#include <memory>
-
-using std::auto_ptr;
+using std::ostream;
 
 
-auto_ptr<Lexer> lex;
-
-int yyparse(Parser*);
-
-void yyerror(const char *str)
+void BoolLiteral::PrettyPrint(ostream& out, int indent) const
 {
-	assert(lex.get() != NULL);
-	std::cerr << lex->Err(str);
+	out << Magenta << (value() ? "true" : "false") << ResetAll;
 }
 
-int yylex(void *yylval)
+void IntLiteral::PrettyPrint(ostream& out, int indent) const
 {
-	assert(lex.get() != NULL);
-	return lex->yylex((YYSTYPE*) yylval);
+	out << Magenta << value() << ResetAll;
 }
 
-int main(int argc, char *argv[]) {
-	auto_ptr<Arguments> Args(Arguments::Parse(argc, argv));
-	if (!Args.get())
+void StringLiteral::PrettyPrint(ostream& out, int indent) const
+{
+	out << Magenta << "'";
+
+	std::string s = value();
+	size_t i = 0;
+	do
 	{
-		Arguments::Usage(std::cerr, argv[0]);
-		return 1;
-	}
+		// Highlight variable references within strings.
+		size_t dollarSign = s.find("$", i);
+		out << s.substr(i, dollarSign - i);
 
-	std::ifstream infile(Args->input.c_str());
+		if (dollarSign == std::string::npos)
+			break;
 
-	bool outputIsFile = (Args->output.length() > 0);
-	std::ofstream outfile;
-	if (outputIsFile)
-		outfile.open(Args->output.c_str());
+		size_t end;
+		if (s[dollarSign + 1] == '{')
+			end = s.find("}", dollarSign + 1) + 1;
 
-	lex.reset(new Lexer(Args->input));
-	lex->switch_streams(&infile, &(outputIsFile ? outfile : std::cout));
+		else
+			end = std::min(
+				s.find(" ", dollarSign + 1),
+				s.find(".", dollarSign + 1)
+			);
 
-	auto_ptr<Parser> parser(new Parser(*lex));
-	int err = yyparse(parser.get());
-
-	for (auto *err : parser->errors())
-		std::cerr << *err << std::endl;
-
-	if (err != 0)
-	{
-		std::cerr
-			<< Bold << "Fabrique:"
-			<< Red << " failed to parse "
-			<< Magenta << Args->input
-			<< ResetAll
-			<< std::endl
+		out
+			<< Cyan << s.substr(dollarSign, end - dollarSign)
+			<< Magenta
 			;
 
-		return 1;
-	}
+		i = end;
 
-	auto& root = parser->getRoot();
-	std::cout << root;
+	} while (i < s.length());
 
-	return 0;
+	//<< value() <<;
+	out << "'" << ResetAll;
 }

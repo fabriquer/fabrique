@@ -1,4 +1,4 @@
-/** @file driver.cc    Driver for the fabrique compiler. */
+/** @file Scope.cc    Definition of @ref Scope. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,76 +29,65 @@
  * SUCH DAMAGE.
  */
 
-#include "Parsing/Lexer.h"
-#include "Parsing/Parser.h"
-#include "Parsing/fab.yacc.h"
-
-#include "Support/Arguments.h"
-#include "Support/ostream.h"
-
-#include <cassert>
-#include <fstream>
-#include <iostream>
-#include <memory>
-
-using std::auto_ptr;
+#include "AST/Argument.h"
+#include "AST/Parameter.h"
+#include "AST/Scope.h"
+#include "AST/Value.h"
 
 
-auto_ptr<Lexer> lex;
-
-int yyparse(Parser*);
-
-void yyerror(const char *str)
+Scope::~Scope()
 {
-	assert(lex.get() != NULL);
-	std::cerr << lex->Err(str);
+	for (auto *v : values)
+		delete v;
 }
 
-int yylex(void *yylval)
+
+const Expression* Scope::Find(const Identifier *name) const
 {
-	assert(lex.get() != NULL);
-	return lex->yylex((YYSTYPE*) yylval);
+	auto i = symbols.find(name->name());
+	if (i != symbols.end())
+		return i->second;
+
+	if (parent)
+		return parent->Find(name);
+
+	return NULL;
 }
 
-int main(int argc, char *argv[]) {
-	auto_ptr<Arguments> Args(Arguments::Parse(argc, argv));
-	if (!Args.get())
-	{
-		Arguments::Usage(std::cerr, argv[0]);
-		return 1;
-	}
 
-	std::ifstream infile(Args->input.c_str());
+void Scope::Register(const Argument *a)
+{
+	assert(a->hasName());
+	Register(a->getName(), &a->getValue());
+}
 
-	bool outputIsFile = (Args->output.length() > 0);
-	std::ofstream outfile;
-	if (outputIsFile)
-		outfile.open(Args->output.c_str());
 
-	lex.reset(new Lexer(Args->input));
-	lex->switch_streams(&infile, &(outputIsFile ? outfile : std::cout));
+void Scope::Register(Parameter *p)
+{
+	Register(p->getName(), p);
+}
 
-	auto_ptr<Parser> parser(new Parser(*lex));
-	int err = yyparse(parser.get());
 
-	for (auto *err : parser->errors())
-		std::cerr << *err << std::endl;
+void Scope::Register(const Value *v)
+{
+	Register(v->getName(), &v->getValue());
+	values.push_back(v);
+}
 
-	if (err != 0)
-	{
-		std::cerr
-			<< Bold << "Fabrique:"
-			<< Red << " failed to parse "
-			<< Magenta << Args->input
-			<< ResetAll
-			<< std::endl
-			;
 
-		return 1;
-	}
+void Scope::Register(const Identifier& id, const Expression *e)
+{
+	assert(e != NULL);
 
-	auto& root = parser->getRoot();
-	std::cout << root;
+	const std::string name(id.name());
+	assert(symbols.find(name) == symbols.end());
 
-	return 0;
+	symbols[name] = e;
+}
+
+
+void Scope::PrettyPrint(std::ostream& out, int indent) const
+{
+	for (auto *v : values)
+		out << *v;
 }

@@ -1,4 +1,4 @@
-/** @file driver.cc    Driver for the fabrique compiler. */
+/** @file List.h    Declaration of @ref List. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,76 +29,33 @@
  * SUCH DAMAGE.
  */
 
-#include "Parsing/Lexer.h"
-#include "Parsing/Parser.h"
-#include "Parsing/fab.yacc.h"
+#ifndef LIST_H
+#define LIST_H
 
-#include "Support/Arguments.h"
-#include "Support/ostream.h"
-
-#include <cassert>
-#include <fstream>
-#include <iostream>
-#include <memory>
-
-using std::auto_ptr;
+#include "Expression.h"
 
 
-auto_ptr<Lexer> lex;
-
-int yyparse(Parser*);
-
-void yyerror(const char *str)
+/**
+ * A list of same-typed expressions.
+ */
+class List : public Expression
 {
-	assert(lex.get() != NULL);
-	std::cerr << lex->Err(str);
-}
-
-int yylex(void *yylval)
-{
-	assert(lex.get() != NULL);
-	return lex->yylex((YYSTYPE*) yylval);
-}
-
-int main(int argc, char *argv[]) {
-	auto_ptr<Arguments> Args(Arguments::Parse(argc, argv));
-	if (!Args.get())
+public:
+	List(ExprVec& e, const Type& ty, const SourceRange& loc)
+		: Expression(ty, loc), elements(e)
 	{
-		Arguments::Usage(std::cerr, argv[0]);
-		return 1;
 	}
 
-	std::ifstream infile(Args->input.c_str());
+	~List() { for (auto *e : elements) delete e; }
 
-	bool outputIsFile = (Args->output.length() > 0);
-	std::ofstream outfile;
-	if (outputIsFile)
-		outfile.open(Args->output.c_str());
+	ExprVec::const_iterator begin() const { return elements.begin(); }
+	ExprVec::const_iterator end() const { return elements.end(); }
 
-	lex.reset(new Lexer(Args->input));
-	lex->switch_streams(&infile, &(outputIsFile ? outfile : std::cout));
+	virtual bool isStatic() const;
+	virtual void PrettyPrint(std::ostream&, int indent = 0) const;
 
-	auto_ptr<Parser> parser(new Parser(*lex));
-	int err = yyparse(parser.get());
+private:
+	const ExprVec elements;
+};
 
-	for (auto *err : parser->errors())
-		std::cerr << *err << std::endl;
-
-	if (err != 0)
-	{
-		std::cerr
-			<< Bold << "Fabrique:"
-			<< Red << " failed to parse "
-			<< Magenta << Args->input
-			<< ResetAll
-			<< std::endl
-			;
-
-		return 1;
-	}
-
-	auto& root = parser->getRoot();
-	std::cout << root;
-
-	return 0;
-}
+#endif

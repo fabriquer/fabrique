@@ -1,4 +1,4 @@
-/** @file driver.cc    Driver for the fabrique compiler. */
+/** @file ast.h    Meta-include file for all AST node types. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,76 +29,23 @@
  * SUCH DAMAGE.
  */
 
-#include "Parsing/Lexer.h"
-#include "Parsing/Parser.h"
-#include "Parsing/fab.yacc.h"
+#ifndef AST_H
+#define AST_H
 
-#include "Support/Arguments.h"
-#include "Support/ostream.h"
+#include "Action.h"
+#include "Argument.h"
+#include "BinaryOperation.h"
+#include "Call.h"
+#include "File.h"
+#include "FileList.h"
+#include "Function.h"
+#include "Identifier.h"
+#include "List.h"
+#include "Parameter.h"
+#include "SymbolReference.h"
+#include "Type.h"
+#include "Value.h"
 
-#include <cassert>
-#include <fstream>
-#include <iostream>
-#include <memory>
+#include "literals.h"
 
-using std::auto_ptr;
-
-
-auto_ptr<Lexer> lex;
-
-int yyparse(Parser*);
-
-void yyerror(const char *str)
-{
-	assert(lex.get() != NULL);
-	std::cerr << lex->Err(str);
-}
-
-int yylex(void *yylval)
-{
-	assert(lex.get() != NULL);
-	return lex->yylex((YYSTYPE*) yylval);
-}
-
-int main(int argc, char *argv[]) {
-	auto_ptr<Arguments> Args(Arguments::Parse(argc, argv));
-	if (!Args.get())
-	{
-		Arguments::Usage(std::cerr, argv[0]);
-		return 1;
-	}
-
-	std::ifstream infile(Args->input.c_str());
-
-	bool outputIsFile = (Args->output.length() > 0);
-	std::ofstream outfile;
-	if (outputIsFile)
-		outfile.open(Args->output.c_str());
-
-	lex.reset(new Lexer(Args->input));
-	lex->switch_streams(&infile, &(outputIsFile ? outfile : std::cout));
-
-	auto_ptr<Parser> parser(new Parser(*lex));
-	int err = yyparse(parser.get());
-
-	for (auto *err : parser->errors())
-		std::cerr << *err << std::endl;
-
-	if (err != 0)
-	{
-		std::cerr
-			<< Bold << "Fabrique:"
-			<< Red << " failed to parse "
-			<< Magenta << Args->input
-			<< ResetAll
-			<< std::endl
-			;
-
-		return 1;
-	}
-
-	auto& root = parser->getRoot();
-	std::cout << root;
-
-	return 0;
-}
+#endif

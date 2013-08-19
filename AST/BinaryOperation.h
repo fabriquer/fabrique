@@ -1,4 +1,4 @@
-/** @file driver.cc    Driver for the fabrique compiler. */
+/** @file BinaryOperation.h    Declaration of @ref BinaryOperation. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,76 +29,48 @@
  * SUCH DAMAGE.
  */
 
-#include "Parsing/Lexer.h"
-#include "Parsing/Parser.h"
-#include "Parsing/fab.yacc.h"
+#ifndef BINARY_OPERATOR_H
+#define BINARY_OPERATOR_H
 
-#include "Support/Arguments.h"
-#include "Support/ostream.h"
+#include "ADT/CStringRef.h"
+#include "AST/Expression.h"
 
-#include <cassert>
-#include <fstream>
-#include <iostream>
 #include <memory>
 
-using std::auto_ptr;
 
-
-auto_ptr<Lexer> lex;
-
-int yyparse(Parser*);
-
-void yyerror(const char *str)
+/**
+ * An operation with two operands.
+ */
+class BinaryOperation : public Expression
 {
-	assert(lex.get() != NULL);
-	std::cerr << lex->Err(str);
-}
-
-int yylex(void *yylval)
-{
-	assert(lex.get() != NULL);
-	return lex->yylex((YYSTYPE*) yylval);
-}
-
-int main(int argc, char *argv[]) {
-	auto_ptr<Arguments> Args(Arguments::Parse(argc, argv));
-	if (!Args.get())
+public:
+	enum Operator
 	{
-		Arguments::Usage(std::cerr, argv[0]);
-		return 1;
+		Concatenate,
+		Prefix,
+		ScalarAdd,
+		Invalid,
+	};
+
+	static Operator Op(CStringRef);
+	static std::string OpStr(Operator);
+
+	static BinaryOperation* Create(Expression*, Operator, Expression*,
+	                               const Type& resultType);
+
+	virtual bool isStatic() const;
+	virtual void PrettyPrint(std::ostream&, int indent = 0) const;
+
+private:
+	BinaryOperation(Expression *LHS, enum Operator op, Expression *RHS,
+	                const Type& ty, const SourceRange& loc)
+		: Expression(ty, loc), LHS(LHS), RHS(RHS), op(op)
+	{
 	}
 
-	std::ifstream infile(Args->input.c_str());
+	const std::auto_ptr<Expression> LHS;
+	const std::auto_ptr<Expression> RHS;
+	const Operator op;
+};
 
-	bool outputIsFile = (Args->output.length() > 0);
-	std::ofstream outfile;
-	if (outputIsFile)
-		outfile.open(Args->output.c_str());
-
-	lex.reset(new Lexer(Args->input));
-	lex->switch_streams(&infile, &(outputIsFile ? outfile : std::cout));
-
-	auto_ptr<Parser> parser(new Parser(*lex));
-	int err = yyparse(parser.get());
-
-	for (auto *err : parser->errors())
-		std::cerr << *err << std::endl;
-
-	if (err != 0)
-	{
-		std::cerr
-			<< Bold << "Fabrique:"
-			<< Red << " failed to parse "
-			<< Magenta << Args->input
-			<< ResetAll
-			<< std::endl
-			;
-
-		return 1;
-	}
-
-	auto& root = parser->getRoot();
-	std::cout << root;
-
-	return 0;
-}
+#endif

@@ -1,4 +1,4 @@
-/** @file driver.cc    Driver for the fabrique compiler. */
+/** @file Location.h    Declaration of @ref Location and @ref SourceRange. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,76 +29,69 @@
  * SUCH DAMAGE.
  */
 
-#include "Parsing/Lexer.h"
-#include "Parsing/Parser.h"
-#include "Parsing/fab.yacc.h"
+#ifndef LOCATION_H
+#define LOCATION_H
 
-#include "Support/Arguments.h"
-#include "Support/ostream.h"
+#include "Printable.h"
 
 #include <cassert>
-#include <fstream>
-#include <iostream>
-#include <memory>
-
-using std::auto_ptr;
+#include <string>
 
 
-auto_ptr<Lexer> lex;
+class Lexer;
 
-int yyparse(Parser*);
 
-void yyerror(const char *str)
+//! A location in the original source code.
+class Location : public Printable
 {
-	assert(lex.get() != NULL);
-	std::cerr << lex->Err(str);
-}
+public:
+	virtual void PrettyPrint(std::ostream&, int indent = 0) const;
 
-int yylex(void *yylval)
-{
-	assert(lex.get() != NULL);
-	return lex->yylex((YYSTYPE*) yylval);
-}
-
-int main(int argc, char *argv[]) {
-	auto_ptr<Arguments> Args(Arguments::Parse(argc, argv));
-	if (!Args.get())
+	Location(const std::string& filename = "", int line = 0, int column = 0)
+		: filename(filename), line(line), column(column)
 	{
-		Arguments::Usage(std::cerr, argv[0]);
-		return 1;
+		assert(line >= 0);
+		assert(column >= 0);
 	}
 
-	std::ifstream infile(Args->input.c_str());
+	std::string filename;
+	int line;
+	int column;
+};
 
-	bool outputIsFile = (Args->output.length() > 0);
-	std::ofstream outfile;
-	if (outputIsFile)
-		outfile.open(Args->output.c_str());
 
-	lex.reset(new Lexer(Args->input));
-	lex->switch_streams(&infile, &(outputIsFile ? outfile : std::cout));
+class HasSource;
 
-	auto_ptr<Parser> parser(new Parser(*lex));
-	int err = yyparse(parser.get());
+class SourceRange : public Printable
+{
+public:
+	//! Construct a short (within a single line) range.
+	static SourceRange Span(
+		const std::string& filename, int line,
+		int begincol, int endcol);
 
-	for (auto *err : parser->errors())
-		std::cerr << *err << std::endl;
+	//! Create a range that spans two @ref HasSource objects.
+	static SourceRange Over(const HasSource *begin, const HasSource *end);
 
-	if (err != 0)
+	static SourceRange None();
+
+	SourceRange(const Location& begin, const Location& end)
+		: begin(begin), end(end)
 	{
-		std::cerr
-			<< Bold << "Fabrique:"
-			<< Red << " failed to parse "
-			<< Magenta << Args->input
-			<< ResetAll
-			<< std::endl
-			;
-
-		return 1;
 	}
 
-	auto& root = parser->getRoot();
-	std::cout << root;
+	virtual void PrettyPrint(std::ostream&, int indent = 0) const;
 
-	return 0;
-}
+	Location begin;
+	Location end;
+};
+
+
+//! Something that has a location in source.
+class HasSource
+{
+public:
+	virtual const SourceRange& getSource() const = 0;
+};
+
+#endif

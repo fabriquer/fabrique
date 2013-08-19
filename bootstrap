@@ -1,0 +1,147 @@
+#!/usr/bin/env python
+
+import argparse
+import itertools
+import os
+
+args = argparse.ArgumentParser()
+args.add_argument('builddir', nargs = '?', default = '.')
+args.add_argument('--debug', action = 'store_true')
+args = args.parse_args()
+
+
+# First, let's declare what we actually want to build.
+cxx_srcs = {
+	'AST/': (
+		'Action', 'Argument', 'BinaryOperation', 'Call',
+		'File', 'FileList', 'Function', 'Identifier', 'List',
+		'Parameter', 'Scope', 'SymbolReference', 'Type', 'Value',
+		'literals',
+	),
+	'Parsing/': (
+		'Lexer', 'Parser',
+	),
+	'Support/': (
+		'Arguments', 'ErrorReport', 'Location', 'Printable', 'ostream',
+	),
+	'': (
+		'driver',
+	),
+}
+
+cxx_srcs = list(itertools.chain(*[
+	[ '%s%s' % (subdir,base) for base in srcs ]
+		for (subdir,srcs) in cxx_srcs.items()
+]))
+
+
+lex = { 'Parsing/fab.l': 'Parsing/fab.lex' }
+yacc = { 'Parsing/fab.yy': 'Parsing/fab.yacc' }
+
+src_root = os.path.dirname(os.path.realpath(__file__))
+
+cxxflags = [
+	'-I', src_root, '-I', args.builddir,
+
+	# we might like to use some C++11 language features like 'auto'
+	'-Wno-c++11-extensions',
+]
+
+if args.debug: cxxflags += [ '-g', '-ggdb' ]
+else: cxxflags += [ '-D NDEBUG' ]
+
+variables = {
+	# tools
+	'cc': 'clang',
+	'cxx': 'clang++',
+	'lex': 'flex',
+	'yacc': 'byacc',
+
+	# flags
+	'cxxflags': ' '.join(cxxflags),
+	'yaccflags': '-d -t',
+}
+
+
+
+# Then describe the mechanics of how to generate a build file.
+import sys
+
+if not os.path.exists(args.builddir):
+	os.makedirs(args.builddir)
+
+if not os.path.isdir(args.builddir):
+	sys.write("Build directory '%s' is not a directory" % args.builddir)
+	sys.exit(1)
+
+out = open(os.path.join(args.builddir, 'build.ninja'), 'w')
+
+
+for var in variables.items():
+	out.write('%s = %s\n' % var)
+
+out.write('\n')
+
+
+# Build rules: how we actually build things.
+rules = {
+	'bin': {
+		'command': 'c++ -o $out $in',
+		'description': 'Linking $out',
+	},
+
+	'cc': {
+		'command': '$cc -c $cflags -MMD -MT $out -MF $out.d -o $out $in',
+		'description': 'Compiling $in',
+		'depfile': '$out.d',
+	},
+
+	'cxx': {
+		'command': '$cxx -c $cxxflags -MMD -MT $out -MF $out.d -o $out $in',
+		'description': 'Compiling $in',
+		'depfile': '$out.d',
+	},
+
+	'lex': {
+		'command': '$lex -c++ --header-file=$header --outfile=$main_out $in',
+		'description': 'Processing $in',
+	},
+
+	'yacc': {
+		'command': '$yacc $yaccflags -o $main_out $in',
+		'description': 'Processing $in',
+	},
+}
+
+for (name, variables) in rules.items():
+	out.write('rule %s\n' % name)
+	for var in variables.items():
+		out.write('  %s = %s\n' % var)
+	out.write('\n')
+
+
+# Finally, build statements.
+objs = [ '%s.o' % o for o in cxx_srcs + lex.values() + yacc.values() ]
+
+out.write('build fab: bin %s\n\n' % ' '.join(objs))
+
+
+for src in cxx_srcs:
+	obj = '%s.o' % src
+	src = os.path.join(src_root, '%s.cc | Parsing/fab.yacc.h' % src)
+	out.write('build %s: cxx %s\n' % (obj, src))
+
+out.write('\n')
+
+for (src,target) in lex.items():
+	src = os.path.join(src_root, src)
+	out.write('build %s.o: cxx %s.cc\n' % (target, target))
+	out.write('build %s.h %s.cc: lex %s\n' % (target, target, src))
+	out.write('  header = %s.h\n' % target)
+	out.write('  main_out = %s.cc\n\n' % target)
+
+for (src,target) in yacc.items():
+	src = os.path.join(src_root, src)
+	out.write('build %s.o: cxx %s.cc\n' % (target, target))
+	out.write('build %s.h %s.cc: yacc %s\n' % (target, target, src))
+	out.write('  main_out = %s.cc\n\n' % target)

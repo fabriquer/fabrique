@@ -1,4 +1,4 @@
-/** @file driver.cc    Driver for the fabrique compiler. */
+/** @file Location.cc    Definition of @ref Location and @ref SourceRange. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -30,75 +30,67 @@
  */
 
 #include "Parsing/Lexer.h"
-#include "Parsing/Parser.h"
-#include "Parsing/fab.yacc.h"
-
-#include "Support/Arguments.h"
+#include "Support/Location.h"
 #include "Support/ostream.h"
 
-#include <cassert>
-#include <fstream>
-#include <iostream>
-#include <memory>
 
-using std::auto_ptr;
-
-
-auto_ptr<Lexer> lex;
-
-int yyparse(Parser*);
-
-void yyerror(const char *str)
+void Location::PrettyPrint(std::ostream& out, int indent) const
 {
-	assert(lex.get() != NULL);
-	std::cerr << lex->Err(str);
+	if (!filename.empty()) out << Magenta << filename << White << ":";
+	if (line > 0) out << line << ":";
+	if (column > 0) out << column << ":";
 }
 
-int yylex(void *yylval)
+SourceRange SourceRange::Span(const std::string& filename, int line,
+                              int begin, int end)
 {
-	assert(lex.get() != NULL);
-	return lex->yylex((YYSTYPE*) yylval);
+	return SourceRange(
+		Location(filename, line, begin),
+		Location(filename, line, end)
+	);
 }
 
-int main(int argc, char *argv[]) {
-	auto_ptr<Arguments> Args(Arguments::Parse(argc, argv));
-	if (!Args.get())
-	{
-		Arguments::Usage(std::cerr, argv[0]);
-		return 1;
-	}
+SourceRange SourceRange::Over(const HasSource *begin, const HasSource *end)
+{
+	Location nowhere;
 
-	std::ifstream infile(Args->input.c_str());
+	const Location& b(begin ? begin->getSource().begin : nowhere);
+	const Location& e(end ? end->getSource().end : nowhere);
 
-	bool outputIsFile = (Args->output.length() > 0);
-	std::ofstream outfile;
-	if (outputIsFile)
-		outfile.open(Args->output.c_str());
+	return SourceRange(b, e);
+}
 
-	lex.reset(new Lexer(Args->input));
-	lex->switch_streams(&infile, &(outputIsFile ? outfile : std::cout));
+SourceRange SourceRange::None()
+{
+	Location nowhere;
+	return SourceRange(nowhere, nowhere);
+}
 
-	auto_ptr<Parser> parser(new Parser(*lex));
-	int err = yyparse(parser.get());
+void SourceRange::PrettyPrint(std::ostream& out, int indent) const
+{
+	out
+		<< Magenta << begin.filename
+		<< White << ":"
+		;
 
-	for (auto *err : parser->errors())
-		std::cerr << *err << std::endl;
-
-	if (err != 0)
-	{
-		std::cerr
-			<< Bold << "Fabrique:"
-			<< Red << " failed to parse "
-			<< Magenta << Args->input
-			<< ResetAll
-			<< std::endl
+	if (begin.line == end.line)
+		out
+			<< Blue << begin.line
+			<< White << ":"
+			<< Green << begin.column
+			<< Yellow << "-"
+			<< Green << end.column
+			;
+	else
+		out
+			<< Blue << begin.line
+			<< White << ":"
+			<< Green << begin.column
+			<< Yellow << "-"
+			<< Blue << end.line
+			<< White << ":"
+			<< Green << end.column
 			;
 
-		return 1;
-	}
-
-	auto& root = parser->getRoot();
-	std::cout << root;
-
-	return 0;
+	out << ResetAll;
 }

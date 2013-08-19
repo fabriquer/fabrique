@@ -1,4 +1,4 @@
-/** @file driver.cc    Driver for the fabrique compiler. */
+/** @file Scope.h    Declaration of @ref Scope. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,76 +29,54 @@
  * SUCH DAMAGE.
  */
 
-#include "Parsing/Lexer.h"
-#include "Parsing/Parser.h"
-#include "Parsing/fab.yacc.h"
+#ifndef SCOPE_H
+#define SCOPE_H
 
-#include "Support/Arguments.h"
-#include "Support/ostream.h"
+#include "ADT/PtrVec.h"
+#include "Support/Printable.h"
+#include "Support/Uncopyable.h"
 
-#include <cassert>
-#include <fstream>
-#include <iostream>
-#include <memory>
+#include <map>
+#include <string>
 
-using std::auto_ptr;
+class Argument;
+class Expression;
+class Identifier;
+class Parameter;
+class Value;
 
 
-auto_ptr<Lexer> lex;
-
-int yyparse(Parser*);
-
-void yyerror(const char *str)
+/**
+ * A scope is a container for name->value mappings.
+ *
+ * A scope can have a parent scope for recursive name lookups.
+ */
+class Scope : public Printable, Uncopyable
 {
-	assert(lex.get() != NULL);
-	std::cerr << lex->Err(str);
-}
+public:
+	typedef PtrVec<Value>::const_iterator iterator;
+	typedef std::map<std::string,const Expression*> SymbolMap;
 
-int yylex(void *yylval)
-{
-	assert(lex.get() != NULL);
-	return lex->yylex((YYSTYPE*) yylval);
-}
+	Scope(const Scope *parent = NULL) : parent(parent) {}
+	~Scope();
 
-int main(int argc, char *argv[]) {
-	auto_ptr<Arguments> Args(Arguments::Parse(argc, argv));
-	if (!Args.get())
-	{
-		Arguments::Usage(std::cerr, argv[0]);
-		return 1;
-	}
+	iterator begin() const { return values.begin(); }
+	iterator end() const { return values.end(); }
 
-	std::ifstream infile(Args->input.c_str());
+	const Expression* Find(const Identifier *name) const;
 
-	bool outputIsFile = (Args->output.length() > 0);
-	std::ofstream outfile;
-	if (outputIsFile)
-		outfile.open(Args->output.c_str());
+	void Register(const Argument*);
+	void Register(Parameter*);
+	void Register(const Value*);
 
-	lex.reset(new Lexer(Args->input));
-	lex->switch_streams(&infile, &(outputIsFile ? outfile : std::cout));
+	virtual void PrettyPrint(std::ostream&, int indent = 0) const;
 
-	auto_ptr<Parser> parser(new Parser(*lex));
-	int err = yyparse(parser.get());
+private:
+	void Register(const Identifier&, const Expression*);
 
-	for (auto *err : parser->errors())
-		std::cerr << *err << std::endl;
+	const Scope *parent;
+	SymbolMap symbols;
+	PtrVec<Value> values;
+};
 
-	if (err != 0)
-	{
-		std::cerr
-			<< Bold << "Fabrique:"
-			<< Red << " failed to parse "
-			<< Magenta << Args->input
-			<< ResetAll
-			<< std::endl
-			;
-
-		return 1;
-	}
-
-	auto& root = parser->getRoot();
-	std::cout << root;
-
-	return 0;
-}
+#endif

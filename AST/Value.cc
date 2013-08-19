@@ -1,4 +1,4 @@
-/** @file driver.cc    Driver for the fabrique compiler. */
+/** @file Value.h    Declaration of @ref Value. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,76 +29,34 @@
  * SUCH DAMAGE.
  */
 
-#include "Parsing/Lexer.h"
-#include "Parsing/Parser.h"
-#include "Parsing/fab.yacc.h"
-
-#include "Support/Arguments.h"
+#include "Type.h"
+#include "Value.h"
 #include "Support/ostream.h"
 
-#include <cassert>
-#include <fstream>
-#include <iostream>
-#include <memory>
+#include <iomanip>
 
-using std::auto_ptr;
+using std::ostream;
 
 
-auto_ptr<Lexer> lex;
-
-int yyparse(Parser*);
-
-void yyerror(const char *str)
+Value::Value(Identifier* id, const Expression* e)
+	: Expression(e->getType(), SourceRange::Over(id, e)), id(id), expr(e)
 {
-	assert(lex.get() != NULL);
-	std::cerr << lex->Err(str);
+	assert(id != NULL);
+	assert(e != NULL);
 }
 
-int yylex(void *yylval)
+void Value::PrettyPrint(ostream& out, int indent) const
 {
-	assert(lex.get() != NULL);
-	return lex->yylex((YYSTYPE*) yylval);
-}
+	std::string tabs(indent, '\t');
 
-int main(int argc, char *argv[]) {
-	auto_ptr<Arguments> Args(Arguments::Parse(argc, argv));
-	if (!Args.get())
-	{
-		Arguments::Usage(std::cerr, argv[0]);
-		return 1;
-	}
-
-	std::ifstream infile(Args->input.c_str());
-
-	bool outputIsFile = (Args->output.length() > 0);
-	std::ofstream outfile;
-	if (outputIsFile)
-		outfile.open(Args->output.c_str());
-
-	lex.reset(new Lexer(Args->input));
-	lex->switch_streams(&infile, &(outputIsFile ? outfile : std::cout));
-
-	auto_ptr<Parser> parser(new Parser(*lex));
-	int err = yyparse(parser.get());
-
-	for (auto *err : parser->errors())
-		std::cerr << *err << std::endl;
-
-	if (err != 0)
-	{
-		std::cerr
-			<< Bold << "Fabrique:"
-			<< Red << " failed to parse "
-			<< Magenta << Args->input
-			<< ResetAll
-			<< std::endl
-			;
-
-		return 1;
-	}
-
-	auto& root = parser->getRoot();
-	std::cout << root;
-
-	return 0;
+	out
+		<< tabs
+		<< Green << id->name()
+		<< Yellow << ":"
+		<< Blue << getType()
+		<< Yellow << " = "
+		<< ResetAll << *expr
+		<< Yellow << ";"
+		<< ResetAll << "\n"
+		;
 }

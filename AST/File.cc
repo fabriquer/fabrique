@@ -1,4 +1,4 @@
-/** @file driver.cc    Driver for the fabrique compiler. */
+/** @file File.cc    Definition of @ref File. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,76 +29,35 @@
  * SUCH DAMAGE.
  */
 
-#include "Parsing/Lexer.h"
-#include "Parsing/Parser.h"
-#include "Parsing/fab.yacc.h"
-
-#include "Support/Arguments.h"
+#include "File.h"
 #include "Support/ostream.h"
 
-#include <cassert>
-#include <fstream>
-#include <iostream>
-#include <memory>
+#include <set>
 
-using std::auto_ptr;
+using std::string;
 
 
-auto_ptr<Lexer> lex;
-
-int yyparse(Parser*);
-
-void yyerror(const char *str)
+bool File::isStatic() const
 {
-	assert(lex.get() != NULL);
-	std::cerr << lex->Err(str);
+	for (auto *a : args)
+		if (!a->isStatic())
+			return false;
+
+	return true;
 }
 
-int yylex(void *yylval)
+void File::PrettyPrint(std::ostream& out, int indent) const
 {
-	assert(lex.get() != NULL);
-	return lex->yylex((YYSTYPE*) yylval);
-}
+	bool haveArgs = (args.size() > 0);
 
-int main(int argc, char *argv[]) {
-	auto_ptr<Arguments> Args(Arguments::Parse(argc, argv));
-	if (!Args.get())
-	{
-		Arguments::Usage(std::cerr, argv[0]);
-		return 1;
-	}
+	if (haveArgs)
+		out << Red << "file" << Yellow << "(";
 
-	std::ifstream infile(Args->input.c_str());
+	out << Magenta << name << ResetAll;
 
-	bool outputIsFile = (Args->output.length() > 0);
-	std::ofstream outfile;
-	if (outputIsFile)
-		outfile.open(Args->output.c_str());
+	for (auto *a : args)
+		out << Yellow << ", " << ResetAll << *a;
 
-	lex.reset(new Lexer(Args->input));
-	lex->switch_streams(&infile, &(outputIsFile ? outfile : std::cout));
-
-	auto_ptr<Parser> parser(new Parser(*lex));
-	int err = yyparse(parser.get());
-
-	for (auto *err : parser->errors())
-		std::cerr << *err << std::endl;
-
-	if (err != 0)
-	{
-		std::cerr
-			<< Bold << "Fabrique:"
-			<< Red << " failed to parse "
-			<< Magenta << Args->input
-			<< ResetAll
-			<< std::endl
-			;
-
-		return 1;
-	}
-
-	auto& root = parser->getRoot();
-	std::cout << root;
-
-	return 0;
+	if (haveArgs)
+		out << Yellow << ")" << ResetAll;
 }

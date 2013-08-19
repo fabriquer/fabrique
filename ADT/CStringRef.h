@@ -1,4 +1,4 @@
-/** @file driver.cc    Driver for the fabrique compiler. */
+/** @file cstr.h    C string helpers. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,76 +29,45 @@
  * SUCH DAMAGE.
  */
 
-#include "Parsing/Lexer.h"
-#include "Parsing/Parser.h"
-#include "Parsing/fab.yacc.h"
-
-#include "Support/Arguments.h"
-#include "Support/ostream.h"
+#ifndef CSTR_H
+#define CSTR_H
 
 #include <cassert>
-#include <fstream>
-#include <iostream>
-#include <memory>
-
-using std::auto_ptr;
+#include <string>
 
 
-auto_ptr<Lexer> lex;
-
-int yyparse(Parser*);
-
-void yyerror(const char *str)
+/**
+ * A reference to a C string, which may not be long-lived.
+ *
+ * Very much like llvm::StringRef, but without having to include LLVM headers.
+ */
+class CStringRef
 {
-	assert(lex.get() != NULL);
-	std::cerr << lex->Err(str);
-}
+public:
+	const char* begin() const { return cstr; }
+	const char* end() const { return cstr + len; }
 
-int yylex(void *yylval)
-{
-	assert(lex.get() != NULL);
-	return lex->yylex((YYSTYPE*) yylval);
-}
-
-int main(int argc, char *argv[]) {
-	auto_ptr<Arguments> Args(Arguments::Parse(argc, argv));
-	if (!Args.get())
+	size_t length() const { return len; }
+	bool operator == (const std::string& s)
 	{
-		Arguments::Usage(std::cerr, argv[0]);
-		return 1;
+		assert(cstr != NULL);
+
+		return (len == s.length())
+			and (strncmp(cstr, s.c_str(), len) == 0);
 	}
 
-	std::ifstream infile(Args->input.c_str());
-
-	bool outputIsFile = (Args->output.length() > 0);
-	std::ofstream outfile;
-	if (outputIsFile)
-		outfile.open(Args->output.c_str());
-
-	lex.reset(new Lexer(Args->input));
-	lex->switch_streams(&infile, &(outputIsFile ? outfile : std::cout));
-
-	auto_ptr<Parser> parser(new Parser(*lex));
-	int err = yyparse(parser.get());
-
-	for (auto *err : parser->errors())
-		std::cerr << *err << std::endl;
-
-	if (err != 0)
+	operator std::string() const { return str(); }
+	std::string str() const
 	{
-		std::cerr
-			<< Bold << "Fabrique:"
-			<< Red << " failed to parse "
-			<< Magenta << Args->input
-			<< ResetAll
-			<< std::endl
-			;
-
-		return 1;
+		assert(cstr != NULL);
+		return std::string(cstr, 0, len);
 	}
 
-	auto& root = parser->getRoot();
-	std::cout << root;
+	void set(char *s, size_t l) { cstr = s; len = l; }
+	void set(char *b, char* e) { cstr = b; len = (e - b); }
 
-	return 0;
-}
+	char *cstr;
+	size_t len;
+};
+
+#endif

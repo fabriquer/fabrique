@@ -1,4 +1,4 @@
-/** @file driver.cc    Driver for the fabrique compiler. */
+/** @file Call.h    Declaration of @ref Call. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,76 +29,37 @@
  * SUCH DAMAGE.
  */
 
-#include "Parsing/Lexer.h"
-#include "Parsing/Parser.h"
-#include "Parsing/fab.yacc.h"
+#ifndef CALL_H
+#define CALL_H
 
-#include "Support/Arguments.h"
-#include "Support/ostream.h"
+#include "ADT/PtrVec.h"
+#include "AST/Argument.h"
+#include "AST/Expression.h"
+#include "AST/SymbolReference.h"
 
-#include <cassert>
-#include <fstream>
-#include <iostream>
 #include <memory>
 
-using std::auto_ptr;
 
-
-auto_ptr<Lexer> lex;
-
-int yyparse(Parser*);
-
-void yyerror(const char *str)
+/**
+ * A call to a function or build action.
+ */
+class Call : public Expression
 {
-	assert(lex.get() != NULL);
-	std::cerr << lex->Err(str);
-}
-
-int yylex(void *yylval)
-{
-	assert(lex.get() != NULL);
-	return lex->yylex((YYSTYPE*) yylval);
-}
-
-int main(int argc, char *argv[]) {
-	auto_ptr<Arguments> Args(Arguments::Parse(argc, argv));
-	if (!Args.get())
+public:
+	Call(SymbolReference *fn, PtrVec<Argument>& args,
+	     const SourceRange& loc)
+		: Expression(fn->getType(), loc), fn(fn), args(args)
 	{
-		Arguments::Usage(std::cerr, argv[0]);
-		return 1;
 	}
 
-	std::ifstream infile(Args->input.c_str());
+	~Call() { for (auto *a : args) delete a; }
 
-	bool outputIsFile = (Args->output.length() > 0);
-	std::ofstream outfile;
-	if (outputIsFile)
-		outfile.open(Args->output.c_str());
+	virtual bool isStatic() const { return false; }
+	virtual void PrettyPrint(std::ostream&, int indent = 0) const;
 
-	lex.reset(new Lexer(Args->input));
-	lex->switch_streams(&infile, &(outputIsFile ? outfile : std::cout));
+private:
+	std::auto_ptr<SymbolReference> fn;
+	PtrVec<Argument> args;
+};
 
-	auto_ptr<Parser> parser(new Parser(*lex));
-	int err = yyparse(parser.get());
-
-	for (auto *err : parser->errors())
-		std::cerr << *err << std::endl;
-
-	if (err != 0)
-	{
-		std::cerr
-			<< Bold << "Fabrique:"
-			<< Red << " failed to parse "
-			<< Magenta << Args->input
-			<< ResetAll
-			<< std::endl
-			;
-
-		return 1;
-	}
-
-	auto& root = parser->getRoot();
-	std::cout << root;
-
-	return 0;
-}
+#endif

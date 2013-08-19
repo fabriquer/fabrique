@@ -1,4 +1,4 @@
-/** @file driver.cc    Driver for the fabrique compiler. */
+/** @file Identifier.h    Declaration of @ref Identifier. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,76 +29,40 @@
  * SUCH DAMAGE.
  */
 
-#include "Parsing/Lexer.h"
-#include "Parsing/Parser.h"
-#include "Parsing/fab.yacc.h"
+#ifndef IDENTIFIER_H
+#define IDENTIFIER_H
 
-#include "Support/Arguments.h"
-#include "Support/ostream.h"
+#include "ADT/CStringRef.h"
+#include "AST/Typed.h"
+#include "Support/Location.h"
+#include "Support/Printable.h"
 
-#include <cassert>
-#include <fstream>
 #include <iostream>
-#include <memory>
+#include <string>
 
-using std::auto_ptr;
-
-
-auto_ptr<Lexer> lex;
-
-int yyparse(Parser*);
-
-void yyerror(const char *str)
+/**
+ * The name of a value, function, parameter or argument.
+ */
+class Identifier : public HasSource, public Printable
 {
-	assert(lex.get() != NULL);
-	std::cerr << lex->Err(str);
-}
-
-int yylex(void *yylval)
-{
-	assert(lex.get() != NULL);
-	return lex->yylex((YYSTYPE*) yylval);
-}
-
-int main(int argc, char *argv[]) {
-	auto_ptr<Arguments> Args(Arguments::Parse(argc, argv));
-	if (!Args.get())
+public:
+	Identifier(const std::string& s, const Type *ty, const SourceRange& loc)
+		: id(s), ty(ty), loc(loc)
 	{
-		Arguments::Usage(std::cerr, argv[0]);
-		return 1;
 	}
 
-	std::ifstream infile(Args->input.c_str());
+	bool isTyped() const { return (ty != NULL); }
+	const Type* getType() const { return ty; }
 
-	bool outputIsFile = (Args->output.length() > 0);
-	std::ofstream outfile;
-	if (outputIsFile)
-		outfile.open(Args->output.c_str());
+	const SourceRange& getSource() const { return loc; }
 
-	lex.reset(new Lexer(Args->input));
-	lex->switch_streams(&infile, &(outputIsFile ? outfile : std::cout));
+	void PrettyPrint(std::ostream&, int indent = 0) const;
+	const std::string& name() const { return id; }
 
-	auto_ptr<Parser> parser(new Parser(*lex));
-	int err = yyparse(parser.get());
+private:
+	const std::string id;
+	const Type *ty;
+	const SourceRange loc;
+};
 
-	for (auto *err : parser->errors())
-		std::cerr << *err << std::endl;
-
-	if (err != 0)
-	{
-		std::cerr
-			<< Bold << "Fabrique:"
-			<< Red << " failed to parse "
-			<< Magenta << Args->input
-			<< ResetAll
-			<< std::endl
-			;
-
-		return 1;
-	}
-
-	auto& root = parser->getRoot();
-	std::cout << root;
-
-	return 0;
-}
+#endif

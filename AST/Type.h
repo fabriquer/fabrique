@@ -1,4 +1,4 @@
-/** @file driver.cc    Driver for the fabrique compiler. */
+/** @file Type.h    Declaration of @ref Type. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,76 +29,47 @@
  * SUCH DAMAGE.
  */
 
-#include "Parsing/Lexer.h"
-#include "Parsing/Parser.h"
-#include "Parsing/fab.yacc.h"
+#ifndef TYPE_H
+#define TYPE_H
 
-#include "Support/Arguments.h"
-#include "Support/ostream.h"
+#include "ADT/PtrVec.h"
+#include "Support/Printable.h"
 
 #include <cassert>
-#include <fstream>
-#include <iostream>
-#include <memory>
-
-using std::auto_ptr;
+#include <string>
 
 
-auto_ptr<Lexer> lex;
-
-int yyparse(Parser*);
-
-void yyerror(const char *str)
+/**
+ * The name of a value, function, parameter or argument.
+ */
+class Type : public Printable
 {
-	assert(lex.get() != NULL);
-	std::cerr << lex->Err(str);
-}
+public:
+	static const Type& GetSupertype(const Type&, const Type&);
+	static Type* Create(const std::string&, const PtrVec<Type>& params);
 
-int yylex(void *yylval)
-{
-	assert(lex.get() != NULL);
-	return lex->yylex((YYSTYPE*) yylval);
-}
+	std::string str() const;
+	const std::string& name() const;
+	void PrettyPrint(std::ostream&, int indent = 0) const;
 
-int main(int argc, char *argv[]) {
-	auto_ptr<Arguments> Args(Arguments::Parse(argc, argv));
-	if (!Args.get())
+	bool operator == (const Type&) const;
+	bool operator < (const Type& t) const { return isSubtype(t); }
+	bool operator > (const Type& t) const { return isSupertype(t); }
+
+	bool isSubtype(const Type&) const;
+	bool isSupertype(const Type&) const;
+
+	bool isListOf(const Type&) const;
+
+private:
+	Type(const std::string& s, const PtrVec<Type>& params)
+		: typeName(s), params(params)
 	{
-		Arguments::Usage(std::cerr, argv[0]);
-		return 1;
+		assert(!s.empty());
 	}
 
-	std::ifstream infile(Args->input.c_str());
+	const std::string typeName;
+	const PtrVec<Type> params;
+};
 
-	bool outputIsFile = (Args->output.length() > 0);
-	std::ofstream outfile;
-	if (outputIsFile)
-		outfile.open(Args->output.c_str());
-
-	lex.reset(new Lexer(Args->input));
-	lex->switch_streams(&infile, &(outputIsFile ? outfile : std::cout));
-
-	auto_ptr<Parser> parser(new Parser(*lex));
-	int err = yyparse(parser.get());
-
-	for (auto *err : parser->errors())
-		std::cerr << *err << std::endl;
-
-	if (err != 0)
-	{
-		std::cerr
-			<< Bold << "Fabrique:"
-			<< Red << " failed to parse "
-			<< Magenta << Args->input
-			<< ResetAll
-			<< std::endl
-			;
-
-		return 1;
-	}
-
-	auto& root = parser->getRoot();
-	std::cout << root;
-
-	return 0;
-}
+#endif

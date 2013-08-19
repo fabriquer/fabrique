@@ -1,4 +1,4 @@
-/** @file driver.cc    Driver for the fabrique compiler. */
+/** @file Printable.h    Declaration of the @ref Printable interface. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,76 +29,47 @@
  * SUCH DAMAGE.
  */
 
-#include "Parsing/Lexer.h"
-#include "Parsing/Parser.h"
-#include "Parsing/fab.yacc.h"
+#ifndef PRINTABLE_H
+#define PRINTABLE_H
 
-#include "Support/Arguments.h"
-#include "Support/ostream.h"
+#include "ADT/PtrVec.h"
 
-#include <cassert>
-#include <fstream>
-#include <iostream>
-#include <memory>
-
-using std::auto_ptr;
+#include <ostream>
 
 
-auto_ptr<Lexer> lex;
-
-int yyparse(Parser*);
-
-void yyerror(const char *str)
+/**
+ * A thing that can be pretty-printed.
+ */
+class Printable
 {
-	assert(lex.get() != NULL);
-	std::cerr << lex->Err(str);
-}
+public:
+	/**
+	 * Print a human-readable representation to an output stream
+	 * and return that output stream.
+	 */
+	virtual void PrettyPrint(std::ostream&, int indent = 0) const = 0;
+};
 
-int yylex(void *yylval)
+
+class Join
 {
-	assert(lex.get() != NULL);
-	return lex->yylex((YYSTYPE*) yylval);
-}
+public:
+	static Join csv(const PtrVec<Printable>& p) { return Join(", ", p); }
+	static Join ssv(const PtrVec<Printable>& p) { return Join(" ", p); }
 
-int main(int argc, char *argv[]) {
-	auto_ptr<Arguments> Args(Arguments::Parse(argc, argv));
-	if (!Args.get())
+	Join(std::string j, const PtrVec<Printable>& p)
+		: joinStr(j), objects(p)
 	{
-		Arguments::Usage(std::cerr, argv[0]);
-		return 1;
 	}
 
-	std::ifstream infile(Args->input.c_str());
+	void Print(std::ostream&) const;
 
-	bool outputIsFile = (Args->output.length() > 0);
-	std::ofstream outfile;
-	if (outputIsFile)
-		outfile.open(Args->output.c_str());
+private:
+	const std::string joinStr;
+	const PtrVec<Printable>& objects;
+};
 
-	lex.reset(new Lexer(Args->input));
-	lex->switch_streams(&infile, &(outputIsFile ? outfile : std::cout));
+std::ostream& operator<< (std::ostream& out, const Printable& p);
+std::ostream& operator<< (std::ostream&, const Join&);
 
-	auto_ptr<Parser> parser(new Parser(*lex));
-	int err = yyparse(parser.get());
-
-	for (auto *err : parser->errors())
-		std::cerr << *err << std::endl;
-
-	if (err != 0)
-	{
-		std::cerr
-			<< Bold << "Fabrique:"
-			<< Red << " failed to parse "
-			<< Magenta << Args->input
-			<< ResetAll
-			<< std::endl
-			;
-
-		return 1;
-	}
-
-	auto& root = parser->getRoot();
-	std::cout << root;
-
-	return 0;
-}
+#endif

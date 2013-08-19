@@ -1,4 +1,4 @@
-/** @file driver.cc    Driver for the fabrique compiler. */
+/** @file literals.h    Declaration of several literal expression types. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,76 +29,69 @@
  * SUCH DAMAGE.
  */
 
-#include "Parsing/Lexer.h"
-#include "Parsing/Parser.h"
-#include "Parsing/fab.yacc.h"
+#ifndef LITERALS_H
+#define LITERALS_H
 
-#include "Support/Arguments.h"
-#include "Support/ostream.h"
+#include "ADT/CStringRef.h"
+#include "AST/Expression.h"
 
-#include <cassert>
-#include <fstream>
-#include <iostream>
-#include <memory>
-
-using std::auto_ptr;
+#include <string>
 
 
-auto_ptr<Lexer> lex;
-
-int yyparse(Parser*);
-
-void yyerror(const char *str)
+/**
+ * An expression whose value is literally expressed in the source file.
+ */
+template<class T>
+class Literal : public Expression
 {
-	assert(lex.get() != NULL);
-	std::cerr << lex->Err(str);
-}
+public:
+	const T& value() const { return val; }
+	bool isStatic() const { return true; }
 
-int yylex(void *yylval)
-{
-	assert(lex.get() != NULL);
-	return lex->yylex((YYSTYPE*) yylval);
-}
-
-int main(int argc, char *argv[]) {
-	auto_ptr<Arguments> Args(Arguments::Parse(argc, argv));
-	if (!Args.get())
+protected:
+	Literal(const T& value, const Type& ty, const SourceRange& loc)
+		: Expression(ty, loc), val(value)
 	{
-		Arguments::Usage(std::cerr, argv[0]);
-		return 1;
 	}
 
-	std::ifstream infile(Args->input.c_str());
+private:
+	const T val;
+};
 
-	bool outputIsFile = (Args->output.length() > 0);
-	std::ofstream outfile;
-	if (outputIsFile)
-		outfile.open(Args->output.c_str());
 
-	lex.reset(new Lexer(Args->input));
-	lex->switch_streams(&infile, &(outputIsFile ? outfile : std::cout));
-
-	auto_ptr<Parser> parser(new Parser(*lex));
-	int err = yyparse(parser.get());
-
-	for (auto *err : parser->errors())
-		std::cerr << *err << std::endl;
-
-	if (err != 0)
+class BoolLiteral : public Literal<bool>
+{
+public:
+	BoolLiteral(bool value, const Type& ty, const SourceRange& loc)
+		: Literal(value, ty, loc)
 	{
-		std::cerr
-			<< Bold << "Fabrique:"
-			<< Red << " failed to parse "
-			<< Magenta << Args->input
-			<< ResetAll
-			<< std::endl
-			;
-
-		return 1;
 	}
 
-	auto& root = parser->getRoot();
-	std::cout << root;
+	void PrettyPrint(std::ostream&, int indent = 0) const;
+};
 
-	return 0;
-}
+class IntLiteral : public Literal<int>
+{
+public:
+	IntLiteral(int value, const Type& ty, const SourceRange& loc)
+		: Literal(value, ty, loc)
+	{
+	}
+
+	void PrettyPrint(std::ostream&, int indent = 0) const;
+};
+
+
+class StringLiteral : public Literal<std::string>
+{
+public:
+	StringLiteral(const std::string& s, const Type& ty,
+	              const SourceRange& loc)
+		: Literal(s, ty, loc)
+	{
+	}
+
+	void PrettyPrint(std::ostream&, int indent = 0) const;
+};
+
+#endif

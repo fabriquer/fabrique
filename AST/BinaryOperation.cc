@@ -1,4 +1,4 @@
-/** @file driver.cc    Driver for the fabrique compiler. */
+/** @file BinaryOperation.cc    Definition of @ref BinaryOperation. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,76 +29,56 @@
  * SUCH DAMAGE.
  */
 
-#include "Parsing/Lexer.h"
-#include "Parsing/Parser.h"
-#include "Parsing/fab.yacc.h"
-
-#include "Support/Arguments.h"
+#include "BinaryOperation.h"
 #include "Support/ostream.h"
-
-#include <cassert>
-#include <fstream>
-#include <iostream>
-#include <memory>
-
-using std::auto_ptr;
+using std::ostream;
 
 
-auto_ptr<Lexer> lex;
-
-int yyparse(Parser*);
-
-void yyerror(const char *str)
+BinaryOperation* BinaryOperation::Create(Expression *lhs,
+                                         Operator op,
+                                         Expression *rhs,
+                                         const Type &resultTy)
 {
-	assert(lex.get() != NULL);
-	std::cerr << lex->Err(str);
+	return new BinaryOperation(lhs, op, rhs, resultTy,
+	                           SourceRange::Over(lhs, rhs));
 }
 
-int yylex(void *yylval)
+BinaryOperation::Operator BinaryOperation::Op(CStringRef o)
 {
-	assert(lex.get() != NULL);
-	return lex->yylex((YYSTYPE*) yylval);
+	Operator op;
+
+	if (o == "++") op = Concatenate;
+	else if (o == "::") op = Prefix;
+	else if (o == ".+") op = ScalarAdd;
+	else op = Invalid;
+
+	assert(o == OpStr(op));
+
+	return op;
 }
 
-int main(int argc, char *argv[]) {
-	auto_ptr<Arguments> Args(Arguments::Parse(argc, argv));
-	if (!Args.get())
+std::string BinaryOperation::OpStr(Operator op)
+{
+	switch (op)
 	{
-		Arguments::Usage(std::cerr, argv[0]);
-		return 1;
+		case Concatenate:       return "++";
+		case Prefix:            return "::";
+		case ScalarAdd:         return ".+";
+		case Invalid:           assert(false && "op == Invalid");
 	}
 
-	std::ifstream infile(Args->input.c_str());
+	assert(false && "unhandled Operator type");
+}
 
-	bool outputIsFile = (Args->output.length() > 0);
-	std::ofstream outfile;
-	if (outputIsFile)
-		outfile.open(Args->output.c_str());
+bool BinaryOperation::isStatic() const
+{
+	return (LHS->isStatic() and RHS->isStatic());
+}
 
-	lex.reset(new Lexer(Args->input));
-	lex->switch_streams(&infile, &(outputIsFile ? outfile : std::cout));
 
-	auto_ptr<Parser> parser(new Parser(*lex));
-	int err = yyparse(parser.get());
-
-	for (auto *err : parser->errors())
-		std::cerr << *err << std::endl;
-
-	if (err != 0)
-	{
-		std::cerr
-			<< Bold << "Fabrique:"
-			<< Red << " failed to parse "
-			<< Magenta << Args->input
-			<< ResetAll
-			<< std::endl
-			;
-
-		return 1;
-	}
-
-	auto& root = parser->getRoot();
-	std::cout << root;
-
-	return 0;
+void BinaryOperation::PrettyPrint(ostream& out, int indent) const
+{
+	LHS->PrettyPrint(out, indent);
+	out << " " << Yellow << OpStr(op) << ResetAll << " ";
+	RHS->PrettyPrint(out, indent);
 }

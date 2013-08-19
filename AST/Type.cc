@@ -1,4 +1,4 @@
-/** @file driver.cc    Driver for the fabrique compiler. */
+/** @file Type.cc    Definition of @ref Type. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,76 +29,80 @@
  * SUCH DAMAGE.
  */
 
-#include "Parsing/Lexer.h"
-#include "Parsing/Parser.h"
-#include "Parsing/fab.yacc.h"
-
-#include "Support/Arguments.h"
+#include "Type.h"
 #include "Support/ostream.h"
 
-#include <cassert>
-#include <fstream>
-#include <iostream>
-#include <memory>
-
-using std::auto_ptr;
+#include <sstream>
 
 
-auto_ptr<Lexer> lex;
-
-int yyparse(Parser*);
-
-void yyerror(const char *str)
+const Type& Type::GetSupertype(const Type& x, const Type& y)
 {
-	assert(lex.get() != NULL);
-	std::cerr << lex->Err(str);
+	assert(x.isSupertype(y) or y.isSupertype(x));
+	return (x.isSupertype(y) ? x : y);
 }
 
-int yylex(void *yylval)
+
+Type* Type::Create(const std::string& name, const PtrVec<Type>& params)
 {
-	assert(lex.get() != NULL);
-	return lex->yylex((YYSTYPE*) yylval);
+	return new Type(name, params);
 }
 
-int main(int argc, char *argv[]) {
-	auto_ptr<Arguments> Args(Arguments::Parse(argc, argv));
-	if (!Args.get())
+
+bool Type::operator == (const Type& t) const
+{
+	return t.isSupertype(*this) and t.isSubtype(*this);
+}
+
+
+bool Type::isSubtype(const Type& t) const
+{
+	// for now, this is really easy...
+	return (&t == this);
+}
+
+
+bool Type::isSupertype(const Type &t) const
+{
+	// for now, this is really easy...
+	return (&t == this);
+}
+
+bool Type::isListOf(const Type& t) const
+{
+	if (typeName != "list")
+		return false;
+
+	assert(params.size() == 1);
+
+	return (t == *params[0]);
+}
+
+
+std::string Type::str() const
+{
+	std::ostringstream oss;
+	PrettyPrint(oss);
+	return oss.str();
+}
+
+
+void Type::PrettyPrint(std::ostream& out, int indent) const
+{
+	out << Blue << typeName;
+
+	if (params.size() > 0)
 	{
-		Arguments::Usage(std::cerr, argv[0]);
-		return 1;
+		out << Yellow << '[' << ResetAll;
+
+		for (size_t i = 0; i < params.size(); )
+		{
+			out << *params[i];
+			if (++i < params.size())
+				out << Yellow << ", " << ResetAll;
+		}
+
+		out << Yellow << ']';
 	}
 
-	std::ifstream infile(Args->input.c_str());
-
-	bool outputIsFile = (Args->output.length() > 0);
-	std::ofstream outfile;
-	if (outputIsFile)
-		outfile.open(Args->output.c_str());
-
-	lex.reset(new Lexer(Args->input));
-	lex->switch_streams(&infile, &(outputIsFile ? outfile : std::cout));
-
-	auto_ptr<Parser> parser(new Parser(*lex));
-	int err = yyparse(parser.get());
-
-	for (auto *err : parser->errors())
-		std::cerr << *err << std::endl;
-
-	if (err != 0)
-	{
-		std::cerr
-			<< Bold << "Fabrique:"
-			<< Red << " failed to parse "
-			<< Magenta << Args->input
-			<< ResetAll
-			<< std::endl
-			;
-
-		return 1;
-	}
-
-	auto& root = parser->getRoot();
-	std::cout << root;
-
-	return 0;
+	out << ResetAll;
 }

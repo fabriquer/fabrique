@@ -1,4 +1,4 @@
-/** @file driver.cc    Driver for the fabrique compiler. */
+/** @file Parameter.h    Declaration of @ref Parameter. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,76 +29,38 @@
  * SUCH DAMAGE.
  */
 
-#include "Parsing/Lexer.h"
-#include "Parsing/Parser.h"
-#include "Parsing/fab.yacc.h"
+#ifndef PARAMETER_H
+#define PARAMETER_H
 
-#include "Support/Arguments.h"
-#include "Support/ostream.h"
+#include "Expression.h"
+#include "Identifier.h"
 
-#include <cassert>
-#include <fstream>
-#include <iostream>
 #include <memory>
 
-using std::auto_ptr;
 
-
-auto_ptr<Lexer> lex;
-
-int yyparse(Parser*);
-
-void yyerror(const char *str)
+/**
+ * A formal parameter in a @ref Function.
+ */
+class Parameter : public Expression
 {
-	assert(lex.get() != NULL);
-	std::cerr << lex->Err(str);
-}
-
-int yylex(void *yylval)
-{
-	assert(lex.get() != NULL);
-	return lex->yylex((YYSTYPE*) yylval);
-}
-
-int main(int argc, char *argv[]) {
-	auto_ptr<Arguments> Args(Arguments::Parse(argc, argv));
-	if (!Args.get())
+public:
+	Parameter(Identifier *id, Expression *e)
+		: Expression(e ? e->getType() : *id->getType(),
+		             SourceRange::Over(id, e)),
+		  name(id), expr(e)
 	{
-		Arguments::Usage(std::cerr, argv[0]);
-		return 1;
+		assert(id != NULL);
 	}
 
-	std::ifstream infile(Args->input.c_str());
+	const Identifier& getName() const { return *name; }
+	const Expression& getValue() const { return *expr; }
 
-	bool outputIsFile = (Args->output.length() > 0);
-	std::ofstream outfile;
-	if (outputIsFile)
-		outfile.open(Args->output.c_str());
+	virtual bool isStatic() const { return false; }
+	virtual void PrettyPrint(std::ostream&, int indent = 0) const;
 
-	lex.reset(new Lexer(Args->input));
-	lex->switch_streams(&infile, &(outputIsFile ? outfile : std::cout));
+private:
+	std::auto_ptr<Identifier> name;
+	std::auto_ptr<Expression> expr;
+};
 
-	auto_ptr<Parser> parser(new Parser(*lex));
-	int err = yyparse(parser.get());
-
-	for (auto *err : parser->errors())
-		std::cerr << *err << std::endl;
-
-	if (err != 0)
-	{
-		std::cerr
-			<< Bold << "Fabrique:"
-			<< Red << " failed to parse "
-			<< Magenta << Args->input
-			<< ResetAll
-			<< std::endl
-			;
-
-		return 1;
-	}
-
-	auto& root = parser->getRoot();
-	std::cout << root;
-
-	return 0;
-}
+#endif
