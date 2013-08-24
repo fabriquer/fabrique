@@ -200,6 +200,24 @@ Call* Parser::CreateCall(Identifier *name, PtrVec<Argument> *args)
 }
 
 
+Conditional* Parser::IfElse(SourceRange *ifLoc, Expression *condition,
+	                    Expression *thenResult, Expression *elseResult)
+{
+	auto_ptr<SourceRange> src(ifLoc);
+
+	const Type &tt(thenResult->getType()), &et(elseResult->getType());
+	if (!tt.isSupertype(et) and !et.isSupertype(tt))
+	{
+		ReportError("incompatible types",
+		            SourceRange::Over(thenResult, elseResult));
+		return NULL;
+	}
+
+	return new Conditional(*ifLoc, condition, thenResult, elseResult,
+	                       Type::GetSupertype(tt, et));
+}
+
+
 List* Parser::ListOf(ExprVec* elements)
 {
 	auto_ptr<ExprVec> e(elements);

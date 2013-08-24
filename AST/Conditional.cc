@@ -1,4 +1,4 @@
-/** @file ast.h    Meta-include file for all AST node types. */
+/** @file Conditional.cc    Definition of @ref Conditional. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,24 +29,31 @@
  * SUCH DAMAGE.
  */
 
-#ifndef AST_H
-#define AST_H
+#include "AST/Conditional.h"
+#include "Support/ostream.h"
 
-#include "Action.h"
-#include "Argument.h"
-#include "BinaryOperation.h"
-#include "Call.h"
-#include "Conditional.h"
-#include "File.h"
-#include "FileList.h"
-#include "Function.h"
-#include "Identifier.h"
-#include "List.h"
-#include "Parameter.h"
-#include "SymbolReference.h"
-#include "Type.h"
-#include "Value.h"
 
-#include "literals.h"
+bool Conditional::isStatic() const
+{
+	// TODO: if the condition is static, we only need *either* the then
+	//       or the else clause to be static too.
+	return condition->isStatic()
+		and thenResult->isStatic()
+		and elseResult->isStatic()
+		;
+}
 
-#endif
+
+void Conditional::PrettyPrint(std::ostream& out, int indent) const
+{
+	out
+		<< Yellow << "if ("
+		<< *condition
+		<< Yellow << ") { "
+		<< *thenResult
+		<< Yellow << "} else {"
+		<< *elseResult
+		<< Yellow << "}"
+		<< ResetAll
+		;
+}

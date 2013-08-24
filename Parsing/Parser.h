@@ -94,6 +94,22 @@ public:
 	Call* CreateCall(Identifier*, PtrVec<Argument>*);
 
 
+	/**
+	 * A conditional if-then-else expression
+	 * (not a statement, an expression).
+	 *
+	 * The expression (if condition foo else bar) evaluates to either
+	 * @a foo or @a bar, depending on @a condition.
+	 * It can also be writen as:
+	 *
+	 * if (condition)
+	 *     foo
+	 * else
+	 *     bar
+	 */
+	Conditional* IfElse(SourceRange *ifLocation, Expression *condition,
+	                    Expression *thenResult, Expression *elseResult);
+
 
 	// files
 	/**

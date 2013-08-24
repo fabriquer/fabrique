@@ -1,4 +1,4 @@
-/** @file ast.h    Meta-include file for all AST node types. */
+/** @file Conditional.h    Declaration of @ref Conditional. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,24 +29,37 @@
  * SUCH DAMAGE.
  */
 
-#ifndef AST_H
-#define AST_H
+#ifndef CONDITIONAL_H
+#define CONDITIONAL_H
 
-#include "Action.h"
-#include "Argument.h"
-#include "BinaryOperation.h"
-#include "Call.h"
-#include "Conditional.h"
-#include "File.h"
-#include "FileList.h"
-#include "Function.h"
-#include "Identifier.h"
-#include "List.h"
-#include "Parameter.h"
-#include "SymbolReference.h"
-#include "Type.h"
-#include "Value.h"
+#include "Expression.h"
 
-#include "literals.h"
+
+/**
+ * A function allows users to create build abstractions.
+ */
+class Conditional : public Expression
+{
+public:
+	Conditional(const SourceRange& ifLoc, Expression *condition,
+	            Expression *thenResult, Expression *elseResult,
+	            const Type& resultTy)
+		: Expression(resultTy,
+		             SourceRange(ifLoc.begin,
+		                         elseResult->getSource().end)),
+		  condition(condition),
+		  thenResult(thenResult),
+		  elseResult(elseResult)
+	{
+	}
+
+	virtual bool isStatic() const;
+	virtual void PrettyPrint(std::ostream&, int indent = 0) const;
+
+private:
+	std::auto_ptr<Expression> condition;
+	std::auto_ptr<Expression> thenResult;
+	std::auto_ptr<Expression> elseResult;
+};
 
 #endif

@@ -75,6 +75,7 @@ void Append(PtrVec<T>*& target, PtrVec<T>* source, const T *nextElement)
 
 %token WHITESPACE
 %token IDENTIFIER FILENAME
+%token IF ELSE
 %token ACTION FILE FILES FUNCTION RETURN
 %token OPERATOR
 %token TRUE FALSE
@@ -109,6 +110,7 @@ expr:
 expression:
 	literal
 	| action
+	| conditional
 	| fileList
 	| function
 	| call
@@ -129,6 +131,12 @@ literal:
 
 action:
 	ACTION '(' args ')'	{ $$.expr = p->DefineAction($3.args, $1.src); }
+	;
+
+conditional:
+	IF expr expr ELSE expr	{
+		$$.expr = p->IfElse($1.src, $2.expr, $3.expr, $5.expr);
+	}
 	;
 
 fileList:

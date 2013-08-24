@@ -72,6 +72,8 @@ whitespace	[ \t\r]+
 true							return TRUE;
 false							return FALSE;
 {digit}+		yylval->i = atoi(yytext);	return INT_LITERAL;
+if			setRange(yylval);		return IF;
+else			setRange(yylval);		return ELSE;
 action			setRange(yylval);		return ACTION;
 files			setRange(yylval);		return FILES;
 file			setRange(yylval);		return FILE;
