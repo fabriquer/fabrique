@@ -110,10 +110,10 @@ expr:
 expression:
 	literal
 	| action
+	| call
 	| conditional
 	| fileList
 	| function
-	| call
 	| identifier		{ $$.expr = p->Reference($1.id); }
 	| '(' expr ')'		{ $$.expr = $2.expr; }
 	| '[' exprlist ']'	{ $$.expr = p->ListOf($2.exprs); }
@@ -131,6 +131,10 @@ literal:
 
 action:
 	ACTION '(' args ')'	{ $$.expr = p->DefineAction($3.args, $1.src); }
+	;
+
+call:
+	identifier '(' args ')' { $$.expr = p->CreateCall($1.id, $3.args); }
 	;
 
 conditional:
@@ -172,10 +176,6 @@ function:
 
 fndecl:
 	FUNCTION		{ p->EnterScope(); p->SaveLoc(); }
-	;
-
-call:
-	identifier '(' args ')' { $$.expr = p->CreateCall($1.id, $3.args); }
 	;
 
 identifier:
