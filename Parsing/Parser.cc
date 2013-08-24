@@ -366,8 +366,7 @@ BinaryOperation* Parser::Prefix(Expression *lhs, Expression *rhs)
 		return NULL;
 	}
 
-	return BinaryOperation::Create(lhs, BinaryOperation::Prefix, rhs,
-	                               Type::GetSupertype(lt, rt));
+	return BinaryOperation::Create(lhs, BinaryOperation::Prefix, rhs, rt);
 }
 
 
