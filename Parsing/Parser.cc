@@ -237,26 +237,6 @@ List* Parser::ListOf(ExprVec* elements)
 }
 
 
-#if 0
-List* List::Take(ExprVec* elements)
-{
-	std::auto_ptr<PtrVec<Expression> > e(elements);
-
-	assert(elements != NULL);
-	// TODO: type
-	return NULL;
-	//return new List(*e, NULL);
-}
-
-List* List::of(ExprVec& elements)
-{
-	// TODO: actual type
-	return NULL;
-	//return new List(elements, NULL);
-}
-#endif
-
-
 File* Parser::Source(string *name, SourceRange *source, PtrVec<Argument> *args)
 {
 	auto_ptr<string> n(name);
@@ -269,64 +249,6 @@ File* Parser::Source(string *name, SourceRange *source, PtrVec<Argument> *args)
 
 	return new File(*name, args ? *args : empty, *getType("file"), *source);
 }
-
-#if 0
-
-	/**
-	 * Create a target file, which only exists at build time as a result
-	 * of a build action.
-	 */
-	File* Target(string *name, const SourceRange *source,
-	             PtrVec<Argument> *arguments = NULL);
-File* File::Source(string *name, PtrVec<Argument> *args, const Location& loc)
-{
-	std::auto_ptr<string> n(name);
-	std::auto_ptr<PtrVec<Argument> > a(args);
-	static PtrVec<Argument> empty;
-
-	assert(name != NULL);
-
-	// TODO: type
-	return NULL;
-	//return new File(*name, args ? *args : empty, NULL);
-}
-
-File* File::Source(const File *orig, PtrVec<Argument> *arguments)
-{
-	//! This is where (all concatenated) arguments go.
-	PtrVec<Argument> args(orig->args);
-
-	std::set<string> argNames;
-	for (auto *a : args)
-		if (a->hasName())
-			argNames.insert(a->getName().name());
-
-	for (auto *a : *arguments)
-	{
-		auto *arg = dynamic_cast<const Argument*>(a);
-		assert(arg->hasName());
-		if (argNames.find(arg->getName().name()) == argNames.end())
-			args.push_back(arg);
-	}
-
-	// TODO: type
-	return new File(orig->name, args, NULL);
-}
-
-
-File* File::Target(string *name, PtrVec<Argument> *args)
-{
-	std::auto_ptr<string> n(name);
-	std::auto_ptr<PtrVec<Argument> > a(args);
-	static PtrVec<Argument> empty;
-
-	assert(name != NULL);
-
-	// TODO: type
-	return NULL;
-	//return new File(*name, args ? *args : empty, NULL);
-}
-#endif
 
 
 FileList* Parser::Files(PtrVec<File> *files, PtrVec<Argument> *args)
@@ -341,19 +263,6 @@ FileList* Parser::Files(PtrVec<File> *files, PtrVec<Argument> *args)
 	return new FileList(*files, args ? *args : emptyArgs, *ty, loc);
 }
 
-#if 0
-FileList* FileList::Take(PtrVec<File> *files, PtrVec<Argument> *args)
-{
-	std::auto_ptr<PtrVec<File> > f(files);
-
-	std::auto_ptr<PtrVec<Argument> > a(args);
-	static PtrVec<Argument> emptyArgs;
-
-	// TODO: type
-	return NULL;
-	//return new FileList(*f, args ? *args : emptyArgs, NULL);
-}
-#endif
 
 BinaryOperation* Parser::Concat(Expression *lhs, Expression *rhs)
 {
