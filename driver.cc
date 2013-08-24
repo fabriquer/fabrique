@@ -61,21 +61,21 @@ int yylex(void *yylval)
 }
 
 int main(int argc, char *argv[]) {
-	auto_ptr<Arguments> Args(Arguments::Parse(argc, argv));
-	if (!Args.get())
+	auto_ptr<Arguments> args(Arguments::Parse(argc, argv));
+	if (!args.get())
 	{
 		Arguments::Usage(std::cerr, argv[0]);
 		return 1;
 	}
 
-	std::ifstream infile(Args->input.c_str());
+	std::ifstream infile(args->input.c_str());
 
-	bool outputIsFile = (Args->output.length() > 0);
+	bool outputIsFile = (args->output.length() > 0);
 	std::ofstream outfile;
 	if (outputIsFile)
-		outfile.open(Args->output.c_str());
+		outfile.open(args->output.c_str());
 
-	lex.reset(new Lexer(Args->input));
+	lex.reset(new Lexer(args->input));
 	lex->switch_streams(&infile, &(outputIsFile ? outfile : std::cout));
 
 	auto_ptr<Parser> parser(new Parser(*lex));
@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
 		std::cerr
 			<< Bold << "Fabrique:"
 			<< Red << " failed to parse "
-			<< Magenta << Args->input
+			<< Magenta << args->input
 			<< ResetAll
 			<< std::endl
 			;
