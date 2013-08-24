@@ -40,6 +40,8 @@ void Arguments::Usage(std::ostream& out, const string& name)
 		<< "Usage:  " << name << " [options] <input-filename>\n"
 		<< "\n"
 		<< "Options:\n"
+		<< "  --print              pretty-print the parsed file\n"
+		<< "\n"
 		<< "  -o output            output filename (default: stdout)\n"
 		<< "\n"
 		;
@@ -49,6 +51,7 @@ Arguments* Arguments::Parse(int argc, char *argv[])
 {
 	string input;
 	string output;
+	bool prettyPrint = false;
 	string *next = NULL;
 
 	for (int i = 1; i < argc; i++)
@@ -64,6 +67,10 @@ Arguments* Arguments::Parse(int argc, char *argv[])
 			*next = arg;
 			next = NULL;
 		}
+		else if (arg == "--print")
+		{
+			prettyPrint = true;
+		}
 		else if (input.length() == 0)
 		{
 			input = arg;
@@ -74,5 +81,5 @@ Arguments* Arguments::Parse(int argc, char *argv[])
 		}
 	}
 
-	return new Arguments(input, output);
+	return new Arguments(input, output, prettyPrint);
 }

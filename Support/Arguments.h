@@ -47,13 +47,17 @@ public:
 	static void Usage(std::ostream&, const std::string& name);
 	static Arguments* Parse(int argc, char *argv[]);
 
-	Arguments(const std::string& input, const std::string& output)
-		: input(input), output(output)
+	const std::string input;
+	const std::string output;
+	bool prettyPrint;
+
+private:
+	Arguments(const std::string& input, const std::string& output,
+		  bool prettyPrint)
+		: input(input), output(output), prettyPrint(prettyPrint)
 	{
 	}
 
-	const std::string input;
-	const std::string output;
 };
 
 #endif

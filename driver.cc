@@ -98,7 +98,9 @@ int main(int argc, char *argv[]) {
 	}
 
 	auto& root = parser->getRoot();
-	std::cout << root;
+
+	if (args->prettyPrint)
+		std::cout << root;
 
 	return 0;
 }
