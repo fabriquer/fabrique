@@ -53,6 +53,8 @@ public:
 	void PrettyPrint(std::ostream&, int indent = 0) const;
 
 	bool operator == (const Type&) const;
+	bool operator != (const Type& t) const { return !(*this == t); }
+
 	bool operator < (const Type& t) const { return isSubtype(t); }
 	bool operator > (const Type& t) const { return isSupertype(t); }
 
