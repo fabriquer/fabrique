@@ -49,6 +49,7 @@ public:
 	                const SourceRange& loc)
 		: Expression(v->getType(), loc), id(id), val(v)
 	{
+		assert(&v->getType() != NULL);
 	}
 
 	virtual bool isStatic() const { return false; }

@@ -136,6 +136,12 @@ SymbolReference* Parser::Reference(Identifier *id)
 		return NULL;
 	}
 
+	if (&e->getType() == NULL)
+	{
+		ReportError("reference to value with unknown type", *id);
+		return NULL;
+	}
+
 	return new SymbolReference(id, e, id->getSource());
 }
 

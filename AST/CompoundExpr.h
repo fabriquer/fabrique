@@ -50,6 +50,7 @@ public:
 		: Expression(result->getType(), loc),
 		  values(values), result(result)
 	{
+		assert(result != NULL);
 	}
 
 	~CompoundExpression();
