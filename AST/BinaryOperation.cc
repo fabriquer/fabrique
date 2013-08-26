@@ -29,7 +29,7 @@
  * SUCH DAMAGE.
  */
 
-#include "BinaryOperation.h"
+#include "AST/BinaryOperation.h"
 #include "Support/ostream.h"
 using std::ostream;
 

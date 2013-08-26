@@ -29,8 +29,8 @@
  * SUCH DAMAGE.
  */
 
-#include "Identifier.h"
-#include "Type.h"
+#include "AST/Identifier.h"
+#include "AST/Type.h"
 #include "Support/ostream.h"
 
 #include <iomanip>

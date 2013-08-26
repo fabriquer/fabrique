@@ -29,7 +29,7 @@
  * SUCH DAMAGE.
  */
 
-#include "Action.h"
+#include "AST/Action.h"
 #include "Support/ostream.h"
 
 

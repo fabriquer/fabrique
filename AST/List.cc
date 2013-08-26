@@ -29,7 +29,7 @@
  * SUCH DAMAGE.
  */
 
-#include "List.h"
+#include "AST/List.h"
 #include "Support/ostream.h"
 
 #include <cassert>

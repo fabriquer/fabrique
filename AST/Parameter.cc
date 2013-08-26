@@ -29,7 +29,7 @@
  * SUCH DAMAGE.
  */
 
-#include "Parameter.h"
+#include "AST/Parameter.h"
 
 void Parameter::PrettyPrint(std::ostream& out, int indent) const
 {

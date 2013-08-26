@@ -29,10 +29,11 @@
  * SUCH DAMAGE.
  */
 
-#include "Function.h"
-#include "Parameter.h"
-#include "Type.h"
-#include "Value.h"
+#include "AST/CompoundExpr.h"
+#include "AST/Function.h"
+#include "AST/Parameter.h"
+#include "AST/Type.h"
+#include "AST/Value.h"
 #include "Support/ostream.h"
 
 

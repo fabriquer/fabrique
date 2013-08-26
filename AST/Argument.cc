@@ -29,7 +29,7 @@
  * SUCH DAMAGE.
  */
 
-#include "Argument.h"
+#include "AST/Argument.h"
 #include "Support/ostream.h"
 
 void Argument::PrettyPrint(std::ostream& out, int indent) const

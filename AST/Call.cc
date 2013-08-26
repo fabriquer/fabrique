@@ -29,7 +29,7 @@
  * SUCH DAMAGE.
  */
 
-#include "Call.h"
+#include "AST/Call.h"
 #include "Support/ostream.h"
 
 

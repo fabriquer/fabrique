@@ -29,8 +29,8 @@
  * SUCH DAMAGE.
  */
 
-#include "Type.h"
-#include "Value.h"
+#include "AST/Type.h"
+#include "AST/Value.h"
 #include "Support/ostream.h"
 
 #include <iomanip>

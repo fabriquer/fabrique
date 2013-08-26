@@ -29,7 +29,7 @@
  * SUCH DAMAGE.
  */
 
-#include "SymbolReference.h"
+#include "AST/SymbolReference.h"
 using std::ostream;
 
 

@@ -29,7 +29,7 @@
  * SUCH DAMAGE.
  */
 
-#include "literals.h"
+#include "AST/literals.h"
 #include "Support/ostream.h"
 
 using std::ostream;

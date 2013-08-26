@@ -29,8 +29,8 @@
  * SUCH DAMAGE.
  */
 
-#include "Lexer.h"
-#include "Parser.h"
+#include "Parsing/Lexer.h"
+#include "Parsing/Parser.h"
 
 using std::auto_ptr;
 using std::string;

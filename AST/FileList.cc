@@ -29,7 +29,7 @@
  * SUCH DAMAGE.
  */
 
-#include "FileList.h"
+#include "AST/FileList.h"
 #include "Support/ostream.h"
 
 
