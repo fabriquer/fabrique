@@ -58,6 +58,9 @@ public:
 	bool operator < (const Type& t) const { return isSubtype(t); }
 	bool operator > (const Type& t) const { return isSupertype(t); }
 
+	const PtrVec<Type>& typeParameters() const { return params; }
+	const Type& operator [] (size_t i) const;
+
 	bool isSubtype(const Type&) const;
 	bool isSupertype(const Type&) const;
 

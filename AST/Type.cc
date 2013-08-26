@@ -54,6 +54,12 @@ bool Type::operator == (const Type& t) const
 }
 
 
+const Type& Type::operator [] (size_t i) const
+{
+	assert(params.size() > i);
+	return *params[i];
+}
+
 bool Type::isSubtype(const Type& t) const
 {
 	// for now, this is really easy...
