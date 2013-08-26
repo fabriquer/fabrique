@@ -113,6 +113,7 @@ expression:
 	| action
 	| call
 	| conditional
+	| file
 	| fileList
 	| function
 	| identifier		{ $$.expr = p->Reference($1.id); }
