@@ -234,7 +234,7 @@ List* Parser::ListOf(ExprVec* elements)
 }
 
 
-CompoundExpression* Parser::CompoundExpr(Expression *result,
+CompoundExpression* Parser::CompoundExpr(Expression *result, SourceRange *b,
 	                                 PtrVec<Value> *val)
 {
 	auto_ptr<Expression> e(result);
@@ -243,10 +243,9 @@ CompoundExpression* Parser::CompoundExpr(Expression *result,
 
 	auto& values = val ? *val : empty;
 	bool haveValues = (val != NULL) and !val->empty();
+	SourceRange vbegin = (haveValues ? *val->begin() : result)->getSource();
 
-	Location begin =
-		(haveValues ? *val->begin() : result)->getSource().begin;
-
+	Location begin = (b ? *b : vbegin).begin;
 	Location end = lex.CurrentTokenRange().end;
 
 	return new CompoundExpression(values, e.release(),

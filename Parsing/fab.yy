@@ -140,6 +140,16 @@ call:
 	identifier '(' args ')' { $$.expr = p->CreateCall($1.id, $3.args); }
 	;
 
+compoundExpr:
+	expr			{ $$.compound = p->CompoundExpr($1.expr); }
+	| '{' expr '}'		{
+		$$.compound = p->CompoundExpr($2.expr, $1.src);
+	}
+	| '{' values expr '}'	{
+		$$.compound = p->CompoundExpr($3.expr, $1.src, $2.values);
+	}
+	;
+
 conditional:
 	IF expr expr ELSE expr	{
 		$$.expr = p->IfElse($1.src, $2.expr, $3.expr, $5.expr);
@@ -182,14 +192,6 @@ function:
 
 fndecl:
 	FUNCTION		{ p->EnterScope(); p->SaveLoc(); }
-	;
-
-compoundExpr:
-	expr			{ $$.compound = p->CompoundExpr($1.expr); }
-	| '{' expr '}'		{ $$.compound = p->CompoundExpr($2.expr); }
-	| '{' values expr '}'	{
-		$$.compound = p->CompoundExpr($3.expr, $2.values);
-	}
 	;
 
 identifier:

@@ -87,6 +87,7 @@ public:
 	List* ListOf(ExprVec* elements);
 
 	CompoundExpression* CompoundExpr(Expression *result,
+	                                 SourceRange *begin = NULL,
 	                                 PtrVec<Value> *values = NULL);
 
 

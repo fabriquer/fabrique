@@ -80,11 +80,11 @@ files			setRange(yylval);		return FILES;
 file			setRange(yylval);		return FILE;
 function		setRange(yylval);		return FUNCTION;
 return			setRange(yylval);		return RETURN;
-"++"							return CONCAT;
-"::"							return PREFIX;
-".+"							return SCALAR_ADD;
-"{"|"}"|"("|")"|"["|"]"					return *yytext;
-":"|","|";"|"="						return *yytext;
+"++"			setRange(yylval);		return CONCAT;
+"::"			setRange(yylval);		return PREFIX;
+".+"			setRange(yylval);		return SCALAR_ADD;
+"{"|"}"|"("|")"|"["|"]"	setRange(yylval);		return *yytext;
+":"|","|";"|"="		setRange(yylval);		return *yytext;
 {identifier}		setCString(yylval);		return IDENTIFIER;
 {filename}		setCString(yylval);		return FILENAME;
 {tab}			yycolumn += 7;			/* ignore */
