@@ -33,8 +33,8 @@
 #define FUNCTION_H
 
 #include "AST/Expression.h"
-#include "AST/CompoundExpr.h"
 
+class CompoundExpression;
 class Parameter;
 class Type;
 class Value;
