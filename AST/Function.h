@@ -1,4 +1,4 @@
-/** @file Action.h    Declaration of @ref Action. */
+/** @file Function.h    Declaration of @ref Function. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
