@@ -43,8 +43,9 @@ comment		#.*\n
 identifier	[_a-zA-Z][_a-zA-Z0-9]*
 filename	[_a-zA-Z0-9\.\/]+
 digit		[0-9]
+tab		[\t]
 newline		[\n]
-whitespace	[ \t\r]+
+whitespace	[ \r]+
 
 %%
 
@@ -86,5 +87,6 @@ return			setRange(yylval);		return RETURN;
 ":"|","|";"|"="						return *yytext;
 {identifier}		setCString(yylval);		return IDENTIFIER;
 {filename}		setCString(yylval);		return FILENAME;
+{tab}			yycolumn += 7;			/* ignore */
 {newline}		yycolumn--;			/* ignore */
 {whitespace}						/* ignore */
