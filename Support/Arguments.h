@@ -49,12 +49,14 @@ public:
 
 	const std::string input;
 	const std::string output;
+	const std::string format;
 	bool prettyPrint;
 
 private:
 	Arguments(const std::string& input, const std::string& output,
-		  bool prettyPrint)
-		: input(input), output(output), prettyPrint(prettyPrint)
+	          const std::string& format, bool prettyPrint)
+		: input(input), output(output), format(format),
+		  prettyPrint(prettyPrint)
 	{
 	}
 

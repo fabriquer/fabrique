@@ -42,6 +42,7 @@ void Arguments::Usage(std::ostream& out, const string& name)
 		<< "Options:\n"
 		<< "  --print              pretty-print the parsed file\n"
 		<< "\n"
+		<< "  -f format            output format (default: ninja)\n"
 		<< "  -o output            output filename (default: stdout)\n"
 		<< "\n"
 		;
@@ -51,6 +52,7 @@ Arguments* Arguments::Parse(int argc, char *argv[])
 {
 	string input;
 	string output;
+	string format = "ninja";
 	bool prettyPrint = false;
 	string *next = NULL;
 
@@ -61,6 +63,10 @@ Arguments* Arguments::Parse(int argc, char *argv[])
 		if (arg == "-o")
 		{
 			next = &output;
+		}
+		else if (arg == "-f")
+		{
+			next = &format;
 		}
 		else if (next)
 		{
@@ -81,5 +87,5 @@ Arguments* Arguments::Parse(int argc, char *argv[])
 		}
 	}
 
-	return new Arguments(input, output, prettyPrint);
+	return new Arguments(input, output, format, prettyPrint);
 }
