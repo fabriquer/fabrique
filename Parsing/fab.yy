@@ -94,8 +94,7 @@ fabfile:
 	;
 
 values:
-				{ CreateList($$.values); }
-	| value			{ CreateList($$.values, $1.val); }
+	value			{ CreateList($$.values, $1.val); }
 	| values value		{ Append($$.values, $1.values, $2.val); }
 	;
 
@@ -187,6 +186,7 @@ fndecl:
 
 compoundExpr:
 	expr			{ $$.compound = p->CompoundExpr($1.expr); }
+	| '{' expr '}'		{ $$.compound = p->CompoundExpr($2.expr); }
 	| '{' values expr '}'	{
 		$$.compound = p->CompoundExpr($3.expr, $2.values);
 	}
