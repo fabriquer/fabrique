@@ -44,9 +44,8 @@
 class Parameter : public Expression
 {
 public:
-	Parameter(Identifier *id, Expression *e)
-		: Expression(e ? e->getType() : *id->getType(),
-		             SourceRange::Over(id, e)),
+	Parameter(Identifier *id, const Type& resultTy, Expression *e = NULL)
+		: Expression(resultTy, SourceRange::Over(id, e)),
 		  name(id), expr(e)
 	{
 		assert(id != NULL);

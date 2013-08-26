@@ -373,7 +373,18 @@ Parameter* Parser::Param(Identifier *name, Expression *defaultValue)
 	if (name == NULL)
 		return NULL;
 
-	auto *p = new Parameter(name, defaultValue);
+	const Type *nameType = name->getType();
+
+	if (defaultValue != NULL and name->isTyped()
+	    and !defaultValue->getType().isSupertype(*name->getType()))
+	{
+		ReportError("type mismatch", *defaultValue);
+		return NULL;
+	}
+
+	const Type& resultType = nameType ? *nameType : defaultValue->getType();
+
+	auto *p = new Parameter(name, resultType, defaultValue);
 	CurrentScope().Register(p);
 
 	return p;
