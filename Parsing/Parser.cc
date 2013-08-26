@@ -60,6 +60,12 @@ void Parser::SetRoot(PtrVec<Value> *values)
 }
 
 
+const Type* Parser::getType(const string& name, const Type& param)
+{
+	return getType(name, PtrVec<Type>(1, &param));
+}
+
+
 const Type* Parser::getType(const string& name, const PtrVec<Type>& params)
 {
 	auto qualifiedName(std::make_pair(name, params));
@@ -100,6 +106,11 @@ SourceRange* Parser::CurrentTokenRange() const
 }
 
 void Parser::SaveLoc() { savedLoc = lex.CurrentTokenRange(); }
+
+void Parser::SaveType(const Type& t)
+{
+	savedType = &t;
+}
 
 Value* Parser::Define(Identifier *id, Expression *e)
 {
@@ -218,6 +229,45 @@ Conditional* Parser::IfElse(SourceRange *ifLoc, Expression *condition,
 
 	return new Conditional(*ifLoc, condition, thenResult, elseResult,
 	                       Type::GetSupertype(tt, et));
+}
+
+
+ForeachExpr* Parser::Foreach(Expression *source, const Parameter *loopParam,
+                             CompoundExpression *body, SourceRange *begin)
+{
+	auto_ptr<Expression> s(source);
+	auto_ptr<const Parameter> p(loopParam);
+	auto_ptr<CompoundExpression> b(body);
+	auto_ptr<SourceRange> beg(begin);
+
+	assert(&loopParam->getType() != NULL);
+
+	SourceRange loc(begin->begin, lex.CurrentTokenRange().end);
+	ExitScope();
+
+	const Type& resultTy = *getType("list", body->getType());
+	return new ForeachExpr(s.release(), p.release(), b.release(),
+	                       resultTy, loc);
+}
+
+
+Parameter* Parser::ForeachParam(Identifier *id)
+{
+	assert(savedType != NULL);
+
+	const Type& t = *savedType;
+	savedType = NULL;
+
+	if (id->isTyped() and !t.isListOf(*id->getType()))
+	{
+		ReportError("type mismatch (" + t.str() + " not list of "
+		             + id->getType()->str() + ")", *id);
+		return NULL;
+	}
+
+	auto *p = new Parameter(id, t[0]);
+	CurrentScope().Register(p);
+	return p;
 }
 
 

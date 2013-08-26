@@ -1,4 +1,4 @@
-/** @file ast.h    Meta-include file for all AST node types. */
+/** @file ForeachExpr.cc    Declaration of @ref ForeachExpr. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,26 +29,26 @@
  * SUCH DAMAGE.
  */
 
-#ifndef AST_H
-#define AST_H
+#include "AST/Foreach.h"
+#include "AST/Parameter.h"
+#include "Support/ostream.h"
 
-#include "Action.h"
-#include "Argument.h"
-#include "BinaryOperation.h"
-#include "Call.h"
-#include "CompoundExpr.h"
-#include "Conditional.h"
-#include "File.h"
-#include "FileList.h"
-#include "Foreach.h"
-#include "Function.h"
-#include "Identifier.h"
-#include "List.h"
-#include "Parameter.h"
-#include "SymbolReference.h"
-#include "Type.h"
-#include "Value.h"
 
-#include "literals.h"
+bool ForeachExpr::isStatic() const
+{
+	return source->isStatic() and body->isStatic();
+}
 
-#endif
+
+void ForeachExpr::PrettyPrint(std::ostream& out, int indent) const
+{
+	out
+		<< Yellow << "foreach "
+		<< *source
+		<< Yellow << " as "
+		<< *loopParameter
+		<< " "
+		<< *body
+		<< ResetAll
+		;
+}

@@ -77,7 +77,7 @@ void Append(PtrVec<T>*& target, PtrVec<T>* source, const T *nextElement)
 
 %token WHITESPACE
 %token IDENTIFIER FILENAME
-%token IF ELSE
+%token IF ELSE FOREACH AS
 %token ACTION FILE FILES FUNCTION RETURN
 %token OPERATOR
 %token TRUE FALSE
@@ -116,6 +116,7 @@ expression:
 	| conditional
 	| file
 	| fileList
+	| foreach
 	| function
 	| identifier		{ $$.expr = p->Reference($1.id); }
 	| '(' expr ')'		{ $$.expr = $2.expr; }
@@ -182,6 +183,24 @@ fileInList:
 		$$.expr = p->Source(p->ParseString($1.s),
 		                    p->CurrentTokenRange());
 	}
+	;
+
+foreach:
+	foreachbegin foreachexpr AS foreachparam compoundExpr {
+		$$.expr = p->Foreach($2.expr, $4.param, $5.compound, $1.src);
+	}
+	;
+
+foreachbegin:
+	FOREACH			{ p->EnterScope(); }
+	;
+
+foreachexpr:
+	expr			{ p->SaveType($1.expr->getType()); }
+	;
+
+foreachparam:
+	identifier		{ $$.param = p->ForeachParam($$.id); }
 	;
 
 function:

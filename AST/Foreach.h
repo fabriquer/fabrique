@@ -1,4 +1,4 @@
-/** @file ast.h    Meta-include file for all AST node types. */
+/** @file Foreach.h    Declaration of @ref Foreach. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,26 +29,38 @@
  * SUCH DAMAGE.
  */
 
-#ifndef AST_H
-#define AST_H
+#ifndef FOREACH_H
+#define FOREACH_H
 
-#include "Action.h"
-#include "Argument.h"
-#include "BinaryOperation.h"
-#include "Call.h"
-#include "CompoundExpr.h"
-#include "Conditional.h"
-#include "File.h"
-#include "FileList.h"
-#include "Foreach.h"
-#include "Function.h"
-#include "Identifier.h"
-#include "List.h"
-#include "Parameter.h"
-#include "SymbolReference.h"
-#include "Type.h"
-#include "Value.h"
+#include "AST/CompoundExpr.h"
+#include "AST/Expression.h"
 
-#include "literals.h"
+class Parameter;
+class Type;
+class Value;
+
+
+/**
+ * An expression that maps list elements into another list.
+ */
+class ForeachExpr : public Expression
+{
+public:
+	ForeachExpr(Expression *source, const Parameter *loopParam,
+	            CompoundExpression *body, const Type& resultTy,
+	            const SourceRange& loc)
+		: Expression(resultTy, loc), source(source),
+		  loopParameter(loopParam), body(body)
+	{
+	}
+
+	virtual bool isStatic() const;
+	virtual void PrettyPrint(std::ostream&, int indent = 0) const;
+
+private:
+	std::auto_ptr<Expression> source;
+	std::auto_ptr<const Parameter> loopParameter;
+	std::auto_ptr<CompoundExpression> body;
+};
 
 #endif

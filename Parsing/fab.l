@@ -75,6 +75,8 @@ false							return FALSE;
 {digit}+		yylval->i = atoi(yytext);	return INT_LITERAL;
 if			setRange(yylval);		return IF;
 else			setRange(yylval);		return ELSE;
+foreach			setRange(yylval);		return FOREACH;
+as			setRange(yylval);		return AS;
 action			setRange(yylval);		return ACTION;
 files			setRange(yylval);		return FILES;
 file			setRange(yylval);		return FILE;

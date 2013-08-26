@@ -61,6 +61,8 @@ public:
 	void SaveLoc();
 	const SourceRange& LastSavedLocation() const { return savedLoc; }
 
+	//! Save the current token's type for future reference.
+	void SaveType(const Type&);
 
 	void SetRoot(PtrVec<Value>*);
 	const Scope& getRoot() const { return root; }
@@ -69,6 +71,8 @@ public:
 	//! Find or create a @ref Type.
 	const Type* getType(const std::string& name,
 	                    const PtrVec<Type>& params = PtrVec<Type>());
+
+	const Type* getType(const std::string&name, const Type& typeParam);
 
 	/**
 	 * Find or create a @ref Type, taking ownership of the name and
@@ -115,6 +119,16 @@ public:
 	Conditional* IfElse(SourceRange *ifLocation, Expression *condition,
 	                    Expression *thenResult, Expression *elseResult);
 
+	/**
+	 * An expression for mapping list elements into another list:
+	 *   foreach x in some_list: x + 1
+	 * .
+	 */
+	ForeachExpr* Foreach(Expression *source, const Parameter *loopParam,
+	                     CompoundExpression *body, SourceRange *start);
+
+	//! A foreach loop iteration parameter, whose type can be inferred.
+	Parameter* ForeachParam(Identifier*);
 
 	// files
 	/**
@@ -174,6 +188,8 @@ private:
 
 	const Lexer& lex;
 	SourceRange savedLoc;
+
+	Type const *savedType = NULL;
 
 	PtrVec<ErrorReport> errs;
 
