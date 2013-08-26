@@ -145,7 +145,7 @@ public:
 	void AddToScope(const PtrVec<Argument>&);
 
 	//! Parse an @ref Identifier.
-	Identifier* Id(const CStringRef&);
+	Identifier* Id(const std::string&);
 
 	//! Parse an @ref Identifier from an untyped name + a type.
 	Identifier* Id(Identifier *untyped, const Type*);

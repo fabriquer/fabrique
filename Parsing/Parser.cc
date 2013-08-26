@@ -357,7 +357,7 @@ Parameter* Parser::Param(Identifier *name, Expression *defaultValue)
 }
 
 
-Identifier* Parser::Id(const CStringRef& name)
+Identifier* Parser::Id(const std::string& name)
 {
 	return new Identifier(name, NULL, lex.CurrentTokenRange());
 }
