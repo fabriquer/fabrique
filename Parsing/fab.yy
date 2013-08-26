@@ -143,28 +143,32 @@ conditional:
 	}
 	;
 
+file:
+	FILE '(' expr args ')'	{
+		$$.expr = p->Source($3.expr, $1.src, $4.args);
+	}
+	;
+
 fileList:
 	FILES '(' files ',' args ')' { $$.expr = p->Files($3.files, $5.args); }
 	| FILES '(' files ')'	{ $$.expr = p->Files($3.files); }
 	;
 
 files:
-	file			{ CreateList($$.files, $1.file); }
-	| files file		{ Append($$.files, $1.files, $2.file); }
+	fileInList		{ CreateList($$.files, $1.file); }
+	| files fileInList	{ Append($$.files, $1.files, $2.file); }
 	;
 
-file:
-	FILE '(' filename args ')'	{
-		$$.expr = p->Source($3.str, $1.src, $4.args);
+fileInList:
+	file
+	| FILENAME		{
+		$$.expr = p->Source(p->ParseString($1.s),
+		                    p->CurrentTokenRange());
 	}
-	| filename		{
-		$$.expr = p->Source($1.str, p->CurrentTokenRange());
+	| IDENTIFIER		{
+		$$.expr = p->Source(p->ParseString($1.s),
+		                    p->CurrentTokenRange());
 	}
-	;
-
-filename:
-	IDENTIFIER		{ $$.str = new std::string($1.s); }
-	| FILENAME		{ $$.str = new std::string($1.s); }
 	;
 
 function:

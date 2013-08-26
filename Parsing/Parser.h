@@ -116,14 +116,14 @@ public:
 	 * Create a source file, which is expected to be present on disk when
 	 * fab is run.
 	 */
-	File* Source(std::string *name, SourceRange *source,
+	File* Source(Expression *name, SourceRange *source,
 	             PtrVec<Argument> *arguments = NULL);
 
 	/**
 	 * Create a target file, which only exists at build time as a result
 	 * of a build action.
 	 */
-	File* Target(std::string *name, SourceRange *source,
+	File* Target(Expression *name, SourceRange *source,
 	             PtrVec<Argument> *arguments = NULL);
 
 	/** Create a list of files, which may have shared arguments. */

@@ -237,9 +237,9 @@ List* Parser::ListOf(ExprVec* elements)
 }
 
 
-File* Parser::Source(string *name, SourceRange *source, PtrVec<Argument> *args)
+File* Parser::Source(Expression *name, SourceRange *source,
+                     PtrVec<Argument> *args)
 {
-	auto_ptr<string> n(name);
 	auto_ptr<SourceRange> r(source);
 	auto_ptr<PtrVec<Argument> > a(args);
 	static PtrVec<Argument> empty;
@@ -247,7 +247,14 @@ File* Parser::Source(string *name, SourceRange *source, PtrVec<Argument> *args)
 	assert(name != NULL);
 	assert(source != NULL);
 
-	return new File(*name, args ? *args : empty, *getType("file"), *source);
+	if (name->getType().name() != "string")
+	{
+		ReportError("filename should be a string, not "
+		             + name->getType().str(), *name);
+		return NULL;
+	}
+
+	return new File(name, args ? *args : empty, *getType("file"), *source);
 }
 
 

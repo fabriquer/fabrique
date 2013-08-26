@@ -42,7 +42,7 @@
 class File : public Expression
 {
 public:
-	File(const std::string& name, PtrVec<Argument>& args, const Type& ty,
+	File(Expression *name, PtrVec<Argument>& args, const Type& ty,
 	     const SourceRange& loc)
 		: Expression(ty, loc), name(name), args(args)
 	{
@@ -54,7 +54,7 @@ public:
 	virtual void PrettyPrint(std::ostream&, int indent = 0) const;
 
 private:
-	const std::string name;
+	const Expression *name;
 	const PtrVec<Argument> args;
 };
 

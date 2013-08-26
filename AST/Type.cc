@@ -86,6 +86,9 @@ std::string Type::str() const
 }
 
 
+const std::string& Type::name() const { return typeName; }
+
+
 void Type::PrettyPrint(std::ostream& out, int indent) const
 {
 	out << Blue << typeName;

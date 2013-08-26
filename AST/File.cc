@@ -29,7 +29,8 @@
  * SUCH DAMAGE.
  */
 
-#include "File.h"
+#include "AST/File.h"
+#include "AST/Type.h"
 #include "Support/ostream.h"
 
 #include <set>
@@ -48,16 +49,17 @@ bool File::isStatic() const
 
 void File::PrettyPrint(std::ostream& out, int indent) const
 {
-	bool haveArgs = (args.size() > 0);
+	bool explicitFile =
+		(args.size() > 0) or (!name->isStatic());
 
-	if (haveArgs)
+	if (explicitFile)
 		out << Red << "file" << Yellow << "(";
 
-	out << Magenta << name << ResetAll;
+	out << Magenta << *name << ResetAll;
 
 	for (auto *a : args)
 		out << Yellow << ", " << ResetAll << *a;
 
-	if (haveArgs)
+	if (explicitFile)
 		out << Yellow << ")" << ResetAll;
 }
