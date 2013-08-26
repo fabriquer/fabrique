@@ -301,7 +301,8 @@ BinaryOperation* Parser::Concat(Expression *lhs, Expression *rhs)
 	const Type &lt = lhs->getType(), &rt = rhs->getType();
 	if (!lt.isSubtype(rt) and !rt.isSubtype(lt))
 	{
-		ReportError("incompatible types", SourceRange::Over(lhs, rhs));
+		ReportError("incompatible types (" + lt.str() + ", "
+		             + rt.str() + ")", SourceRange::Over(lhs, rhs));
 		return NULL;
 	}
 
