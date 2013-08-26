@@ -117,14 +117,15 @@ Value* Parser::Define(Identifier *id, Expression *e)
 	if (e == NULL)
 		return NULL;
 
-	SourceRange range(id->getSource().begin, e->getSource().end);
 	auto& scope(CurrentScope());
 
 	if (scope.Find(id) != NULL)
 	{
-		ReportError("redefining value", range);
+		ReportError("redefining value", *id);
 		return NULL;
 	}
+
+	SourceRange range(id->getSource().begin, e->getSource().end);
 
 	if (id->isTyped() and !e->getType().isSupertype(*id->getType()))
 	{
