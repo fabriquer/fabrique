@@ -92,7 +92,8 @@ fabfile:
 	;
 
 values:
-	value			{ CreateList($$.values, $1.val); }
+				{ CreateList($$.values); }
+	| value			{ CreateList($$.values, $1.val); }
 	| values value		{ Append($$.values, $1.values, $2.val); }
 	;
 
