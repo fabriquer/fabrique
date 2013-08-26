@@ -68,6 +68,7 @@ std::string BinaryOperation::OpStr(Operator op)
 	}
 
 	assert(false && "unhandled Operator type");
+	return "";
 }
 
 bool BinaryOperation::isStatic() const
