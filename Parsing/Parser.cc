@@ -156,29 +156,26 @@ Action* Parser::DefineAction(PtrVec<Argument>* args, SourceRange *start)
 
 
 Function* Parser::DefineFunction(PtrVec<Parameter> *params, const Type *ty,
-                                 PtrVec<Value> *values, Expression *result)
+                                 CompoundExpression *body)
 {
 	auto_ptr<PtrVec<Parameter> > p(params);
-	auto_ptr<PtrVec<Value> > v(values);
 
 	assert(params != NULL);
 	assert(ty != NULL);
-	assert(values != NULL);
-	assert(result != NULL);
 
-	if (!result->getType().isSupertype(*ty))
+	if (!body->getType().isSupertype(*ty))
 	{
 		ReportError(
 			"wrong return type ("
-			+ result->getType().str() + " != " + ty->str()
-			+ ")", *result);
+			+ body->getType().str() + " != " + ty->str()
+			+ ")", *body);
 		return NULL;
 	}
 
 	SourceRange loc(savedLoc.begin, lex.CurrentTokenRange().end);
 	ExitScope();
 
-	return new Function(*params, *ty, *values, result, loc);
+	return new Function(*params, *ty, body, loc);
 }
 
 
@@ -234,6 +231,26 @@ List* Parser::ListOf(ExprVec* elements)
 	SourceRange loc(savedLoc.begin, lex.CurrentTokenRange().end);
 
 	return new List(*elements, *ty, loc);
+}
+
+
+CompoundExpression* Parser::CompoundExpr(Expression *result,
+	                                 PtrVec<Value> *val)
+{
+	auto_ptr<Expression> e(result);
+	auto_ptr<PtrVec<Value> > v(val);
+	static PtrVec<Value> empty;
+
+	auto& values = val ? *val : empty;
+	bool haveValues = (val != NULL) and !val->empty();
+
+	Location begin =
+		(haveValues ? *val->begin() : result)->getSource().begin;
+
+	Location end = lex.CurrentTokenRange().end;
+
+	return new CompoundExpression(values, e.release(),
+	                              SourceRange(begin, end));
 }
 
 

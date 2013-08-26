@@ -36,6 +36,7 @@
 #include "Argument.h"
 #include "BinaryOperation.h"
 #include "Call.h"
+#include "CompoundExpr.h"
 #include "Conditional.h"
 #include "File.h"
 #include "FileList.h"

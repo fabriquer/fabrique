@@ -86,10 +86,14 @@ public:
 
 	List* ListOf(ExprVec* elements);
 
+	CompoundExpression* CompoundExpr(Expression *result,
+	                                 PtrVec<Value> *values = NULL);
+
+
 	// actions and functions
 	Action* DefineAction(PtrVec<Argument>* args, SourceRange*);
 	Function* DefineFunction(PtrVec<Parameter> *params, const Type *ty,
-                                 PtrVec<Value> *values, Expression *result);
+                                 CompoundExpression *body);
 
 	Call* CreateCall(Identifier*, PtrVec<Argument>*);
 

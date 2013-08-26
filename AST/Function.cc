@@ -40,9 +40,6 @@ Function::~Function()
 {
 	for (auto *p : params)
 		delete p;
-
-	for (auto *v : values)
-		delete v;
 }
 
 
@@ -66,17 +63,7 @@ void Function::PrettyPrint(std::ostream& out, int indent) const
 	out
 		<< Yellow << "): "
 		<< ResetAll << getType()
-		<< "\n" << tabs
-		<< Yellow << "{\n"
-		<< ResetAll
-		;
-
-	for (auto *v : values)
-		v->PrettyPrint(out, indent + 1);
-
-	out
-		<< intabs << *result << "\n"
-		<< Yellow << tabs << "}"
+		<< " " << *body
 		<< ResetAll
 		;
 }

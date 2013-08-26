@@ -1,4 +1,4 @@
-/** @file Function.h    Declaration of @ref Function. */
+/** @file CompoundExpr.cc    Definition of @ref CompoundExpr. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,37 +29,46 @@
  * SUCH DAMAGE.
  */
 
-#ifndef FUNCTION_H
-#define FUNCTION_H
-
-#include "AST/Expression.h"
 #include "AST/CompoundExpr.h"
-
-class Parameter;
-class Type;
-class Value;
+#include "AST/Value.h"
+#include "Support/ostream.h"
 
 
-/**
- * A function allows users to create build abstractions.
- */
-class Function : public Expression
+CompoundExpression::~CompoundExpression()
 {
-public:
-	Function(PtrVec<Parameter>& params, const Type& ty,
-	         CompoundExpression *body, const SourceRange& loc)
-		: Expression(ty, loc), params(params), body(body)
+	for (auto *v : values)
+		delete v;
+}
+
+
+bool CompoundExpression::isStatic() const
+{
+	for (auto *v : values)
+		if (!v->isStatic())
+			return false;
+
+	return result->isStatic();
+}
+
+
+void CompoundExpression::PrettyPrint(std::ostream& out, int indent) const
+{
+	std::string tabs(indent, '\t');
+	std::string intabs(indent + 1, '\t');
+	bool isComplex = !values.empty();
+
+	if (isComplex)
 	{
+		out << tabs << Yellow << "{\n";
+		for (auto *v : values)
+			v->PrettyPrint(out, indent + 1);
+		out << intabs;
 	}
 
-	~Function();
+	out << *result;
 
-	virtual bool isStatic() const { return false; }
-	virtual void PrettyPrint(std::ostream&, int indent = 0) const;
+	if (isComplex)
+		out << "\n" << Yellow << tabs << "}";
 
-private:
-	PtrVec<Parameter> params;
-	std::auto_ptr<CompoundExpression> body;
-};
-
-#endif
+	out << ResetAll;
+}

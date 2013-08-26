@@ -1,4 +1,4 @@
-/** @file Function.h    Declaration of @ref Function. */
+/** @file CompoundExpr.h    Declaration of @ref CompoundExpr. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,11 +29,10 @@
  * SUCH DAMAGE.
  */
 
-#ifndef FUNCTION_H
-#define FUNCTION_H
+#ifndef COMPOUND_EXPRESSION_H
+#define COMPOUND_EXPRESSION_H
 
-#include "AST/Expression.h"
-#include "AST/CompoundExpr.h"
+#include "Expression.h"
 
 class Parameter;
 class Type;
@@ -41,25 +40,26 @@ class Value;
 
 
 /**
- * A function allows users to create build abstractions.
+ * An expression that can contain values.
  */
-class Function : public Expression
+class CompoundExpression : public Expression
 {
 public:
-	Function(PtrVec<Parameter>& params, const Type& ty,
-	         CompoundExpression *body, const SourceRange& loc)
-		: Expression(ty, loc), params(params), body(body)
+	CompoundExpression(PtrVec<Value>& values, Expression* result,
+	                   const SourceRange& loc)
+		: Expression(result->getType(), loc),
+		  values(values), result(result)
 	{
 	}
 
-	~Function();
+	~CompoundExpression();
 
-	virtual bool isStatic() const { return false; }
+	virtual bool isStatic() const;
 	virtual void PrettyPrint(std::ostream&, int indent = 0) const;
 
 private:
-	PtrVec<Parameter> params;
-	std::auto_ptr<CompoundExpression> body;
+	PtrVec<Value> values;
+	std::auto_ptr<const Expression> result;
 };
 
 #endif

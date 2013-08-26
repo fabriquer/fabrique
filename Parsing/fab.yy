@@ -55,6 +55,8 @@ void Append(PtrVec<T>*& target, PtrVec<T>* source, const T *nextElement)
 	Expression *expr;
 	PtrVec<Expression> *exprs;
 
+	CompoundExpression *compound;
+
 	const Type *ty;
 	PtrVec<Type> *types;
 
@@ -174,14 +176,20 @@ fileInList:
 	;
 
 function:
-	fndecl '(' params ')' ':' type '{' values RETURN expr ';' '}'	{
-		$$.expr = p->DefineFunction($3.params, $6.ty,
-		                            $8.values, $10.expr);
+	fndecl '(' params ')' ':' type compoundExpr {
+		$$.expr = p->DefineFunction($3.params, $6.ty, $7.compound);
 	}
 	;
 
 fndecl:
 	FUNCTION		{ p->EnterScope(); p->SaveLoc(); }
+	;
+
+compoundExpr:
+	expr			{ $$.compound = p->CompoundExpr($1.expr); }
+	| '{' values expr '}'	{
+		$$.compound = p->CompoundExpr($3.expr, $2.values);
+	}
 	;
 
 identifier:
