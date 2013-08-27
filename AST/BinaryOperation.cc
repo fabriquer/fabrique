@@ -31,7 +31,6 @@
 
 #include "AST/BinaryOperation.h"
 #include "Support/ostream.h"
-using std::ostream;
 
 
 BinaryOperation* BinaryOperation::Create(Expression *lhs,
@@ -77,7 +76,7 @@ bool BinaryOperation::isStatic() const
 }
 
 
-void BinaryOperation::PrettyPrint(ostream& out, int indent) const
+void BinaryOperation::PrettyPrint(std::ostream& out, int indent) const
 {
 	LHS->PrettyPrint(out, indent);
 	out << " " << Yellow << OpStr(op) << ResetAll << " ";

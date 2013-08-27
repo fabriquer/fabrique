@@ -30,10 +30,9 @@
  */
 
 #include "AST/SymbolReference.h"
-using std::ostream;
 
 
-void SymbolReference::PrettyPrint(ostream& out, int indent) const
+void SymbolReference::PrettyPrint(std::ostream& out, int indent) const
 {
 	out << *id;
 }
