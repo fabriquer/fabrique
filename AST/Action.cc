@@ -30,6 +30,7 @@
  */
 
 #include "AST/Action.h"
+#include "Backend/Visitor.h"
 #include "Support/ostream.h"
 
 
@@ -54,4 +55,12 @@ void Action::PrettyPrint(std::ostream& out, int indent) const
 		<< Yellow << ")"
 		<< ResetAll
 		;
+}
+
+
+void Action::Accept(Visitor& v) const
+{
+	v.Visit(*this);
+	for (auto *a : args)
+		a->Accept(v);
 }

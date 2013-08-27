@@ -30,9 +30,17 @@
  */
 
 #include "AST/SymbolReference.h"
+#include "Backend/Visitor.h"
 
 
 void SymbolReference::PrettyPrint(std::ostream& out, int indent) const
 {
 	out << *id;
+}
+
+
+void SymbolReference::Accept(Visitor& v) const
+{
+	v.Visit(*this);
+	id->Accept(v);
 }

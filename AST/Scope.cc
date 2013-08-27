@@ -33,6 +33,7 @@
 #include "AST/Parameter.h"
 #include "AST/Scope.h"
 #include "AST/Value.h"
+#include "Backend/Visitor.h"
 
 
 Scope::~Scope()
@@ -90,4 +91,11 @@ void Scope::PrettyPrint(std::ostream& out, int indent) const
 {
 	for (auto *v : values)
 		out << *v;
+}
+
+
+void Scope::Accept(Visitor& v) const
+{
+	for (auto *val : values)
+		val->Accept(v);
 }

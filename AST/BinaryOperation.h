@@ -61,6 +61,8 @@ public:
 	virtual bool isStatic() const;
 	virtual void PrettyPrint(std::ostream&, int indent = 0) const;
 
+	virtual void Accept(Visitor&) const;
+
 private:
 	BinaryOperation(Expression *LHS, enum Operator op, Expression *RHS,
 	                const Type& ty, const SourceRange& loc)

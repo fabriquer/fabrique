@@ -40,6 +40,9 @@
 #include <iostream>
 #include <string>
 
+class Visitor;
+
+
 /**
  * The name of a value, function, parameter or argument.
  */
@@ -58,6 +61,8 @@ public:
 
 	void PrettyPrint(std::ostream&, int indent = 0) const;
 	const std::string& name() const { return id; }
+
+	virtual void Accept(Visitor&) const;
 
 private:
 	const std::string id;

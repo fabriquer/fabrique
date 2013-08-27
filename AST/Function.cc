@@ -34,6 +34,7 @@
 #include "AST/Parameter.h"
 #include "AST/Type.h"
 #include "AST/Value.h"
+#include "Backend/Visitor.h"
 #include "Support/ostream.h"
 
 
@@ -67,4 +68,15 @@ void Function::PrettyPrint(std::ostream& out, int indent) const
 		<< " " << *body
 		<< ResetAll
 		;
+}
+
+
+void Function::Accept(Visitor& v) const
+{
+	v.Visit(*this);
+
+	for (auto *p : params)
+		p->Accept(v);
+
+	body->Accept(v);
 }

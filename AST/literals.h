@@ -68,6 +68,7 @@ public:
 	}
 
 	void PrettyPrint(std::ostream&, int indent = 0) const;
+	virtual void Accept(Visitor&) const;
 };
 
 class IntLiteral : public Literal<int>
@@ -79,6 +80,7 @@ public:
 	}
 
 	void PrettyPrint(std::ostream&, int indent = 0) const;
+	virtual void Accept(Visitor&) const;
 };
 
 
@@ -92,6 +94,7 @@ public:
 	}
 
 	void PrettyPrint(std::ostream&, int indent = 0) const;
+	virtual void Accept(Visitor&) const;
 };
 
 #endif

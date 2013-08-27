@@ -30,6 +30,7 @@
  */
 
 #include "AST/Call.h"
+#include "Backend/Visitor.h"
 #include "Support/ostream.h"
 
 
@@ -48,4 +49,13 @@ void Call::PrettyPrint(std::ostream& out, int indent) const
 	}
 
 	out << Yellow << ')' << ResetAll;
+}
+
+
+void Call::Accept(Visitor& v) const
+{
+	v.Visit(*this);
+	fn->Accept(v);
+	for (auto *a : args)
+		a->Accept(v);
 }

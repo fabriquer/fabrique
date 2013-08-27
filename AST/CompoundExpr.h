@@ -58,6 +58,8 @@ public:
 	virtual bool isStatic() const;
 	virtual void PrettyPrint(std::ostream&, int indent = 0) const;
 
+	virtual void Accept(Visitor&) const;
+
 private:
 	PtrVec<Value> values;
 	std::auto_ptr<const Expression> result;

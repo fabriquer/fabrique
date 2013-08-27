@@ -30,6 +30,8 @@
  */
 
 #include "AST/Parameter.h"
+#include "Backend/Visitor.h"
+
 
 void Parameter::PrettyPrint(std::ostream& out, int indent) const
 {
@@ -37,4 +39,14 @@ void Parameter::PrettyPrint(std::ostream& out, int indent) const
 
 	if (expr.get() != NULL)
 		out << " = " << *expr;
+}
+
+
+void Parameter::Accept(Visitor& v) const
+{
+	v.Visit(*this);
+
+	name->Accept(v);
+	if (expr.get())
+		expr->Accept(v);
 }

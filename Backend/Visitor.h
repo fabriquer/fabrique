@@ -1,4 +1,4 @@
-/** @file File.h    Declaration of @ref File. */
+/** @file Visitor.h    Declaration of @ref Visitor. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,35 +29,37 @@
  * SUCH DAMAGE.
  */
 
-#ifndef FILE_H
-#define FILE_H
+#ifndef VISITOR_H
+#define VISITOR_H
 
-#include "Argument.h"
-#include "Expression.h"
+#include "AST/forward-decls.h"
 
 
 /**
- * A reference to a file on disk (source or target).
+ * Interface for visitors that walk the AST.
  */
-class File : public Expression
+class Visitor
 {
 public:
-	File(Expression *name, PtrVec<Argument>& args, const Type& ty,
-	     const SourceRange& loc)
-		: Expression(ty, loc), name(name), args(args)
-	{
-	}
-
-	~File() { for (auto *arg : args) delete arg; }
-
-	virtual bool isStatic() const;
-	virtual void PrettyPrint(std::ostream&, int indent = 0) const;
-
-	virtual void Accept(Visitor&) const;
-
-private:
-	const Expression *name;
-	const PtrVec<Argument> args;
+	virtual void Visit(const Action&) = 0;
+	virtual void Visit(const Argument&) = 0;
+	virtual void Visit(const BinaryOperation&) = 0;
+	virtual void Visit(const BoolLiteral&) = 0;
+	virtual void Visit(const Call&) = 0;
+	virtual void Visit(const CompoundExpression&) = 0;
+	virtual void Visit(const Conditional&) = 0;
+	virtual void Visit(const File&) = 0;
+	virtual void Visit(const FileList&) = 0;
+	virtual void Visit(const ForeachExpr&) = 0;
+	virtual void Visit(const Function&) = 0;
+	virtual void Visit(const Identifier&) = 0;
+	virtual void Visit(const IntLiteral&) = 0;
+	virtual void Visit(const List&) = 0;
+	virtual void Visit(const Parameter&) = 0;
+	virtual void Visit(const StringLiteral&) = 0;
+	virtual void Visit(const SymbolReference&) = 0;
+	virtual void Visit(const Type&) = 0;
+	virtual void Visit(const Value&) = 0;
 };
 
 #endif

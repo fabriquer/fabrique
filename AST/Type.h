@@ -38,6 +38,8 @@
 #include <cassert>
 #include <string>
 
+class Visitor;
+
 
 /**
  * The name of a value, function, parameter or argument.

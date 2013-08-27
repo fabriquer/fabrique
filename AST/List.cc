@@ -30,6 +30,7 @@
  */
 
 #include "AST/List.h"
+#include "Backend/Visitor.h"
 #include "Support/ostream.h"
 
 #include <cassert>
@@ -50,4 +51,13 @@ void List::PrettyPrint(std::ostream& out, int indent) const
 	for (auto *e : elements)
 		out << " " << *e;
 	out << Yellow << " ]" << ResetAll;
+}
+
+
+void List::Accept(Visitor& v) const
+{
+	v.Visit(*this);
+
+	for (auto *e : elements)
+		e->Accept(v);
 }

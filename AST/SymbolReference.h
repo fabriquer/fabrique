@@ -55,6 +55,8 @@ public:
 	virtual bool isStatic() const { return false; }
 	virtual void PrettyPrint(std::ostream&, int indent = 0) const;
 
+	virtual void Accept(Visitor&) const;
+
 private:
 	std::auto_ptr<Identifier> id;
 	const Expression *val;

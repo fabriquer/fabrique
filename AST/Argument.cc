@@ -30,6 +30,7 @@
  */
 
 #include "AST/Argument.h"
+#include "Backend/Visitor.h"
 #include "Support/ostream.h"
 
 void Argument::PrettyPrint(std::ostream& out, int indent) const
@@ -38,4 +39,15 @@ void Argument::PrettyPrint(std::ostream& out, int indent) const
 		out << Green << name->name() << Yellow << " = " << ResetAll;
 
 	expr->PrettyPrint(out, indent);
+}
+
+
+void Argument::Accept(Visitor& v) const
+{
+	v.Visit(*this);
+
+	if (name.get())
+		name->Accept(v);
+
+	expr->Accept(v);
 }

@@ -37,12 +37,15 @@
 #include "Support/Location.h"
 #include "Support/Printable.h"
 #include "Support/Uncopyable.h"
+#include "Support/Visitable.h"
 
 
 /**
  * Base class for expressions that can be evaluated.
  */
-class Expression : public HasSource, public Printable, public Typed, Uncopyable
+class Expression
+	: public HasSource, public Printable, public Typed, public Visitable,
+	  Uncopyable
 {
 public:
 	virtual ~Expression() {}

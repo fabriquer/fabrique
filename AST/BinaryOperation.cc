@@ -30,6 +30,7 @@
  */
 
 #include "AST/BinaryOperation.h"
+#include "Backend/Visitor.h"
 #include "Support/ostream.h"
 
 
@@ -81,4 +82,12 @@ void BinaryOperation::PrettyPrint(std::ostream& out, int indent) const
 	LHS->PrettyPrint(out, indent);
 	out << " " << Yellow << OpStr(op) << ResetAll << " ";
 	RHS->PrettyPrint(out, indent);
+}
+
+
+void BinaryOperation::Accept(Visitor& v) const
+{
+	v.Visit(*this);
+	LHS->Accept(v);
+	RHS->Accept(v);
 }

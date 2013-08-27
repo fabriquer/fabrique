@@ -31,6 +31,7 @@
 
 #include "AST/File.h"
 #include "AST/Type.h"
+#include "Backend/Visitor.h"
 #include "Support/ostream.h"
 
 #include <set>
@@ -62,4 +63,13 @@ void File::PrettyPrint(std::ostream& out, int indent) const
 
 	if (explicitFile)
 		out << Yellow << ")" << ResetAll;
+}
+
+
+void File::Accept(Visitor& v) const
+{
+	v.Visit(*this);
+	name->Accept(v);
+	for (auto *a : args)
+		a->Accept(v);
 }

@@ -30,6 +30,7 @@
  */
 
 #include "AST/Conditional.h"
+#include "Backend/Visitor.h"
 #include "Support/ostream.h"
 
 
@@ -56,4 +57,13 @@ void Conditional::PrettyPrint(std::ostream& out, int indent) const
 		<< Yellow << "}"
 		<< ResetAll
 		;
+}
+
+
+void Conditional::Accept(Visitor& v) const
+{
+	v.Visit(*this);
+	condition->Accept(v);
+	thenResult->Accept(v);
+	elseResult->Accept(v);
 }

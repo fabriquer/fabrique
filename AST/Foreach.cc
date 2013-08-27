@@ -31,6 +31,7 @@
 
 #include "AST/Foreach.h"
 #include "AST/Parameter.h"
+#include "Backend/Visitor.h"
 #include "Support/ostream.h"
 
 
@@ -51,4 +52,14 @@ void ForeachExpr::PrettyPrint(std::ostream& out, int indent) const
 		<< *body
 		<< ResetAll
 		;
+}
+
+
+void ForeachExpr::Accept(Visitor& v) const
+{
+	v.Visit(*this);
+
+	source->Accept(v);
+	loopParameter->Accept(v);
+	body->Accept(v);
 }

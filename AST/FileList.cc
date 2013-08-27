@@ -30,6 +30,7 @@
  */
 
 #include "AST/FileList.h"
+#include "Backend/Visitor.h"
 #include "Support/ostream.h"
 
 
@@ -58,4 +59,16 @@ void FileList::PrettyPrint(std::ostream& out, int indent) const
 		out << ", " << *arg;
 
 	out << Yellow << " ]" << ResetAll;
+}
+
+
+void FileList::Accept(Visitor& v) const
+{
+	v.Visit(*this);
+
+	for (auto *f : files)
+		f->Accept(v);
+
+	for (auto *a : args)
+		a->Accept(v);
 }

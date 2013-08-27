@@ -31,6 +31,7 @@
 
 #include "AST/Type.h"
 #include "AST/Value.h"
+#include "Backend/Visitor.h"
 #include "Support/ostream.h"
 
 #include <iomanip>
@@ -59,4 +60,11 @@ void Value::PrettyPrint(ostream& out, int indent) const
 		<< Yellow << ";"
 		<< ResetAll << "\n"
 		;
+}
+
+void Value::Accept(Visitor& v) const
+{
+	v.Visit(*this);
+	id->Accept(v);
+	expr->Accept(v);
 }

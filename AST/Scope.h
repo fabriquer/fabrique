@@ -71,6 +71,8 @@ public:
 
 	virtual void PrettyPrint(std::ostream&, int indent = 0) const;
 
+	virtual void Accept(Visitor&) const;
+
 private:
 	void Register(const Identifier&, const Expression*);
 

@@ -31,6 +31,7 @@
 
 #include "AST/Identifier.h"
 #include "AST/Type.h"
+#include "Backend/Visitor.h"
 #include "Support/ostream.h"
 
 #include <iomanip>
@@ -44,4 +45,10 @@ void Identifier::PrettyPrint(std::ostream& out, int indent) const
 		out << Yellow << ":" << Blue << *ty;
 
 	out << ResetAll;
+}
+
+
+void Identifier::Accept(Visitor& v) const
+{
+	v.Visit(*this);
 }

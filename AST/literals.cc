@@ -30,6 +30,7 @@
  */
 
 #include "AST/literals.h"
+#include "Backend/Visitor.h"
 #include "Support/ostream.h"
 
 using std::ostream;
@@ -40,10 +41,14 @@ void BoolLiteral::PrettyPrint(ostream& out, int indent) const
 	out << Magenta << (value() ? "true" : "false") << ResetAll;
 }
 
+void BoolLiteral::Accept(Visitor& v) const { v.Visit(*this); }
+
 void IntLiteral::PrettyPrint(ostream& out, int indent) const
 {
 	out << Magenta << value() << ResetAll;
 }
+
+void IntLiteral::Accept(Visitor& v) const { v.Visit(*this); }
 
 void StringLiteral::PrettyPrint(ostream& out, int indent) const
 {
@@ -82,3 +87,5 @@ void StringLiteral::PrettyPrint(ostream& out, int indent) const
 	//<< value() <<;
 	out << "'" << ResetAll;
 }
+
+void StringLiteral::Accept(Visitor& v) const { v.Visit(*this); }

@@ -1,4 +1,4 @@
-/** @file File.h    Declaration of @ref File. */
+/** @file Printable.h    Declaration of the @ref Printable interface. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,35 +29,19 @@
  * SUCH DAMAGE.
  */
 
-#ifndef FILE_H
-#define FILE_H
+#ifndef VISITABLE_H
+#define VISITABLE_H
 
-#include "Argument.h"
-#include "Expression.h"
+class Visitor;
 
 
 /**
- * A reference to a file on disk (source or target).
+ * A thing that can be visited by a @ref Visitor.
  */
-class File : public Expression
+class Visitable
 {
 public:
-	File(Expression *name, PtrVec<Argument>& args, const Type& ty,
-	     const SourceRange& loc)
-		: Expression(ty, loc), name(name), args(args)
-	{
-	}
-
-	~File() { for (auto *arg : args) delete arg; }
-
-	virtual bool isStatic() const;
-	virtual void PrettyPrint(std::ostream&, int indent = 0) const;
-
-	virtual void Accept(Visitor&) const;
-
-private:
-	const Expression *name;
-	const PtrVec<Argument> args;
+	virtual void Accept(Visitor&) const = 0;
 };
 
 #endif

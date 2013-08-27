@@ -31,6 +31,7 @@
 
 #include "AST/CompoundExpr.h"
 #include "AST/Value.h"
+#include "Backend/Visitor.h"
 #include "Support/ostream.h"
 
 
@@ -71,4 +72,14 @@ void CompoundExpression::PrettyPrint(std::ostream& out, int indent) const
 		out << "\n" << Yellow << tabs << "}";
 
 	out << ResetAll;
+}
+
+
+void CompoundExpression::Accept(Visitor& v) const
+{
+	v.Visit(*this);
+	for (auto *val : values)
+		val->Accept(v);
+
+	result->Accept(v);
 }
