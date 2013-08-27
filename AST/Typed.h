@@ -41,7 +41,6 @@ class Type;
 class Typed
 {
 public:
-	// TODO: make this Type&
 	virtual const Type& getType() const = 0;
 };
 
