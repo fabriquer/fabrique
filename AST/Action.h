@@ -50,6 +50,10 @@ public:
 
 	~Action() { for (auto *arg : args) delete arg; }
 
+	typedef PtrVec<Argument>::const_iterator const_iterator;
+	const_iterator begin() const { return args.begin(); }
+	const_iterator end() const { return args.end(); }
+
 	virtual bool isStatic() const { return false; }
 	virtual void PrettyPrint(std::ostream&, int indent = 0) const;
 

@@ -58,6 +58,10 @@ public:
 	static BinaryOperation* Create(Expression*, Operator, Expression*,
 	                               const Type& resultType);
 
+	Operator getOp() const { return op; }
+	const Expression& getLHS() const { return *LHS; }
+	const Expression& getRHS() const { return *RHS; }
+
 	virtual bool isStatic() const;
 	virtual void PrettyPrint(std::ostream&, int indent = 0) const;
 
