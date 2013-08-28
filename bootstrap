@@ -23,7 +23,7 @@ cxx_srcs = {
 		'Lexer', 'Parser',
 	),
 	'Support/': (
-		'Arguments', 'ErrorReport', 'Location', 'Printable', 'ostream',
+		'Arguments', 'ErrorReport', 'Join', 'Location', 'ostream',
 	),
 	'': (
 		'driver',

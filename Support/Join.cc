@@ -1,4 +1,4 @@
-/** @file Printable.h    Declaration of the @ref Printable interface. */
+/** @file Join.cc    Definition of @ref Join helpers. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,31 +29,23 @@
  * SUCH DAMAGE.
  */
 
-#ifndef PRINTABLE_H
-#define PRINTABLE_H
-
-#include "ADT/PtrVec.h"
-
-#include <ostream>
+#include "Support/Join.h"
+#include "Support/Printable.h"
 
 
-/**
- * A thing that can be pretty-printed.
- */
-class Printable
+void Join::Print(std::ostream& out) const
 {
-public:
-	/**
-	 * Print a human-readable representation to an output stream
-	 * and return that output stream.
-	 */
-	virtual void PrettyPrint(std::ostream&, int indent = 0) const = 0;
-};
-
-inline std::ostream& operator<< (std::ostream& out, const Printable& p)
-{
-	p.PrettyPrint(out);
-	return out;
+	for (size_t i = 0; i < objects.size(); )
+	{
+		out << *objects[i];
+		if (++i < objects.size())
+			out << joinStr;
+	}
 }
 
-#endif
+
+std::ostream& operator<< (std::ostream& out, const Join& j)
+{
+	j.Print(out);
+	return out;
+}

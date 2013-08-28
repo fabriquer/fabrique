@@ -1,4 +1,4 @@
-/** @file Printable.cc    Definition of @ref Printable helpers. */
+/** @file Join.h    Declaration of the @ref Join ostream helper. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,28 +29,35 @@
  * SUCH DAMAGE.
  */
 
-#include "Printable.h"
+#ifndef JOIN_H
+#define JOIN_H
 
-using std::ostream;
+#include "ADT/PtrVec.h"
 
-void Join::Print(ostream& out) const
+#include <ostream>
+
+
+class Printable;
+
+
+class Join
 {
-	for (size_t i = 0; i < objects.size(); )
+public:
+	static Join csv(const PtrVec<Printable>& p) { return Join(", ", p); }
+	static Join ssv(const PtrVec<Printable>& p) { return Join(" ", p); }
+
+	Join(std::string j, const PtrVec<Printable>& p)
+		: joinStr(j), objects(p)
 	{
-		out << *objects[i];
-		if (++i < objects.size())
-			out << joinStr;
 	}
-}
 
-ostream& operator<< (ostream& out, const Printable& p)
-{
-	p.PrettyPrint(out);
-	return out;
-}
+	void Print(std::ostream&) const;
 
-ostream& operator<< (ostream& out, const Join& j)
-{
-	j.Print(out);
-	return out;
-}
+private:
+	const std::string joinStr;
+	const PtrVec<Printable>& objects;
+};
+
+std::ostream& operator<< (std::ostream&, const Join&);
+
+#endif
