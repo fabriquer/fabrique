@@ -62,8 +62,11 @@ void Conditional::PrettyPrint(std::ostream& out, int indent) const
 
 void Conditional::Accept(Visitor& v) const
 {
-	v.Visit(*this);
+	v.Enter(*this);
+
 	condition->Accept(v);
 	thenResult->Accept(v);
 	elseResult->Accept(v);
+
+	v.Leave(*this);
 }

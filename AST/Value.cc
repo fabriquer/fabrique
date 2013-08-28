@@ -64,7 +64,10 @@ void Value::PrettyPrint(ostream& out, int indent) const
 
 void Value::Accept(Visitor& v) const
 {
-	v.Visit(*this);
+	v.Enter(*this);
+
 	id->Accept(v);
 	expr->Accept(v);
+
+	v.Leave(*this);
 }

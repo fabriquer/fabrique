@@ -41,14 +41,14 @@ void BoolLiteral::PrettyPrint(ostream& out, int indent) const
 	out << Magenta << (value() ? "true" : "false") << ResetAll;
 }
 
-void BoolLiteral::Accept(Visitor& v) const { v.Visit(*this); }
+void BoolLiteral::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }
 
 void IntLiteral::PrettyPrint(ostream& out, int indent) const
 {
 	out << Magenta << value() << ResetAll;
 }
 
-void IntLiteral::Accept(Visitor& v) const { v.Visit(*this); }
+void IntLiteral::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }
 
 void StringLiteral::PrettyPrint(ostream& out, int indent) const
 {
@@ -88,4 +88,4 @@ void StringLiteral::PrettyPrint(ostream& out, int indent) const
 	out << "'" << ResetAll;
 }
 
-void StringLiteral::Accept(Visitor& v) const { v.Visit(*this); }
+void StringLiteral::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }

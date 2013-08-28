@@ -87,7 +87,8 @@ void BinaryOperation::PrettyPrint(std::ostream& out, int indent) const
 
 void BinaryOperation::Accept(Visitor& v) const
 {
-	v.Visit(*this);
+	v.Enter(*this);
 	LHS->Accept(v);
 	RHS->Accept(v);
+	v.Leave(*this);
 }

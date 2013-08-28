@@ -44,9 +44,11 @@ void Parameter::PrettyPrint(std::ostream& out, int indent) const
 
 void Parameter::Accept(Visitor& v) const
 {
-	v.Visit(*this);
+	v.Enter(*this);
 
 	name->Accept(v);
 	if (expr.get())
 		expr->Accept(v);
+
+	v.Leave(*this);
 }

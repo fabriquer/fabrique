@@ -48,7 +48,4 @@ void Identifier::PrettyPrint(std::ostream& out, int indent) const
 }
 
 
-void Identifier::Accept(Visitor& v) const
-{
-	v.Visit(*this);
-}
+void Identifier::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }

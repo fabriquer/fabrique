@@ -44,10 +44,12 @@ void Argument::PrettyPrint(std::ostream& out, int indent) const
 
 void Argument::Accept(Visitor& v) const
 {
-	v.Visit(*this);
+	v.Enter(*this);
 
 	if (name.get())
 		name->Accept(v);
 
 	expr->Accept(v);
+
+	v.Leave(*this);
 }

@@ -57,9 +57,11 @@ void ForeachExpr::PrettyPrint(std::ostream& out, int indent) const
 
 void ForeachExpr::Accept(Visitor& v) const
 {
-	v.Visit(*this);
+	v.Enter(*this);
 
 	source->Accept(v);
 	loopParameter->Accept(v);
 	body->Accept(v);
+
+	v.Leave(*this);
 }

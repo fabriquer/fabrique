@@ -60,7 +60,10 @@ void Action::PrettyPrint(std::ostream& out, int indent) const
 
 void Action::Accept(Visitor& v) const
 {
-	v.Visit(*this);
+	v.Enter(*this);
+
 	for (auto *a : args)
 		a->Accept(v);
+
+	v.Leave(*this);
 }

@@ -73,10 +73,12 @@ void Function::PrettyPrint(std::ostream& out, int indent) const
 
 void Function::Accept(Visitor& v) const
 {
-	v.Visit(*this);
+	v.Enter(*this);
 
 	for (auto *p : params)
 		p->Accept(v);
 
 	body->Accept(v);
+
+	v.Leave(*this);
 }

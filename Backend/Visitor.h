@@ -34,6 +34,10 @@
 
 #include "AST/forward-decls.h"
 
+#define VISIT(type) \
+	virtual void Enter(const type&) {} \
+	virtual void Leave(const type&) {}
+
 
 /**
  * Interface for visitors that walk the AST.
@@ -41,25 +45,30 @@
 class Visitor
 {
 public:
-	virtual void Visit(const Action&) = 0;
-	virtual void Visit(const Argument&) = 0;
-	virtual void Visit(const BinaryOperation&) = 0;
-	virtual void Visit(const BoolLiteral&) = 0;
-	virtual void Visit(const Call&) = 0;
-	virtual void Visit(const CompoundExpression&) = 0;
-	virtual void Visit(const Conditional&) = 0;
-	virtual void Visit(const File&) = 0;
-	virtual void Visit(const FileList&) = 0;
-	virtual void Visit(const ForeachExpr&) = 0;
-	virtual void Visit(const Function&) = 0;
-	virtual void Visit(const Identifier&) = 0;
-	virtual void Visit(const IntLiteral&) = 0;
-	virtual void Visit(const List&) = 0;
-	virtual void Visit(const Parameter&) = 0;
-	virtual void Visit(const StringLiteral&) = 0;
-	virtual void Visit(const SymbolReference&) = 0;
-	virtual void Visit(const Type&) = 0;
-	virtual void Visit(const Value&) = 0;
+	VISIT(Action)
+	VISIT(Argument)
+	VISIT(BinaryOperation)
+	VISIT(BoolLiteral)
+	VISIT(Call)
+	VISIT(CompoundExpression)
+	VISIT(Conditional)
+	VISIT(File)
+	VISIT(FileList)
+	VISIT(ForeachExpr)
+	VISIT(Function)
+	VISIT(Identifier)
+	VISIT(IntLiteral)
+	VISIT(List)
+	VISIT(Parameter)
+	VISIT(StringLiteral)
+	VISIT(SymbolReference)
+	VISIT(Type)
+	VISIT(Value)
 };
+
+#undef VISIT
+#define VISIT(type) \
+	virtual void Enter(const type&); \
+	virtual void Leave(const type&);
 
 #endif

@@ -54,8 +54,11 @@ void Call::PrettyPrint(std::ostream& out, int indent) const
 
 void Call::Accept(Visitor& v) const
 {
-	v.Visit(*this);
+	v.Enter(*this);
+
 	fn->Accept(v);
 	for (auto *a : args)
 		a->Accept(v);
+
+	v.Leave(*this);
 }

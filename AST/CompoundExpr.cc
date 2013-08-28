@@ -77,9 +77,12 @@ void CompoundExpression::PrettyPrint(std::ostream& out, int indent) const
 
 void CompoundExpression::Accept(Visitor& v) const
 {
-	v.Visit(*this);
+	v.Enter(*this);
+
 	for (auto *val : values)
 		val->Accept(v);
 
 	result->Accept(v);
+
+	v.Leave(*this);
 }

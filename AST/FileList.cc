@@ -64,11 +64,13 @@ void FileList::PrettyPrint(std::ostream& out, int indent) const
 
 void FileList::Accept(Visitor& v) const
 {
-	v.Visit(*this);
+	v.Enter(*this);
 
 	for (auto *f : files)
 		f->Accept(v);
 
 	for (auto *a : args)
 		a->Accept(v);
+
+	v.Leave(*this);
 }
