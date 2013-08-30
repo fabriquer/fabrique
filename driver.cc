@@ -29,6 +29,8 @@
  * SUCH DAMAGE.
  */
 
+#include "Backend/ASTDump.h"
+
 #include "Parsing/Lexer.h"
 #include "Parsing/Parser.h"
 #include "Parsing/fab.yacc.h"
@@ -75,8 +77,10 @@ int main(int argc, char *argv[]) {
 	if (outputIsFile)
 		outfile.open(args->output.c_str());
 
+	std::ostream& out(outputIsFile ? outfile : std::cout);
+
 	lex.reset(new Lexer(args->input));
-	lex->switch_streams(&infile, &(outputIsFile ? outfile : std::cout));
+	lex->switch_streams(&infile, &out);
 
 	auto_ptr<Parser> parser(new Parser(*lex));
 	int err = yyparse(parser.get());
@@ -101,6 +105,21 @@ int main(int argc, char *argv[]) {
 
 	if (args->prettyPrint)
 		std::cout << root;
+
+	auto_ptr<Visitor> v;
+	if (args->format == "dump")
+		v.reset(ASTDump::Create(out));
+
+	else
+	{
+		std::cerr
+			<< "unknown format '" << args->format << "'"
+			<< std::endl
+			;
+		return 1;
+	}
+
+	root.Accept(*v);
 
 	return 0;
 }

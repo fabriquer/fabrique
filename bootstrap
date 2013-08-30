@@ -19,6 +19,9 @@ cxx_srcs = {
 		'Parameter', 'Scope', 'SymbolReference', 'Type', 'Value',
 		'literals',
 	),
+	'Backend/': (
+		'ASTDump',
+	),
 	'Parsing/': (
 		'Lexer', 'Parser',
 	),
