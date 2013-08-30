@@ -3,6 +3,7 @@
 import argparse
 import itertools
 import os
+import sys
 
 args = argparse.ArgumentParser()
 args.add_argument('builddir', nargs = '?', default = '.')
@@ -110,6 +111,11 @@ rules = {
 		'description': 'Processing $in',
 	},
 
+	'rebuild': {
+		'command': 'python $in $args',
+		'description': 'Regenerating $out',
+	},
+
 	'yacc': {
 		'command': '$yacc $yaccflags -o $main_out $in',
 		'description': 'Processing $in',
@@ -124,6 +130,15 @@ for (name, variables) in rules.items():
 
 
 # Finally, build statements.
+bootstrap = sys.argv[0]
+args = sys.argv[1:]
+
+out.write('''build build.ninja: rebuild %s
+  args = %s
+
+''' % (bootstrap, ' '.join(args)))
+
+
 objs = [ '%s.o' % o for o in cxx_srcs + lex.values() + yacc.values() ]
 
 out.write('build fab: bin %s\n\n' % ' '.join(objs))
