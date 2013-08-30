@@ -32,7 +32,7 @@
 #ifndef AST_DUMP_H
 #define AST_DUMP_H
 
-#include "Backend/Visitor.h"
+#include "AST/Visitor.h"
 
 #include <iostream>
 

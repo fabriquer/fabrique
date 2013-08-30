@@ -13,14 +13,13 @@ args = args.parse_args()
 # First, let's declare what we actually want to build.
 cxx_srcs = {
 	'AST/': (
-		'Action', 'Argument', 'BinaryOperation', 'Call',
+		'Action', 'Argument', 'ASTDump', 'BinaryOperation', 'Call',
 		'CompoundExpr', 'Conditional',
 		'File', 'FileList', 'Foreach', 'Function', 'Identifier', 'List',
 		'Parameter', 'Scope', 'SymbolReference', 'Type', 'Value',
 		'literals',
 	),
 	'Backend/': (
-		'ASTDump',
 	),
 	'Parsing/': (
 		'Lexer', 'Parser',

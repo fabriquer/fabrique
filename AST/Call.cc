@@ -30,7 +30,7 @@
  */
 
 #include "AST/Call.h"
-#include "Backend/Visitor.h"
+#include "AST/Visitor.h"
 #include "Support/ostream.h"
 
 

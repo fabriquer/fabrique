@@ -33,7 +33,7 @@
 #include "AST/Parameter.h"
 #include "AST/Scope.h"
 #include "AST/Value.h"
-#include "Backend/Visitor.h"
+#include "AST/Visitor.h"
 
 
 Scope::~Scope()

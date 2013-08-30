@@ -30,7 +30,7 @@
  */
 
 #include "AST/SymbolReference.h"
-#include "Backend/Visitor.h"
+#include "AST/Visitor.h"
 
 
 void SymbolReference::PrettyPrint(std::ostream& out, int indent) const

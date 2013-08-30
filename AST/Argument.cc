@@ -30,7 +30,7 @@
  */
 
 #include "AST/Argument.h"
-#include "Backend/Visitor.h"
+#include "AST/Visitor.h"
 #include "Support/ostream.h"
 
 void Argument::PrettyPrint(std::ostream& out, int indent) const

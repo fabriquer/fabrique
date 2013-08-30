@@ -31,7 +31,7 @@
 
 #include "AST/Identifier.h"
 #include "AST/Type.h"
-#include "Backend/Visitor.h"
+#include "AST/Visitor.h"
 #include "Support/ostream.h"
 
 #include <iomanip>

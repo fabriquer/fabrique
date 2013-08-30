@@ -29,7 +29,7 @@
  * SUCH DAMAGE.
  */
 
-#include "Backend/ASTDump.h"
+#include "AST/ASTDump.h"
 
 #include "Parsing/Lexer.h"
 #include "Parsing/Parser.h"

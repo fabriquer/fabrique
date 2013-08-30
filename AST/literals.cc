@@ -30,7 +30,7 @@
  */
 
 #include "AST/literals.h"
-#include "Backend/Visitor.h"
+#include "AST/Visitor.h"
 #include "Support/ostream.h"
 
 using std::ostream;
