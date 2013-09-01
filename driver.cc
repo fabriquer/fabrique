@@ -107,7 +107,10 @@ int main(int argc, char *argv[]) {
 		std::cout << root;
 
 	auto_ptr<Visitor> v;
-	if (args->format == "dump")
+	if (args->format == "null")
+		;
+
+	else if (args->format == "dump")
 		v.reset(ASTDump::Create(out));
 
 	else
@@ -119,7 +122,8 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
-	root.Accept(*v);
+	if (v.get() != NULL)
+		root.Accept(*v);
 
 	return 0;
 }
