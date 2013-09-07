@@ -47,7 +47,7 @@ Parser::~Parser()
 	for (auto *err : errs)
 		delete err;
 
-	for (auto i : simpleTypes)
+	for (auto i : types)
 		delete i.second;
 }
 
@@ -70,11 +70,11 @@ const Type* Parser::getType(const string& name, const PtrVec<Type>& params)
 {
 	auto qualifiedName(std::make_pair(name, params));
 
-	auto i = simpleTypes.find(qualifiedName);
-	if (i != simpleTypes.end())
+	auto i = types.find(qualifiedName);
+	if (i != types.end())
 		return i->second;
 
-	return simpleTypes[qualifiedName] = Type::Create(name, params);
+	return types[qualifiedName] = Type::Create(name, params);
 }
 
 const Type* Parser::TakeType(Identifier *name, const PtrVec<Type>* params)

@@ -194,7 +194,7 @@ private:
 	PtrVec<ErrorReport> errs;
 
 	typedef std::pair<std::string,PtrVec<Type> > TypeName;
-	std::map<TypeName,Type*> simpleTypes;
+	std::map<TypeName,Type*> types;
 
 	Scope root;
 	std::stack<Scope*> scopes;
