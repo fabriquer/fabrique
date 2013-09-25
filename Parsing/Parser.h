@@ -39,7 +39,11 @@
 #include <map>
 #include <stack>
 
+namespace fabrique {
+
 class Lexer;
+
+namespace ast {
 
 
 /**
@@ -199,5 +203,8 @@ private:
 	Scope root;
 	std::stack<Scope*> scopes;
 };
+
+} // namespace ast
+} // namespace fabrique
 
 #endif

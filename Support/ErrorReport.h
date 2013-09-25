@@ -38,6 +38,7 @@
 #include <ostream>
 #include <string>
 
+namespace fabrique {
 
 class ErrorReport : public Printable
 {
@@ -62,5 +63,7 @@ private:
 	const Location caret;
 	const int contextLines;
 };
+
+} // namespace fabrique
 
 #endif

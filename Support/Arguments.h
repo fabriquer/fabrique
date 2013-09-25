@@ -35,6 +35,8 @@
 #include <ostream>
 #include <string>
 
+namespace fabrique {
+
 /**
  * Extremely simple representation of quite simple arguments.
  *
@@ -61,5 +63,7 @@ private:
 	}
 
 };
+
+} // namespace fabrique
 
 #endif

@@ -39,6 +39,8 @@
 #include "Support/Uncopyable.h"
 #include "Support/Visitable.h"
 
+namespace fabrique {
+namespace ast {
 
 /**
  * Base class for expressions that can be evaluated.
@@ -68,5 +70,8 @@ private:
 };
 
 typedef PtrVec<Expression> ExprVec;
+
+} // namespace ast
+} // namespace fabrique
 
 #endif

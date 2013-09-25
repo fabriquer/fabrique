@@ -33,6 +33,8 @@
 #include "AST/Visitor.h"
 #include "Support/ostream.h"
 
+using namespace fabrique::ast;
+
 
 bool Conditional::isStatic() const
 {

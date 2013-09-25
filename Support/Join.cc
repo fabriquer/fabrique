@@ -32,6 +32,8 @@
 #include "Support/Join.h"
 #include "Support/Printable.h"
 
+using namespace fabrique;
+
 
 void Join::Print(std::ostream& out) const
 {

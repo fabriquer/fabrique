@@ -34,6 +34,8 @@
 
 #include "Expression.h"
 
+namespace fabrique {
+namespace ast {
 
 /**
  * A function allows users to create build abstractions.
@@ -63,5 +65,8 @@ private:
 	std::auto_ptr<Expression> thenResult;
 	std::auto_ptr<Expression> elseResult;
 };
+
+} // namespace ast
+} // namespace fabrique
 
 #endif

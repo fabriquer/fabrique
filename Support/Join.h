@@ -37,6 +37,8 @@
 #include <ostream>
 
 
+namespace fabrique {
+
 class Printable;
 
 
@@ -59,5 +61,7 @@ private:
 };
 
 std::ostream& operator<< (std::ostream&, const Join&);
+
+} // namespace fabrique
 
 #endif

@@ -7,6 +7,7 @@
 #include "Parsing/lex.h"
 #include "Parsing/yacc.h"
 
+using namespace fabrique;
 using namespace std;
 
 template<class T>
@@ -37,7 +38,7 @@ void Append(PtrVec<T>*& target, PtrVec<T>* source, const T *nextElement)
 	target->push_back(nextElement);
 }
 
-#define YYPARSE_PARAM_TYPE Parser*
+#define YYPARSE_PARAM_TYPE fabrique::ast::Parser*
 #define YYPARSE_PARAM p
 
 %}
@@ -46,33 +47,33 @@ void Append(PtrVec<T>*& target, PtrVec<T>* source, const T *nextElement)
 
 %union {
 	int i;
-	CStringRef s;
+	fabrique::CStringRef s;
 	std::string *str;
-	SourceRange *src;
+	fabrique::SourceRange *src;
 
-	Identifier *id;
+	fabrique::ast::Identifier *id;
 
-	Expression *expr;
-	PtrVec<Expression> *exprs;
+	fabrique::ast::Expression *expr;
+	fabrique::PtrVec<fabrique::ast::Expression> *exprs;
 
-	CompoundExpression *compound;
+	fabrique::ast::CompoundExpression *compound;
 
-	const Type *ty;
-	PtrVec<Type> *types;
+	const fabrique::ast::Type *ty;
+	fabrique::PtrVec<fabrique::ast::Type> *types;
 
-	const Argument *arg;
-	PtrVec<Argument> *args;
+	const fabrique::ast::Argument *arg;
+	fabrique::PtrVec<fabrique::ast::Argument> *args;
 
-	const Parameter *param;
-	PtrVec<Parameter> *params;
+	const fabrique::ast::Parameter *param;
+	fabrique::PtrVec<fabrique::ast::Parameter> *params;
 
-	const File *file;
-	PtrVec<File> *files;
+	const fabrique::ast::File *file;
+	fabrique::PtrVec<fabrique::ast::File> *files;
 
-	BinaryOperation::Operator op;
+	fabrique::ast::BinaryOperation::Operator op;
 
-	Value *val;
-	PtrVec<Value> *values;
+	fabrique::ast::Value *val;
+	fabrique::PtrVec<fabrique::ast::Value> *values;
 };
 
 %token WHITESPACE

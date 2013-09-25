@@ -34,6 +34,9 @@
 
 #include "AST/forward-decls.h"
 
+namespace fabrique {
+namespace ast {
+
 #define VISIT(type) \
 	virtual void Enter(const type&) {} \
 	virtual void Leave(const type&) {}
@@ -70,5 +73,8 @@ public:
 #define VISIT(type) \
 	virtual void Enter(const type&); \
 	virtual void Leave(const type&);
+
+} // namespace ast
+} // namespace fabrique
 
 #endif

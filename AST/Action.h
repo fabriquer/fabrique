@@ -36,6 +36,9 @@
 #include "AST/Expression.h"
 #include "AST/Argument.h"
 
+namespace fabrique {
+namespace ast {
+
 
 /**
  * A build action that can transform inputs into outputs.
@@ -62,5 +65,8 @@ public:
 private:
 	PtrVec<Argument> args;
 };
+
+} // namespace ast
+} // namespace fabrique
 
 #endif

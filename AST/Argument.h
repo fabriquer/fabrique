@@ -37,6 +37,9 @@
 
 #include <memory>
 
+namespace fabrique {
+namespace ast {
+
 
 /**
  * An argument being passed to an action or function (caller-side).
@@ -64,5 +67,8 @@ private:
 	std::auto_ptr<Identifier> name;
 	std::auto_ptr<Expression> expr;
 };
+
+} // namespace ast
+} // namespace fabrique
 
 #endif

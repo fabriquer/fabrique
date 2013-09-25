@@ -32,6 +32,11 @@
 #include "Parsing/Lexer.h"
 #include "Parsing/Parser.h"
 
+using namespace fabrique::ast;
+
+using fabrique::ErrorReport;
+using fabrique::SourceRange;
+
 using std::auto_ptr;
 using std::string;
 

@@ -33,6 +33,8 @@
 #include "Support/Location.h"
 #include "Support/ostream.h"
 
+using namespace fabrique;
+
 
 void Location::PrettyPrint(std::ostream& out, int indent) const
 {

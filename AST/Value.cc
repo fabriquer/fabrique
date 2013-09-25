@@ -36,6 +36,7 @@
 
 #include <iomanip>
 
+using namespace fabrique::ast;
 using std::ostream;
 
 

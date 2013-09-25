@@ -39,6 +39,7 @@
 
 #include <list>
 
+namespace fabrique {
 
 /**
  */
@@ -63,5 +64,7 @@ private:
 
 	Location lastTokenEnd;
 };
+
+} // namespace fabrique
 
 #endif

@@ -39,6 +39,9 @@
 #include <map>
 #include <string>
 
+namespace fabrique {
+namespace ast {
+
 class Argument;
 class Expression;
 class Identifier;
@@ -80,5 +83,8 @@ private:
 	SymbolMap symbols;
 	PtrVec<Value> values;
 };
+
+} // namespace ast
+} // namespace fabrique
 
 #endif

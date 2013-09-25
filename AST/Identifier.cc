@@ -36,6 +36,8 @@
 
 #include <iomanip>
 
+using namespace fabrique::ast;
+
 
 void Identifier::PrettyPrint(std::ostream& out, int indent) const
 {

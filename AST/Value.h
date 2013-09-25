@@ -35,6 +35,8 @@
 #include "Expression.h"
 #include "Identifier.h"
 
+namespace fabrique {
+namespace ast {
 
 /**
  * Base class for expressions that can be evaluated.
@@ -56,5 +58,8 @@ private:
 	std::auto_ptr<Identifier> id;
 	std::auto_ptr<const Expression> expr;
 };
+
+} // namespace ast
+} // namespace fabrique
 
 #endif

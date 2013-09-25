@@ -32,7 +32,7 @@
 #ifndef LEXBASE_H
 #define LEXBASE_H
 
-#define YY_DECL int Lexer::yylex(YYSTYPE *yylval)
+#define YY_DECL int fabrique::Lexer::yylex(YYSTYPE *yylval)
 
 // FlexLexer.h doesn't have its own include guards.
 #if !defined(yyFlexLexer)

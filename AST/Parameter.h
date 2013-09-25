@@ -37,6 +37,8 @@
 
 #include <memory>
 
+namespace fabrique {
+namespace ast {
 
 /**
  * A formal parameter in a @ref Function.
@@ -63,5 +65,8 @@ private:
 	std::auto_ptr<Identifier> name;
 	std::auto_ptr<Expression> expr;
 };
+
+} // namespace ast
+} // namespace fabrique
 
 #endif

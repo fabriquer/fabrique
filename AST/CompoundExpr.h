@@ -34,6 +34,9 @@
 
 #include "Expression.h"
 
+namespace fabrique {
+namespace ast {
+
 class Parameter;
 class Type;
 class Value;
@@ -64,5 +67,8 @@ private:
 	PtrVec<Value> values;
 	std::auto_ptr<const Expression> result;
 };
+
+} // namespace ast
+} // namespace fabrique
 
 #endif

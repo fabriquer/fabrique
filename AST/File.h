@@ -35,6 +35,8 @@
 #include "Argument.h"
 #include "Expression.h"
 
+namespace fabrique {
+namespace ast {
 
 /**
  * A reference to a file on disk (source or target).
@@ -59,5 +61,8 @@ private:
 	const Expression *name;
 	const PtrVec<Argument> args;
 };
+
+} // namespace ast
+} // namespace fabrique
 
 #endif

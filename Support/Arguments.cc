@@ -31,6 +31,7 @@
 
 #include "Arguments.h"
 
+using namespace fabrique;
 using std::string;
 
 

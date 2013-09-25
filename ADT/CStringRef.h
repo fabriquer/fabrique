@@ -35,6 +35,7 @@
 #include <cassert>
 #include <string>
 
+namespace fabrique {
 
 /**
  * A reference to a C string, which may not be long-lived.
@@ -69,5 +70,7 @@ public:
 	char *cstr;
 	size_t len;
 };
+
+} // namespace fabrique
 
 #endif

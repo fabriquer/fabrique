@@ -32,6 +32,9 @@
 #ifndef TYPED_H
 #define TYPED_H
 
+namespace fabrique {
+namespace ast {
+
 class Type;
 
 
@@ -43,5 +46,8 @@ class Typed
 public:
 	virtual const Type& getType() const = 0;
 };
+
+} // namespace ast
+} // namespace fabrique
 
 #endif

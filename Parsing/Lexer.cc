@@ -36,6 +36,8 @@
 #include <list>
 #include <map>
 
+using namespace fabrique;
+
 extern int yylineno;
 extern int yycolumn;
 

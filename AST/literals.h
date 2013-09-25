@@ -37,6 +37,8 @@
 
 #include <string>
 
+namespace fabrique {
+namespace ast {
 
 /**
  * An expression whose value is literally expressed in the source file.
@@ -96,5 +98,8 @@ public:
 	void PrettyPrint(std::ostream&, int indent = 0) const;
 	virtual void Accept(Visitor&) const;
 };
+
+} // namespace ast
+} // namespace fabrique
 
 #endif

@@ -32,6 +32,9 @@
 #ifndef VISITABLE_H
 #define VISITABLE_H
 
+namespace fabrique {
+namespace ast {
+
 class Visitor;
 
 
@@ -43,5 +46,8 @@ class Visitable
 public:
 	virtual void Accept(Visitor&) const = 0;
 };
+
+} // namespace ast
+} // namespace fabrique
 
 #endif

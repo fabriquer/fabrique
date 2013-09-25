@@ -38,6 +38,8 @@
 
 #include <memory>
 
+namespace fabrique {
+namespace ast {
 
 /**
  * A reference to a named symbol.
@@ -64,5 +66,8 @@ private:
 	std::auto_ptr<Identifier> id;
 	const Expression *val;
 };
+
+} // namespace ast
+} // namespace fabrique
 
 #endif

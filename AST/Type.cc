@@ -34,6 +34,8 @@
 
 #include <sstream>
 
+using namespace fabrique::ast;
+
 
 const Type& Type::GetSupertype(const Type& x, const Type& y)
 {

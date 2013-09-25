@@ -38,6 +38,7 @@
 
 #include "Support/ostream.h"
 
+using namespace fabrique;
 using std::ostream;
 using std::string;
 

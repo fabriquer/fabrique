@@ -32,6 +32,8 @@
 #include "AST/SymbolReference.h"
 #include "AST/Visitor.h"
 
+using namespace fabrique::ast;
+
 
 void SymbolReference::PrettyPrint(std::ostream& out, int indent) const
 {

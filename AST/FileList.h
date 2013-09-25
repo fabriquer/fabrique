@@ -36,6 +36,8 @@
 #include "Expression.h"
 #include "File.h"
 
+namespace fabrique {
+namespace ast {
 
 /**
  * A list of files, with optional arguments that can be applied to each file.
@@ -58,5 +60,8 @@ private:
 	PtrVec<File> files;
 	PtrVec<Argument> args;
 };
+
+} // namespace ast
+} // namespace fabrique
 
 #endif

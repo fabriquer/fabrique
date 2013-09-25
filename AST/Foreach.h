@@ -35,6 +35,9 @@
 #include "AST/CompoundExpr.h"
 #include "AST/Expression.h"
 
+namespace fabrique {
+namespace ast {
+
 class Parameter;
 class Type;
 class Value;
@@ -64,5 +67,8 @@ private:
 	std::auto_ptr<const Parameter> loopParameter;
 	std::auto_ptr<CompoundExpression> body;
 };
+
+} // namespace ast
+} // namespace fabrique
 
 #endif

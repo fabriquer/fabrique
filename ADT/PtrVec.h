@@ -34,7 +34,11 @@
 
 #include <vector>
 
+namespace fabrique {
+
 /** A @ref std::vector that contains const pointers. */
 template<class T> using PtrVec = std::vector<const T*>;
+
+} // namespace fabrique
 
 #endif

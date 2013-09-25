@@ -39,6 +39,9 @@
 
 #include <memory>
 
+namespace fabrique {
+namespace ast {
+
 
 /**
  * A call to a function or build action.
@@ -63,5 +66,8 @@ private:
 	std::auto_ptr<SymbolReference> fn;
 	PtrVec<Argument> args;
 };
+
+} // namespace ast
+} // namespace fabrique
 
 #endif

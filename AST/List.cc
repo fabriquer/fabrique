@@ -35,6 +35,8 @@
 
 #include <cassert>
 
+using namespace fabrique::ast;
+
 
 bool List::isStatic() const
 {

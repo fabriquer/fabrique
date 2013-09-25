@@ -32,6 +32,9 @@
 #ifndef AST_FORWARD_DECLS_H
 #define AST_FORWARD_DECLS_H
 
+namespace fabrique {
+namespace ast {
+
 class Action;
 class Argument;
 class BinaryOperation;
@@ -48,6 +51,9 @@ class Parameter;
 class SymbolReference;
 class Type;
 class Value;
+
+} // namespace ast
+} // namespace fabrique
 
 // our use of typedefs means we can't actually forward-declare literals.
 #include "AST/literals.h"

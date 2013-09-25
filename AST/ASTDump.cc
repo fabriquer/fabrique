@@ -32,6 +32,7 @@
 #include "AST/ASTDump.h"
 #include <iomanip>
 
+using namespace fabrique::ast;
 using std::string;
 
 

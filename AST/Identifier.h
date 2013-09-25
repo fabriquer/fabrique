@@ -40,6 +40,9 @@
 #include <iostream>
 #include <string>
 
+namespace fabrique {
+namespace ast {
+
 class Visitor;
 
 
@@ -69,5 +72,8 @@ private:
 	const Type *ty;
 	const SourceRange loc;
 };
+
+} // namespace ast
+} // namespace fabrique
 
 #endif

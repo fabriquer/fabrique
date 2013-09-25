@@ -36,6 +36,7 @@
 
 #include <set>
 
+using namespace fabrique::ast;
 using std::string;
 
 

@@ -34,6 +34,9 @@
 
 #include "AST/Expression.h"
 
+namespace fabrique {
+namespace ast {
+
 class CompoundExpression;
 class Parameter;
 class Type;
@@ -63,5 +66,8 @@ private:
 	PtrVec<Parameter> params;
 	std::auto_ptr<CompoundExpression> body;
 };
+
+} // namespace ast
+} // namespace fabrique
 
 #endif

@@ -32,6 +32,8 @@
 #include "AST/Parameter.h"
 #include "AST/Visitor.h"
 
+using namespace fabrique::ast;
+
 
 void Parameter::PrettyPrint(std::ostream& out, int indent) const
 {

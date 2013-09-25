@@ -43,12 +43,13 @@
 #include <iostream>
 #include <memory>
 
+using namespace fabrique;
 using std::auto_ptr;
 
 
 auto_ptr<Lexer> lex;
 
-int yyparse(Parser*);
+int yyparse(ast::Parser*);
 
 void yyerror(const char *str)
 {
@@ -82,7 +83,7 @@ int main(int argc, char *argv[]) {
 	lex.reset(new Lexer(args->input));
 	lex->switch_streams(&infile, &out);
 
-	auto_ptr<Parser> parser(new Parser(*lex));
+	auto_ptr<ast::Parser> parser(new ast::Parser(*lex));
 	int err = yyparse(parser.get());
 
 	for (auto *err : parser->errors())
@@ -106,12 +107,12 @@ int main(int argc, char *argv[]) {
 	if (args->prettyPrint)
 		std::cout << root;
 
-	auto_ptr<Visitor> v;
+	auto_ptr<ast::Visitor> v;
 	if (args->format == "null")
 		;
 
 	else if (args->format == "dump")
-		v.reset(ASTDump::Create(out));
+		v.reset(ast::ASTDump::Create(out));
 
 	else
 	{

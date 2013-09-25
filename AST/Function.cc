@@ -37,6 +37,8 @@
 #include "AST/Visitor.h"
 #include "Support/ostream.h"
 
+using namespace fabrique::ast;
+
 
 Function::~Function()
 {

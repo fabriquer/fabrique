@@ -37,6 +37,7 @@
 #include <cassert>
 #include <string>
 
+namespace fabrique {
 
 class Lexer;
 
@@ -93,5 +94,7 @@ class HasSource
 public:
 	virtual const SourceRange& getSource() const = 0;
 };
+
+} // class fabrique
 
 #endif

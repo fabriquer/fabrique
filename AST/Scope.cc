@@ -35,6 +35,8 @@
 #include "AST/Value.h"
 #include "AST/Visitor.h"
 
+using namespace fabrique::ast;
+
 
 Scope::~Scope()
 {

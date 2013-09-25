@@ -36,6 +36,8 @@
 
 #include <ostream>
 
+namespace fabrique {
+
 
 /**
  * A thing that can be pretty-printed.
@@ -55,5 +57,7 @@ inline std::ostream& operator<< (std::ostream& out, const Printable& p)
 	p.PrettyPrint(out);
 	return out;
 }
+
+} // namespace fabrique
 
 #endif

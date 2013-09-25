@@ -36,6 +36,8 @@
 
 #include <iostream>
 
+namespace fabrique {
+namespace ast {
 
 /**
  * Backend that prints the AST as a (not very pretty) tree.
@@ -76,5 +78,8 @@ private:
 	std::ostream& out;
 	size_t indent;
 };
+
+} // namespace ast
+} // namespace fabrique
 
 #endif

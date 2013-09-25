@@ -34,6 +34,8 @@
 
 #include "Expression.h"
 
+namespace fabrique {
+namespace ast {
 
 /**
  * A list of same-typed expressions.
@@ -59,5 +61,8 @@ public:
 private:
 	const ExprVec elements;
 };
+
+} // namespace ast
+} // namespace fabrique
 
 #endif

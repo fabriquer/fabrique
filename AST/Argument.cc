@@ -33,6 +33,9 @@
 #include "AST/Visitor.h"
 #include "Support/ostream.h"
 
+using namespace fabrique::ast;
+
+
 void Argument::PrettyPrint(std::ostream& out, int indent) const
 {
 	if (name.get())

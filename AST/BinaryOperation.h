@@ -37,6 +37,9 @@
 
 #include <memory>
 
+namespace fabrique {
+namespace ast {
+
 
 /**
  * An operation with two operands.
@@ -78,5 +81,8 @@ private:
 	const std::auto_ptr<Expression> RHS;
 	const Operator op;
 };
+
+} // namespace ast
+} // namespace fabrique
 
 #endif
