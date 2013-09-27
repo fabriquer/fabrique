@@ -139,18 +139,18 @@ public:
 	 * Create a source file, which is expected to be present on disk when
 	 * fab is run.
 	 */
-	File* Source(Expression *name, SourceRange *source,
-	             PtrVec<Argument> *arguments = NULL);
+	Filename* Source(Expression *name, SourceRange *source,
+	                 PtrVec<Argument> *arguments = NULL);
 
 	/**
 	 * Create a target file, which only exists at build time as a result
 	 * of a build action.
 	 */
-	File* Target(Expression *name, SourceRange *source,
-	             PtrVec<Argument> *arguments = NULL);
+	Filename* Target(Expression *name, SourceRange *source,
+	                 PtrVec<Argument> *arguments = NULL);
 
 	/** Create a list of files, which may have shared arguments. */
-	FileList* Files(PtrVec<File>*, PtrVec<Argument> *args = NULL);
+	FileList* Files(PtrVec<Filename>*, PtrVec<Argument> *args = NULL);
 
 
 	// binary operations

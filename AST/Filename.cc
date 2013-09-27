@@ -1,4 +1,4 @@
-/** @file File.cc    Definition of @ref File. */
+/** @file Filename.cc    Definition of @ref Filename. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,7 +29,7 @@
  * SUCH DAMAGE.
  */
 
-#include "AST/File.h"
+#include "AST/Filename.h"
 #include "AST/Type.h"
 #include "AST/Visitor.h"
 #include "Support/ostream.h"
@@ -40,7 +40,7 @@ using namespace fabrique::ast;
 using std::string;
 
 
-bool File::isStatic() const
+bool Filename::isStatic() const
 {
 	for (auto *a : args)
 		if (!a->isStatic())
@@ -49,7 +49,7 @@ bool File::isStatic() const
 	return true;
 }
 
-void File::PrettyPrint(std::ostream& out, int indent) const
+void Filename::PrettyPrint(std::ostream& out, int indent) const
 {
 	bool explicitFile =
 		(args.size() > 0) or (!name->isStatic());
@@ -67,7 +67,7 @@ void File::PrettyPrint(std::ostream& out, int indent) const
 }
 
 
-void File::Accept(Visitor& v) const
+void Filename::Accept(Visitor& v) const
 {
 	v.Enter(*this);
 

@@ -315,8 +315,8 @@ CompoundExpression* Parser::CompoundExpr(Expression *result, SourceRange *b,
 }
 
 
-File* Parser::Source(Expression *name, SourceRange *source,
-                     PtrVec<Argument> *args)
+Filename* Parser::Source(Expression *name, SourceRange *source,
+                         PtrVec<Argument> *args)
 {
 	auto_ptr<SourceRange> r(source);
 	auto_ptr<PtrVec<Argument> > a(args);
@@ -332,13 +332,14 @@ File* Parser::Source(Expression *name, SourceRange *source,
 		return NULL;
 	}
 
-	return new File(name, args ? *args : empty, *getType("file"), *source);
+	return new Filename(name, args ? *args : empty,
+	                    *getType("file"), *source);
 }
 
 
-FileList* Parser::Files(PtrVec<File> *files, PtrVec<Argument> *args)
+FileList* Parser::Files(PtrVec<Filename> *files, PtrVec<Argument> *args)
 {
-	auto_ptr<PtrVec<File> > f(files);
+	auto_ptr<PtrVec<Filename> > f(files);
 	auto_ptr<PtrVec<Argument> > a(args);
 	static PtrVec<Argument> emptyArgs;
 

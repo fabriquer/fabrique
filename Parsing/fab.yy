@@ -67,8 +67,8 @@ void Append(PtrVec<T>*& target, PtrVec<T>* source, const T *nextElement)
 	const fabrique::ast::Parameter *param;
 	fabrique::PtrVec<fabrique::ast::Parameter> *params;
 
-	const fabrique::ast::File *file;
-	fabrique::PtrVec<fabrique::ast::File> *files;
+	const fabrique::ast::Filename *file;
+	fabrique::PtrVec<fabrique::ast::Filename> *files;
 
 	fabrique::ast::BinaryOperation::Operator op;
 

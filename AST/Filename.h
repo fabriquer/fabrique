@@ -41,16 +41,16 @@ namespace ast {
 /**
  * A reference to a file on disk (source or target).
  */
-class File : public Expression
+class Filename : public Expression
 {
 public:
-	File(Expression *name, PtrVec<Argument>& args, const Type& ty,
-	     const SourceRange& loc)
+	Filename(Expression *name, PtrVec<Argument>& args, const Type& ty,
+	         const SourceRange& loc)
 		: Expression(ty, loc), name(name), args(args)
 	{
 	}
 
-	~File() { for (auto *arg : args) delete arg; }
+	~Filename() { for (auto *arg : args) delete arg; }
 
 	virtual bool isStatic() const;
 	virtual void PrettyPrint(std::ostream&, int indent = 0) const;

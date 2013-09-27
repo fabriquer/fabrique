@@ -32,9 +32,9 @@
 #ifndef FILE_LIST_H
 #define FILE_LIST_H
 
-#include "Argument.h"
-#include "Expression.h"
-#include "File.h"
+#include "AST/Argument.h"
+#include "AST/Expression.h"
+#include "AST/Filename.h"
 
 namespace fabrique {
 namespace ast {
@@ -45,8 +45,8 @@ namespace ast {
 class FileList : public Expression
 {
 public:
-	FileList(PtrVec<File>& files, PtrVec<Argument>& args, const Type& ty,
-	         const SourceRange& loc)
+	FileList(PtrVec<Filename>& files, PtrVec<Argument>& args,
+	         const Type& ty, const SourceRange& loc)
 		: Expression(ty, loc), files(files), args(args)
 	{
 	}
@@ -57,7 +57,7 @@ public:
 	virtual void Accept(Visitor&) const;
 
 private:
-	PtrVec<File> files;
+	PtrVec<Filename> files;
 	PtrVec<Argument> args;
 };
 

@@ -41,7 +41,7 @@ class BinaryOperation;
 class Call;
 class CompoundExpression;
 class Conditional;
-class File;
+class Filename;
 class FileList;
 class ForeachExpr;
 class Function;

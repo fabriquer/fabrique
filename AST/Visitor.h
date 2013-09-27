@@ -55,7 +55,7 @@ public:
 	VISIT(Call)
 	VISIT(CompoundExpression)
 	VISIT(Conditional)
-	VISIT(File)
+	VISIT(Filename)
 	VISIT(FileList)
 	VISIT(ForeachExpr)
 	VISIT(Function)
