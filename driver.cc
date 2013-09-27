@@ -51,6 +51,11 @@ auto_ptr<Lexer> lex;
 
 int yyparse(ast::Parser*);
 
+/*
+ * I'd like to get rid of the global yyerror() and yylex() functions
+ * (since they assume that there is only one lexer),
+ * but this is a limitation of byacc.
+ */
 void yyerror(const char *str)
 {
 	assert(lex.get() != NULL);
