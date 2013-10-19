@@ -53,6 +53,8 @@ public:
 	static const Type& GetSupertype(const Type&, const Type&);
 	static Type* Create(const std::string&, const PtrVec<Type>& params);
 
+	virtual ~Type() {}
+
 	std::string str() const;
 	const std::string& name() const;
 	void PrettyPrint(std::ostream&, int indent = 0) const;

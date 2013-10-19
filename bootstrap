@@ -48,6 +48,12 @@ src_root = os.path.dirname(os.path.realpath(__file__))
 cxxflags = [
 	'-I', src_root, '-I', args.builddir,
 
+	# Use lots and lots of warnings.
+	'-Wall',
+
+	# We intentionally hide yyFlexLexer::yylex().
+	'-Wno-overloaded-virtual',
+
 	# we might like to use some C++11 language features like 'auto'
 	'-Wno-c++11-extensions',
 ]

@@ -48,6 +48,8 @@ public:
 	       const SourceRange& loc = SourceRange::None(),
 	       int contextLines = 3);
 
+	virtual ~ErrorReport() {}
+
 	void PrettyPrint(std::ostream& out, int indent = 0) const;
 
 private:
