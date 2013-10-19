@@ -120,7 +120,16 @@ int main(int argc, char *argv[]) {
 	const ast::Scope& root = parser->getRoot();
 
 	if (args->prettyPrint)
-		std::cout << root;
+	{
+		std::cout
+			<< Blue
+			<< "#\n"
+			<< "# AST pretty-printed from '" << args->input << "'\n"
+			<< "#\n"
+			<< ResetAll
+			<< root
+			;
+	}
 
 
 	//
