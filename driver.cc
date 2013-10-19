@@ -117,7 +117,7 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
-	auto& root = parser->getRoot();
+	const ast::Scope& root = parser->getRoot();
 
 	if (args->prettyPrint)
 		std::cout << root;
