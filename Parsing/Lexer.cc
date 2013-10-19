@@ -64,6 +64,9 @@ void Lexer::setRange(YYSTYPE *yylval)
 
 SourceRange Lexer::CurrentTokenRange() const
 {
+	if (yylineno == 1 and yycolumn == -1)
+		return SourceRange::None();
+
 	return SourceRange(
 		Location(inputFilename, yylineno, yycolumn),
 		Location(inputFilename, yylineno, yycolumn + yyleng - 1)
