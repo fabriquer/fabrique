@@ -69,6 +69,9 @@ int yylex(void *yylval)
 }
 
 int main(int argc, char *argv[]) {
+	//
+	// Parse command-line arguments.
+	//
 	auto_ptr<Arguments> args(Arguments::Parse(argc, argv));
 	if (!args.get() or args->help)
 	{
@@ -76,6 +79,10 @@ int main(int argc, char *argv[]) {
 		return (args.get() ? 0 : 1);
 	}
 
+
+	//
+	// Set up input and output files.
+	//
 	std::ifstream infile(args->input.c_str());
 
 	std::ofstream outfile;
@@ -87,6 +94,10 @@ int main(int argc, char *argv[]) {
 	lex.reset(new Lexer(args->input));
 	lex->switch_streams(&infile, &out);
 
+
+	//
+	// Parse the Fabrique input.
+	//
 	auto_ptr<ast::Parser> parser(new ast::Parser(*lex));
 	int err = yyparse(parser.get());
 
@@ -111,6 +122,10 @@ int main(int argc, char *argv[]) {
 	if (args->prettyPrint)
 		std::cout << root;
 
+
+	//
+	// What should we do with it now?
+	//
 	auto_ptr<ast::Visitor> v;
 	if (args->format == "null")
 		;
