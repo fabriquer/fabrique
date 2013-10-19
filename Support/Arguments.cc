@@ -29,64 +29,184 @@
  * SUCH DAMAGE.
  */
 
-#include "Arguments.h"
+#include "Support/Arguments.h"
+
+#include <iostream>
+#include <sstream>
+#include <vector>
 
 using namespace fabrique;
+using namespace option;
 using std::string;
 
+static std::ostream& err = std::cerr;
 
-void Arguments::Usage(std::ostream& out, const string& name)
+enum optionNames
 {
-	out
-		<< "Usage:  " << name << " [options] <input-filename>\n"
-		<< "\n"
-		<< "Options:\n"
-		<< "  --print              pretty-print the parsed file\n"
-		<< "\n"
-		<< "  -f format            output format (default: ninja)\n"
-		<< "  -o output            output filename (default: stdout)\n"
-		<< "\n"
-		;
+	Usage,
+	Help,
+	Format,
+	OutputFile,
+	PrettyPrint,
+};
+
+
+enum optionKind
+{
+	SetOpt,    //!< Set an optional value.
+	Enable,    //!< Turn on a boolean value.
+	Disable,   //!< Turn off a boolean value.
+	OtherOpt,  //!< Do something else (e.g., usage description.)
+};
+
+// Option validation functions:
+static ArgStatus Required(const option::Option&, bool);
+static ArgStatus NonEmpty(const option::Option&, bool);
+static ArgStatus IsOutputFormat(const option::Option&, bool);
+
+//! Possible output file formats (name, tool description).
+const static string formatStrings[][2] = {
+	{ "fab", "Fabrique file (possibly modified/optimised)" },
+	{ "make", "POSIX make (no BSD- or GNU-isms)" },
+	{ "ninja", "the Ninja build system (http://martine.github.io/ninja)" },
+	{ "sh", "Bourne shell" },
+};
+
+//! A @a separator -separated string listing all valid output formats.
+static string formats(std::string separator = ",");
+
+
+const size_t formatsLen = sizeof(formatStrings) / sizeof(formatStrings[0]);
+
+const string formatString =
+	("  -f,--format      Format of output file (" + formats() + ").");
+
+
+const option::Descriptor usage[] =
+{
+	{
+		Usage, OtherOpt, "", "", option::Arg::None,
+		"Fabrique: a tool for constructing workflows of build tools.\n"
+		"\n"
+		"Usage:\n"
+		"  fab [options] <fabfile>\n"
+		"\n"
+		"Arguments:\n"
+		"  <fabfile>        Build description; defaults to 'fabfile'\n"
+		"\n"
+		"Options:"
+	},
+	{
+		Help, Enable, "h", "help", option::Arg::None,
+		"  -h,--help        Print usage and exit."
+	},
+	{
+		OutputFile, SetOpt, "o", "output", option::Arg::Optional,
+		"  -o,--output      Output file: defaults to stdout ('-')."
+	},
+	{
+		Format, SetOpt, "f", "format", IsOutputFormat,
+		formatString.c_str()
+	},
+	{
+		PrettyPrint, Enable, "p", "print-ast", option::Arg::None,
+		"  -p,--print-ast   Pretty-print the AST"
+	},
+	{ 0, 0, 0, 0, 0, 0 }
+};
+
+
+
+void Arguments::PrintUsage(std::ostream& out)
+{
+	option::printUsage(out, usage);
 }
 
 Arguments* Arguments::Parse(int argc, char *argv[])
 {
-	string input;
-	string output;
-	string format = "ninja";
-	bool prettyPrint = false;
-	string *next = NULL;
+	option::Stats stats(usage, argc - 1, argv + 1);
+	std::vector<option::Option> options(stats.options_max);
+	std::vector<option::Option> buffer(stats.buffer_max);
+	option::Parser opts(usage, argc - 1, argv + 1,
+	                    options.data(), buffer.data());
 
-	for (int i = 1; i < argc; i++)
+	if (opts.nonOptionsCount() > 1)
+		return NULL;
+
+	const bool help = options[Help];
+
+	const string input = opts.nonOptionsCount() == 1
+	                      ? opts.nonOption(0)
+	                      : "fabfile";
+
+	const string output = options[OutputFile]
+	                       ? options[OutputFile].arg
+	                       : "-";
+
+	const string format = options[Format]
+	                       ? options[Format].arg
+	                       : "ninja";
+
+	const bool prettyPrint = options[PrettyPrint];
+
+	return new Arguments(help, input, output, format, prettyPrint);
+}
+
+
+static ArgStatus Required(const Option& o, bool printErr)
+{
+	if (o.arg != NULL)
+		return ARG_OK;
+
+	if (printErr)
+		err << "Option '" << o << "' requires an argument\n";
+
+	return ARG_ILLEGAL;
+}
+
+
+static ArgStatus NonEmpty(const option::Option& o, bool printErr)
+{
+	ArgStatus req = Required(o, printErr);
+	if (req != ARG_OK)
+		return req;
+
+	if (o.arg[0] != '\0')
+		return ARG_OK;
+
+	if (printErr)
+		err << "Missing argument for option '" << o << "'\n";
+
+	return ARG_ILLEGAL;
+}
+
+
+static ArgStatus IsOutputFormat(const Option& opt, bool printErr)
+{
+	ArgStatus basic = NonEmpty(opt, printErr);
+	if (basic != ARG_OK)
+		return basic;
+
+	const string arg(opt.arg);
+
+	for (auto& formatString : formatStrings)
+		if (arg == formatString[0])
+			return ARG_OK;
+
+	return ARG_ILLEGAL;
+}
+
+
+static string formats(string separator)
+{
+	std::ostringstream oss;
+
+	for (size_t i = 0; i < formatsLen; /* i++ done within loop */)
 	{
-		string arg(argv[i]);
-
-		if (arg == "-o")
-		{
-			next = &output;
-		}
-		else if (arg == "-f")
-		{
-			next = &format;
-		}
-		else if (next)
-		{
-			*next = arg;
-			next = NULL;
-		}
-		else if (arg == "--print")
-		{
-			prettyPrint = true;
-		}
-		else if (input.length() == 0)
-		{
-			input = arg;
-		}
-		else
-		{
-			return NULL;
-		}
+		oss << formatStrings[i][0];
+		if (++i < formatsLen)
+			oss << separator;
 	}
 
-	return new Arguments(input, output, format, prettyPrint);
+	return oss.str();
 }

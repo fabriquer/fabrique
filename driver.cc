@@ -70,20 +70,19 @@ int yylex(void *yylval)
 
 int main(int argc, char *argv[]) {
 	auto_ptr<Arguments> args(Arguments::Parse(argc, argv));
-	if (!args.get())
+	if (!args.get() or args->help)
 	{
-		Arguments::Usage(std::cerr, argv[0]);
-		return 1;
+		Arguments::PrintUsage(std::cerr);
+		return (args.get() ? 0 : 1);
 	}
 
 	std::ifstream infile(args->input.c_str());
 
-	bool outputIsFile = (args->output.length() > 0);
 	std::ofstream outfile;
-	if (outputIsFile)
+	if (args->outputIsFile)
 		outfile.open(args->output.c_str());
 
-	std::ostream& out(outputIsFile ? outfile : std::cout);
+	std::ostream& out(args->outputIsFile ? outfile : std::cout);
 
 	lex.reset(new Lexer(args->input));
 	lex->switch_streams(&infile, &out);

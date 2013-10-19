@@ -32,33 +32,47 @@
 #ifndef ARGUMENTS_H
 #define ARGUMENTS_H
 
+// Include Matthias Benkmann's "Lean Mean C++ Option Parser".
+#include "Support/optionparser.h"
+
 #include <ostream>
 #include <string>
 
 namespace fabrique {
 
+enum OutputFormat
+{
+	Fabrique,
+	Make,
+	Ninja,
+	Sh,
+};
+
 /**
- * Extremely simple representation of quite simple arguments.
- *
- * If we ever get to needing more command-line arguments, we could think about
- * using something like gflags or TCLAP.
+ * Command-line options and arguments after parsing, type-checking, etc.
  */
 class Arguments
 {
 public:
-	static void Usage(std::ostream&, const std::string& name);
+	static void PrintUsage(std::ostream&);
 	static Arguments* Parse(int argc, char *argv[]);
+
+	const bool help;
 
 	const std::string input;
 	const std::string output;
+	const bool outputIsFile;
+
 	const std::string format;
-	bool prettyPrint;
+	const bool prettyPrint;
 
 private:
-	Arguments(const std::string& input, const std::string& output,
+	Arguments(const bool help,
+	          const std::string& input, const std::string& output,
 	          const std::string& format, bool prettyPrint)
-		: input(input), output(output), format(format),
-		  prettyPrint(prettyPrint)
+		: help(help), input(input), output(output),
+		  outputIsFile(output.length() > 0 and output != "-"),
+		  format(format), prettyPrint(prettyPrint)
 	{
 	}
 
