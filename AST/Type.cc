@@ -29,8 +29,8 @@
  * SUCH DAMAGE.
  */
 
-#include "Type.h"
-#include "Support/ostream.h"
+#include "AST/Type.h"
+#include "Support/Bytestream.h"
 
 #include <sstream>
 
@@ -89,7 +89,23 @@ bool Type::isListOf(const Type& t) const
 std::string Type::str() const
 {
 	std::ostringstream oss;
-	PrettyPrint(oss);
+
+	oss << typeName;
+
+	if (params.size() > 0)
+	{
+		oss << '[';
+
+		for (size_t i = 0; i < params.size(); )
+		{
+			oss << params[i]->str();
+			if (++i < params.size())
+				oss << ", ";
+		}
+
+		oss << ']';
+	}
+
 	return oss.str();
 }
 
@@ -97,23 +113,27 @@ std::string Type::str() const
 const std::string& Type::name() const { return typeName; }
 
 
-void Type::PrettyPrint(std::ostream& out, int indent) const
+void Type::PrettyPrint(Bytestream& out, int indent) const
 {
-	out << Blue << typeName;
+	out << Bytestream::Type << typeName;
 
 	if (params.size() > 0)
 	{
-		out << Yellow << '[' << ResetAll;
+		out
+			<< Bytestream::Operator << "["
+			<< Bytestream::Reset;
 
 		for (size_t i = 0; i < params.size(); )
 		{
 			out << *params[i];
 			if (++i < params.size())
-				out << Yellow << ", " << ResetAll;
+				out
+					<< Bytestream::Operator << ", "
+					<< Bytestream::Reset;
 		}
 
-		out << Yellow << ']';
+		out << Bytestream::Operator << "]";
 	}
 
-	out << ResetAll;
+	out << Bytestream::Reset;
 }

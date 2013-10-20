@@ -57,7 +57,7 @@ public:
 
 	std::string str() const;
 	const std::string& name() const;
-	void PrettyPrint(std::ostream&, int indent = 0) const;
+	void PrettyPrint(Bytestream&, int indent = 0) const;
 
 	bool operator == (const Type&) const;
 	bool operator != (const Type& t) const { return !(*this == t); }

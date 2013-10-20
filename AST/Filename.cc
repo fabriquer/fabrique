@@ -32,7 +32,7 @@
 #include "AST/Filename.h"
 #include "AST/Type.h"
 #include "AST/Visitor.h"
-#include "Support/ostream.h"
+#include "Support/Bytestream.h"
 
 #include <set>
 
@@ -49,21 +49,27 @@ bool Filename::isStatic() const
 	return true;
 }
 
-void Filename::PrettyPrint(std::ostream& out, int indent) const
+void Filename::PrettyPrint(Bytestream& out, int indent) const
 {
 	bool explicitFile =
 		(args.size() > 0) or (!name->isStatic());
 
 	if (explicitFile)
-		out << Red << "file" << Yellow << "(";
+		out
+			<< Bytestream::Action << "file"
+			<< Bytestream::Operator << "(";
 
-	out << Magenta << *name << ResetAll;
+	out << Bytestream::Filename << *name << Bytestream::Reset;
 
 	for (auto *a : args)
-		out << Yellow << ", " << ResetAll << *a;
+		out
+			<< Bytestream::Operator << ", "
+			<< Bytestream::Reset << *a;
 
 	if (explicitFile)
-		out << Yellow << ")" << ResetAll;
+		out
+			<< Bytestream::Operator << ")"
+			<< Bytestream::Reset;
 }
 
 

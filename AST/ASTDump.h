@@ -34,9 +34,11 @@
 
 #include "AST/Visitor.h"
 
-#include <iostream>
 
 namespace fabrique {
+
+class Bytestream;
+
 namespace ast {
 
 /**
@@ -45,7 +47,7 @@ namespace ast {
 class ASTDump : public Visitor
 {
 public:
-	static ASTDump* Create(std::ostream&);
+	static ASTDump* Create(Bytestream&);
 
 	VISIT(Action)
 	VISIT(Argument)
@@ -68,14 +70,14 @@ public:
 	VISIT(Value)
 
 private:
-	ASTDump(std::ostream& out)
+	ASTDump(Bytestream& out)
 		: out(out), indent(0)
 	{
 	}
 
 	void Write(const std::string& message, const void *ptr);
 
-	std::ostream& out;
+	Bytestream& out;
 	size_t indent;
 };
 

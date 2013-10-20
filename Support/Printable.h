@@ -34,9 +34,9 @@
 
 #include "ADT/PtrVec.h"
 
-#include <ostream>
-
 namespace fabrique {
+
+class Bytestream;
 
 
 /**
@@ -49,14 +49,8 @@ public:
 	 * Print a human-readable representation to an output stream
 	 * and return that output stream.
 	 */
-	virtual void PrettyPrint(std::ostream&, int indent = 0) const = 0;
+	virtual void PrettyPrint(Bytestream&, int indent = 0) const = 0;
 };
-
-inline std::ostream& operator<< (std::ostream& out, const Printable& p)
-{
-	p.PrettyPrint(out);
-	return out;
-}
 
 } // namespace fabrique
 

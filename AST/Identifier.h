@@ -37,7 +37,6 @@
 #include "Support/Location.h"
 #include "Support/Printable.h"
 
-#include <iostream>
 #include <string>
 
 namespace fabrique {
@@ -62,7 +61,7 @@ public:
 
 	const SourceRange& getSource() const { return loc; }
 
-	void PrettyPrint(std::ostream&, int indent = 0) const;
+	void PrettyPrint(Bytestream&, int indent = 0) const;
 	const std::string& name() const { return id; }
 
 	virtual void Accept(Visitor&) const;

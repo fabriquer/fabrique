@@ -31,7 +31,7 @@
 
 #include "AST/FileList.h"
 #include "AST/Visitor.h"
-#include "Support/ostream.h"
+#include "Support/Bytestream.h"
 
 using namespace fabrique::ast;
 
@@ -50,9 +50,9 @@ bool FileList::isStatic() const
 }
 
 
-void FileList::PrettyPrint(std::ostream& out, int indent) const
+void FileList::PrettyPrint(Bytestream& out, int indent) const
 {
-	out << Yellow << "[" << ResetAll;
+	out << Bytestream::Operator << "[" << Bytestream::Reset;
 
 	for (auto *file : files)
 		out << " " << *file;
@@ -60,7 +60,7 @@ void FileList::PrettyPrint(std::ostream& out, int indent) const
 	for (auto *arg : args)
 		out << ", " << *arg;
 
-	out << Yellow << " ]" << ResetAll;
+	out << Bytestream::Operator << " ]" << Bytestream::Reset;
 }
 
 

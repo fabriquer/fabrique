@@ -31,7 +31,7 @@
 
 #include "AST/List.h"
 #include "AST/Visitor.h"
-#include "Support/ostream.h"
+#include "Support/Bytestream.h"
 
 #include <cassert>
 
@@ -47,12 +47,12 @@ bool List::isStatic() const
 	return true;
 }
 
-void List::PrettyPrint(std::ostream& out, int indent) const
+void List::PrettyPrint(Bytestream& out, int indent) const
 {
-	out << Yellow << "[" << ResetAll;
+	out << Bytestream::Operator << "[" << Bytestream::Reset;
 	for (auto *e : elements)
 		out << " " << *e;
-	out << Yellow << " ]" << ResetAll;
+	out << Bytestream::Operator << " ]" << Bytestream::Reset;
 }
 
 

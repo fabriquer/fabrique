@@ -34,6 +34,7 @@
 #include "AST/Scope.h"
 #include "AST/Value.h"
 #include "AST/Visitor.h"
+#include "Support/Bytestream.h"
 
 using namespace fabrique::ast;
 
@@ -89,7 +90,7 @@ void Scope::Register(const Identifier& id, const Expression *e)
 }
 
 
-void Scope::PrettyPrint(std::ostream& out, int indent) const
+void Scope::PrettyPrint(Bytestream& out, int indent) const
 {
 	for (auto *v : values)
 		out << *v;

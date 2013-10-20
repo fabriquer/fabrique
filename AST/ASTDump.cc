@@ -30,13 +30,15 @@
  */
 
 #include "AST/ASTDump.h"
+#include "Support/Bytestream.h"
+
 #include <iomanip>
 
 using namespace fabrique::ast;
 using std::string;
 
 
-ASTDump* ASTDump::Create(std::ostream& out)
+ASTDump* ASTDump::Create(fabrique::Bytestream& out)
 {
 	return new ASTDump(out);
 }
@@ -73,7 +75,7 @@ void ASTDump::Write(const string& s, const void *ptr)
 
 	out
 		<< indent << s
-		<< " @ 0x" << std::hex << (unsigned long long) ptr
-		<< std::endl
+		<< " @ " << (unsigned long) ptr
+		<< "\n"
 		;
 }

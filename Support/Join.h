@@ -34,11 +34,12 @@
 
 #include "ADT/PtrVec.h"
 
-#include <ostream>
+#include <string>
 
 
 namespace fabrique {
 
+class Bytestream;
 class Printable;
 
 
@@ -53,14 +54,14 @@ public:
 	{
 	}
 
-	void Print(std::ostream&) const;
+	void Print(Bytestream&) const;
 
 private:
 	const std::string joinStr;
 	const PtrVec<Printable>& objects;
 };
 
-std::ostream& operator<< (std::ostream&, const Join&);
+Bytestream& operator<< (Bytestream&, const Join&);
 
 } // namespace fabrique
 

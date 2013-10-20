@@ -32,7 +32,7 @@
 #include "AST/CompoundExpr.h"
 #include "AST/Value.h"
 #include "AST/Visitor.h"
-#include "Support/ostream.h"
+#include "Support/Bytestream.h"
 
 using namespace fabrique::ast;
 
@@ -54,7 +54,7 @@ bool CompoundExpression::isStatic() const
 }
 
 
-void CompoundExpression::PrettyPrint(std::ostream& out, int indent) const
+void CompoundExpression::PrettyPrint(Bytestream& out, int indent) const
 {
 	std::string tabs(indent, '\t');
 	std::string intabs(indent + 1, '\t');
@@ -62,7 +62,7 @@ void CompoundExpression::PrettyPrint(std::ostream& out, int indent) const
 
 	if (isComplex)
 	{
-		out << tabs << Yellow << "{\n";
+		out << tabs << Bytestream::Operator << "{\n";
 		for (auto *v : values)
 			v->PrettyPrint(out, indent + 1);
 		out << intabs;
@@ -71,9 +71,9 @@ void CompoundExpression::PrettyPrint(std::ostream& out, int indent) const
 	out << *result;
 
 	if (isComplex)
-		out << "\n" << Yellow << tabs << "}";
+		out << "\n" << Bytestream::Operator << tabs << "}";
 
-	out << ResetAll;
+	out << Bytestream::Reset;
 }
 
 

@@ -31,7 +31,7 @@
 
 #include "AST/Conditional.h"
 #include "AST/Visitor.h"
-#include "Support/ostream.h"
+#include "Support/Bytestream.h"
 
 using namespace fabrique::ast;
 
@@ -47,17 +47,17 @@ bool Conditional::isStatic() const
 }
 
 
-void Conditional::PrettyPrint(std::ostream& out, int indent) const
+void Conditional::PrettyPrint(Bytestream& out, int indent) const
 {
 	out
-		<< Yellow << "if ("
+		<< Bytestream::Operator << "if ("
 		<< *condition
-		<< Yellow << ") { "
+		<< Bytestream::Operator << ") { "
 		<< *thenResult
-		<< Yellow << "} else {"
+		<< Bytestream::Operator << "} else {"
 		<< *elseResult
-		<< Yellow << "}"
-		<< ResetAll
+		<< Bytestream::Operator << "}"
+		<< Bytestream::Reset
 		;
 }
 

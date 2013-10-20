@@ -32,21 +32,21 @@
 #include "AST/Identifier.h"
 #include "AST/Type.h"
 #include "AST/Visitor.h"
-#include "Support/ostream.h"
+#include "Support/Bytestream.h"
 
 #include <iomanip>
 
 using namespace fabrique::ast;
 
 
-void Identifier::PrettyPrint(std::ostream& out, int indent) const
+void Identifier::PrettyPrint(Bytestream& out, int indent) const
 {
-	out << Cyan << id;
+	out << Bytestream::Identifier << id;
 
 	if (ty)
-		out << Yellow << ":" << Blue << *ty;
+		out << Bytestream::Operator << ":" << Bytestream::Type << *ty;
 
-	out << ResetAll;
+	out << Bytestream::Reset;
 }
 
 

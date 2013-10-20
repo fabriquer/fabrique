@@ -69,7 +69,7 @@ public:
 	{
 	}
 
-	void PrettyPrint(std::ostream&, int indent = 0) const;
+	void PrettyPrint(Bytestream&, int indent = 0) const;
 	virtual void Accept(Visitor&) const;
 };
 
@@ -81,7 +81,7 @@ public:
 	{
 	}
 
-	void PrettyPrint(std::ostream&, int indent = 0) const;
+	void PrettyPrint(Bytestream&, int indent = 0) const;
 	virtual void Accept(Visitor&) const;
 };
 
@@ -95,7 +95,7 @@ public:
 	{
 	}
 
-	void PrettyPrint(std::ostream&, int indent = 0) const;
+	void PrettyPrint(Bytestream&, int indent = 0) const;
 	virtual void Accept(Visitor&) const;
 };
 

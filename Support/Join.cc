@@ -29,13 +29,14 @@
  * SUCH DAMAGE.
  */
 
+#include "Support/Bytestream.h"
 #include "Support/Join.h"
 #include "Support/Printable.h"
 
 using namespace fabrique;
 
 
-void Join::Print(std::ostream& out) const
+void Join::Print(Bytestream& out) const
 {
 	for (size_t i = 0; i < objects.size(); )
 	{
@@ -46,7 +47,7 @@ void Join::Print(std::ostream& out) const
 }
 
 
-std::ostream& operator<< (std::ostream& out, const Join& j)
+Bytestream& operator<< (Bytestream& out, const Join& j)
 {
 	j.Print(out);
 	return out;

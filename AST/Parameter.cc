@@ -31,11 +31,12 @@
 
 #include "AST/Parameter.h"
 #include "AST/Visitor.h"
+#include "Support/Bytestream.h"
 
 using namespace fabrique::ast;
 
 
-void Parameter::PrettyPrint(std::ostream& out, int indent) const
+void Parameter::PrettyPrint(Bytestream& out, int indent) const
 {
 	out << *name;
 

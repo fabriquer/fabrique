@@ -50,7 +50,7 @@ public:
 	const Expression& getValue() const { return *expr; }
 
 	bool isStatic() const { return expr->isStatic(); }
-	virtual void PrettyPrint(std::ostream&, int indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 
 	virtual void Accept(Visitor&) const;
 

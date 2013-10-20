@@ -31,29 +31,30 @@
 
 #include "AST/literals.h"
 #include "AST/Visitor.h"
-#include "Support/ostream.h"
+#include "Support/Bytestream.h"
 
 using namespace fabrique::ast;
-using std::ostream;
 
 
-void BoolLiteral::PrettyPrint(ostream& out, int indent) const
+void BoolLiteral::PrettyPrint(Bytestream& out, int indent) const
 {
-	out << Magenta << (value() ? "true" : "false") << ResetAll;
+	out
+		<< Bytestream::Filename << (value() ? "true" : "false")
+		<< Bytestream::Reset;
 }
 
 void BoolLiteral::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }
 
-void IntLiteral::PrettyPrint(ostream& out, int indent) const
+void IntLiteral::PrettyPrint(Bytestream& out, int indent) const
 {
-	out << Magenta << value() << ResetAll;
+	out << Bytestream::Filename << value() << Bytestream::Reset;
 }
 
 void IntLiteral::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }
 
-void StringLiteral::PrettyPrint(ostream& out, int indent) const
+void StringLiteral::PrettyPrint(Bytestream& out, int indent) const
 {
-	out << Magenta << "'";
+	out << Bytestream::Filename << "'";
 
 	std::string s = value();
 	size_t i = 0;
@@ -77,16 +78,16 @@ void StringLiteral::PrettyPrint(ostream& out, int indent) const
 			);
 
 		out
-			<< Cyan << s.substr(dollarSign, end - dollarSign)
-			<< Magenta
+			<< Bytestream::Identifier
+			<< s.substr(dollarSign, end - dollarSign)
+			<< Bytestream::Filename
 			;
 
 		i = end;
 
 	} while (i < s.length());
 
-	//<< value() <<;
-	out << "'" << ResetAll;
+	out << "'" << Bytestream::Reset;
 }
 
 void StringLiteral::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }

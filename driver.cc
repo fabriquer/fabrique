@@ -36,7 +36,7 @@
 #include "Parsing/fab.yacc.h"
 
 #include "Support/Arguments.h"
-#include "Support/ostream.h"
+#include "Support/Bytestream.h"
 
 #include <cassert>
 #include <fstream>
@@ -48,6 +48,7 @@ using std::auto_ptr;
 
 
 auto_ptr<Lexer> lex;
+Bytestream& err = Bytestream::ANSI(std::cerr);
 
 int yyparse(ast::Parser*);
 
@@ -59,7 +60,7 @@ int yyparse(ast::Parser*);
 void yyerror(const char *str)
 {
 	assert(lex.get() != NULL);
-	std::cerr << lex->Err(str);
+	err << lex->Err(str);
 }
 
 int yylex(void *yylval)
@@ -89,29 +90,33 @@ int main(int argc, char *argv[]) {
 	if (args->outputIsFile)
 		outfile.open(args->output.c_str());
 
-	std::ostream& out(args->outputIsFile ? outfile : std::cout);
+	Bytestream& out = args->outputIsFile
+		? Bytestream::File(outfile)
+		: Bytestream::ANSI(std::cout);
+
+	Bytestream& err = Bytestream::ANSI(std::cerr);
 
 	lex.reset(new Lexer(args->input));
-	lex->switch_streams(&infile, &out);
+	lex->switch_streams(&infile, &out.raw());
 
 
 	//
 	// Parse the Fabrique input.
 	//
 	auto_ptr<ast::Parser> parser(new ast::Parser(*lex));
-	int err = yyparse(parser.get());
+	int result = yyparse(parser.get());
 
-	for (auto *err : parser->errors())
-		std::cerr << *err << std::endl;
+	for (auto *error : parser->errors())
+		err << *error << "\n";
 
-	if (err != 0)
+	if (result != 0)
 	{
-		std::cerr
-			<< Bold << "Fabrique:"
-			<< Red << " failed to parse "
-			<< Magenta << args->input
-			<< ResetAll
-			<< std::endl
+		err
+			<< "Fabrique:"
+			<< Bytestream::Error << " failed to parse "
+			<< Bytestream::Filename << args->input
+			<< Bytestream::Reset
+			<< "\n"
 			;
 
 		return 1;
@@ -121,12 +126,12 @@ int main(int argc, char *argv[]) {
 
 	if (args->prettyPrint)
 	{
-		std::cout
-			<< Blue
+		out
+			<< Bytestream::Comment
 			<< "#\n"
 			<< "# AST pretty-printed from '" << args->input << "'\n"
 			<< "#\n"
-			<< ResetAll
+			<< Bytestream::Reset
 			<< root
 			;
 	}

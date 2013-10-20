@@ -32,7 +32,7 @@
 #include "AST/Foreach.h"
 #include "AST/Parameter.h"
 #include "AST/Visitor.h"
-#include "Support/ostream.h"
+#include "Support/Bytestream.h"
 
 using namespace fabrique::ast;
 
@@ -43,16 +43,16 @@ bool ForeachExpr::isStatic() const
 }
 
 
-void ForeachExpr::PrettyPrint(std::ostream& out, int indent) const
+void ForeachExpr::PrettyPrint(Bytestream& out, int indent) const
 {
 	out
-		<< Yellow << "foreach "
+		<< Bytestream::Operator << "foreach "
 		<< *source
-		<< Yellow << " as "
+		<< Bytestream::Operator << " as "
 		<< *loopParameter
 		<< " "
 		<< *body
-		<< ResetAll
+		<< Bytestream::Reset
 		;
 }
 

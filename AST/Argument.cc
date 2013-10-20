@@ -31,15 +31,18 @@
 
 #include "AST/Argument.h"
 #include "AST/Visitor.h"
-#include "Support/ostream.h"
+#include "Support/Bytestream.h"
 
 using namespace fabrique::ast;
 
 
-void Argument::PrettyPrint(std::ostream& out, int indent) const
+void Argument::PrettyPrint(Bytestream& out, int indent) const
 {
 	if (name.get())
-		out << Green << name->name() << Yellow << " = " << ResetAll;
+		out
+			<< Bytestream::Identifier << name->name()
+			<< Bytestream::Operator << " = "
+			;
 
 	expr->PrettyPrint(out, indent);
 }

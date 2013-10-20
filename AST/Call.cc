@@ -31,26 +31,31 @@
 
 #include "AST/Call.h"
 #include "AST/Visitor.h"
-#include "Support/ostream.h"
+#include "Support/Bytestream.h"
 
 using namespace fabrique::ast;
 
 
-void Call::PrettyPrint(std::ostream& out, int indent) const
+void Call::PrettyPrint(Bytestream& out, int indent) const
 {
 	out
 		<< *fn
-		<< Yellow << '(' << ResetAll
+		<< Bytestream::Operator << "("
+		<< Bytestream::Reset
 		;
 
 	for (size_t i = 0; i < args.size(); )
 	{
 		out << *args[i];
 		if (++i < args.size())
-			out << Yellow << ", " << ResetAll;
+			out
+				<< Bytestream::Operator << ", "
+				<< Bytestream::Reset;
 	}
 
-	out << Yellow << ')' << ResetAll;
+	out
+		<< Bytestream::Operator << ")"
+		<< Bytestream::Reset;
 }
 
 

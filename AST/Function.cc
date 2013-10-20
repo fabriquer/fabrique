@@ -7,12 +7,12 @@
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
  * ("CTSRD"), as part of the DARPA CRASH research programme.
  *
- * Redistribution and use in source and binary forms, with or without
+ * Bytestream::Actionistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 1. Redistributions of source code must retain the above copyright
+ * 1. Bytestream::Actionistributions of source code must retain the above copyright
  *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
+ * 2. Bytestream::Actionistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
  *
@@ -35,7 +35,7 @@
 #include "AST/Type.h"
 #include "AST/Value.h"
 #include "AST/Visitor.h"
-#include "Support/ostream.h"
+#include "Support/Bytestream.h"
 
 using namespace fabrique::ast;
 
@@ -47,28 +47,30 @@ Function::~Function()
 }
 
 
-void Function::PrettyPrint(std::ostream& out, int indent) const
+void Function::PrettyPrint(Bytestream& out, int indent) const
 {
 	std::string tabs(indent, '\t');
 	std::string intabs(indent + 1, '\t');
 
 	out
-		<< Red << "function"
-		<< Yellow << '('
+		<< Bytestream::Action << "function"
+		<< Bytestream::Operator << "("
 		;
 
 	for (size_t i = 0; i < params.size(); )
 	{
 		out << *params[i];
 		if (++i < params.size())
-			out << Yellow << ", " << ResetAll;
+			out
+				<< Bytestream::Operator << ", "
+				<< Bytestream::Reset;
 	}
 
 	out
-		<< Yellow << "): "
-		<< ResetAll << getType()
+		<< Bytestream::Operator << "): "
+		<< Bytestream::Reset << getType()
 		<< " " << *body
-		<< ResetAll
+		<< Bytestream::Reset
 		;
 }
 

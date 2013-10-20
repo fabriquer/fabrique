@@ -31,14 +31,18 @@
 
 #include "Parsing/Lexer.h"
 #include "Support/Location.h"
-#include "Support/ostream.h"
+#include "Support/Bytestream.h"
 
 using namespace fabrique;
 
 
-void Location::PrettyPrint(std::ostream& out, int indent) const
+void Location::PrettyPrint(Bytestream& out, int indent) const
 {
-	if (!filename.empty()) out << Magenta << filename << White << ":";
+	if (!filename.empty())
+		out
+			<< Bytestream::Filename << filename
+			<< Bytestream::Reset << ":";
+
 	if (line > 0) out << line << ":";
 	if (column > 0) out << column << ":";
 }
@@ -68,31 +72,31 @@ SourceRange SourceRange::None()
 	return SourceRange(nowhere, nowhere);
 }
 
-void SourceRange::PrettyPrint(std::ostream& out, int indent) const
+void SourceRange::PrettyPrint(Bytestream& out, int indent) const
 {
 	out
-		<< Magenta << begin.filename
-		<< White << ":"
+		<< Bytestream::Filename << begin.filename
+		<< Bytestream::Reset << ":"
 		;
 
 	if (begin.line == end.line)
 		out
-			<< Blue << begin.line
-			<< White << ":"
-			<< Green << begin.column
-			<< Yellow << "-"
-			<< Green << end.column
+			<< Bytestream::Type << begin.line
+			<< Bytestream::Reset << ":"
+			<< Bytestream::Value << begin.column
+			<< Bytestream::Operator << "-"
+			<< Bytestream::Value << end.column
 			;
 	else
 		out
-			<< Blue << begin.line
-			<< White << ":"
-			<< Green << begin.column
-			<< Yellow << "-"
-			<< Blue << end.line
-			<< White << ":"
-			<< Green << end.column
+			<< Bytestream::Type << begin.line
+			<< Bytestream::Reset << ":"
+			<< Bytestream::Value << begin.column
+			<< Bytestream::Operator << "-"
+			<< Bytestream::Type << end.line
+			<< Bytestream::Reset << ":"
+			<< Bytestream::Value << end.column
 			;
 
-	out << ResetAll;
+	out << Bytestream::Reset;
 }

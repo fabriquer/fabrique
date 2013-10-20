@@ -50,7 +50,7 @@ public:
 
 	virtual ~ErrorReport() {}
 
-	void PrettyPrint(std::ostream& out, int indent = 0) const;
+	void PrettyPrint(Bytestream& out, int indent = 0) const;
 
 private:
 	ErrorReport(const std::string& message, const SourceRange& range,

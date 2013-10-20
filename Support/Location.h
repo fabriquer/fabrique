@@ -46,7 +46,7 @@ class Lexer;
 class Location : public Printable
 {
 public:
-	virtual void PrettyPrint(std::ostream&, int indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 
 	Location(const std::string& filename = "", int line = 0, int column = 0)
 		: filename(filename), line(line), column(column)
@@ -81,7 +81,7 @@ public:
 	{
 	}
 
-	virtual void PrettyPrint(std::ostream&, int indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 
 	Location begin;
 	Location end;

@@ -31,11 +31,12 @@
 
 #include "AST/SymbolReference.h"
 #include "AST/Visitor.h"
+#include "Support/Bytestream.h"
 
 using namespace fabrique::ast;
 
 
-void SymbolReference::PrettyPrint(std::ostream& out, int indent) const
+void SymbolReference::PrettyPrint(Bytestream& out, int indent) const
 {
 	out << *id;
 }

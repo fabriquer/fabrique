@@ -32,14 +32,12 @@
 #include "ErrorReport.h"
 
 #include <fstream>
-#include <iostream>
 #include <list>
 #include <map>
 
-#include "Support/ostream.h"
+#include "Support/Bytestream.h"
 
 using namespace fabrique;
-using std::ostream;
 using std::string;
 
 
@@ -50,21 +48,21 @@ ErrorReport* ErrorReport::Create(const string& message, const SourceRange& loc,
 }
 
 
-void ErrorReport::PrettyPrint(std::ostream& out, int indent) const
+void ErrorReport::PrettyPrint(Bytestream& out, int indent) const
 {
 	string tabs(indent, '\t');
 
 	out
 		<< "\n"
-		<< tabs << Bold
+		<< tabs << Bytestream::ErrorLoc
 		<< caret
 		;
 
 	out
 		<< ": "
-		<< Red << "error" << White << ": "
-		<< Cyan << message
-		<< ResetAll << "\n"
+		<< Bytestream::Error << "error"
+		<< Bytestream::Reset << ": " << message
+		<< Bytestream::Reset << "\n"
 		;
 
 	/*
@@ -88,8 +86,8 @@ void ErrorReport::PrettyPrint(std::ostream& out, int indent) const
 			if (i >= (caret.line - contextLines))
 				out
 					<< tabs
-					<< Blue << i << "\t"
-					<< White << line << "\n"
+					<< Bytestream::Comment << i << "\t"
+					<< Bytestream::Reset << line << "\n"
 					;
 		}
 
@@ -120,7 +118,7 @@ void ErrorReport::PrettyPrint(std::ostream& out, int indent) const
 		out
 			<< tabs << "\t"
 			<< string(firstHighlightColumn - 1, ' ')
-			<< Green
+			<< Bytestream::ErrorLoc
 			<< string(preCaretHighlight, '~')
 			<< "^"
 			<< string(postCaretHighlight, '~')
@@ -128,5 +126,5 @@ void ErrorReport::PrettyPrint(std::ostream& out, int indent) const
 			;
 	}
 
-	out << ResetAll;
+	out << Bytestream::Reset;
 }

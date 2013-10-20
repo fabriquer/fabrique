@@ -58,7 +58,7 @@ public:
 	}
 
 	virtual bool isStatic() const;
-	virtual void PrettyPrint(std::ostream&, int indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 
 	virtual void Accept(Visitor&) const;
 

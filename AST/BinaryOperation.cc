@@ -31,7 +31,7 @@
 
 #include "AST/BinaryOperation.h"
 #include "AST/Visitor.h"
-#include "Support/ostream.h"
+#include "Support/Bytestream.h"
 
 using namespace fabrique::ast;
 
@@ -79,10 +79,14 @@ bool BinaryOperation::isStatic() const
 }
 
 
-void BinaryOperation::PrettyPrint(std::ostream& out, int indent) const
+void BinaryOperation::PrettyPrint(Bytestream& out, int indent) const
 {
 	LHS->PrettyPrint(out, indent);
-	out << " " << Yellow << OpStr(op) << ResetAll << " ";
+	out
+		<< " "
+		<< Bytestream::Operator << OpStr(op)
+		<< Bytestream::Reset
+		<< " ";
 	RHS->PrettyPrint(out, indent);
 }
 

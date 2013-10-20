@@ -31,17 +31,17 @@
 
 #include "AST/Action.h"
 #include "AST/Visitor.h"
-#include "Support/ostream.h"
+#include "Support/Bytestream.h"
 
 using namespace fabrique::ast;
 
 
-void Action::PrettyPrint(std::ostream& out, int indent) const
+void Action::PrettyPrint(Bytestream& out, int indent) const
 {
 	out
-		<< Red << "action"
-		<< Yellow << "("
-		<< ResetAll
+		<< Bytestream::Action << "action"
+		<< Bytestream::Operator << "("
+		<< Bytestream::Reset
 		;
 
 	for (size_t i = 0; i < args.size(); )
@@ -54,8 +54,8 @@ void Action::PrettyPrint(std::ostream& out, int indent) const
 	}
 
 	out
-		<< Yellow << ")"
-		<< ResetAll
+		<< Bytestream::Operator << ")"
+		<< Bytestream::Reset
 		;
 }
 

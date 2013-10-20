@@ -32,12 +32,11 @@
 #include "AST/Type.h"
 #include "AST/Value.h"
 #include "AST/Visitor.h"
-#include "Support/ostream.h"
+#include "Support/Bytestream.h"
 
 #include <iomanip>
 
 using namespace fabrique::ast;
-using std::ostream;
 
 
 Value::Value(Identifier* id, const Expression* e)
@@ -47,19 +46,19 @@ Value::Value(Identifier* id, const Expression* e)
 	assert(e != NULL);
 }
 
-void Value::PrettyPrint(ostream& out, int indent) const
+void Value::PrettyPrint(Bytestream& out, int indent) const
 {
 	std::string tabs(indent, '\t');
 
 	out
 		<< tabs
-		<< Green << id->name()
-		<< Yellow << ":"
-		<< Blue << getType()
-		<< Yellow << " = "
-		<< ResetAll << *expr
-		<< Yellow << ";"
-		<< ResetAll << "\n"
+		<< Bytestream::Value << id->name()
+		<< Bytestream::Operator << ":"
+		<< Bytestream::Type << getType()
+		<< Bytestream::Operator << " = "
+		<< Bytestream::Reset << *expr
+		<< Bytestream::Operator << ";"
+		<< Bytestream::Reset << "\n"
 		;
 }
 
