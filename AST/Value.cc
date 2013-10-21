@@ -52,7 +52,7 @@ void Value::PrettyPrint(Bytestream& out, int indent) const
 
 	out
 		<< tabs
-		<< Bytestream::Value << id->name()
+		<< Bytestream::Definition << id->name()
 		<< Bytestream::Operator << ":"
 		<< Bytestream::Type << getType()
 		<< Bytestream::Operator << " = "

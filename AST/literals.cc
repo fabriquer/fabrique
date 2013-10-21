@@ -78,7 +78,7 @@ void StringLiteral::PrettyPrint(Bytestream& out, int indent) const
 			);
 
 		out
-			<< Bytestream::Identifier
+			<< Bytestream::Reference
 			<< s.substr(dollarSign, end - dollarSign)
 			<< Bytestream::Filename
 			;

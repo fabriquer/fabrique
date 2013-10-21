@@ -40,7 +40,7 @@ void Argument::PrettyPrint(Bytestream& out, int indent) const
 {
 	if (name.get())
 		out
-			<< Bytestream::Identifier << name->name()
+			<< Bytestream::Definition << name->name()
 			<< Bytestream::Operator << " = "
 			;
 

@@ -41,7 +41,7 @@ using namespace fabrique::ast;
 
 void Identifier::PrettyPrint(Bytestream& out, int indent) const
 {
-	out << Bytestream::Identifier << id;
+	out << Bytestream::Reference << id;
 
 	if (ty)
 		out << Bytestream::Operator << ":" << Bytestream::Type << *ty;

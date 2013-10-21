@@ -43,8 +43,15 @@ void Location::PrettyPrint(Bytestream& out, int indent) const
 			<< Bytestream::Filename << filename
 			<< Bytestream::Reset << ":";
 
-	if (line > 0) out << line << ":";
-	if (column > 0) out << column << ":";
+	if (line > 0)
+		out
+			<< Bytestream::Line << line
+			<< Bytestream::Reset << ":";
+
+	if (column > 0)
+		out
+			<< Bytestream::Column << column
+			<< Bytestream::Reset;
 }
 
 SourceRange SourceRange::Span(const std::string& filename, int line,
@@ -81,21 +88,21 @@ void SourceRange::PrettyPrint(Bytestream& out, int indent) const
 
 	if (begin.line == end.line)
 		out
-			<< Bytestream::Type << begin.line
+			<< Bytestream::Line << begin.line
 			<< Bytestream::Reset << ":"
-			<< Bytestream::Value << begin.column
-			<< Bytestream::Operator << "-"
-			<< Bytestream::Value << end.column
+			<< Bytestream::Column << begin.column
+			<< Bytestream::Reset << "-"
+			<< Bytestream::Column << end.column
 			;
 	else
 		out
-			<< Bytestream::Type << begin.line
+			<< Bytestream::Line << begin.line
 			<< Bytestream::Reset << ":"
-			<< Bytestream::Value << begin.column
-			<< Bytestream::Operator << "-"
-			<< Bytestream::Type << end.line
+			<< Bytestream::Column << begin.column
+			<< Bytestream::Reset << "-"
+			<< Bytestream::Line << end.line
 			<< Bytestream::Reset << ":"
-			<< Bytestream::Value << end.column
+			<< Bytestream::Column << end.column
 			;
 
 	out << Bytestream::Reset;

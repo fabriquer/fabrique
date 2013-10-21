@@ -52,11 +52,7 @@ void ErrorReport::PrettyPrint(Bytestream& out, int indent) const
 {
 	string tabs(indent, '\t');
 
-	out
-		<< "\n"
-		<< tabs << Bytestream::ErrorLoc
-		<< caret
-		;
+	out << "\n" << tabs << caret;
 
 	out
 		<< ": "
@@ -86,7 +82,7 @@ void ErrorReport::PrettyPrint(Bytestream& out, int indent) const
 			if (i >= (caret.line - contextLines))
 				out
 					<< tabs
-					<< Bytestream::Comment << i << "\t"
+					<< Bytestream::Line << i << "\t"
 					<< Bytestream::Reset << line << "\n"
 					;
 		}
