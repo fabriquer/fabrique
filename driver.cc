@@ -48,7 +48,7 @@ using std::auto_ptr;
 
 
 auto_ptr<Lexer> lex;
-Bytestream& err = Bytestream::ANSI(std::cerr);
+Bytestream& err = Bytestream::Stderr();
 
 int yyparse(ast::Parser*);
 
@@ -87,14 +87,18 @@ int main(int argc, char *argv[]) {
 	std::ifstream infile(args->input.c_str());
 
 	std::ofstream outfile;
+	auto_ptr<Bytestream> outfileStream;
 	if (args->outputIsFile)
+	{
 		outfile.open(args->output.c_str());
+		outfileStream.reset(Bytestream::File(outfile));
+	}
 
-	Bytestream& out = args->outputIsFile
-		? Bytestream::File(outfile)
-		: Bytestream::ANSI(std::cout);
+	Bytestream& out = (outfileStream.get() != NULL)
+		? *outfileStream.get()
+		: Bytestream::Stdout();
 
-	Bytestream& err = Bytestream::ANSI(std::cerr);
+	Bytestream& err = Bytestream::Stderr();
 
 	lex.reset(new Lexer(args->input));
 	lex->switch_streams(&infile, &out.raw());

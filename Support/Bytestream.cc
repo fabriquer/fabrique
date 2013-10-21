@@ -90,28 +90,31 @@ public:
 };
 
 
-// TODO: clean up the open streams!
-static std::vector<Bytestream*> openStreams;
-
-Bytestream& Bytestream::ANSI(std::ostream& o)
+Bytestream& Bytestream::Stdout()
 {
-	Bytestream *b = new ANSIStream(o);
-	openStreams.push_back(b);
-	return *b;
+	static ANSIStream ANSIOut(std::cout);
+	static PlainStream PlainOut(std::cout);
+
+	if (isatty(fileno(stdin)))
+	    return ANSIOut;
+
+	return PlainOut;
 }
 
-Bytestream& Bytestream::File(std::ofstream& f)
+Bytestream& Bytestream::Stderr()
 {
-	Bytestream *b = new PlainStream(f);
-	openStreams.push_back(b);
-	return *b;
+	static ANSIStream ANSIErr(std::cerr);
+	static PlainStream PlainErr(std::cerr);
+
+	if (isatty(fileno(stdin)))
+		return ANSIErr;
+
+	return PlainErr;
 }
 
-Bytestream& Bytestream::Plain(std::ostream& o)
+Bytestream* Bytestream::File(std::ofstream& f)
 {
-	Bytestream *b = new PlainStream(o);
-	openStreams.push_back(b);
-	return *b;
+	return new PlainStream(f);
 }
 
 

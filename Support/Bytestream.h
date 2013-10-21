@@ -67,9 +67,15 @@ public:
 		Reset,
 	};
 
-	static Bytestream& ANSI(std::ostream&);
-	static Bytestream& File(std::ofstream&);
-	static Bytestream& Plain(std::ostream&);
+	static Bytestream& Stdout();
+	static Bytestream& Stderr();
+
+	/**
+	 * Construct a @ref Bytestream to wrap a @ref std::ofstream.
+	 *
+	 * The caller is responsible for freeing the returned pointer.
+	 */
+	static Bytestream* File(std::ofstream&);
 
 	virtual Bytestream& operator << (enum Format) = 0;
 	Bytestream& operator << (const Printable&);
