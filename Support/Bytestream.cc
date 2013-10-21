@@ -1,4 +1,4 @@
-/** @file bytestream.h    Declaration of byte I/O classes. */
+/** @file Bytestream.cc    Definition of @ref Bytestream. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
