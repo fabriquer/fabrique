@@ -1,0 +1,7 @@
+#
+# RUN: fab %s 2> %t.err || true
+# RUN: FileCheck %s -input-file %t.err
+#
+
+# CHECK: {{/.*}}.fab:{{[0-9:]+}}: error: type mismatch
+foo:string = 42;

@@ -66,6 +66,7 @@ variables = {
 	'cc': 'clang',
 	'cxx': 'clang++',
 	'lex': 'flex',
+	'lit': 'llvm-lit',
 	'yacc': 'byacc',
 
 	# flags
@@ -118,6 +119,11 @@ rules = {
 		'description': 'Processing $in',
 	},
 
+	'lit': {
+		'command': 'PATH=$path $lit -sv $in',
+		'description': 'Running unit tests',
+	},
+
 	'rebuild': {
 		'command': 'python $in $args',
 		'description': 'Regenerating $out',
@@ -136,21 +142,38 @@ for (name, variables) in rules.items():
 	out.write('\n')
 
 
+#
 # Finally, build statements.
+#
 bootstrap = sys.argv[0]
+builddir = os.path.realpath(args.builddir)
 args = sys.argv[1:]
 
+# Rebuild the Ninja file:
 out.write('''build build.ninja: rebuild %s
   args = %s
 
 ''' % (bootstrap, ' '.join(args)))
 
+srcroot = os.path.dirname(os.path.realpath(bootstrap))
+path = [ builddir ] + os.environ['PATH'].split(os.pathsep)
+path = os.pathsep.join(path)
 
+# Unit tests:
+out.write('''build test: lit %s/test
+  path = %s
+
+''' % (srcroot, path))
+
+
+# Main executable
 objs = [ '%s.o' % o for o in cxx_srcs + lex.values() + yacc.values() ]
 
 out.write('build fab: bin %s\n\n' % ' '.join(objs))
+out.write('default fab\n\n')
 
 
+# C++ -> object files:
 for src in cxx_srcs:
 	obj = '%s.o' % src
 	src = os.path.join(src_root, '%s.cc | Parsing/fab.yacc.h' % src)
@@ -158,6 +181,7 @@ for src in cxx_srcs:
 
 out.write('\n')
 
+# Lex and yacc:
 for (src,target) in lex.items():
 	src = os.path.join(src_root, src)
 	out.write('build %s.o: cxx %s.cc\n' % (target, target))
