@@ -36,6 +36,8 @@
 #include <fstream>
 #include <vector>
 
+#include <unistd.h>
+
 using namespace fabrique;
 using std::ostream;
 
