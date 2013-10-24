@@ -79,7 +79,7 @@ foreach			setRange(yylval);		return FOREACH;
 as			setRange(yylval);		return AS;
 action			setRange(yylval);		return ACTION;
 files			setRange(yylval);		return FILES;
-file			setRange(yylval);		return FILE;
+file			setRange(yylval);		return FILE_TOKEN;
 function		setRange(yylval);		return FUNCTION;
 return			setRange(yylval);		return RETURN;
 "++"			setRange(yylval);		return CONCAT;

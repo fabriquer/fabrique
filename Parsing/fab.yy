@@ -79,7 +79,7 @@ void Append(PtrVec<T>*& target, PtrVec<T>* source, const T *nextElement)
 %token WHITESPACE
 %token IDENTIFIER FILENAME
 %token IF ELSE FOREACH AS
-%token ACTION FILE FILES FUNCTION RETURN
+%token ACTION FILE_TOKEN FILES FUNCTION RETURN
 %token OPERATOR
 %token TRUE FALSE
 %token CONCAT PREFIX SCALAR_ADD
@@ -159,7 +159,7 @@ conditional:
 	;
 
 file:
-	FILE '(' expr args ')'	{
+	FILE_TOKEN '(' expr args ')'	{
 		$$.expr = p->Source($3.expr, $1.src, $4.args);
 	}
 	;
@@ -225,7 +225,7 @@ name:
 
 type:
 	name			{ $$.ty = p->TakeType($1.id); }
-	| FILE			{ $$.ty = p->getType("file"); }
+	| FILE_TOKEN		{ $$.ty = p->getType("file"); }
 	| name '[' types ']'	{ $$.ty = p->TakeType($1.id, $3.types); }
 	;
 
