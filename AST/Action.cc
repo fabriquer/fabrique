@@ -62,10 +62,11 @@ void Action::PrettyPrint(Bytestream& out, int indent) const
 
 void Action::Accept(Visitor& v) const
 {
-	v.Enter(*this);
-
-	for (auto *a : args)
-		a->Accept(v);
+	if (v.Enter(*this))
+	{
+		for (auto *a : args)
+			a->Accept(v);
+	}
 
 	v.Leave(*this);
 }

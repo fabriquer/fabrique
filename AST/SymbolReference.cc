@@ -44,7 +44,8 @@ void SymbolReference::PrettyPrint(Bytestream& out, int indent) const
 
 void SymbolReference::Accept(Visitor& v) const
 {
-	v.Enter(*this);
-	id->Accept(v);
+	if (v.Enter(*this))
+		id->Accept(v);
+
 	v.Leave(*this);
 }

@@ -93,8 +93,11 @@ void BinaryOperation::PrettyPrint(Bytestream& out, int indent) const
 
 void BinaryOperation::Accept(Visitor& v) const
 {
-	v.Enter(*this);
-	LHS->Accept(v);
-	RHS->Accept(v);
+	if (v.Enter(*this))
+	{
+		LHS->Accept(v);
+		RHS->Accept(v);
+	}
+
 	v.Leave(*this);
 }

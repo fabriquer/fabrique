@@ -64,11 +64,12 @@ void Conditional::PrettyPrint(Bytestream& out, int indent) const
 
 void Conditional::Accept(Visitor& v) const
 {
-	v.Enter(*this);
-
-	condition->Accept(v);
-	thenResult->Accept(v);
-	elseResult->Accept(v);
+	if (v.Enter(*this))
+	{
+		condition->Accept(v);
+		thenResult->Accept(v);
+		elseResult->Accept(v);
+	}
 
 	v.Leave(*this);
 }

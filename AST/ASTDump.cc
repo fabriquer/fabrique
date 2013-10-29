@@ -43,9 +43,12 @@ ASTDump* ASTDump::Create(fabrique::Bytestream& out)
 	return new ASTDump(out);
 }
 
-#define DUMP_NODE(type) \
-void ASTDump::Enter(const type& n) { Write(#type, &n); indent++; } \
-void ASTDump::Leave(const type& n) { indent--;  }
+#define DUMP_NODE(type)                                                      \
+bool ASTDump::Enter(const type& n)                                           \
+{                                                                            \
+	Write(#type, &n); indent++; return true;                             \
+}                                                                            \
+void ASTDump::Leave(const type& n) { indent--; }
 
 DUMP_NODE(Action)
 DUMP_NODE(Argument)

@@ -59,11 +59,12 @@ void ForeachExpr::PrettyPrint(Bytestream& out, int indent) const
 
 void ForeachExpr::Accept(Visitor& v) const
 {
-	v.Enter(*this);
-
-	source->Accept(v);
-	loopParameter->Accept(v);
-	body->Accept(v);
+	if (v.Enter(*this))
+	{
+		source->Accept(v);
+		loopParameter->Accept(v);
+		body->Accept(v);
+	}
 
 	v.Leave(*this);
 }

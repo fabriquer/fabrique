@@ -75,11 +75,12 @@ void Filename::PrettyPrint(Bytestream& out, int indent) const
 
 void Filename::Accept(Visitor& v) const
 {
-	v.Enter(*this);
-
-	name->Accept(v);
-	for (auto *a : args)
-		a->Accept(v);
+	if (v.Enter(*this))
+	{
+		name->Accept(v);
+		for (auto *a : args)
+			a->Accept(v);
+	}
 
 	v.Leave(*this);
 }

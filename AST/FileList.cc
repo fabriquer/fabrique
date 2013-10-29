@@ -66,13 +66,14 @@ void FileList::PrettyPrint(Bytestream& out, int indent) const
 
 void FileList::Accept(Visitor& v) const
 {
-	v.Enter(*this);
+	if (v.Enter(*this))
+	{
+		for (auto *f : files)
+			f->Accept(v);
 
-	for (auto *f : files)
-		f->Accept(v);
-
-	for (auto *a : args)
-		a->Accept(v);
+		for (auto *a : args)
+			a->Accept(v);
+	}
 
 	v.Leave(*this);
 }

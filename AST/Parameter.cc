@@ -47,11 +47,12 @@ void Parameter::PrettyPrint(Bytestream& out, int indent) const
 
 void Parameter::Accept(Visitor& v) const
 {
-	v.Enter(*this);
-
-	name->Accept(v);
-	if (expr.get())
-		expr->Accept(v);
+	if (v.Enter(*this))
+	{
+		name->Accept(v);
+		if (expr.get())
+			expr->Accept(v);
+	}
 
 	v.Leave(*this);
 }

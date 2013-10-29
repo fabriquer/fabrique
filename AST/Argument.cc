@@ -50,12 +50,13 @@ void Argument::PrettyPrint(Bytestream& out, int indent) const
 
 void Argument::Accept(Visitor& v) const
 {
-	v.Enter(*this);
+	if (v.Enter(*this))
+	{
+		if (name.get())
+			name->Accept(v);
 
-	if (name.get())
-		name->Accept(v);
-
-	expr->Accept(v);
+		expr->Accept(v);
+	}
 
 	v.Leave(*this);
 }

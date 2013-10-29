@@ -58,10 +58,11 @@ void List::PrettyPrint(Bytestream& out, int indent) const
 
 void List::Accept(Visitor& v) const
 {
-	v.Enter(*this);
-
-	for (auto *e : elements)
-		e->Accept(v);
+	if (v.Enter(*this))
+	{
+		for (auto *e : elements)
+			e->Accept(v);
+	}
 
 	v.Leave(*this);
 }

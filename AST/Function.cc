@@ -77,12 +77,13 @@ void Function::PrettyPrint(Bytestream& out, int indent) const
 
 void Function::Accept(Visitor& v) const
 {
-	v.Enter(*this);
+	if (v.Enter(*this))
+	{
+		for (auto *p : params)
+			p->Accept(v);
 
-	for (auto *p : params)
-		p->Accept(v);
-
-	body->Accept(v);
+		body->Accept(v);
+	}
 
 	v.Leave(*this);
 }

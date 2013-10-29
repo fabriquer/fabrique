@@ -61,11 +61,12 @@ void Call::PrettyPrint(Bytestream& out, int indent) const
 
 void Call::Accept(Visitor& v) const
 {
-	v.Enter(*this);
-
-	fn->Accept(v);
-	for (auto *a : args)
-		a->Accept(v);
+	if (v.Enter(*this))
+	{
+		fn->Accept(v);
+		for (auto *a : args)
+			a->Accept(v);
+	}
 
 	v.Leave(*this);
 }

@@ -79,12 +79,13 @@ void CompoundExpression::PrettyPrint(Bytestream& out, int indent) const
 
 void CompoundExpression::Accept(Visitor& v) const
 {
-	v.Enter(*this);
+	if (v.Enter(*this))
+	{
+		for (auto *val : values)
+			val->Accept(v);
 
-	for (auto *val : values)
-		val->Accept(v);
-
-	result->Accept(v);
+		result->Accept(v);
+	}
 
 	v.Leave(*this);
 }

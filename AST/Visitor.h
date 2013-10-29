@@ -37,8 +37,9 @@
 namespace fabrique {
 namespace ast {
 
+//! Define entry (which returns true to continue descent) and exit methods.
 #define VISIT(type) \
-	virtual void Enter(const type&) {} \
+	virtual bool Enter(const type&) { return true; } \
 	virtual void Leave(const type&) {}
 
 
@@ -71,7 +72,7 @@ public:
 
 #undef VISIT
 #define VISIT(type) \
-	virtual void Enter(const type&); \
+	virtual bool Enter(const type&); \
 	virtual void Leave(const type&);
 
 } // namespace ast
