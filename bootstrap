@@ -125,7 +125,7 @@ rules = {
 	},
 
 	'rebuild': {
-		'command': 'python $in $args',
+		'command': 'PATH=$path python $in $args',
 		'description': 'Regenerating $out',
 	},
 
@@ -152,8 +152,9 @@ args = sys.argv[1:]
 # Rebuild the Ninja file:
 out.write('''build build.ninja: rebuild %s
   args = %s
+  path = %s
 
-''' % (bootstrap, ' '.join(args)))
+''' % (bootstrap, ' '.join(args), os.environ['PATH']))
 
 srcroot = os.path.dirname(os.path.realpath(bootstrap))
 path = [ builddir ] + os.environ['PATH'].split(os.pathsep)
