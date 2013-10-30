@@ -82,9 +82,23 @@ int main(int argc, char *argv[]) {
 
 
 	//
-	// Set up input and output files.
+	// Set up input and output streams.
 	//
+	Bytestream& err = Bytestream::Stderr();
+
 	std::ifstream infile(args->input.c_str());
+	if (!infile)
+	{
+		err
+			<< Bytestream::Error << "error: "
+			<< Bytestream::Reset << "failed to open input file '"
+			<< Bytestream::Filename << args->input
+			<< Bytestream::Reset << "': "
+			<< strerror(errno)
+			<< "\n"
+			;
+		return 1;
+	}
 
 	std::ofstream outfile;
 	auto_ptr<Bytestream> outfileStream;
@@ -98,7 +112,6 @@ int main(int argc, char *argv[]) {
 		? *outfileStream.get()
 		: Bytestream::Stdout();
 
-	Bytestream& err = Bytestream::Stderr();
 
 	lex.reset(new Lexer(args->input));
 	lex->switch_streams(&infile, &out.raw());
