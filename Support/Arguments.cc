@@ -47,7 +47,8 @@ enum optionNames
 	Help,
 	Format,
 	OutputFile,
-	PrettyPrint,
+	PrettyPrintAST,
+	PrettyPrintDAG,
 };
 
 
@@ -109,8 +110,12 @@ const option::Descriptor usage[] =
 		formatString.c_str()
 	},
 	{
-		PrettyPrint, Enable, "p", "print-ast", option::Arg::None,
-		"  -p,--print-ast   Pretty-print the AST"
+		PrettyPrintAST, Enable, "", "print-ast", option::Arg::None,
+		"  --print-ast      Pretty-print the AST"
+	},
+	{
+		PrettyPrintDAG, Enable, "", "print-dag", option::Arg::None,
+		"  --print-dag      Pretty-print the AST"
 	},
 	{ 0, 0, 0, 0, 0, 0 }
 };
@@ -147,9 +152,10 @@ Arguments* Arguments::Parse(int argc, char *argv[])
 	                       ? options[Format].arg
 	                       : "ninja";
 
-	const bool prettyPrint = options[PrettyPrint];
+	const bool printAST = options[PrettyPrintAST];
+	const bool printDAG = options[PrettyPrintDAG];
 
-	return new Arguments(help, input, output, format, prettyPrint);
+	return new Arguments(help, input, output, format, printAST, printDAG);
 }
 
 

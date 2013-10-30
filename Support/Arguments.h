@@ -64,15 +64,16 @@ public:
 	const bool outputIsFile;
 
 	const std::string format;
-	const bool prettyPrint;
+	const bool printAST;
+	const bool printDAG;
 
 private:
 	Arguments(const bool help,
 	          const std::string& input, const std::string& output,
-	          const std::string& format, bool prettyPrint)
+	          const std::string& format, bool printAST, bool printDAG)
 		: help(help), input(input), output(output),
 		  outputIsFile(output.length() > 0 and output != "-"),
-		  format(format), prettyPrint(prettyPrint)
+		  format(format), printAST(printAST), printDAG(printDAG)
 	{
 	}
 

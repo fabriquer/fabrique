@@ -31,6 +31,7 @@
 
 #include "AST/ASTDump.h"
 #include "Backend/Backend.h"
+#include "DAG/DAG.h"
 
 #include "Parsing/Lexer.h"
 #include "Parsing/Parser.h"
@@ -142,7 +143,7 @@ int main(int argc, char *argv[]) {
 
 	const ast::Scope& root = parser->getRoot();
 
-	if (args->prettyPrint)
+	if (args->printAST)
 	{
 		out
 			<< Bytestream::Comment
@@ -151,6 +152,28 @@ int main(int argc, char *argv[]) {
 			<< "#\n"
 			<< Bytestream::Reset
 			<< root
+			;
+	}
+
+	auto_ptr<dag::DAG> dag(dag::DAG::Flatten(root));
+	if (!dag.get())
+	{
+		err
+			<< Bytestream::Error
+			<< "Error flattening AST into DAG\n"
+			<< Bytestream::Reset;
+		return 1;
+	}
+
+	if (args->printDAG)
+	{
+		out
+			<< Bytestream::Comment
+			<< "#\n"
+			<< "# DAG pretty-printed from '" << args->input << "'\n"
+			<< "#\n"
+			<< Bytestream::Reset
+			<< *dag.get()
 			;
 	}
 
@@ -172,6 +195,8 @@ int main(int argc, char *argv[]) {
 	}
 
 	assert(backend.get() != NULL);
+	assert(dag.get() != NULL);
+	backend->Process(*dag.get());
 
 	return 0;
 }
