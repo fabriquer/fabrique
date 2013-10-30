@@ -1,4 +1,4 @@
-/** @file Scope.h    Declaration of @ref Scope. */
+/** @file DAG.h    Declaration of @ref DAG. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,63 +29,46 @@
  * SUCH DAMAGE.
  */
 
-#ifndef SCOPE_H
-#define SCOPE_H
+#ifndef DAG_H
+#define DAG_H
 
-#include "ADT/PtrVec.h"
 #include "Support/Printable.h"
-#include "Support/Uncopyable.h"
 
 #include <map>
 #include <string>
 
+
 namespace fabrique {
+
 namespace ast {
+	class Expression;
+	class Identifier;
+	class Scope;
+}
 
-class Argument;
-class Expression;
-class Identifier;
-class Parameter;
-class Value;
-class Visitor;
-
+namespace dag {
 
 /**
- * A scope is a container for name->value mappings.
- *
- * A scope can have a parent scope for recursive name lookups.
+ * A directed acyclic graph of build actions.
  */
-class Scope : public Printable, Uncopyable
+class DAG : public Printable
 {
 public:
-	typedef PtrVec<Value>::const_iterator iterator;
-	typedef std::map<std::string,const Expression*> SymbolMap;
+	static DAG* Flatten(const ast::Scope&);
 
-	Scope(const Scope *parent = NULL) : parent(parent) {}
-	~Scope();
-
-	iterator begin() const { return values.begin(); }
-	iterator end() const { return values.end(); }
-
-	const Expression* Find(const Identifier *name) const;
-
-	void Register(const Argument*);
-	void Register(Parameter*);
-	void Register(const Value*);
+	~DAG() {}
 
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 
-	virtual void Accept(Visitor&) const;
+	typedef std::map<std::string, std::string> VariableMap;
 
 private:
-	void Register(const Identifier&, const Expression*);
+	DAG(const VariableMap&);
 
-	const Scope *parent;
-	SymbolMap symbols;
-	PtrVec<Value> values;
+	VariableMap variables;
 };
 
-} // namespace ast
+} // namespace dag
 } // namespace fabrique
 
 #endif

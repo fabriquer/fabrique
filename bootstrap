@@ -23,6 +23,9 @@ cxx_srcs = {
 	),
 	'Backend/': (
 	),
+	'DAG/': (
+		'DAG',
+	),
 	'Parsing/': (
 		'Lexer', 'Parser',
 	),
