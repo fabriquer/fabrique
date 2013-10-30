@@ -148,6 +148,7 @@ Bytestream& ANSIStream::operator << (enum Format f)
 		case Comment:           set(Blue);              break;
 		case Definition:        set(Green);             break;
 		case Filename:          set(Magenta);           break;
+		case Literal:           set(Magenta);           break;
 		case Operator:          set(Yellow);            break;
 		case Reference:         set(Cyan);              break;
 		case Type:              set(Blue);              break;

@@ -39,7 +39,7 @@ using namespace fabrique::ast;
 void BoolLiteral::PrettyPrint(Bytestream& out, int indent) const
 {
 	out
-		<< Bytestream::Filename << (value() ? "true" : "false")
+		<< Bytestream::Literal << (value() ? "true" : "false")
 		<< Bytestream::Reset;
 }
 
@@ -47,14 +47,14 @@ void BoolLiteral::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }
 
 void IntLiteral::PrettyPrint(Bytestream& out, int indent) const
 {
-	out << Bytestream::Filename << value() << Bytestream::Reset;
+	out << Bytestream::Literal << value() << Bytestream::Reset;
 }
 
 void IntLiteral::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }
 
 void StringLiteral::PrettyPrint(Bytestream& out, int indent) const
 {
-	out << Bytestream::Filename << "'";
+	out << Bytestream::Literal << "'";
 
 	std::string s = value();
 	size_t i = 0;
@@ -80,7 +80,7 @@ void StringLiteral::PrettyPrint(Bytestream& out, int indent) const
 		out
 			<< Bytestream::Reference
 			<< s.substr(dollarSign, end - dollarSign)
-			<< Bytestream::Filename
+			<< Bytestream::Literal
 			;
 
 		i = end;

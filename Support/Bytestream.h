@@ -51,6 +51,7 @@ public:
 		Comment,
 		Definition,
 		Filename,
+		Literal,
 		Operator,
 		Reference,
 		Type,
