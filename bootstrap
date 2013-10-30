@@ -48,6 +48,9 @@ src_root = os.path.dirname(os.path.realpath(__file__))
 cxxflags = [
 	'-I', src_root, '-I', args.builddir,
 
+	# We don't use exceptions or RTTI, and enabling them comes at a cost.
+	'-fno-exceptions', '-fno-rtti',
+
 	# Use lots and lots of warnings.
 	'-Wall',
 
