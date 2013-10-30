@@ -83,14 +83,14 @@ DAG* DAG::Flatten(const ast::Scope& s)
 
 
 DAG::DAG(const VariableMap& vars)
-	: variables(vars)
+	: vars(vars)
 {
 }
 
 
 void DAG::PrettyPrint(Bytestream& b, int indent) const
 {
-	for (auto& v : variables)
+	for (auto& v : vars)
 		b
 			<< Bytestream::Type << "var "
 			<< Bytestream::Definition << v.first

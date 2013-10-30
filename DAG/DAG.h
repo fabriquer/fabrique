@@ -61,11 +61,12 @@ public:
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 
 	typedef std::map<std::string, std::string> VariableMap;
+	const VariableMap& variables() const { return vars; }
 
 private:
 	DAG(const VariableMap&);
 
-	VariableMap variables;
+	VariableMap vars;
 };
 
 } // namespace dag
