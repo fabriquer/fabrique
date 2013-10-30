@@ -30,7 +30,10 @@
  */
 
 #include "AST/ASTDump.h"
+
 #include "Backend/Backend.h"
+#include "Backend/Ninja.h"
+
 #include "DAG/DAG.h"
 
 #include "Parsing/Lexer.h"
@@ -184,6 +187,9 @@ int main(int argc, char *argv[]) {
 	auto_ptr<backend::Backend> backend;
 	if (args->format == "null")
 		;
+
+	else if (args->format == "ninja")
+		backend.reset(backend::NinjaBackend::Create(out));
 
 	else
 	{
