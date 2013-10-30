@@ -30,6 +30,7 @@
  */
 
 #include "AST/ASTDump.h"
+#include "Backend/Backend.h"
 
 #include "Parsing/Lexer.h"
 #include "Parsing/Parser.h"
@@ -157,12 +158,9 @@ int main(int argc, char *argv[]) {
 	//
 	// What should we do with it now?
 	//
-	auto_ptr<ast::Visitor> v;
+	auto_ptr<backend::Backend> backend;
 	if (args->format == "null")
 		;
-
-	else if (args->format == "dump")
-		v.reset(ast::ASTDump::Create(out));
 
 	else
 	{
@@ -173,8 +171,7 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
-	if (v.get() != NULL)
-		root.Accept(*v);
+	assert(backend.get() != NULL);
 
 	return 0;
 }
