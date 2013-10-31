@@ -48,6 +48,8 @@ class Literal : public Expression
 {
 public:
 	const T& value() const { return val; }
+	virtual std::string str() const = 0;
+
 	bool isStatic() const { return true; }
 
 protected:
@@ -69,6 +71,8 @@ public:
 	{
 	}
 
+	std::string str() const;
+
 	void PrettyPrint(Bytestream&, int indent = 0) const;
 	virtual void Accept(Visitor&) const;
 };
@@ -80,6 +84,8 @@ public:
 		: Literal(value, ty, loc)
 	{
 	}
+
+	std::string str() const;
 
 	void PrettyPrint(Bytestream&, int indent = 0) const;
 	virtual void Accept(Visitor&) const;
@@ -94,6 +100,8 @@ public:
 		: Literal(s, ty, loc)
 	{
 	}
+
+	std::string str() const;
 
 	void PrettyPrint(Bytestream&, int indent = 0) const;
 	virtual void Accept(Visitor&) const;

@@ -36,14 +36,25 @@
 using namespace fabrique::ast;
 
 
+std::string BoolLiteral::str() const
+{
+	return (value() ? "true" : "false");
+}
+
 void BoolLiteral::PrettyPrint(Bytestream& out, int indent) const
 {
 	out
-		<< Bytestream::Literal << (value() ? "true" : "false")
+		<< Bytestream::Literal << str()
 		<< Bytestream::Reset;
 }
 
 void BoolLiteral::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }
+
+
+std::string IntLiteral::str() const
+{
+	return std::to_string(value());
+}
 
 void IntLiteral::PrettyPrint(Bytestream& out, int indent) const
 {
@@ -51,6 +62,9 @@ void IntLiteral::PrettyPrint(Bytestream& out, int indent) const
 }
 
 void IntLiteral::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }
+
+
+std::string StringLiteral::str() const { return value(); }
 
 void StringLiteral::PrettyPrint(Bytestream& out, int indent) const
 {

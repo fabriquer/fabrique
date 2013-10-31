@@ -166,7 +166,7 @@ bool Flattener::Enter(const ast::StringLiteral& s)
 {
 	assert(!name.empty());
 
-	variables[name.top()->name()] = s.value();
+	variables[name.top()->name()] = s.str();
 	name.pop();
 
 	return false;
