@@ -1,0 +1,6 @@
+#
+# RUN: fab %s | FileCheck %s
+#
+
+# CHECK: foo = a string literal
+foo = 'a string literal';
