@@ -33,6 +33,7 @@
 
 #include "Backend/Backend.h"
 #include "Backend/Ninja.h"
+#include "Backend/Null.h"
 
 #include "DAG/DAG.h"
 
@@ -186,7 +187,7 @@ int main(int argc, char *argv[]) {
 	//
 	auto_ptr<backend::Backend> backend;
 	if (args->format == "null")
-		;
+		backend.reset(new backend::NullBackend());
 
 	else if (args->format == "ninja")
 		backend.reset(backend::NinjaBackend::Create(out));

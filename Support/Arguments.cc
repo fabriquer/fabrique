@@ -67,6 +67,7 @@ static ArgStatus IsOutputFormat(const option::Option&, bool);
 
 //! Possible output file formats (name, tool description).
 const static string formatStrings[][2] = {
+	{ "null", "No output" },
 	{ "fab", "Fabrique file (possibly modified/optimised)" },
 	{ "make", "POSIX make (no BSD- or GNU-isms)" },
 	{ "ninja", "the Ninja build system (http://martine.github.io/ninja)" },
