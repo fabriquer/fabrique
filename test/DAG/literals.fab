@@ -3,5 +3,5 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: var foo = 'a string literal'
+# CHECK-DAG: var foo = 'a string literal'
 foo = 'a string literal';
