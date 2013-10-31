@@ -1,5 +1,6 @@
 #
-# RUN: fab --print-dag --format=null %s | FileCheck %s
+# RUN: fab --print-dag --format=null %s > %t
+# RUN: FileCheck %s -input-file %t
 #
 
 # CHECK: var foo = 'a string literal'

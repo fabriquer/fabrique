@@ -1,5 +1,6 @@
 #
-# RUN: fab --print-ast --format=null %s | FileCheck %s
+# RUN: fab --print-ast --format=null %s > %t
+# RUN: FileCheck %s -input-file %t
 #
 
 # CHECK: foo:string = 'a string literal';
