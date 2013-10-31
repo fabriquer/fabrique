@@ -44,7 +44,8 @@ class Bytestream;
 namespace backend {
 
 /**
- * Interface for visitors that walk the AST.
+ * A backend that produces Ninja files
+ * (see http://martine.github.io/ninja).
  */
 class NinjaBackend : public Backend
 {
