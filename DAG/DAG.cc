@@ -150,7 +150,16 @@ bool Flattener::Enter(const ast::Identifier&) { return false; }
 void Flattener::Leave(const ast::Identifier&) {}
 
 
-bool Flattener::Enter(const ast::IntLiteral&) { return false; }
+bool Flattener::Enter(const ast::IntLiteral& i)
+{
+	assert(!name.empty());
+
+	variables[name.top()->name()] = i.str();
+	name.pop();
+
+	return false;
+}
+
 void Flattener::Leave(const ast::IntLiteral&) {}
 
 
