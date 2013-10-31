@@ -1,0 +1,6 @@
+#
+# RUN: fab --print-dag %s | FileCheck %s
+#
+
+# CHECK: var foo = 'a string literal'
+foo = 'a string literal';
