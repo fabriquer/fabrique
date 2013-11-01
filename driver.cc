@@ -45,6 +45,7 @@
 #include "Support/Bytestream.h"
 
 #include <cassert>
+#include <cstdio>
 #include <fstream>
 #include <iostream>
 #include <memory>
