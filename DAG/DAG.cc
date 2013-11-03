@@ -68,8 +68,8 @@ public:
 	VISIT(ast::Type)
 	VISIT(ast::Value)
 
-	DAG::VariableMap variables;
-	stack<const ast::Identifier*> name;
+	StringMap<string> variables;
+	std::stack<const ast::Identifier*> name;
 };
 
 
@@ -82,7 +82,7 @@ DAG* DAG::Flatten(const ast::Scope& s)
 }
 
 
-DAG::DAG(const VariableMap& vars)
+DAG::DAG(const StringMap<string>& vars)
 	: vars(vars)
 {
 }

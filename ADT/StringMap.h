@@ -1,4 +1,4 @@
-/** @file DAG.h    Declaration of @ref DAG. */
+/** @file StringMap.h    Declaration of @ref StringMap. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,46 +29,17 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DAG_H
-#define DAG_H
+#ifndef STRING_MAP_H
+#define STRING_MAP_H
 
-#include "ADT/StringMap.h"
-#include "Support/Printable.h"
-
+#include <map>
 #include <string>
-
 
 namespace fabrique {
 
-namespace ast {
-	class Expression;
-	class Identifier;
-	class Scope;
+//! Simply use a std::map with a std::string as a key.
+template<class T> using StringMap = ::std::map< ::std::string, T>;
+
 }
-
-namespace dag {
-
-/**
- * A directed acyclic graph of build actions.
- */
-class DAG : public Printable
-{
-public:
-	static DAG* Flatten(const ast::Scope&);
-
-	~DAG() {}
-
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
-
-	const StringMap<std::string>& variables() const { return vars; }
-
-private:
-	DAG(const StringMap<std::string>& variables);
-
-	StringMap<std::string> vars;
-};
-
-} // namespace dag
-} // namespace fabrique
 
 #endif
