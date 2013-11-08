@@ -160,15 +160,20 @@ int main(int argc, char *argv[]) {
 			;
 	}
 
-	auto_ptr<dag::DAG> dag(dag::DAG::Flatten(root));
-	if (!dag.get())
+	auto_ptr<dag::DAG> dag;
+	try { dag.reset(dag::DAG::Flatten(root)); }
+	catch (std::exception& e)
 	{
 		err
 			<< Bytestream::Error
-			<< "Error flattening AST into DAG\n"
-			<< Bytestream::Reset;
+			<< "Error flattening AST into DAG: "
+			<< Bytestream::Reset
+			<< e.what()
+			<< "\n";
 		return 1;
 	}
+
+	assert(dag.get() != NULL);
 
 	if (args->printDAG)
 	{
@@ -204,7 +209,11 @@ int main(int argc, char *argv[]) {
 
 	assert(backend.get() != NULL);
 	assert(dag.get() != NULL);
-	backend->Process(*dag.get());
+
+	try { backend->Process(*dag.get()); }
+	catch (std::exception& e)
+	{
+	}
 
 	return 0;
 }

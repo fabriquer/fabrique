@@ -32,6 +32,7 @@ cxx_srcs = {
 	),
 	'Support/': (
 		'Arguments', 'Bytestream', 'ErrorReport', 'Join', 'Location',
+		'exceptions',
 	),
 	'': (
 		'driver',
@@ -52,8 +53,8 @@ src_root = os.path.dirname(os.path.realpath(__file__))
 cxxflags = [
 	'-I', src_root, '-I', args.builddir,
 
-	# We don't use exceptions or RTTI, and enabling them comes at a cost.
-	'-fno-exceptions', '-fno-rtti',
+	# We don't use RTTI, and enabling it comes at a cost.
+	'-fno-rtti',
 
 	# Use lots and lots of warnings.
 	'-Wall',
