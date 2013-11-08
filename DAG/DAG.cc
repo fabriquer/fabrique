@@ -158,11 +158,12 @@ bool Flattener::Enter(const ast::Action& a)
 		const string value = this->value.top();
 		this->value.pop();
 
-		if (arg->hasName())
-			parameters[arg->getName().name()] = value;
+		if (not arg->hasName()
+		    or strcmp(arg->getName().name().c_str(), "command") == 0)
+			command = value;
 
 		else
-			command = value;
+			parameters[arg->getName().name()] = value;
 	}
 
 	rule.reset(Rule::Create(command, parameters));

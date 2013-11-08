@@ -1,0 +1,7 @@
+#
+# RUN: fab --print-dag --format=null %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK-DAG: rule cxx = c++ $cxxflags
+cxx = action(command = 'c++ $cxxflags');
