@@ -40,7 +40,7 @@ void Parameter::PrettyPrint(Bytestream& out, int indent) const
 {
 	out << *name;
 
-	if (expr.get() != NULL)
+	if (expr)
 		out << " = " << *expr;
 }
 
@@ -50,7 +50,7 @@ void Parameter::Accept(Visitor& v) const
 	if (v.Enter(*this))
 	{
 		name->Accept(v);
-		if (expr.get())
+		if (expr)
 			expr->Accept(v);
 	}
 

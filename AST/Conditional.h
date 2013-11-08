@@ -61,9 +61,9 @@ public:
 	virtual void Accept(Visitor&) const;
 
 private:
-	std::auto_ptr<Expression> condition;
-	std::auto_ptr<Expression> thenResult;
-	std::auto_ptr<Expression> elseResult;
+	std::unique_ptr<Expression> condition;
+	std::unique_ptr<Expression> thenResult;
+	std::unique_ptr<Expression> elseResult;
 };
 
 } // namespace ast

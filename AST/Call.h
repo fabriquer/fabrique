@@ -63,7 +63,7 @@ public:
 	virtual void Accept(Visitor&) const;
 
 private:
-	std::auto_ptr<SymbolReference> fn;
+	std::unique_ptr<SymbolReference> fn;
 	PtrVec<Argument> args;
 };
 

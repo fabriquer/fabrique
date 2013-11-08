@@ -37,8 +37,8 @@ using namespace fabrique::ast;
 using fabrique::ErrorReport;
 using fabrique::SourceRange;
 
-using std::auto_ptr;
 using std::string;
+using std::unique_ptr;
 
 
 Parser::Parser(const Lexer& lex)
@@ -59,7 +59,7 @@ Parser::~Parser()
 
 void Parser::SetRoot(PtrVec<Value> *values)
 {
-	auto_ptr<PtrVec<Value> > v(values);
+	unique_ptr<PtrVec<Value> > v(values);
 	for (auto *v : *values)
 		root.Register(v);
 }
@@ -84,8 +84,8 @@ const Type* Parser::getType(const string& name, const PtrVec<Type>& params)
 
 const Type* Parser::TakeType(Identifier *name, const PtrVec<Type>* params)
 {
-	auto_ptr<Identifier> i(name);
-	auto_ptr<const PtrVec<Type> > p(params);
+	unique_ptr<Identifier> i(name);
+	unique_ptr<const PtrVec<Type> > p(params);
 	static PtrVec<Type> empty;
 
 	assert(name != NULL);
@@ -165,8 +165,8 @@ SymbolReference* Parser::Reference(Identifier *id)
 
 Action* Parser::DefineAction(PtrVec<Argument>* args, SourceRange *start)
 {
-	auto_ptr<PtrVec<Argument> > a(args);
-	auto_ptr<SourceRange> s(start);
+	unique_ptr<PtrVec<Argument> > a(args);
+	unique_ptr<SourceRange> s(start);
 	SourceRange current(lex.CurrentTokenRange());
 
 	SourceRange loc(start->begin, current.end);
@@ -181,7 +181,7 @@ Action* Parser::DefineAction(PtrVec<Argument>* args, SourceRange *start)
 Function* Parser::DefineFunction(PtrVec<Parameter> *params, const Type *ty,
                                  CompoundExpression *body)
 {
-	auto_ptr<PtrVec<Parameter> > p(params);
+	unique_ptr<PtrVec<Parameter> > p(params);
 
 	assert(params != NULL);
 	assert(ty != NULL);
@@ -204,8 +204,8 @@ Function* Parser::DefineFunction(PtrVec<Parameter> *params, const Type *ty,
 
 Call* Parser::CreateCall(Identifier *name, PtrVec<Argument> *args)
 {
-	auto_ptr<Identifier> n(name);
-	auto_ptr<PtrVec<Argument> > a(args);
+	unique_ptr<Identifier> n(name);
+	unique_ptr<PtrVec<Argument> > a(args);
 
 	assert(name != NULL);
 	assert(args != NULL);
@@ -223,7 +223,7 @@ Call* Parser::CreateCall(Identifier *name, PtrVec<Argument> *args)
 Conditional* Parser::IfElse(SourceRange *ifLoc, Expression *condition,
 	                    Expression *thenResult, Expression *elseResult)
 {
-	auto_ptr<SourceRange> src(ifLoc);
+	unique_ptr<SourceRange> src(ifLoc);
 
 	const Type &tt(thenResult->getType()), &et(elseResult->getType());
 	if (!tt.isSupertype(et) and !et.isSupertype(tt))
@@ -241,10 +241,10 @@ Conditional* Parser::IfElse(SourceRange *ifLoc, Expression *condition,
 ForeachExpr* Parser::Foreach(Expression *source, const Parameter *loopParam,
                              CompoundExpression *body, SourceRange *begin)
 {
-	auto_ptr<Expression> s(source);
-	auto_ptr<const Parameter> p(loopParam);
-	auto_ptr<CompoundExpression> b(body);
-	auto_ptr<SourceRange> beg(begin);
+	unique_ptr<Expression> s(source);
+	unique_ptr<const Parameter> p(loopParam);
+	unique_ptr<CompoundExpression> b(body);
+	unique_ptr<SourceRange> beg(begin);
 
 	assert(&loopParam->getType() != NULL);
 
@@ -279,7 +279,7 @@ Parameter* Parser::ForeachParam(Identifier *id)
 
 List* Parser::ListOf(ExprVec* elements)
 {
-	auto_ptr<ExprVec> e(elements);
+	unique_ptr<ExprVec> e(elements);
 	assert(elements != NULL);
 
 	PtrVec<Type> typeParams;
@@ -299,8 +299,8 @@ List* Parser::ListOf(ExprVec* elements)
 CompoundExpression* Parser::CompoundExpr(Expression *result, SourceRange *b,
 	                                 PtrVec<Value> *val)
 {
-	auto_ptr<Expression> e(result);
-	auto_ptr<PtrVec<Value> > v(val);
+	unique_ptr<Expression> e(result);
+	unique_ptr<PtrVec<Value> > v(val);
 	static PtrVec<Value> empty;
 
 	auto& values = val ? *val : empty;
@@ -318,8 +318,8 @@ CompoundExpression* Parser::CompoundExpr(Expression *result, SourceRange *b,
 Filename* Parser::Source(Expression *name, SourceRange *source,
                          PtrVec<Argument> *args)
 {
-	auto_ptr<SourceRange> r(source);
-	auto_ptr<PtrVec<Argument> > a(args);
+	unique_ptr<SourceRange> r(source);
+	unique_ptr<PtrVec<Argument> > a(args);
 	static PtrVec<Argument> empty;
 
 	assert(name != NULL);
@@ -339,8 +339,8 @@ Filename* Parser::Source(Expression *name, SourceRange *source,
 
 FileList* Parser::Files(PtrVec<Filename> *files, PtrVec<Argument> *args)
 {
-	auto_ptr<PtrVec<Filename> > f(files);
-	auto_ptr<PtrVec<Argument> > a(args);
+	unique_ptr<PtrVec<Filename> > f(files);
+	unique_ptr<PtrVec<Argument> > a(args);
 	static PtrVec<Argument> emptyArgs;
 
 	static const Type *ty = fileListType();
@@ -455,7 +455,7 @@ Identifier* Parser::Id(const std::string& name)
 
 Identifier* Parser::Id(Identifier *untyped, const Type *ty)
 {
-	auto_ptr<Identifier> u(untyped);
+	unique_ptr<Identifier> u(untyped);
 	assert(!untyped->isTyped());
 
 	SourceRange loc(untyped->getSource().begin, savedLoc.end);

@@ -43,9 +43,9 @@
 
 using namespace fabrique;
 using namespace fabrique::dag;
-using std::auto_ptr;
 using std::stack;
 using std::string;
+using std::unique_ptr;
 
 
 //! AST Visitor that flattens the AST into a DAG.
@@ -79,8 +79,8 @@ public:
 	StringMap<Rule*> rules;
 
 	stack<string> value;
-	auto_ptr<File> file;
-	auto_ptr<Rule> rule;
+	unique_ptr<File> file;
+	unique_ptr<Rule> rule;
 };
 
 
@@ -254,26 +254,24 @@ bool Flattener::Enter(const ast::Value& v) { return true; }
 void Flattener::Leave(const ast::Value& v)
 {
 	const bool isStringVal = not value.empty();
-	const bool isFile = (file.get() != NULL);
-	const bool isRule = (rule.get() != NULL);
 
 	const string name = v.getName().name();
 
 	if (isStringVal)
 	{
-		assert(not (isFile or isRule));
+		assert(not (file or rule));
 
 		variables[name] = value.top();
 		value.pop();
 	}
-	else if (isFile)
+	else if (file)
 	{
-		assert(not (isStringVal or isRule));
+		assert(not (isStringVal or rule));
 		files[name] = file.release();
 	}
-	else if (isRule)
+	else if (rule)
 	{
-		assert(not (isStringVal or isFile));
+		assert(not (isStringVal or file));
 		rules[name] = rule.release();
 	}
 	else

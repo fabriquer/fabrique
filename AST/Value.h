@@ -55,8 +55,8 @@ public:
 	virtual void Accept(Visitor&) const;
 
 private:
-	std::auto_ptr<Identifier> id;
-	std::auto_ptr<const Expression> expr;
+	std::unique_ptr<Identifier> id;
+	std::unique_ptr<const Expression> expr;
 };
 
 } // namespace ast

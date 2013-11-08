@@ -51,10 +51,10 @@
 #include <memory>
 
 using namespace fabrique;
-using std::auto_ptr;
+using std::unique_ptr;
 
 
-auto_ptr<Lexer> lex;
+unique_ptr<Lexer> lex;
 Bytestream& err = Bytestream::Stderr();
 
 int yyparse(ast::Parser*);
@@ -66,13 +66,13 @@ int yyparse(ast::Parser*);
  */
 void yyerror(const char *str)
 {
-	assert(lex.get() != NULL);
+	assert(lex);
 	err << lex->Err(str);
 }
 
 int yylex(void *yylval)
 {
-	assert(lex.get() != NULL);
+	assert(lex);
 	return lex->yylex((YYSTYPE*) yylval);
 }
 
@@ -80,11 +80,11 @@ int main(int argc, char *argv[]) {
 	//
 	// Parse command-line arguments.
 	//
-	auto_ptr<Arguments> args(Arguments::Parse(argc, argv));
-	if (!args.get() or args->help)
+	unique_ptr<Arguments> args(Arguments::Parse(argc, argv));
+	if (not args or args->help)
 	{
 		Arguments::PrintUsage(std::cerr);
-		return (args.get() ? 0 : 1);
+		return (args ? 0 : 1);
 	}
 
 
@@ -108,15 +108,15 @@ int main(int argc, char *argv[]) {
 	}
 
 	std::ofstream outfile;
-	auto_ptr<Bytestream> outfileStream;
+	unique_ptr<Bytestream> outfileStream;
 	if (args->outputIsFile)
 	{
 		outfile.open(args->output.c_str());
 		outfileStream.reset(Bytestream::File(outfile));
 	}
 
-	Bytestream& out = (outfileStream.get() != NULL)
-		? *outfileStream.get()
+	Bytestream& out = outfileStream
+		? *outfileStream
 		: Bytestream::Stdout();
 
 
@@ -127,7 +127,7 @@ int main(int argc, char *argv[]) {
 	//
 	// Parse the Fabrique input.
 	//
-	auto_ptr<ast::Parser> parser(new ast::Parser(*lex));
+	unique_ptr<ast::Parser> parser(new ast::Parser(*lex));
 	int result = yyparse(parser.get());
 
 	for (auto *error : parser->errors())
@@ -160,7 +160,7 @@ int main(int argc, char *argv[]) {
 			;
 	}
 
-	auto_ptr<dag::DAG> dag;
+	unique_ptr<dag::DAG> dag;
 	try { dag.reset(dag::DAG::Flatten(root)); }
 	catch (std::exception& e)
 	{
@@ -173,7 +173,7 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
-	assert(dag.get() != NULL);
+	assert(dag);
 
 	if (args->printDAG)
 	{
@@ -183,7 +183,7 @@ int main(int argc, char *argv[]) {
 			<< "# DAG pretty-printed from '" << args->input << "'\n"
 			<< "#\n"
 			<< Bytestream::Reset
-			<< *dag.get()
+			<< *dag
 			;
 	}
 
@@ -191,7 +191,7 @@ int main(int argc, char *argv[]) {
 	//
 	// What should we do with it now?
 	//
-	auto_ptr<backend::Backend> backend;
+	unique_ptr<backend::Backend> backend;
 	if (args->format == "null")
 		backend.reset(new backend::NullBackend());
 
@@ -207,10 +207,9 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
-	assert(backend.get() != NULL);
-	assert(dag.get() != NULL);
+	assert(backend);
 
-	try { backend->Process(*dag.get()); }
+	try { backend->Process(*dag); }
 	catch (std::exception& e)
 	{
 	}

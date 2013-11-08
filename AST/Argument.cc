@@ -38,7 +38,7 @@ using namespace fabrique::ast;
 
 void Argument::PrettyPrint(Bytestream& out, int indent) const
 {
-	if (name.get())
+	if (name)
 		out
 			<< Bytestream::Definition << name->name()
 			<< Bytestream::Operator << " = "
@@ -52,7 +52,7 @@ void Argument::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
 	{
-		if (name.get())
+		if (name)
 			name->Accept(v);
 
 		expr->Accept(v);

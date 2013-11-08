@@ -64,7 +64,7 @@ public:
 
 private:
 	PtrVec<Parameter> params;
-	std::auto_ptr<CompoundExpression> body;
+	std::unique_ptr<CompoundExpression> body;
 };
 
 } // namespace ast

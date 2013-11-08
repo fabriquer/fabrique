@@ -44,9 +44,7 @@ class DuplicateException : public std::exception
 {
 public:
 	DuplicateException(const std::string& kind, const std::string& name);
-	~DuplicateException() _NOEXCEPT {}   // TODO: drop once we use C++11
-
-	const char* what() const _NOEXCEPT;
+	const char* what() const noexcept;
 
 private:
 	const std::string message;
@@ -63,9 +61,7 @@ class SemanticException : public std::exception
 {
 public:
 	SemanticException(const std::string& message, const SourceRange&);
-	~SemanticException() _NOEXCEPT;
-
-	const char* what() const _NOEXCEPT;
+	const char* what() const noexcept;
 
 private:
 	const ErrorReport *err;

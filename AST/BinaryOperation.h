@@ -77,8 +77,8 @@ private:
 	{
 	}
 
-	const std::auto_ptr<Expression> LHS;
-	const std::auto_ptr<Expression> RHS;
+	const std::unique_ptr<Expression> LHS;
+	const std::unique_ptr<Expression> RHS;
 	const Operator op;
 };
 

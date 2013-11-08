@@ -65,7 +65,7 @@ public:
 
 private:
 	PtrVec<Value> values;
-	std::auto_ptr<const Expression> result;
+	std::unique_ptr<const Expression> result;
 };
 
 } // namespace ast

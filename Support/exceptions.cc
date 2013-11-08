@@ -42,7 +42,7 @@ DuplicateException::DuplicateException(const string& kind, const string& name)
 }
 
 
-const char* DuplicateException::what() const _NOEXCEPT
+const char* DuplicateException::what() const noexcept
 {
 	return message.c_str();
 }
@@ -55,9 +55,7 @@ SemanticException::SemanticException(const string& message,
 {
 }
 
-SemanticException::~SemanticException() _NOEXCEPT { delete err; }
-
-const char* SemanticException::what() const _NOEXCEPT
+const char* SemanticException::what() const noexcept
 {
 	return err->getMessage().c_str();
 }

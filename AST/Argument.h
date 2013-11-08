@@ -54,7 +54,7 @@ public:
 		assert(e != NULL);
 	}
 
-	bool hasName() const { return (name.get() != NULL); }
+	bool hasName() const { return (bool) name; }
 	const Identifier& getName() const { return *name; }
 	const Expression& getValue() const { return *expr; }
 
@@ -64,8 +64,8 @@ public:
 	virtual void Accept(Visitor&) const;
 
 private:
-	std::auto_ptr<Identifier> name;
-	std::auto_ptr<Expression> expr;
+	std::unique_ptr<Identifier> name;
+	std::unique_ptr<Expression> expr;
 };
 
 } // namespace ast

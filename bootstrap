@@ -53,6 +53,9 @@ src_root = os.path.dirname(os.path.realpath(__file__))
 cxxflags = [
 	'-I', src_root, '-I', args.builddir,
 
+	# Require C++11.
+	'-std=c++11',
+
 	# We don't use RTTI, and enabling it comes at a cost.
 	'-fno-rtti',
 
@@ -61,9 +64,6 @@ cxxflags = [
 
 	# We intentionally hide yyFlexLexer::yylex().
 	'-Wno-overloaded-virtual',
-
-	# we might like to use some C++11 language features like 'auto'
-	'-Wno-c++11-extensions',
 ]
 
 if args.debug: cxxflags += [ '-g', '-ggdb' ]

@@ -63,9 +63,9 @@ public:
 	virtual void Accept(Visitor&) const;
 
 private:
-	std::auto_ptr<Expression> source;
-	std::auto_ptr<const Parameter> loopParameter;
-	std::auto_ptr<CompoundExpression> body;
+	std::unique_ptr<Expression> source;
+	std::unique_ptr<const Parameter> loopParameter;
+	std::unique_ptr<CompoundExpression> body;
 };
 
 } // namespace ast
