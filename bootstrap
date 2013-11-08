@@ -25,7 +25,7 @@ cxx_srcs = {
 		'Ninja',
 	),
 	'DAG/': (
-		'DAG',
+		'DAG', 'File', 'Rule',
 	),
 	'Parsing/': (
 		'Lexer', 'Parser',

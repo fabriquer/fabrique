@@ -1,4 +1,4 @@
-/** @file DAG.h    Declaration of @ref DAG. */
+/** @file Rule.cc    Definition of @ref Rule. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,51 +29,61 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DAG_H
-#define DAG_H
-
-#include "ADT/StringMap.h"
 #include "DAG/File.h"
 #include "DAG/Rule.h"
-#include "Support/Printable.h"
+#include "Support/Bytestream.h"
 
-#include <string>
+using namespace fabrique::dag;
+using std::string;
 
 
-namespace fabrique {
+Rule* Rule::Create(const string command, const StringMap<string>& parameters)
+{
+	StringMap<string> params(parameters);
 
-namespace ast {
-	class Expression;
-	class Identifier;
-	class Scope;
+	string description;
+
+	auto d = params.find("description");
+	if (d == params.end())
+	{
+		description = command;
+	}
+	else
+	{
+		description = d->second;
+		params.erase(d);
+	}
+
+	return new Rule(command, description, params);
 }
 
-namespace dag {
 
-/**
- * A directed acyclic graph of build actions.
- */
-class DAG : public Printable
+Rule::Rule(const string& command, const string& description,
+	   const StringMap<string>& params)
+	: command(command), description(description), parameters(params)
 {
-public:
-	static DAG* Flatten(const ast::Scope&);
+}
 
-	~DAG();
+void Rule::PrettyPrint(Bytestream& out, int indent) const
+{
+	out
+		<< Bytestream::Action << command
+		<< Bytestream::Operator << " {"
+		<< Bytestream::Literal << " '" << description << "'"
+		;
 
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
+	for (auto& i : parameters)
+	{
+		out
+			<< Bytestream::Operator << ", "
+			<< Bytestream::Definition << i.first
+			<< Bytestream::Operator << " = "
+			<< Bytestream::Literal << "'" << i.second << "'"
+			;
+	}
 
-	const StringMap<std::string>& variables() const { return vars; }
-
-private:
-	DAG(const StringMap<std::string>& variables,
-	    const StringMap<File*>& files, const StringMap<Rule*>& rules);
-
-	StringMap<std::string> vars;
-	StringMap<File*> files;
-	StringMap<Rule*> rules;
-};
-
-} // namespace dag
-} // namespace fabrique
-
-#endif
+	out
+		<< Bytestream::Operator << " }"
+		<< Bytestream::Reset
+		;
+}

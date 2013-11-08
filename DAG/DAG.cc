@@ -39,7 +39,9 @@
 
 using namespace fabrique;
 using namespace fabrique::dag;
+using std::auto_ptr;
 using std::stack;
+using std::string;
 
 
 //! AST Visitor that flattens the AST into a DAG.
@@ -69,7 +71,12 @@ public:
 	VISIT(ast::Value)
 
 	StringMap<string> variables;
-	std::stack<const ast::Identifier*> name;
+	StringMap<File*> files;
+	StringMap<Rule*> rules;
+
+	stack<string> value;
+	auto_ptr<File> file;
+	auto_ptr<Rule> rule;
 };
 
 
@@ -78,13 +85,24 @@ DAG* DAG::Flatten(const ast::Scope& s)
 	Flattener f;
 	s.Accept(f);
 
-	return new DAG(f.variables);
+	return new DAG(f.variables, f.files, f.rules);
 }
 
 
-DAG::DAG(const StringMap<string>& vars)
-	: vars(vars)
+DAG::DAG(const StringMap<string>& vars,
+         const StringMap<File*>& files, const StringMap<Rule*>& rules)
+	: vars(vars), files(files), rules(rules)
 {
+}
+
+
+DAG::~DAG()
+{
+	for (auto& r : rules)
+		delete r.second;
+
+	for (auto& f : files)
+		delete f.second;
 }
 
 
@@ -97,6 +115,15 @@ void DAG::PrettyPrint(Bytestream& b, int indent) const
 			<< Bytestream::Operator << " = "
 			<< Bytestream::Literal << "'" << v.second << "'"
 			<< Bytestream::Reset << "\n"
+			;
+
+	for (auto& r : rules)
+		b
+			<< Bytestream::Type << "rule "
+			<< Bytestream::Definition << r.first
+			<< Bytestream::Operator << " = "
+			<< Bytestream::Reset << *r.second
+			<< "\n"
 			;
 }
 

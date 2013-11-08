@@ -1,4 +1,4 @@
-/** @file DAG.h    Declaration of @ref DAG. */
+/** @file File.h    Declaration of @ref File. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,48 +29,31 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DAG_H
-#define DAG_H
+#ifndef DAG_FILE_H
+#define DAG_FILE_H
 
-#include "ADT/StringMap.h"
-#include "DAG/File.h"
-#include "DAG/Rule.h"
 #include "Support/Printable.h"
 
 #include <string>
 
 
 namespace fabrique {
-
-namespace ast {
-	class Expression;
-	class Identifier;
-	class Scope;
-}
-
 namespace dag {
 
 /**
- * A directed acyclic graph of build actions.
+ * A reference to a file on disk (source or target).
  */
-class DAG : public Printable
+class File : public Printable
 {
 public:
-	static DAG* Flatten(const ast::Scope&);
+	File(const std::string& name, bool generated);
+	virtual ~File() {}
 
-	~DAG();
-
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
-
-	const StringMap<std::string>& variables() const { return vars; }
+	void PrettyPrint(Bytestream&, int indent = 0) const;
 
 private:
-	DAG(const StringMap<std::string>& variables,
-	    const StringMap<File*>& files, const StringMap<Rule*>& rules);
-
-	StringMap<std::string> vars;
-	StringMap<File*> files;
-	StringMap<Rule*> rules;
+	const std::string name;
+	const bool generated;
 };
 
 } // namespace dag

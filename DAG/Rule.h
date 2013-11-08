@@ -1,4 +1,4 @@
-/** @file DAG.h    Declaration of @ref DAG. */
+/** @file Rule.h    Declaration of @ref Rule. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,51 +29,44 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DAG_H
-#define DAG_H
+#ifndef DAG_ACTION_H
+#define DAG_ACTION_H
 
 #include "ADT/StringMap.h"
-#include "DAG/File.h"
-#include "DAG/Rule.h"
 #include "Support/Printable.h"
 
 #include <string>
 
 
 namespace fabrique {
-
-namespace ast {
-	class Expression;
-	class Identifier;
-	class Scope;
-}
-
 namespace dag {
 
+class File;
+
+
 /**
- * A directed acyclic graph of build actions.
+ * An action that transforms files into other files.
  */
-class DAG : public Printable
+class Rule : public Printable
 {
 public:
-	static DAG* Flatten(const ast::Scope&);
+	static Rule* Create(const std::string command,
+	                    const StringMap<std::string>& otherParameters);
 
-	~DAG();
+	virtual ~Rule() {}
 
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
-
-	const StringMap<std::string>& variables() const { return vars; }
+	void PrettyPrint(Bytestream&, int indent = 0) const;
 
 private:
-	DAG(const StringMap<std::string>& variables,
-	    const StringMap<File*>& files, const StringMap<Rule*>& rules);
+	Rule(const std::string& command, const std::string& description,
+	     const StringMap<std::string>& params);
 
-	StringMap<std::string> vars;
-	StringMap<File*> files;
-	StringMap<Rule*> rules;
+	const std::string command;
+	const std::string description;
+	const StringMap<std::string> parameters;
 };
 
-} // namespace dag
+} // namespace ast
 } // namespace fabrique
 
 #endif
