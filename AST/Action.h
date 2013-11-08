@@ -53,6 +53,8 @@ public:
 
 	~Action() { for (auto *arg : args) delete arg; }
 
+	const PtrVec<Argument>& arguments() const { return args; }
+
 	typedef PtrVec<Argument>::const_iterator const_iterator;
 	const_iterator begin() const { return args.begin(); }
 	const_iterator end() const { return args.end(); }

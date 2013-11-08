@@ -29,11 +29,15 @@
  * SUCH DAMAGE.
  */
 
+#include "AST/Action.h"
+#include "AST/Argument.h"
 #include "AST/Scope.h"
 #include "AST/Value.h"
 #include "AST/Visitor.h"
+
 #include "DAG/DAG.h"
 #include "Support/Bytestream.h"
+#include "Support/exceptions.h"
 
 #include <stack>
 
@@ -129,7 +133,43 @@ void DAG::PrettyPrint(Bytestream& b, int indent) const
 
 
 
-bool Flattener::Enter(const ast::Action&) { return false; }
+bool Flattener::Enter(const ast::Action& a)
+{
+	string command;
+	StringMap<string> parameters;
+
+	if (a.arguments().size() < 1)
+		throw SemanticException("Missing action arguments",
+				a.getSource());
+
+	for (const ast::Argument *arg : a)
+	{
+		if (not arg->hasName() and not command.empty())
+		{
+			// The only keyword-less argument to action() is
+			// its command.
+			throw SemanticException(
+				"Duplicate command", arg->getSource());
+		}
+
+		arg->getValue().Accept(*this);
+		assert(not value.empty());
+
+		const string value = this->value.top();
+		this->value.pop();
+
+		if (arg->hasName())
+			parameters[arg->getName().name()] = value;
+
+		else
+			command = value;
+	}
+
+	rule.reset(Rule::Create(command, parameters));
+
+	return false;
+}
+
 void Flattener::Leave(const ast::Action&) {}
 
 
@@ -179,11 +219,7 @@ void Flattener::Leave(const ast::Identifier&) {}
 
 bool Flattener::Enter(const ast::IntLiteral& i)
 {
-	assert(!name.empty());
-
-	variables[name.top()->name()] = i.str();
-	name.pop();
-
+	value.push(i.str());
 	return false;
 }
 
@@ -200,11 +236,7 @@ void Flattener::Leave(const ast::Parameter&) {}
 
 bool Flattener::Enter(const ast::StringLiteral& s)
 {
-	assert(!name.empty());
-
-	variables[name.top()->name()] = s.str();
-	name.pop();
-
+	value.push(s.str());
 	return false;
 }
 
@@ -218,10 +250,39 @@ bool Flattener::Enter(const ast::Type&) { return false; }
 void Flattener::Leave(const ast::Type&) {}
 
 
-bool Flattener::Enter(const ast::Value& v)
+bool Flattener::Enter(const ast::Value& v) { return true; }
+void Flattener::Leave(const ast::Value& v)
 {
-	name.push(&v.getName());
-	return true;
-}
+	const bool isStringVal = not value.empty();
+	const bool isFile = (file.get() != NULL);
+	const bool isRule = (rule.get() != NULL);
 
-void Flattener::Leave(const ast::Value&) {}
+	const string name = v.getName().name();
+
+	if (isStringVal)
+	{
+		assert(not (isFile or isRule));
+
+		variables[name] = value.top();
+		value.pop();
+	}
+	else if (isFile)
+	{
+		assert(not (isStringVal or isRule));
+		files[name] = file.release();
+	}
+	else if (isRule)
+	{
+		assert(not (isStringVal or isFile));
+		rules[name] = rule.release();
+	}
+	else
+	{
+		// TODO: later, throw this exception. for now, ignore.
+		/*
+		throw SemanticException(
+			"Value '" + name + "' is not a variable, file or rule",
+			v.getSource());
+		*/
+	}
+}
