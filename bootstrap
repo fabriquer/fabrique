@@ -169,7 +169,7 @@ path = [ builddir ] + os.environ['PATH'].split(os.pathsep)
 path = os.pathsep.join(path)
 
 # Unit tests:
-out.write('''build test: lit %s/test
+out.write('''build test: lit %s/test | fab
   path = %s
 
 ''' % (srcroot, path))
