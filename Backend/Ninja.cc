@@ -49,7 +49,7 @@ NinjaBackend::NinjaBackend(Bytestream& out)
 }
 
 
-void NinjaBackend::Process(const dag::DAG& g)
+void NinjaBackend::Process(const dag::DAG& d)
 {
 	out
 		<< "#\n"
@@ -57,7 +57,7 @@ void NinjaBackend::Process(const dag::DAG& g)
 		<< "#\n"
 		;
 
-	for (auto& i : g.variables())
+	for (auto& i : d.variables())
 	{
 		out
 			<< i.first
