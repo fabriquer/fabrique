@@ -150,7 +150,7 @@ int main(int argc, char *argv[]) {
 
 	if (args->printAST)
 	{
-		out
+		Bytestream::Stdout()
 			<< Bytestream::Comment
 			<< "#\n"
 			<< "# AST pretty-printed from '" << args->input << "'\n"
@@ -180,7 +180,7 @@ int main(int argc, char *argv[]) {
 
 	if (args->printDAG)
 	{
-		out
+		Bytestream::Stdout()
 			<< Bytestream::Comment
 			<< "#\n"
 			<< "# DAG pretty-printed from '" << args->input << "'\n"
