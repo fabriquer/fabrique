@@ -113,18 +113,18 @@ DAG* DAG::Flatten(const ast::Scope& s)
 
 DAG::DAG(const StringMap<string>& vars,
          const StringMap<File*>& files, const StringMap<Rule*>& rules)
-	: vars(vars), files(files), rules(rules)
+	: vars(vars), f(files), r(rules)
 {
 }
 
 
 DAG::~DAG()
 {
-	for (auto& r : rules)
-		delete r.second;
+	for (auto& i : r)
+		delete i.second;
 
-	for (auto& f : files)
-		delete f.second;
+	for (auto& i : f)
+		delete i.second;
 }
 
 
@@ -139,7 +139,7 @@ void DAG::PrettyPrint(Bytestream& b, int indent) const
 			<< Bytestream::Reset << "\n"
 			;
 
-	for (auto& r : rules)
+	for (auto& r : rules())
 		b
 			<< Bytestream::Type << "rule "
 			<< Bytestream::Definition << r.first
@@ -148,7 +148,7 @@ void DAG::PrettyPrint(Bytestream& b, int indent) const
 			<< "\n"
 			;
 
-	for (auto& f : files)
+	for (auto& f : files())
 		b
 			<< Bytestream::Type << "file "
 			<< Bytestream::Definition << f.first

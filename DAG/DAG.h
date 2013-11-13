@@ -63,14 +63,16 @@ public:
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 
 	const StringMap<std::string>& variables() const { return vars; }
+	const StringMap<File*>& files() const { return f; }
+	const StringMap<Rule*>& rules() const { return r; }
 
 private:
 	DAG(const StringMap<std::string>& variables,
 	    const StringMap<File*>& files, const StringMap<Rule*>& rules);
 
 	StringMap<std::string> vars;
-	StringMap<File*> files;
-	StringMap<Rule*> rules;
+	StringMap<File*> f;
+	StringMap<Rule*> r;
 };
 
 } // namespace dag
