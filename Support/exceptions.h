@@ -61,7 +61,7 @@ class SemanticException : public std::exception
 {
 public:
 	SemanticException(const std::string& message, const SourceRange&);
-	const char* what() const noexcept;
+	virtual const char* what() const noexcept;
 
 private:
 	const ErrorReport *err;
