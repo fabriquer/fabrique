@@ -251,8 +251,8 @@ bool Flattener::Enter(const ast::List& l)
 {
 	assert(l.getType().name() == "list");
 	assert(l.getType().typeParamCount() == 1);
+	const ast::Type& subtype = l.getType()[0];
 
-	const ast::Type subtype = l.getType()[0];
 	if (subtype.name() == "string")
 	{
 		std::vector<shared_ptr<Value>> values;

@@ -53,6 +53,7 @@ public:
 	static const Type& GetSupertype(const Type&, const Type&);
 	static Type* Create(const std::string&, const PtrVec<Type>& params);
 
+	Type(const Type&) = delete;
 	virtual ~Type() {}
 
 	std::string str() const;
