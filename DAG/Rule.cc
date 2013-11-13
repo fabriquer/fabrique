@@ -60,19 +60,19 @@ Rule* Rule::Create(const string command, const StringMap<string>& parameters)
 
 Rule::Rule(const string& command, const string& description,
 	   const StringMap<string>& params)
-	: command(command), description(description), parameters(params)
+	: cmd(command), descrip(description), params(params)
 {
 }
 
 void Rule::PrettyPrint(Bytestream& out, int indent) const
 {
 	out
-		<< Bytestream::Action << command
+		<< Bytestream::Action << cmd
 		<< Bytestream::Operator << " {"
-		<< Bytestream::Literal << " '" << description << "'"
+		<< Bytestream::Literal << " '" << descrip << "'"
 		;
 
-	for (auto& i : parameters)
+	for (auto& i : params)
 	{
 		out
 			<< Bytestream::Operator << ", "

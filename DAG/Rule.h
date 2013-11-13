@@ -55,15 +55,19 @@ public:
 
 	virtual ~Rule() {}
 
+	const std::string& command() const { return cmd; }
+	const std::string& description() const { return descrip; }
+	const StringMap<std::string>& parameters() const { return params; }
+
 	void PrettyPrint(Bytestream&, int indent = 0) const;
 
 private:
 	Rule(const std::string& command, const std::string& description,
 	     const StringMap<std::string>& params);
 
-	const std::string command;
-	const std::string description;
-	const StringMap<std::string> parameters;
+	const std::string cmd;
+	const std::string descrip;
+	const StringMap<std::string> params;
 };
 
 } // namespace ast
