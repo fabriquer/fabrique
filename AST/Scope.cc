@@ -99,6 +99,10 @@ void Scope::PrettyPrint(Bytestream& out, int indent) const
 
 void Scope::Accept(Visitor& v) const
 {
+	v.Enter(*this);
+
 	for (auto *val : values)
 		val->Accept(v);
+
+	v.Leave(*this);
 }

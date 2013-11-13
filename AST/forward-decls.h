@@ -48,6 +48,7 @@ class Function;
 class Identifier;
 class List;
 class Parameter;
+class Scope;
 class SymbolReference;
 class Type;
 class Value;

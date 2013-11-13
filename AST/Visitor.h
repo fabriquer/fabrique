@@ -64,6 +64,7 @@ public:
 	VISIT(IntLiteral)
 	VISIT(List)
 	VISIT(Parameter)
+	VISIT(Scope)
 	VISIT(StringLiteral)
 	VISIT(SymbolReference)
 	VISIT(Type)
