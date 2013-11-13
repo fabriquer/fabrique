@@ -63,6 +63,9 @@ private:
 
 Bytestream& operator<< (Bytestream&, const Join&);
 
+std::string join(const std::vector<std::string>&,
+                 const std::string& delim = ",");
+
 } // namespace fabrique
 
 #endif
