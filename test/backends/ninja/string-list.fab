@@ -1,0 +1,13 @@
+#
+# RUN: fab --format=ninja --output=%t %s
+# RUN: FileCheck %s -input-file %t
+#
+
+foo = 'a string literal';
+bar = 'and another one';
+
+# CHECK-DAG: baz = a string literal and another one
+baz = [ foo bar ];
+
+# CHECK-DAG: wibble = yes, it's a string literal from a list
+wibble = [ "yes, it's" foo 'from a list' ];
