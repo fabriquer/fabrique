@@ -66,4 +66,18 @@ void NinjaBackend::Process(const dag::DAG& d)
 			<< "\n"
 			;
 	}
+
+	for (auto& i : d.rules())
+	{
+		const dag::Rule& rule = *i.second;
+
+		out << "rule " << i.first << "\n";
+		out << "  command = " << rule.command() << "\n";
+		out << "  description = " << rule.description() << "\n";
+
+		for (auto& p : rule.parameters())
+			out << "  " << p.first << " = " << p.second << "\n";
+
+		out << "\n";
+	}
 }
