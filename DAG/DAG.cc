@@ -31,21 +31,26 @@
 
 #include "AST/Action.h"
 #include "AST/Argument.h"
+#include "AST/List.h"
 #include "AST/Scope.h"
+#include "AST/SymbolReference.h"
+#include "AST/Type.h"
 #include "AST/Value.h"
 #include "AST/Visitor.h"
 
 #include "DAG/DAG.h"
+#include "DAG/UndefinedValueException.h"
+
 #include "Support/Bytestream.h"
+#include "Support/Join.h"
 #include "Support/exceptions.h"
 
+#include <deque>
 #include <stack>
 
 using namespace fabrique;
 using namespace fabrique::dag;
-using std::stack;
 using std::string;
-using std::unique_ptr;
 
 
 //! AST Visitor that flattens the AST into a DAG.
@@ -69,6 +74,7 @@ public:
 	VISIT(ast::IntLiteral)
 	VISIT(ast::List)
 	VISIT(ast::Parameter)
+	VISIT(ast::Scope)
 	VISIT(ast::StringLiteral)
 	VISIT(ast::SymbolReference)
 	VISIT(ast::Type)
@@ -78,10 +84,22 @@ public:
 	StringMap<File*> files;
 	StringMap<Rule*> rules;
 
-	stack<string> value;
-	unique_ptr<File> file;
-	unique_ptr<Rule> rule;
+	std::deque<string> scopeName;
+	std::deque<StringMap<string>> scopeSymbols;
+	std::stack<string> currentValue;
+	std::unique_ptr<File> currentFile;
+	std::unique_ptr<Rule> currentRule;
 };
+
+
+//! Append a string to a deque.
+static std::vector<string>&&
+	operator+ (const std::deque<string>& d, const string& s)
+{
+	std::vector<string> result(d.begin(), d.end());
+	result.push_back(s);
+	return std::move(result);
+}
 
 
 DAG* DAG::Flatten(const ast::Scope& s)
@@ -129,6 +147,15 @@ void DAG::PrettyPrint(Bytestream& b, int indent) const
 			<< Bytestream::Reset << *r.second
 			<< "\n"
 			;
+
+	for (auto& f : files)
+		b
+			<< Bytestream::Type << "file "
+			<< Bytestream::Definition << f.first
+			<< Bytestream::Operator << " = "
+			<< Bytestream::Reset << *f.second
+			<< "\n"
+			;
 }
 
 
@@ -153,10 +180,10 @@ bool Flattener::Enter(const ast::Action& a)
 		}
 
 		arg->getValue().Accept(*this);
-		assert(not value.empty());
+		assert(not currentValue.empty());
 
-		const string value = this->value.top();
-		this->value.pop();
+		const string value = currentValue.top();
+		currentValue.pop();
 
 		if (not arg->hasName()
 		    or strcmp(arg->getName().name().c_str(), "command") == 0)
@@ -166,7 +193,7 @@ bool Flattener::Enter(const ast::Action& a)
 			parameters[arg->getName().name()] = value;
 	}
 
-	rule.reset(Rule::Create(command, parameters));
+	currentRule.reset(Rule::Create(command, parameters));
 
 	return false;
 }
@@ -190,8 +217,16 @@ bool Flattener::Enter(const ast::Call&) { return false; }
 void Flattener::Leave(const ast::Call&) {}
 
 
-bool Flattener::Enter(const ast::CompoundExpression&) { return false; }
-void Flattener::Leave(const ast::CompoundExpression&) {}
+bool Flattener::Enter(const ast::CompoundExpression&)
+{
+	scopeSymbols.push_back(StringMap<string>());
+	return true;
+}
+
+void Flattener::Leave(const ast::CompoundExpression&)
+{
+	scopeSymbols.pop_back();
+}
 
 
 bool Flattener::Enter(const ast::Conditional&) { return false; }
@@ -220,14 +255,47 @@ void Flattener::Leave(const ast::Identifier&) {}
 
 bool Flattener::Enter(const ast::IntLiteral& i)
 {
-	value.push(i.str());
+	currentValue.push(i.str());
 	return false;
 }
 
 void Flattener::Leave(const ast::IntLiteral&) {}
 
 
-bool Flattener::Enter(const ast::List&) { return false; }
+bool Flattener::Enter(const ast::List& l)
+{
+	assert(l.getType().name() == "list");
+	assert(l.getType().typeParamCount() == 1);
+
+	const ast::Type subtype = l.getType()[0];
+	if (subtype.name() == "string")
+	{
+		std::vector<string> values;
+
+		for (const ast::Expression *e : l)
+		{
+			e->Accept(*this);
+
+			// TODO: don't do this
+			if (currentValue.empty())
+				continue;
+
+			assert(not currentValue.empty());
+
+			values.push_back(currentValue.top());
+			currentValue.pop();
+		}
+
+		currentValue.push(join(values, " "));
+	}
+
+	else throw SemanticException(
+		"Unable to flatten list[" + subtype.name() + "]",
+		l.getSource());
+
+	return false;
+}
+
 void Flattener::Leave(const ast::List&) {}
 
 
@@ -235,15 +303,42 @@ bool Flattener::Enter(const ast::Parameter&) { return false; }
 void Flattener::Leave(const ast::Parameter&) {}
 
 
+bool Flattener::Enter(const ast::Scope&)
+{
+	scopeSymbols.push_back(StringMap<string>());
+	return false;
+}
+
+void Flattener::Leave(const ast::Scope&)
+{
+	scopeSymbols.pop_back();
+}
+
+
 bool Flattener::Enter(const ast::StringLiteral& s)
 {
-	value.push(s.str());
+	currentValue.push(s.str());
 	return false;
 }
 
 void Flattener::Leave(const ast::StringLiteral&) {}
 
-bool Flattener::Enter(const ast::SymbolReference&) { return false; }
+
+bool Flattener::Enter(const ast::SymbolReference& r)
+{
+	const string& name = r.getName().name();
+	const StringMap<string>& symbols = scopeSymbols.back();
+
+	auto i = symbols.find(name);
+	if (i == symbols.end())
+		throw UndefinedValueException(name, r.getSource());
+
+	assert(i->first == name);
+	currentValue.push(i->second);
+
+	return false;
+}
+
 void Flattener::Leave(const ast::SymbolReference&) {}
 
 
@@ -254,26 +349,30 @@ void Flattener::Leave(const ast::Type&) {}
 bool Flattener::Enter(const ast::Value& v) { return true; }
 void Flattener::Leave(const ast::Value& v)
 {
-	const bool isStringVal = not value.empty();
+	const bool isStringVal = not currentValue.empty();
 
 	const string name = v.getName().name();
+	const string scopedName = join(scopeName + name, ".");
 
 	if (isStringVal)
 	{
-		assert(not (file or rule));
+		assert(not (currentFile or currentRule));
 
-		variables[name] = value.top();
-		value.pop();
+		const string value = currentValue.top();
+		currentValue.pop();
+
+		variables[name] = value;
+		scopeSymbols.back()[name] = value;
 	}
-	else if (file)
+	else if (currentFile)
 	{
-		assert(not (isStringVal or rule));
-		files[name] = file.release();
+		assert(not (isStringVal or currentRule));
+		files[name] = currentFile.release();
 	}
-	else if (rule)
+	else if (currentRule)
 	{
-		assert(not (isStringVal or file));
-		rules[name] = rule.release();
+		assert(not (isStringVal or currentFile));
+		rules[name] = currentRule.release();
 	}
 	else
 	{
