@@ -160,6 +160,9 @@ int main(int argc, char *argv[]) {
 			;
 	}
 
+	if (args->parseOnly)
+		return 0;
+
 	unique_ptr<dag::DAG> dag;
 	try { dag.reset(dag::DAG::Flatten(root)); }
 	catch (std::exception& e)

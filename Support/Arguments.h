@@ -64,16 +64,19 @@ public:
 	const bool outputIsFile;
 
 	const std::string format;
+	const bool parseOnly;
 	const bool printAST;
 	const bool printDAG;
 
 private:
 	Arguments(const bool help,
 	          const std::string& input, const std::string& output,
-	          const std::string& format, bool printAST, bool printDAG)
+	          const std::string& format, bool parseOnly,
+	          bool printAST, bool printDAG)
 		: help(help), input(input), output(output),
 		  outputIsFile(output.length() > 0 and output != "-"),
-		  format(format), printAST(printAST), printDAG(printDAG)
+		  format(format), parseOnly(parseOnly),
+		  printAST(printAST), printDAG(printDAG)
 	{
 	}
 

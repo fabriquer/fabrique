@@ -47,6 +47,7 @@ enum optionNames
 	Help,
 	Format,
 	OutputFile,
+	ParseOnly,
 	PrettyPrintAST,
 	PrettyPrintDAG,
 };
@@ -111,6 +112,10 @@ const option::Descriptor usage[] =
 		formatString.c_str()
 	},
 	{
+		ParseOnly, Enable, "", "parse-only", option::Arg::None,
+		"  --parse-only     Only parse the AST, don't build the DAG"
+	},
+	{
 		PrettyPrintAST, Enable, "", "print-ast", option::Arg::None,
 		"  --print-ast      Pretty-print the AST"
 	},
@@ -153,10 +158,8 @@ Arguments* Arguments::Parse(int argc, char *argv[])
 	                       ? options[Format].arg
 	                       : "ninja";
 
-	const bool printAST = options[PrettyPrintAST];
-	const bool printDAG = options[PrettyPrintDAG];
-
-	return new Arguments(help, input, output, format, printAST, printDAG);
+	return new Arguments(help, input, output, format, options[ParseOnly],
+	                     options[PrettyPrintAST], options[PrettyPrintDAG]);
 }
 
 
