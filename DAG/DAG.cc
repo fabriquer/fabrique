@@ -39,7 +39,12 @@
 #include "AST/Visitor.h"
 
 #include "DAG/DAG.h"
+#include "DAG/File.h"
+#include "DAG/List.h"
+#include "DAG/Primitive.h"
+#include "DAG/Rule.h"
 #include "DAG/UndefinedValueException.h"
+#include "DAG/Value.h"
 
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
@@ -50,6 +55,9 @@
 
 using namespace fabrique;
 using namespace fabrique::dag;
+using ValueMap = DAG::ValueMap;
+
+using std::shared_ptr;
 using std::string;
 
 
@@ -80,26 +88,21 @@ public:
 	VISIT(ast::Type)
 	VISIT(ast::Value)
 
-	StringMap<string> variables;
-	StringMap<File*> files;
-	StringMap<Rule*> rules;
-
+	//! The components of the current scope's fully-qualified name.
 	std::deque<string> scopeName;
-	std::deque<StringMap<string>> scopeSymbols;
-	std::stack<string> currentValue;
-	std::unique_ptr<File> currentFile;
-	std::unique_ptr<Rule> currentRule;
+
+	//! Symbols defined in this scope (or the one up from it, or up...).
+	std::deque<ValueMap> scopes;
+
+	//! All values, named by fully-qualified name.
+	ValueMap values;
+
+	/**
+	 * The value currently being processed.
+	 * Visitor methods should leave a single item on this stack.
+	 */
+	std::stack<shared_ptr<Value>> currentValue;
 };
-
-
-//! Append a string to a deque.
-static std::vector<string>&&
-	operator+ (const std::deque<string>& d, const string& s)
-{
-	std::vector<string> result(d.begin(), d.end());
-	result.push_back(s);
-	return std::move(result);
-}
 
 
 DAG* DAG::Flatten(const ast::Scope& s)
@@ -107,63 +110,45 @@ DAG* DAG::Flatten(const ast::Scope& s)
 	Flattener f;
 	s.Accept(f);
 
-	return new DAG(f.variables, f.files, f.rules);
+	return new DAG(f.values);
 }
 
 
-DAG::DAG(const StringMap<string>& vars,
-         const StringMap<File*>& files, const StringMap<Rule*>& rules)
-	: vars(vars), f(files), r(rules)
+DAG::DAG(const ValueMap& values)
+	: values(values)
 {
-}
-
-
-DAG::~DAG()
-{
-	for (auto& i : r)
-		delete i.second;
-
-	for (auto& i : f)
-		delete i.second;
 }
 
 
 void DAG::PrettyPrint(Bytestream& b, int indent) const
 {
-	for (auto& v : vars)
+	for (auto& i : values)
+	{
+		const string& name = i.first;
+		const shared_ptr<Value>& v = i.second;
+
+		assert(v);
+
 		b
-			<< Bytestream::Type << "var "
-			<< Bytestream::Definition << v.first
+			<< Bytestream::Type << v->type()
+			<< Bytestream::Definition << " " << name
 			<< Bytestream::Operator << " = "
-			<< Bytestream::Literal << "'" << v.second << "'"
+			<< *v
 			<< Bytestream::Reset << "\n"
 			;
-
-	for (auto& r : rules())
-		b
-			<< Bytestream::Type << "rule "
-			<< Bytestream::Definition << r.first
-			<< Bytestream::Operator << " = "
-			<< Bytestream::Reset << *r.second
-			<< "\n"
-			;
-
-	for (auto& f : files())
-		b
-			<< Bytestream::Type << "file "
-			<< Bytestream::Definition << f.first
-			<< Bytestream::Operator << " = "
-			<< Bytestream::Reset << *f.second
-			<< "\n"
-			;
+	}
 }
+
+
+ValueMap::const_iterator DAG::begin() const { return values.begin(); }
+ValueMap::const_iterator DAG::end() const { return values.end(); }
 
 
 
 bool Flattener::Enter(const ast::Action& a)
 {
 	string command;
-	StringMap<string> parameters;
+	ValueMap parameters;
 
 	if (a.arguments().size() < 1)
 		throw SemanticException("Missing action arguments",
@@ -171,29 +156,29 @@ bool Flattener::Enter(const ast::Action& a)
 
 	for (const ast::Argument *arg : a)
 	{
-		if (not arg->hasName() and not command.empty())
-		{
-			// The only keyword-less argument to action() is
-			// its command.
-			throw SemanticException(
-				"Duplicate command", arg->getSource());
-		}
-
+		// Flatten the argument and convert it to a string.
 		arg->getValue().Accept(*this);
 		assert(not currentValue.empty());
 
-		const string value = currentValue.top();
+		shared_ptr<Value> value = currentValue.top();
 		currentValue.pop();
 
-		if (not arg->hasName()
-		    or strcmp(arg->getName().name().c_str(), "command") == 0)
-			command = value;
+		// The only keyword-less argument to action() is its command.
+		if (not arg->hasName() or arg->getName().name() == "command")
+		{
+			if (not command.empty())
+				throw SemanticException(
+					"Duplicate command", arg->getSource());
 
-		else
-			parameters[arg->getName().name()] = value;
+			command = value->str();
+			continue;
+		}
+
+		shared_ptr<Value> v(new String(value->str(), arg->getSource()));
+		parameters.emplace(arg->getName().name(), v);
 	}
 
-	currentRule.reset(Rule::Create(command, parameters));
+	currentValue.emplace(Rule::Create(command, parameters));
 
 	return false;
 }
@@ -219,13 +204,13 @@ void Flattener::Leave(const ast::Call&) {}
 
 bool Flattener::Enter(const ast::CompoundExpression&)
 {
-	scopeSymbols.push_back(StringMap<string>());
+	scopes.push_back(ValueMap());
 	return true;
 }
 
 void Flattener::Leave(const ast::CompoundExpression&)
 {
-	scopeSymbols.pop_back();
+	scopes.pop_back();
 }
 
 
@@ -255,7 +240,7 @@ void Flattener::Leave(const ast::Identifier&) {}
 
 bool Flattener::Enter(const ast::IntLiteral& i)
 {
-	currentValue.push(i.str());
+	currentValue.emplace(new Integer(i.value(), i.getSource()));
 	return false;
 }
 
@@ -270,7 +255,7 @@ bool Flattener::Enter(const ast::List& l)
 	const ast::Type subtype = l.getType()[0];
 	if (subtype.name() == "string")
 	{
-		std::vector<string> values;
+		std::vector<shared_ptr<Value>> values;
 
 		for (const ast::Expression *e : l)
 		{
@@ -286,7 +271,7 @@ bool Flattener::Enter(const ast::List& l)
 			currentValue.pop();
 		}
 
-		currentValue.push(join(values, " "));
+		currentValue.emplace(new List(values));
 	}
 
 	else throw SemanticException(
@@ -305,19 +290,28 @@ void Flattener::Leave(const ast::Parameter&) {}
 
 bool Flattener::Enter(const ast::Scope&)
 {
-	scopeSymbols.push_back(StringMap<string>());
+	scopes.push_back(ValueMap());
 	return false;
 }
 
 void Flattener::Leave(const ast::Scope&)
 {
-	scopeSymbols.pop_back();
+	ValueMap scopedSymbols = std::move(scopes.back());
+	scopes.pop_back();
+
+	const string scopeName = join(this->scopeName, ".");
+
+	for (auto symbol : scopedSymbols)
+	{
+		const string name = join(scopeName, symbol.first, ".");
+		values.emplace(name, std::move(symbol.second));
+	}
 }
 
 
 bool Flattener::Enter(const ast::StringLiteral& s)
 {
-	currentValue.push(s.str());
+	currentValue.emplace(new String(s.str(), s.getSource()));
 	return false;
 }
 
@@ -327,14 +321,14 @@ void Flattener::Leave(const ast::StringLiteral&) {}
 bool Flattener::Enter(const ast::SymbolReference& r)
 {
 	const string& name = r.getName().name();
-	const StringMap<string>& symbols = scopeSymbols.back();
+	const ValueMap& symbols = scopes.back();
 
 	auto i = symbols.find(name);
 	if (i == symbols.end())
 		throw UndefinedValueException(name, r.getSource());
 
 	assert(i->first == name);
-	currentValue.push(i->second);
+	currentValue.emplace(std::move(i->second));
 
 	return false;
 }
@@ -349,38 +343,15 @@ void Flattener::Leave(const ast::Type&) {}
 bool Flattener::Enter(const ast::Value& v) { return true; }
 void Flattener::Leave(const ast::Value& v)
 {
-	const bool isStringVal = not currentValue.empty();
+	// TODO: later, fire this assertion. for now, ignore.
+	if (currentValue.empty())
+		return;
 
-	const string name = v.getName().name();
-	const string scopedName = join(scopeName + name, ".");
+	assert(not currentValue.empty());
 
-	if (isStringVal)
-	{
-		assert(not (currentFile or currentRule));
+	const string& name = v.getName().name();
+	ValueMap& currentScope = scopes.back();
 
-		const string value = currentValue.top();
-		currentValue.pop();
-
-		variables[name] = value;
-		scopeSymbols.back()[name] = value;
-	}
-	else if (currentFile)
-	{
-		assert(not (isStringVal or currentRule));
-		files[name] = currentFile.release();
-	}
-	else if (currentRule)
-	{
-		assert(not (isStringVal or currentFile));
-		rules[name] = currentRule.release();
-	}
-	else
-	{
-		// TODO: later, throw this exception. for now, ignore.
-		/*
-		throw SemanticException(
-			"Value '" + name + "' is not a variable, file or rule",
-			v.getSource());
-		*/
-	}
+	currentScope.emplace(name, std::move(currentValue.top()));
+	currentValue.pop();
 }

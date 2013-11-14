@@ -30,11 +30,23 @@
  */
 
 #include "Backend/Ninja.h"
+
 #include "DAG/DAG.h"
+#include "DAG/File.h"
+#include "DAG/List.h"
+#include "DAG/Primitive.h"
+#include "DAG/Rule.h"
+
 #include "Support/Bytestream.h"
+#include "Support/Join.h"
 
 using namespace fabrique::backend;
+using namespace fabrique::dag;
+
+using std::dynamic_pointer_cast;
+using std::shared_ptr;
 using std::string;
+using std::vector;
 
 
 NinjaBackend* NinjaBackend::Create(Bytestream& out)
@@ -49,8 +61,53 @@ NinjaBackend::NinjaBackend(Bytestream& out)
 }
 
 
+string stringify(const shared_ptr<Value>& v)
+{
+	assert(v);
+
+	if (auto list = dynamic_pointer_cast<List>(v))
+	{
+		vector<string> substrings;
+		for (auto& v : *list)
+			substrings.push_back(stringify(v));
+
+		return fabrique::join(substrings, " ");
+	}
+
+	return v->str();
+}
+
 void NinjaBackend::Process(const dag::DAG& d)
 {
+	//
+	// Split values into files, rules and variables.
+	//
+	typedef std::pair<string,shared_ptr<Value>> NamedValue;
+
+	StringMap<shared_ptr<File>> files;
+	StringMap<shared_ptr<Rule>> rules;
+	StringMap<string> variables;
+
+	for (auto& i : d)
+	{
+		string name = i.first;
+		const shared_ptr<Value>& v = i.second;
+		assert(v);
+
+		if (auto file = dynamic_pointer_cast<File>(v))
+			files[name] = file;
+
+		else if (auto rule = dynamic_pointer_cast<Rule>(v))
+			rules[name] = rule;
+
+		else
+			variables[name] = stringify(v);
+	}
+
+
+	//
+	// Write out a simple header.
+	//
 	out
 		<< Bytestream::Comment
 		<< "#\n"
@@ -60,7 +117,8 @@ void NinjaBackend::Process(const dag::DAG& d)
 		<< "\n"
 		;
 
-	for (auto& i : d.variables())
+
+	for (auto& i : variables)
 	{
 		out
 			<< Bytestream::Definition << i.first
@@ -73,7 +131,7 @@ void NinjaBackend::Process(const dag::DAG& d)
 
 	out << "\n";
 
-	for (auto& i : d.rules())
+	for (auto& i : rules)
 	{
 		const dag::Rule& rule = *i.second;
 
@@ -97,7 +155,7 @@ void NinjaBackend::Process(const dag::DAG& d)
 			out
 				<< Bytestream::Definition << "  " << p.first
 				<< Bytestream::Operator << " = "
-				<< Bytestream::Literal << p.second
+				<< Bytestream::Literal << stringify(p.second)
 				<< Bytestream::Reset << "\n"
 				;
 

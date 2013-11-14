@@ -34,7 +34,6 @@
 #include "Support/Printable.h"
 
 #include <iterator>
-#include <sstream>
 
 using namespace fabrique;
 using std::string;
@@ -57,15 +56,11 @@ Bytestream& operator<< (Bytestream& out, const Join& j)
 	return out;
 }
 
-string fabrique::join(const std::vector<string>& v, const string& delim)
+
+string fabrique::join(const string& x, const string& y, const string& delim)
 {
-	if (v.empty())
-		return "";
+	if (x.empty())
+		return y;
 
-	std::stringstream buffer;
-	std::move(v.begin(), --v.end(),
-	          std::ostream_iterator<string>(buffer, delim.c_str()));
-	buffer << *(--v.end());
-
-	return buffer.str();
+	return x + delim + y;
 }

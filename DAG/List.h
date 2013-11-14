@@ -1,4 +1,4 @@
-/** @file DAG.h    Declaration of @ref DAG. */
+/** @file List.h    Declaration of @ref List. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,52 +29,43 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DAG_H
-#define DAG_H
+#ifndef DAG_LIST_H
+#define DAG_LIST_H
 
-#include "ADT/StringMap.h"
 #include "DAG/Value.h"
-#include "Support/Printable.h"
 
-#include <string>
+#include <memory>
+#include <vector>
 
 
 namespace fabrique {
-
-namespace ast {
-	class Expression;
-	class Identifier;
-	class Scope;
-}
-
 namespace dag {
 
-class Value;
 
-
-/**
- * A directed acyclic graph of build actions.
- */
-class DAG : public Printable
+//! The result of evaluating an expression.
+class List : public Value
 {
 public:
-	typedef StringMap<std::shared_ptr<Value>> ValueMap;
+	List();
+	List(const std::vector<std::shared_ptr<Value>>&);
 
-	static DAG* Flatten(const ast::Scope&);
+	typedef std::vector<std::shared_ptr<Value>>::const_iterator iterator;
 
-	~DAG() {}
+	iterator begin() const;
+	iterator end() const;
+	size_t size() const;
+	const std::shared_ptr<Value>& operator [] (size_t) const;
 
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
+	std::string type() const;
+	std::string str() const;
 
-	ValueMap::const_iterator begin() const;
-	ValueMap::const_iterator end() const;
+	void PrettyPrint(Bytestream&, int indent = 0) const;
 
 private:
-	DAG(const ValueMap&);
-	ValueMap values;
+	const std::vector<std::shared_ptr<Value>> v;
 };
 
 } // namespace dag
 } // namespace fabrique
 
-#endif
+#endif // !DAG_LIST_H

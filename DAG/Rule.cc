@@ -32,35 +32,40 @@
 #include "DAG/File.h"
 #include "DAG/Rule.h"
 #include "Support/Bytestream.h"
+#include "Support/exceptions.h"
 
 using namespace fabrique::dag;
+using ValueMap = DAG::ValueMap;
+
 using std::string;
 
 
-Rule* Rule::Create(const string command, const StringMap<string>& parameters)
+Rule* Rule::Create(const string command, const ValueMap& parameters,
+                   SourceRange location)
 {
-	StringMap<string> params(parameters);
+	ValueMap params(parameters);
 
 	string description;
 
+	// If no description has been specified, use the command string.
 	auto d = params.find("description");
-	if (d == params.end())
+	if (d != params.end())
 	{
-		description = command;
+		description = d->second->str();
+		params.erase(d);
 	}
 	else
 	{
-		description = d->second;
-		params.erase(d);
+		description = command;
 	}
 
-	return new Rule(command, description, params);
+	return new Rule(command, description, params, location);
 }
 
 
 Rule::Rule(const string& command, const string& description,
-	   const StringMap<string>& params)
-	: cmd(command), descrip(description), params(params)
+	   const ValueMap& params, SourceRange location)
+	: Value(location), cmd(command), descrip(description), params(params)
 {
 }
 
@@ -78,7 +83,7 @@ void Rule::PrettyPrint(Bytestream& out, int indent) const
 			<< Bytestream::Operator << ", "
 			<< Bytestream::Definition << i.first
 			<< Bytestream::Operator << " = "
-			<< Bytestream::Literal << "'" << i.second << "'"
+			<< Bytestream::Literal << "'" << *i.second << "'"
 			;
 	}
 

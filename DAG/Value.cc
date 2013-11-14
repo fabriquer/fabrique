@@ -1,4 +1,4 @@
-/** @file DAG.h    Declaration of @ref DAG. */
+/** @file Value.cc    Definition of @ref Value. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,52 +29,70 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DAG_H
-#define DAG_H
-
-#include "ADT/StringMap.h"
 #include "DAG/Value.h"
-#include "Support/Printable.h"
+#include "DAG/File.h"
+#include "DAG/Rule.h"
 
-#include <string>
+#include <cassert>
+
+using namespace fabrique::dag;
+using std::string;
+using std::unique_ptr;
 
 
-namespace fabrique {
+Value::Value(const SourceRange& loc) : loc(loc) {}
 
-namespace ast {
-	class Expression;
-	class Identifier;
-	class Scope;
+#if 0
+Value::Value(File *f) : ty(Type::File), file(f) {}
+Value::Value(unique_ptr<File>&& f) : Value(f.release()) {}
+
+Value::Value(Rule *r) : ty(Type::Rule), rule(r) {}
+Value::Value(unique_ptr<Rule>&& r) : Value(r.release()) {}
+
+
+Value::operator const Primitive& () const
+{
+	assert(ty == Type::Primitive);
+	return p;
 }
 
-namespace dag {
-
-class Value;
-
-
-/**
- * A directed acyclic graph of build actions.
- */
-class DAG : public Printable
+Value::operator const List& () const
 {
-public:
-	typedef StringMap<std::shared_ptr<Value>> ValueMap;
+	assert(ty == Type::List);
+	return l;
+}
 
-	static DAG* Flatten(const ast::Scope&);
+Value::operator std::shared_ptr<File> () const
+{
+	assert(ty == Type::File);
+	return file;
+}
 
-	~DAG() {}
+Value::operator std::shared_ptr<Rule> () const
+{
+	assert(ty == Type::Rule);
+	return rule;
+}
 
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
+void Value::PrettyPrint(Bytestream& b, int indent) const
+{
+	switch (ty)
+	{
+		case Type::Primitive:
+			p.PrettyPrint(b, indent);
+			break;
 
-	ValueMap::const_iterator begin() const;
-	ValueMap::const_iterator end() const;
+		case Type::List:
+			l.PrettyPrint(b, indent);
+			break;
 
-private:
-	DAG(const ValueMap&);
-	ValueMap values;
-};
+		case Type::File:
+			file->PrettyPrint(b, indent);
+			break;
 
-} // namespace dag
-} // namespace fabrique
-
+		case Type::Rule:
+			rule->PrettyPrint(b, indent);
+			break;
+	}
+}
 #endif

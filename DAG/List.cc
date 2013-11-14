@@ -1,4 +1,4 @@
-/** @file DAG.h    Declaration of @ref DAG. */
+/** @file List.h    Definition of @ref List. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,52 +29,76 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DAG_H
-#define DAG_H
+#include "DAG/List.h"
+#include "Support/Bytestream.h"
+#include "Support/Join.h"
+#include "Support/Location.h"
 
-#include "ADT/StringMap.h"
-#include "DAG/Value.h"
-#include "Support/Printable.h"
+#include <algorithm>
 
-#include <string>
+using namespace fabrique;
+using namespace fabrique::dag;
+using std::shared_ptr;
+using std::string;
+using std::vector;
 
 
-namespace fabrique {
+SourceRange range(const vector<shared_ptr<Value>>& v)
+{
+	if (v.empty())
+		return SourceRange::None();
 
-namespace ast {
-	class Expression;
-	class Identifier;
-	class Scope;
+	return SourceRange::Over(v.begin()->get(), (--v.end())->get());
 }
 
-namespace dag {
 
-class Value;
-
-
-/**
- * A directed acyclic graph of build actions.
- */
-class DAG : public Printable
+List::List()
+	: Value(SourceRange::None())
 {
-public:
-	typedef StringMap<std::shared_ptr<Value>> ValueMap;
+}
 
-	static DAG* Flatten(const ast::Scope&);
+List::List(const vector<shared_ptr<Value>>& v)
+	: Value(range(v)), v(v)
+{
+}
 
-	~DAG() {}
+List::iterator List::begin() const { return v.begin(); }
+List::iterator List::end() const { return v.end(); }
 
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
+size_t List::size() const { return v.size(); }
 
-	ValueMap::const_iterator begin() const;
-	ValueMap::const_iterator end() const;
+const shared_ptr<Value>& List::operator [] (size_t i) const
+{
+	return v[i];
+}
 
-private:
-	DAG(const ValueMap&);
-	ValueMap values;
-};
+string List::type() const
+{
+	string typeParam;
+	if (not v.empty())
+		typeParam = v.front()->type();
 
-} // namespace dag
-} // namespace fabrique
+	return "list[" + typeParam + "]";
+}
 
+string List::str() const
+{
+	vector<string> substrings;
+#if 0
+	std::transform(v.begin(), v.end(), substrings.end(),
+	               [](const shared_ptr<Value>& v) { return v->str(); });
 #endif
+
+	return "[ " + join(substrings, " ") + "]";
+}
+
+void List::PrettyPrint(Bytestream& out, int indent) const
+{
+	out << Bytestream::Operator << "[ ";
+
+	for (const shared_ptr<Value>& p : v)
+		out << *p << " ";
+
+	out << Bytestream::Operator << "]";
+
+}

@@ -1,4 +1,4 @@
-/** @file DAG.h    Declaration of @ref DAG. */
+/** @file Value.h    Declaration of @ref Value. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,52 +29,38 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DAG_H
-#define DAG_H
+#ifndef DAG_VALUE_H
+#define DAG_VALUE_H
 
-#include "ADT/StringMap.h"
-#include "DAG/Value.h"
+#include "Support/Location.h"
 #include "Support/Printable.h"
 
 #include <string>
 
-
 namespace fabrique {
-
-namespace ast {
-	class Expression;
-	class Identifier;
-	class Scope;
-}
-
 namespace dag {
 
-class Value;
+class File;
+class Rule;
 
 
-/**
- * A directed acyclic graph of build actions.
- */
-class DAG : public Printable
+//! The result of evaluating an expression.
+class Value : public HasSource, public Printable
 {
 public:
-	typedef StringMap<std::shared_ptr<Value>> ValueMap;
+	virtual std::string type() const = 0;
+	virtual std::string str() const = 0;
 
-	static DAG* Flatten(const ast::Scope&);
+	const SourceRange& getSource() const { return loc; }
 
-	~DAG() {}
-
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
-
-	ValueMap::const_iterator begin() const;
-	ValueMap::const_iterator end() const;
+protected:
+	Value(const SourceRange&);
 
 private:
-	DAG(const ValueMap&);
-	ValueMap values;
+	const SourceRange loc;
 };
 
 } // namespace dag
 } // namespace fabrique
 
-#endif
+#endif // !DAG_VALUE_H

@@ -25,7 +25,8 @@ cxx_srcs = {
 		'Ninja',
 	),
 	'DAG/': (
-		'DAG', 'File', 'Rule', 'UndefinedValueException',
+		'DAG', 'File', 'List', 'Primitive', 'Rule',
+		'UndefinedValueException', 'Value',
 	),
 	'Parsing/': (
 		'Lexer', 'Parser',
@@ -55,9 +56,6 @@ cxxflags = [
 
 	# Require C++11.
 	'-std=c++11',
-
-	# We don't use RTTI, and enabling it comes at a cost.
-	'-fno-rtti',
 
 	# Use lots and lots of warnings.
 	'-Wall',

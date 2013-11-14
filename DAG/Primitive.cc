@@ -1,4 +1,4 @@
-/** @file DAG.h    Declaration of @ref DAG. */
+/** @file Primitive.cc    Definition of @ref Primitive. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,52 +29,28 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DAG_H
-#define DAG_H
+#include "DAG/Primitive.h"
+#include "Support/Bytestream.h"
 
-#include "ADT/StringMap.h"
-#include "DAG/Value.h"
-#include "Support/Printable.h"
-
-#include <string>
+using namespace fabrique::dag;
+using std::string;
 
 
-namespace fabrique {
-
-namespace ast {
-	class Expression;
-	class Identifier;
-	class Scope;
+Primitive::Primitive(SourceRange loc)
+	: Value(loc)
+{
 }
 
-namespace dag {
+Boolean::Boolean(bool b, SourceRange loc) : Primitive(loc), value(b) {}
+string Boolean::str() const { return value ? "true" : "false"; }
 
-class Value;
+Integer::Integer(int i, SourceRange loc) : Primitive(loc), value(i) {}
+string Integer::str() const { return std::to_string(value); }
 
+String::String(string s, SourceRange loc) : Primitive(loc), value(s) {}
+string String::str() const { return value; }
 
-/**
- * A directed acyclic graph of build actions.
- */
-class DAG : public Printable
+void String::PrettyPrint(Bytestream& b, int indent) const
 {
-public:
-	typedef StringMap<std::shared_ptr<Value>> ValueMap;
-
-	static DAG* Flatten(const ast::Scope&);
-
-	~DAG() {}
-
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
-
-	ValueMap::const_iterator begin() const;
-	ValueMap::const_iterator end() const;
-
-private:
-	DAG(const ValueMap&);
-	ValueMap values;
-};
-
-} // namespace dag
-} // namespace fabrique
-
-#endif
+	b << Bytestream::Literal << "'" << str() << "'";
+}

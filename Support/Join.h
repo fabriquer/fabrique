@@ -34,6 +34,7 @@
 
 #include "ADT/PtrVec.h"
 
+#include <sstream>
 #include <string>
 
 
@@ -63,8 +64,22 @@ private:
 
 Bytestream& operator<< (Bytestream&, const Join&);
 
-std::string join(const std::vector<std::string>&,
-                 const std::string& delim = ",");
+template<class T>
+std::string join(const T& c, const std::string& delim = ",")
+{
+	if (c.empty())
+		return "";
+
+	std::stringstream buffer;
+	std::move(c.begin(), --c.end(),
+	          std::ostream_iterator<std::string>(buffer, delim.c_str()));
+	buffer << *(--c.end());
+
+	return buffer.str();
+}
+
+std::string join(const std::string&, const std::string&,
+                 const std::string& delim = ", ");
 
 } // namespace fabrique
 

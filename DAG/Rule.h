@@ -33,6 +33,8 @@
 #define DAG_ACTION_H
 
 #include "ADT/StringMap.h"
+#include "DAG/DAG.h"
+#include "DAG/Value.h"
 #include "Support/Printable.h"
 
 #include <string>
@@ -47,27 +49,31 @@ class File;
 /**
  * An action that transforms files into other files.
  */
-class Rule : public Printable
+class Rule : public Value
 {
 public:
 	static Rule* Create(const std::string command,
-	                    const StringMap<std::string>& otherParameters);
+	                    const DAG::ValueMap& otherParameters,
+	                    const SourceRange from = SourceRange::None());
 
 	virtual ~Rule() {}
 
 	const std::string& command() const { return cmd; }
 	const std::string& description() const { return descrip; }
-	const StringMap<std::string>& parameters() const { return params; }
+	const DAG::ValueMap& parameters() const { return params; }
+
+	std::string type() const { return "rule"; }
+	std::string str() const { return cmd; }
 
 	void PrettyPrint(Bytestream&, int indent = 0) const;
 
 private:
 	Rule(const std::string& command, const std::string& description,
-	     const StringMap<std::string>& params);
+	     const DAG::ValueMap& params, SourceRange location);
 
 	const std::string cmd;
 	const std::string descrip;
-	const StringMap<std::string> params;
+	const DAG::ValueMap params;
 };
 
 } // namespace ast

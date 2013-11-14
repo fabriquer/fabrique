@@ -3,8 +3,8 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK-DAG: var foo = 'a string literal'
+# CHECK-DAG: string foo = 'a string literal'
 foo = 'a string literal';
 
-# CHECK-DAG: var bar = '42'
+# CHECK-DAG: integer bar = 42
 bar = 42;

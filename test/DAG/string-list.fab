@@ -6,8 +6,8 @@
 foo = 'a string literal';
 bar = 'and another one';
 
-# CHECK-DAG: var baz = 'a string literal and another one'
+# CHECK-DAG: list[string] baz = [ 'a string literal' 'and another one' ]
 baz = [ foo bar ];
 
-# CHECK-DAG: var wibble = 'yes, it's a string literal from a list'
+# CHECK-DAG: list[string] wibble = [ 'yes, it's' 'a string literal' 'from a list' ]
 wibble = [ "yes, it's" foo 'from a list' ];

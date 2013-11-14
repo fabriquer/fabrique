@@ -1,4 +1,4 @@
-/** @file DAG.h    Declaration of @ref DAG. */
+/** @file Primitive.h    Declaration of @ref Primitive. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,52 +29,73 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DAG_H
-#define DAG_H
+#ifndef PRIMITIVE_H
+#define PRIMITIVE_H
 
-#include "ADT/StringMap.h"
 #include "DAG/Value.h"
+#include "Support/Bytestream.h"
+#include "Support/Location.h"
 #include "Support/Printable.h"
 
 #include <string>
 
-
 namespace fabrique {
-
-namespace ast {
-	class Expression;
-	class Identifier;
-	class Scope;
-}
-
 namespace dag {
 
-class Value;
 
-
-/**
- * A directed acyclic graph of build actions.
- */
-class DAG : public Printable
+//! The result of evaluating an expression.
+class Primitive : public Value
 {
 public:
-	typedef StringMap<std::shared_ptr<Value>> ValueMap;
+	virtual std::string str() const = 0;
 
-	static DAG* Flatten(const ast::Scope&);
+	virtual void PrettyPrint(Bytestream& b, int indent = 0) const
+	{
+		b << Bytestream::Literal << str();
+	}
 
-	~DAG() {}
+protected:
+	Primitive(SourceRange);
+};
 
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 
-	ValueMap::const_iterator begin() const;
-	ValueMap::const_iterator end() const;
+
+class Boolean : public Primitive
+{
+public:
+	Boolean(bool, SourceRange loc = SourceRange::None());
+	std::string type() const { return "boolean"; }
+	std::string str() const;
 
 private:
-	DAG(const ValueMap&);
-	ValueMap values;
+	bool value;
+};
+
+class Integer : public Primitive
+{
+public:
+	Integer(int, SourceRange loc = SourceRange::None());
+	std::string type() const { return "integer"; }
+	std::string str() const;
+
+private:
+	int value;
+};
+
+class String : public Primitive
+{
+public:
+	String(std::string, SourceRange loc = SourceRange::None());
+	std::string type() const { return "string"; }
+	std::string str() const;
+
+	void PrettyPrint(Bytestream& b, int indent = 0) const;
+
+private:
+	std::string value;
 };
 
 } // namespace dag
 } // namespace fabrique
 
-#endif
+#endif // !PRIMITIVE_H
