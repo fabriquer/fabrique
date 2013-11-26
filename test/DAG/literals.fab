@@ -8,3 +8,6 @@ foo = 'a string literal';
 
 # CHECK-DAG: integer bar = 42
 bar = 42;
+
+# CHECK-DAG: list[integer] baz = [ 1 2 3 ]
+baz = [ 1 2 3 ];

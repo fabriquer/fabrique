@@ -2,9 +2,6 @@
 # RUN: fab --format=null %s 2> %t.err || true
 # RUN: FileCheck %s -input-file %t.err
 #
-# TODO: more type checking
-# XFAIL: *
-#
 
-# CHECK: {{/.*}}.fab:{{[0-9:]+}}: error: syntax error
+# CHECK: list element's type (string) != list subtype (int)
 foo = [ 1 2 '3' ];

@@ -253,30 +253,29 @@ bool Flattener::Enter(const ast::List& l)
 	assert(l.getType().typeParamCount() == 1);
 	const ast::Type& subtype = l.getType()[0];
 
-	if (subtype.name() == "string")
+	std::vector<shared_ptr<Value>> values;
+
+	for (const ast::Expression *e : l)
 	{
-		std::vector<shared_ptr<Value>> values;
+		if (e->getType() != subtype)
+			throw SemanticException(
+				"list element's type (" + e->getType().str()
+				+ ") != list subtype (" + subtype.str() + ")",
+				e->getSource());
 
-		for (const ast::Expression *e : l)
-		{
-			e->Accept(*this);
+		e->Accept(*this);
 
-			// TODO: don't do this
-			if (currentValue.empty())
-				continue;
+		// TODO: don't do this
+		if (currentValue.empty())
+			continue;
 
-			assert(not currentValue.empty());
+		assert(not currentValue.empty());
 
-			values.push_back(currentValue.top());
-			currentValue.pop();
-		}
-
-		currentValue.emplace(new List(values));
+		values.push_back(currentValue.top());
+		currentValue.pop();
 	}
 
-	else throw SemanticException(
-		"Unable to flatten list[" + subtype.name() + "]",
-		l.getSource());
+	currentValue.emplace(new List(values));
 
 	return false;
 }
