@@ -194,7 +194,12 @@ bool Flattener::Enter(const ast::BinaryOperation&) { return false; }
 void Flattener::Leave(const ast::BinaryOperation&) {}
 
 
-bool Flattener::Enter(const ast::BoolLiteral&) { return false; }
+bool Flattener::Enter(const ast::BoolLiteral& b)
+{
+	currentValue.emplace(new Boolean(b.value(), b.getSource()));
+	return false;
+}
+
 void Flattener::Leave(const ast::BoolLiteral&) {}
 
 

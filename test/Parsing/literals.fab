@@ -11,3 +11,6 @@ bar = 42;
 
 # CHECK: baz:list[int] = [ 1 2 3 ];
 baz = [ 1 2 3 ];
+
+# CHECK-DAG: wibble:list[bool] = [ true false ];
+wibble = [ true false ];

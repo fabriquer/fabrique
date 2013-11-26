@@ -11,3 +11,6 @@ bar = 42;
 
 # CHECK-DAG: list[integer] baz = [ 1 2 3 ]
 baz = [ 1 2 3 ];
+
+# CHECK-DAG: wibble = [ true false ]
+wibble = [ true false ];
