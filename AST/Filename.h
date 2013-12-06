@@ -46,11 +46,13 @@ class Filename : public Expression
 public:
 	Filename(Expression *name, PtrVec<Argument>& args, const Type& ty,
 	         const SourceRange& loc)
-		: Expression(ty, loc), name(name), args(args)
+		: Expression(ty, loc), unqualName(name), args(args)
 	{
 	}
 
 	~Filename() { for (auto *arg : args) delete arg; }
+
+	const Expression& name() const { return *unqualName; }
 
 	virtual bool isStatic() const;
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
@@ -58,7 +60,10 @@ public:
 	virtual void Accept(Visitor&) const;
 
 private:
-	const Expression *name;
+	//! A filename, without qualifiers like "in this subdirectory".
+	const Expression *unqualName;
+
+	//! Additional information about the file (e.g., "subdir").
 	const PtrVec<Argument> args;
 };
 

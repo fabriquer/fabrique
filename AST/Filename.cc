@@ -55,7 +55,7 @@ void Filename::PrettyPrint(Bytestream& out, int indent) const
 		<< Bytestream::Action << "file"
 		<< Bytestream::Operator << "(";
 
-	out << Bytestream::Filename << *name << Bytestream::Reset;
+	out << Bytestream::Filename << *unqualName << Bytestream::Reset;
 
 	for (auto *a : args)
 		out
@@ -72,7 +72,7 @@ void Filename::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
 	{
-		name->Accept(v);
+		unqualName->Accept(v);
 		for (auto *a : args)
 			a->Accept(v);
 	}
