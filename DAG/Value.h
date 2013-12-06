@@ -40,9 +40,6 @@
 namespace fabrique {
 namespace dag {
 
-class File;
-class Rule;
-
 
 //! The result of evaluating an expression.
 class Value : public HasSource, public Printable
