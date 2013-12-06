@@ -51,13 +51,9 @@ bool Filename::isStatic() const
 
 void Filename::PrettyPrint(Bytestream& out, int indent) const
 {
-	bool explicitFile =
-		(args.size() > 0) or (!name->isStatic());
-
-	if (explicitFile)
-		out
-			<< Bytestream::Action << "file"
-			<< Bytestream::Operator << "(";
+	out
+		<< Bytestream::Action << "file"
+		<< Bytestream::Operator << "(";
 
 	out << Bytestream::Filename << *name << Bytestream::Reset;
 
@@ -66,10 +62,9 @@ void Filename::PrettyPrint(Bytestream& out, int indent) const
 			<< Bytestream::Operator << ", "
 			<< Bytestream::Reset << *a;
 
-	if (explicitFile)
-		out
-			<< Bytestream::Operator << ")"
-			<< Bytestream::Reset;
+	out
+		<< Bytestream::Operator << ")"
+		<< Bytestream::Reset;
 }
 
 
