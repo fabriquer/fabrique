@@ -51,6 +51,8 @@ public:
 	{
 	}
 
+	const PtrVec<Argument>& arguments() const { return args; }
+
 	PtrVec<Filename>::const_iterator begin() const { return files.begin(); }
 	PtrVec<Filename>::const_iterator end() const { return files.end(); }
 
