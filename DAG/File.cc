@@ -36,17 +36,13 @@ using namespace fabrique::dag;
 using std::string;
 
 
-File::File(const string& name, bool generated)
-	: name(name), generated(generated)
+File::File(const string& name, SourceRange source)
+	: Value(source), name(name)
 {
 }
 
 
 void File::PrettyPrint(Bytestream& out, int indent) const
 {
-	out << Bytestream::Literal << name;
-	if (generated)
-		out << Bytestream::Operator << " (generated)";
-
-	out << Bytestream::Reset;
+	out << Bytestream::Literal << name << Bytestream::Reset;
 }

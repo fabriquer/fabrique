@@ -31,6 +31,9 @@
 
 #include "AST/Action.h"
 #include "AST/Argument.h"
+#include "AST/Builtins.h"
+#include "AST/FileList.h"
+#include "AST/Filename.h"
 #include "AST/List.h"
 #include "AST/Scope.h"
 #include "AST/SymbolReference.h"
@@ -98,6 +101,9 @@ public:
 	ValueMap values;
 
 private:
+	//! Get a named value from the current scope or a parent scope.
+	shared_ptr<Value> getNamedValue(const std::string& name);
+
 	shared_ptr<Value> flatten(const ast::Expression&);
 
 	/**
@@ -222,11 +228,58 @@ bool Flattener::Enter(const ast::Conditional&) { return false; }
 void Flattener::Leave(const ast::Conditional&) {}
 
 
-bool Flattener::Enter(const ast::Filename&) { return false; }
+bool Flattener::Enter(const ast::Filename& f)
+{
+	string name = flatten(f.name())->str();
+
+	if (shared_ptr<Value> subdir = getNamedValue(ast::Subdirectory))
+		name = join(subdir->str(), name, "/");
+
+	currentValue.emplace(new File(name, f.getSource()));
+	return false;
+}
 void Flattener::Leave(const ast::Filename&) {}
 
 
-bool Flattener::Enter(const ast::FileList&) { return false; }
+bool Flattener::Enter(const ast::FileList& l)
+{
+	std::vector<shared_ptr<Value>> files;
+	ValueMap listScope;
+
+	for (const ast::Argument *arg : l.arguments())
+	{
+		const string name = arg->getName().name();
+		shared_ptr<Value> value = flatten(arg->getValue());
+
+		if (name == ast::Subdirectory)
+			if (shared_ptr<Value> existing = getNamedValue(name))
+			{
+				string base = existing->str();
+				string subdir = join(base, value->str(), "/");
+				SourceRange loc = arg->getSource();
+
+				value.reset(new String(subdir, loc));
+			}
+
+		listScope[name] = value;
+	}
+
+	scopes.push_back(listScope);
+
+	for (const ast::Filename *file : l)
+	{
+		shared_ptr<Value> f = flatten(*file);
+		files.push_back(f);
+
+		assert(f == std::dynamic_pointer_cast<File>(f));
+	}
+
+	scopes.pop_back();
+
+	currentValue.emplace(new List(files));
+
+	return false;
+}
 void Flattener::Leave(const ast::FileList&) {}
 
 
@@ -350,6 +403,20 @@ void Flattener::Leave(const ast::Value& v)
 	currentValue.pop();
 }
 
+
+shared_ptr<Value> Flattener::getNamedValue(const string& name)
+{
+	for (auto i = scopes.rbegin(); i != scopes.rend(); i++)
+	{
+		const ValueMap& scope = *i;
+
+		auto value = scope.find(name);
+		if (value != scope.end())
+			return value->second;
+	}
+
+	return NULL;
+}
 
 shared_ptr<Value> Flattener::flatten(const ast::Expression& e)
 {

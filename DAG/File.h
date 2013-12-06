@@ -32,7 +32,7 @@
 #ifndef DAG_FILE_H
 #define DAG_FILE_H
 
-#include "Support/Printable.h"
+#include "DAG/Value.h"
 
 #include <string>
 
@@ -43,17 +43,19 @@ namespace dag {
 /**
  * A reference to a file on disk (source or target).
  */
-class File : public Printable
+class File : public Value
 {
 public:
-	File(const std::string& name, bool generated);
+	File(const std::string& name, SourceRange source);
 	virtual ~File() {}
+
+	virtual std::string type() const { return "file"; }
+	virtual std::string str() const { return name; }
 
 	void PrettyPrint(Bytestream&, int indent = 0) const;
 
 private:
 	const std::string name;
-	const bool generated;
 };
 
 } // namespace dag
