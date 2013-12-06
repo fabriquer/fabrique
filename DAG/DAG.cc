@@ -97,6 +97,9 @@ public:
 	//! All values, named by fully-qualified name.
 	ValueMap values;
 
+private:
+	shared_ptr<Value> flatten(const ast::Expression&);
+
 	/**
 	 * The value currently being processed.
 	 * Visitor methods should leave a single item on this stack.
@@ -157,11 +160,7 @@ bool Flattener::Enter(const ast::Action& a)
 	for (const ast::Argument *arg : a)
 	{
 		// Flatten the argument and convert it to a string.
-		arg->getValue().Accept(*this);
-		assert(not currentValue.empty());
-
-		shared_ptr<Value> value = currentValue.top();
-		currentValue.pop();
+		shared_ptr<Value> value = flatten(arg->getValue());
 
 		// The only keyword-less argument to action() is its command.
 		if (not arg->hasName() or arg->getName().name() == "command")
@@ -268,16 +267,7 @@ bool Flattener::Enter(const ast::List& l)
 				+ ") != list subtype (" + subtype.str() + ")",
 				e->getSource());
 
-		e->Accept(*this);
-
-		// TODO: don't do this
-		if (currentValue.empty())
-			continue;
-
-		assert(not currentValue.empty());
-
-		values.push_back(currentValue.top());
-		currentValue.pop();
+		values.push_back(flatten(*e));
 	}
 
 	currentValue.emplace(new List(values));
@@ -358,4 +348,21 @@ void Flattener::Leave(const ast::Value& v)
 
 	currentScope.emplace(name, std::move(currentValue.top()));
 	currentValue.pop();
+}
+
+
+shared_ptr<Value> Flattener::flatten(const ast::Expression& e)
+{
+	e.Accept(*this);
+
+	// TODO: don't do this
+	if (currentValue.empty())
+		return NULL;
+
+	assert(not currentValue.empty());
+
+	shared_ptr<Value> v(currentValue.top());
+	currentValue.pop();
+
+	return v;
 }
