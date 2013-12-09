@@ -76,7 +76,7 @@ private:
 	const DAG::ValueMap params;
 };
 
-} // namespace ast
+} // namespace dag
 } // namespace fabrique
 
 #endif
