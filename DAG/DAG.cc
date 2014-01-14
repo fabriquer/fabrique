@@ -1,6 +1,6 @@
 /** @file DAG.cc    Definition of @ref DAG. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -32,6 +32,7 @@
 #include "AST/Action.h"
 #include "AST/Argument.h"
 #include "AST/Builtins.h"
+#include "AST/Call.h"
 #include "AST/FileList.h"
 #include "AST/Filename.h"
 #include "AST/List.h"
@@ -41,6 +42,7 @@
 #include "AST/Value.h"
 #include "AST/Visitor.h"
 
+#include "DAG/Build.h"
 #include "DAG/DAG.h"
 #include "DAG/File.h"
 #include "DAG/List.h"
@@ -190,7 +192,12 @@ bool Flattener::Enter(const ast::Action& a)
 void Flattener::Leave(const ast::Action&) {}
 
 
-bool Flattener::Enter(const ast::Argument&) { return false; }
+bool Flattener::Enter(const ast::Argument& arg)
+{
+	currentValue.emplace(flatten(arg.getValue()));
+	return false;
+}
+
 void Flattener::Leave(const ast::Argument&) {}
 
 
@@ -207,7 +214,58 @@ bool Flattener::Enter(const ast::BoolLiteral& b)
 void Flattener::Leave(const ast::BoolLiteral&) {}
 
 
-bool Flattener::Enter(const ast::Call&) { return false; }
+bool Flattener::Enter(const ast::Call& call)
+{
+	shared_ptr<Value> target = flatten(call.target().getValue());
+
+	if (shared_ptr<Rule> rule = std::dynamic_pointer_cast<Rule>(target))
+	{
+		shared_ptr<Value> in, out;
+		ValueMap arguments;
+
+		for (const ast::Argument *arg : call)
+		{
+			shared_ptr<Value> value = flatten(*arg);
+
+			if (arg->hasName())
+			{
+				const std::string& name = arg->getName().name();
+
+				if (name == "in")
+					in = value;
+
+				else if (name == "out")
+					out = value;
+
+				else
+					arguments[name] = value;
+			}
+			else
+			{
+				if (not in)
+					in = value;
+
+				else if (not out)
+					out = value;
+			}
+		}
+
+		if (not in)
+			throw SemanticException(
+				"use of action without input file(s)",
+				call.getSource());
+
+		if (not out)
+			throw SemanticException(
+				"use of action without output file(s)",
+				call.getSource());
+
+		currentValue.emplace(Build::Create(rule, in, out, arguments,
+			call.getSource()));
+	}
+
+	return false;
+}
 void Flattener::Leave(const ast::Call&) {}
 
 
