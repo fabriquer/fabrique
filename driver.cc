@@ -43,6 +43,7 @@
 
 #include "Support/Arguments.h"
 #include "Support/Bytestream.h"
+#include "Support/exceptions.h"
 
 #include <cassert>
 #include <cstdio>
@@ -165,11 +166,21 @@ int main(int argc, char *argv[]) {
 
 	unique_ptr<dag::DAG> dag;
 	try { dag.reset(dag::DAG::Flatten(root)); }
+	catch (SemanticException& e)
+	{
+		err
+			<< Bytestream::Error
+			<< "Semantic error: "
+			<< Bytestream::Reset
+			<< e
+			<< "\n";
+		return 1;
+	}
 	catch (std::exception& e)
 	{
 		err
 			<< Bytestream::Error
-			<< "Error flattening AST into DAG: "
+			<< "Unknown error flattening AST into DAG: "
 			<< Bytestream::Reset
 			<< e.what()
 			<< "\n";
