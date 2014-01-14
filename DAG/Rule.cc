@@ -35,8 +35,6 @@
 #include "Support/exceptions.h"
 
 using namespace fabrique::dag;
-using ValueMap = DAG::ValueMap;
-
 using std::string;
 
 

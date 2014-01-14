@@ -58,7 +58,6 @@
 
 using namespace fabrique;
 using namespace fabrique::dag;
-using ValueMap = DAG::ValueMap;
 
 using std::shared_ptr;
 using std::string;

@@ -58,8 +58,6 @@ class Value;
 class DAG : public Printable
 {
 public:
-	typedef StringMap<std::shared_ptr<Value>> ValueMap;
-
 	static DAG* Flatten(const ast::Scope&);
 
 	~DAG() {}

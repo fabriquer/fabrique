@@ -32,6 +32,7 @@
 #ifndef DAG_VALUE_H
 #define DAG_VALUE_H
 
+#include "ADT/StringMap.h"
 #include "Support/Location.h"
 #include "Support/Printable.h"
 
@@ -56,6 +57,8 @@ protected:
 private:
 	const SourceRange loc;
 };
+
+typedef StringMap<std::shared_ptr<Value>> ValueMap;
 
 } // namespace dag
 } // namespace fabrique
