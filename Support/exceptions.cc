@@ -59,3 +59,8 @@ const char* SemanticException::what() const noexcept
 {
 	return err->getMessage().c_str();
 }
+
+void SemanticException::PrettyPrint(Bytestream& out, int indent) const
+{
+	err->PrettyPrint(out, indent);
+}

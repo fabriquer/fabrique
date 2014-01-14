@@ -32,6 +32,8 @@
 #ifndef EXCEPTIONS_H
 #define EXCEPTIONS_H
 
+#include "Support/Printable.h"
+
 #include <exception>
 #include <string>
 
@@ -57,11 +59,13 @@ class ErrorReport;
 class SourceRange;
 
 //! A semantic error is present in the Fabrique description.
-class SemanticException : public std::exception
+class SemanticException : public std::exception, public Printable
 {
 public:
 	SemanticException(const std::string& message, const SourceRange&);
 	virtual const char* what() const noexcept;
+
+	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 
 private:
 	const ErrorReport *err;
