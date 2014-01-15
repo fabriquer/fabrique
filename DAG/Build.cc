@@ -123,6 +123,6 @@ static void fabrique::dag::listify(shared_ptr<Value>& in,
 		{
 		}
 
-	else throw new SemanticException(
+	else throw SemanticException(
 		"expected file or list of files", in->getSource());
 }
