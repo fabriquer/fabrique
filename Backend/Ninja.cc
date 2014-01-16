@@ -213,6 +213,8 @@ void NinjaBackend::Process(const dag::DAG& d)
 		for (const shared_ptr<File>& f : build.inputs())
 			out << " " << *f;
 
+		out << "\n";
+
 		for (auto& a : build.arguments())
 			out
 				<< Bytestream::Definition << "  " << a.first
