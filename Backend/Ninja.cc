@@ -31,6 +31,7 @@
 
 #include "Backend/Ninja.h"
 
+#include "DAG/Build.h"
 #include "DAG/DAG.h"
 #include "DAG/File.h"
 #include "DAG/List.h"
@@ -86,6 +87,7 @@ void NinjaBackend::Process(const dag::DAG& d)
 
 	StringMap<shared_ptr<File>> files;
 	StringMap<shared_ptr<Rule>> rules;
+	StringMap<shared_ptr<Build>> builds;
 	StringMap<string> variables;
 
 	for (auto& i : d)
@@ -99,6 +101,9 @@ void NinjaBackend::Process(const dag::DAG& d)
 
 		else if (auto rule = dynamic_pointer_cast<Rule>(v))
 			rules[name] = rule;
+
+		else if (auto build = dynamic_pointer_cast<Build>(v))
+			builds[name] = build;
 
 		else
 			variables[name] = stringify(v);
@@ -177,6 +182,44 @@ void NinjaBackend::Process(const dag::DAG& d)
 				<< Bytestream::Reset << "\n"
 				;
 
+		out << "\n";
+	}
+
+
+
+	// Build steps:
+	out
+		<< "\n"
+		<< Bytestream::Comment
+		<< "#\n"
+		<< "# Build steps:\n"
+		<< "#\n"
+		<< Bytestream::Reset
+		;
+
+	for (auto& i : builds)
+	{
+		const dag::Build& build = *i.second;
+
+		out << Bytestream::Type << "build";
+		for (const shared_ptr<File>& f : build.outputs())
+			out << " " << *f;
+
+		out
+			<< Bytestream::Operator << ": "
+			<< Bytestream::Reference << build.buildRule().name()
+			;
+
+		for (const shared_ptr<File>& f : build.inputs())
+			out << " " << *f;
+
+		for (auto& a : build.arguments())
+			out
+				<< Bytestream::Definition << "  " << a.first
+				<< Bytestream::Operator << " = "
+				<< Bytestream::Literal << stringify(a.second)
+				<< Bytestream::Reset << "\n"
+				;
 		out << "\n";
 	}
 }

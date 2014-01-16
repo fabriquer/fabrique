@@ -52,6 +52,8 @@ class Rule;
 class Build : public Value
 {
 public:
+	typedef std::vector<std::shared_ptr<File>> FileVec;
+
 	static Build* Create(std::shared_ptr<Rule>&,
 	                     std::shared_ptr<Value> in,
 	                     std::shared_ptr<Value> out,
@@ -59,6 +61,11 @@ public:
 	                     const SourceRange src);
 
 	virtual ~Build() {}
+
+	const Rule& buildRule() const { return *rule; }
+	const FileVec& inputs() const { return in; }
+	const FileVec& outputs() const { return out; }
+	const ValueMap& arguments() const { return args; }
 
 	std::string type() const { return "build"; }
 	std::string str() const;

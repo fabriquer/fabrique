@@ -9,5 +9,5 @@ src = file('Inputs/foo.c');
 # CHECK-DAG: rule cc = cc -c -D $foo $in -o $out
 cc = action('cc -c -D $foo $in -o $out');
 
-# CHECK-DAG: build obj = { Inputs/foo.c => foo.o }( foo = 'SOME_DEFINITION' )
+# CHECK-DAG: build obj = cc { Inputs/foo.c => foo.o }( foo = 'SOME_DEFINITION' )
 obj = cc(src, out = file('foo.o'), foo = 'SOME_DEFINITION');

@@ -38,7 +38,7 @@ using namespace fabrique::dag;
 using std::string;
 
 
-Rule* Rule::Create(const string command, const ValueMap& parameters,
+Rule* Rule::Create(string name, string command, const ValueMap& parameters,
                    SourceRange location)
 {
 	ValueMap params(parameters);
@@ -57,13 +57,14 @@ Rule* Rule::Create(const string command, const ValueMap& parameters,
 		description = command;
 	}
 
-	return new Rule(command, description, params, location);
+	return new Rule(name, command, description, params, location);
 }
 
 
-Rule::Rule(const string& command, const string& description,
+Rule::Rule(const string& name, const string& command, const string& description,
 	   const ValueMap& params, SourceRange location)
-	: Value(location), cmd(command), descrip(description), params(params)
+	: Value(location), ruleName(name), cmd(command), descrip(description),
+	  params(params)
 {
 }
 

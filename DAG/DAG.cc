@@ -187,7 +187,8 @@ bool Flattener::Enter(const ast::Action& a)
 		parameters.emplace(arg->getName().name(), v);
 	}
 
-	currentValue.emplace(Rule::Create(command, parameters));
+	currentValue.emplace(Rule::Create(currentValueName.top(),
+	                                  command, parameters));
 
 	return false;
 }
@@ -219,7 +220,8 @@ void Flattener::Leave(const ast::BoolLiteral&) {}
 
 bool Flattener::Enter(const ast::Call& call)
 {
-	shared_ptr<Value> target = flatten(call.target().getValue());
+	shared_ptr<Value> target =
+		getNamedValue(call.target().getName().name());
 
 	if (shared_ptr<Rule> rule = std::dynamic_pointer_cast<Rule>(target))
 	{
@@ -264,7 +266,7 @@ bool Flattener::Enter(const ast::Call& call)
 				call.getSource());
 
 		currentValue.emplace(Build::Create(rule, in, out, arguments,
-			call.getSource()));
+		                                   call.getSource()));
 	}
 
 	return false;

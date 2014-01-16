@@ -32,8 +32,10 @@
 #include "DAG/Build.h"
 #include "DAG/File.h"
 #include "DAG/List.h"
+#include "DAG/Rule.h"
 
 #include "Support/Bytestream.h"
+#include "Support/Join.h"
 #include "Support/exceptions.h"
 
 using namespace fabrique::dag;
@@ -41,22 +43,15 @@ using std::shared_ptr;
 using std::vector;
 
 
-namespace fabrique {
-namespace dag {
-static void listify(shared_ptr<Value>& in, vector<shared_ptr<File>>& out);
-}
-}
-
-
 Build* Build::Create(shared_ptr<Rule>& rule,
                      shared_ptr<Value> in, shared_ptr<Value> out,
                      const ValueMap& arguments, const SourceRange src)
 {
 	SharedPtrVec<File> inputs;
-	listify(in, inputs);
+	appendFiles(in, inputs);
 
 	SharedPtrVec<File> outputs;
-	listify(out, outputs);
+	appendFiles(out, outputs);
 
 	return new Build(rule, inputs, outputs, arguments, src);
 }
@@ -75,13 +70,27 @@ Build::Build(shared_ptr<Rule>& rule,
 
 std::string Build::str() const
 {
-	return "<unimplemented>";
+	std::ostringstream oss;
+	oss << "build";
+
+	for (shared_ptr<File> f : out)
+		oss << " " << f->str();
+
+	oss << " => ";
+
+	for (shared_ptr<File> f : in)
+		oss << " " << f->str();
+
+	return oss.str();
 }
 
 
 void Build::PrettyPrint(Bytestream& ostream, int indent) const
 {
-	ostream << Bytestream::Operator << "{";
+	ostream
+		<< Bytestream::Reference << rule->name() << " "
+		<< Bytestream::Operator << "{"
+		;
 
 	for (const shared_ptr<File>& f : in)
 		ostream << " " << *f;
@@ -112,17 +121,33 @@ void Build::PrettyPrint(Bytestream& ostream, int indent) const
 }
 
 
-static void fabrique::dag::listify(shared_ptr<Value>& in,
-                                   SharedPtrVec<File>& out)
+void Build::appendFiles(shared_ptr<Value>& in, vector<shared_ptr<File>>& out)
 {
-	if (shared_ptr<File> file = std::dynamic_pointer_cast<File>(in))
+	if (shared_ptr<Build> build = std::dynamic_pointer_cast<Build>(in))
+		//
+		// Not sure why std::copy() doesn't work here, but
+		// it doesn't (segfault).
+		//
+		for (shared_ptr<File> i : build->out)
+			out.push_back(i);
+
+	else if (shared_ptr<File> file = std::dynamic_pointer_cast<File>(in))
 		out.push_back(file);
 
 	else if (shared_ptr<List> list = std::dynamic_pointer_cast<List>(in))
 		for (shared_ptr<Value> value : *list)
 		{
+			shared_ptr<File> file =
+				std::dynamic_pointer_cast<File>(value);
+
+			if (not file)
+				throw SemanticException(
+					"not a file", value->getSource());
+
+			out.push_back(file);
 		}
 
 	else throw SemanticException(
-		"expected file or list of files", in->getSource());
+		"expected file or list of files, got '" + in->type() + "'",
+		in->getSource());
 }

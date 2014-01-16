@@ -52,12 +52,13 @@ class File;
 class Rule : public Value
 {
 public:
-	static Rule* Create(const std::string command,
+	static Rule* Create(std::string name, std::string command,
 	                    const ValueMap& otherParameters,
 	                    const SourceRange from = SourceRange::None());
 
 	virtual ~Rule() {}
 
+	const std::string& name() const { return ruleName; }
 	const std::string& command() const { return cmd; }
 	const std::string& description() const { return descrip; }
 	const ValueMap& parameters() const { return params; }
@@ -68,9 +69,11 @@ public:
 	void PrettyPrint(Bytestream&, int indent = 0) const;
 
 private:
-	Rule(const std::string& command, const std::string& description,
-	     const ValueMap& params, SourceRange location);
+	Rule(const std::string& name, const std::string& command,
+	     const std::string& description, const ValueMap& params,
+	     SourceRange location);
 
+	const std::string ruleName;
 	const std::string cmd;
 	const std::string descrip;
 	const ValueMap params;

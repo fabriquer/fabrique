@@ -1,0 +1,19 @@
+#
+# RUN: fab --print-dag --format=null %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK-DAG: file src = Inputs/foo.c
+src = file('Inputs/foo.c');
+
+# CHECK-DAG: rule cc = cc -c $in -o $out
+cc = action('cc -c $in -o $out');
+
+# CHECK-DAG: rule link = cc $in -o $out
+link = action('cc $in -o $out');
+
+# CHECK-DAG: build obj = cc { Inputs/foo.c => foo.o }
+obj = cc(src, out = file('foo.o'));
+
+# CHECK-DAG: build bin = link { foo.o => foo }
+bin = link(obj, out = file('foo'));

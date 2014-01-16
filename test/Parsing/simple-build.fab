@@ -1,0 +1,19 @@
+#
+# RUN: fab --parse-only --print-ast %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: src:file = file('Inputs/foo.c');
+src = file('Inputs/foo.c');
+
+# CHECK: cc:list[file] = action('cc -c $in -o $out');
+cc = action('cc -c $in -o $out');
+
+# CHECK: link:list[file] = action('cc $in -o $out');
+link = action('cc $in -o $out');
+
+# CHECK: obj:list[file] = cc(src);
+obj = cc(src);
+
+# CHECK: bin:list[file] = link(obj);
+bin = link(obj);
