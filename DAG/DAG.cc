@@ -107,6 +107,9 @@ private:
 
 	shared_ptr<Value> flatten(const ast::Expression&);
 
+	/** The name of the value we are currently processing. */
+	std::stack<string> currentValueName;
+
 	/**
 	 * The value currently being processed.
 	 * Visitor methods should leave a single item on this stack.
@@ -444,7 +447,12 @@ bool Flattener::Enter(const ast::Type&) { return false; }
 void Flattener::Leave(const ast::Type&) {}
 
 
-bool Flattener::Enter(const ast::Value& v) { return true; }
+bool Flattener::Enter(const ast::Value& v)
+{
+	currentValueName.push(v.getName().name());
+	return true;
+}
+
 void Flattener::Leave(const ast::Value& v)
 {
 	// TODO: later, fire this assertion. for now, ignore.
@@ -453,10 +461,11 @@ void Flattener::Leave(const ast::Value& v)
 
 	assert(not currentValue.empty());
 
-	const string& name = v.getName().name();
 	ValueMap& currentScope = scopes.back();
 
-	currentScope.emplace(name, std::move(currentValue.top()));
+	currentScope.emplace(currentValueName.top(),
+	                     std::move(currentValue.top()));
+	currentValueName.pop();
 	currentValue.pop();
 }
 
