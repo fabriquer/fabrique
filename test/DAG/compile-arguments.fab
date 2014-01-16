@@ -1,0 +1,11 @@
+#
+# RUN: fab --print-dag --format=null %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK-DAG: rule lex = $LEX -c++ --yyclass=$classname --outfile=$out $in
+lex = action('$LEX -c++ --yyclass=$classname --outfile=$out $in');
+
+# TODO: need a way to mark foo.h as an output file!
+# CHECK-DAG: build gen = lex { foo.yy => foo.c }( classname = 'FooClass' )
+gen = lex(file('foo.yy'), file('foo.c'), classname = 'FooClass');
