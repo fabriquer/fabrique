@@ -67,15 +67,18 @@ public:
 
 private:
 	Build(std::shared_ptr<Rule>&,
-	      std::vector<std::shared_ptr<File>>& inputs,
-	      std::vector<std::shared_ptr<File>>& outputs,
+	      SharedPtrVec<File>& inputs,
+	      SharedPtrVec<File>& outputs,
 	      const ValueMap& arguments,
 	      SourceRange src);
 
+	static void appendFiles(std::shared_ptr<Value>& in,
+	                        SharedPtrVec<File>& out);
+
 	std::shared_ptr<Rule> rule;
-	std::vector<std::shared_ptr<File>> inputs;
-	std::vector<std::shared_ptr<File>> outputs;
-	ValueMap arguments;
+	SharedPtrVec<File> in;
+	SharedPtrVec<File> out;
+	ValueMap args;
 };
 
 } // namespace dag

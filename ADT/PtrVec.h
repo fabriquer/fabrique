@@ -39,6 +39,9 @@ namespace fabrique {
 /** A @ref std::vector that contains const pointers. */
 template<class T> using PtrVec = std::vector<const T*>;
 
+/** A @ref std::vector of shared pointers. */
+template<class T> using SharedPtrVec = std::vector<std::shared_ptr<T>>;
+
 } // namespace fabrique
 
 #endif

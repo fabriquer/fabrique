@@ -47,9 +47,9 @@ class List : public Value
 {
 public:
 	List();
-	List(const std::vector<std::shared_ptr<Value>>&);
+	List(const SharedPtrVec<Value>&);
 
-	typedef std::vector<std::shared_ptr<Value>>::const_iterator iterator;
+	typedef SharedPtrVec<Value>::const_iterator iterator;
 
 	iterator begin() const;
 	iterator end() const;
@@ -62,7 +62,7 @@ public:
 	void PrettyPrint(Bytestream&, int indent = 0) const;
 
 private:
-	const std::vector<std::shared_ptr<Value>> v;
+	const SharedPtrVec<Value> v;
 };
 
 } // namespace dag

@@ -43,7 +43,7 @@ using std::string;
 using std::vector;
 
 
-SourceRange range(const vector<shared_ptr<Value>>& v)
+SourceRange range(const SharedPtrVec<Value>& v)
 {
 	if (v.empty())
 		return SourceRange::None();
@@ -57,7 +57,7 @@ List::List()
 {
 }
 
-List::List(const vector<shared_ptr<Value>>& v)
+List::List(const SharedPtrVec<Value>& v)
 	: Value(range(v)), v(v)
 {
 }

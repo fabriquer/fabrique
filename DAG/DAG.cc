@@ -300,7 +300,7 @@ void Flattener::Leave(const ast::Filename&) {}
 
 bool Flattener::Enter(const ast::FileList& l)
 {
-	std::vector<shared_ptr<Value>> files;
+	SharedPtrVec<Value> files;
 	ValueMap listScope;
 
 	for (const ast::Argument *arg : l.arguments())
@@ -367,7 +367,7 @@ bool Flattener::Enter(const ast::List& l)
 	assert(l.getType().typeParamCount() == 1);
 	const ast::Type& subtype = l.getType()[0];
 
-	std::vector<shared_ptr<Value>> values;
+	SharedPtrVec<Value> values;
 
 	for (const ast::Expression *e : l)
 	{

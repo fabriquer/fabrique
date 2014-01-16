@@ -52,10 +52,10 @@ Build* Build::Create(shared_ptr<Rule>& rule,
                      shared_ptr<Value> in, shared_ptr<Value> out,
                      const ValueMap& arguments, const SourceRange src)
 {
-	vector<shared_ptr<File>> inputs;
+	SharedPtrVec<File> inputs;
 	listify(in, inputs);
 
-	vector<shared_ptr<File>> outputs;
+	SharedPtrVec<File> outputs;
 	listify(out, outputs);
 
 	return new Build(rule, inputs, outputs, arguments, src);
@@ -63,12 +63,12 @@ Build* Build::Create(shared_ptr<Rule>& rule,
 
 
 Build::Build(shared_ptr<Rule>& rule,
-             vector<shared_ptr<File>>& inputs,
-             vector<shared_ptr<File>>& outputs,
+             SharedPtrVec<File>& inputs,
+             SharedPtrVec<File>& outputs,
              const ValueMap& arguments,
              SourceRange location)
 	: Value(location), rule(rule),
-	  inputs(inputs), outputs(outputs), arguments(arguments)
+	  in(inputs), out(outputs), args(arguments)
 {
 }
 
@@ -79,41 +79,41 @@ std::string Build::str() const
 }
 
 
-void Build::PrettyPrint(Bytestream& out, int indent) const
+void Build::PrettyPrint(Bytestream& ostream, int indent) const
 {
-	out << Bytestream::Operator << "{";
+	ostream << Bytestream::Operator << "{";
 
-	for (const shared_ptr<File>& f : inputs)
-		out << " " << *f;
+	for (const shared_ptr<File>& f : in)
+		ostream << " " << *f;
 
-	out << Bytestream::Operator << " => ";
+	ostream << Bytestream::Operator << " => ";
 
-	for (const shared_ptr<File>& f : outputs)
-		out << *f << " ";
+	for (const shared_ptr<File>& f : out)
+		ostream << *f << " ";
 
-	out << Bytestream::Operator << "}";
+	ostream << Bytestream::Operator << "}";
 
-	if (arguments.size() > 0)
+	if (args.size() > 0)
 	{
-		out << Bytestream::Operator << "( ";
+		ostream << Bytestream::Operator << "( ";
 
-		for (auto& i : arguments)
-			out
+		for (auto& i : args)
+			ostream
 				<< Bytestream::Definition << i.first
 				<< Bytestream::Operator << " = "
 				<< *i.second
 				<< " "
 				;
 
-		out << Bytestream::Operator << ")";
+		ostream << Bytestream::Operator << ")";
 	}
 
-	out << Bytestream::Reset;
+	ostream << Bytestream::Reset;
 }
 
 
 static void fabrique::dag::listify(shared_ptr<Value>& in,
-                                   vector<shared_ptr<File>>& out)
+                                   SharedPtrVec<File>& out)
 {
 	if (shared_ptr<File> file = std::dynamic_pointer_cast<File>(in))
 		out.push_back(file);
