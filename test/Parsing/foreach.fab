@@ -1,0 +1,9 @@
+#
+# RUN: fab --parse-only --print-ast %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: foo:list[int] = foreach [ 1 2 3 ] as x x;
+foo = foreach [ 1 2 3 ] as x {
+	x
+};
