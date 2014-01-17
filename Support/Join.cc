@@ -50,7 +50,7 @@ void Join::Print(Bytestream& out) const
 }
 
 
-Bytestream& operator<< (Bytestream& out, const Join& j)
+Bytestream& fabrique::operator<< (Bytestream& out, const Join& j)
 {
 	j.Print(out);
 	return out;
