@@ -74,11 +74,15 @@ const shared_ptr<Value>& List::operator [] (size_t i) const
 
 string List::type() const
 {
-	string typeParam;
-	if (not v.empty())
-		typeParam = v.front()->type();
+	return "list[" + subtype() + "]";
+}
 
-	return "list[" + typeParam + "]";
+string List::subtype() const
+{
+	if (v.empty())
+		return "";
+
+	return v.front()->type();
 }
 
 string List::str() const

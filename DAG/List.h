@@ -57,6 +57,7 @@ public:
 	const std::shared_ptr<Value>& operator [] (size_t) const;
 
 	std::string type() const;
+	std::string subtype() const;
 	std::string str() const;
 
 	void PrettyPrint(Bytestream&, int indent = 0) const;
