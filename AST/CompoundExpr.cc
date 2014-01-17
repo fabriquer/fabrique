@@ -58,22 +58,16 @@ void CompoundExpression::PrettyPrint(Bytestream& out, int indent) const
 {
 	std::string tabs(indent, '\t');
 	std::string intabs(indent + 1, '\t');
-	bool isComplex = !values.empty();
 
-	if (isComplex)
-	{
-		out << tabs << Bytestream::Operator << "{\n";
-		for (auto *v : values)
-			v->PrettyPrint(out, indent + 1);
-		out << intabs;
-	}
+	out << tabs << Bytestream::Operator << "{\n";
+	for (auto *v : values)
+		v->PrettyPrint(out, indent + 1);
 
-	out << *result;
-
-	if (isComplex)
-		out << "\n" << Bytestream::Operator << tabs << "}";
-
-	out << Bytestream::Reset;
+	out
+		<< intabs << *result
+		<< "\n" << Bytestream::Operator << tabs << "}"
+		<< Bytestream::Reset
+		;
 }
 
 
