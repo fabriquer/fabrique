@@ -234,16 +234,6 @@ void MakeBackend::Process(const dag::DAG& d, Bytestream& out)
 			<< "\n"
 			;
 
-#if 0
-		for (auto& a : build.arguments())
-			out
-				<< Bytestream::Definition << "  " << a.first
-				<< Bytestream::Operator << " = "
-				<< Bytestream::Literal << stringify(a.second)
-				<< Bytestream::Reset << "\n"
-				;
-#endif
-
 		out << "\n";
 	}
 }
