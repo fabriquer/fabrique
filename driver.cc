@@ -205,10 +205,7 @@ int main(int argc, char *argv[]) {
 
 	else
 	{
-		std::cerr
-			<< "unknown format '" << args->format << "'"
-			<< std::endl
-			;
+		err << "unknown format '" << args->format << "'\n";
 		return 1;
 	}
 
