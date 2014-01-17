@@ -43,8 +43,9 @@ using std::shared_ptr;
 using std::vector;
 
 
-Build* Build::Create(shared_ptr<Rule>& rule,
-                     shared_ptr<Value> in, shared_ptr<Value> out,
+Build* Build::Create(shared_ptr<Rule>& rule, shared_ptr<Value> in,
+                     shared_ptr<Value> out, SharedPtrVec<Value> dependencies,
+                     SharedPtrVec<Value> extraOutputs,
                      const ValueMap& arguments, const SourceRange src)
 {
 	SharedPtrVec<File> inputs;
@@ -53,17 +54,39 @@ Build* Build::Create(shared_ptr<Rule>& rule,
 	SharedPtrVec<File> outputs;
 	appendFiles(out, outputs);
 
-	return new Build(rule, inputs, outputs, arguments, src);
+	for (shared_ptr<Value>& out : extraOutputs)
+	{
+		shared_ptr<File> f = std::dynamic_pointer_cast<File>(out);
+		if (not f)
+			throw SemanticException("output 'file' not a file",
+			                        out->getSource());
+
+		outputs.push_back(f);
+	}
+
+	SharedPtrVec<File> depends;
+	for (shared_ptr<Value>& dep : dependencies)
+	{
+		shared_ptr<File> f = std::dynamic_pointer_cast<File>(dep);
+		if (not f)
+			throw SemanticException("dependency not a file",
+			                        dep->getSource());
+
+		depends.push_back(f);
+	}
+
+	return new Build(rule, inputs, outputs, depends, arguments, src);
 }
 
 
 Build::Build(shared_ptr<Rule>& rule,
              SharedPtrVec<File>& inputs,
              SharedPtrVec<File>& outputs,
+             SharedPtrVec<File>& dependencies,
              const ValueMap& arguments,
              SourceRange location)
 	: Value(location), rule(rule),
-	  in(inputs), out(outputs), args(arguments)
+	  in(inputs), out(outputs), deps(dependencies), args(arguments)
 {
 }
 
@@ -123,6 +146,8 @@ void Build::PrettyPrint(Bytestream& ostream, int indent) const
 
 void Build::appendFiles(shared_ptr<Value>& in, vector<shared_ptr<File>>& out)
 {
+	assert(in);
+
 	if (shared_ptr<Build> build = std::dynamic_pointer_cast<Build>(in))
 		//
 		// Not sure why std::copy() doesn't work here, but

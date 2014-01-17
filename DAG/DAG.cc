@@ -227,6 +227,7 @@ bool Flattener::Enter(const ast::Call& call)
 	if (shared_ptr<Rule> rule = std::dynamic_pointer_cast<Rule>(target))
 	{
 		shared_ptr<Value> in, out;
+		SharedPtrVec<Value> dependencies, extraOutputs;
 		ValueMap arguments;
 
 		//
@@ -247,7 +248,15 @@ bool Flattener::Enter(const ast::Call& call)
 					out = value;
 
 				else
+				{
 					arguments[name] = value;
+
+					if (value->type() == "file[in]")
+						dependencies.push_back(value);
+
+					else if (value->type() == "file[out]")
+						extraOutputs.push_back(value);
+				}
 			}
 			else
 			{
@@ -292,8 +301,10 @@ bool Flattener::Enter(const ast::Call& call)
 					arg->getSource());
 		}
 
-		currentValue.emplace(Build::Create(rule, in, out, arguments,
-		                                   call.getSource()));
+		currentValue.emplace(
+			Build::Create(rule, in, out,
+			              dependencies, extraOutputs,
+			              arguments, call.getSource()));
 	}
 
 	return false;

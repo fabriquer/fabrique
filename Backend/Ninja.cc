@@ -210,8 +210,15 @@ void NinjaBackend::Process(const dag::DAG& d)
 			<< Bytestream::Reference << build.buildRule().name()
 			;
 
-		for (const shared_ptr<File>& f : build.inputs())
+		for (const shared_ptr<File>& f : build.explicitInputs())
 			out << " " << *f;
+
+		if (build.dependencies().size() > 0)
+		{
+			out << " |";
+			for (const shared_ptr<File>& f : build.explicitInputs())
+				out << " " << *f;
+		}
 
 		out << "\n";
 

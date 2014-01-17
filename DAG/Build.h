@@ -57,13 +57,17 @@ public:
 	static Build* Create(std::shared_ptr<Rule>&,
 	                     std::shared_ptr<Value> in,
 	                     std::shared_ptr<Value> out,
+	                     SharedPtrVec<Value> dependencies,
+	                     SharedPtrVec<Value> extraInputs,
 	                     const ValueMap& arguments,
 	                     const SourceRange src);
 
 	virtual ~Build() {}
 
 	const Rule& buildRule() const { return *rule; }
-	const FileVec& inputs() const { return in; }
+	const FileVec& explicitInputs() const { return in; }
+	const FileVec& dependencies() const { return deps; }
+	//const FileVec allInputs() const { return in + deps; }
 	const FileVec& outputs() const { return out; }
 	const ValueMap& arguments() const { return args; }
 
@@ -76,6 +80,7 @@ private:
 	Build(std::shared_ptr<Rule>&,
 	      SharedPtrVec<File>& inputs,
 	      SharedPtrVec<File>& outputs,
+	      SharedPtrVec<File>& dependencies,
 	      const ValueMap& arguments,
 	      SourceRange src);
 
@@ -85,6 +90,7 @@ private:
 	std::shared_ptr<Rule> rule;
 	SharedPtrVec<File> in;
 	SharedPtrVec<File> out;
+	SharedPtrVec<File> deps;
 	ValueMap args;
 };
 

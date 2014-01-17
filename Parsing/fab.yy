@@ -231,6 +231,7 @@ name:
 type:
 	name			{ $$.ty = p->TakeType($1.id); }
 	| FILE_TOKEN		{ $$.ty = p->getType("file"); }
+	| FILE_TOKEN '[' types ']' { $$.ty = p->getType("file", *$3.types); }
 	| name '[' types ']'	{ $$.ty = p->TakeType($1.id, $3.types); }
 	;
 
