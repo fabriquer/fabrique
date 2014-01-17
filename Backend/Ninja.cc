@@ -85,7 +85,7 @@ void NinjaBackend::Process(const dag::DAG& d, Bytestream& out)
 	//
 	typedef std::pair<string,shared_ptr<Value>> NamedValue;
 
-	StringMap<shared_ptr<File>> files;
+	StringMap<string> namedFileTargets;
 	StringMap<shared_ptr<Rule>> rules;
 	StringMap<shared_ptr<Build>> builds;
 	StringMap<string> variables;
@@ -97,13 +97,22 @@ void NinjaBackend::Process(const dag::DAG& d, Bytestream& out)
 		assert(v);
 
 		if (auto file = dynamic_pointer_cast<File>(v))
-			files[name] = file;
+			namedFileTargets[name] = file->filename();
 
 		else if (auto rule = dynamic_pointer_cast<Rule>(v))
 			rules[name] = rule;
 
 		else if (auto build = dynamic_pointer_cast<Build>(v))
 			builds[name] = build;
+
+		else if (auto list = dynamic_pointer_cast<List>(i.second))
+		{
+			if (list->subtype() == "file")
+				namedFileTargets[name] = stringify(list);
+
+			else
+				variables[name] = stringify(v);
+		}
 
 		else
 			variables[name] = stringify(v);
@@ -185,6 +194,19 @@ void NinjaBackend::Process(const dag::DAG& d, Bytestream& out)
 		out << "\n";
 	}
 
+
+	// Psuedo-targets:
+	for (auto& i : namedFileTargets)
+		out
+			<< Bytestream::Type << "build "
+			<< Bytestream::Definition << i.first
+			<< Bytestream::Operator << " : "
+			<< Bytestream::Action << "phony "
+			<< Bytestream::Literal << i.second
+			<< "\n"
+			;
+
+	out << "\n";
 
 
 	// Build steps:

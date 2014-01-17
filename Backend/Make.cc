@@ -94,6 +94,7 @@ void MakeBackend::Process(const dag::DAG& d, Bytestream& out)
 	typedef std::pair<string,shared_ptr<Value>> NamedValue;
 
 	StringMap<shared_ptr<Build>> builds;
+	StringMap<string> namedFileTargets;
 	StringMap<string> variables;
 
 	for (auto& i : d)
@@ -108,6 +109,18 @@ void MakeBackend::Process(const dag::DAG& d, Bytestream& out)
 		// Don't do anything with rules.
 		else if (auto rule = dynamic_pointer_cast<Rule>(i.second))
 			continue;
+
+		else if (auto file = dynamic_pointer_cast<File>(i.second))
+			namedFileTargets[name] = file->filename();
+
+		else if (auto list = dynamic_pointer_cast<List>(i.second))
+		{
+			if (list->subtype() == "file")
+				namedFileTargets[name] = stringify(list);
+
+			else
+				variables[name] = stringify(v);
+		}
 
 		else
 			variables[name] = stringify(v);
@@ -147,11 +160,23 @@ void MakeBackend::Process(const dag::DAG& d, Bytestream& out)
 			<< "\n"
 			;
 	}
+	out << "\n";
+
+
+	// Explicitly-named pseudo-targets:
+	for (auto& i : namedFileTargets)
+		out
+			<< Bytestream::Definition << i.first
+			<< Bytestream::Operator << " : "
+			<< Bytestream::Literal << i.second
+			<< "\n"
+			;
+
+	out << "\n";
 
 
 	// Build steps:
 	out
-		<< "\n"
 		<< Bytestream::Comment
 		<< "#\n"
 		<< "# Build steps:\n"
