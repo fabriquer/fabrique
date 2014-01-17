@@ -91,6 +91,20 @@ Build::Build(shared_ptr<Rule>& rule,
 }
 
 
+const Build::FileVec Build::allInputs() const
+{
+	FileVec everything;
+
+	for (shared_ptr<File> f : in)
+		everything.push_back(f);
+
+	for (shared_ptr<File> f : deps)
+		everything.push_back(f);
+
+	return everything;
+}
+
+
 std::string Build::str() const
 {
 	std::ostringstream oss;

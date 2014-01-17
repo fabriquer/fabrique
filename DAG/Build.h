@@ -67,7 +67,7 @@ public:
 	const Rule& buildRule() const { return *rule; }
 	const FileVec& explicitInputs() const { return in; }
 	const FileVec& dependencies() const { return deps; }
-	//const FileVec allInputs() const { return in + deps; }
+	const FileVec allInputs() const;
 	const FileVec& outputs() const { return out; }
 	const ValueMap& arguments() const { return args; }
 
