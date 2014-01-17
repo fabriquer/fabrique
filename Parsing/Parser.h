@@ -76,7 +76,7 @@ public:
 	const Type* getType(const std::string& name,
 	                    const PtrVec<Type>& params = PtrVec<Type>());
 
-	const Type* getType(const std::string&name, const Type& typeParam);
+	const Type* getType(const std::string& name, const Type& typeParam);
 
 	/**
 	 * Find or create a @ref Type, taking ownership of the name and
