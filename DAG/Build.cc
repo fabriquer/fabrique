@@ -108,14 +108,14 @@ const Build::FileVec Build::allInputs() const
 std::string Build::str() const
 {
 	std::ostringstream oss;
-	oss << "build";
-
-	for (shared_ptr<File> f : out)
-		oss << " " << f->str();
-
-	oss << " => ";
+	oss << rule->name();
 
 	for (shared_ptr<File> f : in)
+		oss << " " << f->str();
+
+	oss << " =>";
+
+	for (shared_ptr<File> f : out)
 		oss << " " << f->str();
 
 	return oss.str();
