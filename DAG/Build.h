@@ -69,6 +69,7 @@ public:
 	const FileVec& dependencies() const { return deps; }
 	const FileVec allInputs() const;
 	const FileVec& outputs() const { return out; }
+	const FileVec& sideEffectOutputs() const { return extraOut; }
 	const ValueMap& arguments() const { return args; }
 
 	std::string type() const { return "build"; }
@@ -81,6 +82,7 @@ private:
 	      SharedPtrVec<File>& inputs,
 	      SharedPtrVec<File>& outputs,
 	      SharedPtrVec<File>& dependencies,
+	      SharedPtrVec<File>& extraOutputs,
 	      const ValueMap& arguments,
 	      SourceRange src);
 
@@ -91,6 +93,7 @@ private:
 	SharedPtrVec<File> in;
 	SharedPtrVec<File> out;
 	SharedPtrVec<File> deps;
+	SharedPtrVec<File> extraOut;
 	ValueMap args;
 };
 

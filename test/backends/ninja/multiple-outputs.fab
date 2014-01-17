@@ -1,0 +1,14 @@
+#
+# RUN: fab --format=ninja %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: rule lex
+# CHECK-NEXT:  command = $LEX -c++ --header-file=$header --outfile=$out $in
+# CHECK-NEXT:  description = $LEX -c++ --header-file=$header --outfile=$out $in
+lex = action('$LEX -c++ --header-file=$header --outfile=$out $in'
+              <- header:file[out]);
+
+# CHECK: build foo.c foo.h: lex foo.yy
+# CHECK-NEXT: header = foo.h
+gen = lex(file('foo.yy'), file('foo.c'), header = file('foo.h'));

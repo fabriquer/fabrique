@@ -205,6 +205,9 @@ void NinjaBackend::Process(const dag::DAG& d)
 		for (const shared_ptr<File>& f : build.outputs())
 			out << " " << *f;
 
+		for (const shared_ptr<File>& f : build.sideEffectOutputs())
+			out << " " << *f;
+
 		out
 			<< Bytestream::Operator << ": "
 			<< Bytestream::Reference << build.buildRule().name()

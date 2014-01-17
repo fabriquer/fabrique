@@ -54,16 +54,6 @@ Build* Build::Create(shared_ptr<Rule>& rule, shared_ptr<Value> in,
 	SharedPtrVec<File> outputs;
 	appendFiles(out, outputs);
 
-	for (shared_ptr<Value>& out : extraOutputs)
-	{
-		shared_ptr<File> f = std::dynamic_pointer_cast<File>(out);
-		if (not f)
-			throw SemanticException("output 'file' not a file",
-			                        out->getSource());
-
-		outputs.push_back(f);
-	}
-
 	SharedPtrVec<File> depends;
 	for (shared_ptr<Value>& dep : dependencies)
 	{
@@ -75,7 +65,19 @@ Build* Build::Create(shared_ptr<Rule>& rule, shared_ptr<Value> in,
 		depends.push_back(f);
 	}
 
-	return new Build(rule, inputs, outputs, depends, arguments, src);
+	SharedPtrVec<File> extraOut;
+	for (shared_ptr<Value>& out : extraOutputs)
+	{
+		shared_ptr<File> f = std::dynamic_pointer_cast<File>(out);
+		if (not f)
+			throw SemanticException("output 'file' not a file",
+			                        out->getSource());
+
+		extraOut.push_back(f);
+	}
+
+	return new Build(rule, inputs, outputs, depends, extraOut,
+	                 arguments, src);
 }
 
 
@@ -83,10 +85,12 @@ Build::Build(shared_ptr<Rule>& rule,
              SharedPtrVec<File>& inputs,
              SharedPtrVec<File>& outputs,
              SharedPtrVec<File>& dependencies,
+             SharedPtrVec<File>& extraOut,
              const ValueMap& arguments,
              SourceRange location)
 	: Value(location), rule(rule),
-	  in(inputs), out(outputs), deps(dependencies), args(arguments)
+	  in(inputs), out(outputs), deps(dependencies), extraOut(extraOut),
+	  args(arguments)
 {
 }
 
@@ -118,6 +122,13 @@ std::string Build::str() const
 	for (shared_ptr<File> f : out)
 		oss << " " << f->str();
 
+	if (extraOut.size() > 0)
+	{
+		oss << " + ";
+		for (shared_ptr<File> f : extraOut)
+			oss << " " << f->str();
+	}
+
 	return oss.str();
 }
 
@@ -136,6 +147,13 @@ void Build::PrettyPrint(Bytestream& ostream, int indent) const
 
 	for (const shared_ptr<File>& f : out)
 		ostream << *f << " ";
+
+	if (extraOut.size() > 0)
+	{
+		ostream << " + ";
+		for (shared_ptr<File> f : extraOut)
+			ostream << *f << " ";
+	}
 
 	ostream << Bytestream::Operator << "}";
 

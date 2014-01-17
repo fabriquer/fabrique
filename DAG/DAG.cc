@@ -248,15 +248,7 @@ bool Flattener::Enter(const ast::Call& call)
 					out = value;
 
 				else
-				{
 					arguments[name] = value;
-
-					if (value->type() == "file[in]")
-						dependencies.push_back(value);
-
-					else if (value->type() == "file[out]")
-						extraOutputs.push_back(value);
-				}
 			}
 			else
 			{
@@ -295,10 +287,36 @@ bool Flattener::Enter(const ast::Call& call)
 			const string name = i.first;
 			shared_ptr<dag::Value> arg = i.second;
 
-			if (params.find(name) == params.end())
+			auto j = params.find(name);
+			if (j == params.end())
 				throw SemanticException(
 					"no such parameter '" + name + "'",
 					arg->getSource());
+
+			//
+			// Additionally, if the parameter is a file, add the
+			// argument to the dependency graph.
+			//
+			const ast::Parameter *p = j->second;
+			const ast::Type& type = p->getType();
+			if (type.name() != "file")
+				continue;
+
+			if (type.typeParamCount() == 0)
+				throw SemanticException(
+					"file missing [in] or [out] tag",
+					p->getSource());
+
+			if (type[0].name() == "in")
+				dependencies.push_back(arg);
+
+			else if (type[0].name() == "out")
+				extraOutputs.push_back(arg);
+
+			else
+				throw SemanticException(
+					"expected file[in|out]",
+					p->getSource());
 		}
 
 		currentValue.emplace(
