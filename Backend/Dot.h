@@ -44,8 +44,7 @@ class Bytestream;
 namespace backend {
 
 /**
- * A backend that produces Ninja files
- * (see http://martine.github.io/ninja).
+ * A backend that produces GraphViz .dot files (see http://www.graphviz.org/).
  */
 class DotBackend : public Backend
 {
