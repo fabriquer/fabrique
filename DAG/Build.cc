@@ -109,6 +109,20 @@ const Build::FileVec Build::allInputs() const
 }
 
 
+const Build::FileVec Build::allOutputs() const
+{
+	FileVec everything;
+
+	for (shared_ptr<File> f : out)
+		everything.push_back(f);
+
+	for (shared_ptr<File> f : extraOut)
+		everything.push_back(f);
+
+	return everything;
+}
+
+
 std::string Build::str() const
 {
 	std::ostringstream oss;

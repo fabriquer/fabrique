@@ -65,11 +65,15 @@ public:
 	virtual ~Build() {}
 
 	const Rule& buildRule() const { return *rule; }
+
 	const FileVec& explicitInputs() const { return in; }
 	const FileVec& dependencies() const { return deps; }
 	const FileVec allInputs() const;
+
 	const FileVec& outputs() const { return out; }
 	const FileVec& sideEffectOutputs() const { return extraOut; }
+	const FileVec allOutputs() const;
+
 	const ValueMap& arguments() const { return args; }
 
 	std::string type() const { return "build"; }
