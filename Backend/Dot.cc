@@ -43,19 +43,19 @@ using std::shared_ptr;
 using std::string;
 
 
-DotBackend* DotBackend::Create(Bytestream& out)
+DotBackend* DotBackend::Create()
 {
-	return new DotBackend(out);
+	return new DotBackend;
 }
 
 
-DotBackend::DotBackend(Bytestream& out)
-	: out(out), indent("\t")
+DotBackend::DotBackend()
+	: indent("\t")
 {
 }
 
 
-void DotBackend::Process(const DAG& dag)
+void DotBackend::Process(const DAG& dag, Bytestream& out)
 {
 	//
 	// Extract the files and builds from the DAG (ignore variables, etc.).

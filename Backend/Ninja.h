@@ -50,14 +50,13 @@ namespace backend {
 class NinjaBackend : public Backend
 {
 public:
-	static NinjaBackend* Create(Bytestream&);
+	static NinjaBackend* Create();
 
-	void Process(const dag::DAG&);
+	std::string DefaultFilename() const { return "build.ninja"; }
+	void Process(const dag::DAG&, Bytestream&);
 
 private:
-	NinjaBackend(Bytestream& out);
-
-	Bytestream& out;
+	NinjaBackend();
 	const std::string indent;
 };
 

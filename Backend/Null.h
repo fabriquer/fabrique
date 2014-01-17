@@ -49,7 +49,8 @@ namespace backend {
 class NullBackend : public Backend
 {
 public:
-	void Process(const dag::DAG&) {}
+	std::string DefaultFilename() const { return ""; }
+	void Process(const dag::DAG&, Bytestream&) {}
 };
 
 } // namespace backend

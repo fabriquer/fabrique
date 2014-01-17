@@ -91,7 +91,7 @@ int main(int argc, char *argv[]) {
 
 
 	//
-	// Set up input and output streams.
+	// Set up input and error streams.
 	//
 	Bytestream& err = Bytestream::Stderr();
 
@@ -109,21 +109,8 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
-	std::ofstream outfile;
-	unique_ptr<Bytestream> outfileStream;
-	if (args->outputIsFile)
-	{
-		outfile.open(args->output.c_str());
-		outfileStream.reset(Bytestream::File(outfile));
-	}
-
-	Bytestream& out = outfileStream
-		? *outfileStream
-		: Bytestream::Stdout();
-
-
 	lex.reset(new Lexer(args->input));
-	lex->switch_streams(&infile, &out.raw());
+	lex->switch_streams(&infile, &err.raw());
 
 
 	//
@@ -211,10 +198,10 @@ int main(int argc, char *argv[]) {
 		backend.reset(new backend::NullBackend());
 
 	else if (args->format == "ninja")
-		backend.reset(backend::NinjaBackend::Create(out));
+		backend.reset(backend::NinjaBackend::Create());
 
 	else if (args->format == "dot")
-		backend.reset(backend::DotBackend::Create(out));
+		backend.reset(backend::DotBackend::Create());
 
 	else
 	{
@@ -227,7 +214,31 @@ int main(int argc, char *argv[]) {
 
 	assert(backend);
 
-	try { backend->Process(*dag); }
+
+	//
+	// Where should output go?
+	//
+	std::ofstream outfile;
+	unique_ptr<Bytestream> outfileStream;
+
+	const std::string filename =
+		args->outputFileSpecified
+		? args->output
+		: backend->DefaultFilename();
+
+
+	if (not args->printOutput and not filename.empty())
+	{
+		outfile.open(filename.c_str());
+		outfileStream.reset(Bytestream::File(outfile));
+	}
+
+	Bytestream& out = outfileStream
+		? *outfileStream
+		: Bytestream::Stdout();
+
+
+	try { backend->Process(*dag, out); }
 	catch (std::exception& e)
 	{
 	}

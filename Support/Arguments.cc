@@ -50,6 +50,7 @@ enum optionNames
 	ParseOnly,
 	PrettyPrintAST,
 	PrettyPrintDAG,
+	PrintOutput,
 };
 
 
@@ -124,6 +125,10 @@ const option::Descriptor usage[] =
 		PrettyPrintDAG, Enable, "", "print-dag", option::Arg::None,
 		"  --print-dag      Pretty-print the AST"
 	},
+	{
+		PrintOutput, Enable, "", "stdout", option::Arg::None,
+		"  --stdout         Print the result to stdout"
+	},
 	{ 0, 0, 0, 0, 0, 0 }
 };
 
@@ -160,7 +165,8 @@ Arguments* Arguments::Parse(int argc, char *argv[])
 	                       : "ninja";
 
 	return new Arguments(help, input, output, format, options[ParseOnly],
-	                     options[PrettyPrintAST], options[PrettyPrintDAG]);
+	                     options[PrettyPrintAST], options[PrettyPrintDAG],
+	                     options[PrintOutput]);
 }
 
 

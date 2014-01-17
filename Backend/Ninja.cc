@@ -50,14 +50,14 @@ using std::string;
 using std::vector;
 
 
-NinjaBackend* NinjaBackend::Create(Bytestream& out)
+NinjaBackend* NinjaBackend::Create()
 {
-	return new NinjaBackend(out);
+	return new NinjaBackend;
 }
 
 
-NinjaBackend::NinjaBackend(Bytestream& out)
-	: out(out), indent("    ")
+NinjaBackend::NinjaBackend()
+	: indent("    ")
 {
 }
 
@@ -78,7 +78,7 @@ string stringify(const shared_ptr<Value>& v)
 	return v->str();
 }
 
-void NinjaBackend::Process(const dag::DAG& d)
+void NinjaBackend::Process(const dag::DAG& d, Bytestream& out)
 {
 	//
 	// Split values into files, rules and variables.

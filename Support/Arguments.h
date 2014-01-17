@@ -61,22 +61,23 @@ public:
 
 	const std::string input;
 	const std::string output;
-	const bool outputIsFile;
+	const bool outputFileSpecified;
 
 	const std::string format;
 	const bool parseOnly;
 	const bool printAST;
 	const bool printDAG;
+	const bool printOutput;
 
 private:
 	Arguments(const bool help,
 	          const std::string& input, const std::string& output,
 	          const std::string& format, bool parseOnly,
-	          bool printAST, bool printDAG)
+	          bool printAST, bool printDAG, bool printOut)
 		: help(help), input(input), output(output),
-		  outputIsFile(output.length() > 0 and output != "-"),
+		  outputFileSpecified(output.length() > 0 and output != "-"),
 		  format(format), parseOnly(parseOnly),
-		  printAST(printAST), printDAG(printDAG)
+		  printAST(printAST), printDAG(printDAG), printOutput(printOut)
 	{
 	}
 

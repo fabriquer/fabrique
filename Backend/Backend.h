@@ -1,6 +1,6 @@
 /** @file Backend.h    Declaration of @ref Backend. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -32,8 +32,11 @@
 #ifndef BACKEND_H
 #define BACKEND_H
 
+#include <string>
+
 namespace fabrique {
 
+class Bytestream;
 namespace dag { class DAG; }
 
 namespace backend {
@@ -45,7 +48,8 @@ namespace backend {
 class Backend
 {
 public:
-	virtual void Process(const dag::DAG&) = 0;
+	virtual std::string DefaultFilename() const = 0;
+	virtual void Process(const dag::DAG&, Bytestream&) = 0;
 };
 
 } // namespace backend

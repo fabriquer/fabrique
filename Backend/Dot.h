@@ -49,14 +49,13 @@ namespace backend {
 class DotBackend : public Backend
 {
 public:
-	static DotBackend* Create(Bytestream&);
+	static DotBackend* Create();
 
-	void Process(const dag::DAG&);
+	std::string DefaultFilename() const { return "build.dot"; }
+	void Process(const dag::DAG&, Bytestream&);
 
 private:
-	DotBackend(Bytestream& out);
-
-	Bytestream& out;
+	DotBackend();
 	const std::string indent;
 };
 
