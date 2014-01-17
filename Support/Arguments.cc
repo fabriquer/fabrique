@@ -70,6 +70,7 @@ static ArgStatus IsOutputFormat(const option::Option&, bool);
 const static string formatStrings[][2] = {
 	{ "null", "No output" },
 	{ "fab", "Fabrique file (possibly modified/optimised)" },
+	{ "dot", "Graphviz .dot graph format" },
 	{ "make", "POSIX make (no BSD- or GNU-isms)" },
 	{ "ninja", "the Ninja build system (http://martine.github.io/ninja)" },
 	{ "sh", "Bourne shell" },

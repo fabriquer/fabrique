@@ -1,0 +1,11 @@
+#
+# RUN: fab --format=dot %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+lex = action('$LEX -c++ --yyclass=$classname --outfile=$out $in'
+              <- classname:string);
+
+# CHECK-DAG: "foo.yy" -> "lex foo.yy => foo.c";
+# CHECK-DAG: "lex foo.yy => foo.c" -> "foo.c";
+gen = lex(file('foo.yy'), file('foo.c'), classname = 'FooClass');

@@ -32,6 +32,7 @@
 #include "AST/ASTDump.h"
 
 #include "Backend/Backend.h"
+#include "Backend/Dot.h"
 #include "Backend/Ninja.h"
 #include "Backend/Null.h"
 
@@ -211,6 +212,9 @@ int main(int argc, char *argv[]) {
 
 	else if (args->format == "ninja")
 		backend.reset(backend::NinjaBackend::Create(out));
+
+	else if (args->format == "dot")
+		backend.reset(backend::DotBackend::Create(out));
 
 	else
 	{

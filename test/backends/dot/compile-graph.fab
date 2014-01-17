@@ -1,0 +1,23 @@
+#
+# RUN: fab --format=dot %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+lex = action('$LEX -c++ --header=$header --outfile=$out $in'
+              <- header:file[out]);
+
+cc = action('$CC -c $in -o $out');
+link = action('$CC $in -o $out');
+
+# CHECK-DAG: "foo.yy" -> "lex foo.yy => foo.c + foo.h";
+# CHECK-DAG: "lex foo.yy => foo.c + foo.h" -> "foo.c";
+# CHECK-DAG: "lex foo.yy => foo.c + foo.h" -> "foo.h";
+foo_c = lex(file('foo.yy'), out = file('foo.c'), header = file('foo.h'));
+
+# CHECK-DAG: "foo.c" -> "cc foo.c => foo.o";
+# CHECK-DAG: "cc foo.c => foo.o" -> "foo.o"
+foo_o = cc(foo_c, out = file('foo.o'));
+
+bar_o = cc(in = file('bar.c'), file('bar.o'));
+
+#bin = link(in = foo_o ++ bar_o, out = file('bin'));
