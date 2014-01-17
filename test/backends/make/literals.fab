@@ -1,0 +1,16 @@
+#
+# RUN: fab --format=make --output=%t %s
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK-DAG: foo=	a string literal
+foo = 'a string literal';
+
+# CHECK-DAG: bar=	42
+bar = 42;
+
+# CHECK-DAG: baz=	1 2 3
+baz = [ 1 2 3 ];
+
+# CHECK-DAG: wibble=	true false
+wibble = [ true false ];

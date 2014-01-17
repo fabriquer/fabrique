@@ -1,0 +1,14 @@
+#
+# RUN: fab --format=make --output=%t %s
+# RUN: FileCheck %s -input-file %t
+#
+
+#
+# The Make backend should not produce output for rules, only build steps.
+#
+
+# CHECK-NOT: cc
+cc = action('cc $in -o $out', description = 'Compiling $in');
+
+# CHECK-NOT: c++
+cxx = action(command = 'c++ $in -o $out', bar = 'b', foo = 'f');

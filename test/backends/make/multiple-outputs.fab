@@ -1,0 +1,11 @@
+#
+# RUN: fab --format=make --output=%t %s
+# RUN: FileCheck %s -input-file %t
+#
+
+lex = action('$LEX -c++ --header-file=$header --outfile=$out $in'
+              <- header:file[out]);
+
+# CHECK: foo.c foo.h : foo.yy
+# CHECK-NEXT: $LEX -c++ --header-file=foo.h --outfile=foo.c foo.yy
+gen = lex(file('foo.yy'), file('foo.c'), header = file('foo.h'));

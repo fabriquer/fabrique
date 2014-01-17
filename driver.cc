@@ -33,6 +33,7 @@
 
 #include "Backend/Backend.h"
 #include "Backend/Dot.h"
+#include "Backend/Make.h"
 #include "Backend/Ninja.h"
 #include "Backend/Null.h"
 
@@ -194,8 +195,12 @@ int main(int argc, char *argv[]) {
 	// What should we do with it now?
 	//
 	unique_ptr<backend::Backend> backend;
+
 	if (args->format == "null")
 		backend.reset(new backend::NullBackend());
+
+	else if (args->format == "make")
+		backend.reset(backend::MakeBackend::Create());
 
 	else if (args->format == "ninja")
 		backend.reset(backend::NinjaBackend::Create());

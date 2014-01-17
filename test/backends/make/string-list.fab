@@ -1,0 +1,16 @@
+#
+# RUN: fab --format=make --output=%t %s
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK-DAG: foo=	a string literal
+foo = 'a string literal';
+
+# CHECK-DAG: bar=	and another one
+bar = 'and another one';
+
+# CHECK-DAG: baz=	a string literal and another one
+baz = [ foo bar ];
+
+# CHECK-DAG: wibble=	yes, it's a string literal from a list
+wibble = [ "yes, it's" foo 'from a list' ];

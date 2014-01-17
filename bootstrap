@@ -22,7 +22,7 @@ cxx_srcs = {
 		'literals',
 	),
 	'Backend/': (
-		'Dot', 'Ninja',
+		'Dot', 'Make', 'Ninja',
 	),
 	'DAG/': (
 		'Build', 'DAG', 'File', 'List', 'Primitive', 'Rule',
