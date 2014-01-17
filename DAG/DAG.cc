@@ -161,13 +161,13 @@ ValueMap::const_iterator DAG::end() const { return values.end(); }
 bool Flattener::Enter(const ast::Action& a)
 {
 	string command;
-	ValueMap parameters;
+	ValueMap arguments;
 
 	if (a.arguments().size() < 1)
 		throw SemanticException("Missing action arguments",
 				a.getSource());
 
-	for (const ast::Argument *arg : a)
+	for (const ast::Argument *arg : a.arguments())
 	{
 		// Flatten the argument and convert it to a string.
 		shared_ptr<Value> value = flatten(arg->getValue());
@@ -184,11 +184,11 @@ bool Flattener::Enter(const ast::Action& a)
 		}
 
 		shared_ptr<Value> v(new String(value->str(), arg->getSource()));
-		parameters.emplace(arg->getName().name(), v);
+		arguments.emplace(arg->getName().name(), v);
 	}
 
 	currentValue.emplace(Rule::Create(currentValueName.top(),
-	                                  command, parameters));
+	                                  command, arguments));
 
 	return false;
 }
@@ -220,14 +220,18 @@ void Flattener::Leave(const ast::BoolLiteral&) {}
 
 bool Flattener::Enter(const ast::Call& call)
 {
-	shared_ptr<Value> target =
-		getNamedValue(call.target().getName().name());
+	const ast::SymbolReference& targetRef = call.target();
+	const string name = targetRef.getName().name();
+	shared_ptr<Value> target = getNamedValue(name);
 
 	if (shared_ptr<Rule> rule = std::dynamic_pointer_cast<Rule>(target))
 	{
 		shared_ptr<Value> in, out;
 		ValueMap arguments;
 
+		//
+		// Interpret the first two unnamed arguments as 'in' and 'out'.
+		//
 		for (const ast::Argument *arg : call)
 		{
 			shared_ptr<Value> value = flatten(*arg);
@@ -255,6 +259,12 @@ bool Flattener::Enter(const ast::Call& call)
 			}
 		}
 
+		//
+		// Validate against The Rules:
+		//  1. there must be input
+		//  2. there must be output
+		//  3. all other arguments must match explicit parameters
+		//
 		if (not in)
 			throw SemanticException(
 				"use of action without input file(s)",
@@ -264,6 +274,23 @@ bool Flattener::Enter(const ast::Call& call)
 			throw SemanticException(
 				"use of action without output file(s)",
 				call.getSource());
+
+
+		const ast::Action& action =
+			dynamic_cast<const ast::Action&>(targetRef.getValue());
+
+		auto& params = action.parameters();
+
+		for (auto& i : arguments)
+		{
+			const string name = i.first;
+			shared_ptr<dag::Value> arg = i.second;
+
+			if (params.find(name) == params.end())
+				throw SemanticException(
+					"no such parameter '" + name + "'",
+					arg->getSource());
+		}
 
 		currentValue.emplace(Build::Create(rule, in, out, arguments,
 		                                   call.getSource()));

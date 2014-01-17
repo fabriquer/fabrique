@@ -38,33 +38,33 @@ using namespace fabrique::dag;
 using std::string;
 
 
-Rule* Rule::Create(string name, string command, const ValueMap& parameters,
+Rule* Rule::Create(string name, string command, const ValueMap& arguments,
                    SourceRange location)
 {
-	ValueMap params(parameters);
+	ValueMap args(arguments);
 
 	string description;
 
 	// If no description has been specified, use the command string.
-	auto d = params.find("description");
-	if (d != params.end())
+	auto d = args.find("description");
+	if (d != args.end())
 	{
 		description = d->second->str();
-		params.erase(d);
+		args.erase(d);
 	}
 	else
 	{
 		description = command;
 	}
 
-	return new Rule(name, command, description, params, location);
+	return new Rule(name, command, description, args, location);
 }
 
 
 Rule::Rule(const string& name, const string& command, const string& description,
-	   const ValueMap& params, SourceRange location)
+	   const ValueMap& args, SourceRange location)
 	: Value(location), ruleName(name), cmd(command), descrip(description),
-	  params(params)
+	  args(args)
 {
 }
 
@@ -76,7 +76,7 @@ void Rule::PrettyPrint(Bytestream& out, int indent) const
 		<< Bytestream::Literal << " '" << descrip << "'"
 		;
 
-	for (auto& i : params)
+	for (auto& i : args)
 	{
 		out
 			<< Bytestream::Operator << ", "

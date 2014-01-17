@@ -174,11 +174,11 @@ void NinjaBackend::Process(const dag::DAG& d)
 			<< Bytestream::Reset << "\n"
 			;
 
-		for (auto& p : rule.parameters())
+		for (auto& a : rule.arguments())
 			out
-				<< Bytestream::Definition << "  " << p.first
+				<< Bytestream::Definition << "  " << a.first
 				<< Bytestream::Operator << " = "
-				<< Bytestream::Literal << stringify(p.second)
+				<< Bytestream::Literal << stringify(a.second)
 				<< Bytestream::Reset << "\n"
 				;
 

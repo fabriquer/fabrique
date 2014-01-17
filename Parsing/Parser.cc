@@ -163,7 +163,8 @@ SymbolReference* Parser::Reference(Identifier *id)
 }
 
 
-Action* Parser::DefineAction(PtrVec<Argument>* args, SourceRange *start)
+Action* Parser::DefineAction(PtrVec<Argument>* args, SourceRange *start,
+                             PtrVec<Parameter>* params)
 {
 	unique_ptr<PtrVec<Argument> > a(args);
 	unique_ptr<SourceRange> s(start);
@@ -174,7 +175,12 @@ Action* Parser::DefineAction(PtrVec<Argument>* args, SourceRange *start)
 	const Type *fileType = getType("file");
 	const Type *fileListType = getType("list", PtrVec<Type>(1, fileType));
 
-	return new Action(*args, *fileListType, loc);
+	StringMap<const Parameter*> parameters;
+	if (params)
+		for (const Parameter *p : *params)
+			parameters[p->getName().name()] = p;
+
+	return new Action(*args, parameters, *fileListType, loc);
 }
 
 

@@ -53,7 +53,7 @@ class Rule : public Value
 {
 public:
 	static Rule* Create(std::string name, std::string command,
-	                    const ValueMap& otherParameters,
+	                    const ValueMap& otherArguments,
 	                    const SourceRange from = SourceRange::None());
 
 	virtual ~Rule() {}
@@ -61,7 +61,9 @@ public:
 	const std::string& name() const { return ruleName; }
 	const std::string& command() const { return cmd; }
 	const std::string& description() const { return descrip; }
-	const ValueMap& parameters() const { return params; }
+
+	//! Arguments define the action (e.g., command = 'cc').
+	const ValueMap& arguments() const { return args; }
 
 	std::string type() const { return "rule"; }
 	std::string str() const { return cmd; }
@@ -70,13 +72,13 @@ public:
 
 private:
 	Rule(const std::string& name, const std::string& command,
-	     const std::string& description, const ValueMap& params,
+	     const std::string& description, const ValueMap& args,
 	     SourceRange location);
 
 	const std::string ruleName;
 	const std::string cmd;
 	const std::string descrip;
-	const ValueMap params;
+	const ValueMap args;
 };
 
 } // namespace dag

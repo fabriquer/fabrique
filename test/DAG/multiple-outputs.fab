@@ -1,0 +1,14 @@
+#
+# RUN: fab --print-dag --format=null %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+# XFAIL: *
+#
+
+# CHECK-DAG: rule lex = $LEX -c++ --header-file=$header --outfile=$out $in
+lex = action('$LEX -c++ --header-file=$header --outfile=$out $in',
+             header:file[out]);
+
+# TODO: need a way to mark foo.h as an output file!
+# CHECK-DAG: build gen = lex { foo.yy => foo.c }( header = foo.h )
+gen = lex(file('foo.yy'), file('foo.c'), header = file('foo.h'));

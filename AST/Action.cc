@@ -36,6 +36,15 @@
 using namespace fabrique::ast;
 
 
+Action::Action(PtrVec<Argument>& args, StringMap<const Parameter*>& params,
+               const Type& ty, const SourceRange& loc)
+	: Expression(ty, loc), args(args), params(params)
+{
+	for (auto& i : params)
+		assert(i.second != NULL);
+}
+
+
 void Action::PrettyPrint(Bytestream& out, int indent) const
 {
 	out
@@ -64,8 +73,11 @@ void Action::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
 	{
-		for (auto *a : args)
+		for (auto& a : args)
 			a->Accept(v);
+
+		for (auto& p : params)
+			p.second->Accept(v);
 	}
 
 	v.Leave(*this);

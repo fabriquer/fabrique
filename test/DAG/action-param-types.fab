@@ -1,0 +1,20 @@
+#
+# RUN: fab --print-dag --format=null %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+
+#
+# An action must specify the types of its inputs other than 'in' and 'out'.
+#
+# CHECK-DAG: rule lex = $LEX -c++ --header-file=$header --outfile=$out $in
+lex = action('$LEX -c++ --header-file=$header --outfile=$out $in'
+              <- header:file);
+
+#
+# An action *may* specify the types of 'in' and 'out'. This is useful when
+# e.g. you know that the input will only ever be a single file, not a list
+# of files.
+#
+# CHECK-DAG: rule cxx = $CXX -c $in -o $out
+cxx = action('$CXX -c $in -o $out' <- in:list[file], out:file);

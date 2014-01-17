@@ -81,6 +81,7 @@ void Append(PtrVec<T>*& target, PtrVec<T>* source, const T *nextElement)
 %token IF ELSE FOREACH AS
 %token ACTION FILE_TOKEN FILES FUNCTION RETURN
 %token OPERATOR
+%token INPUT
 %token TRUE FALSE
 %token CONCAT PREFIX SCALAR_ADD
 %token STRING_LITERAL INT_LITERAL
@@ -136,6 +137,10 @@ literal:
 
 action:
 	ACTION '(' args ')'	{ $$.expr = p->DefineAction($3.args, $1.src); }
+	| ACTION '(' args INPUT params ')'
+	{
+		$$.expr = p->DefineAction($3.args, $1.src, $5.params);
+	}
 	;
 
 call:

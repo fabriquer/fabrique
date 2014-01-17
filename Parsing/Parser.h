@@ -100,7 +100,8 @@ public:
 
 
 	// actions and functions
-	Action* DefineAction(PtrVec<Argument>* args, SourceRange*);
+	Action* DefineAction(PtrVec<Argument>* args, SourceRange*,
+	                     PtrVec<Parameter>* params = NULL);
 	Function* DefineFunction(PtrVec<Parameter> *params, const Type *ty,
                                  CompoundExpression *body);
 

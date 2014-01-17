@@ -33,8 +33,11 @@
 #define ACTION_H
 
 #include "ADT/PtrVec.h"
-#include "AST/Expression.h"
+#include "ADT/StringMap.h"
 #include "AST/Argument.h"
+#include "AST/Expression.h"
+#include "AST/Parameter.h"
+#include "Support/Bytestream.h"
 
 namespace fabrique {
 namespace ast {
@@ -46,18 +49,11 @@ namespace ast {
 class Action : public Expression
 {
 public:
-	Action(PtrVec<Argument>& args, const Type& ty, const SourceRange& loc)
-		: Expression(ty, loc), args(args)
-	{
-	}
-
-	~Action() { for (auto *arg : args) delete arg; }
+	Action(PtrVec<Argument>& args, StringMap<const Parameter*>& params,
+	       const Type& ty, const SourceRange& loc);
 
 	const PtrVec<Argument>& arguments() const { return args; }
-
-	typedef PtrVec<Argument>::const_iterator const_iterator;
-	const_iterator begin() const { return args.begin(); }
-	const_iterator end() const { return args.end(); }
+	const StringMap<const Parameter*>& parameters() const { return params; }
 
 	virtual bool isStatic() const { return false; }
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
@@ -66,6 +62,7 @@ public:
 
 private:
 	PtrVec<Argument> args;
+	StringMap<const Parameter*> params;
 };
 
 } // namespace ast

@@ -82,6 +82,7 @@ files			setRange(yylval);		return FILES;
 file			setRange(yylval);		return FILE_TOKEN;
 function		setRange(yylval);		return FUNCTION;
 return			setRange(yylval);		return RETURN;
+"<-"			setRange(yylval);		return INPUT;
 "++"			setRange(yylval);		return CONCAT;
 "::"			setRange(yylval);		return PREFIX;
 ".+"			setRange(yylval);		return SCALAR_ADD;

@@ -6,7 +6,8 @@
 # CHECK: rule lex
 # CHECK-NEXT:  command = $LEX -c++ --yyclass=$classname --outfile=$out $in
 # CHECK-NEXT:  description = $LEX -c++ --yyclass=$classname --outfile=$out $in
-lex = action('$LEX -c++ --yyclass=$classname --outfile=$out $in');
+lex = action('$LEX -c++ --yyclass=$classname --outfile=$out $in'
+              <- classname:string);
 
 # CHECK: build foo.c: lex foo.yy
 # CHECK-NEXT: classname = FooClass
