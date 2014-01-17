@@ -49,6 +49,7 @@ public:
 	File(const std::string& name, SourceRange source);
 	virtual ~File() {}
 
+	virtual std::string filename() const { return name; }
 	virtual std::string type() const { return "file"; }
 	virtual std::string str() const { return name; }
 
