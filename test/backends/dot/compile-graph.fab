@@ -18,6 +18,12 @@ foo_c = lex(file('foo.yy'), out = file('foo.c'), header = file('foo.h'));
 # CHECK-DAG: "cc foo.c => foo.o" -> "foo.o"
 foo_o = cc(foo_c, out = file('foo.o'));
 
+# CHECK-DAG: "bar.c" -> "cc bar.c => bar.o";
+# CHECK-DAG: "cc bar.c => bar.o" -> "bar.o"
 bar_o = cc(in = file('bar.c'), file('bar.o'));
 
-#bin = link(in = foo_o ++ bar_o, out = file('bin'));
+# CHECK-DAG: "foo.o" -> "link foo.o bar.o => bin";
+# CHECK-DAG: "bar.o" -> "link foo.o bar.o => bin";
+# CHECK-DAG: "link foo.o bar.o => bin" -> "bin";
+# TODO: foo_o ++ bar_o once concatenation works
+bin = link(in = files(foo.o bar.o), out = file('bin'));
