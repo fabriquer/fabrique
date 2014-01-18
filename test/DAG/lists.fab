@@ -1,0 +1,7 @@
+#
+# RUN: fab --print-dag --format=null %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: list[nil] empty = [ ]
+empty = [];

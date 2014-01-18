@@ -282,14 +282,12 @@ List* Parser::ListOf(ExprVec* elements)
 	unique_ptr<ExprVec> e(elements);
 	assert(elements != NULL);
 
-	PtrVec<Type> typeParams;
-	if (!elements->empty())
-	{
-		const Expression *elem = *elements->begin();
-		typeParams.push_back(&elem->getType());
-	}
+	const Type *elementType =
+		elements->empty()
+			? ctx.nilType()
+			: &elements->front()->getType();
 
-	const Type *ty = getType("list", typeParams);
+	const Type *ty = getType("list", PtrVec<Type>(1, elementType));
 	SourceRange loc(savedLoc.begin, lex.CurrentTokenRange().end);
 
 	return new List(*elements, *ty, loc);

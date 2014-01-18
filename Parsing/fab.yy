@@ -240,7 +240,7 @@ types:
 	| types ',' type	{ Append($$.types, $1.types, $3.ty); }
 
 exprlist:
-	expr			{ p->SaveLoc(); CreateList($$.exprs, $1.expr); }
+	/* empty */		{ p->SaveLoc(); CreateList($$.exprs); }
 	| exprlist expr		{ Append($$.exprs, $1.exprs, $2.expr); }
 
 args:
