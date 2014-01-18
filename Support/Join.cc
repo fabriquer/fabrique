@@ -39,24 +39,6 @@ using namespace fabrique;
 using std::string;
 
 
-void Join::Print(Bytestream& out) const
-{
-	for (size_t i = 0; i < objects.size(); )
-	{
-		out << *objects[i];
-		if (++i < objects.size())
-			out << joinStr;
-	}
-}
-
-
-Bytestream& fabrique::operator<< (Bytestream& out, const Join& j)
-{
-	j.Print(out);
-	return out;
-}
-
-
 string fabrique::join(const string& x, const string& y, const string& delim)
 {
 	if (x.empty())

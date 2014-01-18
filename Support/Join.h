@@ -44,25 +44,41 @@ class Bytestream;
 class Printable;
 
 
+template<class T>
 class Join
 {
 public:
-	static Join csv(const PtrVec<Printable>& p) { return Join(", ", p); }
-	static Join ssv(const PtrVec<Printable>& p) { return Join(" ", p); }
+	static Join csv(const PtrVec<T>& p) { return Join(", ", p); }
+	static Join ssv(const PtrVec<T>& p) { return Join(" ", p); }
 
-	Join(std::string j, const PtrVec<Printable>& p)
+	Join(std::string j, const PtrVec<T>& p)
 		: joinStr(j), objects(p)
 	{
 	}
 
-	void Print(Bytestream&) const;
+	void Print(Bytestream& out) const
+	{
+		for (size_t i = 0; i < objects.size(); )
+		{
+			out << *objects[i];
+			if (++i < objects.size())
+				out << joinStr;
+		}
+	}
+
 
 private:
 	const std::string joinStr;
-	const PtrVec<Printable>& objects;
+	const PtrVec<T>& objects;
 };
 
-Bytestream& operator<< (Bytestream&, const Join&);
+template<class T>
+Bytestream& operator<< (Bytestream& out, const Join<T>& j)
+{
+	j.Print(out);
+	return out;
+}
+
 
 template<class T>
 std::string join(const T& c, const std::string& delim = ",")
