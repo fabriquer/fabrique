@@ -38,7 +38,6 @@
 #include "AST/List.h"
 #include "AST/Scope.h"
 #include "AST/SymbolReference.h"
-#include "AST/Type.h"
 #include "AST/Value.h"
 #include "AST/Visitor.h"
 
@@ -54,6 +53,8 @@
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
 #include "Support/exceptions.h"
+
+#include "Types/Type.h"
 
 #include <deque>
 #include <stack>
@@ -89,7 +90,6 @@ public:
 	VISIT(ast::Scope)
 	VISIT(ast::StringLiteral)
 	VISIT(ast::SymbolReference)
-	VISIT(ast::Type)
 	VISIT(ast::Value)
 
 	//! The components of the current scope's fully-qualified name.
@@ -298,7 +298,7 @@ bool Flattener::Enter(const ast::Call& call)
 			// argument to the dependency graph.
 			//
 			const ast::Parameter *p = j->second;
-			const ast::Type& type = p->getType();
+			const Type& type = p->getType();
 			if (type.name() != "file")
 				continue;
 
@@ -426,7 +426,7 @@ bool Flattener::Enter(const ast::List& l)
 {
 	assert(l.getType().name() == "list");
 	assert(l.getType().typeParamCount() == 1);
-	const ast::Type& subtype = l.getType()[0];
+	const Type& subtype = l.getType()[0];
 
 	SharedPtrVec<Value> values;
 
@@ -499,10 +499,6 @@ bool Flattener::Enter(const ast::SymbolReference& r)
 }
 
 void Flattener::Leave(const ast::SymbolReference&) {}
-
-
-bool Flattener::Enter(const ast::Type&) { return false; }
-void Flattener::Leave(const ast::Type&) {}
 
 
 bool Flattener::Enter(const ast::Value& v)

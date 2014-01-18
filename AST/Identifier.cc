@@ -30,9 +30,9 @@
  */
 
 #include "AST/Identifier.h"
-#include "AST/Type.h"
 #include "AST/Visitor.h"
 #include "Support/Bytestream.h"
+#include "Types/Type.h"
 
 using namespace fabrique::ast;
 

@@ -39,7 +39,6 @@
 #include <string>
 
 namespace fabrique {
-namespace ast {
 
 class Visitor;
 
@@ -86,7 +85,6 @@ private:
 	const PtrVec<Type> params;
 };
 
-} // namespace ast
 } // namespace fabrique
 
 #endif

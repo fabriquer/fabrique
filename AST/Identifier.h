@@ -33,9 +33,9 @@
 #define IDENTIFIER_H
 
 #include "ADT/CStringRef.h"
-#include "AST/Typed.h"
 #include "Support/Location.h"
 #include "Support/Printable.h"
+#include "Types/Typed.h"
 
 #include <string>
 

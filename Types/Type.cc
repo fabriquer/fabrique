@@ -29,12 +29,12 @@
  * SUCH DAMAGE.
  */
 
-#include "AST/Type.h"
 #include "Support/Bytestream.h"
+#include "Types/Type.h"
 
 #include <sstream>
 
-using namespace fabrique::ast;
+using namespace fabrique;
 
 
 const Type& Type::GetSupertype(const Type& x, const Type& y)

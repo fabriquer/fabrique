@@ -46,7 +46,6 @@
 #include "List.h"
 #include "Parameter.h"
 #include "SymbolReference.h"
-#include "Type.h"
 #include "Value.h"
 
 #include "literals.h"

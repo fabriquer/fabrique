@@ -58,8 +58,8 @@ void Append(PtrVec<T>*& target, PtrVec<T>* source, const T *nextElement)
 
 	fabrique::ast::CompoundExpression *compound;
 
-	const fabrique::ast::Type *ty;
-	fabrique::PtrVec<fabrique::ast::Type> *types;
+	const fabrique::Type *ty;
+	fabrique::PtrVec<fabrique::Type> *types;
 
 	const fabrique::ast::Argument *arg;
 	fabrique::PtrVec<fabrique::ast::Argument> *args;

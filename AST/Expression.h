@@ -33,11 +33,11 @@
 #define EXPRESSION_H
 
 #include "ADT/PtrVec.h"
-#include "AST/Typed.h"
 #include "Support/Location.h"
 #include "Support/Printable.h"
 #include "Support/Uncopyable.h"
 #include "Support/Visitable.h"
+#include "Types/Typed.h"
 
 namespace fabrique {
 namespace ast {

@@ -31,11 +31,13 @@
 
 #include "Parsing/Lexer.h"
 #include "Parsing/Parser.h"
+#include "Types/Type.h"
 
 using namespace fabrique::ast;
 
 using fabrique::ErrorReport;
 using fabrique::SourceRange;
+using fabrique::Type;
 
 using std::string;
 using std::unique_ptr;

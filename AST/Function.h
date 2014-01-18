@@ -35,11 +35,13 @@
 #include "AST/Expression.h"
 
 namespace fabrique {
+
+class Type;
+
 namespace ast {
 
 class CompoundExpression;
 class Parameter;
-class Type;
 class Value;
 
 

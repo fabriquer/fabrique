@@ -36,10 +36,12 @@
 #include "AST/Expression.h"
 
 namespace fabrique {
+
+class Type;
+
 namespace ast {
 
 class Parameter;
-class Type;
 class Value;
 
 
