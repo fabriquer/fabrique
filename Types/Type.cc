@@ -1,4 +1,4 @@
-/** @file Identifier.cc    Definition of @ref Identifier. */
+/** @file Type.cc    Definition of @ref Type. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,23 +29,111 @@
  * SUCH DAMAGE.
  */
 
-#include "AST/Identifier.h"
 #include "AST/Type.h"
-#include "AST/Visitor.h"
 #include "Support/Bytestream.h"
+
+#include <sstream>
 
 using namespace fabrique::ast;
 
 
-void Identifier::PrettyPrint(Bytestream& out, int indent) const
+const Type& Type::GetSupertype(const Type& x, const Type& y)
 {
-	out << Bytestream::Reference << id;
-
-	if (ty)
-		out << Bytestream::Operator << ":" << Bytestream::Type << *ty;
-
-	out << Bytestream::Reset;
+	assert(x.isSupertype(y) or y.isSupertype(x));
+	return (x.isSupertype(y) ? x : y);
 }
 
 
-void Identifier::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }
+Type* Type::Create(const std::string& name, const PtrVec<Type>& params)
+{
+	return new Type(name, params);
+}
+
+
+bool Type::operator == (const Type& t) const
+{
+	return t.isSupertype(*this) and t.isSubtype(*this);
+}
+
+
+const Type& Type::operator [] (size_t i) const
+{
+	assert(params.size() > i);
+	return *params[i];
+}
+
+bool Type::isSubtype(const Type& t) const
+{
+	// for now, this is really easy...
+	return (&t == this);
+}
+
+
+bool Type::isSupertype(const Type &t) const
+{
+	// for now, this is really easy...
+	return (&t == this);
+}
+
+bool Type::isListOf(const Type& t) const
+{
+	if (typeName != "list")
+		return false;
+
+	assert(params.size() == 1);
+
+	return (t == *params[0]);
+}
+
+
+std::string Type::str() const
+{
+	std::ostringstream oss;
+
+	oss << typeName;
+
+	if (params.size() > 0)
+	{
+		oss << '[';
+
+		for (size_t i = 0; i < params.size(); )
+		{
+			oss << params[i]->str();
+			if (++i < params.size())
+				oss << ", ";
+		}
+
+		oss << ']';
+	}
+
+	return oss.str();
+}
+
+
+const std::string& Type::name() const { return typeName; }
+
+
+void Type::PrettyPrint(Bytestream& out, int indent) const
+{
+	out << Bytestream::Type << typeName;
+
+	if (params.size() > 0)
+	{
+		out
+			<< Bytestream::Operator << "["
+			<< Bytestream::Reset;
+
+		for (size_t i = 0; i < params.size(); )
+		{
+			out << *params[i];
+			if (++i < params.size())
+				out
+					<< Bytestream::Operator << ", "
+					<< Bytestream::Reset;
+		}
+
+		out << Bytestream::Operator << "]";
+	}
+
+	out << Bytestream::Reset;
+}

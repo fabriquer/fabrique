@@ -1,4 +1,4 @@
-/** @file Identifier.cc    Definition of @ref Identifier. */
+/** @file Typed.h    Declaration of @ref Typed interface. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,23 +29,25 @@
  * SUCH DAMAGE.
  */
 
-#include "AST/Identifier.h"
-#include "AST/Type.h"
-#include "AST/Visitor.h"
-#include "Support/Bytestream.h"
+#ifndef TYPED_H
+#define TYPED_H
 
-using namespace fabrique::ast;
+namespace fabrique {
+namespace ast {
+
+class Type;
 
 
-void Identifier::PrettyPrint(Bytestream& out, int indent) const
+/**
+ * Interface for something that has a @ref Type.
+ */
+class Typed
 {
-	out << Bytestream::Reference << id;
+public:
+	virtual const Type& getType() const = 0;
+};
 
-	if (ty)
-		out << Bytestream::Operator << ":" << Bytestream::Type << *ty;
+} // namespace ast
+} // namespace fabrique
 
-	out << Bytestream::Reset;
-}
-
-
-void Identifier::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }
+#endif

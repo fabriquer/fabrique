@@ -1,4 +1,4 @@
-/** @file Identifier.cc    Definition of @ref Identifier. */
+/** @file Type.h    Declaration of @ref Type. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,23 +29,64 @@
  * SUCH DAMAGE.
  */
 
-#include "AST/Identifier.h"
-#include "AST/Type.h"
-#include "AST/Visitor.h"
-#include "Support/Bytestream.h"
+#ifndef TYPE_H
+#define TYPE_H
 
-using namespace fabrique::ast;
+#include "ADT/PtrVec.h"
+#include "Support/Printable.h"
+
+#include <cassert>
+#include <string>
+
+namespace fabrique {
+namespace ast {
+
+class Visitor;
 
 
-void Identifier::PrettyPrint(Bytestream& out, int indent) const
+/**
+ * The name of a value, function, parameter or argument.
+ */
+class Type : public Printable
 {
-	out << Bytestream::Reference << id;
+public:
+	static const Type& GetSupertype(const Type&, const Type&);
+	static Type* Create(const std::string&, const PtrVec<Type>& params);
 
-	if (ty)
-		out << Bytestream::Operator << ":" << Bytestream::Type << *ty;
+	Type(const Type&) = delete;
+	virtual ~Type() {}
 
-	out << Bytestream::Reset;
-}
+	std::string str() const;
+	const std::string& name() const;
+	void PrettyPrint(Bytestream&, int indent = 0) const;
 
+	bool operator == (const Type&) const;
+	bool operator != (const Type& t) const { return !(*this == t); }
 
-void Identifier::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }
+	bool operator < (const Type& t) const { return isSubtype(t); }
+	bool operator > (const Type& t) const { return isSupertype(t); }
+
+	const PtrVec<Type>& typeParameters() const { return params; }
+	const size_t typeParamCount() const { return params.size(); }
+	const Type& operator [] (size_t i) const;
+
+	bool isSubtype(const Type&) const;
+	bool isSupertype(const Type&) const;
+
+	bool isListOf(const Type&) const;
+
+private:
+	Type(const std::string& s, const PtrVec<Type>& params)
+		: typeName(s), params(params)
+	{
+		assert(!s.empty());
+	}
+
+	const std::string typeName;
+	const PtrVec<Type> params;
+};
+
+} // namespace ast
+} // namespace fabrique
+
+#endif
