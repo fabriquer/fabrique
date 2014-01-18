@@ -40,4 +40,7 @@ using std::string;
 using std::unique_ptr;
 
 
-Value::Value(const SourceRange& loc) : loc(loc) {}
+Value::Value(const Type& t, const SourceRange& loc)
+	: ty(t), loc(loc)
+{
+}

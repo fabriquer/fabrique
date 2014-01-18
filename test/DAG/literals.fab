@@ -6,10 +6,10 @@
 # CHECK-DAG: string foo = 'a string literal'
 foo = 'a string literal';
 
-# CHECK-DAG: integer bar = 42
+# CHECK-DAG: int bar = 42
 bar = 42;
 
-# CHECK-DAG: list[integer] baz = [ 1 2 3 ]
+# CHECK-DAG: list[int] baz = [ 1 2 3 ]
 baz = [ 1 2 3 ];
 
 # CHECK-DAG: wibble = [ true false ]

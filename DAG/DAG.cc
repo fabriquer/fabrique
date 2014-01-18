@@ -70,6 +70,11 @@ using std::string;
 class Flattener : public ast::Visitor
 {
 public:
+	Flattener(FabContext& ctx)
+		: ctx(ctx), stringTy(*ctx.type("string"))
+	{
+	}
+
 	~Flattener() {}
 
 	VISIT(ast::Action)
@@ -102,6 +107,12 @@ public:
 	ValueMap values;
 
 private:
+	//! Object that owns types and other memory.
+	FabContext& ctx;
+
+	//! The type of generated strings.
+	const Type& stringTy;
+
 	//! Get a named value from the current scope or a parent scope.
 	shared_ptr<Value> getNamedValue(const std::string& name);
 
@@ -118,9 +129,9 @@ private:
 };
 
 
-DAG* DAG::Flatten(const ast::Scope& s)
+DAG* DAG::Flatten(const ast::Scope& s, FabContext& ctx)
 {
-	Flattener f;
+	Flattener f(ctx);
 	s.Accept(f);
 
 	return new DAG(f.values);
@@ -160,6 +171,8 @@ ValueMap::const_iterator DAG::end() const { return values.end(); }
 
 bool Flattener::Enter(const ast::Action& a)
 {
+	// TODO: proper function type, e.g. (int,string) => file
+	static const Type& ruleType = *ctx.type("rule");
 	string command;
 	ValueMap arguments;
 
@@ -183,12 +196,13 @@ bool Flattener::Enter(const ast::Action& a)
 			continue;
 		}
 
-		shared_ptr<Value> v(new String(value->str(), arg->getSource()));
+		shared_ptr<Value> v(new String(value->str(), stringTy,
+		                               arg->getSource()));
 		arguments.emplace(arg->getName().name(), v);
 	}
 
 	currentValue.emplace(Rule::Create(currentValueName.top(),
-	                                  command, arguments));
+	                                  command, arguments, ruleType));
 
 	return false;
 }
@@ -211,7 +225,9 @@ void Flattener::Leave(const ast::BinaryOperation&) {}
 
 bool Flattener::Enter(const ast::BoolLiteral& b)
 {
-	currentValue.emplace(new Boolean(b.value(), b.getSource()));
+	currentValue.emplace(
+		new Boolean(b.value(), b.getType(), b.getSource()));
+
 	return false;
 }
 
@@ -220,6 +236,9 @@ void Flattener::Leave(const ast::BoolLiteral&) {}
 
 bool Flattener::Enter(const ast::Call& call)
 {
+	// TODO: proper function type, e.g. (int,string) => file
+	static const Type& buildType = *ctx.type("build");
+
 	const ast::SymbolReference& targetRef = call.target();
 	const string name = targetRef.getName().name();
 	shared_ptr<Value> target = getNamedValue(name);
@@ -322,7 +341,7 @@ bool Flattener::Enter(const ast::Call& call)
 		currentValue.emplace(
 			Build::Create(rule, in, out,
 			              dependencies, extraOutputs,
-			              arguments, call.getSource()));
+			              arguments, buildType, call.getSource()));
 	}
 
 	return false;
@@ -353,7 +372,7 @@ bool Flattener::Enter(const ast::Filename& f)
 	if (shared_ptr<Value> subdir = getNamedValue(ast::Subdirectory))
 		name = join(subdir->str(), name, "/");
 
-	currentValue.emplace(new File(name, f.getSource()));
+	currentValue.emplace(new File(name, f.getType(), f.getSource()));
 	return false;
 }
 void Flattener::Leave(const ast::Filename&) {}
@@ -376,7 +395,7 @@ bool Flattener::Enter(const ast::FileList& l)
 				string subdir = join(base, value->str(), "/");
 				SourceRange loc = arg->getSource();
 
-				value.reset(new String(subdir, loc));
+				value.reset(new String(subdir, stringTy, loc));
 			}
 
 		listScope[name] = value;
@@ -394,7 +413,7 @@ bool Flattener::Enter(const ast::FileList& l)
 
 	scopes.pop_back();
 
-	currentValue.emplace(new List(files));
+	currentValue.emplace(new List(files, l.getType(), l.getSource()));
 
 	return false;
 }
@@ -415,7 +434,9 @@ void Flattener::Leave(const ast::Identifier&) {}
 
 bool Flattener::Enter(const ast::IntLiteral& i)
 {
-	currentValue.emplace(new Integer(i.value(), i.getSource()));
+	currentValue.emplace(
+		new Integer(i.value(), i.getType(), i.getSource()));
+
 	return false;
 }
 
@@ -441,7 +462,7 @@ bool Flattener::Enter(const ast::List& l)
 		values.push_back(flatten(*e));
 	}
 
-	currentValue.emplace(new List(values));
+	currentValue.emplace(new List(values, l.getType(), l.getSource()));
 
 	return false;
 }
@@ -476,7 +497,7 @@ void Flattener::Leave(const ast::Scope&)
 
 bool Flattener::Enter(const ast::StringLiteral& s)
 {
-	currentValue.emplace(new String(s.str(), s.getSource()));
+	currentValue.emplace(new String(s.str(), s.getType(), s.getSource()));
 	return false;
 }
 

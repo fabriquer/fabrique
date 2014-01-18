@@ -39,6 +39,9 @@
 #include <string>
 
 namespace fabrique {
+
+class Type;
+
 namespace dag {
 
 
@@ -46,15 +49,16 @@ namespace dag {
 class Value : public HasSource, public Printable
 {
 public:
-	virtual std::string type() const = 0;
+	virtual const Type& type() const { return ty; }
 	virtual std::string str() const = 0;
 
 	const SourceRange& getSource() const { return loc; }
 
 protected:
-	Value(const SourceRange&);
+	Value(const Type&, const SourceRange&);
 
 private:
+	const Type& ty;
 	const SourceRange loc;
 };
 

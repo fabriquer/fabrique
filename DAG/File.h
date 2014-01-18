@@ -46,11 +46,10 @@ namespace dag {
 class File : public Value
 {
 public:
-	File(const std::string& name, SourceRange source);
+	File(const std::string& name, const Type&, SourceRange source);
 	virtual ~File() {}
 
 	virtual std::string filename() const { return name; }
-	virtual std::string type() const { return "file"; }
 	virtual std::string str() const { return name; }
 
 	void PrettyPrint(Bytestream&, int indent = 0) const;

@@ -39,7 +39,7 @@ using std::string;
 
 
 Rule* Rule::Create(string name, string command, const ValueMap& arguments,
-                   SourceRange location)
+                   const Type& t, SourceRange location)
 {
 	ValueMap args(arguments);
 
@@ -57,14 +57,14 @@ Rule* Rule::Create(string name, string command, const ValueMap& arguments,
 		description = command;
 	}
 
-	return new Rule(name, command, description, args, location);
+	return new Rule(name, command, description, args, t, location);
 }
 
 
 Rule::Rule(const string& name, const string& command, const string& description,
-	   const ValueMap& args, SourceRange location)
-	: Value(location), ruleName(name), cmd(command), descrip(description),
-	  args(args)
+	   const ValueMap& args, const Type& t, SourceRange location)
+	: Value(t, location), ruleName(name), cmd(command),
+	  descrip(description), args(args)
 {
 }
 

@@ -33,6 +33,7 @@
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
 #include "Support/Location.h"
+#include "Types/SequenceType.h"
 
 #include <algorithm>
 
@@ -43,23 +44,11 @@ using std::string;
 using std::vector;
 
 
-SourceRange range(const SharedPtrVec<Value>& v)
+List::List(const SharedPtrVec<Value>& v, const Type& t, const SourceRange& src)
+	: Value(t, src), v(v)
 {
-	if (v.empty())
-		return SourceRange::None();
-
-	return SourceRange::Over(v.begin()->get(), (--v.end())->get());
-}
-
-
-List::List()
-	: Value(SourceRange::None())
-{
-}
-
-List::List(const SharedPtrVec<Value>& v)
-	: Value(range(v)), v(v)
-{
+	if (v.size() > 0)
+		assert(t.isListOf(v.front()->type()));
 }
 
 List::iterator List::begin() const { return v.begin(); }
@@ -70,19 +59,6 @@ size_t List::size() const { return v.size(); }
 const shared_ptr<Value>& List::operator [] (size_t i) const
 {
 	return v[i];
-}
-
-string List::type() const
-{
-	return "list[" + subtype() + "]";
-}
-
-string List::subtype() const
-{
-	if (v.empty())
-		return "";
-
-	return v.front()->type();
 }
 
 string List::str() const

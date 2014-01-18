@@ -107,7 +107,8 @@ void NinjaBackend::Process(const dag::DAG& d, Bytestream& out)
 
 		else if (auto list = dynamic_pointer_cast<List>(i.second))
 		{
-			if (list->subtype() == "file")
+			if (list->size() > 0
+			    and dynamic_pointer_cast<File>((*list)[0]))
 				namedFileTargets[name] = stringify(list);
 
 			else

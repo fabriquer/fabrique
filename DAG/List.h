@@ -46,8 +46,7 @@ namespace dag {
 class List : public Value
 {
 public:
-	List();
-	List(const SharedPtrVec<Value>&);
+	List(const SharedPtrVec<Value>&, const Type&, const SourceRange&);
 
 	typedef SharedPtrVec<Value>::const_iterator iterator;
 
@@ -56,8 +55,6 @@ public:
 	size_t size() const;
 	const std::shared_ptr<Value>& operator [] (size_t) const;
 
-	std::string type() const;
-	std::string subtype() const;
 	std::string str() const;
 
 	void PrettyPrint(Bytestream&, int indent = 0) const;

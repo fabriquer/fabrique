@@ -41,6 +41,8 @@
 
 namespace fabrique {
 
+class FabContext;
+
 namespace ast {
 	class Expression;
 	class Identifier;
@@ -58,7 +60,7 @@ class Value;
 class DAG : public Printable
 {
 public:
-	static DAG* Flatten(const ast::Scope&);
+	static DAG* Flatten(const ast::Scope&, FabContext&);
 
 	~DAG() {}
 

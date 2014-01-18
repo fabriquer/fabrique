@@ -36,8 +36,8 @@ using namespace fabrique::dag;
 using std::string;
 
 
-File::File(const string& name, SourceRange source)
-	: Value(source), name(name)
+File::File(const string& name, const Type& t, SourceRange source)
+	: Value(t, source), name(name)
 {
 }
 

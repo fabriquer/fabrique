@@ -60,7 +60,7 @@ public:
 	                     SharedPtrVec<Value> dependencies,
 	                     SharedPtrVec<Value> extraInputs,
 	                     const ValueMap& arguments,
-	                     const SourceRange src);
+	                     const Type&, const SourceRange src);
 
 	virtual ~Build() {}
 
@@ -76,7 +76,6 @@ public:
 
 	const ValueMap& arguments() const { return args; }
 
-	std::string type() const { return "build"; }
 	std::string str() const;
 
 	void PrettyPrint(Bytestream&, int indent = 0) const;
@@ -88,7 +87,7 @@ private:
 	      SharedPtrVec<File>& dependencies,
 	      SharedPtrVec<File>& extraOutputs,
 	      const ValueMap& arguments,
-	      SourceRange src);
+	      const Type&, SourceRange src);
 
 	static void appendFiles(std::shared_ptr<Value>& in,
 	                        SharedPtrVec<File>& out);

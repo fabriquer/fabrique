@@ -53,7 +53,7 @@ class Rule : public Value
 {
 public:
 	static Rule* Create(std::string name, std::string command,
-	                    const ValueMap& otherArguments,
+	                    const ValueMap& otherArguments, const Type&,
 	                    const SourceRange from = SourceRange::None());
 
 	virtual ~Rule() {}
@@ -65,7 +65,6 @@ public:
 	//! Arguments define the action (e.g., command = 'cc').
 	const ValueMap& arguments() const { return args; }
 
-	std::string type() const { return "rule"; }
 	std::string str() const { return cmd; }
 
 	void PrettyPrint(Bytestream&, int indent = 0) const;
@@ -73,7 +72,7 @@ public:
 private:
 	Rule(const std::string& name, const std::string& command,
 	     const std::string& description, const ValueMap& args,
-	     SourceRange location);
+	     const Type&, SourceRange location);
 
 	const std::string ruleName;
 	const std::string cmd;

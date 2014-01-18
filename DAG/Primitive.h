@@ -55,7 +55,7 @@ public:
 	}
 
 protected:
-	Primitive(SourceRange);
+	Primitive(const Type&, SourceRange);
 };
 
 
@@ -63,8 +63,7 @@ protected:
 class Boolean : public Primitive
 {
 public:
-	Boolean(bool, SourceRange loc = SourceRange::None());
-	std::string type() const { return "boolean"; }
+	Boolean(bool, const Type&, SourceRange loc = SourceRange::None());
 	std::string str() const;
 
 private:
@@ -74,8 +73,7 @@ private:
 class Integer : public Primitive
 {
 public:
-	Integer(int, SourceRange loc = SourceRange::None());
-	std::string type() const { return "integer"; }
+	Integer(int, const Type&, SourceRange loc = SourceRange::None());
 	std::string str() const;
 
 private:
@@ -85,8 +83,7 @@ private:
 class String : public Primitive
 {
 public:
-	String(std::string, SourceRange loc = SourceRange::None());
-	std::string type() const { return "string"; }
+	String(std::string, const Type&, SourceRange loc = SourceRange::None());
 	std::string str() const;
 
 	void PrettyPrint(Bytestream& b, int indent = 0) const;

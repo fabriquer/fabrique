@@ -41,8 +41,6 @@
 
 namespace fabrique {
 
-class Visitor;
-
 
 /**
  * The name of a value, function, parameter or argument.
@@ -55,9 +53,9 @@ public:
 	Type(const Type&) = delete;
 	virtual ~Type() {}
 
-	std::string str() const;
-	const std::string& name() const;
-	void PrettyPrint(Bytestream&, int indent = 0) const;
+	virtual std::string str() const;
+	virtual const std::string& name() const;
+	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 
 	bool operator == (const Type&) const;
 	bool operator != (const Type& t) const { return !(*this == t); }
@@ -74,14 +72,15 @@ public:
 
 	bool isListOf(const Type&) const;
 
-private:
-	static Type* Create(const std::string&, const PtrVec<Type>& params);
-
+protected:
 	Type(const std::string& s, const PtrVec<Type>& params)
 		: typeName(s), params(params)
 	{
 		assert(!s.empty());
 	}
+
+private:
+	static Type* Create(const std::string&, const PtrVec<Type>& params);
 
 	const std::string typeName;
 	const PtrVec<Type> params;

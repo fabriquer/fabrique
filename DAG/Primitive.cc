@@ -36,18 +36,32 @@ using namespace fabrique::dag;
 using std::string;
 
 
-Primitive::Primitive(SourceRange loc)
-	: Value(loc)
+Primitive::Primitive(const Type& t, SourceRange loc)
+	: Value(t, loc)
 {
 }
 
-Boolean::Boolean(bool b, SourceRange loc) : Primitive(loc), value(b) {}
+Boolean::Boolean(bool b, const Type& t, SourceRange loc)
+	: Primitive(t, loc), value(b)
+{
+	// TODO: assert(t is a subtype of bool?)
+}
+
 string Boolean::str() const { return value ? "true" : "false"; }
 
-Integer::Integer(int i, SourceRange loc) : Primitive(loc), value(i) {}
+
+Integer::Integer(int i, const Type& t, SourceRange loc)
+	: Primitive(t, loc), value(i)
+{
+}
+
 string Integer::str() const { return std::to_string(value); }
 
-String::String(string s, SourceRange loc) : Primitive(loc), value(s) {}
+String::String(string s, const Type& t, SourceRange loc)
+	: Primitive(t, loc), value(s)
+{
+}
+
 string String::str() const { return value; }
 
 void String::PrettyPrint(Bytestream& b, int indent) const

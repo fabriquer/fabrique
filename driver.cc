@@ -157,7 +157,7 @@ int main(int argc, char *argv[]) {
 		return 0;
 
 	unique_ptr<dag::DAG> dag;
-	try { dag.reset(dag::DAG::Flatten(root)); }
+	try { dag.reset(dag::DAG::Flatten(root, ctx)); }
 	catch (SemanticException& e)
 	{
 		err

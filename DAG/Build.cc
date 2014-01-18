@@ -38,6 +38,8 @@
 #include "Support/Join.h"
 #include "Support/exceptions.h"
 
+#include "Types/Type.h"
+
 using namespace fabrique::dag;
 using std::shared_ptr;
 using std::vector;
@@ -46,7 +48,8 @@ using std::vector;
 Build* Build::Create(shared_ptr<Rule>& rule, shared_ptr<Value> in,
                      shared_ptr<Value> out, SharedPtrVec<Value> dependencies,
                      SharedPtrVec<Value> extraOutputs,
-                     const ValueMap& arguments, const SourceRange src)
+                     const ValueMap& arguments, const Type& t,
+                     const SourceRange src)
 {
 	SharedPtrVec<File> inputs;
 	appendFiles(in, inputs);
@@ -77,7 +80,7 @@ Build* Build::Create(shared_ptr<Rule>& rule, shared_ptr<Value> in,
 	}
 
 	return new Build(rule, inputs, outputs, depends, extraOut,
-	                 arguments, src);
+	                 arguments, t, src);
 }
 
 
@@ -87,8 +90,9 @@ Build::Build(shared_ptr<Rule>& rule,
              SharedPtrVec<File>& dependencies,
              SharedPtrVec<File>& extraOut,
              const ValueMap& arguments,
+             const Type& t,
              SourceRange location)
-	: Value(location), rule(rule),
+	: Value(t, location), rule(rule),
 	  in(inputs), out(outputs), deps(dependencies), extraOut(extraOut),
 	  args(arguments)
 {
@@ -219,6 +223,6 @@ void Build::appendFiles(shared_ptr<Value>& in, vector<shared_ptr<File>>& out)
 		}
 
 	else throw SemanticException(
-		"expected file or list of files, got '" + in->type() + "'",
+		"expected file or list of files, got " + in->type().str(),
 		in->getSource());
 }
