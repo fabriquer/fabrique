@@ -114,7 +114,12 @@ Bytestream& Bytestream::Stderr()
 	return PlainErr;
 }
 
-Bytestream* Bytestream::File(std::ofstream& f)
+Bytestream* Bytestream::Formatted(std::ostream& f)
+{
+	return new ANSIStream(f);
+}
+
+Bytestream* Bytestream::Plain(std::ostream& f)
 {
 	return new PlainStream(f);
 }

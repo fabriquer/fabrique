@@ -72,11 +72,19 @@ public:
 	static Bytestream& Stderr();
 
 	/**
-	 * Construct a @ref Bytestream to wrap a @ref std::ofstream.
+	 * Construct a formatted @ref Bytestream to wrap an @ref std::ostream.
 	 *
 	 * The caller is responsible for freeing the returned pointer.
 	 */
-	static Bytestream* File(std::ofstream&);
+	static Bytestream* Formatted(std::ostream&);
+
+	/**
+	 * Construct a plain @ref Bytestream to wrap an @ref std::ostream.
+	 *
+	 * The caller is responsible for freeing the returned pointer.
+	 */
+	static Bytestream* Plain(std::ostream&);
+
 
 	virtual Bytestream& operator << (enum Format) = 0;
 	Bytestream& operator << (const Printable&);

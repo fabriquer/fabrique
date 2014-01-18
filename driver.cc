@@ -235,7 +235,7 @@ int main(int argc, char *argv[]) {
 	if (not args->printOutput and not filename.empty())
 	{
 		outfile.open(filename.c_str());
-		outfileStream.reset(Bytestream::File(outfile));
+		outfileStream.reset(Bytestream::Plain(outfile));
 	}
 
 	Bytestream& out = outfileStream
