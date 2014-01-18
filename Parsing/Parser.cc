@@ -32,6 +32,7 @@
 #include "Parsing/Lexer.h"
 #include "Parsing/Parser.h"
 #include "Types/Type.h"
+#include "FabContext.h"
 
 using namespace fabrique::ast;
 
@@ -43,8 +44,8 @@ using std::string;
 using std::unique_ptr;
 
 
-Parser::Parser(const Lexer& lex)
-	: lex(lex), savedLoc(SourceRange::None())
+Parser::Parser(FabContext& ctx, const Lexer& lex)
+	: ctx(ctx), lex(lex), savedLoc(SourceRange::None())
 {
 	scopes.push(new Scope());
 }
@@ -53,9 +54,6 @@ Parser::~Parser()
 {
 	for (auto *err : errs)
 		delete err;
-
-	for (auto i : types)
-		delete i.second;
 }
 
 
@@ -75,16 +73,10 @@ const Type* Parser::getType(const string& name, const Type& param)
 
 const Type* Parser::getType(const string& name, const PtrVec<Type>& params)
 {
-	auto qualifiedName(std::make_pair(name, params));
-
-	auto i = types.find(qualifiedName);
-	if (i != types.end())
-		return i->second;
-
-	return types[qualifiedName] = Type::Create(name, params);
+	return ctx.type(name, params);
 }
 
-const Type* Parser::TakeType(Identifier *name, const PtrVec<Type>* params)
+const Type* Parser::getType(Identifier *name, const PtrVec<Type>* params)
 {
 	unique_ptr<Identifier> i(name);
 	unique_ptr<const PtrVec<Type> > p(params);

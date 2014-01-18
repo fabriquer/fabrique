@@ -47,6 +47,8 @@
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 
+#include "FabContext.h"
+
 #include <cassert>
 #include <cstdio>
 #include <fstream>
@@ -117,7 +119,8 @@ int main(int argc, char *argv[]) {
 	//
 	// Parse the Fabrique input.
 	//
-	unique_ptr<ast::Parser> parser(new ast::Parser(*lex));
+	FabContext ctx;
+	unique_ptr<ast::Parser> parser(new ast::Parser(ctx, *lex));
 	int result = yyparse(parser.get());
 
 	for (auto *error : parser->errors())

@@ -41,6 +41,7 @@
 
 namespace fabrique {
 
+class FabContext;
 class Lexer;
 
 namespace ast {
@@ -52,7 +53,7 @@ namespace ast {
 class Parser
 {
 public:
-	Parser(const Lexer& lex);
+	Parser(FabContext&, const Lexer& lex);
 	~Parser();
 
 	const PtrVec<ErrorReport>& errors() const { return errs; }
@@ -76,13 +77,13 @@ public:
 	const Type* getType(const std::string& name,
 	                    const PtrVec<Type>& params = PtrVec<Type>());
 
-	const Type* getType(const std::string& name, const Type& typeParam);
-
 	/**
 	 * Find or create a @ref Type, taking ownership of the name and
 	 * type parameter vector. We already own the elements of this vector.
 	 */
-	const Type* TakeType(Identifier*, const PtrVec<Type>* params = NULL);
+	const Type* getType(Identifier*, const PtrVec<Type>* params = NULL);
+
+	const Type* getType(const std::string& name, const Type& typeParam);
 
 
 	//! Define a @ref Value in the current scope.
@@ -188,6 +189,8 @@ private:
 	const ErrorReport& ReportError(const std::string&, const SourceRange&);
 	const ErrorReport& ReportError(const std::string&, const HasSource&);
 
+	FabContext& ctx;
+
 	Scope& CurrentScope();
 	void ExitScope();
 
@@ -197,9 +200,6 @@ private:
 	Type const *savedType = NULL;
 
 	PtrVec<ErrorReport> errs;
-
-	typedef std::pair<std::string,PtrVec<Type> > TypeName;
-	std::map<TypeName,Type*> types;
 
 	Scope root;
 	std::stack<Scope*> scopes;

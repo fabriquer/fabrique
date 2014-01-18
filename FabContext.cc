@@ -1,6 +1,6 @@
-/** @file Type.h    Declaration of @ref Type. */
+/** @file FabContext.h    Declaration of @ref FabContext. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,66 +29,20 @@
  * SUCH DAMAGE.
  */
 
-#ifndef TYPE_H
-#define TYPE_H
-
-#include "ADT/PtrVec.h"
-#include "Support/Printable.h"
 #include "FabContext.h"
-
-#include <cassert>
-#include <string>
-
-namespace fabrique {
-
-class Visitor;
+using namespace fabrique;
+using std::string;
 
 
-/**
- * The name of a value, function, parameter or argument.
- */
-class Type : public Printable
+const Type* FabContext::type(const string& name, const PtrVec<Type>& params)
 {
-public:
-	static const Type& GetSupertype(const Type&, const Type&);
+	auto qualifiedName(std::make_pair(name, params));
 
-	Type(const Type&) = delete;
-	virtual ~Type() {}
+	auto i = types.find(qualifiedName);
+	if (i != types.end())
+		return i->second.get();
 
-	std::string str() const;
-	const std::string& name() const;
-	void PrettyPrint(Bytestream&, int indent = 0) const;
-
-	bool operator == (const Type&) const;
-	bool operator != (const Type& t) const { return !(*this == t); }
-
-	bool operator < (const Type& t) const { return isSubtype(t); }
-	bool operator > (const Type& t) const { return isSupertype(t); }
-
-	const PtrVec<Type>& typeParameters() const { return params; }
-	const size_t typeParamCount() const { return params.size(); }
-	const Type& operator [] (size_t i) const;
-
-	bool isSubtype(const Type&) const;
-	bool isSupertype(const Type&) const;
-
-	bool isListOf(const Type&) const;
-
-private:
-	static Type* Create(const std::string&, const PtrVec<Type>& params);
-
-	Type(const std::string& s, const PtrVec<Type>& params)
-		: typeName(s), params(params)
-	{
-		assert(!s.empty());
-	}
-
-	const std::string typeName;
-	const PtrVec<Type> params;
-
-	friend class FabContext;
-};
-
-} // namespace fabrique
-
-#endif
+	Type *t = Type::Create(name, params);
+	types[qualifiedName].reset(t);
+	return t;
+}

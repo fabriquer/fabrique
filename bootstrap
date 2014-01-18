@@ -39,6 +39,7 @@ cxx_srcs = {
 		'Type',
 	),
 	'': (
+		'FabContext',
 		'driver',
 	),
 }
