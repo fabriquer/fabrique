@@ -54,6 +54,9 @@ public:
 	const Type* type(const std::string& name,
 	                 const PtrVec<Type>& params = PtrVec<Type>());
 
+	//! The type of a typeless thing.
+	const Type* nilType();
+
 private:
 	typedef std::pair<std::string,PtrVec<Type> > TypeName;
 	std::map<TypeName,std::unique_ptr<Type>> types;

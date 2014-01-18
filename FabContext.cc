@@ -46,3 +46,9 @@ const Type* FabContext::type(const string& name, const PtrVec<Type>& params)
 	types[qualifiedName].reset(t);
 	return t;
 }
+
+const Type* FabContext::nilType()
+{
+	static const Type *nil = Type::Create("nil", PtrVec<Type>());
+	return nil;
+}
