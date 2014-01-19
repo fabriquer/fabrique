@@ -33,6 +33,7 @@ cxx_srcs = {
 	),
 	'Support/': (
 		'Arguments', 'Bytestream', 'ErrorReport', 'Join', 'Location',
+		'Printable',
 		'exceptions',
 	),
 	'Types/': (

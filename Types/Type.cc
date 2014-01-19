@@ -32,8 +32,6 @@
 #include "Support/Bytestream.h"
 #include "Types/Type.h"
 
-#include <sstream>
-
 using namespace fabrique;
 
 
@@ -83,30 +81,6 @@ bool Type::isListOf(const Type& t) const
 	assert(params.size() == 1);
 
 	return (t == *params[0]);
-}
-
-
-std::string Type::str() const
-{
-	std::ostringstream oss;
-
-	oss << typeName;
-
-	if (params.size() > 0)
-	{
-		oss << '[';
-
-		for (size_t i = 0; i < params.size(); )
-		{
-			oss << params[i]->str();
-			if (++i < params.size())
-				oss << ", ";
-		}
-
-		oss << ']';
-	}
-
-	return oss.str();
 }
 
 

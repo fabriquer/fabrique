@@ -1,6 +1,6 @@
-/** @file Printable.h    Declaration of the @ref Printable interface. */
+/** @file Printable.cc    Definition of the @ref Printable class. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,32 +29,21 @@
  * SUCH DAMAGE.
  */
 
-#ifndef PRINTABLE_H
-#define PRINTABLE_H
+#include "Support/Bytestream.h"
+#include "Support/Printable.h"
 
-#include "ADT/PtrVec.h"
-#include <string>
+#include <memory>
+#include <sstream>
 
-namespace fabrique {
-
-class Bytestream;
+using namespace fabrique;
 
 
-/**
- * A thing that can be pretty-printed.
- */
-class Printable
+std::string Printable::str() const
 {
-public:
-	/**
-	 * Print a human-readable representation to an output stream
-	 * and return that output stream.
-	 */
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const = 0;
+	std::ostringstream oss;
+	std::unique_ptr<Bytestream> out(Bytestream::Plain(oss));
 
-	virtual std::string str() const;
-};
+	*out << *this;
 
-} // namespace fabrique
-
-#endif
+	return oss.str();
+}

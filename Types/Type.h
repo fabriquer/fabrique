@@ -53,7 +53,6 @@ public:
 	Type(const Type&) = delete;
 	virtual ~Type() {}
 
-	virtual std::string str() const;
 	virtual const std::string& name() const;
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 
