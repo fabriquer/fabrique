@@ -49,7 +49,7 @@ BinaryOperation::Operator BinaryOperation::Op(CStringRef o)
 {
 	Operator op;
 
-	if (o == "++") op = Concatenate;
+	if (o == "+") op = Add;
 	else if (o == "::") op = Prefix;
 	else if (o == ".+") op = ScalarAdd;
 	else op = Invalid;
@@ -63,7 +63,7 @@ std::string BinaryOperation::OpStr(Operator op)
 {
 	switch (op)
 	{
-		case Concatenate:       return "++";
+		case Add:               return "+";
 		case Prefix:            return "::";
 		case ScalarAdd:         return ".+";
 		case Invalid:           assert(false && "op == Invalid");

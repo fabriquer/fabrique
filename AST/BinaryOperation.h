@@ -51,7 +51,7 @@ class BinaryOperation : public Expression
 public:
 	enum Operator
 	{
-		Concatenate,
+		Add,
 		Prefix,
 		ScalarAdd,
 		Invalid,

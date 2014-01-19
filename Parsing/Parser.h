@@ -156,7 +156,7 @@ public:
 
 
 	// binary operations
-	BinaryOperation* Concat(Expression*, Expression*);
+	BinaryOperation* Add(Expression*, Expression*);
 	BinaryOperation* Prefix(Expression*, Expression*);
 	BinaryOperation* ScalarAdd(Expression*, Expression*);
 

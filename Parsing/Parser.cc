@@ -354,7 +354,7 @@ FileList* Parser::Files(PtrVec<Filename> *files, PtrVec<Argument> *args)
 }
 
 
-BinaryOperation* Parser::Concat(Expression *lhs, Expression *rhs)
+BinaryOperation* Parser::Add(Expression *lhs, Expression *rhs)
 {
 	if (lhs == NULL or rhs == NULL)
 		return NULL;
@@ -367,7 +367,7 @@ BinaryOperation* Parser::Concat(Expression *lhs, Expression *rhs)
 		return NULL;
 	}
 
-	return BinaryOperation::Create(lhs, BinaryOperation::Concatenate, rhs,
+	return BinaryOperation::Create(lhs, BinaryOperation::Add, rhs,
 	                               Type::GetSupertype(lt, rt));
 }
 

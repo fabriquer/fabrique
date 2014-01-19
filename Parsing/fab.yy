@@ -83,10 +83,10 @@ void Append(PtrVec<T>*& target, PtrVec<T>* source, const T *nextElement)
 %token OPERATOR
 %token INPUT
 %token TRUE FALSE
-%token CONCAT PREFIX SCALAR_ADD
+%token ADD PREFIX SCALAR_ADD
 %token STRING_LITERAL INT_LITERAL
 
-%left CONCAT SCALAR_ADD
+%left ADD SCALAR_ADD
 %right PREFIX
 
 %%
@@ -123,7 +123,7 @@ expression:
 	| identifier		{ $$.expr = p->Reference($1.id); }
 	| '(' expr ')'		{ $$.expr = $2.expr; }
 	| '[' exprlist ']'	{ $$.expr = p->ListOf($2.exprs); }
-	| expr CONCAT expr	{ $$.expr = p->Concat($1.expr, $3.expr); }
+	| expr ADD expr		{ $$.expr = p->Add($1.expr, $3.expr); }
 	| expr PREFIX expr	{ $$.expr = p->Prefix($1.expr, $3.expr); }
 	| expr SCALAR_ADD expr	{ $$.expr = p->ScalarAdd($1.expr, $3.expr); }
 	;
