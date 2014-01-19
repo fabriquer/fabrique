@@ -36,6 +36,7 @@
 
 namespace fabrique {
 
+class FunctionType;
 class Type;
 
 namespace ast {
@@ -51,12 +52,8 @@ class Value;
 class Function : public Expression
 {
 public:
-	Function(PtrVec<Parameter>& params, const Type& ty,
-	         CompoundExpression *body, const SourceRange& loc)
-		: Expression(ty, loc), params(params), body(body)
-	{
-	}
-
+	Function(PtrVec<Parameter>& params, const FunctionType& ty,
+	         CompoundExpression *body, const SourceRange& loc);
 	~Function();
 
 	virtual bool isStatic() const { return false; }

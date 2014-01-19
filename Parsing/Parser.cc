@@ -178,25 +178,31 @@ Action* Parser::DefineAction(PtrVec<Argument>* args, SourceRange *start,
 }
 
 
-Function* Parser::DefineFunction(PtrVec<Parameter> *params, const Type *ty,
+Function* Parser::DefineFunction(PtrVec<Parameter> *params, const Type *output,
                                  CompoundExpression *body)
 {
 	unique_ptr<PtrVec<Parameter> > p(params);
 
 	assert(params != NULL);
-	assert(ty != NULL);
+	assert(output != NULL);
 
-	if (!body->getType().isSupertype(*ty))
+	if (!body->getType().isSupertype(*output))
 	{
 		ReportError(
 			"wrong return type ("
-			+ body->getType().str() + " != " + ty->str()
+			+ body->getType().str() + " != " + output->str()
 			+ ")", *body);
 		return NULL;
 	}
 
 	SourceRange loc(savedLoc.begin, lex.CurrentTokenRange().end);
 	ExitScope();
+
+	PtrVec<Type> parameterTypes;
+	for (const Parameter *p : *params)
+		parameterTypes.push_back(&p->getType());
+
+	const FunctionType *ty = ctx.functionType(parameterTypes, *output);
 
 	return new Function(*params, *ty, body, loc);
 }

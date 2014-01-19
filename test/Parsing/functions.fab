@@ -1,0 +1,24 @@
+#
+# RUN: fab --parse-only --print-ast %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: foo:(list[int]) => list[int] = function(ints:list[int]): list[int]
+# CHECK-NEXT: {
+# CHECK-NEXT:   foreach ints as x
+# CHECK-NEXT:   {
+# CHECK-NEXT:     x
+# CHECK-NEXT:   }
+# CHECK-NEXT: }
+foo = function(ints:list[int]): list[int]
+{
+	foreach ints as x {
+		x
+	}
+};
+
+bar = function(srcs:list[string]): list[file]
+	foreach srcs as src {
+		file(src)
+	}
+;

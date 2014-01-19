@@ -35,10 +35,16 @@
 #include "AST/Value.h"
 #include "AST/Visitor.h"
 #include "Support/Bytestream.h"
-#include "Types/Type.h"
+#include "Types/FunctionType.h"
 
 using namespace fabrique::ast;
 
+
+Function::Function(PtrVec<Parameter>& params, const FunctionType& ty,
+         CompoundExpression *body, const SourceRange& loc)
+	: Expression(ty, loc), params(params), body(body)
+{
+}
 
 Function::~Function()
 {
@@ -68,10 +74,13 @@ void Function::PrettyPrint(Bytestream& out, int indent) const
 
 	out
 		<< Bytestream::Operator << "): "
-		<< Bytestream::Reset << getType()
-		<< " " << *body
 		<< Bytestream::Reset
-		;
+		<< dynamic_cast<const FunctionType&>(getType()).returnType()
+		<< "\n";
+
+	body->PrettyPrint(out, indent);
+
+	out << Bytestream::Reset;
 }
 
 

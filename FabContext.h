@@ -41,6 +41,7 @@
 
 namespace fabrique {
 
+class FunctionType;
 class Type;
 
 
@@ -56,6 +57,10 @@ public:
 
 	//! The type of a typeless thing.
 	const Type* nilType();
+
+	//! A function type, which incorporates the function's signature.
+	const FunctionType* functionType(const PtrVec<Type>& argumentTypes,
+	                                 const Type& returnType);
 
 private:
 	typedef std::pair<std::string,PtrVec<Type> > TypeName;

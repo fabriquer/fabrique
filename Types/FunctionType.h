@@ -1,4 +1,4 @@
-/** @file FabContext.h    Declaration of @ref FabContext. */
+/** @file FunctionType.h    Declaration of @ref FunctionType. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -29,34 +29,42 @@
  * SUCH DAMAGE.
  */
 
-#include "Types/FunctionType.h"
-#include "FabContext.h"
+#ifndef FUNCTION_TYPE_H
+#define FUNCTION_TYPE_H
 
-using namespace fabrique;
-using std::string;
+#include "Types/Type.h"
+
+namespace fabrique {
 
 
-const Type* FabContext::type(const string& name, const PtrVec<Type>& params)
+/**
+ * A type that represents an ordered sequence.
+ */
+class FunctionType : public Type
 {
-	auto qualifiedName(std::make_pair(name, params));
+public:
+	const std::string& name() const;
+	void PrettyPrint(Bytestream&, int indent = 0) const;
 
-	auto i = types.find(qualifiedName);
-	if (i != types.end())
-		return i->second.get();
+	const PtrVec<Type>& parameterTypes() const { return paramTypes; }
+	const Type& returnType() const { return retTy; }
 
-	Type *t = Type::Create(name, params);
-	types[qualifiedName].reset(t);
-	return t;
-}
+private:
+	static FunctionType* Create(const PtrVec<Type>& parameterTypes,
+	                            const Type& retTy);
 
-const Type* FabContext::nilType()
-{
-	static const Type *nil = Type::Create("nil", PtrVec<Type>());
-	return nil;
-}
+	FunctionType(const PtrVec<Type>& params, const Type& ret,
+		     const PtrVec<Type>& signature)
+		: Type("function", signature), paramTypes(params), retTy(ret)
+	{
+	}
 
-const FunctionType*
-FabContext::functionType(const PtrVec<Type>& argTypes, const Type& retType)
-{
-	return FunctionType::Create(argTypes, retType);
-}
+	const PtrVec<Type> paramTypes;
+	const Type& retTy;
+
+	friend class FabContext;
+};
+
+} // namespace fabrique
+
+#endif

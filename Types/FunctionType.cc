@@ -1,4 +1,4 @@
-/** @file FabContext.h    Declaration of @ref FabContext. */
+/** @file FunctionType.cc    Definition of @ref FunctionType. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -30,33 +30,37 @@
  */
 
 #include "Types/FunctionType.h"
-#include "FabContext.h"
+#include "Support/Bytestream.h"
+#include "Support/Join.h"
+
+#include <memory>
 
 using namespace fabrique;
-using std::string;
 
 
-const Type* FabContext::type(const string& name, const PtrVec<Type>& params)
+FunctionType*
+FunctionType::Create(const PtrVec<Type>& parameterTypes, const Type& retTy)
 {
-	auto qualifiedName(std::make_pair(name, params));
+	PtrVec<Type> signature(parameterTypes);
+	signature.push_back(&retTy);
 
-	auto i = types.find(qualifiedName);
-	if (i != types.end())
-		return i->second.get();
-
-	Type *t = Type::Create(name, params);
-	types[qualifiedName].reset(t);
-	return t;
+	return new FunctionType(parameterTypes, retTy, signature);
 }
 
-const Type* FabContext::nilType()
+
+const std::string& FunctionType::name() const
 {
-	static const Type *nil = Type::Create("nil", PtrVec<Type>());
-	return nil;
+	static std::string name("function");
+	return name;
 }
 
-const FunctionType*
-FabContext::functionType(const PtrVec<Type>& argTypes, const Type& retType)
+void FunctionType::PrettyPrint(Bytestream& out, int indent) const
 {
-	return FunctionType::Create(argTypes, retType);
+	out
+		<< Bytestream::Operator << "("
+		<< Join<Type>::csv(paramTypes)
+		<< Bytestream::Operator << ") => "
+		<< retTy
+		<< Bytestream::Reset
+		;
 }
