@@ -55,12 +55,19 @@ public:
 	size_t size() const;
 	const std::shared_ptr<Value>& operator [] (size_t) const;
 
+	//! List addition is concatenation.
+	virtual std::shared_ptr<Value> Add(std::shared_ptr<Value>&);
+	virtual std::shared_ptr<Value> PrefixWith(std::shared_ptr<Value>&);
+	virtual std::shared_ptr<Value> ScalarAdd(std::shared_ptr<Value>&);
+	virtual bool canScalarAdd(const Value&);
+
 	std::string str() const;
 
 	void PrettyPrint(Bytestream&, int indent = 0) const;
 
 private:
 	const SharedPtrVec<Value> v;
+	const Type& elementType;
 };
 
 } // namespace dag

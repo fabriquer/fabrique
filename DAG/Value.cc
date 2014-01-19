@@ -32,15 +32,37 @@
 #include "DAG/Value.h"
 #include "DAG/File.h"
 #include "DAG/Rule.h"
-
-#include <cassert>
+#include "Support/exceptions.h"
+#include "Types/Type.h"
 
 using namespace fabrique::dag;
 using std::string;
-using std::unique_ptr;
+using std::shared_ptr;
 
 
 Value::Value(const Type& t, const SourceRange& loc)
 	: ty(t), loc(loc)
 {
+}
+
+
+shared_ptr<Value> Value::Add(shared_ptr<Value>&)
+{
+	throw SemanticException(
+		"addition unsupported by " + ty.name(),
+		getSource());
+}
+
+shared_ptr<Value> Value::PrefixWith(shared_ptr<Value>&)
+{
+	throw SemanticException(
+		"prefix operation unsupported by " + ty.name(),
+		getSource());
+}
+
+shared_ptr<Value> Value::ScalarAdd(shared_ptr<Value>&)
+{
+	throw SemanticException(
+		"scalar addition unsupported by " + ty.name(),
+		getSource());
 }

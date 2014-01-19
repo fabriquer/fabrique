@@ -1,0 +1,10 @@
+#
+# RUN: fab --format=null --print-dag %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: list[int] integers = [ 5 6 7 8 9 ]
+integers = 0 :: [ 1 2 ] + [ 3 4 ] .+ 5;
+
+# CHECK: list[string] strings = [ 'hello' 'world' '!' ]
+strings = 'hello' :: [ 'world' ] + [ '!' ];

@@ -31,8 +31,10 @@
 
 #include "DAG/Primitive.h"
 #include "Support/Bytestream.h"
+#include "Support/exceptions.h"
 
 using namespace fabrique::dag;
+using std::shared_ptr;
 using std::string;
 
 
@@ -57,12 +59,39 @@ Integer::Integer(int i, const Type& t, SourceRange loc)
 
 string Integer::str() const { return std::to_string(value); }
 
+shared_ptr<Value> Integer::Add(shared_ptr<Value>& v)
+{
+	SourceRange loc = SourceRange::Over(this, v.get());
+
+	shared_ptr<Integer> other = std::dynamic_pointer_cast<Integer>(v);
+	if (not other)
+		throw SemanticException(
+			"integers can only add with integers", loc);
+
+	return shared_ptr<Value>(
+		new Integer(this->value + other->value, type(), loc));
+}
+
+
 String::String(string s, const Type& t, SourceRange loc)
 	: Primitive(t, loc), value(s)
 {
 }
 
 string String::str() const { return value; }
+
+shared_ptr<Value> String::Add(shared_ptr<Value>& v)
+{
+	SourceRange loc = SourceRange::Over(this, v.get());
+
+	shared_ptr<String> other = std::dynamic_pointer_cast<String>(v);
+	if (not other)
+		throw SemanticException(
+			"strings can only concatenate with strings", loc);
+
+	return shared_ptr<Value>(
+		new String(this->value + other->value, type(), loc));
+}
 
 void String::PrettyPrint(Bytestream& b, int indent) const
 {

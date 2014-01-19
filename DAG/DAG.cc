@@ -210,8 +210,51 @@ bool Flattener::Enter(const ast::Argument& arg)
 void Flattener::Leave(const ast::Argument&) {}
 
 
-bool Flattener::Enter(const ast::BinaryOperation&) { return false; }
-void Flattener::Leave(const ast::BinaryOperation&) {}
+bool Flattener::Enter(const ast::BinaryOperation& o)
+{
+	shared_ptr<Value> lhs = flatten(o.getLHS());
+	shared_ptr<Value> rhs = flatten(o.getRHS());
+
+	assert(lhs and rhs);
+
+	shared_ptr<Value> result;
+	switch (o.getOp())
+	{
+		case ast::BinaryOperation::Add:
+			result = lhs->Add(rhs);
+			break;
+
+		case ast::BinaryOperation::Prefix:
+			result = rhs->PrefixWith(lhs);
+			break;
+
+		case ast::BinaryOperation::ScalarAdd:
+			if (lhs->canScalarAdd(*rhs))
+				result = lhs->ScalarAdd(rhs);
+
+			else if (rhs->canScalarAdd(*lhs))
+				result = rhs->ScalarAdd(lhs);
+
+			else
+				throw SemanticException(
+					"invalid types for addition",
+					SourceRange::Over(lhs.get(), rhs.get())
+				);
+			break;
+
+		case ast::BinaryOperation::Invalid:
+			break;
+	}
+
+	assert(result);
+	currentValue.emplace(result);
+
+	return false;
+}
+
+void Flattener::Leave(const ast::BinaryOperation&)
+{
+}
 
 
 bool Flattener::Enter(const ast::BoolLiteral& b)

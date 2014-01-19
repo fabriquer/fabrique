@@ -76,6 +76,8 @@ public:
 	Integer(int, const Type&, SourceRange loc = SourceRange::None());
 	std::string str() const;
 
+	virtual std::shared_ptr<Value> Add(std::shared_ptr<Value>&);
+
 private:
 	int value;
 };
@@ -85,6 +87,8 @@ class String : public Primitive
 public:
 	String(std::string, const Type&, SourceRange loc = SourceRange::None());
 	std::string str() const;
+
+	virtual std::shared_ptr<Value> Add(std::shared_ptr<Value>&);
 
 	void PrettyPrint(Bytestream& b, int indent = 0) const;
 

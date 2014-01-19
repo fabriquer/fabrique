@@ -49,6 +49,26 @@ namespace dag {
 class Value : public HasSource, public Printable
 {
 public:
+	/**
+	 * Add this @ref Value to a following @ref Value.
+	 *
+	 * The implementation of addition is type-dependent: it might make
+	 * sense to add, concatenate or apply a logical AND.
+	 */
+	virtual std::shared_ptr<Value> Add(std::shared_ptr<Value>&);
+
+	//! Apply the prefix operation: prefix this value with another value.
+	virtual std::shared_ptr<Value> PrefixWith(std::shared_ptr<Value>&);
+
+	//! Add another @ref Value scalar-wise across this @ref Value.
+	virtual std::shared_ptr<Value> ScalarAdd(std::shared_ptr<Value>&);
+
+	/**
+	 * This @ref Value add @a v to itself in a scalar fashion.
+	 * For instance, [ 1 2 ] can add 3 to itself but not vice versa.
+	 */
+	virtual bool canScalarAdd(const Value& v) { return false; }
+
 	virtual const Type& type() const { return ty; }
 	virtual std::string str() const = 0;
 
