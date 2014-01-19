@@ -101,3 +101,11 @@ void BinaryOperation::Accept(Visitor& v) const
 
 	v.Leave(*this);
 }
+
+
+fabrique::Bytestream&
+fabrique::operator << (Bytestream& out, BinaryOperation::Operator op)
+{
+	out << BinaryOperation::OpStr(op);
+	return out;
+}

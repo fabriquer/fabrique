@@ -38,8 +38,10 @@
 #include <memory>
 
 namespace fabrique {
-namespace ast {
 
+class Bytestream;
+
+namespace ast {
 
 /**
  * An operation with two operands.
@@ -83,6 +85,9 @@ private:
 };
 
 } // namespace ast
+
+Bytestream& operator << (Bytestream&, enum ast::BinaryOperation::Operator);
+
 } // namespace fabrique
 
 #endif
