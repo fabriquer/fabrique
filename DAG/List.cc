@@ -74,11 +74,16 @@ string List::str() const
 
 void List::PrettyPrint(Bytestream& out, int indent) const
 {
-	out << Bytestream::Operator << "[ ";
+	out
+		<< Bytestream::Operator << "[ "
+		<< Bytestream::Reset
+		;
 
 	for (const shared_ptr<Value>& p : v)
 		out << *p << " ";
 
-	out << Bytestream::Operator << "]";
-
+	out
+		<< Bytestream::Operator << "]"
+		<< Bytestream::Reset
+		;
 }
