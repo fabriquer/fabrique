@@ -50,10 +50,12 @@ void ForeachExpr::PrettyPrint(Bytestream& out, int indent) const
 		<< *source
 		<< Bytestream::Operator << " as "
 		<< *loopParameter
-		<< " "
-		<< *body
-		<< Bytestream::Reset
+		<< "\n"
 		;
+
+	body->PrettyPrint(out, indent + 1);
+
+	out << Bytestream::Reset;
 }
 
 
