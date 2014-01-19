@@ -29,16 +29,7 @@
  * SUCH DAMAGE.
  */
 
-#include "AST/Action.h"
-#include "AST/Argument.h"
-#include "AST/Builtins.h"
-#include "AST/Call.h"
-#include "AST/FileList.h"
-#include "AST/Filename.h"
-#include "AST/List.h"
-#include "AST/Scope.h"
-#include "AST/SymbolReference.h"
-#include "AST/Value.h"
+#include "AST/ast.h"
 #include "AST/Visitor.h"
 
 #include "DAG/Build.h"

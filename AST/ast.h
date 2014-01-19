@@ -35,6 +35,7 @@
 #include "Action.h"
 #include "Argument.h"
 #include "BinaryOperation.h"
+#include "Builtins.h"
 #include "Call.h"
 #include "CompoundExpr.h"
 #include "Conditional.h"
@@ -45,6 +46,7 @@
 #include "Identifier.h"
 #include "List.h"
 #include "Parameter.h"
+#include "Scope.h"
 #include "SymbolReference.h"
 #include "Value.h"
 
