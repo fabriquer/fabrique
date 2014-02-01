@@ -270,7 +270,6 @@ void Flattener::Leave(const ast::BoolLiteral&) {}
 
 bool Flattener::Enter(const ast::Call& call)
 {
-	// TODO: proper function type, e.g. (int,string) => file
 	static const Type& buildType = *ctx.type("build");
 
 	const ast::SymbolReference& targetRef = call.target();
