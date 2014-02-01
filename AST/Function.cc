@@ -42,7 +42,7 @@ using namespace fabrique::ast;
 
 Function::Function(PtrVec<Parameter>& params, const FunctionType& ty,
          CompoundExpression *body, const SourceRange& loc)
-	: Expression(ty, loc), params(params), body(body)
+	: Expression(ty, loc), params(params), expr(body)
 {
 }
 
@@ -78,7 +78,7 @@ void Function::PrettyPrint(Bytestream& out, int indent) const
 		<< dynamic_cast<const FunctionType&>(getType()).returnType()
 		<< "\n";
 
-	body->PrettyPrint(out, indent);
+	expr->PrettyPrint(out, indent);
 
 	out << Bytestream::Reset;
 }
@@ -91,7 +91,7 @@ void Function::Accept(Visitor& v) const
 		for (auto *p : params)
 			p->Accept(v);
 
-		body->Accept(v);
+		expr->Accept(v);
 	}
 
 	v.Leave(*this);

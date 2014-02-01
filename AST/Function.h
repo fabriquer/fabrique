@@ -56,6 +56,9 @@ public:
 	         CompoundExpression *body, const SourceRange& loc);
 	~Function();
 
+	const PtrVec<Parameter>& parameters() const { return params; }
+	const CompoundExpression& body() const { return *expr; }
+
 	virtual bool isStatic() const { return false; }
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 
@@ -63,7 +66,7 @@ public:
 
 private:
 	PtrVec<Parameter> params;
-	std::unique_ptr<CompoundExpression> body;
+	std::unique_ptr<CompoundExpression> expr;
 };
 
 } // namespace ast
