@@ -32,9 +32,16 @@
 #include "AST/Call.h"
 #include "AST/Visitor.h"
 #include "Support/Bytestream.h"
+#include "Types/FunctionType.h"
 
 using namespace fabrique::ast;
 
+
+const fabrique::Type& Call::getType() const
+{
+	auto& fnType = dynamic_cast<const FunctionType&>(Expression::getType());
+	return fnType.returnType();
+}
 
 void Call::PrettyPrint(Bytestream& out, int indent) const
 {

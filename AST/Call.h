@@ -57,6 +57,7 @@ public:
 
 	~Call() { for (auto *a : args) delete a; }
 
+	virtual const Type& getType() const;
 	const SymbolReference& target() const { return *fn; }
 
 	const PtrVec<Argument>& arguments() const { return args; }

@@ -52,7 +52,7 @@ class Expression
 public:
 	virtual ~Expression() {}
 
-	const Type& getType() const { return ty; }
+	virtual const Type& getType() const { return ty; }
 	const SourceRange& getSource() const { return loc; }
 
 	/**
