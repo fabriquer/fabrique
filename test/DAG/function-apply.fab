@@ -1,0 +1,11 @@
+#
+# RUN: fab --format=null --print-dag %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK-NOT: increment =
+increment = function(x:int): int
+	x + 1;
+
+# CHECK: int incremented = 1
+incremented = increment(0);

@@ -1,0 +1,17 @@
+#
+# RUN: fab --format=null --print-dag %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# TODO: default arguments
+increment = function(x:int, increment:int): int
+	x + increment;
+
+# CHECK-DAG: int no_names = 2
+no_names = increment(1, 1);
+
+# CHECK-DAG: int all_names = 3
+all_names = increment(increment = 2, x = 1);
+
+# CHECK-DAG: int one_name = 4
+one_name = increment(2, increment = 2);

@@ -269,118 +269,189 @@ bool Flattener::Enter(const ast::BoolLiteral& b)
 void Flattener::Leave(const ast::BoolLiteral&) {}
 
 
-bool Flattener::Enter(const ast::Call& call)
+bool Flattener::Enter(const ast::Call& call) { return false; }
+void Flattener::Leave(const ast::Call& call)
 {
 	static const Type& buildType = *ctx.type("build");
 
 	const ast::SymbolReference& targetRef = call.target();
 	const string name = targetRef.getName().name();
-	shared_ptr<Value> target = getNamedValue(name);
+	const ast::Expression& target = targetRef.getValue();
+	shared_ptr<Value> targetValue = getNamedValue(name);
 
-	if (shared_ptr<Rule> rule = std::dynamic_pointer_cast<Rule>(target))
+	//
+	// Are we calling a function?
+	//
+	if (auto *fn = dynamic_cast<const ast::Function*>(&target))
 	{
-		shared_ptr<Value> in, out;
-		SharedPtrVec<Value> dependencies, extraOutputs;
-		ValueMap arguments;
+		//
+		// We evaluate the function with the given arguments by
+		// putting these names into the local scope and then
+		// entering the function's CompoundExpr.
+		//
+		scopes.push_back(ValueMap());
+		ValueMap& scope = *scopes.rbegin();
 
-		//
-		// Interpret the first two unnamed arguments as 'in' and 'out'.
-		//
-		for (const ast::Argument *arg : call)
+		StringMap<const ast::Parameter*> params;
+		std::vector<string> paramNames;
+		for (const ast::Parameter *p : fn->parameters())
 		{
-			shared_ptr<Value> value = flatten(*arg);
+			const string name(p->getName().name());
 
-			if (arg->hasName())
-			{
-				const std::string& name = arg->getName().name();
-
-				if (name == "in")
-					in = value;
-
-				else if (name == "out")
-					out = value;
-
-				else
-					arguments[name] = value;
-			}
-			else
-			{
-				if (not in)
-					in = value;
-
-				else if (not out)
-					out = value;
-			}
+			paramNames.push_back(name);
+			params[name] = p;
 		}
 
 		//
-		// Validate against The Rules:
-		//  1. there must be input
-		//  2. there must be output
-		//  3. all other arguments must match explicit parameters
+		// Check the arguments and their types.
 		//
-		if (not in)
-			throw SemanticException(
-				"use of action without input file(s)",
+		if (params.size() != call.arguments().size())
+			throw SyntaxError(
+				"expected " + std::to_string(params.size())
+				+ " arguments, got "
+				+ std::to_string(call.arguments().size()),
 				call.getSource());
 
-		if (not out)
-			throw SemanticException(
-				"use of action without output file(s)",
-				call.getSource());
-
-
-		const ast::Action& action =
-			dynamic_cast<const ast::Action&>(targetRef.getValue());
-
-		auto& params = action.parameters();
-
-		for (auto& i : arguments)
+		size_t unnamed = 0;
+		for (const ast::Argument *a : call.arguments())
 		{
-			const string name = i.first;
-			shared_ptr<dag::Value> arg = i.second;
+			string name = a->hasName()
+				? a->getName().name()
+				: paramNames[unnamed++];
 
-			auto j = params.find(name);
-			if (j == params.end())
-				throw SemanticException(
+			auto p = params.find(name);
+			if (p == params.end())
+				throw SyntaxError(
 					"no such parameter '" + name + "'",
-					arg->getSource());
+					a->getSource());
 
-			//
-			// Additionally, if the parameter is a file, add the
-			// argument to the dependency graph.
-			//
-			const ast::Parameter *p = j->second;
-			const Type& type = p->getType();
-			if (type.name() != "file")
-				continue;
+			const ast::Parameter *param = p->second;
+			assert(p->first == name);
 
-			if (type.typeParamCount() == 0)
+			if (not a->getType().isSubtype(param->getType()))
 				throw SemanticException(
-					"file missing [in] or [out] tag",
-					p->getSource());
+					"invalid argument type (expected '"
+					+ param->getType().str()
+					+ "', got '"
+					+ a->getType().str()
+					+ "'",
+					a->getSource());
 
-			if (type[0].name() == "in")
-				dependencies.push_back(arg);
-
-			else if (type[0].name() == "out")
-				extraOutputs.push_back(arg);
-
-			else
-				throw SemanticException(
-					"expected file[in|out]",
-					p->getSource());
+			scope[name] = flatten(*a);
 		}
 
-		currentValue.emplace(
-			Build::Create(rule, in, out,
-			              dependencies, extraOutputs,
-			              arguments, buildType, call.getSource()));
+		currentValue.emplace(flatten(fn->body()));
+		scopes.pop_back();
+
+		return;
 	}
 
-	return false;
+
+	//
+	// We can only call functions and build rules. If it's not the former,
+	// it must be a rule!
+	//
+	shared_ptr<Rule> rule = std::dynamic_pointer_cast<Rule>(targetValue);
+	assert(rule);
+
+	shared_ptr<Value> in, out;
+	SharedPtrVec<Value> dependencies, extraOutputs;
+	ValueMap arguments;
+
+	//
+	// Interpret the first two unnamed arguments as 'in' and 'out'.
+	//
+	for (const ast::Argument *arg : call)
+	{
+		shared_ptr<Value> value = flatten(*arg);
+
+		if (arg->hasName())
+		{
+			const std::string& name = arg->getName().name();
+
+			if (name == "in")
+				in = value;
+
+			else if (name == "out")
+				out = value;
+
+			else
+				arguments[name] = value;
+		}
+		else
+		{
+			if (not in)
+				in = value;
+
+			else if (not out)
+				out = value;
+		}
+	}
+
+	//
+	// Validate against The Rules:
+	//  1. there must be input
+	//  2. there must be output
+	//  3. all other arguments must match explicit parameters
+	//
+	if (not in)
+		throw SemanticException(
+			"use of action without input file(s)",
+			call.getSource());
+
+	if (not out)
+		throw SemanticException(
+			"use of action without output file(s)",
+			call.getSource());
+
+
+	const ast::Action& action =
+		dynamic_cast<const ast::Action&>(targetRef.getValue());
+
+	auto& params = action.parameters();
+
+	for (auto& i : arguments)
+	{
+		const string name = i.first;
+		shared_ptr<dag::Value> arg = i.second;
+
+		auto j = params.find(name);
+		if (j == params.end())
+			throw SemanticException(
+				"no such parameter '" + name + "'",
+				arg->getSource());
+
+		//
+		// Additionally, if the parameter is a file, add the
+		// argument to the dependency graph.
+		//
+		const ast::Parameter *p = j->second;
+		const Type& type = p->getType();
+		if (type.name() != "file")
+			continue;
+
+		if (type.typeParamCount() == 0)
+			throw SemanticException(
+				"file missing [in] or [out] tag",
+				p->getSource());
+
+		if (type[0].name() == "in")
+			dependencies.push_back(arg);
+
+		else if (type[0].name() == "out")
+			extraOutputs.push_back(arg);
+
+		else
+			throw SemanticException(
+				"expected file[in|out]",
+				p->getSource());
+	}
+
+	currentValue.emplace(
+		Build::Create(rule, in, out,
+		              dependencies, extraOutputs,
+		              arguments, buildType, call.getSource()));
 }
-void Flattener::Leave(const ast::Call&) {}
 
 
 bool Flattener::Enter(const ast::CompoundExpression& e)
@@ -391,6 +462,7 @@ bool Flattener::Enter(const ast::CompoundExpression& e)
 void Flattener::Leave(const ast::CompoundExpression& e)
 {
 	Leave(static_cast<const ast::Scope&>(e));
+	currentValue.emplace(flatten(e.result()));
 }
 
 
