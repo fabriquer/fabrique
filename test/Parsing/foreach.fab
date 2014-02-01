@@ -10,3 +10,14 @@
 foo = foreach [ 1 2 3 ] as x {
 	x
 };
+
+
+#
+# Also check the shorthand version:
+#
+
+# CHECK: bar:list[int] = foreach [ 1 2 3 ] as x
+# CHECK-NEXT: {
+# CHECK-NEXT:   x
+# CHECK-NEXT: };
+bar = foreach [ 1 2 3 ] as x x;
