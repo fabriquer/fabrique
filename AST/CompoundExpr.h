@@ -54,12 +54,14 @@ public:
 	CompoundExpression(PtrVec<Value>& values, Expression* result,
 	                   const SourceRange& loc)
 		: Expression(result->getType(), loc),
-		  values(values), result(result)
+		  values(values), res(result)
 	{
 		assert(result != NULL);
 	}
 
 	~CompoundExpression();
+
+	const Expression& result() const { return *res; }
 
 	virtual bool isStatic() const;
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
@@ -68,7 +70,7 @@ public:
 
 private:
 	PtrVec<Value> values;
-	std::unique_ptr<const Expression> result;
+	std::unique_ptr<const Expression> res;
 };
 
 } // namespace ast

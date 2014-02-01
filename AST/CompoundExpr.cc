@@ -50,7 +50,7 @@ bool CompoundExpression::isStatic() const
 		if (!v->isStatic())
 			return false;
 
-	return result->isStatic();
+	return res->isStatic();
 }
 
 
@@ -64,7 +64,7 @@ void CompoundExpression::PrettyPrint(Bytestream& out, int indent) const
 		v->PrettyPrint(out, indent + 1);
 
 	out
-		<< intabs << *result
+		<< intabs << *res
 		<< "\n" << Bytestream::Operator << tabs << "}"
 		<< Bytestream::Reset
 		;
@@ -78,7 +78,7 @@ void CompoundExpression::Accept(Visitor& v) const
 		for (auto *val : values)
 			val->Accept(v);
 
-		result->Accept(v);
+		res->Accept(v);
 	}
 
 	v.Leave(*this);
