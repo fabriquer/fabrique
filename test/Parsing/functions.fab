@@ -13,7 +13,7 @@
 foo = function(ints:list[int]): list[int]
 {
 	foreach ints as x {
-		x
+		x + 1
 	}
 };
 
