@@ -6,14 +6,14 @@
 # CHECK: src:file = file('Inputs/foo.c');
 src = file('Inputs/foo.c');
 
-# CHECK: cc:list[file] = action('cc -c $in -o $out');
+# CHECK: cc:(list[file]) => list[file] = action('cc -c $in -o $out');
 cc = action('cc -c $in -o $out');
 
-# CHECK: link:list[file] = action('cc $in -o $out');
+# CHECK: link:(list[file]) => list[file] = action('cc $in -o $out');
 link = action('cc $in -o $out');
 
-# CHECK: obj:list[file] = cc(src);
-obj = cc(src);
+# CHECK: obj:file = cc(src, file('foo.o'));
+obj = cc(src, file('foo.o'));
 
-# CHECK: bin:list[file] = link(obj);
-bin = link(obj);
+# CHECK: bin:file = link(obj, file('foo'));
+bin = link(obj, file('foo'));

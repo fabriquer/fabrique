@@ -34,6 +34,8 @@
 #include "Support/Bytestream.h"
 
 using namespace fabrique::ast;
+using fabrique::StringMap;
+using std::string;
 
 
 Action::Action(PtrVec<Argument>& args, StringMap<const Parameter*>& params,
@@ -42,6 +44,36 @@ Action::Action(PtrVec<Argument>& args, StringMap<const Parameter*>& params,
 {
 	for (auto& i : params)
 		assert(i.second != NULL);
+}
+
+
+StringMap<int> Action::NameArguments(const std::vector<string>& argNames) const
+{
+	StringMap<int> result;
+
+	for (size_t i = 0; i < argNames.size(); i++)
+	{
+		const string& name = argNames[i];
+
+		if (name == "")
+		{
+			if (result.find("in") == result.end())
+				result["in"] = i;
+
+			else if (result.find("out") == result.end())
+				result["out"] = i;
+
+			else
+				assert(false && "should already be checked");
+		}
+		else
+		{
+			assert(result.find(name) == result.end());
+			result[name] = i;
+		}
+	}
+
+	return result;
 }
 
 

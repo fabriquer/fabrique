@@ -49,15 +49,11 @@ namespace ast {
 class Call : public Expression
 {
 public:
-	Call(SymbolReference *fn, PtrVec<Argument>& args,
-	     const SourceRange& loc)
-		: Expression(fn->getType(), loc), fn(fn), args(args)
-	{
-	}
-
+	Call(SymbolReference *fn, PtrVec<Argument>&, const Type& resultType,
+	     const SourceRange&);
 	~Call() { for (auto *a : args) delete a; }
 
-	virtual const Type& getType() const;
+	virtual const Type& getType() const { return resultType; }
 	const SymbolReference& target() const { return *fn; }
 
 	const PtrVec<Argument>& arguments() const { return args; }
@@ -72,6 +68,7 @@ public:
 private:
 	std::unique_ptr<SymbolReference> fn;
 	PtrVec<Argument> args;
+	const Type& resultType;
 };
 
 } // namespace ast

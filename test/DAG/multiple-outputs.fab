@@ -3,9 +3,9 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK-DAG: rule lex = $LEX -c++ --header-file=$header --outfile=$out $in
+# CHECK-DAG: (list[file]) => list[file] lex = $LEX -c++ --header-file=$header --outfile=$out $in
 lex = action('$LEX -c++ --header-file=$header --outfile=$out $in'
               <- header:file[out]);
 
-# CHECK-DAG: build gen = lex { foo.yy => foo.c + foo.h }( header = foo.h )
+# CHECK-DAG: file gen = lex { foo.yy => foo.c + foo.h }( header = foo.h )
 gen = lex(file('foo.yy'), file('foo.c'), header = file('foo.h'));

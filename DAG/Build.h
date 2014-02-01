@@ -60,7 +60,7 @@ public:
 	                     SharedPtrVec<Value> dependencies,
 	                     SharedPtrVec<Value> extraInputs,
 	                     const ValueMap& arguments,
-	                     const Type&, const SourceRange src);
+	                     const SourceRange src);
 
 	virtual ~Build() {}
 
@@ -87,7 +87,8 @@ private:
 	      SharedPtrVec<File>& dependencies,
 	      SharedPtrVec<File>& extraOutputs,
 	      const ValueMap& arguments,
-	      const Type&, SourceRange src);
+	      const Type& t,
+	      SourceRange src);
 
 	static void appendFiles(std::shared_ptr<Value>& in,
 	                        SharedPtrVec<File>& out);

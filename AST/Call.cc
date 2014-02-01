@@ -37,10 +37,10 @@
 using namespace fabrique::ast;
 
 
-const fabrique::Type& Call::getType() const
+Call::Call(SymbolReference *fn, PtrVec<Argument>& args, const Type& ty,
+           const SourceRange& loc)
+	: Expression(fn->getType(), loc), fn(fn), args(args), resultType(ty)
 {
-	auto& fnType = dynamic_cast<const FunctionType&>(Expression::getType());
-	return fnType.returnType();
 }
 
 void Call::PrettyPrint(Bytestream& out, int indent) const

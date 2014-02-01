@@ -45,6 +45,7 @@
 #include "Support/Join.h"
 #include "Support/exceptions.h"
 
+#include "Types/FunctionType.h"
 #include "Types/Type.h"
 
 #include <deque>
@@ -62,7 +63,7 @@ class Flattener : public ast::Visitor
 {
 public:
 	Flattener(FabContext& ctx)
-		: ctx(ctx), stringTy(*ctx.type("string"))
+		: stringTy(*ctx.type("string"))
 	{
 	}
 
@@ -102,10 +103,6 @@ private:
 	shared_ptr<Value> getNamedValue(const std::string& name);
 
 	shared_ptr<Value> flatten(const ast::Expression&);
-
-
-	//! Object that owns types and other memory.
-	FabContext& ctx;
 
 	//! The type of generated strings.
 	const Type& stringTy;
@@ -163,8 +160,6 @@ ValueMap::const_iterator DAG::end() const { return values.end(); }
 
 bool Flattener::Enter(const ast::Action& a)
 {
-	// TODO: proper function type, e.g. (int,string) => file
-	static const Type& ruleType = *ctx.type("rule");
 	string command;
 	ValueMap arguments;
 
@@ -194,7 +189,7 @@ bool Flattener::Enter(const ast::Action& a)
 	}
 
 	currentValue.emplace(Rule::Create(currentValueName.top(),
-	                                  command, arguments, ruleType));
+	                                  command, arguments, a.getType()));
 
 	return false;
 }
@@ -272,8 +267,6 @@ void Flattener::Leave(const ast::BoolLiteral&) {}
 bool Flattener::Enter(const ast::Call& call) { return false; }
 void Flattener::Leave(const ast::Call& call)
 {
-	static const Type& buildType = *ctx.type("build");
-
 	const ast::SymbolReference& targetRef = call.target();
 	const string name = targetRef.getName().name();
 	const ast::Expression& target = targetRef.getValue();
@@ -450,7 +443,7 @@ void Flattener::Leave(const ast::Call& call)
 	currentValue.emplace(
 		Build::Create(rule, in, out,
 		              dependencies, extraOutputs,
-		              arguments, buildType, call.getSource()));
+		              arguments, call.getSource()));
 }
 
 

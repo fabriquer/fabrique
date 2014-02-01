@@ -31,6 +31,7 @@
 
 #include "Parsing/Lexer.h"
 #include "Parsing/Parser.h"
+#include "Types/FunctionType.h"
 #include "Types/Type.h"
 #include "FabContext.h"
 
@@ -171,7 +172,20 @@ Action* Parser::DefineAction(PtrVec<Argument>* args, SourceRange *start,
 		for (const Parameter *p : *params)
 			parameters[p->getName().name()] = p;
 
-	return new Action(*args, parameters, *ctx.fileListType(), loc);
+
+	auto i = parameters.find("in");
+	const Type& inType = i != parameters.end()
+		? i->second->getType()
+		: *ctx.fileListType();
+
+	i = parameters.find("out");
+	const Type& outType = i != parameters.end()
+		? i->second->getType()
+		: *ctx.fileListType();
+
+	const FunctionType& type = *ctx.functionType(inType, outType);
+
+	return new Action(*args, parameters, type, loc);
 }
 
 
@@ -219,7 +233,30 @@ Call* Parser::CreateCall(Identifier *name, PtrVec<Argument> *args)
 	if (fn == NULL)
 		return NULL;
 
-	return new Call(fn, *args, loc);
+	auto& fnType = dynamic_cast<const FunctionType&>(fn->getType());
+	const Type& returnType = fnType.returnType();
+
+	const Type *outType = NULL;
+	if (auto *action = dynamic_cast<const Action*>(&fn->getValue()))
+	{
+		std::vector<std::string> argNames;
+		for (const Argument *arg : *args)
+			argNames.push_back(
+				arg->hasName() ? arg->getName().name() : "");
+
+		StringMap<int> allArgNames = action->NameArguments(argNames);
+
+		if (allArgNames.find("out") == allArgNames.end())
+		{
+			ReportError("missing 'out' argument", loc);
+			return NULL;
+		}
+
+		outType = &(*args)[allArgNames["out"]]->getType();
+	}
+
+	const Type& resultType = outType ? *outType : returnType;
+	return new Call(fn, *args, resultType, loc);
 }
 
 

@@ -38,7 +38,7 @@
 #include "Support/Join.h"
 #include "Support/exceptions.h"
 
-#include "Types/Type.h"
+#include "Types/FunctionType.h"
 
 using namespace fabrique::dag;
 using std::shared_ptr;
@@ -48,8 +48,7 @@ using std::vector;
 Build* Build::Create(shared_ptr<Rule>& rule, shared_ptr<Value> in,
                      shared_ptr<Value> out, SharedPtrVec<Value> dependencies,
                      SharedPtrVec<Value> extraOutputs,
-                     const ValueMap& arguments, const Type& t,
-                     const SourceRange src)
+                     const ValueMap& arguments, const SourceRange src)
 {
 	SharedPtrVec<File> inputs;
 	appendFiles(in, inputs);
@@ -80,7 +79,7 @@ Build* Build::Create(shared_ptr<Rule>& rule, shared_ptr<Value> in,
 	}
 
 	return new Build(rule, inputs, outputs, depends, extraOut,
-	                 arguments, t, src);
+	                 arguments, out->type(), src);
 }
 
 

@@ -55,6 +55,28 @@ public:
 	const PtrVec<Argument>& arguments() const { return args; }
 	const StringMap<const Parameter*>& parameters() const { return params; }
 
+	/**
+	 * Name all of the arguments in @a in according to the rules for
+	 * positional and keyword arguments.
+	 *
+	 * For instance, given the action:
+	 * foo = action('$FOO $in $out --bar=$bar', bar = 'default_bar')
+	 *
+	 * and the call:
+	 * baz = foo(infile, bar = 'something', out = outfile)
+	 *
+	 * You could pass [ "", "bar", "out" ] to Action::NameArguments()
+	 * and receive in return:
+	 *
+	 * {
+	 *   "in": 0,
+	 *   "out": 2,
+	 *   "bar": 1,
+	 * }
+	 */
+	StringMap<int> NameArguments(const std::vector<std::string>& in) const;
+
+
 	virtual bool isStatic() const { return false; }
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 
