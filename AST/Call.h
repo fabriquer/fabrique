@@ -59,6 +59,7 @@ public:
 
 	const SymbolReference& target() const { return *fn; }
 
+	const PtrVec<Argument>& arguments() const { return args; }
 	PtrVec<Argument>::const_iterator begin() const { return args.begin(); }
 	PtrVec<Argument>::const_iterator end() const { return args.end(); }
 
