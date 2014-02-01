@@ -58,6 +58,19 @@ private:
 class ErrorReport;
 class SourceRange;
 
+//! A syntactic error is present in the Fabrique description.
+class SyntaxError : public std::exception, public Printable
+{
+public:
+	SyntaxError(const std::string& message, const SourceRange&);
+	virtual const char* what() const noexcept;
+
+	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
+
+private:
+	const ErrorReport *err;
+};
+
 //! A semantic error is present in the Fabrique description.
 class SemanticException : public std::exception, public Printable
 {

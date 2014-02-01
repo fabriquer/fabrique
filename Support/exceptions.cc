@@ -49,6 +49,23 @@ const char* DuplicateException::what() const noexcept
 
 
 
+SyntaxError::SyntaxError(const string& message,
+                                     const SourceRange& loc)
+	: err(ErrorReport::Create(message, loc))
+{
+}
+
+const char* SyntaxError::what() const noexcept
+{
+	return err->getMessage().c_str();
+}
+
+void SyntaxError::PrettyPrint(Bytestream& out, int indent) const
+{
+	err->PrettyPrint(out, indent);
+}
+
+
 SemanticException::SemanticException(const string& message,
                                      const SourceRange& loc)
 	: err(ErrorReport::Create(message, loc))
