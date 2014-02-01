@@ -55,6 +55,16 @@ const Type* FabContext::nilType()
 	return nil;
 }
 
+const Type* FabContext::fileType()
+{
+	return type("file");
+}
+
+const Type* FabContext::fileListType()
+{
+	return type("list", PtrVec<Type>(1, fileType()));
+}
+
 
 const FunctionType*
 FabContext::functionType(const Type& in, const Type& out)

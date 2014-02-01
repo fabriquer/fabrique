@@ -58,6 +58,12 @@ public:
 	//! The type of a typeless thing.
 	const Type* nilType();
 
+	//! A file in a build.
+	const Type* fileType();
+
+	//! A list of files (a pretty fundamental type!).
+	const Type* fileListType();
+
 	//! A function type for a simple (one in, one out) function.
 	const FunctionType* functionType(const Type& in, const Type& out);
 

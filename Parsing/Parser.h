@@ -183,9 +183,6 @@ public:
 
 
 private:
-	const Type* fileType();
-	const Type* fileListType();
-
 	const ErrorReport& ReportError(const std::string&, const SourceRange&);
 	const ErrorReport& ReportError(const std::string&, const HasSource&);
 

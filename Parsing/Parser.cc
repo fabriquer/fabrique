@@ -166,15 +166,12 @@ Action* Parser::DefineAction(PtrVec<Argument>* args, SourceRange *start,
 
 	SourceRange loc(start->begin, current.end);
 
-	const Type *fileType = getType("file");
-	const Type *fileListType = getType("list", PtrVec<Type>(1, fileType));
-
 	StringMap<const Parameter*> parameters;
 	if (params)
 		for (const Parameter *p : *params)
 			parameters[p->getName().name()] = p;
 
-	return new Action(*args, parameters, *fileListType, loc);
+	return new Action(*args, parameters, *ctx.fileListType(), loc);
 }
 
 
@@ -347,10 +344,10 @@ FileList* Parser::Files(PtrVec<Filename> *files, PtrVec<Argument> *args)
 	unique_ptr<PtrVec<Argument> > a(args);
 	static PtrVec<Argument> emptyArgs;
 
-	static const Type *ty = fileListType();
+	const Type& ty = *ctx.fileListType();
 	SourceRange loc(SourceRange::None());
 
-	return new FileList(*files, args ? *args : emptyArgs, *ty, loc);
+	return new FileList(*files, args ? *args : emptyArgs, ty, loc);
 }
 
 
@@ -503,20 +500,6 @@ StringLiteral* Parser::ParseString(const string& value)
 	SourceRange loc(begin, current.end);
 
 	return new StringLiteral(value, *getType("string"), loc);
-}
-
-
-const Type* Parser::fileType()
-{
-	static const Type *t = getType("file");
-	return t;
-}
-
-
-const Type* Parser::fileListType()
-{
-	static const Type *t = getType("list", PtrVec<Type>(1, fileType()));
-	return t;
 }
 
 
