@@ -48,11 +48,7 @@ class Primitive : public Value
 {
 public:
 	virtual std::string str() const = 0;
-
-	virtual void PrettyPrint(Bytestream& b, int indent = 0) const
-	{
-		b << Bytestream::Literal << str();
-	}
+	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 
 protected:
 	Primitive(const Type&, SourceRange);

@@ -43,6 +43,12 @@ Primitive::Primitive(const Type& t, SourceRange loc)
 {
 }
 
+void Primitive::PrettyPrint(Bytestream& b, int indent) const
+{
+	b << Bytestream::Literal << str() << Bytestream::Reset;
+}
+
+
 Boolean::Boolean(bool b, const Type& t, SourceRange loc)
 	: Primitive(t, loc), value(b)
 {
@@ -95,5 +101,5 @@ shared_ptr<Value> String::Add(shared_ptr<Value>& v)
 
 void String::PrettyPrint(Bytestream& b, int indent) const
 {
-	b << Bytestream::Literal << "'" << str() << "'";
+	b << Bytestream::Literal << "'" << str() << "'" << Bytestream::Reset;
 }
