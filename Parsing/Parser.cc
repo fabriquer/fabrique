@@ -231,7 +231,10 @@ Call* Parser::CreateCall(Identifier *name, PtrVec<Argument> *args)
 
 	auto *fn(Reference(n.release()));
 	if (fn == NULL)
+	{
+		ReportError("call to undefined function", loc);
 		return NULL;
+	}
 
 	auto& fnType = dynamic_cast<const FunctionType&>(fn->getType());
 	const Type& returnType = fnType.returnType();
