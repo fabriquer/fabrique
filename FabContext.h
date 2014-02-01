@@ -58,6 +58,9 @@ public:
 	//! The type of a typeless thing.
 	const Type* nilType();
 
+	//! A function type for a simple (one in, one out) function.
+	const FunctionType* functionType(const Type& in, const Type& out);
+
 	//! A function type, which incorporates the function's signature.
 	const FunctionType* functionType(const PtrVec<Type>& argumentTypes,
 	                                 const Type& returnType);

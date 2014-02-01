@@ -55,6 +55,16 @@ const Type* FabContext::nilType()
 	return nil;
 }
 
+
+const FunctionType*
+FabContext::functionType(const Type& in, const Type& out)
+{
+	PtrVec<Type> args;
+	args.push_back(&in);
+
+	return functionType(args, out);
+}
+
 const FunctionType*
 FabContext::functionType(const PtrVec<Type>& argTypes, const Type& retType)
 {
