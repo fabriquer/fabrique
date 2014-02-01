@@ -90,20 +90,30 @@ variables = {
 # Then describe the mechanics of how to generate a build file.
 import sys
 
-if not os.path.exists(args.builddir):
-	os.makedirs(args.builddir)
+builddir = os.path.realpath(args.builddir)
 
-if not os.path.isdir(args.builddir):
+if not os.path.exists(builddir):
+	os.makedirs(builddir)
+
+if not os.path.isdir(builddir):
 	sys.write("Build directory '%s' is not a directory" % args.builddir)
 	sys.exit(1)
 
-out = open(os.path.join(args.builddir, 'build.ninja'), 'w')
+out = open(os.path.join(builddir, 'build.ninja'), 'w')
 
 
 for var in variables.items():
 	out.write('%s = %s\n' % var)
 
 out.write('\n')
+
+test_output = os.path.join(builddir, 'test')
+if not os.path.isdir(builddir):
+	os.mkdir(test_output)
+
+lit_config = '-sv --param=output-dir=%s --output=%s' % (
+	test_output, os.path.join(test_output, 'report.txt'),
+)
 
 
 # Build rules: how we actually build things.
@@ -131,7 +141,7 @@ rules = {
 	},
 
 	'lit': {
-		'command': 'PATH=$path $lit -sv $in',
+		'command': 'PATH=$path $lit ' + lit_config + ' $in',
 		'description': 'Running unit tests',
 	},
 
@@ -157,7 +167,6 @@ for (name, variables) in rules.items():
 # Finally, build statements.
 #
 bootstrap = sys.argv[0]
-builddir = os.path.realpath(args.builddir)
 args = sys.argv[1:]
 
 # Rebuild the Ninja file:
