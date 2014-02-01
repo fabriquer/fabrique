@@ -33,6 +33,7 @@
 #define COMPOUND_EXPRESSION_H
 
 #include "Expression.h"
+#include "Scope.h"
 
 namespace fabrique {
 
@@ -47,7 +48,7 @@ class Value;
 /**
  * An expression that can contain values.
  */
-class CompoundExpression : public Expression
+class CompoundExpression : public Expression, public Scope
 {
 public:
 	CompoundExpression(PtrVec<Value>& values, Expression* result,

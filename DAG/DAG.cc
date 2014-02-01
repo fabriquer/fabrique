@@ -382,15 +382,14 @@ bool Flattener::Enter(const ast::Call& call)
 void Flattener::Leave(const ast::Call&) {}
 
 
-bool Flattener::Enter(const ast::CompoundExpression&)
+bool Flattener::Enter(const ast::CompoundExpression& e)
 {
-	scopes.push_back(ValueMap());
-	return true;
+	return Enter(static_cast<const ast::Scope&>(e));
 }
 
-void Flattener::Leave(const ast::CompoundExpression&)
+void Flattener::Leave(const ast::CompoundExpression& e)
 {
-	scopes.pop_back();
+	Leave(static_cast<const ast::Scope&>(e));
 }
 
 
