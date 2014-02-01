@@ -98,16 +98,17 @@ public:
 	ValueMap values;
 
 private:
+	//! Get a named value from the current scope or a parent scope.
+	shared_ptr<Value> getNamedValue(const std::string& name);
+
+	shared_ptr<Value> flatten(const ast::Expression&);
+
+
 	//! Object that owns types and other memory.
 	FabContext& ctx;
 
 	//! The type of generated strings.
 	const Type& stringTy;
-
-	//! Get a named value from the current scope or a parent scope.
-	shared_ptr<Value> getNamedValue(const std::string& name);
-
-	shared_ptr<Value> flatten(const ast::Expression&);
 
 	/** The name of the value we are currently processing. */
 	std::stack<string> currentValueName;
