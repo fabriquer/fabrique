@@ -40,26 +40,15 @@ using std::shared_ptr;
 using std::string;
 
 
-Primitive::Primitive(const Type& t, SourceRange loc)
-	: Value(t, loc)
-{
-}
-
-void Primitive::PrettyPrint(Bytestream& b, int indent) const
-{
-	b << Bytestream::Literal << str() << Bytestream::Reset;
-}
-
-
 Boolean::Boolean(bool b, const Type& t, SourceRange loc)
-	: Primitive(t, loc), value(b)
+	: Primitive(t, b, loc)
 {
 	// TODO: assert(t is a subtype of bool?)
 }
 
 shared_ptr<Value> Boolean::Negate(const SourceRange& loc) const
 {
-	return shared_ptr<Value>(new Boolean(not value, type(), loc));
+	return shared_ptr<Value>(new Boolean(not val, type(), loc));
 }
 
 shared_ptr<Value> Boolean::And(shared_ptr<Value>& v)
@@ -68,7 +57,7 @@ shared_ptr<Value> Boolean::And(shared_ptr<Value>& v)
 	assert(other);
 
 	return shared_ptr<Value>(
-		new Boolean(value and other->value,
+		new Boolean(val and other->val,
 			Type::GetSupertype(type(), other->type()),
 			SourceRange(*this, *other))
 	);
@@ -80,7 +69,7 @@ shared_ptr<Value> Boolean::Or(shared_ptr<Value>& v)
 	assert(other);
 
 	return shared_ptr<Value>(
-		new Boolean(value or other->value,
+		new Boolean(val or other->val,
 			Type::GetSupertype(type(), other->type()),
 			SourceRange(*this, *other))
 	);
@@ -92,21 +81,21 @@ shared_ptr<Value> Boolean::Xor(shared_ptr<Value>& v)
 	assert(other);
 
 	return shared_ptr<Value>(
-		new Boolean(value xor other->value,
+		new Boolean(val xor other->val,
 			Type::GetSupertype(type(), other->type()),
 			SourceRange(*this, *other))
 	);
 }
 
-string Boolean::str() const { return value ? "true" : "false"; }
+string Boolean::str() const { return val ? "true" : "false"; }
 
 
 Integer::Integer(int i, const Type& t, SourceRange loc)
-	: Primitive(t, loc), value(i)
+	: Primitive(t, i, loc)
 {
 }
 
-string Integer::str() const { return std::to_string(value); }
+string Integer::str() const { return std::to_string(val); }
 
 shared_ptr<Value> Integer::Add(shared_ptr<Value>& v)
 {
@@ -118,16 +107,16 @@ shared_ptr<Value> Integer::Add(shared_ptr<Value>& v)
 			"integers can only add with integers", loc);
 
 	return shared_ptr<Value>(
-		new Integer(this->value + other->value, type(), loc));
+		new Integer(this->val + other->val, type(), loc));
 }
 
 
 String::String(string s, const Type& t, SourceRange loc)
-	: Primitive(t, loc), value(s)
+	: Primitive(t, s, loc)
 {
 }
 
-string String::str() const { return value; }
+string String::str() const { return val; }
 
 shared_ptr<Value> String::Add(shared_ptr<Value>& v)
 {
@@ -139,7 +128,7 @@ shared_ptr<Value> String::Add(shared_ptr<Value>& v)
 			"strings can only concatenate with strings", loc);
 
 	return shared_ptr<Value>(
-		new String(this->value + other->value, type(), loc));
+		new String(this->val + other->val, type(), loc));
 }
 
 void String::PrettyPrint(Bytestream& b, int indent) const

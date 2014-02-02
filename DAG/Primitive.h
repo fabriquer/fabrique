@@ -44,19 +44,30 @@ namespace dag {
 
 
 //! The result of evaluating an expression.
+template<class T>
 class Primitive : public Value
 {
 public:
 	virtual std::string str() const = 0;
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
+	virtual T value() const { return val; }
+
+	virtual void PrettyPrint(Bytestream& b, int indent = 0) const
+	{
+		b << Bytestream::Literal << str() << Bytestream::Reset;
+	}
 
 protected:
-	Primitive(const Type&, SourceRange);
+	Primitive(const Type& t, const T& val, SourceRange loc)
+		: Value(t, loc), val(val)
+	{
+	}
+
+	const T val;
 };
 
 
 
-class Boolean : public Primitive
+class Boolean : public Primitive<bool>
 {
 public:
 	Boolean(bool, const Type&, SourceRange loc = SourceRange::None);
@@ -66,24 +77,18 @@ public:
 	virtual std::shared_ptr<Value> And(std::shared_ptr<Value>&);
 	virtual std::shared_ptr<Value> Or(std::shared_ptr<Value>&);
 	virtual std::shared_ptr<Value> Xor(std::shared_ptr<Value>&);
-
-private:
-	bool value;
 };
 
-class Integer : public Primitive
+class Integer : public Primitive<int>
 {
 public:
 	Integer(int, const Type&, SourceRange loc = SourceRange::None);
 	std::string str() const;
 
 	virtual std::shared_ptr<Value> Add(std::shared_ptr<Value>&);
-
-private:
-	int value;
 };
 
-class String : public Primitive
+class String : public Primitive<std::string>
 {
 public:
 	String(std::string, const Type&, SourceRange loc = SourceRange::None);
@@ -92,9 +97,6 @@ public:
 	virtual std::shared_ptr<Value> Add(std::shared_ptr<Value>&);
 
 	void PrettyPrint(Bytestream& b, int indent = 0) const;
-
-private:
-	std::string value;
 };
 
 } // namespace dag
