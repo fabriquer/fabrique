@@ -1,6 +1,6 @@
 /** @file Conditional.h    Declaration of @ref Conditional. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -53,13 +53,17 @@ public:
 	            UniqPtr<CompoundExpression>& elseResult,
 	            const Type& resultTy);
 
+	const Expression& condition() const { return *cond; }
+	const Expression& thenClause() const { return *thenExpr; }
+	const Expression& elseClause() const { return *elseExpr; }
+
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 	virtual void Accept(Visitor&) const;
 
 private:
-	const std::unique_ptr<Expression> condition;
-	const std::unique_ptr<CompoundExpression> thenResult;
-	const std::unique_ptr<CompoundExpression> elseResult;
+	const std::unique_ptr<Expression> cond;
+	const std::unique_ptr<CompoundExpression> thenExpr;
+	const std::unique_ptr<CompoundExpression> elseExpr;
 };
 
 } // namespace ast
