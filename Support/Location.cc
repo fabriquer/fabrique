@@ -75,7 +75,12 @@ SourceRange SourceRange::Over(const HasSource *begin, const HasSource *end)
 
 SourceRange SourceRange::Over(const HasSource& begin, const HasSource& end)
 {
-	return SourceRange(begin.getSource().begin, end.getSource().end);
+	return SourceRange::Over(begin.getSource(), end.getSource());
+}
+
+SourceRange SourceRange::Over(const SourceRange& begin, const SourceRange& end)
+{
+	return SourceRange(begin.begin, end.end);
 }
 
 
