@@ -40,7 +40,7 @@
 
 namespace fabrique {
 
-class ErrorReport : public Printable
+class ErrorReport : public HasSource, public Printable
 {
 public:
 	static ErrorReport*
@@ -51,6 +51,7 @@ public:
 	virtual ~ErrorReport() {}
 
 	const std::string& getMessage() const { return message; }
+	const SourceRange& getSource() const { return source; }
 	void PrettyPrint(Bytestream& out, int indent = 0) const;
 
 private:
