@@ -60,8 +60,7 @@ public:
 	static Operator Op(CStringRef);
 	static std::string OpStr(Operator);
 
-	static BinaryOperation* Create(Expression*, Operator, Expression*,
-	                               const Type& resultType);
+	static BinaryOperation* Create(Expression*, Operator, Expression*);
 
 	Operator getOp() const { return op; }
 	const Expression& getLHS() const { return *LHS; }

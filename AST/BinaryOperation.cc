@@ -32,17 +32,51 @@
 #include "AST/BinaryOperation.h"
 #include "AST/Visitor.h"
 #include "Support/Bytestream.h"
+#include "Support/exceptions.h"
+#include "Types/Type.h"
 
 using namespace fabrique::ast;
 
 
 BinaryOperation* BinaryOperation::Create(Expression *lhs,
                                          Operator op,
-                                         Expression *rhs,
-                                         const Type &resultTy)
+                                         Expression *rhs)
 {
-	return new BinaryOperation(lhs, op, rhs, resultTy,
-	                           SourceRange::Over(lhs, rhs));
+	assert(lhs);
+	assert(rhs);
+
+	SourceRange loc = SourceRange::Over(lhs, rhs);
+	const Type &lt = lhs->getType(), &rt = rhs->getType();
+	const Type *resultType = NULL;
+
+	switch (op)
+	{
+		case Add:
+			if (lt.isSubtype(rt) or rt.isSubtype(lt))
+				resultType = &Type::GetSupertype(lt, rt);
+			break;
+
+		case Prefix:
+			if (rt.isListOf(lt))
+				resultType = &rt;
+			break;
+
+		case ScalarAdd:
+			if (lt.isListOf(rt))
+				resultType = &lt;
+
+			else if (rt.isListOf(lt))
+				resultType = &rt;
+			break;
+
+		case Invalid:
+			break;
+	}
+
+	if (not resultType)
+		throw SemanticException("incompatible types", loc);
+
+	return new BinaryOperation(lhs, op, rhs, *resultType, loc);
 }
 
 BinaryOperation::Operator BinaryOperation::Op(CStringRef o)

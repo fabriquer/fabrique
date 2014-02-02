@@ -32,6 +32,7 @@
 #ifndef PARSER_H
 #define PARSER_H
 
+#include "AST/BinaryOperation.h"
 #include "AST/Scope.h"
 #include "AST/ast.h"
 #include "Support/ErrorReport.h"
@@ -154,11 +155,9 @@ public:
 	/** Create a list of files, which may have shared arguments. */
 	FileList* Files(PtrVec<Filename>*, PtrVec<Argument> *args = NULL);
 
+	BinaryOperation* BinaryOp(BinaryOperation::Operator,
+	                          Expression*, Expression*);
 
-	// binary operations
-	BinaryOperation* Add(Expression*, Expression*);
-	BinaryOperation* Prefix(Expression*, Expression*);
-	BinaryOperation* ScalarAdd(Expression*, Expression*);
 
 	//! Parse an @ref Argument to a @ref Function, build @ref Action, etc.
 	Argument* Arg(Expression *e, Identifier *name = NULL);

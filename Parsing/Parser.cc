@@ -33,6 +33,8 @@
 #include "Parsing/Parser.h"
 #include "Types/FunctionType.h"
 #include "Types/Type.h"
+#include "Support/exceptions.h"
+
 #include "FabContext.h"
 
 using namespace fabrique::ast;
@@ -391,69 +393,18 @@ FileList* Parser::Files(PtrVec<Filename> *files, PtrVec<Argument> *args)
 }
 
 
-BinaryOperation* Parser::Add(Expression *lhs, Expression *rhs)
+BinaryOperation* Parser::BinaryOp(BinaryOperation::Operator op,
+                                  Expression *lhs, Expression *rhs)
 {
 	if (lhs == NULL or rhs == NULL)
 		return NULL;
 
-	const Type &lt = lhs->getType(), &rt = rhs->getType();
-	if (!lt.isSubtype(rt) and !rt.isSubtype(lt))
+	try { return BinaryOperation::Create(lhs, op, rhs); }
+	catch (fabrique::SourceCodeException& e)
 	{
-		ReportError("incompatible types (" + lt.str() + ", "
-		             + rt.str() + ")", SourceRange::Over(lhs, rhs));
+		ReportError(e.message(), e.getSource());
 		return NULL;
 	}
-
-	return BinaryOperation::Create(lhs, BinaryOperation::Add, rhs,
-	                               Type::GetSupertype(lt, rt));
-}
-
-
-BinaryOperation* Parser::Prefix(Expression *lhs, Expression *rhs)
-{
-	if (lhs == NULL or rhs == NULL)
-		return NULL;
-
-	const Type &lt = lhs->getType(), &rt = rhs->getType();
-	if (!rt.isListOf(lt))
-	{
-		ReportError("incompatible types", SourceRange::Over(lhs, rhs));
-		return NULL;
-	}
-
-	return BinaryOperation::Create(lhs, BinaryOperation::Prefix, rhs, rt);
-}
-
-
-BinaryOperation* Parser::ScalarAdd(Expression *lhs, Expression *rhs)
-{
-	if (lhs == NULL or rhs == NULL)
-	return NULL;
-
-	const Expression *lst, *element;
-
-	const Type &lt = lhs->getType(), &rt = rhs->getType();
-	if (lt.isListOf(rt))
-	{
-		lst = lhs;
-		element = rhs;
-	}
-	else
-	{
-		lst = rhs;
-		element = lhs;
-	}
-
-	// Are we trying to do .+ on unrelated (or non-list) types?
-	if (!lst->getType().isListOf(element->getType()))
-	{
-		ReportError("incompatible types", SourceRange::Over(lhs, rhs));
-		return NULL;
-	}
-
-
-	return BinaryOperation::Create(lhs, BinaryOperation::ScalarAdd, rhs,
-	                               lst->getType());
 }
 
 
