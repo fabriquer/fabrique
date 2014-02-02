@@ -1,6 +1,6 @@
 /** @file Primitive.cc    Definition of @ref Primitive. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -32,8 +32,10 @@
 #include "DAG/Primitive.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
+#include "Types/Type.h"
 
 using namespace fabrique::dag;
+using std::dynamic_pointer_cast;
 using std::shared_ptr;
 using std::string;
 
@@ -53,6 +55,42 @@ Boolean::Boolean(bool b, const Type& t, SourceRange loc)
 	: Primitive(t, loc), value(b)
 {
 	// TODO: assert(t is a subtype of bool?)
+}
+
+shared_ptr<Value> Boolean::And(shared_ptr<Value>& v)
+{
+	auto other = dynamic_pointer_cast<Boolean>(v);
+	assert(other);
+
+	return shared_ptr<Value>(
+		new Boolean(value and other->value,
+			Type::GetSupertype(type(), other->type()),
+			SourceRange::Over(*this, *other))
+	);
+}
+
+shared_ptr<Value> Boolean::Or(shared_ptr<Value>& v)
+{
+	auto other = dynamic_pointer_cast<Boolean>(v);
+	assert(other);
+
+	return shared_ptr<Value>(
+		new Boolean(value or other->value,
+			Type::GetSupertype(type(), other->type()),
+			SourceRange::Over(*this, *other))
+	);
+}
+
+shared_ptr<Value> Boolean::Xor(shared_ptr<Value>& v)
+{
+	auto other = dynamic_pointer_cast<Boolean>(v);
+	assert(other);
+
+	return shared_ptr<Value>(
+		new Boolean(value xor other->value,
+			Type::GetSupertype(type(), other->type()),
+			SourceRange::Over(*this, *other))
+	);
 }
 
 string Boolean::str() const { return value ? "true" : "false"; }

@@ -1,0 +1,19 @@
+#
+# RUN: fab --parse-only --print-ast %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: foo:bool = true;
+foo = true;
+
+# TODO: CCCCCCCHECK: bar:bool = not foo;
+bar = false;#not foo;
+
+# CHECK: baz:bool = foo or bar;
+baz = foo or bar;
+
+# CHECK: wibble:bool = foo and bar;
+wibble = foo and bar;
+
+# CHECK: wobble:bool = foo xor bar;
+wobble = foo xor bar;

@@ -1,6 +1,6 @@
 /** @file BinaryOperation.cc    Definition of @ref BinaryOperation. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -69,6 +69,13 @@ BinaryOperation* BinaryOperation::Create(Expression *lhs,
 				resultType = &rt;
 			break;
 
+		case And:
+		case Or:
+		case Xor:
+			if (lt == rt)
+				resultType = &lt;
+			break;
+
 		case Invalid:
 			break;
 	}
@@ -100,6 +107,9 @@ std::string BinaryOperation::OpStr(Operator op)
 		case Add:               return "+";
 		case Prefix:            return "::";
 		case ScalarAdd:         return ".+";
+		case And:               return "and";
+		case Or:                return "or";
+		case Xor:               return "xor";
 		case Invalid:           assert(false && "op == Invalid");
 	}
 

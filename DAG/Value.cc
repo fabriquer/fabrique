@@ -1,6 +1,6 @@
 /** @file Value.cc    Definition of @ref Value. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -64,5 +64,26 @@ shared_ptr<Value> Value::ScalarAdd(shared_ptr<Value>&)
 {
 	throw SemanticException(
 		"scalar addition unsupported by " + ty.name(),
+		getSource());
+}
+
+shared_ptr<Value> Value::And(shared_ptr<Value>&)
+{
+	throw SemanticException(
+		"logial AND unsupported by " + ty.name(),
+		getSource());
+}
+
+shared_ptr<Value> Value::Or(shared_ptr<Value>&)
+{
+	throw SemanticException(
+		"logial OR unsupported by " + ty.name(),
+		getSource());
+}
+
+shared_ptr<Value> Value::Xor(shared_ptr<Value>&)
+{
+	throw SemanticException(
+		"logial XOR unsupported by " + ty.name(),
 		getSource());
 }

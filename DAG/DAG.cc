@@ -238,6 +238,18 @@ bool Flattener::Enter(const ast::BinaryOperation& o)
 				);
 			break;
 
+		case ast::BinaryOperation::And:
+			result = lhs->And(rhs);
+			break;
+
+		case ast::BinaryOperation::Or:
+			result = lhs->Or(rhs);
+			break;
+
+		case ast::BinaryOperation::Xor:
+			result = lhs->Xor(rhs);
+			break;
+
 		case ast::BinaryOperation::Invalid:
 			break;
 	}

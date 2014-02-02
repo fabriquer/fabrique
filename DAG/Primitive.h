@@ -1,6 +1,6 @@
 /** @file Primitive.h    Declaration of @ref Primitive. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -61,6 +61,10 @@ class Boolean : public Primitive
 public:
 	Boolean(bool, const Type&, SourceRange loc = SourceRange::None());
 	std::string str() const;
+
+	virtual std::shared_ptr<Value> And(std::shared_ptr<Value>&);
+	virtual std::shared_ptr<Value> Or(std::shared_ptr<Value>&);
+	virtual std::shared_ptr<Value> Xor(std::shared_ptr<Value>&);
 
 private:
 	bool value;

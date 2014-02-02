@@ -1,6 +1,6 @@
 /** @file Value.h    Declaration of @ref Value. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -62,6 +62,15 @@ public:
 
 	//! Add another @ref Value scalar-wise across this @ref Value.
 	virtual std::shared_ptr<Value> ScalarAdd(std::shared_ptr<Value>&);
+
+	/** Logical and. */
+	virtual std::shared_ptr<Value> And(std::shared_ptr<Value>&);
+
+	/** Logical or. */
+	virtual std::shared_ptr<Value> Or(std::shared_ptr<Value>&);
+
+	/** Logical xor. */
+	virtual std::shared_ptr<Value> Xor(std::shared_ptr<Value>&);
 
 	/**
 	 * This @ref Value add @a v to itself in a scalar fashion.

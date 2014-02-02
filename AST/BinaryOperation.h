@@ -1,6 +1,6 @@
 /** @file BinaryOperation.h    Declaration of @ref BinaryOperation. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -55,6 +55,11 @@ public:
 		Prefix,
 		ScalarAdd,
 		Invalid,
+
+		// logical operators:
+		And,
+		Or,
+		Xor,
 	};
 
 	static Operator Op(CStringRef);

@@ -86,6 +86,7 @@ void Append(PtrVec<T>*& target, PtrVec<T>* source, const T *nextElement)
 %token ADD PREFIX SCALAR_ADD
 %token STRING_LITERAL INT_LITERAL
 
+%left AND OR XOR
 %left ADD SCALAR_ADD
 %right PREFIX
 
@@ -135,6 +136,15 @@ binaryOperation:
 
 	| expr SCALAR_ADD expr	{ $$.expr = p->BinaryOp(
 		ast::BinaryOperation::ScalarAdd, $1.expr, $3.expr); }
+
+	| expr AND expr		{ $$.expr = p->BinaryOp(
+		ast::BinaryOperation::And, $1.expr, $3.expr); }
+
+	| expr OR expr		{ $$.expr = p->BinaryOp(
+		ast::BinaryOperation::Or, $1.expr, $3.expr); }
+
+	| expr XOR expr		{ $$.expr = p->BinaryOp(
+		ast::BinaryOperation::Xor, $1.expr, $3.expr); }
 	;
 
 literal:
