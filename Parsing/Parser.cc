@@ -393,6 +393,12 @@ FileList* Parser::Files(PtrVec<Filename> *files, PtrVec<Argument> *args)
 }
 
 
+UnaryOperation* Parser::UnaryOp(UnaryOperation::Operator op, Expression* e)
+{
+	return UnaryOperation::Create(op, savedLoc, e);
+}
+
+
 BinaryOperation* Parser::BinaryOp(BinaryOperation::Operator op,
                                   Expression *lhs, Expression *rhs)
 {

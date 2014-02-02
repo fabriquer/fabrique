@@ -7,7 +7,7 @@
 foo = true;
 
 # CHECK-DAG: bool bar = false
-bar = false;#not foo;
+bar = not foo;
 
 # CHECK-DAG: bool baz = true
 baz = foo or bar;

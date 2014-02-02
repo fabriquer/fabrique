@@ -82,6 +82,7 @@ files			setRange(yylval);		return FILES;
 file			setRange(yylval);		return FILE_TOKEN;
 function		setRange(yylval);		return FUNCTION;
 return			setRange(yylval);		return RETURN;
+not			setRange(yylval);		return NOT;
 and			setRange(yylval);		return AND;
 or			setRange(yylval);		return OR;
 xor			setRange(yylval);		return XOR;

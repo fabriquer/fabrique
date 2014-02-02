@@ -34,6 +34,7 @@
 
 #include "AST/BinaryOperation.h"
 #include "AST/Scope.h"
+#include "AST/UnaryOperation.h"
 #include "AST/ast.h"
 #include "Support/ErrorReport.h"
 
@@ -154,6 +155,8 @@ public:
 
 	/** Create a list of files, which may have shared arguments. */
 	FileList* Files(PtrVec<Filename>*, PtrVec<Argument> *args = NULL);
+
+	UnaryOperation* UnaryOp(UnaryOperation::Operator, Expression*);
 
 	BinaryOperation* BinaryOp(BinaryOperation::Operator,
 	                          Expression*, Expression*);

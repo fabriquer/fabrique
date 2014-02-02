@@ -70,8 +70,6 @@ void Append(PtrVec<T>*& target, PtrVec<T>* source, const T *nextElement)
 	const fabrique::ast::Filename *file;
 	fabrique::PtrVec<fabrique::ast::Filename> *files;
 
-	fabrique::ast::BinaryOperation::Operator op;
-
 	fabrique::ast::Value *val;
 	fabrique::PtrVec<fabrique::ast::Value> *values;
 };
@@ -83,6 +81,7 @@ void Append(PtrVec<T>*& target, PtrVec<T>* source, const T *nextElement)
 %token OPERATOR
 %token INPUT
 %token TRUE FALSE
+%token NOT
 %token STRING_LITERAL INT_LITERAL
 
 %left AND OR XOR
@@ -124,6 +123,7 @@ expression:
 	| identifier		{ $$.expr = p->Reference($1.id); }
 	| '(' expr ')'		{ $$.expr = $2.expr; }
 	| '[' exprlist ']'	{ $$.expr = p->ListOf($2.exprs); }
+	| unaryOperation
 	;
 
 binaryOperation:
@@ -144,6 +144,16 @@ binaryOperation:
 
 	| expr XOR expr		{ $$.expr = p->BinaryOp(
 		ast::BinaryOperation::Xor, $1.expr, $3.expr); }
+	;
+
+unaryOperation:
+	not expr		{
+		$$.expr = p->UnaryOp(ast::UnaryOperation::Negate, $2.expr);
+	}
+	;
+
+not:
+	NOT			{ p->SaveLoc(); }
 	;
 
 literal:

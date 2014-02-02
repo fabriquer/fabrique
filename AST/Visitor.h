@@ -68,6 +68,7 @@ public:
 	VISIT(StringLiteral)
 	VISIT(SymbolReference)
 	VISIT(Type)
+	VISIT(UnaryOperation)
 	VISIT(Value)
 };
 

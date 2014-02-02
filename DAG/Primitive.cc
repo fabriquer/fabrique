@@ -57,6 +57,11 @@ Boolean::Boolean(bool b, const Type& t, SourceRange loc)
 	// TODO: assert(t is a subtype of bool?)
 }
 
+shared_ptr<Value> Boolean::Negate(const SourceRange& loc) const
+{
+	return shared_ptr<Value>(new Boolean(not value, type(), loc));
+}
+
 shared_ptr<Value> Boolean::And(shared_ptr<Value>& v)
 {
 	auto other = dynamic_pointer_cast<Boolean>(v);

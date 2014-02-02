@@ -49,6 +49,9 @@ namespace dag {
 class Value : public HasSource, public Printable
 {
 public:
+	//! Unary 'not' operator.
+	virtual std::shared_ptr<Value> Negate(const SourceRange& loc) const;
+
 	/**
 	 * Add this @ref Value to a following @ref Value.
 	 *

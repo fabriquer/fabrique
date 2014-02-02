@@ -87,6 +87,7 @@ public:
 	VISIT(ast::Scope)
 	VISIT(ast::StringLiteral)
 	VISIT(ast::SymbolReference)
+	VISIT(ast::UnaryOperation)
 	VISIT(ast::Value)
 
 	//! The components of the current scope's fully-qualified name.
@@ -628,6 +629,31 @@ bool Flattener::Enter(const ast::SymbolReference& r)
 }
 
 void Flattener::Leave(const ast::SymbolReference&) {}
+
+
+bool Flattener::Enter(const ast::UnaryOperation& o)
+{
+	shared_ptr<Value> subexpr = flatten(o.getSubExpr());
+	assert(subexpr);
+
+	shared_ptr<Value> result;
+	switch (o.getOp())
+	{
+		case ast::UnaryOperation::Negate:
+			result = subexpr->Negate(o.getSource());
+			break;
+
+		case ast::UnaryOperation::Invalid:
+			break;
+	}
+
+	assert(result);
+	currentValue.emplace(result);
+
+	return false;
+}
+
+void Flattener::Leave(const ast::UnaryOperation&) {}
 
 
 bool Flattener::Enter(const ast::Value& v)

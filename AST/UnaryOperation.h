@@ -1,6 +1,6 @@
-/** @file ast.h    Meta-include file for all AST node types. */
+/** @file UnaryOperation.h    Declaration of @ref UnaryOperation. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,34 +29,58 @@
  * SUCH DAMAGE.
  */
 
-#ifndef AST_FORWARD_DECLS_H
-#define AST_FORWARD_DECLS_H
+#ifndef UNARY_OPERATION_H
+#define UNARY_OPERATION_H
+
+#include "ADT/CStringRef.h"
+#include "AST/Expression.h"
+
+#include <memory>
 
 namespace fabrique {
+
+class Bytestream;
+
 namespace ast {
 
-class Action;
-class Argument;
-class BinaryOperation;
-class Call;
-class CompoundExpression;
-class Conditional;
-class Filename;
-class FileList;
-class ForeachExpr;
-class Function;
-class Identifier;
-class List;
-class Parameter;
-class Scope;
-class SymbolReference;
-class UnaryOperation;
-class Value;
+/**
+ * An operation with two operands.
+ */
+class UnaryOperation : public Expression
+{
+public:
+	enum Operator
+	{
+		Negate,
+		Invalid,
+	};
+
+	static Operator Op(CStringRef);
+	static std::string OpStr(Operator);
+
+	static UnaryOperation* Create(Operator, const SourceRange& opLoc,
+	                              Expression*);
+
+	Operator getOp() const { return op; }
+	const Expression& getSubExpr() const { return *subexpr; }
+
+	virtual bool isStatic() const;
+	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
+
+	virtual void Accept(Visitor&) const;
+
+private:
+	UnaryOperation(Expression *e, enum Operator op,
+	               const Type& ty, const SourceRange& loc);
+
+	const std::unique_ptr<Expression> subexpr;
+	const Operator op;
+};
 
 } // namespace ast
-} // namespace fabrique
 
-// our use of typedefs means we can't actually forward-declare literals.
-#include "AST/literals.h"
+Bytestream& operator << (Bytestream&, enum ast::UnaryOperation::Operator);
+
+} // namespace fabrique
 
 #endif

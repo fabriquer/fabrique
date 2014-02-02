@@ -6,8 +6,8 @@
 # CHECK: foo:bool = true;
 foo = true;
 
-# TODO: CCCCCCCHECK: bar:bool = not foo;
-bar = false;#not foo;
+# CHECK: bar:bool = not foo;
+bar = not foo;
 
 # CHECK: baz:bool = foo or bar;
 baz = foo or bar;

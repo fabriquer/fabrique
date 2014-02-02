@@ -18,7 +18,7 @@ cxx_srcs = {
 		'CompoundExpr', 'Conditional',
 		'Filename', 'FileList', 'Foreach', 'Function', 'Identifier',
 		'List', 'Parameter', 'Scope', 'SymbolReference',
-		'Value',
+		'UnaryOperation', 'Value',
 		'literals',
 	),
 	'Backend/': (

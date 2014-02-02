@@ -1,6 +1,6 @@
-/** @file Primitive.h    Declaration of @ref Primitive. */
+/** @file UnaryOperation.cc    Definition of @ref UnaryOperation. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,75 +29,85 @@
  * SUCH DAMAGE.
  */
 
-#ifndef PRIMITIVE_H
-#define PRIMITIVE_H
-
-#include "DAG/Value.h"
+#include "AST/UnaryOperation.h"
+#include "AST/Visitor.h"
 #include "Support/Bytestream.h"
 #include "Support/Location.h"
-#include "Support/Printable.h"
+#include "Support/exceptions.h"
+#include "Types/Type.h"
 
-#include <string>
-
-namespace fabrique {
-namespace dag {
+using namespace fabrique::ast;
 
 
-//! The result of evaluating an expression.
-class Primitive : public Value
+UnaryOperation* UnaryOperation::Create(Operator op, const SourceRange& opLoc,
+                                       Expression *e)
 {
-public:
-	virtual std::string str() const = 0;
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
+	assert(e);
 
-protected:
-	Primitive(const Type&, SourceRange);
-};
+	SourceRange loc = SourceRange::Over(opLoc, e->getSource());
+	return new UnaryOperation(e, op, e->getType(), loc);
+}
 
-
-
-class Boolean : public Primitive
+UnaryOperation::UnaryOperation(Expression *e, enum Operator op,
+                               const Type& ty, const SourceRange& loc)
+	: Expression(ty, loc), subexpr(e), op(op)
 {
-public:
-	Boolean(bool, const Type&, SourceRange loc = SourceRange::None());
-	std::string str() const;
+}
 
-	virtual std::shared_ptr<Value> Negate(const SourceRange& loc) const;
-	virtual std::shared_ptr<Value> And(std::shared_ptr<Value>&);
-	virtual std::shared_ptr<Value> Or(std::shared_ptr<Value>&);
-	virtual std::shared_ptr<Value> Xor(std::shared_ptr<Value>&);
 
-private:
-	bool value;
-};
-
-class Integer : public Primitive
+UnaryOperation::Operator UnaryOperation::Op(CStringRef o)
 {
-public:
-	Integer(int, const Type&, SourceRange loc = SourceRange::None());
-	std::string str() const;
+	Operator op;
 
-	virtual std::shared_ptr<Value> Add(std::shared_ptr<Value>&);
+	if (o == "not") op = Negate;
+	else op = Invalid;
 
-private:
-	int value;
-};
+	assert(o == OpStr(op));
 
-class String : public Primitive
+	return op;
+}
+
+std::string UnaryOperation::OpStr(Operator op)
 {
-public:
-	String(std::string, const Type&, SourceRange loc = SourceRange::None());
-	std::string str() const;
+	switch (op)
+	{
+		case Negate:            return "not";
+		case Invalid:           assert(false && "op == Invalid");
+	}
 
-	virtual std::shared_ptr<Value> Add(std::shared_ptr<Value>&);
+	assert(false && "unhandled Operator type");
+	return "";
+}
 
-	void PrettyPrint(Bytestream& b, int indent = 0) const;
+bool UnaryOperation::isStatic() const
+{
+	return subexpr->isStatic();
+}
 
-private:
-	std::string value;
-};
 
-} // namespace dag
-} // namespace fabrique
+void UnaryOperation::PrettyPrint(Bytestream& out, int indent) const
+{
+	out
+		<< Bytestream::Operator << OpStr(op)
+		<< Bytestream::Reset << " "
+		;
 
-#endif // !PRIMITIVE_H
+	subexpr->PrettyPrint(out, indent);
+}
+
+
+void UnaryOperation::Accept(Visitor& v) const
+{
+	if (v.Enter(*this))
+		subexpr->Accept(v);
+
+	v.Leave(*this);
+}
+
+
+fabrique::Bytestream&
+fabrique::operator << (Bytestream& out, UnaryOperation::Operator op)
+{
+	out << UnaryOperation::OpStr(op);
+	return out;
+}

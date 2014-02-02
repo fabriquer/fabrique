@@ -48,6 +48,7 @@
 #include "Parameter.h"
 #include "Scope.h"
 #include "SymbolReference.h"
+#include "UnaryOperation.h"
 #include "Value.h"
 
 #include "literals.h"

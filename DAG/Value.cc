@@ -46,6 +46,14 @@ Value::Value(const Type& t, const SourceRange& loc)
 }
 
 
+shared_ptr<Value> Value::Negate(const SourceRange& opLoc) const
+{
+	throw SemanticException(
+		"negation unsupported by " + ty.name(),
+		SourceRange::Over(opLoc, getSource())
+	);
+}
+
 shared_ptr<Value> Value::Add(shared_ptr<Value>&)
 {
 	throw SemanticException(
