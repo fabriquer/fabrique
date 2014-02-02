@@ -136,21 +136,6 @@ void Action::PrettyPrint(Bytestream& out, int indent) const
 		}
 	}
 
-	const PtrVec<Parameter> params = parameters();
-	if (not parameters().empty())
-	{
-		out << Bytestream::Operator << " <- ";
-
-		for (size_t i = 0; i < params.size(); )
-		{
-			assert(params[i] != NULL);
-
-			out << *params[i];
-			if (++i < params.size())
-				out << Bytestream::Operator << ", ";
-		}
-	}
-
 	out
 		<< Bytestream::Operator << ")"
 		<< Bytestream::Reset

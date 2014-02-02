@@ -70,6 +70,10 @@ const Type& Type::operator [] (size_t i) const
 
 bool Type::isSubtype(const Type& t) const
 {
+	// TODO: drop this dirty hack: can pass file to a file[in] parameter
+	if (typeName == "file" and t.typeName == "file")
+		return true;
+
 	// for now, this is really easy...
 	return (&t == this);
 }
@@ -77,6 +81,11 @@ bool Type::isSubtype(const Type& t) const
 
 bool Type::isSupertype(const Type &t) const
 {
+	// TODO: drop this dirty hack
+	if (typeName == "file" and t.typeName == "file")
+		if (typeParamCount() <= t.typeParamCount())
+			return true;
+
 	// for now, this is really easy...
 	return (&t == this);
 }

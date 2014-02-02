@@ -436,12 +436,21 @@ void Flattener::Leave(const ast::Call& call)
 		//
 		const ast::Parameter& p = **j;
 		const Type& type = p.type();
+
 		if (type.name() != "file")
+			continue;
+
+		//
+		// A file parameter should either be named in/out or have
+		// an in/out type parameter (e.g. foo:file[in]).
+		//
+		if (name == "in" or name == "out")
 			continue;
 
 		if (type.typeParamCount() == 0)
 			throw SemanticException(
 				"file missing [in] or [out] tag", p.source());
+
 
 		if (type[0].name() == "in")
 			dependencies.push_back(arg);
