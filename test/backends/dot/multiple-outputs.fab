@@ -4,7 +4,7 @@
 #
 
 lex = action('$LEX -c++ --header-file=$header --outfile=$out $in'
-              <- header:file[out]);
+              <- in:file, out:file, header:file[out]);
 
 # CHECK-DAG: "foo.yy" -> "lex { foo.yy => foo.c + foo.h }{{.*}}";
 # CHECK-DAG: "lex { foo.yy => foo.c + foo.h }{{.*}}" -> "foo.c";

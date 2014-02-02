@@ -139,6 +139,7 @@ Action* Parser::DefineAction(UniqPtr<UniqPtrVec<Argument>>& args,
 	if (not args)
 		return nullptr;
 
+	ExitScope();
 	return Action::Create(*args, params, src, ctx);
 }
 

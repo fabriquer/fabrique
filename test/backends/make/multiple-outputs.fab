@@ -4,7 +4,7 @@
 #
 
 lex = action('$LEX -c++ --header-file=$header --outfile=$out $in'
-              <- header:file[out]);
+              <- in:file, out:file, header:file[out]);
 
 # CHECK: foo.c foo.h : foo.yy
 # CHECK-NEXT: $LEX -c++ --header-file=foo.h --outfile=foo.c foo.yy

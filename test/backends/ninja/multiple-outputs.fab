@@ -7,7 +7,7 @@
 # CHECK-NEXT:  command = $LEX -c++ --header-file=$header --outfile=$out $in
 # CHECK-NEXT:  description = $LEX -c++ --header-file=$header --outfile=$out $in
 lex = action('$LEX -c++ --header-file=$header --outfile=$out $in'
-              <- header:file[out]);
+              <- in:file, out:file, header:file[out]);
 
 # CHECK: build foo.c foo.h: lex foo.yy
 # CHECK-NEXT: header = foo.h

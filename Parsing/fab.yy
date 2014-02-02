@@ -141,7 +141,7 @@ expression:
 	;
 
 action:
-	ACTION '(' argumentList ')'
+	actionBegin '(' argumentList ')'
 	{
 		SourceRange begin = Take(Parser::Token($1))->source();
 		auto args = Take(ExprVec<Argument>($3));
@@ -149,13 +149,20 @@ action:
 
 		SetOrDie($$, p->DefineAction(args, SourceRange(begin, end)));
 	}
-	| ACTION '(' argumentList INPUT parameterList ')'
+	| actionBegin '(' argumentList INPUT parameterList ')'
 	{
 		SourceRange begin = Take(Parser::Token($1))->source();
 		auto args = Take(ExprVec<Argument>($3));
 		auto params = Take(ExprVec<Parameter>($5));
 
 		SetOrDie($$, p->DefineAction(args, begin, std::move(params)));
+	}
+	;
+
+actionBegin:
+	ACTION
+	{
+		p->EnterScope("action");
 	}
 	;
 
