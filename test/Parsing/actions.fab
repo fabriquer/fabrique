@@ -1,0 +1,16 @@
+#
+# RUN: fab --parse-only --print-ast %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: default_type:{{.*}}list[file]{{.*}} = action('$CC -c $in -o $out')
+default_type = action('$CC -c $in -o $out');
+
+cxx = action('$CXX -c $cxxflags -MMD -MF $out.d $in -o $out',
+	description = 'Compiling $in', depfile = '$out.d');
+
+# CHECK: single_object:file = cxx(file('a.cc'), out = file('a.o'));
+single_object = cxx(file('a.cc'), out = file('a.o'));
+
+# CHECK: object_list:list[file] = cxx(file('a.cc'), out = [ file('a.o') file('b.o') ]);
+object_list = cxx(file('a.cc'), out = files(a.o b.o));

@@ -1,0 +1,11 @@
+#
+# RUN: fab --format=null --print-dag %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: compile_one_cxx_file
+compile_one_cxx_file = action('$CXX -c $cxxflags -MMD -MF $out.d $in -o $out',
+	description = 'Compiling $in', depfile = '$out.d');
+
+# CHECK: file single_object = compile_one_cxx_file { a.cc => a.o }
+single_object = compile_one_cxx_file(file('a.cc'), out = file('a.o'));
