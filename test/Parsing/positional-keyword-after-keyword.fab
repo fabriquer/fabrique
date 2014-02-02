@@ -1,0 +1,9 @@
+#
+# RUN: fab --parse-only %s 2> %t || true
+# RUN: FileCheck %s -input-file %t
+#
+
+cc = action('$CC -c $in -o $out');
+
+# CHECK: error: positional argument after keyword argument
+obj = cc(in = file('foo.c'), file('foo.o'));
