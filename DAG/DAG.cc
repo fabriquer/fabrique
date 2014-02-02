@@ -260,9 +260,7 @@ bool Flattener::Enter(const ast::BinaryOperation& o)
 	return false;
 }
 
-void Flattener::Leave(const ast::BinaryOperation&)
-{
-}
+void Flattener::Leave(const ast::BinaryOperation&) {}
 
 
 bool Flattener::Enter(const ast::BoolLiteral& b)
