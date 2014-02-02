@@ -61,8 +61,6 @@ public:
 	virtual std::shared_ptr<Value> ScalarAdd(std::shared_ptr<Value>&);
 	virtual bool canScalarAdd(const Value&);
 
-	std::string str() const;
-
 	void PrettyPrint(Bytestream&, int indent = 0) const;
 
 private:

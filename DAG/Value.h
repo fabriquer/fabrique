@@ -82,8 +82,6 @@ public:
 	 */
 	virtual bool canScalarAdd(const Value& v) { return false; }
 
-	virtual std::string str() const = 0;
-
 protected:
 	Value(const Type&, const SourceRange&);
 };

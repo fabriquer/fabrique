@@ -125,18 +125,6 @@ bool List::canScalarAdd(const Value& other)
 	return type().isListOf(other.type());
 }
 
-
-string List::str() const
-{
-	vector<string> substrings;
-#if 0
-	std::transform(v.begin(), v.end(), substrings.end(),
-	               [](const shared_ptr<Value>& v) { return v->str(); });
-#endif
-
-	return "[ " + join(substrings, " ") + "]";
-}
-
 void List::PrettyPrint(Bytestream& out, int indent) const
 {
 	out

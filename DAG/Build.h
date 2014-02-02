@@ -76,8 +76,6 @@ public:
 
 	const ValueMap& arguments() const { return args; }
 
-	std::string str() const;
-
 	void PrettyPrint(Bytestream&, int indent = 0) const;
 
 private:

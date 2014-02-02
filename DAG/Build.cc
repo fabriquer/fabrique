@@ -128,30 +128,6 @@ const Build::FileVec Build::allOutputs() const
 }
 
 
-std::string Build::str() const
-{
-	std::ostringstream oss;
-	oss << rule->name();
-
-	for (shared_ptr<File> f : in)
-		oss << " " << f->str();
-
-	oss << " =>";
-
-	for (shared_ptr<File> f : out)
-		oss << " " << f->str();
-
-	if (extraOut.size() > 0)
-	{
-		oss << " + ";
-		for (shared_ptr<File> f : extraOut)
-			oss << " " << f->str();
-	}
-
-	return oss.str();
-}
-
-
 void Build::PrettyPrint(Bytestream& ostream, int indent) const
 {
 	ostream
