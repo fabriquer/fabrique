@@ -180,15 +180,20 @@ void Build::PrettyPrint(Bytestream& ostream, int indent) const
 	{
 		ostream << Bytestream::Operator << "( ";
 
-		for (auto& i : args)
+		for (auto& j : args)
+		{
+			if (j.first == "in" or j.first == "out")
+				continue;
+
 			ostream
-				<< Bytestream::Definition << i.first
+				<< Bytestream::Definition << j.first
 				<< Bytestream::Operator << " = "
-				<< *i.second
+				<< *j.second
 				<< " "
 				;
+		}
 
-		ostream << Bytestream::Operator << ")";
+		ostream << Bytestream::Operator << " )";
 	}
 
 	ostream << Bytestream::Reset;

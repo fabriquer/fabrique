@@ -9,21 +9,21 @@ lex = action('$LEX -c++ --header=$header --outfile=$out $in'
 cc = action('$CC -c $in -o $out');
 link = action('$CC $in -o $out');
 
-# CHECK-DAG: "foo.yy" -> "lex foo.yy => foo.c + foo.h";
-# CHECK-DAG: "lex foo.yy => foo.c + foo.h" -> "foo.c";
-# CHECK-DAG: "lex foo.yy => foo.c + foo.h" -> "foo.h";
+# CHECK-DAG: "foo.yy" -> "lex { foo.yy => foo.c + foo.h }{{.*}}";
+# CHECK-DAG: "lex { foo.yy => foo.c + foo.h }{{.*}}" -> "foo.c";
+# CHECK-DAG: "lex { foo.yy => foo.c + foo.h }{{.*}}" -> "foo.h";
 foo_c = lex(file('foo.yy'), out = file('foo.c'), header = file('foo.h'));
 
-# CHECK-DAG: "foo.c" -> "cc foo.c => foo.o";
-# CHECK-DAG: "cc foo.c => foo.o" -> "foo.o"
+# CHECK-DAG: "foo.c" -> "cc { foo.c => foo.o }{{.*}}";
+# CHECK-DAG: "cc { foo.c => foo.o }{{.*}}" -> "foo.o"
 foo_o = cc(foo_c, out = file('foo.o'));
 
-# CHECK-DAG: "bar.c" -> "cc bar.c => bar.o";
-# CHECK-DAG: "cc bar.c => bar.o" -> "bar.o"
+# CHECK-DAG: "bar.c" -> "cc { bar.c => bar.o }{{.*}}";
+# CHECK-DAG: "cc { bar.c => bar.o }{{.*}}" -> "bar.o"
 bar_o = cc(file('bar.c'), file('bar.o'));
 
-# CHECK-DAG: "foo.o" -> "link foo.o bar.o => bin";
-# CHECK-DAG: "bar.o" -> "link foo.o bar.o => bin";
-# CHECK-DAG: "link foo.o bar.o => bin" -> "bin";
+# CHECK-DAG: "foo.o" -> "link { foo.o bar.o => bin }{{.*}}";
+# CHECK-DAG: "bar.o" -> "link { foo.o bar.o => bin }{{.*}}";
+# CHECK-DAG: "link { foo.o bar.o => bin }{{.*}}" -> "bin";
 # TODO: foo_o ++ bar_o once concatenation works
 bin = link(in = files(foo.o bar.o), out = file('bin'));
