@@ -36,6 +36,7 @@
 #include "Support/Printable.h"
 
 #include <exception>
+#include <memory>
 #include <string>
 
 
@@ -73,7 +74,7 @@ protected:
 	SourceCodeException(const std::string& message, const SourceRange&);
 
 private:
-	const ErrorReport *err;
+	std::shared_ptr<ErrorReport> err;
 };
 
 
