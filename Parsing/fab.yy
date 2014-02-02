@@ -83,7 +83,6 @@ void Append(PtrVec<T>*& target, PtrVec<T>* source, const T *nextElement)
 %token OPERATOR
 %token INPUT
 %token TRUE FALSE
-%token ADD PREFIX SCALAR_ADD
 %token STRING_LITERAL INT_LITERAL
 
 %left AND OR XOR
