@@ -1,0 +1,13 @@
+#
+# RUN: fab --parse-only --print-ast %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: foo:bool = true;
+foo = true;
+
+# CHECK: bar:int = if (foo) { 42 } else { 314 };
+bar = if foo 42 else 314;
+
+# CHECK: baz:string = if (not foo) { 'hello' } else { 'world' };
+baz = if not foo "hello" else "world";
