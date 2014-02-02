@@ -401,6 +401,10 @@ parameter:
 	{
 		SetOrDie($$, p->Param(Take($1.id)));
 	}
+	| identifier '=' expression
+	{
+		SetOrDie($$, p->Param(Take($1.id), Expr<Expression>($3)));
+	}
 	;
 
 parameterList:
@@ -477,9 +481,6 @@ value:
 	identifier '=' expression ';'	{
 		auto name = Take($1.id);
 		auto initialiser = Expr<Expression>($3);
-
-		if (not name or not initialiser)
-			return -1;
 
 		if (not p->DefineValue(name, initialiser))
 			return -1;

@@ -478,7 +478,7 @@ bool Flattener::Enter(const ast::Conditional& c)
 	shared_ptr<Boolean> cond =
 		std::dynamic_pointer_cast<Boolean>(flatten(c.condition()));
 	if (not cond)
-		throw SemanticException("non-boolean condition", c.getSource());
+		throw SemanticException("non-boolean condition", c.source());
 
 	// Flatten either the "then" or the "else" clause.
 	currentValue.emplace(
