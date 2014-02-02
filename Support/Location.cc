@@ -65,7 +65,7 @@ SourceRange SourceRange::Span(const std::string& filename, int line,
 
 SourceRange SourceRange::Over(const HasSource *begin, const HasSource *end)
 {
-	Location nowhere;
+	static const Location nowhere;
 
 	const Location& b(begin ? begin->getSource().begin : nowhere);
 	const Location& e(end ? end->getSource().end : nowhere);
