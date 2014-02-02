@@ -473,7 +473,21 @@ void Flattener::Leave(const ast::CompoundExpression& e)
 }
 
 
-bool Flattener::Enter(const ast::Conditional&) { return false; }
+bool Flattener::Enter(const ast::Conditional& c)
+{
+	shared_ptr<Boolean> cond =
+		std::dynamic_pointer_cast<Boolean>(flatten(c.condition()));
+	if (not cond)
+		throw SemanticException("non-boolean condition", c.getSource());
+
+	// Flatten either the "then" or the "else" clause.
+	currentValue.emplace(
+		flatten(cond->value() ? c.thenClause() : c.elseClause())
+	);
+
+	return false;
+}
+
 void Flattener::Leave(const ast::Conditional&) {}
 
 

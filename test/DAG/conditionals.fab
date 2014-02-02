@@ -1,0 +1,13 @@
+#
+# RUN: fab --format=null --print-dag %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK-DAG: bool foo = true
+foo = true;
+
+# CHECK-DAG: int bar = 42
+bar = if foo 42 else 314;
+
+# CHECK-DAG: string baz = 'world'
+baz = if not foo "hello" else "world";
