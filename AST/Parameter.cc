@@ -49,7 +49,10 @@ void Parameter::PrettyPrint(Bytestream& out, int indent) const
 	out << *name;
 
 	if (expr)
-		out << " = " << *expr;
+		out
+			<< Bytestream::Operator << " = "
+			<< *expr
+			;
 }
 
 
