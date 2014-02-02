@@ -32,6 +32,7 @@
 #ifndef EXCEPTIONS_H
 #define EXCEPTIONS_H
 
+#include "Support/Location.h"
 #include "Support/Printable.h"
 
 #include <exception>
@@ -56,32 +57,38 @@ private:
 
 
 class ErrorReport;
-class SourceRange;
 
-//! A syntactic error is present in the Fabrique description.
-class SyntaxError : public std::exception, public Printable
+//! Base class for exceptions related to invalid source code.
+class SourceCodeException
+	: public std::exception, public HasSource, public Printable
 {
 public:
-	SyntaxError(const std::string& message, const SourceRange&);
+	const std::string& message() const;
 	virtual const char* what() const noexcept;
 
+	const SourceRange& getSource() const;
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
+
+protected:
+	SourceCodeException(const std::string& message, const SourceRange&);
 
 private:
 	const ErrorReport *err;
 };
 
+
+//! A syntactic error is present in the Fabrique description.
+class SyntaxError : public SourceCodeException
+{
+public:
+	SyntaxError(const std::string& message, const SourceRange&);
+};
+
 //! A semantic error is present in the Fabrique description.
-class SemanticException : public std::exception, public Printable
+class SemanticException : public SourceCodeException
 {
 public:
 	SemanticException(const std::string& message, const SourceRange&);
-	virtual const char* what() const noexcept;
-
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
-
-private:
-	const ErrorReport *err;
 };
 
 }

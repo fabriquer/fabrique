@@ -48,36 +48,34 @@ const char* DuplicateException::what() const noexcept
 }
 
 
-
-SyntaxError::SyntaxError(const string& message,
-                                     const SourceRange& loc)
-	: err(ErrorReport::Create(message, loc))
+SourceCodeException::SourceCodeException(const string& m, const SourceRange& l)
+	: err(ErrorReport::Create(m, l))
 {
 }
 
-const char* SyntaxError::what() const noexcept
+const string& SourceCodeException::message() const { return err->getMessage(); }
+const char* SourceCodeException::what() const noexcept
 {
-	return err->getMessage().c_str();
+	return message().c_str();
 }
 
-void SyntaxError::PrettyPrint(Bytestream& out, int indent) const
+const SourceRange& SourceCodeException::getSource() const
+{
+	return err->getSource();
+}
+
+void SourceCodeException::PrettyPrint(Bytestream& out, int indent) const
 {
 	err->PrettyPrint(out, indent);
 }
 
 
-SemanticException::SemanticException(const string& message,
-                                     const SourceRange& loc)
-	: err(ErrorReport::Create(message, loc))
+SyntaxError::SyntaxError(const string& message, const SourceRange& loc)
+	: SourceCodeException(message, loc)
 {
 }
 
-const char* SemanticException::what() const noexcept
+SemanticException::SemanticException(const string& m, const SourceRange& loc)
+	: SourceCodeException(m, loc)
 {
-	return err->getMessage().c_str();
-}
-
-void SemanticException::PrettyPrint(Bytestream& out, int indent) const
-{
-	err->PrettyPrint(out, indent);
 }
