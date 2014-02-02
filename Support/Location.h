@@ -73,6 +73,7 @@ public:
 
 	//! Create a range that spans two @ref HasSource objects.
 	static SourceRange Over(const HasSource *begin, const HasSource *end);
+	static SourceRange Over(const HasSource& begin, const HasSource& end);
 
 	static SourceRange None();
 
