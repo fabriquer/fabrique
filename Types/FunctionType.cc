@@ -58,8 +58,8 @@ void FunctionType::PrettyPrint(Bytestream& out, int indent) const
 {
 	out
 		<< Bytestream::Operator << "("
-		<< Join<Type>::csv(paramTypes)
-		<< Bytestream::Operator << ") => "
+		<< Join<Type>(",", paramTypes)     // don't use csv with spaces
+		<< Bytestream::Operator << ")=>"
 		<< retTy
 		<< Bytestream::Reset
 		;

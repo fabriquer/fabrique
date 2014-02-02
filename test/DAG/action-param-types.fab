@@ -7,7 +7,7 @@
 #
 # An action must specify the types of its inputs other than 'in' and 'out'.
 #
-# CHECK-DAG: (list[file]) => list[file] lex = $LEX -c++ --header-file=$header --outfile=$out $in
+# CHECK-DAG: (list[file])=>list[file] lex = $LEX -c++ --header-file=$header --outfile=$out $in
 lex = action('$LEX -c++ --header-file=$header --outfile=$out $in'
               <- header:file);
 
@@ -16,5 +16,5 @@ lex = action('$LEX -c++ --header-file=$header --outfile=$out $in'
 # e.g. you know that the input will only ever be a single file, not a list
 # of files.
 #
-# CHECK-DAG: (list[file]) => file cxx = $CXX -c $in -o $out
+# CHECK-DAG: (list[file])=>file cxx = $CXX -c $in -o $out
 cxx = action('$CXX -c $in -o $out' <- in:list[file], out:file);

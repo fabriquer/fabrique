@@ -3,7 +3,7 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK-DAG: (list[file]) => list[file] lex = $LEX -c++ --header-file=$header --outfile=$out $in
+# CHECK-DAG: (list[file])=>list[file] lex = $LEX -c++ --header-file=$header --outfile=$out $in
 lex = action('$LEX -c++ --header-file=$header --outfile=$out $in'
               <- header:file[out]);
 

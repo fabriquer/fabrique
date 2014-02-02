@@ -6,10 +6,10 @@
 # CHECK-DAG: file src = Inputs/foo.c
 src = file('Inputs/foo.c');
 
-# CHECK-DAG: (list[file]) => list[file] cc = cc -c $in -o $out
+# CHECK-DAG: (list[file])=>list[file] cc = cc -c $in -o $out
 cc = action('cc -c $in -o $out');
 
-# CHECK-DAG: (list[file]) => list[file] link = cc $in -o $out
+# CHECK-DAG: (list[file])=>list[file] link = cc $in -o $out
 link = action('cc $in -o $out');
 
 # CHECK-DAG: file obj = cc { Inputs/foo.c => foo.o }

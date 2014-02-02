@@ -6,11 +6,11 @@
 # CHECK: src:file = file('Inputs/foo.c');
 src = file('Inputs/foo.c');
 
-# CHECK: cc:(list[file]) => list[file] =
+# CHECK: cc:(list[file])=>list[file] =
 # CHECK:   action('cc -c $in -o $out' <- in:list[file], out:list[file]);
 cc = action('cc -c $in -o $out');
 
-# CHECK: link:(list[file]) => list[file] =
+# CHECK: link:(list[file])=>list[file] =
 # CHECK:   action('cc $in -o $out' <- in:list[file], out:list[file]);
 link = action('cc $in -o $out');
 

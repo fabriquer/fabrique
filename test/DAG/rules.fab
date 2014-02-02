@@ -3,5 +3,5 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK-DAG: (list[file]) => list[file] cxx = c++ $cxxflags
+# CHECK-DAG: (list[file])=>list[file] cxx = c++ $cxxflags
 cxx = action(command = 'c++ $cxxflags');
