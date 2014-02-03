@@ -37,6 +37,8 @@
 #include "lex.h"
 #include "yacc.h"
 
+#include "Parsing/fab.yacc.h"
+
 #include <list>
 
 namespace fabrique {

@@ -29,7 +29,6 @@
  * SUCH DAMAGE.
  */
 
-#include "Parsing/Lexer.h"
 #include "Support/Location.h"
 #include "Support/Bytestream.h"
 

@@ -39,7 +39,6 @@
 #include "AST/ast.h"
 
 #include "Parsing/Parser.h"
-#include "Parsing/fab.yacc.h"
 
 void	yyerror(const char*);
 int	yylex(void*);

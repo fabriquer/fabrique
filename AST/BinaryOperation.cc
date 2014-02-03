@@ -86,7 +86,7 @@ BinaryOperation* BinaryOperation::Create(Expression *lhs,
 	return new BinaryOperation(lhs, op, rhs, *resultType, loc);
 }
 
-BinaryOperation::Operator BinaryOperation::Op(CStringRef o)
+BinaryOperation::Operator BinaryOperation::Op(const std::string& o)
 {
 	Operator op;
 

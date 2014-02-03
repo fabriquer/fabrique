@@ -32,7 +32,6 @@
 #ifndef UNARY_OPERATION_H
 #define UNARY_OPERATION_H
 
-#include "ADT/CStringRef.h"
 #include "AST/Expression.h"
 
 #include <memory>
@@ -55,7 +54,7 @@ public:
 		Invalid,
 	};
 
-	static Operator Op(CStringRef);
+	static Operator Op(const std::string&);
 	static std::string OpStr(Operator);
 
 	static UnaryOperation* Create(Operator, const SourceRange& opLoc,

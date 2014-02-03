@@ -33,6 +33,8 @@
 
 #include "Lexer.h"
 
+#include "Parsing/fab.yacc.h"
+
 #include <list>
 #include <map>
 

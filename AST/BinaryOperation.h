@@ -32,7 +32,6 @@
 #ifndef BINARY_OPERATOR_H
 #define BINARY_OPERATOR_H
 
-#include "ADT/CStringRef.h"
 #include "AST/Expression.h"
 
 #include <memory>
@@ -62,7 +61,7 @@ public:
 		Xor,
 	};
 
-	static Operator Op(CStringRef);
+	static Operator Op(const std::string&);
 	static std::string OpStr(Operator);
 
 	static BinaryOperation* Create(Expression*, Operator, Expression*);

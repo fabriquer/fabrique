@@ -55,7 +55,7 @@ UnaryOperation::UnaryOperation(Expression *e, enum Operator op,
 }
 
 
-UnaryOperation::Operator UnaryOperation::Op(CStringRef o)
+UnaryOperation::Operator UnaryOperation::Op(const std::string& o)
 {
 	Operator op;
 
