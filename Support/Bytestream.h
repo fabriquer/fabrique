@@ -70,6 +70,7 @@ public:
 
 	static Bytestream& Stdout();
 	static Bytestream& Stderr();
+	static Bytestream& None();
 
 	/**
 	 * Construct a formatted @ref Bytestream to wrap an @ref std::ostream.
@@ -87,9 +88,9 @@ public:
 
 
 	virtual Bytestream& operator << (enum Format) = 0;
-	Bytestream& operator << (const Printable&);
-	Bytestream& operator << (const std::string&);
-	Bytestream& operator << (unsigned long);
+	virtual Bytestream& operator << (const Printable&);
+	virtual Bytestream& operator << (const std::string&);
+	virtual Bytestream& operator << (unsigned long);
 
 	std::ostream& raw() { return out; }
 

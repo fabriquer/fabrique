@@ -91,6 +91,26 @@ public:
 	}
 };
 
+class NullStream : public Bytestream
+{
+public:
+	NullStream() : Bytestream(out) {}
+
+	virtual Bytestream& operator << (enum Format) { return *this; }
+	virtual Bytestream& operator << (const Printable&) { return *this; }
+	virtual Bytestream& operator << (const string&) { return *this; }
+	virtual Bytestream& operator << (unsigned long) { return *this; }
+
+private:
+	/**
+	 * An uninitialised file output stream. If we never initialised the
+	 * stream, it will stay in the error state, so formatting operations
+	 * will never be performed; this saves us the cost of formatting
+	 * characters before throwing them away.
+	 */
+	std::ofstream out;
+};
+
 
 Bytestream& Bytestream::Stdout()
 {
@@ -112,6 +132,12 @@ Bytestream& Bytestream::Stderr()
 		return ANSIErr;
 
 	return PlainErr;
+}
+
+Bytestream& Bytestream::None()
+{
+	static NullStream stream;
+	return stream;
 }
 
 Bytestream* Bytestream::Formatted(std::ostream& f)
