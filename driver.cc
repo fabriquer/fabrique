@@ -94,9 +94,12 @@ int main(int argc, char *argv[]) {
 
 
 	//
-	// Set up input and error streams.
+	// Set up input, error and debug streams.
 	//
 	Bytestream& err = Bytestream::Stderr();
+
+	Bytestream::SetDebugPattern(args->debugPattern);
+	Bytestream::SetDebugStream(err);
 
 	std::ifstream infile(args->input.c_str());
 	if (!infile)

@@ -51,6 +51,7 @@ enum optionNames
 	PrettyPrintAST,
 	PrettyPrintDAG,
 	PrintOutput,
+	DebugPattern,
 };
 
 
@@ -129,6 +130,10 @@ const option::Descriptor usage[] =
 		PrintOutput, Enable, "", "stdout", option::Arg::None,
 		"  --stdout         Print the result to stdout"
 	},
+	{
+		DebugPattern, SetOpt, "", "debug", option::Arg::Optional,
+		"  --debug          Show debug output (e.g. 'parser', equivalent to 'parser.*')"
+	},
 	{ 0, 0, 0, 0, 0, 0 }
 };
 
@@ -164,9 +169,13 @@ Arguments* Arguments::Parse(int argc, char *argv[])
 	                       ? options[Format].arg
 	                       : "ninja";
 
+	const string debugPattern = options[DebugPattern]
+	                             ? options[DebugPattern].arg
+	                             : "none";
+
 	return new Arguments(help, input, output, format, options[ParseOnly],
 	                     options[PrettyPrintAST], options[PrettyPrintDAG],
-	                     options[PrintOutput]);
+	                     options[PrintOutput], debugPattern);
 }
 
 

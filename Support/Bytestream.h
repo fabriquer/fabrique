@@ -73,6 +73,21 @@ public:
 	static Bytestream& None();
 
 	/**
+	 * Retrieve the debug output stream or a do-nothing stream, based
+	 * on the (hierarchical) debug naming scheme.
+	 *
+	 * Fabrique runs with a debug pattern (that defaults to "") that is
+	 * used to select how much debug output is actually output.
+	 * For instance, if running with --debug=*, all names will match,
+	 * whereas if running with --debug=parser (equivalent to parser.*),
+	 * Debug("parser.foo") will return the debug stream but
+	 * Debug("lexer.bar") will return the do-nothing stream.
+	 */
+	static Bytestream& Debug(const std::string& name);
+	static void SetDebugPattern(const std::string&);
+	static void SetDebugStream(Bytestream&);
+
+	/**
 	 * Construct a formatted @ref Bytestream to wrap an @ref std::ostream.
 	 *
 	 * The caller is responsible for freeing the returned pointer.

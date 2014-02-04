@@ -36,10 +36,12 @@
 #include <fstream>
 #include <vector>
 
+#include <fnmatch.h>   // filename-style pattern matching
 #include <unistd.h>
 
 using namespace fabrique;
 using std::ostream;
+using std::string;
 
 
 class ANSIStream : public Bytestream
@@ -112,6 +114,31 @@ private:
 };
 
 
+static class DebugState
+{
+public:
+	Bytestream *out = &Bytestream::Stderr();
+	Bytestream *null = &Bytestream::None();
+	string pattern;
+
+	bool match(const string& name)
+	{
+		string longPattern = pattern + ".*";
+
+		return (fnmatch(pattern.c_str(), name.c_str(), 0) == 0)
+			or (fnmatch(longPattern.c_str(), name.c_str(), 0) == 0);
+	}
+
+	Bytestream& get(const string& name)
+	{
+		assert(out);
+		assert(null);
+
+		return match(name) ? *out : *null;
+	}
+} debugState;
+
+
 Bytestream& Bytestream::Stdout()
 {
 	static ANSIStream ANSIOut(std::cout);
@@ -132,6 +159,21 @@ Bytestream& Bytestream::Stderr()
 		return ANSIErr;
 
 	return PlainErr;
+}
+
+Bytestream& Bytestream::Debug(const string& name)
+{
+	return debugState.get(name);
+}
+
+void Bytestream::SetDebugPattern(const string& pattern)
+{
+	debugState.pattern = pattern;
+}
+
+void Bytestream::SetDebugStream(Bytestream& s)
+{
+	debugState.out = &s;
 }
 
 Bytestream& Bytestream::None()

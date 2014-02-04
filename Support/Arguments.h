@@ -69,15 +69,19 @@ public:
 	const bool printDAG;
 	const bool printOutput;
 
+	const std::string debugPattern;
+
 private:
 	Arguments(const bool help,
 	          const std::string& input, const std::string& output,
 	          const std::string& format, bool parseOnly,
-	          bool printAST, bool printDAG, bool printOut)
+	          bool printAST, bool printDAG, bool printOut,
+		  const std::string& debugPattern)
 		: help(help), input(input), output(output),
 		  outputFileSpecified(output.length() > 0 and output != "-"),
 		  format(format), parseOnly(parseOnly),
-		  printAST(printAST), printDAG(printDAG), printOutput(printOut)
+		  printAST(printAST), printDAG(printDAG), printOutput(printOut),
+		  debugPattern(debugPattern)
 	{
 	}
 
