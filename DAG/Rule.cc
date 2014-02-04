@@ -39,7 +39,7 @@ using std::string;
 
 
 Rule* Rule::Create(string name, string command, const ValueMap& arguments,
-                   const Type& t, SourceRange location)
+                   const Type& t, const SourceRange& location)
 {
 	ValueMap args(arguments);
 

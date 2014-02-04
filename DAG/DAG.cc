@@ -57,6 +57,9 @@ using namespace fabrique::dag;
 using std::shared_ptr;
 using std::string;
 
+template<class T>
+using ConstPtr = const std::unique_ptr<T>;
+
 
 //! AST Visitor that flattens the AST into a DAG.
 class Flattener : public ast::Visitor
@@ -167,7 +170,7 @@ bool Flattener::Enter(const ast::Action& a)
 	if (a.arguments().size() < 1)
 		throw SemanticException("Missing action arguments", a.source());
 
-	for (const ast::Argument *arg : a.arguments())
+	for (ConstPtr<ast::Argument>& arg : a.arguments())
 	{
 		// Flatten the argument and convert it to a string.
 		shared_ptr<Value> value = flatten(arg->getValue());
@@ -279,7 +282,7 @@ void Flattener::Leave(const ast::Call& call)
 {
 	const ast::SymbolReference& targetRef = call.target();
 	const string name = targetRef.getName().name();
-	const ast::Expression& target = targetRef.getValue();
+	const ast::Expression& target = targetRef.definition();
 	shared_ptr<Value> targetValue = getNamedValue(name);
 
 	//
@@ -295,14 +298,14 @@ void Flattener::Leave(const ast::Call& call)
 		scopes.push_back(ValueMap());
 		ValueMap& scope = *scopes.rbegin();
 
-		StringMap<const ast::Parameter*> params;
+		StringMap<const ast::Parameter&> params;
 		std::vector<string> paramNames;
-		for (const ast::Parameter *p : fn->parameters())
+		for (auto& p : fn->parameters())
 		{
 			const string name(p->getName().name());
 
 			paramNames.push_back(name);
-			params[name] = p;
+			params.emplace(name, *p);
 		}
 
 		//
@@ -316,7 +319,7 @@ void Flattener::Leave(const ast::Call& call)
 				call.source());
 
 		size_t unnamed = 0;
-		for (const ast::Argument *a : call.arguments())
+		for (ConstPtr<ast::Argument>& a : call.arguments())
 		{
 			string name = a->hasName()
 				? a->getName().name()
@@ -328,13 +331,13 @@ void Flattener::Leave(const ast::Call& call)
 					"no such parameter '" + name + "'",
 					a->source());
 
-			const ast::Parameter *param = p->second;
+			const ast::Parameter& param = p->second;
 			assert(p->first == name);
 
-			if (not a->type().isSubtype(param->type()))
+			if (not a->type().isSubtype(param.type()))
 				throw SemanticException(
 					"invalid argument type (expected '"
-					+ param->type().str()
+					+ param.type().str()
 					+ "', got '"
 					+ a->type().str()
 					+ "'",
@@ -364,7 +367,7 @@ void Flattener::Leave(const ast::Call& call)
 	//
 	// Interpret the first two unnamed arguments as 'in' and 'out'.
 	//
-	for (const ast::Argument *arg : call)
+	for (ConstPtr<ast::Argument>& arg : call)
 	{
 		shared_ptr<Value> value = flatten(*arg);
 
@@ -407,7 +410,7 @@ void Flattener::Leave(const ast::Call& call)
 
 
 	const ast::Action& action =
-		dynamic_cast<const ast::Action&>(targetRef.getValue());
+		dynamic_cast<const ast::Action&>(targetRef.definition());
 
 	auto& params = action.parameters();
 
@@ -416,7 +419,11 @@ void Flattener::Leave(const ast::Call& call)
 		const string name = i.first;
 		shared_ptr<dag::Value> arg = i.second;
 
-		auto j = params.find(name);
+		auto j = params.begin();
+		for ( ; j != params.end(); j++)
+			if ((*j)->getName().name() == name)
+				break;
+
 		if (j == params.end())
 			throw SemanticException(
 				"no such parameter '" + name + "'",
@@ -426,14 +433,14 @@ void Flattener::Leave(const ast::Call& call)
 		// Additionally, if the parameter is a file, add the
 		// argument to the dependency graph.
 		//
-		const ast::Parameter *p = j->second;
-		const Type& type = p->type();
+		const ast::Parameter& p = **j;
+		const Type& type = p.type();
 		if (type.name() != "file")
 			continue;
 
 		if (type.typeParamCount() == 0)
 			throw SemanticException(
-				"file missing [in] or [out] tag", p->source());
+				"file missing [in] or [out] tag", p.source());
 
 		if (type[0].name() == "in")
 			dependencies.push_back(arg);
@@ -443,7 +450,7 @@ void Flattener::Leave(const ast::Call& call)
 
 		else
 			throw SemanticException(
-				"expected file[in|out]", p->source());
+				"expected file[in|out]", p.source());
 	}
 
 	currentValue.emplace(
@@ -487,7 +494,7 @@ bool Flattener::Enter(const ast::FileList& l)
 	SharedPtrVec<Value> files;
 	ValueMap listScope;
 
-	for (const ast::Argument *arg : l.arguments())
+	for (ConstPtr<ast::Argument>& arg : l.arguments())
 	{
 		const string name = arg->getName().name();
 		shared_ptr<Value> value = flatten(arg->getValue());
@@ -507,7 +514,7 @@ bool Flattener::Enter(const ast::FileList& l)
 
 	scopes.push_back(listScope);
 
-	for (const ast::Filename *file : l)
+	for (ConstPtr<ast::Filename>& file : l)
 	{
 		shared_ptr<Value> f = flatten(*file);
 		files.push_back(f);
@@ -555,7 +562,7 @@ bool Flattener::Enter(const ast::List& l)
 
 	SharedPtrVec<Value> values;
 
-	for (const ast::Expression *e : l)
+	for (ConstPtr<ast::Expression>& e : l)
 	{
 		if (e->type() != subtype)
 			throw SemanticException(

@@ -51,21 +51,19 @@ class Value;
 class ForeachExpr : public Expression
 {
 public:
-	ForeachExpr(Expression *source, const Parameter *loopParam,
-	            CompoundExpression *body, const Type& resultTy,
-	            const SourceRange& loc)
-		: Expression(resultTy, loc), source(source),
-		  loopParameter(loopParam), body(body)
-	{
-	}
+	ForeachExpr(UniqPtr<Expression>& list,
+	            UniqPtr<Parameter>& loopParam,
+	            UniqPtr<CompoundExpression>& body,
+	            const Type& resultTy,
+	            const SourceRange& source);
 
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 	virtual void Accept(Visitor&) const;
 
 private:
-	std::unique_ptr<Expression> source;
-	std::unique_ptr<const Parameter> loopParameter;
-	std::unique_ptr<CompoundExpression> body;
+	const UniqPtr<Expression> source;
+	const UniqPtr<Parameter> loopParameter;
+	const UniqPtr<CompoundExpression> body;
 };
 
 } // namespace ast

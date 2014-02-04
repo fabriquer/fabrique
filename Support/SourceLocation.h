@@ -35,7 +35,8 @@
 #ifndef LOCATION_H
 #define LOCATION_H
 
-#include "Printable.h"
+#include "ADT/UniqPtr.h"
+#include "Support/Printable.h"
 
 #include <cassert>
 #include <string>
@@ -49,7 +50,7 @@ class Lexer;
 class SourceLocation : public Printable
 {
 public:
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
+	const static SourceLocation Nowhere;
 
 	SourceLocation(const std::string& filename = "",
 	               int line = 0, int column = 0)
@@ -58,6 +59,12 @@ public:
 		assert(line >= 0);
 		assert(column >= 0);
 	}
+
+	operator bool() const;
+	bool operator == (const SourceLocation&) const;
+	bool operator != (const SourceLocation&) const;
+
+	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 
 	std::string filename;
 	int line;
@@ -70,22 +77,33 @@ class HasSource;
 class SourceRange : public Printable
 {
 public:
+	const static SourceRange None;
+
 	//! Construct a short (within a single line) range.
 	static SourceRange Span(
 		const std::string& filename, int line,
 		int begincol, int endcol);
 
 	//! Create a range that spans two @ref HasSource objects.
-	static SourceRange Over(const HasSource *begin, const HasSource *end);
-	static SourceRange Over(const HasSource& begin, const HasSource& end);
-	static SourceRange Over(const SourceRange&, const SourceRange&);
-
-	static SourceRange None();
-
-	SourceRange(const SourceLocation& begin, const SourceLocation& end)
-		: begin(begin), end(end)
+	template<class T1, class T2>
+	static SourceRange Over(const T1& b, const T2& e)
 	{
+		const SourceLocation& begin =
+			b ? b->source().begin : SourceLocation::Nowhere;
+
+		const SourceLocation& end =
+			e ? e->source().end : SourceLocation::Nowhere;
+
+		return SourceRange(begin, end);
 	}
+
+	SourceRange(const SourceLocation& begin, const SourceLocation& end);
+	SourceRange(const SourceRange& begin, const SourceRange& end);
+	SourceRange(const HasSource& begin, const HasSource& end);
+
+	operator bool() const;
+	bool operator == (const SourceRange&) const;
+	bool operator != (const SourceRange&) const;
 
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 

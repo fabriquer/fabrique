@@ -41,7 +41,7 @@ using namespace fabrique::ast;
 void List::PrettyPrint(Bytestream& out, int indent) const
 {
 	out << Bytestream::Operator << "[" << Bytestream::Reset;
-	for (auto *e : elements)
+	for (auto& e : elements)
 		out << " " << *e;
 	out << Bytestream::Operator << " ]" << Bytestream::Reset;
 }
@@ -51,7 +51,7 @@ void List::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
 	{
-		for (auto *e : elements)
+		for (auto& e : elements)
 			e->Accept(v);
 	}
 

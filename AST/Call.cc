@@ -32,14 +32,15 @@
 #include "AST/Call.h"
 #include "AST/Visitor.h"
 #include "Support/Bytestream.h"
+#include "Support/SourceLocation.h"
 #include "Types/FunctionType.h"
 
 using namespace fabrique::ast;
 
 
-Call::Call(SymbolReference *fn, PtrVec<Argument>& args, const Type& ty,
-           const SourceRange& loc)
-	: Expression(ty, loc), fn(fn), args(args)
+Call::Call(UniqPtr<SymbolReference>& fn, UniqPtrVec<Argument>& args,
+           const Type& ty, const SourceRange& loc)
+	: Expression(ty, loc), fn(std::move(fn)), args(std::move(args))
 {
 }
 
@@ -71,7 +72,7 @@ void Call::Accept(Visitor& v) const
 	if (v.Enter(*this))
 	{
 		fn->Accept(v);
-		for (auto *a : args)
+		for (auto& a : args)
 			a->Accept(v);
 	}
 

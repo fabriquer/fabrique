@@ -32,7 +32,6 @@
 #ifndef LITERALS_H
 #define LITERALS_H
 
-#include "ADT/CStringRef.h"
 #include "AST/Expression.h"
 
 #include <string>

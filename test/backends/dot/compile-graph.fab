@@ -20,7 +20,7 @@ foo_o = cc(foo_c, out = file('foo.o'));
 
 # CHECK-DAG: "bar.c" -> "cc bar.c => bar.o";
 # CHECK-DAG: "cc bar.c => bar.o" -> "bar.o"
-bar_o = cc(in = file('bar.c'), file('bar.o'));
+bar_o = cc(file('bar.c'), file('bar.o'));
 
 # CHECK-DAG: "foo.o" -> "link foo.o bar.o => bin";
 # CHECK-DAG: "bar.o" -> "link foo.o bar.o => bin";

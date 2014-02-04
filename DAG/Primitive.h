@@ -59,7 +59,7 @@ protected:
 class Boolean : public Primitive
 {
 public:
-	Boolean(bool, const Type&, SourceRange loc = SourceRange::None());
+	Boolean(bool, const Type&, SourceRange loc = SourceRange::None);
 	std::string str() const;
 
 	virtual std::shared_ptr<Value> Negate(const SourceRange& loc) const;
@@ -74,7 +74,7 @@ private:
 class Integer : public Primitive
 {
 public:
-	Integer(int, const Type&, SourceRange loc = SourceRange::None());
+	Integer(int, const Type&, SourceRange loc = SourceRange::None);
 	std::string str() const;
 
 	virtual std::shared_ptr<Value> Add(std::shared_ptr<Value>&);
@@ -86,7 +86,7 @@ private:
 class String : public Primitive
 {
 public:
-	String(std::string, const Type&, SourceRange loc = SourceRange::None());
+	String(std::string, const Type&, SourceRange loc = SourceRange::None);
 	std::string str() const;
 
 	virtual std::shared_ptr<Value> Add(std::shared_ptr<Value>&);

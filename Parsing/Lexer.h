@@ -32,16 +32,17 @@
 #ifndef LEXER_H
 #define LEXER_H
 
+#include "ADT/PtrVec.h"
 #include "Support/ErrorReport.h"
 
 #include "lex.h"
 #include "yacc.h"
 
-#include "Parsing/fab.yacc.h"
-
 #include <list>
 
 namespace fabrique {
+
+class Token;
 
 /**
  */
@@ -49,8 +50,8 @@ class Lexer : public yyFlexLexer
 {
 public:
 	Lexer(const std::string& in) : inputFilename(in) {}
-	~Lexer();
 
+	Token NextToken() const;
 	SourceRange CurrentTokenRange() const;
 
 	const ErrorReport& Err(const char *message);
@@ -58,13 +59,20 @@ public:
 	int yylex(YYSTYPE *yylval);
 
 private:
-	void setCString(YYSTYPE *yylval);
-	void setRange(YYSTYPE *yylval);
+	void SetComment(YYSTYPE*, bool includesNewline = true);
+	void SetToken(YYSTYPE*);
+
+	void BeginString();
+	void AppendChar(char);
+	void EndString(YYSTYPE*);
+	//void SetString(YYSTYPE*);
 
 	const std::string inputFilename;
-	std::list<ErrorReport*> errs;
+	UniqPtrVec<ErrorReport> errs;
 
-	SourceLocation lastTokenEnd;
+	fabrique::Token currentToken;
+	fabrique::SourceLocation stringStart;
+	std::vector<char> buf;
 };
 
 } // namespace fabrique

@@ -32,6 +32,7 @@
 #ifndef PTRVEC_H
 #define PTRVEC_H
 
+#include "ADT/UniqPtr.h"
 #include <vector>
 
 namespace fabrique {
@@ -41,6 +42,9 @@ template<class T> using PtrVec = std::vector<const T*>;
 
 /** A @ref std::vector of shared pointers. */
 template<class T> using SharedPtrVec = std::vector<std::shared_ptr<T>>;
+
+/** A @ref std::vector of pointers whose memory we own. */
+template<class T> using UniqPtrVec = std::vector<std::unique_ptr<T>>;
 
 } // namespace fabrique
 

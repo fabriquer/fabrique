@@ -50,7 +50,7 @@ shared_ptr<Value> Value::Negate(const SourceRange& opLoc) const
 {
 	throw SemanticException(
 		"negation unsupported by " + type().name(),
-		SourceRange::Over(opLoc, source())
+		SourceRange(opLoc, source())
 	);
 }
 

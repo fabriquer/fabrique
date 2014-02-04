@@ -15,7 +15,7 @@ args = args.parse_args()
 cxx_srcs = {
 	'AST/': (
 		'Action', 'Argument', 'ASTDump', 'BinaryOperation', 'Call',
-		'CompoundExpr', 'Conditional',
+		'Callable', 'CompoundExpr', 'Conditional',
 		'Filename', 'FileList', 'Foreach', 'Function', 'Identifier',
 		'List', 'Parameter', 'Scope', 'SymbolReference',
 		'UnaryOperation', 'Value',
@@ -29,11 +29,11 @@ cxx_srcs = {
 		'UndefinedValueException', 'Value',
 	),
 	'Parsing/': (
-		'Lexer', 'Parser',
+		'Lexer', 'Parser', 'Token',
 	),
 	'Support/': (
-		'Arguments', 'Bytestream', 'ErrorReport', 'Join', 'Printable',
-		'SourceLocation',
+		'Arguments', 'Bytestream', 'ErrorReport', 'Join',
+		'Printable', 'SourceLocation',
 		'exceptions',
 	),
 	'Types/': (

@@ -46,12 +46,8 @@ namespace ast {
 class Parameter : public Expression
 {
 public:
-	Parameter(Identifier *id, const Type& resultTy, Expression *e = NULL)
-		: Expression(resultTy, SourceRange::Over(id, e)),
-		  name(id), expr(e)
-	{
-		assert(id != NULL);
-	}
+	Parameter(UniqPtr<Identifier>& id, const Type& resultTy,
+	          UniqPtr<Expression>&& e = nullptr);
 
 	const Identifier& getName() const { return *name; }
 	const Expression& getValue() const { return *expr; }
@@ -60,8 +56,8 @@ public:
 	virtual void Accept(Visitor&) const;
 
 private:
-	std::unique_ptr<Identifier> name;
-	std::unique_ptr<Expression> expr;
+	const UniqPtr<Identifier> name;
+	const UniqPtr<Expression> expr;
 };
 
 } // namespace ast

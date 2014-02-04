@@ -33,6 +33,8 @@
 #define CALL_H
 
 #include "ADT/PtrVec.h"
+#include "ADT/UniqPtr.h"
+
 #include "AST/Argument.h"
 #include "AST/Expression.h"
 #include "AST/SymbolReference.h"
@@ -49,22 +51,23 @@ namespace ast {
 class Call : public Expression
 {
 public:
-	Call(SymbolReference *fn, PtrVec<Argument>&, const Type& resultType,
-	     const SourceRange&);
-	~Call() { for (auto *a : args) delete a; }
+	Call(UniqPtr<SymbolReference>& fn, UniqPtrVec<Argument>&,
+	     const Type& resultType, const SourceRange&);
 
 	const SymbolReference& target() const { return *fn; }
 
-	const PtrVec<Argument>& arguments() const { return args; }
-	PtrVec<Argument>::const_iterator begin() const { return args.begin(); }
-	PtrVec<Argument>::const_iterator end() const { return args.end(); }
+	const UniqPtrVec<Argument>& arguments() const { return args; }
+
+	using ParamIterator = UniqPtrVec<Argument>::const_iterator;
+	ParamIterator begin() const { return args.begin(); }
+	ParamIterator end() const { return args.end(); }
 
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 	virtual void Accept(Visitor&) const;
 
 private:
-	std::unique_ptr<SymbolReference> fn;
-	PtrVec<Argument> args;
+	const UniqPtr<SymbolReference> fn;
+	const UniqPtrVec<Argument> args;
 };
 
 } // namespace ast

@@ -38,9 +38,9 @@
 using namespace fabrique::ast;
 
 
-BinaryOperation* BinaryOperation::Create(Expression *lhs,
+BinaryOperation* BinaryOperation::Create(UniqPtr<Expression>&& lhs,
                                          Operator op,
-                                         Expression *rhs)
+                                         UniqPtr<Expression>&& rhs)
 {
 	assert(lhs);
 	assert(rhs);
@@ -83,8 +83,18 @@ BinaryOperation* BinaryOperation::Create(Expression *lhs,
 	if (not resultType)
 		throw SemanticException("incompatible types", loc);
 
-	return new BinaryOperation(lhs, op, rhs, *resultType, loc);
+	return new BinaryOperation(
+		std::move(lhs), std::move(rhs), op, *resultType, loc);
 }
+
+
+BinaryOperation::BinaryOperation(
+		UniqPtr<Expression>&& lhs, UniqPtr<Expression>&& rhs,
+		enum Operator op, const Type& ty, const SourceRange& src)
+	: Expression(ty, src), lhs(std::move(lhs)), rhs(std::move(rhs)), op(op)
+{
+}
+
 
 BinaryOperation::Operator BinaryOperation::Op(const std::string& o)
 {
@@ -120,13 +130,13 @@ std::string BinaryOperation::OpStr(Operator op)
 
 void BinaryOperation::PrettyPrint(Bytestream& out, int indent) const
 {
-	LHS->PrettyPrint(out, indent);
+	lhs->PrettyPrint(out, indent);
 	out
 		<< " "
 		<< Bytestream::Operator << OpStr(op)
 		<< Bytestream::Reset
 		<< " ";
-	RHS->PrettyPrint(out, indent);
+	rhs->PrettyPrint(out, indent);
 }
 
 
@@ -134,8 +144,8 @@ void BinaryOperation::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
 	{
-		LHS->Accept(v);
-		RHS->Accept(v);
+		lhs->Accept(v);
+		rhs->Accept(v);
 	}
 
 	v.Leave(*this);

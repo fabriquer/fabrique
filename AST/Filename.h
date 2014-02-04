@@ -44,13 +44,8 @@ namespace ast {
 class Filename : public Expression
 {
 public:
-	Filename(Expression *name, PtrVec<Argument>& args, const Type& ty,
-	         const SourceRange& loc)
-		: Expression(ty, loc), unqualName(name), args(args)
-	{
-	}
-
-	~Filename() { for (auto *arg : args) delete arg; }
+	Filename(UniqPtr<Expression>& name, UniqPtrVec<Argument>& args,
+	         const Type& ty, const SourceRange& loc);
 
 	const Expression& name() const { return *unqualName; }
 
@@ -59,10 +54,10 @@ public:
 
 private:
 	//! A filename, without qualifiers like "in this subdirectory".
-	const Expression *unqualName;
+	const UniqPtr<Expression> unqualName;
 
 	//! Additional information about the file (e.g., "subdir").
-	const PtrVec<Argument> args;
+	const UniqPtrVec<Argument> args;
 };
 
 } // namespace ast

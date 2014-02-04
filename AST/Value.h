@@ -29,11 +29,12 @@
  * SUCH DAMAGE.
  */
 
-#ifndef VALUE_H
-#define VALUE_H
+#ifndef AST_VALUE_H
+#define AST_VALUE_H
 
-#include "Expression.h"
-#include "Identifier.h"
+#include "ADT/UniqPtr.h"
+#include "AST/Expression.h"
+#include "AST/Identifier.h"
 
 namespace fabrique {
 namespace ast {
@@ -44,7 +45,7 @@ namespace ast {
 class Value : public Expression
 {
 public:
-	Value(Identifier*, const Expression*);
+	Value(UniqPtr<Identifier>&, UniqPtr<Expression>&);
 
 	const Identifier& getName() const { return *id; }
 	const Expression& getValue() const { return *expr; }
@@ -53,8 +54,8 @@ public:
 	virtual void Accept(Visitor&) const;
 
 private:
-	std::unique_ptr<Identifier> id;
-	std::unique_ptr<const Expression> expr;
+	const UniqPtr<Identifier> id;
+	const UniqPtr<Expression> expr;
 };
 
 } // namespace ast

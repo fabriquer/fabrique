@@ -32,10 +32,14 @@
 #ifndef CONDITIONAL_H
 #define CONDITIONAL_H
 
-#include "Expression.h"
+#include "ADT/UniqPtr.h"
+#include "AST/Expression.h"
 
 namespace fabrique {
 namespace ast {
+
+class CompoundExpression;
+
 
 /**
  * A function allows users to create build abstractions.
@@ -43,25 +47,19 @@ namespace ast {
 class Conditional : public Expression
 {
 public:
-	Conditional(const SourceRange& ifLoc, Expression *condition,
-	            Expression *thenResult, Expression *elseResult,
-	            const Type& resultTy)
-		: Expression(resultTy,
-		             SourceRange(ifLoc.begin,
-		                         elseResult->source().end)),
-		  condition(condition),
-		  thenResult(thenResult),
-		  elseResult(elseResult)
-	{
-	}
+	Conditional(const SourceRange& ifLoc,
+	            UniqPtr<Expression>& condition,
+	            UniqPtr<CompoundExpression>& then,
+	            UniqPtr<CompoundExpression>& elseResult,
+	            const Type& resultTy);
 
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 	virtual void Accept(Visitor&) const;
 
 private:
-	std::unique_ptr<Expression> condition;
-	std::unique_ptr<Expression> thenResult;
-	std::unique_ptr<Expression> elseResult;
+	const std::unique_ptr<Expression> condition;
+	const std::unique_ptr<CompoundExpression> thenResult;
+	const std::unique_ptr<CompoundExpression> elseResult;
 };
 
 } // namespace ast

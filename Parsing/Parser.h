@@ -32,6 +32,7 @@
 #ifndef PARSER_H
 #define PARSER_H
 
+#include "ADT/UniqPtr.h"
 #include "AST/BinaryOperation.h"
 #include "AST/Scope.h"
 #include "AST/UnaryOperation.h"
@@ -40,6 +41,9 @@
 
 #include <map>
 #include <stack>
+
+namespace fabrique { class Token; }
+#include "Parsing/fab.yacc.h"
 
 namespace fabrique {
 
@@ -58,58 +62,88 @@ public:
 	Parser(FabContext&, const Lexer& lex);
 	~Parser();
 
-	const PtrVec<ErrorReport>& errors() const { return errs; }
+	//! Errors encountered during parsing.
+	const UniqPtrVec<ErrorReport>& errors() const { return errs; }
 
-	void EnterScope();
 
-	SourceRange* CurrentTokenRange() const;
+	/**
+	 * Enter an AST @ref Scope. Should be called before parsing anything
+	 * that belongs in the scope, e.g. parameters:
+	 *
+	 * <<EnterScope>> function (x:int <<Parameter>>) { ... } <<ExitScope>>
+	 */
+	Scope& EnterScope();
 
-	//! Save the current token's location for future reference.
-	void SaveLoc();
-	const SourceRange& LastSavedLocation() const { return savedLoc; }
-
-	//! Save the current token's type for future reference.
-	void SaveType(const Type&);
-
-	void SetRoot(PtrVec<Value>*);
-	const Scope& getRoot() const { return root; }
+	/**
+	 * Leave an AST @ref Scope, returning ownership of that scope
+	 * (and, transitively, everything it contains).
+	 */
+	std::unique_ptr<Scope> ExitScope();
 
 
 	//! Find or create a @ref Type.
 	const Type* getType(const std::string& name,
 	                    const PtrVec<Type>& params = PtrVec<Type>());
 
-	/**
-	 * Find or create a @ref Type, taking ownership of the name and
-	 * type parameter vector. We already own the elements of this vector.
-	 */
-	const Type* getType(Identifier*, const PtrVec<Type>* params = NULL);
-
 	const Type* getType(const std::string& name, const Type& typeParam);
 
-
-	//! Define a @ref Value in the current scope.
-	Value* Define(Identifier*, Expression*);
-
-	//! Reference a @ref Value in scope.
-	SymbolReference* Reference(Identifier*);
+	const Type* getType(UniqPtr<Identifier>&&,
+	                    UniqPtr<const PtrVec<Type>>&& params = nullptr);
 
 
-	List* ListOf(ExprVec* elements);
 
-	CompoundExpression* CompoundExpr(Expression *result,
-	                                 SourceRange *begin = NULL,
-	                                 PtrVec<Value> *values = NULL);
+	//! Define a build @ref Action.
+	Action* DefineAction(UniqPtr<UniqPtrVec<Argument>>& args,
+	                     const SourceRange&,
+	                     UniqPtr<UniqPtrVec<Parameter>>&& params = nullptr);
+
+	//! Parse an @ref Argument to a @ref Function, build @ref Action, etc.
+	Argument* Arg(UniqPtr<Expression>& value,
+	              UniqPtr<Identifier>&& = nullptr);
+
+	//! Create a @ref BinaryOperation (+, ::, ...).
+	BinaryOperation* BinaryOp(BinaryOperation::Operator,
+	                          UniqPtr<Expression>&, UniqPtr<Expression>&);
+
+	//! A call to an @ref Action or @ref Function.
+	Call* CreateCall(UniqPtr<Identifier>&, UniqPtr<UniqPtrVec<Argument>>&);
+
+	//! An expression that can (optionally) include intermediate values.
+	CompoundExpression* CompoundExpr(UniqPtr<Expression>& result,
+	                                 SourceRange begin = SourceRange::None,
+	                                 SourceRange end = SourceRange::None);
+
+	//! A @ref Filename that is part of the build DAG.
+	Filename* File(UniqPtr<Expression>& name, const SourceRange& src,
+	               UniqPtr<UniqPtrVec<Argument>>&& arguments = nullptr);
+
+	/** Create a list of files, which may have shared arguments. */
+	FileList* Files(const SourceRange&, UniqPtr<UniqPtrVec<Filename>>&,
+	                UniqPtr<UniqPtrVec<Argument>>&& args = nullptr);
 
 
-	// actions and functions
-	Action* DefineAction(PtrVec<Argument>* args, SourceRange*,
-	                     PtrVec<Parameter>* params = NULL);
-	Function* DefineFunction(PtrVec<Parameter> *params, const Type *ty,
-                                 CompoundExpression *body);
+	/**
+	 * An expression for mapping list elements into another list:
+	 *   foreach x in some_list: x + 1
+	 * .
+	 */
+	ForeachExpr* Foreach(UniqPtr<Expression>& source,
+	                     UniqPtr<Parameter>& loopParam,
+	                     UniqPtr<CompoundExpression>& body,
+	                     const SourceRange& start);
 
-	Call* CreateCall(Identifier*, PtrVec<Argument>*);
 
+	Function* DefineFunction(const SourceRange& begin,
+	                         UniqPtr<UniqPtrVec<Parameter>>& params,
+	                         UniqPtr<CompoundExpression>& body,
+	                         const Type *ty);
+
+
+	//! An untyped @ref Identifier: just a name.
+	Identifier* Id(UniqPtr<Token>&&);
+
+	//! A typed @ref Identifier.
+	Identifier* Id(UniqPtr<Identifier>&& untyped, const Type*);
 
 	/**
 	 * A conditional if-then-else expression
@@ -124,84 +158,66 @@ public:
 	 * else
 	 *     bar
 	 */
-	Conditional* IfElse(SourceRange *ifLocation, Expression *condition,
-	                    Expression *thenResult, Expression *elseResult);
+	Conditional* IfElse(const SourceRange& ifLocation,
+	                    UniqPtr<Expression>& condition,
+	                    UniqPtr<CompoundExpression>& thenResult,
+	                    UniqPtr<CompoundExpression>& elseResult);
 
-	/**
-	 * An expression for mapping list elements into another list:
-	 *   foreach x in some_list: x + 1
-	 * .
-	 */
-	ForeachExpr* Foreach(Expression *source, const Parameter *loopParam,
-	                     CompoundExpression *body, SourceRange *start);
+	//! Define a @ref List of expressions.
+	List* ListOf(UniqPtr<UniqPtrVec<Expression>>&&, const SourceRange&);
 
-	//! A foreach loop iteration parameter, whose type can be inferred.
-	Parameter* ForeachParam(Identifier*);
-
-	// files
-	/**
-	 * Create a source file, which is expected to be present on disk when
-	 * fab is run.
-	 */
-	Filename* Source(Expression *name, SourceRange *source,
-	                 PtrVec<Argument> *arguments = NULL);
-
-	/**
-	 * Create a target file, which only exists at build time as a result
-	 * of a build action.
-	 */
-	Filename* Target(Expression *name, SourceRange *source,
-	                 PtrVec<Argument> *arguments = NULL);
-
-	/** Create a list of files, which may have shared arguments. */
-	FileList* Files(PtrVec<Filename>*, PtrVec<Argument> *args = NULL);
-
-	UnaryOperation* UnaryOp(UnaryOperation::Operator, Expression*);
-
-	BinaryOperation* BinaryOp(BinaryOperation::Operator,
-	                          Expression*, Expression*);
-
-
-	//! Parse an @ref Argument to a @ref Function, build @ref Action, etc.
-	Argument* Arg(Expression *e, Identifier *name = NULL);
-
-	//! Parse a function @ref Parameter.
-	Parameter* Param(Identifier*, Expression *defaultValue = NULL);
-
-	//! Add an @ref Argument vector to the current scope.
-	void AddToScope(const PtrVec<Argument>&);
-
-	//! Parse an @ref Identifier.
-	Identifier* Id(const std::string&);
-
-	//! Parse an @ref Identifier from an untyped name + a type.
-	Identifier* Id(Identifier *untyped, const Type*);
 
 	// literals
 	BoolLiteral* True();
 	BoolLiteral* False();
 	IntLiteral* ParseInt(int);
-	StringLiteral* ParseString(const std::string&);
+	StringLiteral* ParseString(UniqPtr<Token>&&);
+
+
+	//! Parse a function @ref Parameter.
+	Parameter* Param(UniqPtr<Identifier>&& name,
+	                 UniqPtr<Expression>&& defaultValue = nullptr);
+
+
+	//! Reference a @ref Value in scope.
+	SymbolReference* Reference(UniqPtr<Identifier>&&);
+
+
+	//! Create a @ref UnaryOperation (currently just 'not').
+	UnaryOperation* UnaryOp(UnaryOperation::Operator,
+	                        const SourceRange& operatorLocation,
+	                        UniqPtr<Expression>&);
+
+
+	//! Define a @ref Value in the current scope.
+	bool DefineValue(UniqPtr<Identifier>&, UniqPtr<Expression>&);
+
+
+	//
+	// Low-level but type-safe getters and setters for the YYSTYPE union:
+	//
+	static Token* Token(YYSTYPE&);
+
+	static bool Set(YYSTYPE&, Expression*);
+	static bool Set(YYSTYPE&, Identifier*);
 
 
 private:
+	Scope& CurrentScope();
+
+	//! Add an @ref Argument vector to the current scope.
+	void AddToScope(const PtrVec<Argument>&);
+
 	const ErrorReport& ReportError(const std::string&, const SourceRange&);
 	const ErrorReport& ReportError(const std::string&, const HasSource&);
 
 	FabContext& ctx;
-
-	Scope& CurrentScope();
-	void ExitScope();
-
 	const Lexer& lex;
-	SourceRange savedLoc;
 
-	Type const *savedType = NULL;
+	//Type const *savedType = nullptr;
 
-	PtrVec<ErrorReport> errs;
-
-	Scope root;
-	std::stack<Scope*> scopes;
+	UniqPtrVec<ErrorReport> errs;
+	std::stack<std::unique_ptr<Scope>> scopes;
 };
 
 } // namespace ast

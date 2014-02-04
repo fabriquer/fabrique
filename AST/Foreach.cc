@@ -31,10 +31,22 @@
 
 #include "AST/Foreach.h"
 #include "AST/Parameter.h"
+#include "AST/Value.h"
 #include "AST/Visitor.h"
 #include "Support/Bytestream.h"
 
 using namespace fabrique::ast;
+
+
+ForeachExpr::ForeachExpr(UniqPtr<Expression>& list,
+                         UniqPtr<Parameter>& loopParam,
+                         UniqPtr<CompoundExpression>& body,
+                         const Type& resultTy,
+                         const SourceRange& source)
+	: Expression(resultTy, source), source(std::move(list)),
+	  loopParameter(std::move(loopParam)), body(std::move(body))
+{
+}
 
 
 void ForeachExpr::PrettyPrint(Bytestream& out, int indent) const

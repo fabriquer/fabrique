@@ -40,10 +40,10 @@ void FileList::PrettyPrint(Bytestream& out, int indent) const
 {
 	out << Bytestream::Operator << "[" << Bytestream::Reset;
 
-	for (auto *file : files)
+	for (auto& file : files)
 		out << " " << *file;
 
-	for (auto *arg : args)
+	for (auto& arg : args)
 		out << ", " << *arg;
 
 	out << Bytestream::Operator << " ]" << Bytestream::Reset;
@@ -54,10 +54,10 @@ void FileList::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
 	{
-		for (auto *f : files)
+		for (auto& f : files)
 			f->Accept(v);
 
-		for (auto *a : args)
+		for (auto& a : args)
 			a->Accept(v);
 	}
 

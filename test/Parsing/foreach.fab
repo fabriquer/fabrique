@@ -7,7 +7,7 @@
 # CHECK-NEXT: {
 # CHECK-NEXT:   x
 # CHECK-NEXT: };
-foo = foreach [ 1 2 3 ] as x {
+foo = foreach [ 1 2 3 ] as x:int {
 	x
 };
 
@@ -20,4 +20,4 @@ foo = foreach [ 1 2 3 ] as x {
 # CHECK-NEXT: {
 # CHECK-NEXT:   x
 # CHECK-NEXT: };
-bar = foreach [ 1 2 3 ] as x x;
+bar = foreach [ 1 2 3 ] as x:int x;

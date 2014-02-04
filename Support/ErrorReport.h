@@ -45,7 +45,7 @@ class ErrorReport : public HasSource, public Printable
 public:
 	static ErrorReport*
 	Create(const std::string& message,
-	       const SourceRange& loc = SourceRange::None(),
+	       const SourceRange& loc = SourceRange::None,
 	       int contextLines = 3);
 
 	virtual ~ErrorReport() {}

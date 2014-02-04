@@ -39,12 +39,12 @@
 using namespace fabrique::ast;
 
 
-Value::Value(Identifier* id, const Expression* e)
-	: Expression(e->type(), SourceRange::Over(id, e)), id(id), expr(e)
+Value::Value(UniqPtr<Identifier>& id, UniqPtr<Expression>& e)
+	: Expression(e->type(), SourceRange::Over(id, e)),
+	  id(std::move(id)), expr(std::move(e))
 {
-	assert(id != NULL);
-	assert(e != NULL);
 }
+
 
 void Value::PrettyPrint(Bytestream& out, int indent) const
 {

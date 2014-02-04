@@ -1,6 +1,6 @@
-/** @file Conditional.cc    Definition of @ref Conditional. */
+/** @file UniqPtr.h    Declaration of @ref UniqPtr and @ref Ptr. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,50 +29,20 @@
  * SUCH DAMAGE.
  */
 
-#include "AST/CompoundExpr.h"
-#include "AST/Conditional.h"
-#include "AST/Value.h"
-#include "AST/Visitor.h"
-#include "Support/Bytestream.h"
+#ifndef UNIQUE_PTR_H
+#define UNIQUE_PTR_H
 
-using namespace fabrique::ast;
+#include <memory>
 
+namespace fabrique {
 
-Conditional::Conditional(const SourceRange& ifLoc,
-                         UniqPtr<Expression>& condition,
-                         UniqPtr<CompoundExpression>& thenResult,
-                         UniqPtr<CompoundExpression>& elseResult,
-                         const Type& ty)
-	: Expression(ty, SourceRange(ifLoc.begin, elseResult->source().end)),
-	  condition(std::move(condition)),
-	  thenResult(std::move(thenResult)),
-	  elseResult(std::move(elseResult))
-{
-}
+/** A shorter spelling of std::unique_ptr. */
+template<class T> using UniqPtr = std::unique_ptr<T>;
 
-void Conditional::PrettyPrint(Bytestream& out, int indent) const
-{
-	out
-		<< Bytestream::Operator << "if ("
-		<< *condition
-		<< Bytestream::Operator << ") { "
-		<< *thenResult
-		<< Bytestream::Operator << " } else { "
-		<< *elseResult
-		<< Bytestream::Operator << " }"
-		<< Bytestream::Reset
-		;
-}
+/** Take ownership of a pointer. */
+template<class T>
+std::unique_ptr<T> Take(T *val) { return std::unique_ptr<T>(val); }
 
+} // namespace fabrique
 
-void Conditional::Accept(Visitor& v) const
-{
-	if (v.Enter(*this))
-	{
-		condition->Accept(v);
-		thenResult->Accept(v);
-		elseResult->Accept(v);
-	}
-
-	v.Leave(*this);
-}
+#endif

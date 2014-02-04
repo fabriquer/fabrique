@@ -32,7 +32,6 @@
 #ifndef IDENTIFIER_H
 #define IDENTIFIER_H
 
-#include "ADT/CStringRef.h"
 #include "Support/Printable.h"
 #include "Support/SourceLocation.h"
 #include "Types/Typed.h"
@@ -61,6 +60,9 @@ public:
 
 	void PrettyPrint(Bytestream&, int indent = 0) const;
 	const std::string& name() const { return id; }
+
+	bool operator == (const Identifier&) const;
+	bool operator < (const Identifier&) const;
 
 	virtual void Accept(Visitor&) const;
 

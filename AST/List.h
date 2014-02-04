@@ -43,21 +43,21 @@ namespace ast {
 class List : public Expression
 {
 public:
-	List(ExprVec& e, const Type& ty, const SourceRange& loc)
-		: Expression(ty, loc), elements(e)
+	List(UniqPtrVec<Expression>& e, const Type& ty,
+	     const SourceRange& loc)
+		: Expression(ty, loc), elements(std::move(e))
 	{
 	}
 
-	~List() { for (auto *e : elements) delete e; }
-
-	ExprVec::const_iterator begin() const { return elements.begin(); }
-	ExprVec::const_iterator end() const { return elements.end(); }
+	using ConstIterator = UniqPtrVec<Expression>::const_iterator;
+	ConstIterator begin() const { return elements.begin(); }
+	ConstIterator end() const { return elements.end(); }
 
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 	virtual void Accept(Visitor&) const;
 
 private:
-	const ExprVec elements;
+	const UniqPtrVec<Expression> elements;
 };
 
 } // namespace ast

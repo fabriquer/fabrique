@@ -39,16 +39,22 @@
 using namespace fabrique::ast;
 
 
-Scope::~Scope()
+Scope::Scope(const Scope *parent)
+	: parent(parent)
 {
-	for (auto *v : values)
-		delete v;
 }
 
 
-const Expression* Scope::Lookup(const Identifier* name) const
+Scope::Scope(Scope&& other)
+	: parent(other.parent), symbols(other.symbols),
+	  ownedValues(std::move(other.ownedValues))
 {
-	auto i = symbols.find(name->name());
+}
+
+
+const Expression* Scope::Lookup(const Identifier& name) const
+{
+	auto i = symbols.find(name.name());
 	if (i != symbols.end())
 		return i->second;
 
@@ -66,34 +72,52 @@ void Scope::Register(const Argument *a)
 }
 
 
-void Scope::Register(Parameter *p)
+void Scope::Register(const Parameter *p)
 {
 	Register(p->getName(), p);
 }
 
 
-void Scope::Register(const Value *v)
+void Scope::Register(const Value& v)
 {
-	Register(v->getName(), &v->getValue());
-	values.push_back(v);
+	Register(v.getName(), &v.getValue());
 }
 
 
 void Scope::Register(const Identifier& id, const Expression *e)
 {
-	assert(e != NULL);
+	assert(e);
 
-	const std::string name(id.name());
-	assert(symbols.find(name) == symbols.end());
+	Bytestream::Debug("ast.scope")
+		<< Bytestream::Action << "scope"
+		<< Bytestream::Operator << " <- "
+		<< Bytestream::Type << "symbol"
+		<< Bytestream::Operator << ": " << id
+		<< Bytestream::Operator << " = " << *e
+		<< "\n"
+		;
 
-	symbols[name] = e;
+	assert(symbols.find(id.name()) == symbols.end());
+	symbols[id.name()] = e;
 }
 
 
-void Scope::PrettyPrint(Bytestream& out, int indent) const
+void Scope::Take(Value *v)
 {
-	for (auto *v : values)
-		out << *v << "\n";
+	std::unique_ptr<Value> val(v);
+	assert(val);
+
+	Register(*val);
+
+	Bytestream::Debug("ast.scope")
+		<< Bytestream::Action << "scope"
+		<< Bytestream::Operator << " <- "
+		<< Bytestream::Type << "value"
+		<< Bytestream::Operator << ": " << *val
+		<< "\n"
+		;
+
+	ownedValues.push_back(std::move(val));
 }
 
 
@@ -101,7 +125,7 @@ void Scope::Accept(Visitor& v) const
 {
 	v.Enter(*this);
 
-	for (auto *val : values)
+	for (auto& val : ownedValues)
 		val->Accept(v);
 
 	v.Leave(*this);

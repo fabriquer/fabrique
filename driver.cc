@@ -41,7 +41,6 @@
 
 #include "Parsing/Lexer.h"
 #include "Parsing/Parser.h"
-#include "Parsing/fab.yacc.h"
 
 #include "Support/Arguments.h"
 #include "Support/Bytestream.h"
@@ -59,27 +58,9 @@ using namespace fabrique;
 using std::unique_ptr;
 
 
-unique_ptr<Lexer> lex;
 Bytestream& err = Bytestream::Stderr();
 
-int yyparse(ast::Parser*);
-
-/*
- * I'd like to get rid of the global yyerror() and yylex() functions
- * (since they assume that there is only one lexer),
- * but this is a limitation of byacc.
- */
-void yyerror(const char *str)
-{
-	assert(lex);
-	err << lex->Err(str);
-}
-
-int yylex(void *yylval)
-{
-	assert(lex);
-	return lex->yylex((YYSTYPE*) yylval);
-}
+unique_ptr<ast::Scope> Parse(const std::string& filename, FabContext&);
 
 int main(int argc, char *argv[]) {
 	//
@@ -101,48 +82,14 @@ int main(int argc, char *argv[]) {
 	Bytestream::SetDebugPattern(args->debugPattern);
 	Bytestream::SetDebugStream(err);
 
-	std::ifstream infile(args->input.c_str());
-	if (!infile)
-	{
-		err
-			<< Bytestream::Error << "error: "
-			<< Bytestream::Reset << "failed to open input file '"
-			<< Bytestream::Filename << args->input
-			<< Bytestream::Reset << "': "
-			<< strerror(errno)
-			<< "\n"
-			;
-		return 1;
-	}
-
-	lex.reset(new Lexer(args->input));
-	lex->switch_streams(&infile, &err.raw());
-
 
 	//
-	// Parse the Fabrique input.
+	// Parse the file, optionally pretty-printing it.
 	//
 	FabContext ctx;
-	unique_ptr<ast::Parser> parser(new ast::Parser(ctx, *lex));
-	int result = yyparse(parser.get());
-
-	for (auto *error : parser->errors())
-		err << *error << "\n";
-
-	if (result != 0)
-	{
-		err
-			<< "Fabrique:"
-			<< Bytestream::Error << " failed to parse "
-			<< Bytestream::Filename << args->input
-			<< Bytestream::Reset
-			<< "\n"
-			;
-
-		return 1;
-	}
-
-	const ast::Scope& root = parser->getRoot();
+	unique_ptr<ast::Scope> ast = Parse(args->input, ctx);
+	if (not ast)
+		return -1;
 
 	if (args->printAST)
 	{
@@ -152,15 +99,21 @@ int main(int argc, char *argv[]) {
 			<< "# AST pretty-printed from '" << args->input << "'\n"
 			<< "#\n"
 			<< Bytestream::Reset
-			<< root
 			;
+
+		for (auto& val : ast->values())
+			Bytestream::Stdout() << *val << "\n";
 	}
 
 	if (args->parseOnly)
 		return 0;
 
+
+	//
+	// Convert the parsed AST into a DAG.
+	//
 	unique_ptr<dag::DAG> dag;
-	try { dag.reset(dag::DAG::Flatten(root, ctx)); }
+	try { dag.reset(dag::DAG::Flatten(*ast, ctx)); }
 	catch (SemanticException& e)
 	{
 		err
@@ -252,4 +205,76 @@ int main(int argc, char *argv[]) {
 	}
 
 	return 0;
+}
+
+
+int yyparse(ast::Parser*);
+unique_ptr<Lexer> lex;
+
+/*
+ * I'd like to get rid of the global yyerror() and yylex() functions
+ * (since they assume that there is only one lexer),
+ * but this is a limitation of byacc.
+ */
+void yyerror(const char *str)
+{
+	assert(lex);
+	err << lex->Err(str);
+}
+
+int yylex(void *yylval)
+{
+	assert(lex);
+	return lex->yylex((YYSTYPE*) yylval);
+}
+
+
+unique_ptr<ast::Scope> Parse(const std::string& filename, FabContext& ctx)
+{
+	std::ifstream infile(filename.c_str());
+	if (!infile)
+	{
+		err
+			<< Bytestream::Error << "error: "
+			<< Bytestream::Reset << "failed to open input file '"
+			<< Bytestream::Filename << filename
+			<< Bytestream::Reset << "': "
+			<< strerror(errno)
+			<< "\n"
+			;
+		return unique_ptr<ast::Scope>();
+	}
+
+	lex.reset(new Lexer(filename));
+	lex->switch_streams(&infile, &err.raw());
+
+
+	//
+	// Parse the Fabrique input.
+	//
+	unique_ptr<ast::Parser> parser(new ast::Parser(ctx, *lex));
+	unique_ptr<ast::Scope> ast;
+
+	try
+	{
+		int result = yyparse(parser.get());
+
+		lex.reset();
+		for (auto& error : parser->errors())
+			err << *error << "\n";
+
+		if (result == 0)
+			ast = parser->ExitScope();
+	}
+	catch (SourceCodeException& e)
+	{
+		err
+			<< Bytestream::Error
+			<< "Parse error: "
+			<< Bytestream::Reset
+			<< e
+			<< "\n";
+	}
+
+	return ast;
 }

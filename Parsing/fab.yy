@@ -4,39 +4,74 @@
 #include "AST/ast.h"
 
 #include "Parsing/Parser.h"
+#include "Parsing/Token.h"
 #include "Parsing/lex.h"
+#include "Parsing/fab.yacc.h"
 #include "Parsing/yacc.h"
 
 using namespace fabrique;
+using namespace fabrique::ast;
 using namespace std;
 
-template<class T>
-void CreateList(PtrVec<T>*& target, const T *firstElement = NULL)
+using std::unique_ptr;
+
+
+//
+// Setters and getters for the YYSTYPE union:
+//
+#define SetOrDie(...) \
+	do { \
+		if (not Parser::Set(__VA_ARGS__)) \
+			return -1; \
+	} while (0)
+
+
+static void Append(YYSTYPE& yyunion, UniqPtr<Expression>&& e)
 {
-	target = new PtrVec<T>;
-	if (firstElement != NULL)
-		target->push_back(firstElement);
+	assert(yyunion.exprs);
+	assert(e && "NULL expression!");
+
+	yyunion.exprs->push_back(std::move(e));
+}
+
+
+//
+// Getters for said YYSTYPE union:
+//
+template<class T>
+static UniqPtr<T> Expr(YYSTYPE& yyunion)
+{
+	return UniqPtr<T>(dynamic_cast<T*>(yyunion.expr));
 }
 
 template<class T>
-void Append(PtrVec<T>*& target, PtrVec<T>* source, const T *nextElement)
+static UniqPtrVec<T>* ExprVec(YYSTYPE& yyunion)
 {
-	if (source == NULL)
+	assert(yyunion.exprs);
+
+	unique_ptr<UniqPtrVec<Expression>> ownership(yyunion.exprs);
+	UniqPtrVec<Expression>& generic = *ownership;
+	const size_t len = generic.size();
+
+	UniqPtrVec<T> *result = new UniqPtrVec<T>(len);
+	UniqPtrVec<T>& vec = *result;
+
+	for (size_t i = 0; i < len; i++)
 	{
-		target = NULL;
-		return;
+		assert(generic[i]);
+
+		unique_ptr<Expression> e = std::move(generic[i]);
+		unique_ptr<T> val(dynamic_cast<T*>(e.release()));
+
+		assert(val);
+		assert(not vec[i]);
+
+		vec[i].swap(val);
 	}
 
-	if (nextElement == NULL)
-	{
-		target = NULL;
-		delete source;
-		return;
-	}
-
-	target = source;
-	target->push_back(nextElement);
+	return result;
 }
+
 
 #define YYPARSE_PARAM_TYPE fabrique::ast::Parser*
 #define YYPARSE_PARAM p
@@ -45,33 +80,22 @@ void Append(PtrVec<T>*& target, PtrVec<T>* source, const T *nextElement)
 
 %pure-parser
 
+/**
+ * Since we're using C++, we don't have to use hopefully-typed unions:
+ * we can use run-time type information!
+ */
 %union {
-	int i;
-	fabrique::CStringRef s;
-	std::string *str;
-	fabrique::SourceRange *src;
+	int intVal;
 
 	fabrique::ast::Identifier *id;
-
 	fabrique::ast::Expression *expr;
-	fabrique::PtrVec<fabrique::ast::Expression> *exprs;
+	fabrique::UniqPtrVec<fabrique::ast::Expression> *exprs;
 
-	fabrique::ast::CompoundExpression *compound;
-
-	const fabrique::Type *ty;
+	const fabrique::Type *type;
 	fabrique::PtrVec<fabrique::Type> *types;
 
-	const fabrique::ast::Argument *arg;
-	fabrique::PtrVec<fabrique::ast::Argument> *args;
-
-	const fabrique::ast::Parameter *param;
-	fabrique::PtrVec<fabrique::ast::Parameter> *params;
-
-	const fabrique::ast::Filename *file;
-	fabrique::PtrVec<fabrique::ast::Filename> *files;
-
-	fabrique::ast::Value *val;
-	fabrique::PtrVec<fabrique::ast::Value> *values;
+	//fabrique::SourceRange *src;
+	fabrique::Token *token;
 };
 
 %token WHITESPACE
@@ -91,23 +115,7 @@ void Append(PtrVec<T>*& target, PtrVec<T>* source, const T *nextElement)
 %%
 
 fabfile:
-	values			{ p->SetRoot($1.values); }
-	;
-
-values:
-	value			{ CreateList($$.values, $1.val); }
-	| values value		{ Append($$.values, $1.values, $2.val); }
-	;
-
-value:
-	identifier '=' expr ';'	{
-		$$.val = p->Define($1.id, $3.expr);
-		if ($$.val == NULL) return -1;
-	}
-	;
-
-expr:
-	expression		{ if ($$.expr == NULL) return -1; }
+	values
 	;
 
 expression:
@@ -116,112 +124,209 @@ expression:
 	| binaryOperation
 	| call
 	| conditional
+	| '(' expression ')'	{ SetOrDie($$, $2.expr); }
 	| file
 	| fileList
 	| foreach
 	| function
-	| identifier		{ $$.expr = p->Reference($1.id); }
-	| '(' expr ')'		{ $$.expr = $2.expr; }
-	| '[' exprlist ']'	{ $$.expr = p->ListOf($2.exprs); }
+	| identifier		{ SetOrDie($$, p->Reference(Take($1.id))); }
+	| list
 	| unaryOperation
 	;
 
-binaryOperation:
-	expr ADD expr		{ $$.expr = p->BinaryOp(
-		ast::BinaryOperation::Add, $1.expr, $3.expr); }
-
-	| expr PREFIX expr	{ $$.expr = p->BinaryOp(
-		ast::BinaryOperation::Prefix, $1.expr, $3.expr); }
-
-	| expr SCALAR_ADD expr	{ $$.expr = p->BinaryOp(
-		ast::BinaryOperation::ScalarAdd, $1.expr, $3.expr); }
-
-	| expr AND expr		{ $$.expr = p->BinaryOp(
-		ast::BinaryOperation::And, $1.expr, $3.expr); }
-
-	| expr OR expr		{ $$.expr = p->BinaryOp(
-		ast::BinaryOperation::Or, $1.expr, $3.expr); }
-
-	| expr XOR expr		{ $$.expr = p->BinaryOp(
-		ast::BinaryOperation::Xor, $1.expr, $3.expr); }
-	;
-
-unaryOperation:
-	not expr		{
-		$$.expr = p->UnaryOp(ast::UnaryOperation::Negate, $2.expr);
-	}
-	;
-
-not:
-	NOT			{ p->SaveLoc(); }
-	;
-
-literal:
-	TRUE			{ $$.expr = p->True(); }
-	| FALSE			{ $$.expr = p->False(); }
-	| INT_LITERAL		{ $$.expr = p->ParseInt($1.i); }
-	| STRING_LITERAL	{ $$.expr = p->ParseString($1.s); }
-	;
-
 action:
-	ACTION '(' args ')'	{ $$.expr = p->DefineAction($3.args, $1.src); }
-	| ACTION '(' args INPUT params ')'
+	ACTION '(' argumentList ')'
 	{
-		$$.expr = p->DefineAction($3.args, $1.src, $5.params);
+		SourceRange begin = Take(Parser::Token($1))->source();
+		auto args = Take(ExprVec<Argument>($3));
+		SourceRange end = Take(Parser::Token($4))->source();
+
+		SetOrDie($$, p->DefineAction(args, SourceRange(begin, end)));
 	}
+	| ACTION '(' argumentList INPUT parameterList ')'
+	{
+		SourceRange begin = Take(Parser::Token($1))->source();
+		auto args = Take(ExprVec<Argument>($3));
+		auto params = Take(ExprVec<Parameter>($5));
+
+		SetOrDie($$, p->DefineAction(args, begin, std::move(params)));
+	}
+	;
+
+/**
+ * A positional or keyword argument.
+ */
+argument:
+	expression
+	{
+		auto value = Expr<Expression>($1);
+		SetOrDie($$, p->Arg(value));
+	}
+	| identifier '=' expression
+	{
+		auto name = $1.id;
+		auto value = Expr<Expression>($3);
+
+		SetOrDie($$, p->Arg(value, Take(name)));
+	}
+	;
+
+argumentList:
+	/* empty */
+	{
+		$$.exprs = new UniqPtrVec<Expression>;
+	}
+	| argument
+	{
+		$$.exprs = new UniqPtrVec<Expression>;
+		Append($$, Expr<Argument>($1));
+	}
+	| argumentList ',' argument
+	{
+		$$.exprs = $1.exprs;
+		Append($$, Expr<Argument>($3));
+	}
+	;
+
+binaryOperation:
+	expression binaryOperator expression
+	{
+		UniqPtr<Expression> lhs = Expr<Expression>($1);
+		UniqPtr<Expression> rhs = Expr<Expression>($3);
+		auto op = static_cast<BinaryOperation::Operator>($2.intVal);
+
+		SetOrDie($$, p->BinaryOp(op, lhs, rhs));
+	}
+	;
+
+binaryOperator:
+	ADD			{ $$.intVal = BinaryOperation::Add; }
+	| PREFIX		{ $$.intVal = BinaryOperation::Prefix; }
+	| SCALAR_ADD		{ $$.intVal = BinaryOperation::ScalarAdd; }
+	| AND			{ $$.intVal = BinaryOperation::And; }
+	| OR			{ $$.intVal = BinaryOperation::Or; }
+	| XOR			{ $$.intVal = BinaryOperation::Xor; }
 	;
 
 call:
-	identifier '(' args ')' { $$.expr = p->CreateCall($1.id, $3.args); }
+	identifier '(' argumentList ')'
+	{
+		auto fnName = Take($1.id);
+		auto arguments = Take(ExprVec<Argument>($3));
+
+		SetOrDie($$, p->CreateCall(fnName, arguments));
+	}
 	;
 
 compoundExpr:
-	expr			{ $$.compound = p->CompoundExpr($1.expr); }
-	| '{' expr '}'		{
-		$$.compound = p->CompoundExpr($2.expr, $1.src);
+	expression
+	{
+		auto singleton = Expr<Expression>($1);
+		SetOrDie($$, p->CompoundExpr(singleton));
 	}
-	| '{' values expr '}'	{
-		$$.compound = p->CompoundExpr($3.expr, $1.src, $2.values);
+	| '{' expression '}'
+	{
+		SourceRange begin = Take(Parser::Token($1))->source();
+		auto result = Expr<Expression>($2);
+		SourceRange end = Take(Parser::Token($3))->source();
+
+		SetOrDie($$, p->CompoundExpr(result, begin, end));
+	}
+	| '{' values expression '}'
+	{
+		SourceRange begin = Take(Parser::Token($1))->source();
+		// NOTE: values have already been added to the scope by Parser
+		auto result = Expr<Expression>($3);
+		SourceRange end = Take(Parser::Token($4))->source();
+
+		SetOrDie($$, p->CompoundExpr(result, begin, end));
 	}
 	;
 
 conditional:
-	IF expr expr ELSE expr	{
-		$$.expr = p->IfElse($1.src, $2.expr, $3.expr, $5.expr);
+	IF expression compoundExpr ELSE compoundExpr
+	{
+		SourceRange begin = Take(Parser::Token($1))->source();
+		auto condition = Expr<Expression>($2);
+		auto then = Expr<CompoundExpression>($3);
+		auto elseClause = Expr<CompoundExpression>($5);
+
+		SetOrDie($$, p->IfElse(begin, condition, then, elseClause));
 	}
 	;
 
 file:
-	FILE_TOKEN '(' expr args ')'	{
-		$$.expr = p->Source($3.expr, $1.src, $4.args);
+	FILE_TOKEN '(' expression argumentList ')'
+	{
+		SourceRange begin = Take(Parser::Token($1))->source();
+		auto name = Expr<Expression>($3);
+		auto arguments = Take(ExprVec<Argument>($4));
+
+		SetOrDie($$, p->File(name, begin, std::move(arguments)));
 	}
 	;
 
 fileList:
-	FILES '(' files ',' args ')' { $$.expr = p->Files($3.files, $5.args); }
-	| FILES '(' files ')'	{ $$.expr = p->Files($3.files); }
+	FILES '(' files ',' argumentList ')'
+	{
+		auto begin = Take($1.token);
+		auto files = Take(ExprVec<Filename>($3));
+		auto arguments = ExprVec<Argument>($5);
+
+		SetOrDie($$, p->Files(begin->source(), files, Take(arguments)));
+	}
+	| FILES '(' files ')'
+	{
+		auto begin = Take($1.token);
+		auto files = Take(ExprVec<Filename>($3));
+
+		SetOrDie($$, p->Files(begin->source(), files));
+	}
 	;
 
 files:
-	fileInList		{ CreateList($$.files, $1.file); }
-	| files fileInList	{ Append($$.files, $1.files, $2.file); }
+	fileInList
+	{
+		$$.exprs = new UniqPtrVec<Expression>;
+		Append($$, Expr<Filename>($1));
+	}
+	| files fileInList
+	{
+		$$.exprs = $1.exprs;
+		Append($$, Expr<Filename>($2));
+	}
 	;
 
+/*
+ * The files() production has some special syntax to make fabfiles a bit
+ * nicer to write. You can write 'files(file("foo.c") bar.c Makefile)',
+ * which contains 1) a file production, 2) a literal filename and
+ * 3) a literal filename that would in other circumstances be interpreted as
+ * a legal identifier.
+ */
 fileInList:
 	file
-	| FILENAME		{
-		$$.expr = p->Source(p->ParseString($1.s),
-		                    p->CurrentTokenRange());
+	| FILENAME
+	{
+		UniqPtr<Expression> name(p->ParseString(Take($1.token)));
+		SetOrDie($$, p->File(name, name->source()));
 	}
-	| IDENTIFIER		{
-		$$.expr = p->Source(p->ParseString($1.s),
-		                    p->CurrentTokenRange());
+	| IDENTIFIER
+	{
+		UniqPtr<Expression> name(p->ParseString(Take($1.token)));
+		SetOrDie($$,p->File(name, name->source()));
 	}
 	;
 
 foreach:
-	foreachbegin foreachexpr AS foreachparam compoundExpr {
-		$$.expr = p->Foreach($2.expr, $4.param, $5.compound, $1.src);
+	foreachbegin expression AS parameter compoundExpr
+	{
+		SourceRange begin = Take(Parser::Token($1))->source();
+		auto seq = Expr<Expression>($2);
+		auto loopParameter = Expr<Parameter>($4);
+		auto body = Expr<CompoundExpression>($5);
+
+		SetOrDie($$, p->Foreach(seq, loopParameter, body, begin));
 	}
 	;
 
@@ -229,67 +334,144 @@ foreachbegin:
 	FOREACH			{ p->EnterScope(); }
 	;
 
-foreachexpr:
-	expr			{ p->SaveType($1.expr->type()); }
-	;
-
-foreachparam:
-	identifier		{ $$.param = p->ForeachParam($$.id); }
-	;
-
 function:
-	fndecl '(' params ')' ':' type compoundExpr {
-		$$.expr = p->DefineFunction($3.params, $6.ty, $7.compound);
+	functiondecl '(' parameterList ')' ':' type compoundExpr
+	{
+		SourceRange begin = Take(Parser::Token($1))->source();
+		auto params = Take(ExprVec<Parameter>($3));
+		auto *retTy = $6.type;
+		auto body = Expr<CompoundExpression>($7);
+
+		SetOrDie($$, p->DefineFunction(begin, params, body, retTy));
 	}
 	;
 
-fndecl:
-	FUNCTION		{ p->EnterScope(); p->SaveLoc(); }
+functiondecl:
+	FUNCTION		{ p->EnterScope(); }
 	;
 
 identifier:
-	name			/* keep id parsed in the 'name' production */
-	| name ':' type		{ p->SaveLoc(); $$.id = p->Id($1.id, $3.ty); }
+	name			/* keep result of 'name' production */
+	| name ':' type		{ SetOrDie($$, p->Id(Take($1.id), $3.type)); }
+	;
+
+list:
+	| '[' listElements ']'
+	{
+		SourceRange src(*Take($1.token), *Take($3.token));
+		SetOrDie($$, p->ListOf(Take($2.exprs), src));
+	}
+	;
+
+listElements:
+	/* empty */
+	{
+		$$.exprs = new UniqPtrVec<Expression>;
+	}
+	| listElements expression
+	{
+		$$.exprs = $1.exprs;
+		Append($$, Expr<Expression>($2));
+	}
+
+literal:
+	TRUE			{ SetOrDie($$, p->True()); }
+	| FALSE			{ SetOrDie($$, p->False()); }
+	| INT_LITERAL		{ SetOrDie($$, p->ParseInt($1.intVal)); }
+	| STRING_LITERAL	{ SetOrDie($$, p->ParseString(Take($1.token))); }
 	;
 
 name:
-	IDENTIFIER		{ $$.id = p->Id($1.s); }
-	;
-
-type:
-	name			{ $$.ty = p->getType($1.id); }
-	| FILE_TOKEN		{ $$.ty = p->getType("file"); }
-	| FILE_TOKEN '[' types ']' { $$.ty = p->getType("file", *$3.types); }
-	| name '[' types ']'	{ $$.ty = p->getType($1.id, $3.types); }
-	;
-
-types:
-	type			{ CreateList($$.types, $1.ty); p->SaveLoc(); }
-	| types ',' type	{ Append($$.types, $1.types, $3.ty); }
-
-exprlist:
-	/* empty */		{ p->SaveLoc(); CreateList($$.exprs); }
-	| exprlist expr		{ Append($$.exprs, $1.exprs, $2.expr); }
-
-args:
-	/* empty */		{ CreateList($$.args); }
-	| arg			{ CreateList($$.args, $1.arg); }
-	| args ',' arg		{ Append($$.args, $1.args, $3.arg); }
-	;
-
-arg:
-	identifier '=' expr	{ $$.arg = p->Arg($3.expr, $1.id); }
-	| expr			{ $$.arg = p->Arg($1.expr); }
-	;
-
-params:
-	/* empty */		{ CreateList($$.params); }
-	| parameter		{ CreateList($$.params, $1.param); }
-	| params ',' parameter	{ Append($$.params, $1.params, $3.param); }
+	IDENTIFIER		{ SetOrDie($$, p->Id(Take($1.token))); }
 	;
 
 parameter:
-	identifier		{ $$.param = p->Param($1.id); }
+	identifier
+	{
+		SetOrDie($$, p->Param(Take($1.id)));
+	}
 	;
 
+parameterList:
+	/* empty */
+	{
+		$$.exprs = new UniqPtrVec<Expression>;
+	}
+	| parameter
+	{
+		$$.exprs = new UniqPtrVec<Expression>;
+		Append($$, Expr<Parameter>($1));
+	}
+	| parameterList ',' parameter
+	{
+		$$.exprs = $1.exprs;
+		Append($$, Expr<Parameter>($3));
+	}
+	;
+
+/*
+ * 'file' and 'file[in]' are valid types, so we need to do provide
+ * alternate handling paths here.
+ *
+ * TODO: add typeName production
+ */
+type:
+	name
+	{
+		$$.type = p->getType(Take($1.id));
+	}
+	| name '[' types ']'
+	{
+		auto *subtypes = $3.types;
+		$$.type = p->getType(Take($1.id), Take(subtypes));
+	}
+	| FILE_TOKEN
+	{
+		$$.type = p->getType("file");
+	}
+	| FILE_TOKEN '[' types ']'
+	{
+		$$.type = p->getType("file", *$3.types);
+	}
+	;
+
+types:
+	type
+	{
+		$$.types = new PtrVec<Type>(1, $1.type);
+	}
+	| types ',' type
+	{
+		$$.types = $1.types;
+		$$.types->push_back($3.type);
+	}
+
+unaryOperation:
+	NOT expression
+	{
+		auto opsrc = Take($1.token)->source();
+		auto e = Expr<Expression>($2);
+		UnaryOperation::Operator op = ast::UnaryOperation::Negate;
+
+		SetOrDie($$, p->UnaryOp(op, opsrc, e));
+	}
+	;
+
+values:
+	value
+	| values value
+	;
+
+value:
+	identifier '=' expression ';'	{
+		auto name = Take($1.id);
+		auto initialiser = Expr<Expression>($3);
+
+		if (not name or not initialiser)
+			return -1;
+
+		if (not p->DefineValue(name, initialiser))
+			return -1;
+	}
+	;
 %%

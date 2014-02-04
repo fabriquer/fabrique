@@ -36,6 +36,13 @@
 using namespace fabrique::ast;
 
 
+SymbolReference::SymbolReference(UniqPtr<Identifier>&& id,
+                                 const Expression& definition,
+                                 const SourceRange& src)
+	: Expression(definition.type(), src), id(std::move(id)), def(definition)
+{
+}
+
 void SymbolReference::PrettyPrint(Bytestream& out, int indent) const
 {
 	out << *id;

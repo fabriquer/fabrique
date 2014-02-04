@@ -54,7 +54,7 @@ class Rule : public Value
 public:
 	static Rule* Create(std::string name, std::string command,
 	                    const ValueMap& otherArguments, const Type&,
-	                    const SourceRange from = SourceRange::None());
+	                    const SourceRange& from = SourceRange::None);
 
 	virtual ~Rule() {}
 

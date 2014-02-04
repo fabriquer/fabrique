@@ -29,11 +29,10 @@
  * SUCH DAMAGE.
  */
 
-#include "Support/ErrorReport.h"
-
-#include "Lexer.h"
-
+#include "Parsing/Lexer.h"
 #include "Parsing/fab.yacc.h"
+#include "Support/Bytestream.h"
+#include "Support/ErrorReport.h"
 
 #include <list>
 #include <map>
@@ -43,36 +42,110 @@ using namespace fabrique;
 extern int yylineno;
 extern int yycolumn;
 
-Lexer::~Lexer()
+
+static SourceRange range(const char *text, size_t len, SourceLocation begin)
 {
-	for (ErrorReport *e : errs)
-		delete e;
+	size_t line = begin.line;
+	size_t column = begin.column;
+
+	for (size_t i = 0; i < len; i++)
+	{
+		if (text[i] == '\n')
+		{
+			line++;
+			column = 1;
+		}
+		else
+			column++;
+	}
+
+	SourceLocation end(begin.filename, line, column);
+
+	return SourceRange(begin, end);
 }
+
 
 const ErrorReport& Lexer::Err(const char *message)
 {
-	errs.push_back(ErrorReport::Create(message, CurrentTokenRange()));
+	errs.push_back(
+		std::unique_ptr<ErrorReport>(
+			ErrorReport::Create(message, CurrentTokenRange())));
+
 	return *errs.back();
 }
 
-void Lexer::setCString(YYSTYPE *yylval) { yylval->s.set(yytext, yyleng); }
-void Lexer::setRange(YYSTYPE *yylval)
+Token Lexer::NextToken() const
 {
-	yylval->src = new SourceRange(
-		SourceLocation(inputFilename, yylineno, yycolumn),
-		SourceLocation(inputFilename, yylineno, yycolumn + yyleng)
-	);
+	return Token(yytext, yyleng, CurrentTokenRange());
 }
 
 SourceRange Lexer::CurrentTokenRange() const
 {
-	if (yylineno == 1 and yycolumn == -1)
-		return SourceRange::None();
+	SourceLocation begin(inputFilename, yylineno, yycolumn);
+	return range(yytext, yyleng, begin);
+}
 
-	return SourceRange(
-		SourceLocation(inputFilename, yylineno, yycolumn),
-		SourceLocation(inputFilename, yylineno, yycolumn + yyleng - 1)
-	);
+
+void Lexer::SetComment(YYSTYPE *yyunion, bool includesNewline)
+{
+	std::string s = currentToken.str();
+	SourceRange src = currentToken.source();
+
+	if (includesNewline)
+	{
+		s = s.substr(0, s.length() - 1);
+
+		src.begin.line--;
+		src = range(s.data(), s.length(), src.begin);
+	}
+
+	yyunion->token = new Token(s, src);
+	Token &t = *yyunion->token;
+
+	Bytestream::Debug("lex.comment")
+		<< Bytestream::Action << "lexed "
+		<< Bytestream::Type << "comment"
+		<< Bytestream::Operator << ": '"
+		<< Bytestream::Comment << t.str()
+		<< Bytestream::Operator << "' @ " << t.source()
+		<< Bytestream::Reset << "\n"
+		;
+}
+
+
+void Lexer::SetToken(YYSTYPE *yyunion)
+{
+	Bytestream::Debug("lex.token")
+		<< Bytestream::Action << "lexed "
+		<< Bytestream::Type << "token"
+		<< Bytestream::Operator << ": " << currentToken
+		<< Bytestream::Reset << "\n"
+		;
+
+	yyunion->token = new Token(currentToken);
+}
+
+
+void Lexer::BeginString()
+{
+	stringStart = currentToken.source().begin;
+	assert(buf.empty());
+}
+
+
+void Lexer::AppendChar(char c)
+{
+	buf.push_back(c);
+}
+
+
+void Lexer::EndString(YYSTYPE* yyunion)
+{
+	SourceRange src = range(buf.data(), buf.size(), stringStart);
+
+	std::string s(buf.data(), 0, buf.size());
+	buf.clear();
+	yyunion->token = new Token(s, src);
 }
 
 

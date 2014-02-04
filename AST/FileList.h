@@ -45,23 +45,25 @@ namespace ast {
 class FileList : public Expression
 {
 public:
-	FileList(PtrVec<Filename>& files, PtrVec<Argument>& args,
+	FileList(UniqPtrVec<Filename>& files, UniqPtrVec<Argument>& args,
 	         const Type& ty, const SourceRange& loc)
-		: Expression(ty, loc), files(files), args(args)
+		: Expression(ty, loc), files(std::move(files)),
+		  args(std::move(args))
 	{
 	}
 
-	const PtrVec<Argument>& arguments() const { return args; }
+	const UniqPtrVec<Argument>& arguments() const { return args; }
 
-	PtrVec<Filename>::const_iterator begin() const { return files.begin(); }
-	PtrVec<Filename>::const_iterator end() const { return files.end(); }
+	using ConstIterator = UniqPtrVec<Filename>::const_iterator;
+	ConstIterator begin() const { return files.begin(); }
+	ConstIterator end() const { return files.end(); }
 
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 	virtual void Accept(Visitor&) const;
 
 private:
-	PtrVec<Filename> files;
-	PtrVec<Argument> args;
+	UniqPtrVec<Filename> files;
+	UniqPtrVec<Argument> args;
 };
 
 } // namespace ast

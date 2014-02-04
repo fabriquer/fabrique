@@ -32,6 +32,7 @@
 #ifndef FUNCTION_H
 #define FUNCTION_H
 
+#include "AST/Callable.h"
 #include "AST/Expression.h"
 
 namespace fabrique {
@@ -49,22 +50,19 @@ class Value;
 /**
  * A function allows users to create build abstractions.
  */
-class Function : public Expression
+class Function : public Expression, public Callable
 {
 public:
-	Function(PtrVec<Parameter>& params, const FunctionType& ty,
-	         CompoundExpression *body, const SourceRange& loc);
-	~Function();
+	Function(UniqPtrVec<Parameter>& params, const FunctionType& ty,
+	         UniqPtr<CompoundExpression>& body, const SourceRange& loc);
 
-	const PtrVec<Parameter>& parameters() const { return params; }
 	const CompoundExpression& body() const { return *expr; }
 
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 	virtual void Accept(Visitor&) const;
 
 private:
-	PtrVec<Parameter> params;
-	std::unique_ptr<CompoundExpression> expr;
+	const UniqPtr<CompoundExpression> expr;
 };
 
 } // namespace ast

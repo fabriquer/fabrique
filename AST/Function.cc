@@ -40,16 +40,10 @@
 using namespace fabrique::ast;
 
 
-Function::Function(PtrVec<Parameter>& params, const FunctionType& ty,
-         CompoundExpression *body, const SourceRange& loc)
-	: Expression(ty, loc), params(params), expr(body)
+Function::Function(UniqPtrVec<Parameter>& params, const FunctionType& ty,
+                   UniqPtr<CompoundExpression>& body, const SourceRange& loc)
+	: Expression(ty, loc), Callable(params), expr(std::move(body))
 {
-}
-
-Function::~Function()
-{
-	for (auto *p : params)
-		delete p;
 }
 
 
@@ -63,10 +57,13 @@ void Function::PrettyPrint(Bytestream& out, int indent) const
 		<< Bytestream::Operator << "("
 		;
 
-	for (size_t i = 0; i < params.size(); )
+	const UniqPtrVec<Parameter>& params = parameters();
+	size_t printed = 0;
+
+	for (auto& p : params)
 	{
-		out << *params[i];
-		if (++i < params.size())
+		out << *p;
+		if (++printed < params.size())
 			out
 				<< Bytestream::Operator << ", "
 				<< Bytestream::Reset;
@@ -88,7 +85,7 @@ void Function::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
 	{
-		for (auto *p : params)
+		for (auto& p : parameters())
 			p->Accept(v);
 
 		expr->Accept(v);

@@ -36,6 +36,14 @@
 using namespace fabrique::ast;
 
 
+Argument::Argument(UniqPtr<Identifier>& name, UniqPtr<Expression>& value)
+	: Expression(value->type(), SourceRange::Over(name, value)),
+	  name(std::move(name)), value(std::move(value))
+{
+	assert(this->value);
+}
+
+
 void Argument::PrettyPrint(Bytestream& out, int indent) const
 {
 	if (name)
@@ -44,7 +52,8 @@ void Argument::PrettyPrint(Bytestream& out, int indent) const
 			<< Bytestream::Operator << " = "
 			;
 
-	expr->PrettyPrint(out, indent);
+	assert(this->value);
+	value->PrettyPrint(out, indent);
 }
 
 
@@ -55,7 +64,7 @@ void Argument::Accept(Visitor& v) const
 		if (name)
 			name->Accept(v);
 
-		expr->Accept(v);
+		value->Accept(v);
 	}
 
 	v.Leave(*this);

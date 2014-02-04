@@ -1,4 +1,4 @@
-/** @file Typed.h    Declaration of @ref Typed interface. */
+/** @file Typed.h    Declaration of @ref Typed mixin. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.

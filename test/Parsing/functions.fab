@@ -7,12 +7,13 @@
 # CHECK-NEXT: {
 # CHECK-NEXT:   foreach ints as x
 # CHECK-NEXT:   {
-# CHECK-NEXT:     x
+# CHECK-NEXT:     x + 1
 # CHECK-NEXT:   }
 # CHECK-NEXT: }
 foo = function(ints:list[int]): list[int]
 {
-	foreach ints as x {
+	foreach ints as x:int
+	{
 		x + 1
 	}
 };
@@ -25,5 +26,5 @@ foo = function(ints:list[int]): list[int]
 # CHECK-NEXT:   }
 # CHECK-NEXT: }
 bar = function(names:list[string]): list[file]
-	foreach names as name
+	foreach names as name:string
 		file(name);

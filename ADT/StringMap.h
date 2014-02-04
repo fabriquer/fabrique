@@ -33,12 +33,16 @@
 #define STRING_MAP_H
 
 #include <map>
+#include <memory>
 #include <string>
 
 namespace fabrique {
 
 //! Simply use a std::map with a std::string as a key.
 template<class T> using StringMap = ::std::map< ::std::string, T>;
+
+//! A map from strings to owned pointers.
+template<class T> using UniqPtrMap = StringMap< ::std::unique_ptr<T> >;
 
 }
 

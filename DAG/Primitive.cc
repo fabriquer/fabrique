@@ -70,7 +70,7 @@ shared_ptr<Value> Boolean::And(shared_ptr<Value>& v)
 	return shared_ptr<Value>(
 		new Boolean(value and other->value,
 			Type::GetSupertype(type(), other->type()),
-			SourceRange::Over(*this, *other))
+			SourceRange(*this, *other))
 	);
 }
 
@@ -82,7 +82,7 @@ shared_ptr<Value> Boolean::Or(shared_ptr<Value>& v)
 	return shared_ptr<Value>(
 		new Boolean(value or other->value,
 			Type::GetSupertype(type(), other->type()),
-			SourceRange::Over(*this, *other))
+			SourceRange(*this, *other))
 	);
 }
 
@@ -94,7 +94,7 @@ shared_ptr<Value> Boolean::Xor(shared_ptr<Value>& v)
 	return shared_ptr<Value>(
 		new Boolean(value xor other->value,
 			Type::GetSupertype(type(), other->type()),
-			SourceRange::Over(*this, *other))
+			SourceRange(*this, *other))
 	);
 }
 
@@ -110,7 +110,7 @@ string Integer::str() const { return std::to_string(value); }
 
 shared_ptr<Value> Integer::Add(shared_ptr<Value>& v)
 {
-	SourceRange loc = SourceRange::Over(this, v.get());
+	SourceRange loc = SourceRange(*this, *v);
 
 	shared_ptr<Integer> other = std::dynamic_pointer_cast<Integer>(v);
 	if (not other)
@@ -131,7 +131,7 @@ string String::str() const { return value; }
 
 shared_ptr<Value> String::Add(shared_ptr<Value>& v)
 {
-	SourceRange loc = SourceRange::Over(this, v.get());
+	SourceRange loc = SourceRange(*this, *v);
 
 	shared_ptr<String> other = std::dynamic_pointer_cast<String>(v);
 	if (not other)

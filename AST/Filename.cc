@@ -40,6 +40,13 @@ using namespace fabrique::ast;
 using std::string;
 
 
+Filename::Filename(UniqPtr<Expression>& name, UniqPtrVec<Argument>& args,
+                   const Type& t, const SourceRange& src)
+	: Expression(t, src), unqualName(std::move(name)), args(std::move(args))
+{
+}
+
+
 void Filename::PrettyPrint(Bytestream& out, int indent) const
 {
 	out
@@ -48,7 +55,7 @@ void Filename::PrettyPrint(Bytestream& out, int indent) const
 
 	out << Bytestream::Filename << *unqualName << Bytestream::Reset;
 
-	for (auto *a : args)
+	for (auto& a : args)
 		out
 			<< Bytestream::Operator << ", "
 			<< Bytestream::Reset << *a;
@@ -64,7 +71,7 @@ void Filename::Accept(Visitor& v) const
 	if (v.Enter(*this))
 	{
 		unqualName->Accept(v);
-		for (auto *a : args)
+		for (auto& a : args)
 			a->Accept(v);
 	}
 

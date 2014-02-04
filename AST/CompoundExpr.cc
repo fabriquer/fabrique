@@ -37,10 +37,13 @@
 using namespace fabrique::ast;
 
 
-CompoundExpression::~CompoundExpression()
+CompoundExpression::CompoundExpression(UniqPtr<Scope>&& scope,
+                                       UniqPtr<Expression>& result,
+                                       const SourceRange& loc)
+	: Expression(result->type(), loc), Scope(std::move(*scope)),
+	  res(std::move(result))
 {
-	for (auto *v : values)
-		delete v;
+	assert(res);
 }
 
 
@@ -50,12 +53,13 @@ void CompoundExpression::PrettyPrint(Bytestream& out, int indent) const
 	std::string intabs(indent + 1, '\t');
 
 	out << tabs << Bytestream::Operator << "{\n";
-	for (auto *v : values)
+	for (auto& v : values())
 	{
 		v->PrettyPrint(out, indent + 1);
 		out << "\n";
 	}
 
+	assert(res);
 	out
 		<< intabs << *res
 		<< "\n" << Bytestream::Operator << tabs << "}"
@@ -68,7 +72,7 @@ void CompoundExpression::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
 	{
-		for (auto *val : values)
+		for (auto& val : values())
 			val->Accept(v);
 
 		res->Accept(v);

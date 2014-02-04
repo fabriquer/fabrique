@@ -1,4 +1,4 @@
-/** @file UnaryOperation.h    Declaration of @ref UnaryOperation. */
+/** @file Callable.h    Declaration of @ref Callable. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -29,55 +29,78 @@
  * SUCH DAMAGE.
  */
 
-#ifndef UNARY_OPERATION_H
-#define UNARY_OPERATION_H
+#ifndef CALLABLE_H
+#define CALLABLE_H
 
-#include "ADT/UniqPtr.h"
-#include "AST/Expression.h"
+#include "ADT/PtrVec.h"
+#include "ADT/StringMap.h"
 
+#include "AST/Parameter.h"
+#include "AST/SymbolReference.h"
+
+#include <memory>
 
 namespace fabrique {
-
-class Bytestream;
-
 namespace ast {
 
+class Argument;
+
+
 /**
- * An operation with two operands.
+ * A mixin type for something that can be called with parameters.
  */
-class UnaryOperation : public Expression
+class Callable
 {
 public:
-	enum Operator
+	Callable(UniqPtrVec<Parameter>&);
+
+	const UniqPtrVec<Parameter>& parameters() const;
+
+	using ParamIterator = UniqPtrVec<Parameter>::const_iterator;
+	ParamIterator begin() const { return params.begin(); }
+	ParamIterator end() const { return params.end(); }
+
+	/**
+	 * Name all of the arguments in @a v according to the rules for
+	 * positional and keyword arguments.
+	 */
+	template<class T>
+	StringMap<const T*> NameArguments(const UniqPtrVec<T>& v) const
 	{
-		Negate,
-		Invalid,
-	};
+		std::vector<std::string> names;
+		SourceLocation begin, end;
 
-	static Operator Op(const std::string&);
-	static std::string OpStr(Operator);
+		// Build a vector of what we currently know about the
+		// arguments' names.
+		for (auto& i : v)
+		{
+			const SourceRange& src = i->source();
+			if (not begin) begin = src.begin;
+			end = src.end;
 
-	static UnaryOperation* Create(Operator, const SourceRange& opLoc,
-	                              UniqPtr<Expression>&);
+			names.push_back(
+				i->hasName() ? i->getName().name() : "");
+		}
 
-	Operator getOp() const { return op; }
-	const Expression& getSubExpr() const { return *subexpr; }
+		// Fill in any gaps with knowledge about formal parameters.
+		names = NameArguments(names, SourceRange(begin, end));
 
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
-	virtual void Accept(Visitor&) const;
+		// Return the result.
+		StringMap<const T*> result;
+		for (size_t i = 0; i < v.size(); i++)
+			result.emplace(names[i], v[i].get());
+
+		return result;
+	}
 
 private:
-	UnaryOperation(UniqPtr<Expression>& e, enum Operator op,
-	               const Type& ty, const SourceRange& loc);
+	std::vector<std::string>
+	NameArguments(const std::vector<std::string>&, SourceRange src) const;
 
-	const UniqPtr<Expression> subexpr;
-	const Operator op;
+	UniqPtrVec<Parameter> params;
 };
 
 } // namespace ast
-
-Bytestream& operator << (Bytestream&, enum ast::UnaryOperation::Operator);
-
 } // namespace fabrique
 
 #endif

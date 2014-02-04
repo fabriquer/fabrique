@@ -220,7 +220,7 @@ Bytestream& ANSIStream::operator << (enum Format f)
 		case Action:            set(Red);               break;
 		case Comment:           set(Blue);              break;
 		case Definition:        set(Green);             break;
-		case Filename:          set(Magenta);           break;
+		case Filename:          set(Green);             break;
 		case Literal:           set(Magenta);           break;
 		case Operator:          set(Yellow);            break;
 		case Reference:         set(Cyan);              break;
@@ -229,8 +229,8 @@ Bytestream& ANSIStream::operator << (enum Format f)
 		case Error:             set(Bold); set(Red);    break;
 		case ErrorLoc:          set(Green);             break;
 
-		case Line:              set(Blue);              break;
-		case Column:            set(Cyan);              break;
+		case Line:              set(Bold); set(Cyan);   break;
+		case Column:            set(Blue);              break;
 
 		case Reset:             set(ResetAll);          break;
 	}

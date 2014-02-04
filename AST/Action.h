@@ -33,55 +33,49 @@
 #define ACTION_H
 
 #include "ADT/PtrVec.h"
-#include "ADT/StringMap.h"
+
 #include "AST/Argument.h"
+#include "AST/Callable.h"
 #include "AST/Expression.h"
 #include "AST/Parameter.h"
-#include "Support/Bytestream.h"
 
 namespace fabrique {
+
+class FabContext;
+class FunctionType;
+
 namespace ast {
 
 
 /**
  * A build action that can transform inputs into outputs.
  */
-class Action : public Expression
+class Action : public Expression, public Callable
 {
 public:
-	Action(PtrVec<Argument>& args, StringMap<const Parameter*>& params,
-	       const Type& ty, const SourceRange& loc);
-
-	const PtrVec<Argument>& arguments() const { return args; }
-	const StringMap<const Parameter*>& parameters() const { return params; }
-
 	/**
-	 * Name all of the arguments in @a in according to the rules for
-	 * positional and keyword arguments.
+	 * An action definition has both arguments and parameters.
+	 * Arguments define the action itself and parameters declare what
+	 * callers can pass in.
 	 *
-	 * For instance, given the action:
-	 * foo = action('$FOO $in $out --bar=$bar', bar = 'default_bar')
-	 *
-	 * and the call:
-	 * baz = foo(infile, bar = 'something', out = outfile)
-	 *
-	 * You could pass [ "", "bar", "out" ] to Action::NameArguments()
-	 * and receive in return:
-	 *
-	 * {
-	 *   "in": 0,
-	 *   "out": 2,
-	 *   "bar": 1,
-	 * }
+	 * If no explicit 'in' or 'out' parameters are specified, an action
+	 * assumes that the first two parameters are in:list[file] and
+	 * out:list[file].
 	 */
-	StringMap<int> NameArguments(const std::vector<std::string>& in) const;
+	static Action* Create(UniqPtrVec<Argument>&,
+	                      UniqPtr<UniqPtrVec<Parameter>>&,
+	                      const SourceRange&, FabContext&);
+
+	const UniqPtrVec<Argument>& arguments() const { return args; }
 
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 	virtual void Accept(Visitor&) const;
 
 private:
-	PtrVec<Argument> args;
-	StringMap<const Parameter*> params;
+	Action(UniqPtrVec<Argument>&, UniqPtrVec<Parameter>&,
+	       const FunctionType&, const SourceRange&);
+
+	UniqPtrVec<Argument> args;
 };
 
 } // namespace ast

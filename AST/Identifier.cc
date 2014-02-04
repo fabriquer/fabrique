@@ -49,3 +49,14 @@ void Identifier::PrettyPrint(Bytestream& out, int indent) const
 
 
 void Identifier::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }
+
+
+bool Identifier::operator == (const Identifier& other) const
+{
+	return name() == other.name() and type() == other.type();
+}
+
+bool Identifier::operator < (const Identifier& other) const
+{
+	return name() < other.name() or type() < other.type();
+}

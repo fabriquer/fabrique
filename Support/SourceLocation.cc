@@ -38,23 +38,71 @@
 using namespace fabrique;
 
 
+const SourceLocation SourceLocation::Nowhere;
+
+
+SourceLocation::operator bool() const
+{
+	return not (line == 0);
+}
+
+bool SourceLocation::operator == (const SourceLocation& other) const
+{
+	return filename == other.filename
+		and line == other.line
+		and column == other.column;
+}
+
+
+bool SourceLocation::operator != (const SourceLocation& other) const
+{
+	return not (*this == other);
+}
+
+
 void SourceLocation::PrettyPrint(Bytestream& out, int indent) const
 {
-	if (!filename.empty())
-		out
-			<< Bytestream::Filename << filename
-			<< Bytestream::Reset << ":";
+	out
+		<< Bytestream::Filename
+		<< (filename.empty() ? "-" : filename)
+		;
 
 	if (line > 0)
 		out
+			<< Bytestream::Operator << ":"
 			<< Bytestream::Line << line
-			<< Bytestream::Reset << ":";
+			;
 
 	if (column > 0)
 		out
+			<< Bytestream::Operator << ":"
 			<< Bytestream::Column << column
-			<< Bytestream::Reset;
+			;
+
+	out << Bytestream::Reset;
 }
+
+
+
+const SourceRange SourceRange::None(
+	SourceLocation::Nowhere, SourceLocation::Nowhere);
+
+
+SourceRange::SourceRange(const SourceLocation& begin, const SourceLocation& end)
+	: begin(begin), end(end)
+{
+}
+
+SourceRange::SourceRange(const SourceRange& begin, const SourceRange& end)
+	: SourceRange(begin.begin, end.end)
+{
+}
+
+SourceRange::SourceRange(const HasSource& begin, const HasSource& end)
+	: SourceRange(begin.source(), end.source())
+{
+}
+
 
 SourceRange SourceRange::Span(const std::string& filename, int line,
                               int begin, int end)
@@ -65,57 +113,58 @@ SourceRange SourceRange::Span(const std::string& filename, int line,
 	);
 }
 
-SourceRange SourceRange::Over(const HasSource *begin, const HasSource *end)
+
+SourceRange::operator bool() const
 {
-	static const SourceLocation nowhere;
-
-	const SourceLocation& b(begin ? begin->source().begin : nowhere);
-	const SourceLocation& e(end ? end->source().end : nowhere);
-
-	return SourceRange(b, e);
+	return begin and end;
 }
 
-SourceRange SourceRange::Over(const HasSource& begin, const HasSource& end)
+bool SourceRange::operator == (const SourceRange& other) const
 {
-	return SourceRange::Over(begin.source(), end.source());
-}
-
-SourceRange SourceRange::Over(const SourceRange& begin, const SourceRange& end)
-{
-	return SourceRange(begin.begin, end.end);
+	return begin == other.begin and end == other.end;
 }
 
 
-SourceRange SourceRange::None()
+bool SourceRange::operator != (const SourceRange& other) const
 {
-	SourceLocation nowhere;
-	return SourceRange(nowhere, nowhere);
+	return not (*this == other);
 }
+
 
 void SourceRange::PrettyPrint(Bytestream& out, int indent) const
 {
 	out
 		<< Bytestream::Filename << begin.filename
-		<< Bytestream::Reset << ":"
+		<< Bytestream::Operator << ":"
 		;
 
+	// The end column is the first character in the next token; don't
+	// report this when printing out the current location.
+	size_t endcol = end.column - 1;
+
 	if (begin.line == end.line)
+	{
 		out
 			<< Bytestream::Line << begin.line
-			<< Bytestream::Reset << ":"
+			<< Bytestream::Operator << ":"
 			<< Bytestream::Column << begin.column
-			<< Bytestream::Reset << "-"
-			<< Bytestream::Column << end.column
 			;
+
+		if (endcol != begin.column)
+			out
+				<< Bytestream::Operator << "-"
+				<< Bytestream::Column << endcol
+				;
+	}
 	else
 		out
 			<< Bytestream::Line << begin.line
-			<< Bytestream::Reset << ":"
+			<< Bytestream::Operator << ":"
 			<< Bytestream::Column << begin.column
-			<< Bytestream::Reset << "-"
+			<< Bytestream::Operator << "-"
 			<< Bytestream::Line << end.line
-			<< Bytestream::Reset << ":"
-			<< Bytestream::Column << end.column
+			<< Bytestream::Operator << ":"
+			<< Bytestream::Column << endcol
 			;
 
 	out << Bytestream::Reset;

@@ -32,8 +32,10 @@
 #ifndef COMPOUND_EXPRESSION_H
 #define COMPOUND_EXPRESSION_H
 
-#include "Expression.h"
-#include "Scope.h"
+#include "ADT/UniqPtr.h"
+
+#include "AST/Expression.h"
+#include "AST/Scope.h"
 
 namespace fabrique {
 
@@ -51,15 +53,8 @@ class Value;
 class CompoundExpression : public Expression, public Scope
 {
 public:
-	CompoundExpression(PtrVec<Value>& values, Expression* result,
-	                   const SourceRange& loc)
-		: Expression(result->type(), loc),
-		  values(values), res(result)
-	{
-		assert(result != NULL);
-	}
-
-	~CompoundExpression();
+	CompoundExpression(UniqPtr<Scope>&& values, UniqPtr<Expression>& result,
+	                   const SourceRange& loc);
 
 	const Expression& result() const { return *res; }
 
@@ -67,8 +62,7 @@ public:
 	virtual void Accept(Visitor&) const;
 
 private:
-	PtrVec<Value> values;
-	std::unique_ptr<const Expression> res;
+	const UniqPtr<Expression> res;
 };
 
 } // namespace ast

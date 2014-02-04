@@ -47,22 +47,24 @@ namespace ast {
 class SymbolReference : public Expression
 {
 public:
-	SymbolReference(Identifier *id, const Expression *v,
-	                const SourceRange& loc)
-		: Expression(v->type(), loc), id(id), val(v)
-	{
-		assert(&v->type() != NULL);
-	}
+	/**
+	 * Constructor.
+	 *
+	 * @a id            the name of the referenced symbol
+	 * @a definition    the referenced thing itself
+	 */
+	SymbolReference(UniqPtr<Identifier>&& id, const Expression& definition,
+	                const SourceRange&);
 
 	const Identifier& getName() const { return *id; }
-	const Expression& getValue() const { return *val; }
+	const Expression& definition() const { return def; }
 
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 	virtual void Accept(Visitor&) const;
 
 private:
-	std::unique_ptr<Identifier> id;
-	const Expression *val;
+	const std::unique_ptr<Identifier> id;
+	const Expression& def;
 };
 
 } // namespace ast

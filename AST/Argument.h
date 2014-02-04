@@ -32,8 +32,9 @@
 #ifndef ARGUMENT_H
 #define ARGUMENT_H
 
-#include "Expression.h"
-#include "Identifier.h"
+#include "ADT/UniqPtr.h"
+#include "AST/Expression.h"
+#include "AST/Identifier.h"
 
 #include <memory>
 
@@ -47,23 +48,18 @@ namespace ast {
 class Argument : public Expression
 {
 public:
-	Argument(Identifier *id, Expression *e)
-		: Expression(e->type(), SourceRange::Over(id, e)),
-		  name(id), expr(e)
-	{
-		assert(e != NULL);
-	}
+	Argument(UniqPtr<Identifier>& name, UniqPtr<Expression>& value);
 
 	bool hasName() const { return (bool) name; }
 	const Identifier& getName() const { return *name; }
-	const Expression& getValue() const { return *expr; }
+	const Expression& getValue() const { return *value; }
 
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 	virtual void Accept(Visitor&) const;
 
 private:
-	std::unique_ptr<Identifier> name;
-	std::unique_ptr<Expression> expr;
+	const UniqPtr<Identifier> name;
+	const UniqPtr<Expression> value;
 };
 
 } // namespace ast

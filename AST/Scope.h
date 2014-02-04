@@ -33,10 +33,11 @@
 #define SCOPE_H
 
 #include "ADT/PtrVec.h"
-#include "Support/Printable.h"
+#include "ADT/StringMap.h"
 #include "Support/Uncopyable.h"
 
 #include <map>
+#include <memory>
 #include <string>
 
 namespace fabrique {
@@ -55,25 +56,27 @@ class Visitor;
  *
  * A scope can have a parent scope for recursive name lookups.
  */
-class Scope : public Printable, Uncopyable
+class Scope : public Uncopyable
 {
 public:
-	typedef PtrVec<Value>::const_iterator iterator;
-	typedef std::map<std::string,const Expression*> SymbolMap;
+	Scope(const Scope *parent);
+	Scope(Scope&&);
 
-	Scope(const Scope *parent = NULL) : parent(parent) {}
-	~Scope();
+	typedef StringMap<const Expression*> SymbolMap;
+	typedef SymbolMap::const_iterator iterator;
 
-	iterator begin() const { return values.begin(); }
-	iterator end() const { return values.end(); }
+	iterator begin() const { return symbols.begin(); }
+	iterator end() const { return symbols.end(); }
 
-	const Expression* Lookup(const Identifier*) const;
+	const UniqPtrVec<Value>& values() const { return ownedValues; }
+
+	const Expression* Lookup(const Identifier&) const;
 
 	void Register(const Argument*);
-	void Register(Parameter*);
-	void Register(const Value*);
+	void Register(const Parameter*);
+	void Register(const Value&);
 
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
+	void Take(Value*);
 
 	virtual void Accept(Visitor&) const;
 
@@ -82,7 +85,7 @@ private:
 
 	const Scope *parent;
 	SymbolMap symbols;
-	PtrVec<Value> values;
+	UniqPtrVec<Value> ownedValues;
 };
 
 } // namespace ast

@@ -3,14 +3,26 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: default_type:{{.*}}list[file]{{.*}} = action('$CC -c $in -o $out')
+# CHECK: default_type:(list[file]) => list[file]
+# CHECK:   = action('$CC -c $in -o $out' <- in:list[file], out:list[file])
 default_type = action('$CC -c $in -o $out');
 
+# CHECK: cxx:(list[file]) => list[file] = action('$CXX{{.*}} -o $out',
+# CHECK:            description = 'Compiling $in', depfile = '$out.d'
+# CHECK:            <- in:list[file], out:list[file]);
 cxx = action('$CXX -c $cxxflags -MMD -MF $out.d $in -o $out',
 	description = 'Compiling $in', depfile = '$out.d');
+
+# CHECK: lex:(list[file]) => list[file] = action('$LEX{{.*}}=$out $in'
+# CHECK:            <- in:list[file], out:list[file], header:file[out]);
+lex = action('$LEX -c++ --header-file=$header --outfile=$out $in'
+              <- header:file[out]);
 
 # CHECK: single_object:file = cxx(file('a.cc'), out = file('a.o'));
 single_object = cxx(file('a.cc'), out = file('a.o'));
 
 # CHECK: object_list:list[file] = cxx(file('a.cc'), out = [ file('a.o') file('b.o') ]);
 object_list = cxx(file('a.cc'), out = files(a.o b.o));
+
+# CHECK: lexed:file = lex(file('foo.l'), file('foo.lex.c'), file('foo.lex.h'));
+lexed = lex(file('foo.l'), file('foo.lex.c'), file('foo.lex.h'));

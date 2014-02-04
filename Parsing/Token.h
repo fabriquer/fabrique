@@ -1,6 +1,6 @@
-/** @file Conditional.cc    Definition of @ref Conditional. */
+/** @file Token.h    Declaration of @ref Token. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,50 +29,36 @@
  * SUCH DAMAGE.
  */
 
-#include "AST/CompoundExpr.h"
-#include "AST/Conditional.h"
-#include "AST/Value.h"
-#include "AST/Visitor.h"
-#include "Support/Bytestream.h"
+#ifndef STRINGREF_H
+#define STRINGREF_H
 
-using namespace fabrique::ast;
+#include "Support/SourceLocation.h"
 
+#include <string>
 
-Conditional::Conditional(const SourceRange& ifLoc,
-                         UniqPtr<Expression>& condition,
-                         UniqPtr<CompoundExpression>& thenResult,
-                         UniqPtr<CompoundExpression>& elseResult,
-                         const Type& ty)
-	: Expression(ty, SourceRange(ifLoc.begin, elseResult->source().end)),
-	  condition(std::move(condition)),
-	  thenResult(std::move(thenResult)),
-	  elseResult(std::move(elseResult))
+namespace fabrique {
+
+/**
+ * A token obtained from the @ref Lexer.
+ */
+class Token : public HasSource, public Printable
 {
-}
+public:
+	Token();
+	Token(const std::string&, const SourceRange&);
+	Token(const char *begin, size_t len, const SourceRange&);
 
-void Conditional::PrettyPrint(Bytestream& out, int indent) const
-{
-	out
-		<< Bytestream::Operator << "if ("
-		<< *condition
-		<< Bytestream::Operator << ") { "
-		<< *thenResult
-		<< Bytestream::Operator << " } else { "
-		<< *elseResult
-		<< Bytestream::Operator << " }"
-		<< Bytestream::Reset
-		;
-}
+	size_t length() const { return s.length(); }
 
+	operator std::string() const { return str(); }
+	std::string str() const override { return s; }
 
-void Conditional::Accept(Visitor& v) const
-{
-	if (v.Enter(*this))
-	{
-		condition->Accept(v);
-		thenResult->Accept(v);
-		elseResult->Accept(v);
-	}
+	void PrettyPrint(Bytestream&, int indent = 0) const;
 
-	v.Leave(*this);
-}
+private:
+	std::string s;
+};
+
+} // namespace fabrique
+
+#endif

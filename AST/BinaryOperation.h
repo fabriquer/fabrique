@@ -32,6 +32,7 @@
 #ifndef BINARY_OPERATOR_H
 #define BINARY_OPERATOR_H
 
+#include "ADT/UniqPtr.h"
 #include "AST/Expression.h"
 
 #include <memory>
@@ -64,24 +65,22 @@ public:
 	static Operator Op(const std::string&);
 	static std::string OpStr(Operator);
 
-	static BinaryOperation* Create(Expression*, Operator, Expression*);
+	static BinaryOperation* Create(
+		UniqPtr<Expression>&&, Operator, UniqPtr<Expression>&&);
 
 	Operator getOp() const { return op; }
-	const Expression& getLHS() const { return *LHS; }
-	const Expression& getRHS() const { return *RHS; }
+	const Expression& getLHS() const { return *lhs; }
+	const Expression& getRHS() const { return *rhs; }
 
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 	virtual void Accept(Visitor&) const;
 
 private:
-	BinaryOperation(Expression *LHS, enum Operator op, Expression *RHS,
-	                const Type& ty, const SourceRange& loc)
-		: Expression(ty, loc), LHS(LHS), RHS(RHS), op(op)
-	{
-	}
+	BinaryOperation(UniqPtr<Expression>&& lhs, UniqPtr<Expression>&& rhs,
+	                enum Operator, const Type&, const SourceRange&);
 
-	const std::unique_ptr<Expression> LHS;
-	const std::unique_ptr<Expression> RHS;
+	const std::unique_ptr<Expression> lhs;
+	const std::unique_ptr<Expression> rhs;
 	const Operator op;
 };
 

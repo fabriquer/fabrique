@@ -39,4 +39,8 @@
 	#include <FlexLexer.h>
 #endif
 
+#include "AST/forward-decls.h"
+#include "Parsing/Token.h"
+#include "Parsing/fab.yacc.h"
+
 #endif

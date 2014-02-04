@@ -36,6 +36,14 @@
 using namespace fabrique::ast;
 
 
+Parameter::Parameter(UniqPtr<Identifier>& name, const Type& resultTy,
+                     UniqPtr<Expression>&& e)
+	: Expression(resultTy, SourceRange::Over(name, e)),
+	  name(std::move(name)), expr(std::move(e))
+{
+}
+
+
 void Parameter::PrettyPrint(Bytestream& out, int indent) const
 {
 	out << *name;
