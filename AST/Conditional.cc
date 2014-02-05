@@ -36,17 +36,6 @@
 using namespace fabrique::ast;
 
 
-bool Conditional::isStatic() const
-{
-	// TODO: if the condition is static, we only need *either* the then
-	//       or the else clause to be static too.
-	return condition->isStatic()
-		and thenResult->isStatic()
-		and elseResult->isStatic()
-		;
-}
-
-
 void Conditional::PrettyPrint(Bytestream& out, int indent) const
 {
 	out

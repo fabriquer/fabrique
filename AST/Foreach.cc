@@ -37,12 +37,6 @@
 using namespace fabrique::ast;
 
 
-bool ForeachExpr::isStatic() const
-{
-	return source->isStatic() and body->isStatic();
-}
-
-
 void ForeachExpr::PrettyPrint(Bytestream& out, int indent) const
 {
 	out

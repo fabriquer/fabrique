@@ -56,9 +56,7 @@ public:
 	PtrVec<Filename>::const_iterator begin() const { return files.begin(); }
 	PtrVec<Filename>::const_iterator end() const { return files.end(); }
 
-	virtual bool isStatic() const;
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
-
 	virtual void Accept(Visitor&) const;
 
 private:

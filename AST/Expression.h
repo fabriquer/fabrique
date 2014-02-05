@@ -55,12 +55,6 @@ public:
 	virtual const Type& getType() const { return ty; }
 	const SourceRange& getSource() const { return loc; }
 
-	/**
-	 * Can this expression be evaluated at parse time, independent of
-	 * e.g., the state of source files on disk?
-	 */
-	virtual bool isStatic() const = 0;
-
 protected:
 	Expression(const Type& ty, const SourceRange& loc) : ty(ty), loc(loc) {}
 

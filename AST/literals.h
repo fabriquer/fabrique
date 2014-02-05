@@ -50,8 +50,6 @@ public:
 	const T& value() const { return val; }
 	virtual std::string str() const = 0;
 
-	bool isStatic() const { return true; }
-
 protected:
 	Literal(const T& value, const Type& ty, const SourceRange& loc)
 		: Expression(ty, loc), val(value)

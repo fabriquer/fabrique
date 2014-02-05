@@ -36,20 +36,6 @@
 using namespace fabrique::ast;
 
 
-bool FileList::isStatic() const
-{
-	for (auto *file : files)
-		if (!file->isStatic())
-			return false;
-
-	for (auto *arg : args)
-		if (!arg->isStatic())
-			return false;
-
-	return true;
-}
-
-
 void FileList::PrettyPrint(Bytestream& out, int indent) const
 {
 	out << Bytestream::Operator << "[" << Bytestream::Reset;

@@ -63,9 +63,7 @@ public:
 	Operator getOp() const { return op; }
 	const Expression& getSubExpr() const { return *subexpr; }
 
-	virtual bool isStatic() const;
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
-
 	virtual void Accept(Visitor&) const;
 
 private:

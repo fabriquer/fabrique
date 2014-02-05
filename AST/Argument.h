@@ -58,9 +58,7 @@ public:
 	const Identifier& getName() const { return *name; }
 	const Expression& getValue() const { return *expr; }
 
-	virtual bool isStatic() const { return expr->isStatic(); }
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
-
 	virtual void Accept(Visitor&) const;
 
 private:

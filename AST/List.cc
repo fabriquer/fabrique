@@ -38,15 +38,6 @@
 using namespace fabrique::ast;
 
 
-bool List::isStatic() const
-{
-	for (auto *e : elements)
-		if (!e->isStatic())
-			return false;
-
-	return true;
-}
-
 void List::PrettyPrint(Bytestream& out, int indent) const
 {
 	out << Bytestream::Operator << "[" << Bytestream::Reset;

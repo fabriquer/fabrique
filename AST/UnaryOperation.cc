@@ -79,11 +79,6 @@ std::string UnaryOperation::OpStr(Operator op)
 	return "";
 }
 
-bool UnaryOperation::isStatic() const
-{
-	return subexpr->isStatic();
-}
-
 
 void UnaryOperation::PrettyPrint(Bytestream& out, int indent) const
 {

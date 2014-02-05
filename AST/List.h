@@ -53,9 +53,7 @@ public:
 	ExprVec::const_iterator begin() const { return elements.begin(); }
 	ExprVec::const_iterator end() const { return elements.end(); }
 
-	virtual bool isStatic() const;
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
-
 	virtual void Accept(Visitor&) const;
 
 private:

@@ -117,11 +117,6 @@ std::string BinaryOperation::OpStr(Operator op)
 	return "";
 }
 
-bool BinaryOperation::isStatic() const
-{
-	return (LHS->isStatic() and RHS->isStatic());
-}
-
 
 void BinaryOperation::PrettyPrint(Bytestream& out, int indent) const
 {

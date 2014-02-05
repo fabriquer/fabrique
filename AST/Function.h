@@ -59,9 +59,7 @@ public:
 	const PtrVec<Parameter>& parameters() const { return params; }
 	const CompoundExpression& body() const { return *expr; }
 
-	virtual bool isStatic() const { return false; }
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
-
 	virtual void Accept(Visitor&) const;
 
 private:

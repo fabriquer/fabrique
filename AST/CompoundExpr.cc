@@ -44,16 +44,6 @@ CompoundExpression::~CompoundExpression()
 }
 
 
-bool CompoundExpression::isStatic() const
-{
-	for (auto *v : values)
-		if (!v->isStatic())
-			return false;
-
-	return res->isStatic();
-}
-
-
 void CompoundExpression::PrettyPrint(Bytestream& out, int indent) const
 {
 	std::string tabs(indent, '\t');

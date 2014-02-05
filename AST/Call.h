@@ -60,9 +60,7 @@ public:
 	PtrVec<Argument>::const_iterator begin() const { return args.begin(); }
 	PtrVec<Argument>::const_iterator end() const { return args.end(); }
 
-	virtual bool isStatic() const { return false; }
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
-
 	virtual void Accept(Visitor&) const;
 
 private:

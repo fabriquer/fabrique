@@ -40,15 +40,6 @@ using namespace fabrique::ast;
 using std::string;
 
 
-bool Filename::isStatic() const
-{
-	for (auto *a : args)
-		if (!a->isStatic())
-			return false;
-
-	return true;
-}
-
 void Filename::PrettyPrint(Bytestream& out, int indent) const
 {
 	out

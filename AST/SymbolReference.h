@@ -54,12 +54,10 @@ public:
 		assert(&v->getType() != NULL);
 	}
 
-	virtual bool isStatic() const { return false; }
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
-
 	const Identifier& getName() const { return *id; }
 	const Expression& getValue() const { return *val; }
 
+	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 	virtual void Accept(Visitor&) const;
 
 private:
