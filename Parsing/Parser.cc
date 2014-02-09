@@ -127,7 +127,7 @@ Value* Parser::Define(Identifier *id, Expression *e)
 		return NULL;
 	}
 
-	SourceRange range(id->source().begin, e->source().end);
+	SourceRange range = SourceRange::Over(id, e);
 
 	if (id->isTyped() and !e->type().isSupertype(*id->type()))
 	{
