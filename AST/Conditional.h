@@ -48,7 +48,7 @@ public:
 	            const Type& resultTy)
 		: Expression(resultTy,
 		             SourceRange(ifLoc.begin,
-		                         elseResult->getSource().end)),
+		                         elseResult->source().end)),
 		  condition(condition),
 		  thenResult(thenResult),
 		  elseResult(elseResult)

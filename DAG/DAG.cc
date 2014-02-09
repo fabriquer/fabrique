@@ -165,8 +165,7 @@ bool Flattener::Enter(const ast::Action& a)
 	ValueMap arguments;
 
 	if (a.arguments().size() < 1)
-		throw SemanticException("Missing action arguments",
-				a.getSource());
+		throw SemanticException("Missing action arguments", a.source());
 
 	for (const ast::Argument *arg : a.arguments())
 	{
@@ -178,14 +177,14 @@ bool Flattener::Enter(const ast::Action& a)
 		{
 			if (not command.empty())
 				throw SemanticException(
-					"Duplicate command", arg->getSource());
+					"Duplicate command", arg->source());
 
 			command = value->str();
 			continue;
 		}
 
 		shared_ptr<Value> v(new String(value->str(), stringTy,
-		                               arg->getSource()));
+		                               arg->source()));
 		arguments.emplace(arg->getName().name(), v);
 	}
 
@@ -267,7 +266,7 @@ void Flattener::Leave(const ast::BinaryOperation&) {}
 bool Flattener::Enter(const ast::BoolLiteral& b)
 {
 	currentValue.emplace(
-		new Boolean(b.value(), b.type(), b.getSource()));
+		new Boolean(b.value(), b.type(), b.source()));
 
 	return false;
 }
@@ -314,7 +313,7 @@ void Flattener::Leave(const ast::Call& call)
 				"expected " + std::to_string(params.size())
 				+ " arguments, got "
 				+ std::to_string(call.arguments().size()),
-				call.getSource());
+				call.source());
 
 		size_t unnamed = 0;
 		for (const ast::Argument *a : call.arguments())
@@ -327,7 +326,7 @@ void Flattener::Leave(const ast::Call& call)
 			if (p == params.end())
 				throw SyntaxError(
 					"no such parameter '" + name + "'",
-					a->getSource());
+					a->source());
 
 			const ast::Parameter *param = p->second;
 			assert(p->first == name);
@@ -339,7 +338,7 @@ void Flattener::Leave(const ast::Call& call)
 					+ "', got '"
 					+ a->type().str()
 					+ "'",
-					a->getSource());
+					a->source());
 
 			scope[name] = flatten(*a);
 		}
@@ -400,13 +399,11 @@ void Flattener::Leave(const ast::Call& call)
 	//
 	if (not in)
 		throw SemanticException(
-			"use of action without input file(s)",
-			call.getSource());
+			"use of action without input file(s)", call.source());
 
 	if (not out)
 		throw SemanticException(
-			"use of action without output file(s)",
-			call.getSource());
+			"use of action without output file(s)", call.source());
 
 
 	const ast::Action& action =
@@ -423,7 +420,7 @@ void Flattener::Leave(const ast::Call& call)
 		if (j == params.end())
 			throw SemanticException(
 				"no such parameter '" + name + "'",
-				arg->getSource());
+				arg->source());
 
 		//
 		// Additionally, if the parameter is a file, add the
@@ -436,8 +433,7 @@ void Flattener::Leave(const ast::Call& call)
 
 		if (type.typeParamCount() == 0)
 			throw SemanticException(
-				"file missing [in] or [out] tag",
-				p->getSource());
+				"file missing [in] or [out] tag", p->source());
 
 		if (type[0].name() == "in")
 			dependencies.push_back(arg);
@@ -447,14 +443,13 @@ void Flattener::Leave(const ast::Call& call)
 
 		else
 			throw SemanticException(
-				"expected file[in|out]",
-				p->getSource());
+				"expected file[in|out]", p->source());
 	}
 
 	currentValue.emplace(
 		Build::Create(rule, in, out,
 		              dependencies, extraOutputs,
-		              arguments, call.getSource()));
+		              arguments, call.source()));
 }
 
 
@@ -481,7 +476,7 @@ bool Flattener::Enter(const ast::Filename& f)
 	if (shared_ptr<Value> subdir = getNamedValue(ast::Subdirectory))
 		name = join(subdir->str(), name, "/");
 
-	currentValue.emplace(new File(name, f.type(), f.getSource()));
+	currentValue.emplace(new File(name, f.type(), f.source()));
 	return false;
 }
 void Flattener::Leave(const ast::Filename&) {}
@@ -502,7 +497,7 @@ bool Flattener::Enter(const ast::FileList& l)
 			{
 				string base = existing->str();
 				string subdir = join(base, value->str(), "/");
-				SourceRange loc = arg->getSource();
+				SourceRange loc = arg->source();
 
 				value.reset(new String(subdir, stringTy, loc));
 			}
@@ -522,7 +517,7 @@ bool Flattener::Enter(const ast::FileList& l)
 
 	scopes.pop_back();
 
-	currentValue.emplace(new List(files, l.type(), l.getSource()));
+	currentValue.emplace(new List(files, l.type(), l.source()));
 
 	return false;
 }
@@ -544,7 +539,7 @@ void Flattener::Leave(const ast::Identifier&) {}
 bool Flattener::Enter(const ast::IntLiteral& i)
 {
 	currentValue.emplace(
-		new Integer(i.value(), i.type(), i.getSource()));
+		new Integer(i.value(), i.type(), i.source()));
 
 	return false;
 }
@@ -566,12 +561,12 @@ bool Flattener::Enter(const ast::List& l)
 			throw SemanticException(
 				"list element's type (" + e->type().str()
 				+ ") != list subtype (" + subtype.str() + ")",
-				e->getSource());
+				e->source());
 
 		values.push_back(flatten(*e));
 	}
 
-	currentValue.emplace(new List(values, l.type(), l.getSource()));
+	currentValue.emplace(new List(values, l.type(), l.source()));
 
 	return false;
 }
@@ -606,7 +601,7 @@ void Flattener::Leave(const ast::Scope&)
 
 bool Flattener::Enter(const ast::StringLiteral& s)
 {
-	currentValue.emplace(new String(s.str(), s.type(), s.getSource()));
+	currentValue.emplace(new String(s.str(), s.type(), s.source()));
 	return false;
 }
 
@@ -620,7 +615,7 @@ bool Flattener::Enter(const ast::SymbolReference& r)
 
 	auto i = symbols.find(name);
 	if (i == symbols.end())
-		throw UndefinedValueException(name, r.getSource());
+		throw UndefinedValueException(name, r.source());
 
 	assert(i->first == name);
 	currentValue.emplace(std::move(i->second));
@@ -640,7 +635,7 @@ bool Flattener::Enter(const ast::UnaryOperation& o)
 	switch (o.getOp())
 	{
 		case ast::UnaryOperation::Negate:
-			result = subexpr->Negate(o.getSource());
+			result = subexpr->Negate(o.source());
 			break;
 
 		case ast::UnaryOperation::Invalid:

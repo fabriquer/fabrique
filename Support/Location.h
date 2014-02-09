@@ -95,7 +95,7 @@ class HasSource
 {
 public:
 	HasSource(const SourceRange& src) : src(src) {}
-	const SourceRange& getSource() const { return src; }
+	const SourceRange& source() const { return src; }
 
 private:
 	SourceRange src;

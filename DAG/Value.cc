@@ -50,48 +50,42 @@ shared_ptr<Value> Value::Negate(const SourceRange& opLoc) const
 {
 	throw SemanticException(
 		"negation unsupported by " + type().name(),
-		SourceRange::Over(opLoc, getSource())
+		SourceRange::Over(opLoc, source())
 	);
 }
 
 shared_ptr<Value> Value::Add(shared_ptr<Value>&)
 {
 	throw SemanticException(
-		"addition unsupported by " + type().name(),
-		getSource());
+		"addition unsupported by " + type().name(), source());
 }
 
 shared_ptr<Value> Value::PrefixWith(shared_ptr<Value>&)
 {
 	throw SemanticException(
-		"prefix operation unsupported by " + type().name(),
-		getSource());
+		"prefix operation unsupported by " + type().name(), source());
 }
 
 shared_ptr<Value> Value::ScalarAdd(shared_ptr<Value>&)
 {
 	throw SemanticException(
-		"scalar addition unsupported by " + type().name(),
-		getSource());
+		"scalar addition unsupported by " + type().name(), source());
 }
 
 shared_ptr<Value> Value::And(shared_ptr<Value>&)
 {
 	throw SemanticException(
-		"logial AND unsupported by " + type().name(),
-		getSource());
+		"logial AND unsupported by " + type().name(), source());
 }
 
 shared_ptr<Value> Value::Or(shared_ptr<Value>&)
 {
 	throw SemanticException(
-		"logial OR unsupported by " + type().name(),
-		getSource());
+		"logial OR unsupported by " + type().name(), source());
 }
 
 shared_ptr<Value> Value::Xor(shared_ptr<Value>&)
 {
 	throw SemanticException(
-		"logial XOR unsupported by " + type().name(),
-		getSource());
+		"logial XOR unsupported by " + type().name(), source());
 }

@@ -62,7 +62,7 @@ Build* Build::Create(shared_ptr<Rule>& rule, shared_ptr<Value> in,
 		shared_ptr<File> f = std::dynamic_pointer_cast<File>(dep);
 		if (not f)
 			throw SemanticException("dependency not a file",
-			                        dep->getSource());
+			                        dep->source());
 
 		depends.push_back(f);
 	}
@@ -73,7 +73,7 @@ Build* Build::Create(shared_ptr<Rule>& rule, shared_ptr<Value> in,
 		shared_ptr<File> f = std::dynamic_pointer_cast<File>(out);
 		if (not f)
 			throw SemanticException("output 'file' not a file",
-			                        out->getSource());
+			                        out->source());
 
 		extraOut.push_back(f);
 	}
@@ -216,12 +216,12 @@ void Build::appendFiles(shared_ptr<Value>& in, vector<shared_ptr<File>>& out)
 
 			if (not file)
 				throw SemanticException(
-					"not a file", value->getSource());
+					"not a file", value->source());
 
 			out.push_back(file);
 		}
 
 	else throw SemanticException(
 		"expected file or list of files, got " + in->type().str(),
-		in->getSource());
+		in->source());
 }

@@ -127,7 +127,7 @@ Value* Parser::Define(Identifier *id, Expression *e)
 		return NULL;
 	}
 
-	SourceRange range(id->getSource().begin, e->getSource().end);
+	SourceRange range(id->source().begin, e->source().end);
 
 	if (id->isTyped() and !e->type().isSupertype(*id->type()))
 	{
@@ -156,7 +156,7 @@ SymbolReference* Parser::Reference(Identifier *id)
 		return NULL;
 	}
 
-	return new SymbolReference(id, e, id->getSource());
+	return new SymbolReference(id, e, id->source());
 }
 
 
@@ -229,7 +229,7 @@ Call* Parser::CreateCall(Identifier *name, PtrVec<Argument> *args)
 	assert(name != NULL);
 	assert(args != NULL);
 
-	SourceRange loc(name->getSource().begin, lex.CurrentTokenRange().end);
+	SourceRange loc(name->source().begin, lex.CurrentTokenRange().end);
 
 	auto *fn(Reference(n.release()));
 	if (fn == NULL)
@@ -348,7 +348,7 @@ CompoundExpression* Parser::CompoundExpr(Expression *result, SourceRange *b,
 
 	auto& values = val ? *val : empty;
 	bool haveValues = (val != NULL) and !val->empty();
-	SourceRange vbegin = (haveValues ? *val->begin() : result)->getSource();
+	SourceRange vbegin = (haveValues ? *val->begin() : result)->source();
 
 	Location begin = (b ? *b : vbegin).begin;
 	Location end = lex.CurrentTokenRange().end;
@@ -408,7 +408,7 @@ BinaryOperation* Parser::BinaryOp(BinaryOperation::Operator op,
 	try { return BinaryOperation::Create(lhs, op, rhs); }
 	catch (fabrique::SourceCodeException& e)
 	{
-		ReportError(e.message(), e.getSource());
+		ReportError(e.message(), e.source());
 		return NULL;
 	}
 }
@@ -456,7 +456,7 @@ Identifier* Parser::Id(Identifier *untyped, const Type *ty)
 	unique_ptr<Identifier> u(untyped);
 	assert(!untyped->isTyped());
 
-	SourceRange loc(untyped->getSource().begin, savedLoc.end);
+	SourceRange loc(untyped->source().begin, savedLoc.end);
 
 	return new Identifier(u->name(), ty, loc);
 }
@@ -502,7 +502,7 @@ StringLiteral* Parser::ParseString(const string& value)
 
 const ErrorReport& Parser::ReportError(const string& msg, const HasSource& s)
 {
-	return ReportError(msg, s.getSource());
+	return ReportError(msg, s.source());
 }
 
 const ErrorReport& Parser::ReportError(const string& message,

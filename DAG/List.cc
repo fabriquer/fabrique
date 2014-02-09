@@ -95,7 +95,7 @@ shared_ptr<Value> List::PrefixWith(shared_ptr<Value>& prefix)
 {
 	if (prefix->type() != elementType)
 		throw SemanticException(
-			"expected " + elementType.str(), prefix->getSource());
+			"expected " + elementType.str(), prefix->source());
 
 	SharedPtrVec<Value> values;
 	values.push_back(prefix);

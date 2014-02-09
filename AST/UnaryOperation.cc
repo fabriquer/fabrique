@@ -44,7 +44,7 @@ UnaryOperation* UnaryOperation::Create(Operator op, const SourceRange& opLoc,
 {
 	assert(e);
 
-	SourceRange loc = SourceRange::Over(opLoc, e->getSource());
+	SourceRange loc = SourceRange::Over(opLoc, e->source());
 	return new UnaryOperation(e, op, e->type(), loc);
 }
 
