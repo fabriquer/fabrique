@@ -90,11 +90,15 @@ public:
 };
 
 
-//! Something that has a location in source.
+//! A mixin type for something that has a location in source code.
 class HasSource
 {
 public:
-	virtual const SourceRange& getSource() const = 0;
+	HasSource(const SourceRange& src) : src(src) {}
+	const SourceRange& getSource() const { return src; }
+
+private:
+	SourceRange src;
 };
 
 } // class fabrique

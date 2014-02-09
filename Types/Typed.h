@@ -37,13 +37,15 @@ namespace fabrique {
 class Type;
 
 
-/**
- * Interface for something that has a @ref Type.
- */
+/** A mixin type for something that has a @ref fabrique::Type. */
 class Typed
 {
 public:
-	virtual const Type& getType() const = 0;
+	Typed(const Type& ty) : ty(ty) {}
+	virtual const Type& type() const { return ty; }
+
+private:
+	const Type& ty;
 };
 
 } // namespace fabrique

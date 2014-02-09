@@ -67,7 +67,6 @@ public:
 	const std::string& message() const;
 	virtual const char* what() const noexcept;
 
-	const SourceRange& getSource() const;
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 
 protected:

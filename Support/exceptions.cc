@@ -49,7 +49,7 @@ const char* DuplicateException::what() const noexcept
 
 
 SourceCodeException::SourceCodeException(const string& m, const SourceRange& l)
-	: err(ErrorReport::Create(m, l))
+	: HasSource(l), err(ErrorReport::Create(m, l))
 {
 }
 
@@ -57,11 +57,6 @@ const string& SourceCodeException::message() const { return err->getMessage(); }
 const char* SourceCodeException::what() const noexcept
 {
 	return message().c_str();
-}
-
-const SourceRange& SourceCodeException::getSource() const
-{
-	return err->getSource();
 }
 
 void SourceCodeException::PrettyPrint(Bytestream& out, int indent) const

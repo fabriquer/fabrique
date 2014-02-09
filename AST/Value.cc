@@ -40,7 +40,7 @@ using namespace fabrique::ast;
 
 
 Value::Value(Identifier* id, const Expression* e)
-	: Expression(e->getType(), SourceRange::Over(id, e)), id(id), expr(e)
+	: Expression(e->type(), SourceRange::Over(id, e)), id(id), expr(e)
 {
 	assert(id != NULL);
 	assert(e != NULL);
@@ -54,7 +54,7 @@ void Value::PrettyPrint(Bytestream& out, int indent) const
 		<< tabs
 		<< Bytestream::Definition << id->name()
 		<< Bytestream::Operator << ":"
-		<< Bytestream::Type << getType()
+		<< Bytestream::Type << type()
 		<< Bytestream::Operator << " = "
 		<< Bytestream::Reset << *expr
 		<< Bytestream::Operator << ";"

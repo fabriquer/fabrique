@@ -52,14 +52,12 @@ class Identifier : public HasSource, public Printable
 {
 public:
 	Identifier(const std::string& s, const Type *ty, const SourceRange& loc)
-		: id(s), ty(ty), loc(loc)
+		: HasSource(loc), id(s), ty(ty)
 	{
 	}
 
 	bool isTyped() const { return (ty != NULL); }
-	const Type* getType() const { return ty; }
-
-	const SourceRange& getSource() const { return loc; }
+	const Type* type() const { return ty; }
 
 	void PrettyPrint(Bytestream&, int indent = 0) const;
 	const std::string& name() const { return id; }
@@ -69,7 +67,6 @@ public:
 private:
 	const std::string id;
 	const Type *ty;
-	const SourceRange loc;
 };
 
 } // namespace ast

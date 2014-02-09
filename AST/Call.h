@@ -53,7 +53,6 @@ public:
 	     const SourceRange&);
 	~Call() { for (auto *a : args) delete a; }
 
-	virtual const Type& getType() const { return resultType; }
 	const SymbolReference& target() const { return *fn; }
 
 	const PtrVec<Argument>& arguments() const { return args; }
@@ -66,7 +65,6 @@ public:
 private:
 	std::unique_ptr<SymbolReference> fn;
 	PtrVec<Argument> args;
-	const Type& resultType;
 };
 
 } // namespace ast

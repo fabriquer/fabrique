@@ -129,7 +129,7 @@ Value* Parser::Define(Identifier *id, Expression *e)
 
 	SourceRange range(id->getSource().begin, e->getSource().end);
 
-	if (id->isTyped() and !e->getType().isSupertype(*id->getType()))
+	if (id->isTyped() and !e->type().isSupertype(*id->type()))
 	{
 		ReportError("type mismatch", range);
 		return NULL;
@@ -150,7 +150,7 @@ SymbolReference* Parser::Reference(Identifier *id)
 		return NULL;
 	}
 
-	if (&e->getType() == NULL)
+	if (&e->type() == NULL)
 	{
 		ReportError("reference to value with unknown type", *id);
 		return NULL;
@@ -177,12 +177,12 @@ Action* Parser::DefineAction(PtrVec<Argument>* args, SourceRange *start,
 
 	auto i = parameters.find("in");
 	const Type& inType = i != parameters.end()
-		? i->second->getType()
+		? i->second->type()
 		: *ctx.fileListType();
 
 	i = parameters.find("out");
 	const Type& outType = i != parameters.end()
-		? i->second->getType()
+		? i->second->type()
 		: *ctx.fileListType();
 
 	const FunctionType& type = *ctx.functionType(inType, outType);
@@ -199,11 +199,11 @@ Function* Parser::DefineFunction(PtrVec<Parameter> *params, const Type *output,
 	assert(params != NULL);
 	assert(output != NULL);
 
-	if (!body->getType().isSupertype(*output))
+	if (!body->type().isSupertype(*output))
 	{
 		ReportError(
 			"wrong return type ("
-			+ body->getType().str() + " != " + output->str()
+			+ body->type().str() + " != " + output->str()
 			+ ")", *body);
 		return NULL;
 	}
@@ -213,7 +213,7 @@ Function* Parser::DefineFunction(PtrVec<Parameter> *params, const Type *output,
 
 	PtrVec<Type> parameterTypes;
 	for (const Parameter *p : *params)
-		parameterTypes.push_back(&p->getType());
+		parameterTypes.push_back(&p->type());
 
 	const FunctionType *ty = ctx.functionType(parameterTypes, *output);
 
@@ -238,7 +238,7 @@ Call* Parser::CreateCall(Identifier *name, PtrVec<Argument> *args)
 		return NULL;
 	}
 
-	auto& fnType = dynamic_cast<const FunctionType&>(fn->getType());
+	auto& fnType = dynamic_cast<const FunctionType&>(fn->type());
 	const Type& returnType = fnType.returnType();
 
 	const Type *outType = NULL;
@@ -257,7 +257,7 @@ Call* Parser::CreateCall(Identifier *name, PtrVec<Argument> *args)
 			return NULL;
 		}
 
-		outType = &(*args)[allArgNames["out"]]->getType();
+		outType = &(*args)[allArgNames["out"]]->type();
 	}
 
 	const Type& resultType = outType ? *outType : returnType;
@@ -270,7 +270,7 @@ Conditional* Parser::IfElse(SourceRange *ifLoc, Expression *condition,
 {
 	unique_ptr<SourceRange> src(ifLoc);
 
-	const Type &tt(thenResult->getType()), &et(elseResult->getType());
+	const Type &tt(thenResult->type()), &et(elseResult->type());
 	if (!tt.isSupertype(et) and !et.isSupertype(tt))
 	{
 		ReportError("incompatible types",
@@ -291,12 +291,12 @@ ForeachExpr* Parser::Foreach(Expression *source, const Parameter *loopParam,
 	unique_ptr<CompoundExpression> b(body);
 	unique_ptr<SourceRange> beg(begin);
 
-	assert(&loopParam->getType() != NULL);
+	assert(&loopParam->type() != NULL);
 
 	SourceRange loc(begin->begin, lex.CurrentTokenRange().end);
 	ExitScope();
 
-	const Type& resultTy = *getType("list", body->getType());
+	const Type& resultTy = *getType("list", body->type());
 	return new ForeachExpr(s.release(), p.release(), b.release(),
 	                       resultTy, loc);
 }
@@ -309,10 +309,10 @@ Parameter* Parser::ForeachParam(Identifier *id)
 	const Type& t = *savedType;
 	savedType = NULL;
 
-	if (id->isTyped() and !t.isListOf(*id->getType()))
+	if (id->isTyped() and !t.isListOf(*id->type()))
 	{
 		ReportError("type mismatch (" + t.str() + " not list of "
-		             + id->getType()->str() + ")", *id);
+		             + id->type()->str() + ")", *id);
 		return NULL;
 	}
 
@@ -330,7 +330,7 @@ List* Parser::ListOf(ExprVec* elements)
 	const Type *elementType =
 		elements->empty()
 			? ctx.nilType()
-			: &elements->front()->getType();
+			: &elements->front()->type();
 
 	const Type *ty = getType("list", PtrVec<Type>(1, elementType));
 	SourceRange loc(savedLoc.begin, lex.CurrentTokenRange().end);
@@ -368,10 +368,10 @@ Filename* Parser::Source(Expression *name, SourceRange *source,
 	assert(name != NULL);
 	assert(source != NULL);
 
-	if (name->getType().name() != "string")
+	if (name->type().name() != "string")
 	{
 		ReportError("filename should be a string, not "
-		             + name->getType().str(), *name);
+		             + name->type().str(), *name);
 		return NULL;
 	}
 
@@ -428,16 +428,16 @@ Parameter* Parser::Param(Identifier *name, Expression *defaultValue)
 	if (name == NULL)
 		return NULL;
 
-	const Type *nameType = name->getType();
+	const Type *nameType = name->type();
 
 	if (defaultValue != NULL and name->isTyped()
-	    and !defaultValue->getType().isSupertype(*name->getType()))
+	    and !defaultValue->type().isSupertype(*name->type()))
 	{
 		ReportError("type mismatch", *defaultValue);
 		return NULL;
 	}
 
-	const Type& resultType = nameType ? *nameType : defaultValue->getType();
+	const Type& resultType = nameType ? *nameType : defaultValue->type();
 
 	auto *p = new Parameter(name, resultType, defaultValue);
 	CurrentScope().Register(p);

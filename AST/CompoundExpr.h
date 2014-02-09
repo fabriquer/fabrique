@@ -53,7 +53,7 @@ class CompoundExpression : public Expression, public Scope
 public:
 	CompoundExpression(PtrVec<Value>& values, Expression* result,
 	                   const SourceRange& loc)
-		: Expression(result->getType(), loc),
+		: Expression(result->type(), loc),
 		  values(values), res(result)
 	{
 		assert(result != NULL);

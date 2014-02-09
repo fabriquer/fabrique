@@ -46,7 +46,7 @@ BinaryOperation* BinaryOperation::Create(Expression *lhs,
 	assert(rhs);
 
 	SourceRange loc = SourceRange::Over(lhs, rhs);
-	const Type &lt = lhs->getType(), &rt = rhs->getType();
+	const Type &lt = lhs->type(), &rt = rhs->type();
 	const Type *resultType = NULL;
 
 	switch (op)

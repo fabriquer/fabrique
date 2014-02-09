@@ -230,7 +230,7 @@ foreachbegin:
 	;
 
 foreachexpr:
-	expr			{ p->SaveType($1.expr->getType()); }
+	expr			{ p->SaveType($1.expr->type()); }
 	;
 
 foreachparam:

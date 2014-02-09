@@ -45,7 +45,7 @@ UnaryOperation* UnaryOperation::Create(Operator op, const SourceRange& opLoc,
 	assert(e);
 
 	SourceRange loc = SourceRange::Over(opLoc, e->getSource());
-	return new UnaryOperation(e, op, e->getType(), loc);
+	return new UnaryOperation(e, op, e->type(), loc);
 }
 
 UnaryOperation::UnaryOperation(Expression *e, enum Operator op,

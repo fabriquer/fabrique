@@ -51,19 +51,17 @@ public:
 	virtual ~ErrorReport() {}
 
 	const std::string& getMessage() const { return message; }
-	const SourceRange& getSource() const { return source; }
 	void PrettyPrint(Bytestream& out, int indent = 0) const;
 
 private:
 	ErrorReport(const std::string& message, const SourceRange& range,
 	            const Location& loc, int contextLines)
-		: message(message), source(range), caret(loc),
+		: HasSource(range), message(message), caret(loc),
 		  contextLines(contextLines)
 	{
 	}
 
 	const std::string message;
-	const SourceRange source;
 	const Location caret;
 	const int contextLines;
 };

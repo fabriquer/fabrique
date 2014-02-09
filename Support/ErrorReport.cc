@@ -70,6 +70,7 @@ void ErrorReport::PrettyPrint(Bytestream& out, int indent) const
 	 * there's no such output for source from stdin.
 	 */
 	string filename(caret.filename);
+	const SourceRange& source = getSource();
 	if (filename.empty()) filename = source.begin.filename;
 
 	if (!filename.empty())

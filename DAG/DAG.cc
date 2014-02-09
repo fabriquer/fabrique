@@ -190,7 +190,7 @@ bool Flattener::Enter(const ast::Action& a)
 	}
 
 	currentValue.emplace(Rule::Create(currentValueName.top(),
-	                                  command, arguments, a.getType()));
+	                                  command, arguments, a.type()));
 
 	return false;
 }
@@ -267,7 +267,7 @@ void Flattener::Leave(const ast::BinaryOperation&) {}
 bool Flattener::Enter(const ast::BoolLiteral& b)
 {
 	currentValue.emplace(
-		new Boolean(b.value(), b.getType(), b.getSource()));
+		new Boolean(b.value(), b.type(), b.getSource()));
 
 	return false;
 }
@@ -332,12 +332,12 @@ void Flattener::Leave(const ast::Call& call)
 			const ast::Parameter *param = p->second;
 			assert(p->first == name);
 
-			if (not a->getType().isSubtype(param->getType()))
+			if (not a->type().isSubtype(param->type()))
 				throw SemanticException(
 					"invalid argument type (expected '"
-					+ param->getType().str()
+					+ param->type().str()
 					+ "', got '"
-					+ a->getType().str()
+					+ a->type().str()
 					+ "'",
 					a->getSource());
 
@@ -430,7 +430,7 @@ void Flattener::Leave(const ast::Call& call)
 		// argument to the dependency graph.
 		//
 		const ast::Parameter *p = j->second;
-		const Type& type = p->getType();
+		const Type& type = p->type();
 		if (type.name() != "file")
 			continue;
 
@@ -481,7 +481,7 @@ bool Flattener::Enter(const ast::Filename& f)
 	if (shared_ptr<Value> subdir = getNamedValue(ast::Subdirectory))
 		name = join(subdir->str(), name, "/");
 
-	currentValue.emplace(new File(name, f.getType(), f.getSource()));
+	currentValue.emplace(new File(name, f.type(), f.getSource()));
 	return false;
 }
 void Flattener::Leave(const ast::Filename&) {}
@@ -522,7 +522,7 @@ bool Flattener::Enter(const ast::FileList& l)
 
 	scopes.pop_back();
 
-	currentValue.emplace(new List(files, l.getType(), l.getSource()));
+	currentValue.emplace(new List(files, l.type(), l.getSource()));
 
 	return false;
 }
@@ -544,7 +544,7 @@ void Flattener::Leave(const ast::Identifier&) {}
 bool Flattener::Enter(const ast::IntLiteral& i)
 {
 	currentValue.emplace(
-		new Integer(i.value(), i.getType(), i.getSource()));
+		new Integer(i.value(), i.type(), i.getSource()));
 
 	return false;
 }
@@ -554,24 +554,24 @@ void Flattener::Leave(const ast::IntLiteral&) {}
 
 bool Flattener::Enter(const ast::List& l)
 {
-	assert(l.getType().name() == "list");
-	assert(l.getType().typeParamCount() == 1);
-	const Type& subtype = l.getType()[0];
+	assert(l.type().name() == "list");
+	assert(l.type().typeParamCount() == 1);
+	const Type& subtype = l.type()[0];
 
 	SharedPtrVec<Value> values;
 
 	for (const ast::Expression *e : l)
 	{
-		if (e->getType() != subtype)
+		if (e->type() != subtype)
 			throw SemanticException(
-				"list element's type (" + e->getType().str()
+				"list element's type (" + e->type().str()
 				+ ") != list subtype (" + subtype.str() + ")",
 				e->getSource());
 
 		values.push_back(flatten(*e));
 	}
 
-	currentValue.emplace(new List(values, l.getType(), l.getSource()));
+	currentValue.emplace(new List(values, l.type(), l.getSource()));
 
 	return false;
 }
@@ -606,7 +606,7 @@ void Flattener::Leave(const ast::Scope&)
 
 bool Flattener::Enter(const ast::StringLiteral& s)
 {
-	currentValue.emplace(new String(s.str(), s.getType(), s.getSource()));
+	currentValue.emplace(new String(s.str(), s.type(), s.getSource()));
 	return false;
 }
 

@@ -48,7 +48,7 @@ class Argument : public Expression
 {
 public:
 	Argument(Identifier *id, Expression *e)
-		: Expression(e->getType(), SourceRange::Over(id, e)),
+		: Expression(e->type(), SourceRange::Over(id, e)),
 		  name(id), expr(e)
 	{
 		assert(e != NULL);

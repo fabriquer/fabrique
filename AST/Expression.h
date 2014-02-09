@@ -52,15 +52,11 @@ class Expression
 public:
 	virtual ~Expression() {}
 
-	virtual const Type& getType() const { return ty; }
-	const SourceRange& getSource() const { return loc; }
-
 protected:
-	Expression(const Type& ty, const SourceRange& loc) : ty(ty), loc(loc) {}
-
-private:
-	const Type& ty;
-	const SourceRange loc;
+	Expression(const Type& t, const SourceRange& src)
+		: HasSource(src), Typed(t)
+	{
+	}
 };
 
 typedef PtrVec<Expression> ExprVec;

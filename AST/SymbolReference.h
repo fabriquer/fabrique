@@ -49,9 +49,9 @@ class SymbolReference : public Expression
 public:
 	SymbolReference(Identifier *id, const Expression *v,
 	                const SourceRange& loc)
-		: Expression(v->getType(), loc), id(id), val(v)
+		: Expression(v->type(), loc), id(id), val(v)
 	{
-		assert(&v->getType() != NULL);
+		assert(&v->type() != NULL);
 	}
 
 	const Identifier& getName() const { return *id; }

@@ -39,7 +39,7 @@ using namespace fabrique::ast;
 
 Call::Call(SymbolReference *fn, PtrVec<Argument>& args, const Type& ty,
            const SourceRange& loc)
-	: Expression(fn->getType(), loc), fn(fn), args(args), resultType(ty)
+	: Expression(ty, loc), fn(fn), args(args)
 {
 }
 

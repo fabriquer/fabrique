@@ -35,6 +35,7 @@
 #include "ADT/StringMap.h"
 #include "Support/Location.h"
 #include "Support/Printable.h"
+#include "Types/Typed.h"
 
 #include <string>
 
@@ -46,7 +47,7 @@ namespace dag {
 
 
 //! The result of evaluating an expression.
-class Value : public HasSource, public Printable
+class Value : public HasSource, public Printable, public Typed
 {
 public:
 	//! Unary 'not' operator.
@@ -81,17 +82,10 @@ public:
 	 */
 	virtual bool canScalarAdd(const Value& v) { return false; }
 
-	virtual const Type& type() const { return ty; }
 	virtual std::string str() const = 0;
-
-	const SourceRange& getSource() const { return loc; }
 
 protected:
 	Value(const Type&, const SourceRange&);
-
-private:
-	const Type& ty;
-	const SourceRange loc;
 };
 
 typedef StringMap<std::shared_ptr<Value>> ValueMap;

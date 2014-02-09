@@ -75,7 +75,7 @@ void Function::PrettyPrint(Bytestream& out, int indent) const
 	out
 		<< Bytestream::Operator << "): "
 		<< Bytestream::Reset
-		<< dynamic_cast<const FunctionType&>(getType()).returnType()
+		<< dynamic_cast<const FunctionType&>(type()).returnType()
 		<< "\n";
 
 	expr->PrettyPrint(out, indent);
