@@ -1,4 +1,7 @@
-/** @file Location.cc    Definition of @ref Location and @ref SourceRange. */
+/**
+ * @file SourceLocation.cc
+ * Definition of @ref SourceLocation and @ref SourceRange.
+ */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,13 +32,13 @@
  * SUCH DAMAGE.
  */
 
-#include "Support/Location.h"
 #include "Support/Bytestream.h"
+#include "Support/SourceLocation.h"
 
 using namespace fabrique;
 
 
-void Location::PrettyPrint(Bytestream& out, int indent) const
+void SourceLocation::PrettyPrint(Bytestream& out, int indent) const
 {
 	if (!filename.empty())
 		out
@@ -57,17 +60,17 @@ SourceRange SourceRange::Span(const std::string& filename, int line,
                               int begin, int end)
 {
 	return SourceRange(
-		Location(filename, line, begin),
-		Location(filename, line, end)
+		SourceLocation(filename, line, begin),
+		SourceLocation(filename, line, end)
 	);
 }
 
 SourceRange SourceRange::Over(const HasSource *begin, const HasSource *end)
 {
-	static const Location nowhere;
+	static const SourceLocation nowhere;
 
-	const Location& b(begin ? begin->source().begin : nowhere);
-	const Location& e(end ? end->source().end : nowhere);
+	const SourceLocation& b(begin ? begin->source().begin : nowhere);
+	const SourceLocation& e(end ? end->source().end : nowhere);
 
 	return SourceRange(b, e);
 }
@@ -85,7 +88,7 @@ SourceRange SourceRange::Over(const SourceRange& begin, const SourceRange& end)
 
 SourceRange SourceRange::None()
 {
-	Location nowhere;
+	SourceLocation nowhere;
 	return SourceRange(nowhere, nowhere);
 }
 

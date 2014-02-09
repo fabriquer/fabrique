@@ -32,7 +32,7 @@
 #include "DAG/List.h"
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
-#include "Support/Location.h"
+#include "Support/SourceLocation.h"
 #include "Support/exceptions.h"
 #include "Types/SequenceType.h"
 

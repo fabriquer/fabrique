@@ -59,8 +59,8 @@ void Lexer::setCString(YYSTYPE *yylval) { yylval->s.set(yytext, yyleng); }
 void Lexer::setRange(YYSTYPE *yylval)
 {
 	yylval->src = new SourceRange(
-		Location(inputFilename, yylineno, yycolumn),
-		Location(inputFilename, yylineno, yycolumn + yyleng)
+		SourceLocation(inputFilename, yylineno, yycolumn),
+		SourceLocation(inputFilename, yylineno, yycolumn + yyleng)
 	);
 }
 
@@ -70,8 +70,8 @@ SourceRange Lexer::CurrentTokenRange() const
 		return SourceRange::None();
 
 	return SourceRange(
-		Location(inputFilename, yylineno, yycolumn),
-		Location(inputFilename, yylineno, yycolumn + yyleng - 1)
+		SourceLocation(inputFilename, yylineno, yycolumn),
+		SourceLocation(inputFilename, yylineno, yycolumn + yyleng - 1)
 	);
 }
 

@@ -350,8 +350,8 @@ CompoundExpression* Parser::CompoundExpr(Expression *result, SourceRange *b,
 	bool haveValues = (val != NULL) and !val->empty();
 	SourceRange vbegin = (haveValues ? *val->begin() : result)->source();
 
-	Location begin = (b ? *b : vbegin).begin;
-	Location end = lex.CurrentTokenRange().end;
+	SourceLocation begin = (b ? *b : vbegin).begin;
+	SourceLocation end = lex.CurrentTokenRange().end;
 
 	return new CompoundExpression(values, e.release(),
 	                              SourceRange(begin, end));
@@ -489,8 +489,8 @@ StringLiteral* Parser::ParseString(const string& value)
 	// before the place the lexer reports. Simple subtraction is safe here
 	// because Fabrique strings can't straddle newlines.
 	SourceRange current(lex.CurrentTokenRange());
-	Location begin(current.begin.filename, current.begin.line,
-	               current.begin.column - value.length() - 1);
+	SourceLocation begin(current.begin.filename, current.begin.line,
+	                     current.begin.column - value.length() - 1);
 
 	assert(begin.column > 0);
 

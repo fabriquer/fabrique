@@ -34,8 +34,8 @@
 
 #include "DAG/Value.h"
 #include "Support/Bytestream.h"
-#include "Support/Location.h"
 #include "Support/Printable.h"
+#include "Support/SourceLocation.h"
 
 #include <string>
 

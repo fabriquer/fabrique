@@ -32,8 +32,8 @@ cxx_srcs = {
 		'Lexer', 'Parser',
 	),
 	'Support/': (
-		'Arguments', 'Bytestream', 'ErrorReport', 'Join', 'Location',
-		'Printable',
+		'Arguments', 'Bytestream', 'ErrorReport', 'Join', 'Printable',
+		'SourceLocation',
 		'exceptions',
 	),
 	'Types/': (

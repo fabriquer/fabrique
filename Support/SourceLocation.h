@@ -1,4 +1,7 @@
-/** @file Location.h    Declaration of @ref Location and @ref SourceRange. */
+/**
+ * @file SourceLocation.h
+ * Declaration of @ref HasSource, @ref SourceLocation and @ref SourceRange.
+ */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -43,12 +46,13 @@ class Lexer;
 
 
 //! A location in the original source code.
-class Location : public Printable
+class SourceLocation : public Printable
 {
 public:
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 
-	Location(const std::string& filename = "", int line = 0, int column = 0)
+	SourceLocation(const std::string& filename = "",
+	               int line = 0, int column = 0)
 		: filename(filename), line(line), column(column)
 	{
 		assert(line >= 0);
@@ -78,15 +82,15 @@ public:
 
 	static SourceRange None();
 
-	SourceRange(const Location& begin, const Location& end)
+	SourceRange(const SourceLocation& begin, const SourceLocation& end)
 		: begin(begin), end(end)
 	{
 	}
 
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 
-	Location begin;
-	Location end;
+	SourceLocation begin;
+	SourceLocation end;
 };
 
 

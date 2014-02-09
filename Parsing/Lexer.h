@@ -64,7 +64,7 @@ private:
 	const std::string inputFilename;
 	std::list<ErrorReport*> errs;
 
-	Location lastTokenEnd;
+	SourceLocation lastTokenEnd;
 };
 
 } // namespace fabrique

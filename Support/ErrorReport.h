@@ -32,8 +32,8 @@
 #ifndef ERROR_REPORT_H
 #define ERROR_REPORT_H
 
-#include "Location.h"
-#include "Printable.h"
+#include "Support/Printable.h"
+#include "Support/SourceLocation.h"
 
 #include <ostream>
 #include <string>
@@ -55,14 +55,14 @@ public:
 
 private:
 	ErrorReport(const std::string& message, const SourceRange& range,
-	            const Location& loc, int contextLines)
+	            const SourceLocation& loc, int contextLines)
 		: HasSource(range), message(message), caret(loc),
 		  contextLines(contextLines)
 	{
 	}
 
 	const std::string message;
-	const Location caret;
+	const SourceLocation caret;
 	const int contextLines;
 };
 

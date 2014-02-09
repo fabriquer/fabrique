@@ -33,8 +33,8 @@
 #define EXPRESSION_H
 
 #include "ADT/PtrVec.h"
-#include "Support/Location.h"
 #include "Support/Printable.h"
+#include "Support/SourceLocation.h"
 #include "Support/Uncopyable.h"
 #include "Support/Visitable.h"
 #include "Types/Typed.h"

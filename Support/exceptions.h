@@ -32,8 +32,8 @@
 #ifndef EXCEPTIONS_H
 #define EXCEPTIONS_H
 
-#include "Support/Location.h"
 #include "Support/Printable.h"
+#include "Support/SourceLocation.h"
 
 #include <exception>
 #include <memory>

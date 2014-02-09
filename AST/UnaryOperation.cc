@@ -32,7 +32,7 @@
 #include "AST/UnaryOperation.h"
 #include "AST/Visitor.h"
 #include "Support/Bytestream.h"
-#include "Support/Location.h"
+#include "Support/SourceLocation.h"
 #include "Support/exceptions.h"
 #include "Types/Type.h"
 
