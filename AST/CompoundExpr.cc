@@ -51,7 +51,10 @@ void CompoundExpression::PrettyPrint(Bytestream& out, int indent) const
 
 	out << tabs << Bytestream::Operator << "{\n";
 	for (auto *v : values)
+	{
 		v->PrettyPrint(out, indent + 1);
+		out << "\n";
+	}
 
 	out
 		<< intabs << *res

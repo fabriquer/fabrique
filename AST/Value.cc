@@ -58,7 +58,7 @@ void Value::PrettyPrint(Bytestream& out, int indent) const
 		<< Bytestream::Operator << " = "
 		<< Bytestream::Reset << *expr
 		<< Bytestream::Operator << ";"
-		<< Bytestream::Reset << "\n"
+		<< Bytestream::Reset
 		;
 }
 

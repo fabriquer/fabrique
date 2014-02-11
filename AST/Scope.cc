@@ -93,7 +93,7 @@ void Scope::Register(const Identifier& id, const Expression *e)
 void Scope::PrettyPrint(Bytestream& out, int indent) const
 {
 	for (auto *v : values)
-		out << *v;
+		out << *v << "\n";
 }
 
 
