@@ -67,7 +67,7 @@ public:
 	iterator begin() const { return values.begin(); }
 	iterator end() const { return values.end(); }
 
-	const Expression* Find(const Identifier *name) const;
+	const Expression* Lookup(const Identifier*) const;
 
 	void Register(const Argument*);
 	void Register(Parameter*);

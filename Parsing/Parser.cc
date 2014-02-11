@@ -121,7 +121,7 @@ Value* Parser::Define(Identifier *id, Expression *e)
 
 	auto& scope(CurrentScope());
 
-	if (scope.Find(id) != NULL)
+	if (scope.Lookup(id) != NULL)
 	{
 		ReportError("redefining value", *id);
 		return NULL;
@@ -143,7 +143,7 @@ Value* Parser::Define(Identifier *id, Expression *e)
 
 SymbolReference* Parser::Reference(Identifier *id)
 {
-	const Expression *e = CurrentScope().Find(id);
+	const Expression *e = CurrentScope().Lookup(id);
 	if (e == NULL)
 	{
 		ReportError("reference to undefined value", *id);

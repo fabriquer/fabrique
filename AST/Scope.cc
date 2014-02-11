@@ -46,14 +46,14 @@ Scope::~Scope()
 }
 
 
-const Expression* Scope::Find(const Identifier *name) const
+const Expression* Scope::Lookup(const Identifier* name) const
 {
 	auto i = symbols.find(name->name());
 	if (i != symbols.end())
 		return i->second;
 
 	if (parent)
-		return parent->Find(name);
+		return parent->Lookup(name);
 
 	return NULL;
 }
