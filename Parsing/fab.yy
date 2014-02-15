@@ -130,7 +130,11 @@ expression:
 	| foreach
 	| function
 	| identifier		{ SetOrDie($$, p->Reference(Take($1.id))); }
-	| list
+	| '[' listElements ']'
+	{
+		SourceRange src(*Take($1.token), *Take($3.token));
+		SetOrDie($$, p->ListOf(Take($2.exprs), src));
+	}
 	| unaryOperation
 	;
 
@@ -353,14 +357,6 @@ functiondecl:
 identifier:
 	name			/* keep result of 'name' production */
 	| name ':' type		{ SetOrDie($$, p->Id(Take($1.id), $3.type)); }
-	;
-
-list:
-	| '[' listElements ']'
-	{
-		SourceRange src(*Take($1.token), *Take($3.token));
-		SetOrDie($$, p->ListOf(Take($2.exprs), src));
-	}
 	;
 
 listElements:
