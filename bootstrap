@@ -82,7 +82,7 @@ variables = {
 
 	# flags
 	'cxxflags': ' '.join(cxxflags),
-	'yaccflags': '-d -t',
+	'yaccflags': '-d -g -t -v',
 }
 
 
