@@ -7,6 +7,7 @@ import sys
 
 args = argparse.ArgumentParser()
 args.add_argument('builddir', nargs = '?', default = '.')
+args.add_argument('--cxxflags', default = '')
 args.add_argument('--debug', action = 'store_true')
 args = args.parse_args()
 
@@ -67,7 +68,7 @@ cxxflags = [
 
 	# We intentionally hide yyFlexLexer::yylex().
 	'-Wno-overloaded-virtual',
-]
+] + args.cxxflags.split()
 
 if args.debug: cxxflags += [ '-g', '-ggdb' ]
 else: cxxflags += [ '-D NDEBUG' ]
