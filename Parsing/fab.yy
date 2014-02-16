@@ -223,6 +223,19 @@ call:
 	;
 
 compoundExpr:
+	compoundBegin compoundBody
+	{
+		SetOrDie($$, Expr<CompoundExpression>($2).release());
+	}
+	;
+
+compoundBegin:
+	{
+		p->EnterScope();
+	}
+	;
+
+compoundBody:
 	expression
 	{
 		auto singleton = Expr<Expression>($1);
