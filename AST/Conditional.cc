@@ -55,11 +55,10 @@ void Conditional::PrettyPrint(Bytestream& out, int indent) const
 	out
 		<< Bytestream::Operator << "if ("
 		<< *cond
-		<< Bytestream::Operator << ") { "
+		<< Bytestream::Operator << ") "
 		<< *thenExpr
-		<< Bytestream::Operator << " } else { "
+		<< Bytestream::Operator << " else "
 		<< *elseExpr
-		<< Bytestream::Operator << " }"
 		<< Bytestream::Reset
 		;
 }
