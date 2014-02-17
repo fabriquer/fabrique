@@ -496,7 +496,7 @@ bool Parser::Set(YYSTYPE& yyunion, Expression *e)
 	if (not e)
 		return false;
 
-	Bytestream::Debug("parser.raw")
+	Bytestream::Debug("parser.expr")
 		<< Bytestream::Action << "parsed "
 		<< Bytestream::Type << "expression"
 		<< Bytestream::Operator << ": "
@@ -514,7 +514,7 @@ bool Parser::Set(YYSTYPE& yyunion, Identifier *id)
 	if (not id)
 		return false;
 
-	Bytestream::Debug("parser.raw")
+	Bytestream::Debug("parser.id")
 		<< Bytestream::Action << "parsed "
 		<< Bytestream::Type << "identifier"
 		<< Bytestream::Operator << ": "
