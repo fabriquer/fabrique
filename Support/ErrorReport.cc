@@ -29,14 +29,13 @@
  * SUCH DAMAGE.
  */
 
-#include "ErrorReport.h"
+#include "Support/ErrorReport.h"
+#include "Support/Bytestream.h"
 
 #include <cassert>
 #include <fstream>
 #include <list>
 #include <map>
-
-#include "Support/Bytestream.h"
 
 using namespace fabrique;
 using std::string;
