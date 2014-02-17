@@ -43,8 +43,8 @@ ForeachExpr::ForeachExpr(UniqPtr<Expression>& list,
                          UniqPtr<CompoundExpression>& body,
                          const Type& resultTy,
                          const SourceRange& source)
-	: Expression(resultTy, source), source(std::move(list)),
-	  loopParameter(std::move(loopParam)), body(std::move(body))
+	: Expression(resultTy, source), seq(std::move(list)),
+	  param(std::move(loopParam)), body(std::move(body))
 {
 }
 
@@ -53,9 +53,9 @@ void ForeachExpr::PrettyPrint(Bytestream& out, int indent) const
 {
 	out
 		<< Bytestream::Operator << "foreach "
-		<< *source
+		<< *seq
 		<< Bytestream::Operator << " as "
-		<< *loopParameter
+		<< *param
 		<< "\n"
 		;
 
@@ -69,8 +69,8 @@ void ForeachExpr::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
 	{
-		source->Accept(v);
-		loopParameter->Accept(v);
+		seq->Accept(v);
+		param->Accept(v);
 		body->Accept(v);
 	}
 

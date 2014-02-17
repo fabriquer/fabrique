@@ -57,12 +57,16 @@ public:
 	            const Type& resultTy,
 	            const SourceRange& source);
 
+	const Expression& targetSequence() const { return *seq; }
+	const Parameter& loopParameter() const { return *param; }
+	const CompoundExpression& loopBody() const { return *body; }
+
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 	virtual void Accept(Visitor&) const;
 
 private:
-	const UniqPtr<Expression> source;
-	const UniqPtr<Parameter> loopParameter;
+	const UniqPtr<Expression> seq;
+	const UniqPtr<Parameter> param;
 	const UniqPtr<CompoundExpression> body;
 };
 
