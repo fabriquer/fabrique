@@ -22,3 +22,13 @@ baz = true;
 # CHECK: lexed token: 'foo' @ %s:9:1-3
 # CHECK: parsed identifier: foo @ %s:9:1-3
 # CHECK: lexed token: '=' @ %s:9:5
+
+# CHECK: parsed identifier: ints:list[int] @ %s:27:16-30
+# CHECK: parsed expression: ints:list[int] @ %s:27:16-30
+wibble = function(ints:list[int]): list[int]
+{
+	foreach ints as x:int
+	{
+		x + 1
+	}
+};
