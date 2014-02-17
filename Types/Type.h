@@ -36,7 +36,6 @@
 #include "Support/Printable.h"
 #include "FabContext.h"
 
-#include <cassert>
 #include <string>
 
 namespace fabrique {
@@ -72,11 +71,7 @@ public:
 	bool isListOf(const Type&) const;
 
 protected:
-	Type(const std::string& s, const PtrVec<Type>& params)
-		: typeName(s), params(params)
-	{
-		assert(!s.empty());
-	}
+	Type(const std::string& s, const PtrVec<Type>& params);
 
 private:
 	static Type* Create(const std::string&, const PtrVec<Type>& params);

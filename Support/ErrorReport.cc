@@ -31,6 +31,7 @@
 
 #include "ErrorReport.h"
 
+#include <cassert>
 #include <fstream>
 #include <list>
 #include <map>

@@ -34,6 +34,8 @@
 #include "AST/Visitor.h"
 #include "Support/Bytestream.h"
 
+#include <cassert>
+
 using namespace fabrique::ast;
 
 

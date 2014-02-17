@@ -40,6 +40,8 @@
 
 #include "Types/FunctionType.h"
 
+#include <cassert>
+
 using namespace fabrique::dag;
 using std::shared_ptr;
 using std::vector;

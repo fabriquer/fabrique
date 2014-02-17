@@ -40,6 +40,8 @@
 
 #include "FabContext.h"
 
+#include <cassert>
+
 using namespace fabrique::ast;
 
 using fabrique::ErrorReport;

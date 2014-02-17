@@ -36,6 +36,8 @@
 #include "Types/FunctionType.h"
 #include "FabContext.h"
 
+#include <cassert>
+
 using namespace fabrique::ast;
 using fabrique::StringMap;
 using fabrique::UniqPtrMap;

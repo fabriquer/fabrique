@@ -9,6 +9,8 @@
 #include "Parsing/fab.yacc.h"
 #include "Parsing/yacc.h"
 
+#include <cassert>
+
 using namespace fabrique;
 using namespace fabrique::ast;
 using namespace std;

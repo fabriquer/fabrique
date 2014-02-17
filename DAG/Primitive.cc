@@ -34,6 +34,8 @@
 #include "Support/exceptions.h"
 #include "Types/Type.h"
 
+#include <cassert>
+
 using namespace fabrique::dag;
 using std::dynamic_pointer_cast;
 using std::shared_ptr;

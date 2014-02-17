@@ -41,6 +41,8 @@
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
 
+#include <cassert>
+
 using namespace fabrique::backend;
 using namespace fabrique::dag;
 

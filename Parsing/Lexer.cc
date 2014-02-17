@@ -34,6 +34,7 @@
 #include "Support/Bytestream.h"
 #include "Support/ErrorReport.h"
 
+#include <cassert>
 #include <list>
 #include <map>
 

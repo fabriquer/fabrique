@@ -37,6 +37,7 @@
 #include "Types/Type.h"
 
 #include <algorithm>
+#include <cassert>
 
 using namespace fabrique;
 using namespace fabrique::dag;

@@ -35,11 +35,20 @@
 #include "Support/Bytestream.h"
 #include "Support/SourceLocation.h"
 
+#include <cassert>
+
 using namespace fabrique;
 
 
 const SourceLocation SourceLocation::Nowhere;
 
+
+SourceLocation::SourceLocation(const std::string& file, int line, int column)
+	: filename(file), line(line), column(column)
+{
+	assert(line >= 0);
+	assert(column >= 0);
+}
 
 SourceLocation::operator bool() const
 {

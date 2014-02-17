@@ -35,6 +35,8 @@
 #include "Support/exceptions.h"
 #include "Types/Type.h"
 
+#include <cassert>
+
 using namespace fabrique::ast;
 
 

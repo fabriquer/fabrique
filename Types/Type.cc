@@ -32,8 +32,16 @@
 #include "Support/Bytestream.h"
 #include "Types/Type.h"
 
+#include <cassert>
+
 using namespace fabrique;
 
+
+Type::Type(const std::string& s, const PtrVec<Type>& params)
+	: typeName(s), params(params)
+{
+	assert(not s.empty());
+}
 
 const Type& Type::GetSupertype(const Type& x, const Type& y)
 {

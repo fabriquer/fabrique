@@ -48,6 +48,7 @@
 #include "Types/FunctionType.h"
 #include "Types/Type.h"
 
+#include <cassert>
 #include <deque>
 #include <stack>
 

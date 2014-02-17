@@ -38,7 +38,6 @@
 #include "ADT/UniqPtr.h"
 #include "Support/Printable.h"
 
-#include <cassert>
 #include <string>
 
 namespace fabrique {
@@ -53,12 +52,7 @@ public:
 	const static SourceLocation Nowhere;
 
 	SourceLocation(const std::string& filename = "",
-	               int line = 0, int column = 0)
-		: filename(filename), line(line), column(column)
-	{
-		assert(line >= 0);
-		assert(column >= 0);
-	}
+	               int line = 0, int column = 0);
 
 	operator bool() const;
 	bool operator == (const SourceLocation&) const;

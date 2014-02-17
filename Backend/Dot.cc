@@ -36,6 +36,8 @@
 #include "DAG/Value.h"
 #include "Support/Bytestream.h"
 
+#include <cassert>
+
 using namespace fabrique::dag;
 using fabrique::backend::DotBackend;
 using std::dynamic_pointer_cast;
