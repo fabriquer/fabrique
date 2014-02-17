@@ -263,11 +263,6 @@ ForeachExpr* Parser::Foreach(UniqPtr<Expression>& source,
 	SourceRange loc(begin, lex.CurrentTokenRange());
 	ExitScope();
 
-#if 0
-	loopId.reset(Id(std::move(loopId), &body->type()));
-	UniqPtr<Parameter> loopParam(Param(std::move(loopId)));
-#endif
-
 	const Type& resultTy = *getType("list", body->type());
 	return new ForeachExpr(source, loopParam, body, resultTy, loc);
 }
