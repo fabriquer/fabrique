@@ -5,16 +5,21 @@
 
 # CHECK: foo:(list[int]) => list[int] = function(ints:list[int]): list[int]
 # CHECK-NEXT: {
+# CHECK-NEXT:   local_var:int = 42;
 # CHECK-NEXT:   foreach ints as x
 # CHECK-NEXT:   {
-# CHECK-NEXT:     x + 1
+# CHECK-NEXT:     y:int = x + local_var;
+# CHECK-NEXT:     y + 1
 # CHECK-NEXT:   }
 # CHECK-NEXT: }
 foo = function(ints:list[int]): list[int]
 {
+	local_var = 42;
+
 	foreach ints as x:int
 	{
-		x + 1
+		y = x + local_var;
+		y + 1
 	}
 };
 
