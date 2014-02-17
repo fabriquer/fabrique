@@ -261,6 +261,7 @@ ForeachExpr* Parser::Foreach(UniqPtr<Expression>& source,
                              const SourceRange& begin)
 {
 	SourceRange loc(begin, lex.CurrentTokenRange());
+	ExitScope();
 
 #if 0
 	loopId.reset(Id(std::move(loopId), &body->type()));
@@ -294,6 +295,8 @@ Function* Parser::DefineFunction(const SourceRange& begin,
 	PtrVec<Type> parameterTypes;
 	for (auto& p : *params)
 		parameterTypes.push_back(&p->type());
+
+	ExitScope();
 
 	const FunctionType *ty = ctx.functionType(parameterTypes, *resultType);
 	return new Function(*params, *ty, body, loc);
