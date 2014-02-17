@@ -71,8 +71,10 @@ public:
 	 * that belongs in the scope, e.g. parameters:
 	 *
 	 * <<EnterScope>> function (x:int <<Parameter>>) { ... } <<ExitScope>>
+	 *
+	 * @param  name    a name used to describe the scope (for debugging)
 	 */
-	Scope& EnterScope();
+	Scope& EnterScope(const std::string& name);
 
 	/**
 	 * Leave an AST @ref Scope, returning ownership of that scope

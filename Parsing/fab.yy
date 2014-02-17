@@ -231,7 +231,7 @@ compoundExpr:
 
 compoundBegin:
 	{
-		p->EnterScope();
+		p->EnterScope("compound expression");
 	}
 	;
 
@@ -348,7 +348,7 @@ foreach:
 	;
 
 foreachbegin:
-	FOREACH			{ p->EnterScope(); }
+	FOREACH			{ p->EnterScope("foreach"); }
 	;
 
 function:
@@ -364,7 +364,7 @@ function:
 	;
 
 functiondecl:
-	FUNCTION		{ p->EnterScope(); }
+	FUNCTION		{ p->EnterScope("function"); }
 	;
 
 identifier:

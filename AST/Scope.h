@@ -59,7 +59,7 @@ class Visitor;
 class Scope : public Uncopyable
 {
 public:
-	Scope(const Scope *parent);
+	Scope(const Scope *parent, const std::string& name);
 	Scope(Scope&&);
 
 	typedef StringMap<const Expression*> SymbolMap;
@@ -68,6 +68,7 @@ public:
 	iterator begin() const { return symbols.begin(); }
 	iterator end() const { return symbols.end(); }
 
+	const std::string& name() const { return debugName; }
 	const UniqPtrVec<Value>& values() const { return ownedValues; }
 
 	const Expression* Lookup(const Identifier&) const;
@@ -84,6 +85,8 @@ private:
 	void Register(const Identifier&, const Expression*);
 
 	const Scope *parent;
+	const std::string debugName;
+
 	SymbolMap symbols;
 	UniqPtrVec<Value> ownedValues;
 };

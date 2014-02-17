@@ -39,8 +39,8 @@
 using namespace fabrique::ast;
 
 
-Scope::Scope(const Scope *parent)
-	: parent(parent)
+Scope::Scope(const Scope *parent, const std::string& name)
+	: parent(parent), debugName(name)
 {
 }
 

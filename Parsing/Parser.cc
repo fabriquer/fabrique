@@ -53,7 +53,7 @@ using std::unique_ptr;
 Parser::Parser(FabContext& ctx, const Lexer& lex)
 	: ctx(ctx), lex(lex)
 {
-	scopes.emplace(new Scope(nullptr));
+	scopes.emplace(new Scope(nullptr, "file scope"));
 }
 
 Parser::~Parser()
@@ -66,15 +66,17 @@ Parser::~Parser()
 //
 // AST scopes:
 //
-Scope& Parser::EnterScope()
+Scope& Parser::EnterScope(const string& name)
 {
 	Bytestream::Debug("parser.scope")
+		<< string(scopes.size(), ' ')
 		<< Bytestream::Operator << " >> "
 		<< Bytestream::Type << "scope"
+		<< Bytestream::Literal << " '" << name << "'"
 		<< Bytestream::Reset << "\n"
 		;
 
-	scopes.emplace(new Scope(&CurrentScope()));
+	scopes.emplace(new Scope(&CurrentScope(), name));
 	return *scopes.top();
 }
 
@@ -82,11 +84,14 @@ unique_ptr<Scope> Parser::ExitScope()
 {
 	unique_ptr<Scope> scope = std::move(scopes.top());
 	assert(scope and not scopes.top());
+	scopes.pop();
 
 	Bytestream& dbg = Bytestream::Debug("parser.scope");
 	dbg
+		<< string(scopes.size(), ' ')
 		<< Bytestream::Operator << " << "
 		<< Bytestream::Type << "scope"
+		<< Bytestream::Literal << " '" << scope->name() << "'"
 		<< Bytestream::Operator << ":"
 		;
 
@@ -96,8 +101,6 @@ unique_ptr<Scope> Parser::ExitScope()
 	dbg
 		<< Bytestream::Reset << "\n"
 		;
-
-	scopes.pop();
 
 	return std::move(scope);
 }
