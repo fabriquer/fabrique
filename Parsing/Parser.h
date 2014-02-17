@@ -216,8 +216,6 @@ private:
 	FabContext& ctx;
 	const Lexer& lex;
 
-	//Type const *savedType = nullptr;
-
 	UniqPtrVec<ErrorReport> errs;
 	std::stack<std::unique_ptr<Scope>> scopes;
 };
