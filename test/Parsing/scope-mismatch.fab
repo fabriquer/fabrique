@@ -1,0 +1,14 @@
+#
+# RUN: fab --format=null --print-dag %s 2> %t || true
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: {{.*}}:8:{{[0-9]+}}: error: syntax error
+foo = function(xs:list[int])
+{
+	foreach xs as x:
+	{
+		x + 1
+};
+
+# CHECK-NOT: Assertion failed: (scopes.empty()), function ~Parser
