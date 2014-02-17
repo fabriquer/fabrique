@@ -43,6 +43,31 @@
 namespace fabrique {
 
 
+//! Some code may choose to throw this exception rather than assert() out.
+class AssertionFailure : public std::exception
+{
+public:
+	AssertionFailure(const std::string& condition,
+	                 const std::string& message = "");
+
+	const char* what() const noexcept;
+	const std::string& condition() const noexcept { return cond; }
+	const std::string& message() const noexcept { return msg; }
+
+private:
+	const std::string cond;
+	const std::string msg;
+};
+
+#ifdef NDEBUG
+#define FabAssert()
+#else
+#define FabAssert(condition, ...) \
+	if (not condition) \
+		throw AssertionFailure(#condition __VA_ARGS__)
+#endif
+
+
 //! An unexpected duplicate was encountered.
 class DuplicateException : public std::exception
 {

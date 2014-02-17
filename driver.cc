@@ -258,13 +258,24 @@ unique_ptr<ast::Scope> Parse(const std::string& filename, FabContext& ctx)
 	try
 	{
 		int result = yyparse(parser.get());
-
 		lex.reset();
-		for (auto& error : parser->errors())
-			err << *error << "\n";
 
 		if (result == 0)
+		{
 			ast = parser->ExitScope();
+			assert(parser->errors().empty());
+		}
+		else
+		{
+			for (auto& error : parser->errors())
+				err << *error << "\n";
+
+			// If we've encountered parse errors, some assertions
+			// might fail on destruction (e.g. scope mismatches).
+			try { ast.reset(); }
+			catch (AssertionFailure& ){}
+		}
+
 	}
 	catch (SourceCodeException& e)
 	{

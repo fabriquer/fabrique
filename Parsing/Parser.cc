@@ -40,8 +40,6 @@
 
 #include "FabContext.h"
 
-#include <cassert>
-
 using namespace fabrique::ast;
 
 using fabrique::ErrorReport;
@@ -60,7 +58,7 @@ Parser::Parser(FabContext& ctx, const Lexer& lex)
 
 Parser::~Parser()
 {
-	assert(scopes.empty());
+	FabAssert(scopes.empty());
 }
 
 
@@ -85,7 +83,7 @@ Scope& Parser::EnterScope(const string& name)
 unique_ptr<Scope> Parser::ExitScope()
 {
 	unique_ptr<Scope> scope = std::move(scopes.top());
-	assert(scope and not scopes.top());
+	FabAssert(scope and not scopes.top());
 	scopes.pop();
 
 	Bytestream& dbg = Bytestream::Debug("parser.scope");
@@ -219,7 +217,7 @@ CompoundExpression* Parser::CompoundExpr(UniqPtr<Expression>& result,
 	SourceRange src = result->source();
 	if (begin != SourceRange::None)
 	{
-		assert(end != SourceRange::None);
+		FabAssert(end != SourceRange::None);
 		src = SourceRange(begin, end);
 	}
 
@@ -319,7 +317,7 @@ Identifier* Parser::Id(UniqPtr<Identifier>&& untyped, const Type *ty)
 	if (not untyped)
 		return nullptr;
 
-	assert(not untyped->isTyped());
+	FabAssert(not untyped->isTyped());
 
 	SourceRange loc(untyped->source().begin, lex.CurrentTokenRange().end);
 	return new Identifier(untyped->name(), ty, loc);
@@ -472,7 +470,7 @@ bool Parser::DefineValue(UniqPtr<Identifier>& id, UniqPtr<Expression>& e)
 Scope& Parser::CurrentScope()
 {
 	// We must always have at least a top-level scope on the stack.
-	assert(scopes.size() > 0);
+	FabAssert(scopes.size() > 0);
 	return *scopes.top();
 }
 
@@ -489,8 +487,8 @@ void Parser::AddToScope(const PtrVec<Argument>& args)
 
 fabrique::Token* Parser::Token(YYSTYPE& yyunion)
 {
-	assert(yyunion.token);
-	assert(dynamic_cast<fabrique::Token*>(yyunion.token));
+	FabAssert(yyunion.token);
+	FabAssert(dynamic_cast<fabrique::Token*>(yyunion.token));
 
 	return yyunion.token;
 }

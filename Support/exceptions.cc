@@ -36,6 +36,18 @@ using namespace fabrique;
 using std::string;
 
 
+AssertionFailure::AssertionFailure(const string& condition, const string& msg)
+	: cond(condition),
+	  msg(msg.empty() ? ("Assertion failed: " + condition) : msg)
+{
+}
+
+const char* AssertionFailure::what() const noexcept
+{
+	return msg.c_str();
+}
+
+
 DuplicateException::DuplicateException(const string& kind, const string& name)
 	: message("duplicate " + kind + " " + name), kind(kind), name(name)
 {
