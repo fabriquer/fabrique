@@ -34,7 +34,7 @@
 #include "Support/Join.h"
 #include "Support/SourceLocation.h"
 #include "Support/exceptions.h"
-#include "Types/SequenceType.h"
+#include "Types/Type.h"
 
 #include <algorithm>
 
