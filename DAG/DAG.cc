@@ -555,7 +555,34 @@ bool Flattener::Enter(const ast::FileList& l)
 void Flattener::Leave(const ast::FileList&) {}
 
 
-bool Flattener::Enter(const ast::ForeachExpr&) { return false; }
+bool Flattener::Enter(const ast::ForeachExpr& f)
+{
+	SharedPtrVec<Value> values;
+
+	auto target = flatten(f.targetSequence());
+	assert(target->type().name() == "list");
+	shared_ptr<List> input = std::dynamic_pointer_cast<List>(target);
+	const ast::Parameter& loopParam = f.loopParameter();
+
+	//
+	// For each input element, put its value in scope as the loop parameter
+	// and then evaluate the CompoundExpression.
+	//
+	for (const shared_ptr<Value>& element : *input)
+	{
+		scopes.push_back(ValueMap());
+		ValueMap& scope = *scopes.rbegin();
+
+		scope[loopParam.getName().name()] = element;
+		values.push_back(flatten(f.loopBody()));
+
+		scopes.pop_back();
+	}
+
+	currentValue.emplace(new List(values, f.type(), f.source()));
+	return false;
+}
+
 void Flattener::Leave(const ast::ForeachExpr&) {}
 
 
