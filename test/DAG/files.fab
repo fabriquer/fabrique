@@ -14,3 +14,6 @@ baz = files(Inputs/foo.txt file('Inputs/bar.txt'));
 
 # CHECK-DAG: list[file] wibble = [ foo.txt ]
 wibble = files(foo.txt);
+
+# CHECK-DAG: file wobble = Inputs/foo.txt
+wobble = foo;
