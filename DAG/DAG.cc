@@ -104,6 +104,10 @@ public:
 	ValueMap values;
 
 private:
+	ValueMap& EnterScope(const string& name);
+	ValueMap ExitScope();
+	ValueMap& CurrentScope();
+
 	//! Get a named value from the current scope or a parent scope.
 	shared_ptr<Value> getNamedValue(const std::string& name);
 
@@ -296,8 +300,7 @@ void Flattener::Leave(const ast::Call& call)
 		// putting these names into the local scope and then
 		// entering the function's CompoundExpr.
 		//
-		scopes.push_back(ValueMap());
-		ValueMap& scope = *scopes.rbegin();
+		ValueMap& scope = EnterScope("fn eval");
 
 		StringMap<const ast::Parameter&> params;
 		std::vector<string> paramNames;
@@ -348,7 +351,7 @@ void Flattener::Leave(const ast::Call& call)
 		}
 
 		currentValue.emplace(flatten(fn->body()));
-		scopes.pop_back();
+		ExitScope();
 
 		return;
 	}
@@ -536,7 +539,7 @@ bool Flattener::Enter(const ast::FileList& l)
 		listScope[name] = value;
 	}
 
-	scopes.push_back(listScope);
+	EnterScope("file list");
 
 	for (ConstPtr<ast::Filename>& file : l)
 	{
@@ -546,7 +549,7 @@ bool Flattener::Enter(const ast::FileList& l)
 		assert(f == std::dynamic_pointer_cast<File>(f));
 	}
 
-	scopes.pop_back();
+	ExitScope();
 
 	currentValue.emplace(new List(files, l.type(), l.source()));
 
@@ -570,13 +573,12 @@ bool Flattener::Enter(const ast::ForeachExpr& f)
 	//
 	for (const shared_ptr<Value>& element : *input)
 	{
-		scopes.push_back(ValueMap());
-		ValueMap& scope = *scopes.rbegin();
+		ValueMap& scope = EnterScope("foreach body");
 
 		scope[loopParam.getName().name()] = element;
 		values.push_back(flatten(f.loopBody()));
 
-		scopes.pop_back();
+		ExitScope();
 	}
 
 	currentValue.emplace(new List(values, f.type(), f.source()));
@@ -638,14 +640,13 @@ void Flattener::Leave(const ast::Parameter&) {}
 
 bool Flattener::Enter(const ast::Scope&)
 {
-	scopes.push_back(ValueMap());
+	EnterScope("AST scope");
 	return false;
 }
 
 void Flattener::Leave(const ast::Scope&)
 {
-	ValueMap scopedSymbols = std::move(scopes.back());
-	scopes.pop_back();
+	ValueMap scopedSymbols = ExitScope();
 
 	const string scopeName = join(this->scopeName, ".");
 
@@ -723,12 +724,53 @@ void Flattener::Leave(const ast::Value& v)
 
 	assert(not currentValue.empty());
 
-	ValueMap& currentScope = scopes.back();
+	ValueMap& currentScope = CurrentScope();
 
 	currentScope.emplace(currentValueName.top(),
 	                     std::move(currentValue.top()));
 	currentValueName.pop();
 	currentValue.pop();
+}
+
+
+ValueMap& Flattener::EnterScope(const string& name)
+{
+	Bytestream::Debug("dag.scope")
+		<< string(scopes.size(), ' ')
+		<< Bytestream::Operator << " >> "
+		<< Bytestream::Type << "scope"
+		<< Bytestream::Literal << " '" << name << "'"
+		<< Bytestream::Reset << "\n"
+		;
+
+	scopes.push_back(ValueMap());
+	return CurrentScope();
+}
+
+ValueMap Flattener::ExitScope()
+{
+	ValueMap values = std::move(CurrentScope());
+	scopes.pop_back();
+
+	Bytestream& dbg = Bytestream::Debug("parser.scope");
+	dbg
+		<< string(scopes.size(), ' ')
+		<< Bytestream::Operator << " << "
+		<< Bytestream::Type << "scope"
+		<< Bytestream::Operator << ":"
+		;
+
+	for (auto& i : values)
+		dbg << " " << i.first;
+
+	dbg << Bytestream::Reset << "\n";
+
+	return std::move(values);
+}
+
+ValueMap& Flattener::CurrentScope()
+{
+	return scopes.back();
 }
 
 
