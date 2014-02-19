@@ -252,11 +252,11 @@ unique_ptr<ast::Scope> Parse(const std::string& filename, FabContext& ctx)
 	//
 	// Parse the Fabrique input.
 	//
-	unique_ptr<ast::Parser> parser(new ast::Parser(ctx, *lex));
 	unique_ptr<ast::Scope> ast;
 
 	try
 	{
+		unique_ptr<ast::Parser> parser(new ast::Parser(ctx, *lex));
 		int result = yyparse(parser.get());
 		lex.reset();
 
