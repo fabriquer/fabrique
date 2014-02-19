@@ -475,13 +475,14 @@ void Flattener::Leave(const ast::Call& call)
 
 bool Flattener::Enter(const ast::CompoundExpression& e)
 {
-	return Enter(static_cast<const ast::Scope&>(e));
+	Enter(static_cast<const ast::Scope&>(e));
+	return true;
 }
 
 void Flattener::Leave(const ast::CompoundExpression& e)
 {
 	Leave(static_cast<const ast::Scope&>(e));
-	currentValue.emplace(flatten(e.result()));
+	assert(not currentValue.empty());
 }
 
 
