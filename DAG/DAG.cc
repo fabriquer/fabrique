@@ -726,10 +726,23 @@ void Flattener::Leave(const ast::Value& v)
 
 	ValueMap& currentScope = CurrentScope();
 
+	Bytestream& dbg = Bytestream::Debug("dag.scope");
+	dbg
+		<< Bytestream::Action << "defining "
+		<< Bytestream::Literal << "'" << currentValueName.top() << "'"
+		<< Bytestream::Operator << ":"
+		;
+
+
 	currentScope.emplace(currentValueName.top(),
 	                     std::move(currentValue.top()));
 	currentValueName.pop();
 	currentValue.pop();
+
+	for (auto& i : currentScope)
+		dbg << Bytestream::Definition << " " << i.first;
+
+	dbg << Bytestream::Reset << "\n";
 }
 
 
@@ -776,13 +789,40 @@ ValueMap& Flattener::CurrentScope()
 
 shared_ptr<Value> Flattener::getNamedValue(const string& name)
 {
+	Bytestream& dbg = Bytestream::Debug("dag.lookup");
+	dbg
+		<< Bytestream::Action << "lookup "
+		<< Bytestream::Literal << "'" << name << "'"
+		<< Bytestream::Reset << "\n"
+		;
+
 	for (auto i = scopes.rbegin(); i != scopes.rend(); i++)
 	{
 		const ValueMap& scope = *i;
 
 		auto value = scope.find(name);
 		if (value != scope.end())
+		{
+			dbg
+				<< Bytestream::Action << "  found "
+				<< Bytestream::Literal << "'" << name << "'"
+				<< Bytestream::Operator << ": "
+				<< *value->second
+				<< Bytestream::Reset << "\n"
+				;
 			return value->second;
+		}
+
+		dbg
+			<< "  no "
+			<< Bytestream::Literal << "'" << name << "'"
+			<< Bytestream::Operator << ":"
+			;
+
+		for (auto& j : scope)
+			dbg << " " << Bytestream::Definition << j.first;
+
+		dbg << Bytestream::Reset << "\n";
 	}
 
 	return NULL;
