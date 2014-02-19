@@ -438,7 +438,7 @@ bool Parser::DefineValue(UniqPtr<Identifier>& id, UniqPtr<Expression>& e)
 
 	auto& scope(CurrentScope());
 
-	if (scope.Lookup(*id) != nullptr)
+	if (scope.contains(*id))
 	{
 		ReportError("redefining value", *id);
 		return false;
