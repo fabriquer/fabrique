@@ -1,6 +1,6 @@
 /** @file driver.cc    Driver for the fabrique compiler. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
