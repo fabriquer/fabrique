@@ -67,6 +67,12 @@ const Expression* Scope::Lookup(const Identifier& name) const
 }
 
 
+bool Scope::contains(const Identifier& name) const
+{
+	return symbols.find(name.name()) != symbols.end();
+}
+
+
 void Scope::Register(const Argument *a)
 {
 	assert(a->hasName());

@@ -71,6 +71,7 @@ public:
 	const std::string& name() const { return debugName; }
 	const UniqPtrVec<Value>& values() const { return ownedValues; }
 
+	bool contains(const Identifier&) const;
 	const Expression* Lookup(const Identifier&) const;
 
 	void Register(const Argument*);
