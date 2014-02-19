@@ -831,12 +831,7 @@ shared_ptr<Value> Flattener::flatten(const ast::Expression& e)
 {
 	e.Accept(*this);
 
-	// TODO: don't do this
-	if (currentValue.empty())
-		return NULL;
-
 	assert(not currentValue.empty());
-
 	shared_ptr<Value> v(currentValue.top());
 	currentValue.pop();
 
