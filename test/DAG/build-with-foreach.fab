@@ -1,0 +1,27 @@
+#
+# RUN: fab --print-dag --format=null %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# TODO: declare srcs with files(foo.c bar.c ...) once we have a way of
+#       accessing a file's name within the 'objs' foreach below
+#
+# CHECK-DAG: list[string] srcs = [ 'foo.c' 'bar.c' 'baz.c' ]
+srcs = [ 'foo.c' 'bar.c' 'baz.c' ];
+
+# CHECK-DAG: (file)=>file cc = cc -c $in -o $out
+cc = action('cc -c $in -o $out' <- in:file, out:file);
+
+# CHECK-DAG: (list[file])=>file link = cc $in -o $out
+link = action('cc $in -o $out' <- in:list[file], out:file);
+
+# CHECK-DAG: list[file] objs = [ foo.c.o bar.c.o baz.c.o ]
+objs = foreach srcs as src:string
+{
+	obj = file(src + '.o');
+	build = cc(in = file(src), out = obj);
+	obj
+};
+
+# CHECK-DAG: file bin = link { foo.c.o bar.c.o baz.c.o => foo }
+bin = link(objs, out = file('foo'));
