@@ -177,8 +177,10 @@ Arguments* Arguments::Parse(int argc, char *argv[])
 
 	return new Arguments(help, input, output, outputSpecified, format,
 	                     options[ParseOnly],
-	                     options[PrettyPrintAST], options[PrettyPrintDAG],
-	                     options[PrintOutput], debugPattern);
+	                     options[PrettyPrintAST],
+	                     options[PrettyPrintDAG],
+	                     options[PrintOutput],
+	                     debugPattern);
 }
 
 
