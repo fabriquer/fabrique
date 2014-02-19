@@ -188,7 +188,7 @@ int main(int argc, char *argv[]) {
 		: backend->DefaultFilename();
 
 
-	if (not args->printOutput and not filename.empty())
+	if (not args->printOutput and not filename.empty() and filename != "-")
 	{
 		outfile.open(filename.c_str());
 		outfileStream.reset(Bytestream::Plain(outfile));

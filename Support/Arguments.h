@@ -74,11 +74,12 @@ public:
 private:
 	Arguments(const bool help,
 	          const std::string& input, const std::string& output,
+		  bool outputFileSpecified,
 	          const std::string& format, bool parseOnly,
 	          bool printAST, bool printDAG, bool printOut,
 		  const std::string& debugPattern)
 		: help(help), input(input), output(output),
-		  outputFileSpecified(output.length() > 0 and output != "-"),
+		  outputFileSpecified(outputFileSpecified),
 		  format(format), parseOnly(parseOnly),
 		  printAST(printAST), printDAG(printDAG), printOutput(printOut),
 		  debugPattern(debugPattern)

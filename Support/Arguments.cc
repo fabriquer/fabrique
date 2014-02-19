@@ -165,6 +165,8 @@ Arguments* Arguments::Parse(int argc, char *argv[])
 	                       ? options[OutputFile].arg
 	                       : "-";
 
+	const bool outputSpecified = options[OutputFile];
+
 	const string format = options[Format]
 	                       ? options[Format].arg
 	                       : "ninja";
@@ -173,7 +175,8 @@ Arguments* Arguments::Parse(int argc, char *argv[])
 	                             ? options[DebugPattern].arg
 	                             : "none";
 
-	return new Arguments(help, input, output, format, options[ParseOnly],
+	return new Arguments(help, input, output, outputSpecified, format,
+	                     options[ParseOnly],
 	                     options[PrettyPrintAST], options[PrettyPrintDAG],
 	                     options[PrintOutput], debugPattern);
 }
