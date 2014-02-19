@@ -56,11 +56,6 @@ Parser::Parser(FabContext& ctx, const Lexer& lex)
 	scopes.emplace(new Scope(nullptr, "file scope"));
 }
 
-Parser::~Parser()
-{
-	FabAssert(scopes.empty());
-}
-
 
 
 //

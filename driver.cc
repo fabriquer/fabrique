@@ -269,11 +269,6 @@ unique_ptr<ast::Scope> Parse(const std::string& filename, FabContext& ctx)
 		{
 			for (auto& error : parser->errors())
 				err << *error << "\n";
-
-			// If we've encountered parse errors, some assertions
-			// might fail on destruction (e.g. scope mismatches).
-			try { ast.reset(); }
-			catch (AssertionFailure& ){}
 		}
 
 	}

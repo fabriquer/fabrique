@@ -60,7 +60,6 @@ class Parser
 {
 public:
 	Parser(FabContext&, const Lexer& lex);
-	~Parser();
 
 	//! Errors encountered during parsing.
 	const UniqPtrVec<ErrorReport>& errors() const { return errs; }
