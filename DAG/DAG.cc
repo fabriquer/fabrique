@@ -670,14 +670,12 @@ void Flattener::Leave(const ast::StringLiteral&) {}
 bool Flattener::Enter(const ast::SymbolReference& r)
 {
 	const string& name = r.getName().name();
-	const ValueMap& symbols = scopes.back();
 
-	auto i = symbols.find(name);
-	if (i == symbols.end())
+	shared_ptr<Value> value = getNamedValue(name);
+	if (not value)
 		throw UndefinedValueException(name, r.source());
 
-	assert(i->first == name);
-	currentValue.emplace(std::move(i->second));
+	currentValue.emplace(value);
 
 	return false;
 }
