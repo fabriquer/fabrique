@@ -63,15 +63,15 @@ using ConstPtr = const std::unique_ptr<T>;
 
 
 //! AST Visitor that flattens the AST into a DAG.
-class Flattener : public ast::Visitor
+class DAGBuilder : public ast::Visitor
 {
 public:
-	Flattener(FabContext& ctx)
+	DAGBuilder(FabContext& ctx)
 		: stringTy(*ctx.type("string"))
 	{
 	}
 
-	~Flattener() {}
+	~DAGBuilder() {}
 
 	VISIT(ast::Action)
 	VISIT(ast::Argument)
@@ -129,7 +129,7 @@ private:
 
 DAG* DAG::Flatten(const ast::Scope& s, FabContext& ctx)
 {
-	Flattener f(ctx);
+	DAGBuilder f(ctx);
 	s.Accept(f);
 
 	return new DAG(f.values);
@@ -167,7 +167,7 @@ ValueMap::const_iterator DAG::end() const { return values.end(); }
 
 
 
-bool Flattener::Enter(const ast::Action& a)
+bool DAGBuilder::Enter(const ast::Action& a)
 {
 	string command;
 	ValueMap arguments;
@@ -202,19 +202,19 @@ bool Flattener::Enter(const ast::Action& a)
 	return false;
 }
 
-void Flattener::Leave(const ast::Action&) {}
+void DAGBuilder::Leave(const ast::Action&) {}
 
 
-bool Flattener::Enter(const ast::Argument& arg)
+bool DAGBuilder::Enter(const ast::Argument& arg)
 {
 	currentValue.emplace(flatten(arg.getValue()));
 	return false;
 }
 
-void Flattener::Leave(const ast::Argument&) {}
+void DAGBuilder::Leave(const ast::Argument&) {}
 
 
-bool Flattener::Enter(const ast::BinaryOperation& o)
+bool DAGBuilder::Enter(const ast::BinaryOperation& o)
 {
 	shared_ptr<Value> lhs = flatten(o.getLHS());
 	shared_ptr<Value> rhs = flatten(o.getRHS());
@@ -268,10 +268,10 @@ bool Flattener::Enter(const ast::BinaryOperation& o)
 	return false;
 }
 
-void Flattener::Leave(const ast::BinaryOperation&) {}
+void DAGBuilder::Leave(const ast::BinaryOperation&) {}
 
 
-bool Flattener::Enter(const ast::BoolLiteral& b)
+bool DAGBuilder::Enter(const ast::BoolLiteral& b)
 {
 	currentValue.emplace(
 		new Boolean(b.value(), b.type(), b.source()));
@@ -279,11 +279,11 @@ bool Flattener::Enter(const ast::BoolLiteral& b)
 	return false;
 }
 
-void Flattener::Leave(const ast::BoolLiteral&) {}
+void DAGBuilder::Leave(const ast::BoolLiteral&) {}
 
 
-bool Flattener::Enter(const ast::Call& call) { return false; }
-void Flattener::Leave(const ast::Call& call)
+bool DAGBuilder::Enter(const ast::Call& call) { return false; }
+void DAGBuilder::Leave(const ast::Call& call)
 {
 	const ast::SymbolReference& targetRef = call.target();
 	const string name = targetRef.getName().name();
@@ -473,20 +473,20 @@ void Flattener::Leave(const ast::Call& call)
 }
 
 
-bool Flattener::Enter(const ast::CompoundExpression& e)
+bool DAGBuilder::Enter(const ast::CompoundExpression& e)
 {
 	Enter(static_cast<const ast::Scope&>(e));
 	return true;
 }
 
-void Flattener::Leave(const ast::CompoundExpression& e)
+void DAGBuilder::Leave(const ast::CompoundExpression& e)
 {
 	Leave(static_cast<const ast::Scope&>(e));
 	assert(not currentValue.empty());
 }
 
 
-bool Flattener::Enter(const ast::Conditional& c)
+bool DAGBuilder::Enter(const ast::Conditional& c)
 {
 	shared_ptr<Boolean> cond =
 		std::dynamic_pointer_cast<Boolean>(flatten(c.condition()));
@@ -501,10 +501,10 @@ bool Flattener::Enter(const ast::Conditional& c)
 	return false;
 }
 
-void Flattener::Leave(const ast::Conditional&) {}
+void DAGBuilder::Leave(const ast::Conditional&) {}
 
 
-bool Flattener::Enter(const ast::Filename& f)
+bool DAGBuilder::Enter(const ast::Filename& f)
 {
 	string name = flatten(f.name())->str();
 
@@ -514,10 +514,10 @@ bool Flattener::Enter(const ast::Filename& f)
 	currentValue.emplace(new File(name, f.type(), f.source()));
 	return false;
 }
-void Flattener::Leave(const ast::Filename&) {}
+void DAGBuilder::Leave(const ast::Filename&) {}
 
 
-bool Flattener::Enter(const ast::FileList& l)
+bool DAGBuilder::Enter(const ast::FileList& l)
 {
 	SharedPtrVec<Value> files;
 	ValueMap listScope;
@@ -556,10 +556,10 @@ bool Flattener::Enter(const ast::FileList& l)
 
 	return false;
 }
-void Flattener::Leave(const ast::FileList&) {}
+void DAGBuilder::Leave(const ast::FileList&) {}
 
 
-bool Flattener::Enter(const ast::ForeachExpr& f)
+bool DAGBuilder::Enter(const ast::ForeachExpr& f)
 {
 	SharedPtrVec<Value> values;
 
@@ -586,18 +586,18 @@ bool Flattener::Enter(const ast::ForeachExpr& f)
 	return false;
 }
 
-void Flattener::Leave(const ast::ForeachExpr&) {}
+void DAGBuilder::Leave(const ast::ForeachExpr&) {}
 
 
-bool Flattener::Enter(const ast::Function&) { return false; }
-void Flattener::Leave(const ast::Function&) {}
+bool DAGBuilder::Enter(const ast::Function&) { return false; }
+void DAGBuilder::Leave(const ast::Function&) {}
 
 
-bool Flattener::Enter(const ast::Identifier&) { return false; }
-void Flattener::Leave(const ast::Identifier&) {}
+bool DAGBuilder::Enter(const ast::Identifier&) { return false; }
+void DAGBuilder::Leave(const ast::Identifier&) {}
 
 
-bool Flattener::Enter(const ast::IntLiteral& i)
+bool DAGBuilder::Enter(const ast::IntLiteral& i)
 {
 	currentValue.emplace(
 		new Integer(i.value(), i.type(), i.source()));
@@ -605,10 +605,10 @@ bool Flattener::Enter(const ast::IntLiteral& i)
 	return false;
 }
 
-void Flattener::Leave(const ast::IntLiteral&) {}
+void DAGBuilder::Leave(const ast::IntLiteral&) {}
 
 
-bool Flattener::Enter(const ast::List& l)
+bool DAGBuilder::Enter(const ast::List& l)
 {
 	assert(l.type().name() == "list");
 	assert(l.type().typeParamCount() == 1);
@@ -632,22 +632,26 @@ bool Flattener::Enter(const ast::List& l)
 	return false;
 }
 
-void Flattener::Leave(const ast::List&) {}
+void DAGBuilder::Leave(const ast::List&) {}
 
 
-bool Flattener::Enter(const ast::Parameter&) { return false; }
-void Flattener::Leave(const ast::Parameter&) {}
+bool DAGBuilder::Enter(const ast::Parameter&) { return false; }
+void DAGBuilder::Leave(const ast::Parameter&) {}
 
 
-bool Flattener::Enter(const ast::Scope&)
+bool DAGBuilder::Enter(const ast::Scope&)
 {
 	EnterScope("AST scope");
 	return false;
 }
 
-void Flattener::Leave(const ast::Scope&)
+void DAGBuilder::Leave(const ast::Scope&)
 {
 	ValueMap scopedSymbols = ExitScope();
+
+	// We only save top-level values if we are, in fact, at the top level.
+	if (not scopes.empty())
+		return;
 
 	const string scopeName = join(this->scopeName, ".");
 
@@ -659,16 +663,16 @@ void Flattener::Leave(const ast::Scope&)
 }
 
 
-bool Flattener::Enter(const ast::StringLiteral& s)
+bool DAGBuilder::Enter(const ast::StringLiteral& s)
 {
 	currentValue.emplace(new String(s.str(), s.type(), s.source()));
 	return false;
 }
 
-void Flattener::Leave(const ast::StringLiteral&) {}
+void DAGBuilder::Leave(const ast::StringLiteral&) {}
 
 
-bool Flattener::Enter(const ast::SymbolReference& r)
+bool DAGBuilder::Enter(const ast::SymbolReference& r)
 {
 	const string& name = r.getName().name();
 
@@ -681,10 +685,10 @@ bool Flattener::Enter(const ast::SymbolReference& r)
 	return false;
 }
 
-void Flattener::Leave(const ast::SymbolReference&) {}
+void DAGBuilder::Leave(const ast::SymbolReference&) {}
 
 
-bool Flattener::Enter(const ast::UnaryOperation& o)
+bool DAGBuilder::Enter(const ast::UnaryOperation& o)
 {
 	shared_ptr<Value> subexpr = flatten(o.getSubExpr());
 	assert(subexpr);
@@ -706,16 +710,16 @@ bool Flattener::Enter(const ast::UnaryOperation& o)
 	return false;
 }
 
-void Flattener::Leave(const ast::UnaryOperation&) {}
+void DAGBuilder::Leave(const ast::UnaryOperation&) {}
 
 
-bool Flattener::Enter(const ast::Value& v)
+bool DAGBuilder::Enter(const ast::Value& v)
 {
 	currentValueName.push(v.getName().name());
 	return true;
 }
 
-void Flattener::Leave(const ast::Value& v)
+void DAGBuilder::Leave(const ast::Value& v)
 {
 	// Things like function definitions will never be flattened.
 	if (currentValue.empty())
@@ -743,7 +747,7 @@ void Flattener::Leave(const ast::Value& v)
 }
 
 
-ValueMap& Flattener::EnterScope(const string& name)
+ValueMap& DAGBuilder::EnterScope(const string& name)
 {
 	Bytestream::Debug("dag.scope")
 		<< string(scopes.size(), ' ')
@@ -757,7 +761,7 @@ ValueMap& Flattener::EnterScope(const string& name)
 	return CurrentScope();
 }
 
-ValueMap Flattener::ExitScope()
+ValueMap DAGBuilder::ExitScope()
 {
 	ValueMap values = std::move(CurrentScope());
 	scopes.pop_back();
@@ -778,13 +782,13 @@ ValueMap Flattener::ExitScope()
 	return std::move(values);
 }
 
-ValueMap& Flattener::CurrentScope()
+ValueMap& DAGBuilder::CurrentScope()
 {
 	return scopes.back();
 }
 
 
-shared_ptr<Value> Flattener::getNamedValue(const string& name)
+shared_ptr<Value> DAGBuilder::getNamedValue(const string& name)
 {
 	Bytestream& dbg = Bytestream::Debug("dag.lookup");
 	dbg
@@ -825,7 +829,7 @@ shared_ptr<Value> Flattener::getNamedValue(const string& name)
 	return NULL;
 }
 
-shared_ptr<Value> Flattener::flatten(const ast::Expression& e)
+shared_ptr<Value> DAGBuilder::flatten(const ast::Expression& e)
 {
 	e.Accept(*this);
 
