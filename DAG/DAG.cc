@@ -62,6 +62,21 @@ template<class T>
 using ConstPtr = const std::unique_ptr<T>;
 
 
+class ImmutableDAG : public DAG
+{
+public:
+	ImmutableDAG(const ValueMap&);
+
+	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
+
+	ValueMap::const_iterator begin() const { return values.begin(); }
+	ValueMap::const_iterator end() const { return values.end(); }
+
+private:
+	ValueMap values;
+};
+
+
 //! AST Visitor that flattens the AST into a DAG.
 class DAGBuilder : public ast::Visitor
 {
@@ -132,17 +147,17 @@ DAG* DAG::Flatten(const ast::Scope& s, FabContext& ctx)
 	DAGBuilder f(ctx);
 	s.Accept(f);
 
-	return new DAG(f.values);
+	return new ImmutableDAG(f.values);
 }
 
 
-DAG::DAG(const ValueMap& values)
+ImmutableDAG::ImmutableDAG(const ValueMap& values)
 	: values(values)
 {
 }
 
 
-void DAG::PrettyPrint(Bytestream& b, int indent) const
+void ImmutableDAG::PrettyPrint(Bytestream& b, int indent) const
 {
 	for (auto& i : values)
 	{
@@ -160,11 +175,6 @@ void DAG::PrettyPrint(Bytestream& b, int indent) const
 			;
 	}
 }
-
-
-ValueMap::const_iterator DAG::begin() const { return values.begin(); }
-ValueMap::const_iterator DAG::end() const { return values.end(); }
-
 
 
 bool DAGBuilder::Enter(const ast::Action& a)

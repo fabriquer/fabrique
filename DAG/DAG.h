@@ -62,16 +62,8 @@ class DAG : public Printable
 public:
 	static DAG* Flatten(const ast::Scope&, FabContext&);
 
-	~DAG() {}
-
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
-
-	ValueMap::const_iterator begin() const;
-	ValueMap::const_iterator end() const;
-
-private:
-	DAG(const ValueMap&);
-	ValueMap values;
+	virtual ValueMap::const_iterator begin() const = 0;
+	virtual ValueMap::const_iterator end() const = 0;
 };
 
 } // namespace dag
