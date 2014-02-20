@@ -717,11 +717,9 @@ bool Flattener::Enter(const ast::Value& v)
 
 void Flattener::Leave(const ast::Value& v)
 {
-	// TODO: later, fire this assertion. for now, ignore.
+	// Things like function definitions will never be flattened.
 	if (currentValue.empty())
 		return;
-
-	assert(not currentValue.empty());
 
 	ValueMap& currentScope = CurrentScope();
 
