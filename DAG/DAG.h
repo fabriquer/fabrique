@@ -60,7 +60,7 @@ class Value;
 class DAG : public Printable
 {
 public:
-	static DAG* Flatten(const ast::Scope&, FabContext&);
+	static UniqPtr<DAG> Flatten(const ast::Scope&, FabContext&);
 
 	virtual ValueMap::const_iterator begin() const = 0;
 	virtual ValueMap::const_iterator end() const = 0;

@@ -142,12 +142,12 @@ private:
 };
 
 
-DAG* DAG::Flatten(const ast::Scope& s, FabContext& ctx)
+UniqPtr<DAG> DAG::Flatten(const ast::Scope& s, FabContext& ctx)
 {
 	DAGBuilder f(ctx);
 	s.Accept(f);
 
-	return new ImmutableDAG(f.values);
+	return UniqPtr<DAG>(new ImmutableDAG(f.values));
 }
 
 

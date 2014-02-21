@@ -113,7 +113,7 @@ int main(int argc, char *argv[]) {
 	// Convert the parsed AST into a DAG.
 	//
 	unique_ptr<dag::DAG> dag;
-	try { dag.reset(dag::DAG::Flatten(*ast, ctx)); }
+	try { dag = dag::DAG::Flatten(*ast, ctx); }
 	catch (SemanticException& e)
 	{
 		err
