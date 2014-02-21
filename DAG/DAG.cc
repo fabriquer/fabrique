@@ -55,6 +55,7 @@
 using namespace fabrique;
 using namespace fabrique::dag;
 
+using std::dynamic_pointer_cast;
 using std::shared_ptr;
 using std::string;
 
@@ -371,7 +372,7 @@ void DAGBuilder::Leave(const ast::Call& call)
 	// We can only call functions and build rules. If it's not the former,
 	// it must be a rule!
 	//
-	shared_ptr<Rule> rule = std::dynamic_pointer_cast<Rule>(targetValue);
+	shared_ptr<Rule> rule = dynamic_pointer_cast<Rule>(targetValue);
 	assert(rule);
 
 	shared_ptr<Value> in, out;
@@ -499,7 +500,8 @@ void DAGBuilder::Leave(const ast::CompoundExpression& e)
 bool DAGBuilder::Enter(const ast::Conditional& c)
 {
 	shared_ptr<Boolean> cond =
-		std::dynamic_pointer_cast<Boolean>(flatten(c.condition()));
+		dynamic_pointer_cast<Boolean>(flatten(c.condition()));
+
 	if (not cond)
 		throw SemanticException("non-boolean condition", c.source());
 
@@ -557,7 +559,7 @@ bool DAGBuilder::Enter(const ast::FileList& l)
 		shared_ptr<Value> f = flatten(*file);
 		files.push_back(f);
 
-		assert(f == std::dynamic_pointer_cast<File>(f));
+		assert(f == dynamic_pointer_cast<File>(f));
 	}
 
 	ExitScope();
@@ -575,7 +577,7 @@ bool DAGBuilder::Enter(const ast::ForeachExpr& f)
 
 	auto target = flatten(f.targetSequence());
 	assert(target->type().name() == "list");
-	shared_ptr<List> input = std::dynamic_pointer_cast<List>(target);
+	shared_ptr<List> input = dynamic_pointer_cast<List>(target);
 	const ast::Parameter& loopParam = f.loopParameter();
 
 	//
