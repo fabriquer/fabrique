@@ -37,11 +37,19 @@
 using namespace fabrique;
 
 
-Type::Type(const std::string& s, const PtrVec<Type>& params)
-	: typeName(s), params(params)
+Type::Type(const std::string& name, const PtrVec<Type>& params,
+           FabContext& parent)
+	: parent(parent), typeName(name), params(params)
 {
-	assert(not s.empty());
+	assert(not name.empty());
 }
+
+Type::Type(const std::string& name, const PtrVec<Type>& params, const Type& t)
+	: parent(t.parent), typeName(name), params(params)
+{
+	assert(not name.empty());
+}
+
 
 const Type& Type::GetSupertype(const Type& x, const Type& y)
 {
@@ -50,9 +58,10 @@ const Type& Type::GetSupertype(const Type& x, const Type& y)
 }
 
 
-Type* Type::Create(const std::string& name, const PtrVec<Type>& params)
+Type* Type::Create(const std::string& name, const PtrVec<Type>& params,
+                   FabContext& ctx)
 {
-	return new Type(name, params);
+	return new Type(name, params, ctx);
 }
 
 

@@ -44,14 +44,14 @@ const Type* FabContext::type(const string& name, const PtrVec<Type>& params)
 	if (i != types.end())
 		return i->second.get();
 
-	Type *t = Type::Create(name, params);
+	Type *t = Type::Create(name, params, *this);
 	types[qualifiedName].reset(t);
 	return t;
 }
 
 const Type* FabContext::nilType()
 {
-	static const Type *nil = Type::Create("nil", PtrVec<Type>());
+	static const Type *nil = Type::Create("nil", PtrVec<Type>(), *this);
 	return nil;
 }
 

@@ -48,6 +48,7 @@ class Type : public Printable
 {
 public:
 	static const Type& GetSupertype(const Type&, const Type&);
+	static const Type& ListOf(const Type&);
 
 	Type(const Type&) = delete;
 	virtual ~Type() {}
@@ -71,11 +72,14 @@ public:
 	bool isListOf(const Type&) const;
 
 protected:
-	Type(const std::string& s, const PtrVec<Type>& params);
+	Type(const std::string&, const PtrVec<Type>& params, FabContext&);
+	Type(const std::string&, const PtrVec<Type>& params, const Type&);
 
 private:
-	static Type* Create(const std::string&, const PtrVec<Type>& params);
+	static Type* Create(const std::string&, const PtrVec<Type>& params,
+	                    FabContext&);
 
+	FabContext& parent;
 	const std::string typeName;
 	const PtrVec<Type> params;
 
