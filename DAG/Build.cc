@@ -205,6 +205,7 @@ void Build::appendFiles(shared_ptr<Value>& in, vector<shared_ptr<File>>& out)
 		}
 
 	else throw SemanticException(
-		"expected file or list of files, got " + in->type().str(),
+		"expected file or list of files, got " + in->type().str()
+		+ " (" + typeid(*in).name() + ")",
 		in->source());
 }
