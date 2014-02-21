@@ -85,8 +85,6 @@ void NinjaBackend::Process(const dag::DAG& d, Bytestream& out)
 	//
 	// Split values into files, rules and variables.
 	//
-	typedef std::pair<string,shared_ptr<Value>> NamedValue;
-
 	StringMap<string> namedFileTargets;
 	StringMap<shared_ptr<Rule>> rules;
 	StringMap<shared_ptr<Build>> builds;
