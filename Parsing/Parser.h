@@ -1,4 +1,4 @@
-/** @file Lexer.h    Declaration of @ref Lexer. */
+/** @file Parser.h    Declaration of @ref Parser. */
 /*
  * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
