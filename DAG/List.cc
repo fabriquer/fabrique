@@ -35,6 +35,7 @@
 #include "Support/SourceLocation.h"
 #include "Support/exceptions.h"
 #include "Types/Type.h"
+#include "Types/TypeError.h"
 
 #include <algorithm>
 #include <cassert>
@@ -95,8 +96,8 @@ shared_ptr<Value> List::Add(shared_ptr<Value>& n)
 shared_ptr<Value> List::PrefixWith(shared_ptr<Value>& prefix)
 {
 	if (prefix->type() != elementType)
-		throw SemanticException(
-			"expected " + elementType.str(), prefix->source());
+		throw WrongTypeException(elementType,
+		                         prefix->type(), prefix->source());
 
 	SharedPtrVec<Value> values;
 	values.push_back(prefix);

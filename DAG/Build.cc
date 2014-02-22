@@ -39,6 +39,7 @@
 #include "Support/exceptions.h"
 
 #include "Types/FunctionType.h"
+#include "Types/TypeError.h"
 
 #include <cassert>
 
@@ -63,8 +64,8 @@ Build* Build::Create(shared_ptr<Rule>& rule, shared_ptr<Value> in,
 	{
 		shared_ptr<File> f = std::dynamic_pointer_cast<File>(dep);
 		if (not f)
-			throw SemanticException("dependency not a file",
-			                        dep->source());
+			throw WrongTypeException("file", dep->type(),
+			                         dep->source());
 
 		depends.push_back(f);
 	}
@@ -74,8 +75,8 @@ Build* Build::Create(shared_ptr<Rule>& rule, shared_ptr<Value> in,
 	{
 		shared_ptr<File> f = std::dynamic_pointer_cast<File>(out);
 		if (not f)
-			throw SemanticException("output 'file' not a file",
-			                        out->source());
+			throw WrongTypeException("file", out->type(),
+			                         out->source());
 
 		extraOut.push_back(f);
 	}
@@ -198,14 +199,12 @@ void Build::appendFiles(shared_ptr<Value>& in, vector<shared_ptr<File>>& out)
 				std::dynamic_pointer_cast<File>(value);
 
 			if (not file)
-				throw SemanticException(
-					"not a file", value->source());
+				throw WrongTypeException("file",
+					value->type(), value->source());
 
 			out.push_back(file);
 		}
 
-	else throw SemanticException(
-		"expected file or list of files, got " + in->type().str()
-		+ " (" + typeid(*in).name() + ")",
-		in->source());
+	else throw WrongTypeException("file|list[file]",
+	                              in->type(), in->source());
 }

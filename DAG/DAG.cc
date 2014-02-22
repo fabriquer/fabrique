@@ -47,6 +47,7 @@
 
 #include "Types/FunctionType.h"
 #include "Types/Type.h"
+#include "Types/TypeError.h"
 
 #include <cassert>
 #include <deque>
@@ -350,13 +351,8 @@ void DAGBuilder::Leave(const ast::Call& call)
 			assert(p->first == name);
 
 			if (not a->type().isSubtype(param.type()))
-				throw SemanticException(
-					"invalid argument type (expected '"
-					+ param.type().str()
-					+ "', got '"
-					+ a->type().str()
-					+ "'",
-					a->source());
+				throw WrongTypeException(param.type(),
+					a->type(), a->source());
 
 			scope[name] = flatten(*a);
 		}
@@ -473,8 +469,8 @@ void DAGBuilder::Leave(const ast::Call& call)
 			extraOutputs.push_back(arg);
 
 		else
-			throw SemanticException(
-				"expected file[in|out]", p.source());
+			throw WrongTypeException("file[in|out]",
+				p.type(), p.source());
 	}
 
 	currentValue.emplace(
@@ -503,7 +499,7 @@ bool DAGBuilder::Enter(const ast::Conditional& c)
 		dynamic_pointer_cast<Boolean>(flatten(c.condition()));
 
 	if (not cond)
-		throw SemanticException("non-boolean condition", c.source());
+		throw WrongTypeException("bool", c.type(), c.source());
 
 	// Flatten either the "then" or the "else" clause.
 	currentValue.emplace(
@@ -631,10 +627,8 @@ bool DAGBuilder::Enter(const ast::List& l)
 	for (ConstPtr<ast::Expression>& e : l)
 	{
 		if (e->type() != subtype)
-			throw SemanticException(
-				"list element's type (" + e->type().str()
-				+ ") != list subtype (" + subtype.str() + ")",
-				e->source());
+			throw WrongTypeException(subtype,
+			                         e->type(), e->source());
 
 		values.push_back(flatten(*e));
 	}

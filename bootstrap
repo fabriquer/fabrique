@@ -38,7 +38,7 @@ cxx_srcs = {
 		'exceptions',
 	),
 	'Types/': (
-		'FunctionType', 'Type',
+		'FunctionType', 'Type', 'TypeError',
 	),
 	'': (
 		'FabContext',

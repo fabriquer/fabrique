@@ -33,6 +33,7 @@
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 #include "Types/Type.h"
+#include "Types/TypeError.h"
 
 #include <cassert>
 
@@ -105,8 +106,7 @@ shared_ptr<Value> Integer::Add(shared_ptr<Value>& v)
 
 	shared_ptr<Integer> other = std::dynamic_pointer_cast<Integer>(v);
 	if (not other)
-		throw SemanticException(
-			"integers can only add with integers", loc);
+		throw WrongTypeException("int", v->type(), v->source());
 
 	return shared_ptr<Value>(
 		new Integer(this->val + other->val, type(), loc));
@@ -126,8 +126,7 @@ shared_ptr<Value> String::Add(shared_ptr<Value>& v)
 
 	shared_ptr<String> other = std::dynamic_pointer_cast<String>(v);
 	if (not other)
-		throw SemanticException(
-			"strings can only concatenate with strings", loc);
+		throw WrongTypeException("string", v->type(), v->source());
 
 	return shared_ptr<Value>(
 		new String(this->val + other->val, type(), loc));
