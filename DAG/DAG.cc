@@ -447,7 +447,7 @@ void DAGBuilder::Leave(const ast::Call& call)
 		const ast::Parameter& p = **j;
 		const Type& type = p.type();
 
-		if (type.name() != "file")
+		if (not type.isFile())
 			continue;
 
 		//

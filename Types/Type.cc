@@ -99,6 +99,11 @@ bool Type::isSupertype(const Type &t) const
 	return (&t == this);
 }
 
+bool Type::isFile() const
+{
+	return (typeName == "file");
+}
+
 bool Type::isListOf(const Type& t) const
 {
 	if (typeName != "list")

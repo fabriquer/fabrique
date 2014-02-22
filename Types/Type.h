@@ -69,6 +69,7 @@ public:
 	bool isSubtype(const Type&) const;
 	bool isSupertype(const Type&) const;
 
+	bool isFile() const;
 	bool isListOf(const Type&) const;
 
 protected:
