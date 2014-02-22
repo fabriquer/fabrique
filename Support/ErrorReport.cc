@@ -105,7 +105,7 @@ void ErrorReport::PrettyPrint(Bytestream& out, int indent) const
 
 		const int postCaretHighlight =
 			source.end.column >= caret.column
-			  ? source.end.column - caret.column
+			  ? source.end.column - caret.column - 1
 			  : 0;
 
 		assert(firstHighlightColumn >= 1);
