@@ -31,10 +31,18 @@
 
 #include "Support/Bytestream.h"
 #include "Types/Type.h"
+#include "FabContext.h"
 
 #include <cassert>
 
 using namespace fabrique;
+
+
+const Type& Type::ListOf(const Type& t)
+{
+	PtrVec<Type> types(1, &t);
+	return *t.parent.type("list", types);
+}
 
 
 Type::Type(const std::string& name, const PtrVec<Type>& params,
