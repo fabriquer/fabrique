@@ -44,6 +44,7 @@
 #include <cassert>
 
 using namespace fabrique::dag;
+using std::dynamic_pointer_cast;
 using std::shared_ptr;
 using std::vector;
 
@@ -62,7 +63,7 @@ Build* Build::Create(shared_ptr<Rule>& rule, shared_ptr<Value> in,
 	SharedPtrVec<File> depends;
 	for (shared_ptr<Value>& dep : dependencies)
 	{
-		shared_ptr<File> f = std::dynamic_pointer_cast<File>(dep);
+		shared_ptr<File> f = dynamic_pointer_cast<File>(dep);
 		if (not f)
 			throw WrongTypeException("file", dep->type(),
 			                         dep->source());
@@ -73,7 +74,7 @@ Build* Build::Create(shared_ptr<Rule>& rule, shared_ptr<Value> in,
 	SharedPtrVec<File> extraOut;
 	for (shared_ptr<Value>& out : extraOutputs)
 	{
-		shared_ptr<File> f = std::dynamic_pointer_cast<File>(out);
+		shared_ptr<File> f = dynamic_pointer_cast<File>(out);
 		if (not f)
 			throw WrongTypeException("file", out->type(),
 			                         out->source());
@@ -181,7 +182,7 @@ void Build::appendFiles(shared_ptr<Value>& in, vector<shared_ptr<File>>& out)
 {
 	assert(in);
 
-	if (shared_ptr<Build> build = std::dynamic_pointer_cast<Build>(in))
+	if (shared_ptr<Build> build = dynamic_pointer_cast<Build>(in))
 		//
 		// Not sure why std::copy() doesn't work here, but
 		// it doesn't (segfault).
@@ -189,14 +190,14 @@ void Build::appendFiles(shared_ptr<Value>& in, vector<shared_ptr<File>>& out)
 		for (shared_ptr<File> i : build->out)
 			out.push_back(i);
 
-	else if (shared_ptr<File> file = std::dynamic_pointer_cast<File>(in))
+	else if (shared_ptr<File> file = dynamic_pointer_cast<File>(in))
 		out.push_back(file);
 
-	else if (shared_ptr<List> list = std::dynamic_pointer_cast<List>(in))
+	else if (shared_ptr<List> list = dynamic_pointer_cast<List>(in))
 		for (shared_ptr<Value> value : *list)
 		{
 			shared_ptr<File> file =
-				std::dynamic_pointer_cast<File>(value);
+				dynamic_pointer_cast<File>(value);
 
 			if (not file)
 				throw WrongTypeException("file",
