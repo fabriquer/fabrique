@@ -82,13 +82,13 @@ public:
 	template<class T1, class T2>
 	static SourceRange Over(const T1& b, const T2& e)
 	{
-		const SourceLocation& begin =
-			b ? b->source().begin : SourceLocation::Nowhere;
+		const SourceRange& begin =
+			b ? b->source() : (e ? e->source() : SourceRange::None);
 
-		const SourceLocation& end =
-			e ? e->source().end : SourceLocation::Nowhere;
+		const SourceRange& end =
+			e ? e->source() : (b ? b->source() : SourceRange::None);
 
-		return SourceRange(begin, end);
+		return SourceRange(begin.begin, end.end);
 	}
 
 	SourceRange(const SourceLocation& begin, const SourceLocation& end);
