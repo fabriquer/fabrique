@@ -33,6 +33,7 @@
 #include "DAG/File.h"
 #include "DAG/List.h"
 #include "DAG/Rule.h"
+#include "DAG/Target.h"
 
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
@@ -82,8 +83,13 @@ Build* Build::Create(shared_ptr<Rule>& rule, shared_ptr<Value> in,
 		extraOut.push_back(f);
 	}
 
+	const Type& type =
+		(out->type().isFile() and not extraOut.empty())
+			? Type::ListOf(out->type())
+			: out->type();
+
 	return new Build(rule, inputs, outputs, depends, extraOut,
-	                 arguments, out->type(), src);
+	                 arguments, type, src);
 }
 
 
@@ -205,6 +211,10 @@ void Build::appendFiles(shared_ptr<Value>& in, vector<shared_ptr<File>>& out)
 
 			out.push_back(file);
 		}
+
+	else if (shared_ptr<Target> t = dynamic_pointer_cast<Target>(in))
+		for (shared_ptr<Value> f : t->files())
+			out.push_back(dynamic_pointer_cast<File>(f));
 
 	else throw WrongTypeException("file|list[file]",
 	                              in->type(), in->source());

@@ -14,8 +14,9 @@ link = action('$CC $in -o $out' <- in:list[file], out:file);
 # CHECK-DAG: "lex { foo.yy => foo.c + foo.h }{{.*}}" -> "foo.h";
 foo_c = lex(file('foo.yy'), out = file('foo.c'), header = file('foo.h'));
 
-# CHECK-DAG: "foo.c" -> "cc { foo.c => foo.o }{{.*}}";
-# CHECK-DAG: "cc { foo.c => foo.o }{{.*}}" -> "foo.o"
+# CHECK-DAG: "foo.c" -> "cc { foo.c foo.h => foo.o }{{.*}}";
+# CHECK-DAG: "foo.h" -> "cc { foo.c foo.h => foo.o }{{.*}}";
+# CHECK-DAG: "cc { foo.c foo.h => foo.o }{{.*}}" -> "foo.o"
 foo_o = cc(foo_c, out = file('foo.o'));
 
 # CHECK-DAG: "bar.c" -> "cc { bar.c => bar.o }{{.*}}";

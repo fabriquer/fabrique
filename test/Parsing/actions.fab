@@ -29,5 +29,5 @@ single_object = cxx_one(file('a.cc'), out = file('a.o'));
 # CHECK: object_list:list[file] = multi_cxx([ file('a.cc') file('b.cc') ], out = [ file('a.o') file('b.o') ]);
 object_list = multi_cxx(files(a.cc b.cc), out = files(a.o b.o));
 
-# CHECK: lexed:file = lex(file('foo.l'), file('foo.lex.c'), file('foo.lex.h'));
+# CHECK: lexed:list[file] = lex(file('foo.l'), file('foo.lex.c'), file('foo.lex.h'));
 lexed = lex(file('foo.l'), file('foo.lex.c'), file('foo.lex.h'));

@@ -37,6 +37,7 @@
 #include "DAG/List.h"
 #include "DAG/Primitive.h"
 #include "DAG/Rule.h"
+#include "DAG/Target.h"
 
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
@@ -88,52 +89,8 @@ static string stringify(const shared_ptr<Value>& v)
 }
 
 
-void MakeBackend::Process(const dag::DAG& d, Bytestream& out)
+void MakeBackend::Process(const dag::DAG& dag, Bytestream& out)
 {
-	//
-	// Extract variables and build steps.
-	//
-	typedef std::pair<string,shared_ptr<Value>> NamedValue;
-
-	StringMap<shared_ptr<Build>> builds;
-	StringMap<string> namedFileTargets;
-	StringMap<string> variables;
-
-	for (auto& i : d)
-	{
-		string name = i.first;
-		const shared_ptr<Value>& v = i.second;
-		assert(v);
-
-		if (auto build = dynamic_pointer_cast<Build>(v))
-			builds[name] = build;
-
-		// Don't do anything with rules.
-		else if (auto rule = dynamic_pointer_cast<Rule>(i.second))
-			continue;
-
-		else if (auto file = dynamic_pointer_cast<File>(i.second))
-			namedFileTargets[name] = file->filename();
-
-		else if (auto list = dynamic_pointer_cast<List>(i.second))
-		{
-			if (list->size() > 0
-			    and dynamic_pointer_cast<File>((*list)[0]))
-				namedFileTargets[name] = stringify(list);
-
-			else
-				variables[name] = stringify(v);
-		}
-
-		else
-			variables[name] = stringify(v);
-	}
-
-
-	//
-	// Now write out the file:
-	//
-
 	// Header comment:
 	out
 		<< Bytestream::Comment
@@ -153,12 +110,12 @@ void MakeBackend::Process(const dag::DAG& d, Bytestream& out)
 		<< Bytestream::Reset
 		;
 
-	for (auto& i : variables)
+	for (auto& i : dag.variables())
 	{
 		out
 			<< Bytestream::Definition << i.first
 			<< Bytestream::Operator << "=" << indent
-			<< Bytestream::Literal << i.second
+			<< Bytestream::Literal << stringify(i.second)
 			<< Bytestream::Reset
 			<< "\n"
 			;
@@ -167,13 +124,21 @@ void MakeBackend::Process(const dag::DAG& d, Bytestream& out)
 
 
 	// Explicitly-named pseudo-targets:
-	for (auto& i : namedFileTargets)
+	for (auto& i : dag.targets())
+	{
 		out
 			<< Bytestream::Definition << i.first
-			<< Bytestream::Operator << " : "
-			<< Bytestream::Literal << i.second
+			<< Bytestream::Operator << " :"
+			<< Bytestream::Literal
+			;
+
+		for (auto& j : i.second->files())
+			out << " " << *j;
+
+		out
 			<< "\n"
 			;
+	}
 
 	out << "\n";
 
@@ -189,9 +154,9 @@ void MakeBackend::Process(const dag::DAG& d, Bytestream& out)
 
 	StringMap<string> pseudoTargets;
 	size_t buildID = 0;
-	for (auto& i : builds)
+	for (auto& i : dag.builds())
 	{
-		const dag::Build& build = *i.second;
+		const dag::Build& build = *i;
 		const dag::Rule& rule = build.buildRule();
 
 		//

@@ -38,6 +38,7 @@
 #include "DAG/List.h"
 #include "DAG/Primitive.h"
 #include "DAG/Rule.h"
+#include "DAG/Target.h"
 #include "DAG/UndefinedValueException.h"
 #include "DAG/Value.h"
 
@@ -67,15 +68,25 @@ using ConstPtr = const std::unique_ptr<T>;
 class ImmutableDAG : public DAG
 {
 public:
-	ImmutableDAG(const ValueMap&);
+	ImmutableDAG(SharedPtrVec<File>& files, SharedPtrVec<Build>& builds,
+	             SharedPtrMap<Rule>& rules, SharedPtrMap<Value>& variables,
+	             SharedPtrMap<Target>& targets);
 
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
-
-	ValueMap::const_iterator begin() const { return values.begin(); }
-	ValueMap::const_iterator end() const { return values.end(); }
+	const SharedPtrVec<File>& files() const override { return files_; }
+	const SharedPtrVec<Build>& builds() const override { return builds_; }
+	const SharedPtrMap<Rule>& rules() const override { return rules_; }
+	const SharedPtrMap<Value>& variables() const override { return vars_; }
+	const SharedPtrMap<Target>& targets() const override
+	{
+		return targets_;
+	}
 
 private:
-	ValueMap values;
+	const SharedPtrVec<File> files_;
+	const SharedPtrVec<Build> builds_;
+	const SharedPtrMap<Rule> rules_;
+	const SharedPtrMap<Value> vars_;
+	const SharedPtrMap<Target> targets_;
 };
 
 
@@ -84,7 +95,7 @@ class DAGBuilder : public ast::Visitor
 {
 public:
 	DAGBuilder(FabContext& ctx)
-		: stringTy(*ctx.type("string"))
+		: fileType(*ctx.fileType()), stringTy(*ctx.type("string"))
 	{
 	}
 
@@ -111,14 +122,12 @@ public:
 	VISIT(ast::UnaryOperation)
 	VISIT(ast::Value)
 
-	//! The components of the current scope's fully-qualified name.
-	std::deque<string> scopeName;
-
-	//! Symbols defined in this scope (or the one up from it, or up...).
-	std::deque<ValueMap> scopes;
-
-	//! All values, named by fully-qualified name.
-	ValueMap values;
+	// The values we're creating:
+	SharedPtrVec<File> files_;
+	SharedPtrVec<Build> builds_;
+	SharedPtrMap<Rule> rules_;
+	SharedPtrMap<Value> variables_;
+	SharedPtrMap<Target> targets_;
 
 private:
 	ValueMap& EnterScope(const string& name);
@@ -129,6 +138,16 @@ private:
 	shared_ptr<Value> getNamedValue(const std::string& name);
 
 	shared_ptr<Value> flatten(const ast::Expression&);
+
+
+	//! The components of the current scope's fully-qualified name.
+	std::deque<string> scopeName;
+
+	//! Symbols defined in this scope (or the one up from it, or up...).
+	std::deque<ValueMap> scopes;
+
+	//! The type of individual source (or target) files.
+	const Type& fileType;
 
 	//! The type of generated strings.
 	const Type& stringTy;
@@ -149,26 +168,26 @@ UniqPtr<DAG> DAG::Flatten(const ast::Scope& s, FabContext& ctx)
 	DAGBuilder f(ctx);
 	s.Accept(f);
 
-	return UniqPtr<DAG>(new ImmutableDAG(f.values));
+	return UniqPtr<DAG>(new ImmutableDAG(
+		f.files_, f.builds_, f.rules_, f.variables_, f.targets_));
 }
 
 
-ImmutableDAG::ImmutableDAG(const ValueMap& values)
-	: values(values)
+void DAG::PrettyPrint(Bytestream& out, int indent) const
 {
-}
+	SharedPtrMap<Value> namedValues;
+	for (auto& i : rules()) namedValues.emplace(i);
+	for (auto& i : targets()) namedValues.emplace(i);
+	for (auto& i : variables()) namedValues.emplace(i);
 
-
-void ImmutableDAG::PrettyPrint(Bytestream& b, int indent) const
-{
-	for (auto& i : values)
+	for (auto& i : namedValues)
 	{
 		const string& name = i.first;
 		const shared_ptr<Value>& v = i.second;
 
 		assert(v);
 
-		b
+		out
 			<< Bytestream::Type << v->type()
 			<< Bytestream::Definition << " " << name
 			<< Bytestream::Operator << " = "
@@ -176,6 +195,36 @@ void ImmutableDAG::PrettyPrint(Bytestream& b, int indent) const
 			<< Bytestream::Reset << "\n"
 			;
 	}
+
+	for (const shared_ptr<File>& f : files())
+	{
+		out
+			<< Bytestream::Type << f->type()
+			<< Bytestream::Operator << ": "
+			<< *f
+			<< Bytestream::Reset << "\n"
+			;
+	}
+
+	for (const shared_ptr<Build>& b : builds())
+	{
+		out
+			<< Bytestream::Type << "build"
+			<< Bytestream::Operator << ": "
+			<< *b
+			<< Bytestream::Reset << "\n"
+			;
+	}
+}
+
+
+ImmutableDAG::ImmutableDAG(
+		SharedPtrVec<File>& files, SharedPtrVec<Build>& builds,
+		SharedPtrMap<Rule>& rules, SharedPtrMap<Value>& variables,
+		SharedPtrMap<Target>& targets)
+	: files_(files), builds_(builds), rules_(rules),
+	  vars_(variables), targets_(targets)
+{
 }
 
 
@@ -473,10 +522,12 @@ void DAGBuilder::Leave(const ast::Call& call)
 				p.type(), p.source());
 	}
 
-	currentValue.emplace(
-		Build::Create(rule, in, out,
-		              dependencies, extraOutputs,
+	shared_ptr<Build> build(
+		Build::Create(rule, in, out, dependencies, extraOutputs,
 		              arguments, call.source()));
+
+	builds_.push_back(build);
+	currentValue.push(build);
 }
 
 
@@ -519,7 +570,10 @@ bool DAGBuilder::Enter(const ast::Filename& f)
 	if (shared_ptr<Value> subdir = getNamedValue(ast::Subdirectory))
 		name = join(subdir->str(), name, "/");
 
-	currentValue.emplace(new File(name, f.type(), f.source()));
+	shared_ptr<File> file(new File(name, f.type(), f.source()));
+	files_.push_back(file);
+	currentValue.push(file);
+
 	return false;
 }
 void DAGBuilder::Leave(const ast::Filename&) {}
@@ -664,7 +718,22 @@ void DAGBuilder::Leave(const ast::Scope&)
 	for (auto symbol : scopedSymbols)
 	{
 		const string name = join(scopeName, symbol.first, ".");
-		values.emplace(name, std::move(symbol.second));
+		shared_ptr<Value>& v = symbol.second;
+
+		if (dynamic_pointer_cast<File>(v)
+		    or dynamic_pointer_cast<Build>(v))
+		{
+			// Do nothing: files and builds have already been
+			// added to files_ or builds_, respectively.
+		}
+		else if (auto rule = dynamic_pointer_cast<Rule>(v))
+			rules_[name] = rule;
+
+		else if (auto target = dynamic_pointer_cast<Target>(v))
+			targets_[name] = target;
+
+		else
+			variables_[name] = v;
 	}
 }
 
@@ -740,11 +809,31 @@ void DAGBuilder::Leave(const ast::Value& v)
 		<< Bytestream::Operator << ":"
 		;
 
-
-	currentScope.emplace(currentValueName.top(),
-	                     std::move(currentValue.top()));
-	currentValueName.pop();
+	shared_ptr<Value> val = std::move(currentValue.top());
 	currentValue.pop();
+
+	const string name = currentValueName.top();
+	currentValueName.pop();
+
+
+	//
+	// If the right-hand side is a build, file or list of files,
+	// convert to a named target (files and builds are already in the DAG).
+	//
+	if (auto build = dynamic_pointer_cast<Build>(val))
+		val.reset(Target::Create(name, build));
+
+	else if (auto file = dynamic_pointer_cast<File>(val))
+		val.reset(Target::Create(name, file));
+
+	else if (auto list = dynamic_pointer_cast<List>(val))
+	{
+		if (list->type().isListOf(fileType))
+			val.reset(Target::Create(name, list));
+	}
+
+
+	currentScope.emplace(name, std::move(val));
 
 	for (auto& i : currentScope)
 		dbg << Bytestream::Definition << " " << i.first;

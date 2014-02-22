@@ -7,5 +7,6 @@
 lex = action('$LEX -c++ --yyclass=$classname --outfile=$out $in'
              <- classname:string);
 
-# CHECK-DAG: file gen = lex { foo.yy => foo.c }( classname = 'FooClass' )
+# CHECK-DAG: build: lex { foo.yy => foo.c }( classname = 'FooClass' )
+# CHECK-DAG: file gen = foo.c
 gen = lex(file('foo.yy'), file('foo.c'), classname = 'FooClass');

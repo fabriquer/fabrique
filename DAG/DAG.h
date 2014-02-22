@@ -33,6 +33,7 @@
 #define DAG_H
 
 #include "ADT/StringMap.h"
+#include "ADT/UniqPtr.h"
 #include "DAG/Value.h"
 #include "Support/Printable.h"
 
@@ -51,6 +52,10 @@ namespace ast {
 
 namespace dag {
 
+class Build;
+class File;
+class Rule;
+class Target;
 class Value;
 
 
@@ -62,8 +67,13 @@ class DAG : public Printable
 public:
 	static UniqPtr<DAG> Flatten(const ast::Scope&, FabContext&);
 
-	virtual ValueMap::const_iterator begin() const = 0;
-	virtual ValueMap::const_iterator end() const = 0;
+	virtual const SharedPtrVec<File>& files() const = 0;
+	virtual const SharedPtrVec<Build>& builds() const = 0;
+	virtual const SharedPtrMap<Rule>& rules() const = 0;
+	virtual const SharedPtrMap<Value>& variables() const = 0;
+	virtual const SharedPtrMap<Target>& targets() const = 0;
+
+	virtual void PrettyPrint(Bytestream&, int) const;
 };
 
 } // namespace dag

@@ -167,40 +167,20 @@ Call* Parser::CreateCall(UniqPtr<Identifier>& name,
 
 	SourceRange loc(name->source().begin, lex.CurrentTokenRange().end);
 
-	UniqPtr<SymbolReference> fn(Reference(std::move(name)));
-	if (not fn)
+	UniqPtr<SymbolReference> ref(Reference(std::move(name)));
+	if (not ref)
 	{
-		ReportError("call to undefined function", loc);
+		ReportError("call to undefined action/function", loc);
 		return nullptr;
 	}
 
-	auto& fnType = dynamic_cast<const FunctionType&>(fn->type());
-	const Type& returnType = fnType.returnType();
+	// Run the arguments through Callable::NameArguments to validate
+	// various rules (e.g. no positional arguments after keyword arguments).
+	auto& callable = dynamic_cast<const Callable&>(ref->definition());
+	callable.NameArguments(*args);
 
-	const Type *outType = nullptr;
-	if (auto *action = dynamic_cast<const Action*>(&fn->definition()))
-	{
-		StringMap<const Argument*> namedArguments
-			= action->NameArguments(*args);
-
-		auto out = namedArguments.find("out");
-		if (out == namedArguments.end())
-		{
-			ReportError("missing 'out' argument", loc);
-			return nullptr;
-		}
-
-		outType = &out->second->type();
-
-#if 0
-		// TODO(JA): ensure 'out' is a subtype
-		if (not outType->isSubType(...))
-			;
-#endif
-	}
-
-	const Type& resultType = outType ? *outType : returnType;
-	return new Call(fn, *args, resultType, loc);
+	auto& fnType = dynamic_cast<const FunctionType&>(ref->type());
+	return new Call(ref, *args, fnType.returnType(), loc);
 }
 
 

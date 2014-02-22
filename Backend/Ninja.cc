@@ -37,6 +37,7 @@
 #include "DAG/List.h"
 #include "DAG/Primitive.h"
 #include "DAG/Rule.h"
+#include "DAG/Target.h"
 
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
@@ -76,54 +77,20 @@ string stringify(const shared_ptr<Value>& v)
 
 		return fabrique::join(substrings, " ");
 	}
+	else if (auto target = dynamic_pointer_cast<Target>(v))
+	{
+		vector<string> files;
+		for (auto& f : target->files())
+			files.push_back(stringify(f));
+
+		return fabrique::join(files, " ");
+	}
 
 	return v->str();
 }
 
-void NinjaBackend::Process(const dag::DAG& d, Bytestream& out)
+void NinjaBackend::Process(const dag::DAG& dag, Bytestream& out)
 {
-	//
-	// Split values into files, rules and variables.
-	//
-	StringMap<string> namedFileTargets;
-	StringMap<shared_ptr<Rule>> rules;
-	StringMap<shared_ptr<Build>> builds;
-	StringMap<string> variables;
-
-	for (auto& i : d)
-	{
-		string name = i.first;
-		const shared_ptr<Value>& v = i.second;
-		assert(v);
-
-		if (auto file = dynamic_pointer_cast<File>(v))
-			namedFileTargets[name] = file->filename();
-
-		else if (auto rule = dynamic_pointer_cast<Rule>(v))
-			rules[name] = rule;
-
-		else if (auto build = dynamic_pointer_cast<Build>(v))
-			builds[name] = build;
-
-		else if (auto list = dynamic_pointer_cast<List>(i.second))
-		{
-			if (list->size() > 0
-			    and dynamic_pointer_cast<File>((*list)[0]))
-				namedFileTargets[name] = stringify(list);
-
-			else
-				variables[name] = stringify(v);
-		}
-
-		else
-			variables[name] = stringify(v);
-	}
-
-
-	//
-	// Now write out the file:
-	//
-
 	// Header comment:
 	out
 		<< Bytestream::Comment
@@ -142,12 +109,12 @@ void NinjaBackend::Process(const dag::DAG& d, Bytestream& out)
 		<< Bytestream::Reset
 		;
 
-	for (auto& i : variables)
+	for (auto& i : dag.variables())
 	{
 		out
 			<< Bytestream::Definition << i.first
 			<< Bytestream::Operator << " = "
-			<< Bytestream::Literal << i.second
+			<< Bytestream::Literal << stringify(i.second)
 			<< Bytestream::Reset
 			<< "\n"
 			;
@@ -164,7 +131,7 @@ void NinjaBackend::Process(const dag::DAG& d, Bytestream& out)
 		<< Bytestream::Reset
 		;
 
-	for (auto& i : rules)
+	for (auto& i : dag.rules())
 	{
 		const dag::Rule& rule = *i.second;
 
@@ -197,13 +164,13 @@ void NinjaBackend::Process(const dag::DAG& d, Bytestream& out)
 
 
 	// Psuedo-targets:
-	for (auto& i : namedFileTargets)
+	for (auto& i : dag.targets())
 		out
 			<< Bytestream::Type << "build "
 			<< Bytestream::Definition << i.first
 			<< Bytestream::Operator << " : "
 			<< Bytestream::Action << "phony "
-			<< Bytestream::Literal << i.second
+			<< Bytestream::Literal << stringify(i.second)
 			<< "\n"
 			;
 
@@ -220,9 +187,9 @@ void NinjaBackend::Process(const dag::DAG& d, Bytestream& out)
 		<< Bytestream::Reset
 		;
 
-	for (auto& i : builds)
+	for (auto& i : dag.builds())
 	{
-		const dag::Build& build = *i.second;
+		const dag::Build& build = *i;
 
 		out << Bytestream::Type << "build";
 		for (const shared_ptr<File>& f : build.outputs())

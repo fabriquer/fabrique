@@ -16,6 +16,9 @@ cc = action('cc -c $in -o $out' <- in:file, out:file);
 link = action('cc $in -o $out' <- in:list[file], out:file);
 
 # CHECK-DAG: list[file] objs = [ foo.c.o bar.c.o baz.c.o ]
+# CHECK-DAG: build: cc { foo.c => foo.c.o }
+# CHECK-DAG: build: cc { bar.c => bar.c.o }
+# CHECK-DAG: build: cc { baz.c => baz.c.o }
 objs = foreach srcs as src:string
 {
 	obj = file(src + '.o');
@@ -23,5 +26,6 @@ objs = foreach srcs as src:string
 	obj
 };
 
-# CHECK-DAG: file bin = link { foo.c.o bar.c.o baz.c.o => foo }
+# CHECK-DAG: build: link { foo.c.o bar.c.o baz.c.o => foo }
+# CHECK-DAG: file bin = foo
 bin = link(objs, out = file('foo'));
