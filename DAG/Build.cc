@@ -201,16 +201,7 @@ void Build::appendFiles(shared_ptr<Value>& in, vector<shared_ptr<File>>& out)
 
 	else if (shared_ptr<List> list = dynamic_pointer_cast<List>(in))
 		for (shared_ptr<Value> value : *list)
-		{
-			shared_ptr<File> file =
-				dynamic_pointer_cast<File>(value);
-
-			if (not file)
-				throw WrongTypeException("file",
-					value->type(), value->source());
-
-			out.push_back(file);
-		}
+			appendFiles(value, out);
 
 	else if (shared_ptr<Target> t = dynamic_pointer_cast<Target>(in))
 		for (shared_ptr<Value> f : t->files())
