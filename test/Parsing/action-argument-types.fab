@@ -1,0 +1,9 @@
+#
+# RUN: fab --parse-only --print-ast %s 2> %t || true
+# RUN: FileCheck %s -input-file %t
+#
+
+cc = action('$CC -c $in -o $out' <- in:file, out:file);
+
+# CHECK: expected file, got list[file]
+bad = cc(files(foo.c), file('foo.o'));

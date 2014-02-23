@@ -33,6 +33,8 @@
 #include "AST/Callable.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
+#include "Types/Type.h"
+#include "Types/TypeError.h"
 
 using namespace fabrique::ast;
 using fabrique::UniqPtrVec;
@@ -49,6 +51,19 @@ Callable::Callable(UniqPtrVec<Parameter>& params)
 const UniqPtrVec<Parameter>& Callable::parameters() const
 {
 	return params;
+}
+
+void Callable::CheckArguments(const UniqPtrVec<Argument>& args) const
+{
+	StringMap<const Argument*> namedArguments = NameArguments(args);
+
+	for (auto& p : params)
+	{
+		const Argument *arg = namedArguments[p->getName().name()];
+		if (arg and not arg->type().isSubtype(p->type()))
+			throw WrongTypeException(p->type(),
+			                         arg->type(), arg->source());
+	}
 }
 
 

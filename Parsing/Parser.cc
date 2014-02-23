@@ -177,7 +177,12 @@ Call* Parser::CreateCall(UniqPtr<Identifier>& name,
 	// Run the arguments through Callable::NameArguments to validate
 	// various rules (e.g. no positional arguments after keyword arguments).
 	auto& callable = dynamic_cast<const Callable&>(ref->definition());
-	callable.NameArguments(*args);
+	try { callable.CheckArguments(*args); }
+	catch (SourceCodeException& e)
+	{
+		ReportError(e.message(), e.source());
+		return nullptr;
+	}
 
 	auto& fnType = dynamic_cast<const FunctionType&>(ref->type());
 	return new Call(ref, *args, fnType.returnType(), loc);

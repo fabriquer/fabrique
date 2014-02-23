@@ -6,11 +6,11 @@
 # CHECK-DAG: file src = Inputs/foo.c
 src = file('Inputs/foo.c');
 
-# CHECK-DAG: (list[file])=>list[file] cc = cc -c $in -o $out
-cc = action('cc -c $in -o $out');
+# CHECK-DAG: (file)=>file cc = cc -c $in -o $out
+cc = action('cc -c $in -o $out' <- in:file, out:file);
 
-# CHECK-DAG: (list[file])=>list[file] link = cc $in -o $out
-link = action('cc $in -o $out');
+# CHECK-DAG: (list[file])=>file link = cc $in -o $out
+link = action('cc $in -o $out' <- out:file);
 
 # CHECK-DAG: build: cc { Inputs/foo.c => foo.o }
 # CHECK-DAG: file obj = foo.o
@@ -18,4 +18,4 @@ obj = cc(src, out = file('foo.o'));
 
 # CHECK-DAG: build: link { foo.o => foo }
 # CHECK-DAG: file bin = foo
-bin = link(obj, out = file('foo'));
+bin = link([ obj ], out = file('foo'));
