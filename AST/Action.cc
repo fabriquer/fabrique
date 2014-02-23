@@ -53,6 +53,7 @@ Action* Action::Create(UniqPtrVec<Argument>& args,
 	// Identify the input and output types for FunctionType.
 	//
 	const Type *inType = NULL, *outType = NULL;
+	int extraOut = 0;
 	if (params)
 		for (auto& p : *params)
 		{
@@ -63,6 +64,14 @@ Action* Action::Create(UniqPtrVec<Argument>& args,
 
 			else if (name == "out")
 				outType = &p->type();
+
+			else
+			{
+				const Type& ty = p->type();
+				if (ty.isFile() and ty.typeParamCount() > 0
+				    and ty[0].name() == "out")
+					++extraOut;
+			}
 		}
 
 	//
@@ -92,6 +101,9 @@ Action* Action::Create(UniqPtrVec<Argument>& args,
 	if (params)
 		for (auto& p : *params)
 			parameters.push_back(std::move(p));
+
+	if (extraOut > 0)
+		outType = fileListTy;
 
 	const FunctionType& type = *ctx.functionType(*inType, *outType);
 

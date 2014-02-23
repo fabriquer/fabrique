@@ -3,9 +3,9 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK-DAG: (list[file])=>list[file] lex = $LEX -c++ --header-file=$header --outfile=$out $in
+# CHECK-DAG: (file)=>list[file] lex = $LEX -c++ --header-file=$header --outfile=$out $in
 lex = action('$LEX -c++ --header-file=$header --outfile=$out $in'
-              <- header:file[out]);
+              <- in:file, out:file, header:file[out]);
 
 # CHECK-DAG: build: lex { foo.yy => foo.c + foo.h }( header = foo.h )
 # CHECK-DAG: list[file] gen = [ foo.c foo.h ]

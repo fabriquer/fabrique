@@ -18,10 +18,10 @@ cxx_one = action('$CXX -c $cxxflags -MMD -MF $out.d $in -o $out',
 multi_cxx = action('$CXX -c $cxxflags -MMD -MF $out.d $in',
 	description = 'Compiling $in', depfile = '$out.d');
 
-# CHECK: lex:(list[file])=>list[file] = action('$LEX{{.*}}=$out $in'
-# CHECK:            <- in:list[file], out:list[file], header:file[out]);
+# CHECK: lex:(file)=>list[file] = action('$LEX{{.*}}=$out $in'
+# CHECK:            <- in:file, out:file, header:file[out]);
 lex = action('$LEX -c++ --header-file=$header --outfile=$out $in'
-              <- header:file[out]);
+              <- in:file, out:file, header:file[out]);
 
 # CHECK: single_object:file = cxx_one(file('a.cc'), out = file('a.o'));
 single_object = cxx_one(file('a.cc'), out = file('a.o'));
