@@ -1,0 +1,46 @@
+#
+# RUN: fab --print-dag --format=dot --output=%t %s
+# RUN: FileCheck %s -input-file %t
+#
+
+cc = action('cc -c $in -o $out' <- in:file, out:file);
+link = action('cc $in -o $out' <- in:list[file], out:file);
+lex = action('$LEX -c++ --yyclass=$classname --outfile=$out $in'
+              <- in:file, out:file, classname:string);
+
+srcs = [ 'foo.c' 'bar.c' 'baz.c' ];
+
+gen = lex(file('foo.yy'), file('foo.c'), classname = 'FooClass');
+
+objs = foreach srcs as src:string
+{
+	obj = file(src + '.o');
+	build = cc(in = file(src), out = obj);
+	obj
+};
+
+bin = link(objs, out = file('foo'));
+
+
+# CHECK-DAG: "cc { foo.c => foo.c.o }" [ shape =
+# CHECK-DAG: "cc { bar.c => bar.c.o }" [ shape =
+# CHECK-DAG: "cc { baz.c => baz.c.o }" [ shape =
+# CHECK-DAG: "link { foo.c.o bar.c.o baz.c.o => foo }" [ shape =
+# CHECK-DAG: "lex { foo.yy => foo.c }( classname = 'FooClass' )" [ shape =
+#
+# CHECK-DAG: "foo.yy" -> "lex { foo.yy => foo.c }{{.*}}";
+# CHECK-DAG: "lex { foo.yy => foo.c }{{.*}}" -> "foo.c";
+#
+# CHECK-DAG: "foo.c" -> "cc { foo.c => foo.c.o }";
+# CHECK-DAG: "cc { foo.c => foo.c.o }" -> "foo.c.o";
+#
+# CHECK-DAG: "bar.c" -> "cc { bar.c => bar.c.o }";
+# CHECK-DAG: "cc { bar.c => bar.c.o }" -> "bar.c.o";
+#
+# CHECK-DAG: "baz.c" -> "cc { baz.c => baz.c.o }";
+# CHECK-DAG: "cc { baz.c => baz.c.o }" -> "baz.c.o";
+#
+# CHECK-DAG: "foo.c.o" -> "link { foo.c.o bar.c.o baz.c.o => foo }";
+# CHECK-DAG: "bar.c.o" -> "link { foo.c.o bar.c.o baz.c.o => foo }";
+# CHECK-DAG: "baz.c.o" -> "link { foo.c.o bar.c.o baz.c.o => foo }";
+# CHECK-DAG: "link { foo.c.o bar.c.o baz.c.o => foo }" -> "foo";

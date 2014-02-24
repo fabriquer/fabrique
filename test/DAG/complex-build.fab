@@ -1,0 +1,43 @@
+#
+# RUN: fab --print-dag --format=null %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+# NOTE: This test should be updated periodically to include all the bells
+#       and whistles. When it fails, we should then produce reduced test cases.
+#
+#       When we update this file, we should also update the 'complex-build.fab'
+#       files in the backend test directories.
+#
+
+cc = action('cc -c $in -o $out' <- in:file, out:file);
+link = action('cc $in -o $out' <- in:list[file], out:file);
+lex = action('$LEX -c++ --yyclass=$classname --outfile=$out $in'
+              <- in:file, out:file, classname:string);
+
+srcs = [ 'foo.c' 'bar.c' 'baz.c' ];
+
+gen = lex(file('foo.yy'), file('foo.c'), classname = 'FooClass');
+
+objs = foreach srcs as src:string
+{
+	obj = file(src + '.o');
+	build = cc(in = file(src), out = obj);
+	obj
+};
+
+bin = link(objs, out = file('foo'));
+
+
+# CHECK-DAG: (file)=>file cc = cc -c $in -o $out
+# CHECK-DAG: (list[file])=>file link = cc $in -o $out
+# CHECK-DAG: (file)=>file lex = $LEX -c++ --yyclass=$classname --outfile=$out
+#
+# CHECK-DAG: file gen = foo.c
+# CHECK-DAG: list[file] objs = [ foo.c.o bar.c.o baz.c.o ]
+# CHECK-DAG: file bin = foo
+#
+# CHECK-DAG: build: lex { foo.yy => foo.c }( classname = 'FooClass' )
+# CHECK-DAG: build: cc { foo.c => foo.c.o }
+# CHECK-DAG: build: cc { bar.c => bar.c.o }
+# CHECK-DAG: build: cc { bar.c => bar.c.o }
+# CHECK-DAG: build: link { foo.c.o bar.c.o baz.c.o => foo }

@@ -1,0 +1,47 @@
+#
+# RUN: fab --print-dag --format=ninja --output=%t %s
+# RUN: FileCheck %s -input-file %t
+#
+
+cc = action('cc -c $in -o $out' <- in:file, out:file);
+link = action('cc $in -o $out' <- in:list[file], out:file);
+lex = action('$LEX -c++ --yyclass=$classname --outfile=$out $in'
+              <- in:file, out:file, classname:string);
+
+srcs = [ 'foo.c' 'bar.c' 'baz.c' ];
+
+gen = lex(file('foo.yy'), file('foo.c'), classname = 'FooClass');
+
+objs = foreach srcs as src:string
+{
+	obj = file(src + '.o');
+	build = cc(in = file(src), out = obj);
+	obj
+};
+
+bin = link(objs, out = file('foo'));
+
+
+# CHECK: srcs = foo.c bar.c baz.c
+#
+# CHECK-DAG: rule cc
+# CHECK-NEXT-TODO: command = cc -c $in -o $out
+#
+# CHECK-DAG: rule link
+# CHECK-NEXT-TODO: command = cc $in -o $out
+#
+# CHECK-DAG: rule lex
+# CHECK-NEXT-TODO: comamand = $LEX -c++ --yyclass=$classname --outfile=$out
+#
+# CHECK-DAG: build gen : phony foo.c
+# CHECK-DAG: build objs : phony foo.c.o bar.c.o baz.c.o
+# CHECK-DAG: build bin : phony foo
+#
+# CHECK-DAG: build foo.c: lex foo.yy
+# CHECK-NEXT-TODO:  classname = FooClass
+#
+# CHECK-DAG: build foo.c.o: cc foo.c
+# CHECK-DAG: build bar.c.o: cc bar.c
+# CHECK-DAG: build baz.c.o: cc baz.c
+#
+# CHECK-DAG: build foo: link foo.c.o bar.c.o baz.c.o
