@@ -404,6 +404,7 @@ void DAGBuilder::Leave(const ast::Call& call)
 					a->type(), a->source());
 
 			shared_ptr<Value> v(flatten(*a));
+			assert(v);
 			scope[name] = v;
 		}
 
@@ -900,6 +901,8 @@ shared_ptr<Value> DAGBuilder::getNamedValue(const string& name)
 		auto value = scope.find(name);
 		if (value != scope.end())
 		{
+			assert(value->second);
+
 			dbg
 				<< Bytestream::Action << "  found "
 				<< Bytestream::Literal << "'" << name << "'"
