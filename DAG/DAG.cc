@@ -403,7 +403,8 @@ void DAGBuilder::Leave(const ast::Call& call)
 				throw WrongTypeException(param.type(),
 					a->type(), a->source());
 
-			scope[name] = flatten(*a);
+			shared_ptr<Value> v(flatten(*a));
+			scope[name] = v;
 		}
 
 		currentValue.emplace(flatten(fn->body()));
