@@ -177,7 +177,7 @@ void Build::PrettyPrint(Bytestream& ostream, int indent) const
 				;
 		}
 
-		ostream << Bytestream::Operator << " )";
+		ostream << Bytestream::Operator << ")";
 	}
 
 	ostream << Bytestream::Reset;
