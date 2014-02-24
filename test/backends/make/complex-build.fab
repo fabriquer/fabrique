@@ -1,0 +1,46 @@
+#
+# RUN: fab --print-dag --format=make --output=%t %s
+# RUN: FileCheck %s -input-file %t
+#
+
+cc = action('cc -c $in -o $out' <- in:file, out:file);
+link = action('cc $in -o $out' <- in:list[file], out:file);
+lex = action('$LEX -c++ --yyclass=$classname --outfile=$out $in'
+              <- in:file, out:file, classname:string);
+
+cc_all = function(srcs:list[string]): list[file]
+{
+	foreach srcs as src:string
+	{
+		obj = file(src + '.o');
+		build = cc(in = file(src), out = obj);
+		obj
+	}
+};
+
+srcs = [ 'foo.c' 'bar.c' 'baz.c' ];
+gen = lex(file('foo.yy'), file('foo.c'), classname = 'FooClass');
+objs = cc_all(srcs);
+bin = link(objs, out = file('foo'));
+
+
+# CHECK: srcs= foo.c bar.c baz.c
+#
+# CHECK-DAG: bin : foo
+# CHECK-DAG: gen : foo.c
+# CHECK-DAG: objs : foo.c.o bar.c.o baz.c.o
+#
+# CHECK-DAG: foo.c : foo.yy
+# CHECK-NEXT-TODO:  $LEX -c++ --yyclass=FooClass --outfile=foo.c foo.yy
+#
+# CHECK-DAG: foo.c.o : foo.c
+# CHECK-NEXT-TODO:  cc -c foo.c -o foo.c.o
+#
+# CHECK-DAG: bar.c.o : bar.c
+# CHECK-NEXT-TODO:  cc -c bar.c -o bar.c.o
+#
+# CHECK-DAG: baz.c.o : baz.c
+# CHECK-NEXT-TODO:  cc -c baz.c -o baz.c.o
+#
+# CHECK-DAG: foo : foo.c.o bar.c.o baz.c.o
+# CHECK-NEXT-TODO:  cc foo.c.o bar.c.o baz.c.o -o foo
