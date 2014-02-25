@@ -175,7 +175,7 @@ Call* Parser::CreateCall(UniqPtr<Identifier>& name,
 		return nullptr;
 	}
 
-	// Run the arguments through Callable::NameArguments to validate
+	// Run the arguments through Callable::CheckArguments to validate
 	// various rules (e.g. no positional arguments after keyword arguments).
 	auto& callable = dynamic_cast<const Callable&>(ref->definition());
 	try { callable.CheckArguments(*args); }
