@@ -50,7 +50,7 @@ public:
 	          UniqPtr<Expression>&& e = nullptr);
 
 	const Identifier& getName() const { return *name; }
-	const Expression& getValue() const { return *expr; }
+	const UniqPtr<Expression>& defaultValue() const { return expr; }
 
 	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
 	virtual void Accept(Visitor&) const;
