@@ -160,17 +160,18 @@ BinaryOperation* Parser::BinaryOp(BinaryOperation::Operator op,
 
 
 Call* Parser::CreateCall(UniqPtr<Identifier>& name,
-                         UniqPtr<UniqPtrVec<Argument>>& args)
+                         UniqPtr<UniqPtrVec<Argument>>& args,
+                         const SourceRange& end)
 {
 	if (not name or not args)
 		return nullptr;
 
-	SourceRange loc(name->source().begin, lex.CurrentTokenRange().end);
+	SourceRange src(name->source(), end);
 
 	UniqPtr<SymbolReference> ref(Reference(std::move(name)));
 	if (not ref)
 	{
-		ReportError("call to undefined action/function", loc);
+		ReportError("call to undefined action/function", src);
 		return nullptr;
 	}
 
@@ -185,7 +186,7 @@ Call* Parser::CreateCall(UniqPtr<Identifier>& name,
 	}
 
 	auto& fnType = dynamic_cast<const FunctionType&>(ref->type());
-	return new Call(ref, *args, fnType.returnType(), loc);
+	return new Call(ref, *args, fnType.returnType(), src);
 }
 
 

@@ -107,7 +107,8 @@ public:
 	                          UniqPtr<Expression>&, UniqPtr<Expression>&);
 
 	//! A call to an @ref Action or @ref Function.
-	Call* CreateCall(UniqPtr<Identifier>&, UniqPtr<UniqPtrVec<Argument>>&);
+	Call* CreateCall(UniqPtr<Identifier>&, UniqPtr<UniqPtrVec<Argument>>&,
+	                 const SourceRange& end);
 
 	//! An expression that can (optionally) include intermediate values.
 	CompoundExpression* CompoundExpr(UniqPtr<Expression>& result,

@@ -226,8 +226,9 @@ call:
 	{
 		auto fnName = Take($1.id);
 		auto arguments = Take(ExprVec<Argument>($3));
+		auto end = Take($4.token);
 
-		SetOrDie($$, p->CreateCall(fnName, arguments));
+		SetOrDie($$, p->CreateCall(fnName, arguments, end->source()));
 	}
 	;
 
