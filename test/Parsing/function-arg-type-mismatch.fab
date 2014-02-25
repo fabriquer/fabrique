@@ -1,0 +1,21 @@
+#
+# RUN: fab --parse-only --print-ast %s 2> %t || true
+# RUN: FileCheck %s -input-file %t
+#
+
+foo = function(ints:list[int]): list[int]
+{
+	local_var = 42;
+
+	foreach ints as x:int
+	{
+		y = x + local_var;
+		y + 1
+	}
+};
+
+# CHECK: {{.*}}.fab:[[line:[0-9]+]]:{{.*}} expected list[int], got int
+bar = foo(42);
+
+# CHECK: [[line]] bar = foo(42);
+# CHECK-NEXT:               ^~

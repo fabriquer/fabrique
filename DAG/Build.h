@@ -54,13 +54,8 @@ class Build : public Value
 public:
 	typedef std::vector<std::shared_ptr<File>> FileVec;
 
-	static Build* Create(std::shared_ptr<Rule>&,
-	                     std::shared_ptr<Value> in,
-	                     std::shared_ptr<Value> out,
-	                     SharedPtrVec<Value> dependencies,
-	                     SharedPtrVec<Value> extraInputs,
-	                     const ValueMap& arguments,
-	                     const SourceRange src);
+	static Build* Create(std::shared_ptr<Rule>&, SharedPtrMap<Value>& args,
+	                     ConstPtrMap<Type>& paramTypes, const SourceRange&);
 
 	virtual ~Build() {}
 

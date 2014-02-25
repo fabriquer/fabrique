@@ -1,0 +1,12 @@
+#
+# RUN: fab --parse-only --print-ast %s 2> %t || true
+# RUN: FileCheck %s -input-file %t
+#
+
+cc = action('cc -c $in -o $out' <- in:file, out:file);
+
+# CHECK: {{.*}}.fab:[[line:[0-9]+]]:{{.*}} missing argument to 'out'
+obj = cc(file('foo.c'));
+
+# CHECK: [[line]] obj = cc(file('foo.c'));
+# CHECK-NEXT:           ^~~~~~~~~~~~~~~~~

@@ -50,45 +50,62 @@ using std::shared_ptr;
 using std::vector;
 
 
-Build* Build::Create(shared_ptr<Rule>& rule, shared_ptr<Value> in,
-                     shared_ptr<Value> out, SharedPtrVec<Value> dependencies,
-                     SharedPtrVec<Value> extraOutputs,
-                     const ValueMap& arguments, const SourceRange src)
+Build* Build::Create(shared_ptr<Rule>& rule, SharedPtrMap<Value>& args,
+                     ConstPtrMap<Type>& paramTypes, const SourceRange& src)
 {
-	SharedPtrVec<File> inputs;
-	appendFiles(in, inputs);
+	SharedPtrVec<File> inputs, outputs, dependencies, extraOutputs;
+	ValueMap arguments;
 
-	SharedPtrVec<File> outputs;
-	appendFiles(out, outputs);
-
-	SharedPtrVec<File> depends;
-	for (shared_ptr<Value>& dep : dependencies)
+	for (auto& i : args)
 	{
-		shared_ptr<File> f = dynamic_pointer_cast<File>(dep);
-		if (not f)
-			throw WrongTypeException("file", dep->type(),
-			                         dep->source());
+		const std::string& name = i.first;
+		shared_ptr<Value>& arg = i.second;
+		const Type& type = i.second->type();
 
-		depends.push_back(f);
+		if (name == "in")
+			appendFiles(arg, inputs);
+
+		else if (name == "out")
+			appendFiles(arg, outputs);
+
+		else if (type.isFile())
+		{
+			const Type& type = *paramTypes[name];
+
+			if (type.typeParamCount() == 0)
+				throw SemanticException(
+					"file missing [in] or [out] tag", src);
+
+			if (type[0].name() == "in")
+			{
+				appendFiles(arg, dependencies);
+			}
+			else if (type[0].name() == "out")
+			{
+				appendFiles(arg, extraOutputs);
+				arguments[name] = arg;
+			}
+			else
+				throw WrongTypeException("file[in|out]", type,
+					arg->source());
+		}
+
+		else
+			arguments[name] = arg;
 	}
 
-	SharedPtrVec<File> extraOut;
-	for (shared_ptr<Value>& out : extraOutputs)
-	{
-		shared_ptr<File> f = dynamic_pointer_cast<File>(out);
-		if (not f)
-			throw WrongTypeException("file", out->type(),
-			                         out->source());
+	// TODO: allow input-less actions (e.g. 'cat uname -a > file')?
+	assert(not inputs.empty());
+	assert(not outputs.empty());
 
-		extraOut.push_back(f);
-	}
-
+	const File& out = *outputs.front();
 	const Type& type =
-		(out->type().isFile() and not extraOut.empty())
-			? Type::ListOf(out->type())
-			: out->type();
+		(outputs.size() == 1 and extraOutputs.empty()
+		 and out.type().isFile())
+			? out.type()
+			: Type::ListOf(out.type());
 
-	return new Build(rule, inputs, outputs, depends, extraOut,
+	return new Build(rule, inputs, outputs, dependencies, extraOutputs,
 	                 arguments, type, src);
 }
 
@@ -166,9 +183,6 @@ void Build::PrettyPrint(Bytestream& ostream, int indent) const
 
 		for (auto& j : args)
 		{
-			if (j.first == "in" or j.first == "out")
-				continue;
-
 			ostream
 				<< Bytestream::Definition << j.first
 				<< Bytestream::Operator << " = "

@@ -346,16 +346,47 @@ void DAGBuilder::Leave(const ast::BoolLiteral&) {}
 bool DAGBuilder::Enter(const ast::Call& call) { return false; }
 void DAGBuilder::Leave(const ast::Call& call)
 {
-	const ast::SymbolReference& targetRef = call.target();
-	const string name = targetRef.getName().name();
-	const ast::Expression& target = targetRef.definition();
-	shared_ptr<Value> targetValue = getNamedValue(name);
+	const ast::SymbolReference& ref = call.target();
+	const string name = ref.getName().name();
+	auto& target = dynamic_cast<const ast::Callable&>(ref.definition());
+
+	ValueMap args;
+	for (auto& i : target.NameArguments(call.arguments()))
+		args[i.first] = std::move(flatten(*i.second));
+
 
 	//
-	// Are we calling a function?
+	// The target must be an action or a function.
 	//
-	if (auto *fn = dynamic_cast<const ast::Function*>(&target))
+	if (auto rule = dynamic_pointer_cast<Rule>(getNamedValue(name)))
 	{
+		// Builds need the parameter types, not just the argument types.
+		ConstPtrMap<Type> paramTypes;
+		auto& params = target.parameters();
+		for (auto& a : args)
+		{
+			const string& name = a.first;
+
+			auto i = params.begin();
+			for ( ; i != params.end(); i++)
+				if ((*i)->getName().name() == name)
+					break;
+
+			assert(i != params.end());
+			const Type& t = (*i)->type();
+			paramTypes[name] = &t;
+		}
+
+		shared_ptr<Build> build(
+			Build::Create(rule, args, paramTypes, call.source()));
+
+		builds_.push_back(build);
+		currentValue.push(build);
+	}
+	else
+	{
+		auto& fn = dynamic_cast<const ast::Function&>(ref.definition());
+
 		//
 		// We evaluate the function with the given arguments by
 		// putting these names into the local scope and then
@@ -363,173 +394,12 @@ void DAGBuilder::Leave(const ast::Call& call)
 		//
 		ValueMap& scope = EnterScope("fn eval");
 
-		StringMap<const ast::Parameter&> params;
-		std::vector<string> paramNames;
-		for (auto& p : fn->parameters())
-		{
-			const string name(p->getName().name());
+		for (auto& i : args)
+			scope[i.first] = i.second;
 
-			paramNames.push_back(name);
-			params.emplace(name, *p);
-		}
-
-		//
-		// Check the arguments and their types.
-		//
-		if (params.size() != call.arguments().size())
-			throw SyntaxError(
-				"expected " + std::to_string(params.size())
-				+ " arguments, got "
-				+ std::to_string(call.arguments().size()),
-				call.source());
-
-		size_t unnamed = 0;
-		for (ConstPtr<ast::Argument>& a : call.arguments())
-		{
-			string name = a->hasName()
-				? a->getName().name()
-				: paramNames[unnamed++];
-
-			auto p = params.find(name);
-			if (p == params.end())
-				throw SyntaxError(
-					"no such parameter '" + name + "'",
-					a->source());
-
-			const ast::Parameter& param = p->second;
-			assert(p->first == name);
-
-			if (not a->type().isSubtype(param.type()))
-				throw WrongTypeException(param.type(),
-					a->type(), a->source());
-
-			shared_ptr<Value> v(flatten(*a));
-			assert(v);
-			scope[name] = v;
-		}
-
-		currentValue.emplace(flatten(fn->body()));
+		currentValue.emplace(flatten(fn.body()));
 		ExitScope();
-
-		return;
 	}
-
-
-	//
-	// We can only call functions and build rules. If it's not the former,
-	// it must be a rule!
-	//
-	shared_ptr<Rule> rule = dynamic_pointer_cast<Rule>(targetValue);
-	assert(rule);
-
-	shared_ptr<Value> in, out;
-	SharedPtrVec<Value> dependencies, extraOutputs;
-	ValueMap arguments;
-
-	//
-	// Interpret the first two unnamed arguments as 'in' and 'out'.
-	//
-	for (ConstPtr<ast::Argument>& arg : call)
-	{
-		shared_ptr<Value> value = flatten(*arg);
-
-		if (arg->hasName())
-		{
-			const std::string& name = arg->getName().name();
-
-			if (name == "in")
-				in = value;
-
-			else if (name == "out")
-				out = value;
-
-			else
-				arguments[name] = value;
-		}
-		else
-		{
-			if (not in)
-				in = value;
-
-			else if (not out)
-				out = value;
-		}
-	}
-
-	//
-	// Validate against The Rules:
-	//  1. there must be input
-	//  2. there must be output
-	//  3. all other arguments must match explicit parameters
-	//
-	if (not in)
-		throw SemanticException(
-			"use of action without input file(s)", call.source());
-
-	if (not out)
-		throw SemanticException(
-			"use of action without output file(s)", call.source());
-
-
-	const ast::Action& action =
-		dynamic_cast<const ast::Action&>(targetRef.definition());
-
-	auto& params = action.parameters();
-
-	for (auto& i : arguments)
-	{
-		const string name = i.first;
-		shared_ptr<dag::Value> arg = i.second;
-
-		auto j = params.begin();
-		for ( ; j != params.end(); j++)
-			if ((*j)->getName().name() == name)
-				break;
-
-		if (j == params.end())
-			throw SemanticException(
-				"no such parameter '" + name + "'",
-				arg->source());
-
-		//
-		// Additionally, if the parameter is a file, add the
-		// argument to the dependency graph.
-		//
-		const ast::Parameter& p = **j;
-		const Type& type = p.type();
-
-		if (not type.isFile())
-			continue;
-
-		//
-		// A file parameter should either be named in/out or have
-		// an in/out type parameter (e.g. foo:file[in]).
-		//
-		if (name == "in" or name == "out")
-			continue;
-
-		if (type.typeParamCount() == 0)
-			throw SemanticException(
-				"file missing [in] or [out] tag", p.source());
-
-
-		if (type[0].name() == "in")
-			dependencies.push_back(arg);
-
-		else if (type[0].name() == "out")
-			extraOutputs.push_back(arg);
-
-		else
-			throw WrongTypeException("file[in|out]",
-				p.type(), p.source());
-	}
-
-	shared_ptr<Build> build(
-		Build::Create(rule, in, out, dependencies, extraOutputs,
-		              arguments, call.source()));
-
-	builds_.push_back(build);
-	currentValue.push(build);
 }
 
 

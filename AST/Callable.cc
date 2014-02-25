@@ -53,13 +53,20 @@ const UniqPtrVec<Parameter>& Callable::parameters() const
 	return params;
 }
 
-void Callable::CheckArguments(const UniqPtrVec<Argument>& args) const
+void Callable::CheckArguments(const UniqPtrVec<Argument>& args,
+                              const SourceRange& src) const
 {
 	StringMap<const Argument*> namedArguments = NameArguments(args);
 
 	for (auto& p : params)
 	{
-		const Argument *arg = namedArguments[p->getName().name()];
+		const string& name = p->getName().name();
+		const Argument *arg = namedArguments[name];
+
+		if (not arg and not p->defaultValue())
+			throw SemanticException(
+				"missing argument to '" + name + "'", src);
+
 		if (arg and not arg->type().isSubtype(p->type()))
 			throw WrongTypeException(p->type(),
 			                         arg->type(), arg->source());

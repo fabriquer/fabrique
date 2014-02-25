@@ -55,7 +55,8 @@ public:
 	Callable(UniqPtrVec<Parameter>&);
 
 	const UniqPtrVec<Parameter>& parameters() const;
-	void CheckArguments(const UniqPtrVec<Argument>&) const;
+	void CheckArguments(const UniqPtrVec<Argument>&,
+	                    const SourceRange&) const;
 
 	using ParamIterator = UniqPtrVec<Parameter>::const_iterator;
 	ParamIterator begin() const { return params.begin(); }
