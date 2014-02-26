@@ -209,7 +209,8 @@ void Build::PrettyPrint(Bytestream& ostream, int indent) const
 }
 
 
-void Build::appendFiles(shared_ptr<Value>& in, vector<shared_ptr<File>>& out)
+void Build::appendFiles(const shared_ptr<Value>& in,
+                        vector<shared_ptr<File>>& out)
 {
 	assert(in);
 
@@ -221,15 +222,15 @@ void Build::appendFiles(shared_ptr<Value>& in, vector<shared_ptr<File>>& out)
 		for (shared_ptr<File> i : build->out)
 			out.push_back(i);
 
-	else if (shared_ptr<File> file = dynamic_pointer_cast<File>(in))
+	else if (const shared_ptr<File>& file = dynamic_pointer_cast<File>(in))
 		out.push_back(file);
 
-	else if (shared_ptr<List> list = dynamic_pointer_cast<List>(in))
-		for (shared_ptr<Value> value : *list)
+	else if (const shared_ptr<List>& list = dynamic_pointer_cast<List>(in))
+		for (const shared_ptr<Value>& value : *list)
 			appendFiles(value, out);
 
-	else if (shared_ptr<Target> t = dynamic_pointer_cast<Target>(in))
-		for (shared_ptr<Value> f : t->files())
+	else if (const shared_ptr<Target>& t = dynamic_pointer_cast<Target>(in))
+		for (const shared_ptr<Value>& f : t->files())
 			out.push_back(dynamic_pointer_cast<File>(f));
 
 	else throw WrongTypeException("file|list[file]",
