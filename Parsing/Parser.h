@@ -166,7 +166,7 @@ public:
 	                    UniqPtr<CompoundExpression>& elseResult);
 
 	//! Define a @ref List of expressions.
-	List* ListOf(UniqPtr<UniqPtrVec<Expression>>&&, const SourceRange&);
+	List* ListOf(UniqPtrVec<Expression>&, const SourceRange&);
 
 
 	// literals
@@ -199,9 +199,7 @@ public:
 	// Low-level but type-safe getters and setters for the YYSTYPE union:
 	//
 	static Token* Token(YYSTYPE&);
-
-	static bool Set(YYSTYPE&, Expression*);
-	static bool Set(YYSTYPE&, Identifier*);
+	static bool Set(YYSTYPE&, Node*);
 
 
 private:

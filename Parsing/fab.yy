@@ -28,12 +28,17 @@ using std::unique_ptr;
 	} while (0)
 
 
-static void Append(YYSTYPE& yyunion, UniqPtr<Expression>&& e)
+static void CreateNodeList(YYSTYPE& yyunion)
 {
-	assert(yyunion.exprs);
-	assert(e && "NULL expression!");
+	yyunion.nodes = new UniqPtrVec<Node>;
+}
 
-	yyunion.exprs->push_back(std::move(e));
+static void Append(YYSTYPE& yyunion, UniqPtr<Node>&& e)
+{
+	assert(yyunion.nodes);
+	assert(e && "NULL AST node!");
+
+	yyunion.nodes->push_back(std::move(e));
 }
 
 
@@ -41,18 +46,18 @@ static void Append(YYSTYPE& yyunion, UniqPtr<Expression>&& e)
 // Getters for said YYSTYPE union:
 //
 template<class T>
-static UniqPtr<T> Expr(YYSTYPE& yyunion)
+static UniqPtr<T> TakeNode(YYSTYPE& yyunion)
 {
-	return UniqPtr<T>(dynamic_cast<T*>(yyunion.expr));
+	return UniqPtr<T>(dynamic_cast<T*>(yyunion.node));
 }
 
 template<class T>
-static UniqPtrVec<T>* ExprVec(YYSTYPE& yyunion)
+static UniqPtrVec<T>* NodeVec(YYSTYPE& yyunion)
 {
-	assert(yyunion.exprs);
+	assert(yyunion.nodes);
 
-	unique_ptr<UniqPtrVec<Expression>> ownership(yyunion.exprs);
-	UniqPtrVec<Expression>& generic = *ownership;
+	unique_ptr<UniqPtrVec<Node>> ownership(yyunion.nodes);
+	UniqPtrVec<Node>& generic = *ownership;
 	const size_t len = generic.size();
 
 	UniqPtrVec<T> *result = new UniqPtrVec<T>(len);
@@ -62,8 +67,8 @@ static UniqPtrVec<T>* ExprVec(YYSTYPE& yyunion)
 	{
 		assert(generic[i]);
 
-		unique_ptr<Expression> e = std::move(generic[i]);
-		unique_ptr<T> val(dynamic_cast<T*>(e.release()));
+		unique_ptr<Node> n = std::move(generic[i]);
+		unique_ptr<T> val(dynamic_cast<T*>(n.release()));
 
 		assert(val);
 		assert(not vec[i]);
@@ -89,9 +94,8 @@ static UniqPtrVec<T>* ExprVec(YYSTYPE& yyunion)
 %union {
 	int intVal;
 
-	fabrique::ast::Identifier *id;
-	fabrique::ast::Expression *expr;
-	fabrique::UniqPtrVec<fabrique::ast::Expression> *exprs;
+	fabrique::ast::Node *node;
+	fabrique::UniqPtrVec<fabrique::ast::Node> *nodes;
 
 	const fabrique::Type *type;
 	fabrique::PtrVec<fabrique::Type> *types;
@@ -126,16 +130,21 @@ expression:
 	| binaryOperation
 	| call
 	| conditional
-	| '(' expression ')'	{ SetOrDie($$, $2.expr); }
+	| '(' expression ')'	{ SetOrDie($$, $2.node); }
 	| file
 	| fileList
 	| foreach
 	| function
-	| identifier		{ SetOrDie($$, p->Reference(Take($1.id))); }
+	| identifier
+	{
+		SetOrDie($$, p->Reference(TakeNode<Identifier>($1)));
+	}
 	| '[' listElements ']'
 	{
 		SourceRange src(*Take($1.token), *Take($3.token));
-		SetOrDie($$, p->ListOf(Take($2.exprs), src));
+		auto elements = Take(NodeVec<Expression>($2));
+
+		SetOrDie($$, p->ListOf(*elements, src));
 	}
 	| unaryOperation
 	;
@@ -144,7 +153,7 @@ action:
 	actionBegin '(' argumentList ')'
 	{
 		SourceRange begin = Take(Parser::Token($1))->source();
-		auto args = Take(ExprVec<Argument>($3));
+		auto args = Take(NodeVec<Argument>($3));
 		SourceRange end = Take(Parser::Token($4))->source();
 
 		SetOrDie($$, p->DefineAction(args, SourceRange(begin, end)));
@@ -152,8 +161,8 @@ action:
 	| actionBegin '(' argumentList INPUT parameterList ')'
 	{
 		SourceRange begin = Take(Parser::Token($1))->source();
-		auto args = Take(ExprVec<Argument>($3));
-		auto params = Take(ExprVec<Parameter>($5));
+		auto args = Take(NodeVec<Argument>($3));
+		auto params = Take(NodeVec<Parameter>($5));
 
 		SetOrDie($$, p->DefineAction(args, begin, std::move(params)));
 	}
@@ -172,40 +181,40 @@ actionBegin:
 argument:
 	expression
 	{
-		auto value = Expr<Expression>($1);
+		auto value = TakeNode<Expression>($1);
 		SetOrDie($$, p->Arg(value));
 	}
 	| identifier '=' expression
 	{
-		auto name = $1.id;
-		auto value = Expr<Expression>($3);
+		auto name = TakeNode<Identifier>($1);
+		auto value = TakeNode<Expression>($3);
 
-		SetOrDie($$, p->Arg(value, Take(name)));
+		SetOrDie($$, p->Arg(value, std::move(name)));
 	}
 	;
 
 argumentList:
 	/* empty */
 	{
-		$$.exprs = new UniqPtrVec<Expression>;
+		CreateNodeList($$);
 	}
 	| argument
 	{
-		$$.exprs = new UniqPtrVec<Expression>;
-		Append($$, Expr<Argument>($1));
+		CreateNodeList($$);
+		Append($$, TakeNode<Argument>($1));
 	}
 	| argumentList ',' argument
 	{
-		$$.exprs = $1.exprs;
-		Append($$, Expr<Argument>($3));
+		$$.nodes = $1.nodes;
+		Append($$, TakeNode<Argument>($3));
 	}
 	;
 
 binaryOperation:
 	expression binaryOperator expression
 	{
-		UniqPtr<Expression> lhs = Expr<Expression>($1);
-		UniqPtr<Expression> rhs = Expr<Expression>($3);
+		UniqPtr<Expression> lhs = TakeNode<Expression>($1);
+		UniqPtr<Expression> rhs = TakeNode<Expression>($3);
 		auto op = static_cast<BinaryOperation::Operator>($2.intVal);
 
 		SetOrDie($$, p->BinaryOp(op, lhs, rhs));
@@ -224,8 +233,8 @@ binaryOperator:
 call:
 	identifier '(' argumentList ')'
 	{
-		auto fnName = Take($1.id);
-		auto arguments = Take(ExprVec<Argument>($3));
+		auto fnName = TakeNode<Identifier>($1);
+		auto arguments = Take(NodeVec<Argument>($3));
 		auto end = Take($4.token);
 
 		SetOrDie($$, p->CreateCall(fnName, arguments, end->source()));
@@ -235,7 +244,7 @@ call:
 compoundExpr:
 	compoundBegin compoundBody
 	{
-		SetOrDie($$, Expr<CompoundExpression>($2).release());
+		SetOrDie($$, TakeNode<CompoundExpression>($2).release());
 	}
 	;
 
@@ -248,13 +257,13 @@ compoundBegin:
 compoundBody:
 	expression
 	{
-		auto singleton = Expr<Expression>($1);
+		auto singleton = TakeNode<Expression>($1);
 		SetOrDie($$, p->CompoundExpr(singleton));
 	}
 	| '{' expression '}'
 	{
 		SourceRange begin = Take(Parser::Token($1))->source();
-		auto result = Expr<Expression>($2);
+		auto result = TakeNode<Expression>($2);
 		SourceRange end = Take(Parser::Token($3))->source();
 
 		SetOrDie($$, p->CompoundExpr(result, begin, end));
@@ -263,7 +272,7 @@ compoundBody:
 	{
 		SourceRange begin = Take(Parser::Token($1))->source();
 		// NOTE: values have already been added to the scope by Parser
-		auto result = Expr<Expression>($3);
+		auto result = TakeNode<Expression>($3);
 		SourceRange end = Take(Parser::Token($4))->source();
 
 		SetOrDie($$, p->CompoundExpr(result, begin, end));
@@ -274,9 +283,9 @@ conditional:
 	IF expression compoundExpr ELSE compoundExpr
 	{
 		SourceRange begin = Take(Parser::Token($1))->source();
-		auto condition = Expr<Expression>($2);
-		auto then = Expr<CompoundExpression>($3);
-		auto elseClause = Expr<CompoundExpression>($5);
+		auto condition = TakeNode<Expression>($2);
+		auto then = TakeNode<CompoundExpression>($3);
+		auto elseClause = TakeNode<CompoundExpression>($5);
 
 		SetOrDie($$, p->IfElse(begin, condition, then, elseClause));
 	}
@@ -286,8 +295,8 @@ file:
 	FILE_TOKEN '(' expression argumentList ')'
 	{
 		SourceRange begin = Take(Parser::Token($1))->source();
-		auto name = Expr<Expression>($3);
-		auto arguments = Take(ExprVec<Argument>($4));
+		auto name = TakeNode<Expression>($3);
+		auto arguments = Take(NodeVec<Argument>($4));
 
 		SetOrDie($$, p->File(name, begin, std::move(arguments)));
 	}
@@ -297,15 +306,15 @@ fileList:
 	FILES '(' files ',' argumentList ')'
 	{
 		auto begin = Take($1.token);
-		auto files = Take(ExprVec<Filename>($3));
-		auto arguments = ExprVec<Argument>($5);
+		auto files = Take(NodeVec<Filename>($3));
+		auto arguments = NodeVec<Argument>($5);
 
 		SetOrDie($$, p->Files(begin->source(), files, Take(arguments)));
 	}
 	| FILES '(' files ')'
 	{
 		auto begin = Take($1.token);
-		auto files = Take(ExprVec<Filename>($3));
+		auto files = Take(NodeVec<Filename>($3));
 
 		SetOrDie($$, p->Files(begin->source(), files));
 	}
@@ -314,13 +323,13 @@ fileList:
 files:
 	fileInList
 	{
-		$$.exprs = new UniqPtrVec<Expression>;
-		Append($$, Expr<Filename>($1));
+		CreateNodeList($$);
+		Append($$, TakeNode<Filename>($1));
 	}
 	| files fileInList
 	{
-		$$.exprs = $1.exprs;
-		Append($$, Expr<Filename>($2));
+		$$.nodes = $1.nodes;
+		Append($$, TakeNode<Filename>($2));
 	}
 	;
 
@@ -349,9 +358,9 @@ foreach:
 	foreachbegin expression AS parameter compoundExpr
 	{
 		SourceRange begin = Take(Parser::Token($1))->source();
-		auto seq = Expr<Expression>($2);
-		auto loopParameter = Expr<Parameter>($4);
-		auto body = Expr<CompoundExpression>($5);
+		auto seq = TakeNode<Expression>($2);
+		auto loopParameter = TakeNode<Parameter>($4);
+		auto body = TakeNode<CompoundExpression>($5);
 
 		SetOrDie($$, p->Foreach(seq, loopParameter, body, begin));
 	}
@@ -365,9 +374,9 @@ function:
 	functiondecl '(' parameterList ')' ':' type compoundExpr
 	{
 		SourceRange begin = Take(Parser::Token($1))->source();
-		auto params = Take(ExprVec<Parameter>($3));
+		auto params = Take(NodeVec<Parameter>($3));
 		auto *retTy = $6.type;
-		auto body = Expr<CompoundExpression>($7);
+		auto body = TakeNode<CompoundExpression>($7);
 
 		SetOrDie($$, p->DefineFunction(begin, params, body, retTy));
 	}
@@ -379,18 +388,18 @@ functiondecl:
 
 identifier:
 	name			/* keep result of 'name' production */
-	| name ':' type		{ SetOrDie($$, p->Id(Take($1.id), $3.type)); }
+	| name ':' type		{ SetOrDie($$, p->Id(TakeNode<Identifier>($1), $3.type)); }
 	;
 
 listElements:
 	/* empty */
 	{
-		$$.exprs = new UniqPtrVec<Expression>;
+		CreateNodeList($$);
 	}
 	| listElements expression
 	{
-		$$.exprs = $1.exprs;
-		Append($$, Expr<Expression>($2));
+		$$.nodes = $1.nodes;
+		Append($$, TakeNode<Expression>($2));
 	}
 
 literal:
@@ -407,28 +416,28 @@ name:
 parameter:
 	identifier
 	{
-		SetOrDie($$, p->Param(Take($1.id)));
+		SetOrDie($$, p->Param(TakeNode<Identifier>($1)));
 	}
 	| identifier '=' expression
 	{
-		SetOrDie($$, p->Param(Take($1.id), Expr<Expression>($3)));
+		SetOrDie($$, p->Param(TakeNode<Identifier>($1), TakeNode<Expression>($3)));
 	}
 	;
 
 parameterList:
 	/* empty */
 	{
-		$$.exprs = new UniqPtrVec<Expression>;
+		CreateNodeList($$);
 	}
 	| parameter
 	{
-		$$.exprs = new UniqPtrVec<Expression>;
-		Append($$, Expr<Parameter>($1));
+		CreateNodeList($$);
+		Append($$, TakeNode<Parameter>($1));
 	}
 	| parameterList ',' parameter
 	{
-		$$.exprs = $1.exprs;
-		Append($$, Expr<Parameter>($3));
+		$$.nodes = $1.nodes;
+		Append($$, TakeNode<Parameter>($3));
 	}
 	;
 
@@ -441,12 +450,12 @@ parameterList:
 type:
 	name
 	{
-		$$.type = p->getType(Take($1.id));
+		$$.type = p->getType(TakeNode<Identifier>($1));
 	}
 	| name '[' types ']'
 	{
 		auto *subtypes = $3.types;
-		$$.type = p->getType(Take($1.id), Take(subtypes));
+		$$.type = p->getType(TakeNode<Identifier>($1), Take(subtypes));
 	}
 	| FILE_TOKEN
 	{
@@ -473,7 +482,7 @@ unaryOperation:
 	NOT expression
 	{
 		auto opsrc = Take($1.token)->source();
-		auto e = Expr<Expression>($2);
+		auto e = TakeNode<Expression>($2);
 		UnaryOperation::Operator op = ast::UnaryOperation::Negate;
 
 		SetOrDie($$, p->UnaryOp(op, opsrc, e));
@@ -487,8 +496,8 @@ values:
 
 value:
 	identifier '=' expression ';'	{
-		auto name = Take($1.id);
-		auto initialiser = Expr<Expression>($3);
+		auto name = TakeNode<Identifier>($1);
+		auto initialiser = TakeNode<Expression>($3);
 
 		if (not p->DefineValue(name, initialiser))
 			return -1;

@@ -319,19 +319,16 @@ Conditional* Parser::IfElse(const SourceRange& ifLocation,
 }
 
 
-List* Parser::ListOf(UniqPtr<UniqPtrVec<Expression>>&& elements,
+List* Parser::ListOf(UniqPtrVec<Expression>& elements,
                      const SourceRange& src)
 {
-	if (not elements)
-		return nullptr;
-
 	const Type *elementType =
-		elements->empty()
+		elements.empty()
 			? ctx.nilType()
-			: &elements->front()->type();
+			: &elements.front()->type();
 
 	const Type *ty = getType("list", PtrVec<Type>(1, elementType));
-	return new List(*elements, *ty, src);
+	return new List(elements, *ty, src);
 }
 
 
@@ -471,39 +468,21 @@ fabrique::Token* Parser::Token(YYSTYPE& yyunion)
 }
 
 
-bool Parser::Set(YYSTYPE& yyunion, Expression *e)
+bool Parser::Set(YYSTYPE& yyunion, Node *e)
 {
 	if (not e)
 		return false;
 
-	Bytestream::Debug("parser.expr")
+	Bytestream::Debug("parser.node")
 		<< Bytestream::Action << "parsed "
-		<< Bytestream::Type << "expression"
+		<< Bytestream::Type << "AST node"
 		<< Bytestream::Operator << ": "
 		<< Bytestream::Reset << *e
 		<< Bytestream::Operator << " @ " << e->source()
 		<< "\n"
 		;
 
-	yyunion.expr = e;
-	return true;
-}
-
-bool Parser::Set(YYSTYPE& yyunion, Identifier *id)
-{
-	if (not id)
-		return false;
-
-	Bytestream::Debug("parser.id")
-		<< Bytestream::Action << "parsed "
-		<< Bytestream::Type << "identifier"
-		<< Bytestream::Operator << ": "
-		<< Bytestream::Reset << *id
-		<< Bytestream::Operator << " @ " << id->source()
-		<< "\n"
-		;
-
-	yyunion.id = id;
+	yyunion.node = e;
 	return true;
 }
 

@@ -1,6 +1,6 @@
-/** @file Identifier.h    Declaration of @ref Identifier. */
+/** @file Node.h    Declaration of @ref ast::Node. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,48 +29,35 @@
  * SUCH DAMAGE.
  */
 
-#ifndef IDENTIFIER_H
-#define IDENTIFIER_H
+#ifndef AST_NODE_H
+#define AST_NODE_H
 
-#include "AST/Node.h"
-#include "Types/Typed.h"
-
-#include <string>
+#include "Support/Printable.h"
+#include "Support/SourceLocation.h"
+#include "Support/Uncopyable.h"
+#include "Support/Visitable.h"
 
 namespace fabrique {
 namespace ast {
 
-class Visitor;
-
-
 /**
- * The name of a value, function, parameter or argument.
+ * Base class for expressions that can be evaluated.
  */
-class Identifier : public Node
+class Node : public HasSource, public Printable, public Visitable,
+             private Uncopyable
 {
 public:
-	Identifier(const std::string& s, const Type *ty, const SourceRange& loc)
-		: Node(loc), id(s), ty(ty)
+	virtual ~Node() {}
+
+protected:
+	Node(const SourceRange& src)
+		: HasSource(src)
 	{
 	}
-
-	bool isTyped() const { return (ty != NULL); }
-	const Type* type() const { return ty; }
-
-	void PrettyPrint(Bytestream&, int indent = 0) const;
-	const std::string& name() const { return id; }
-
-	bool operator == (const Identifier&) const;
-	bool operator < (const Identifier&) const;
-
-	virtual void Accept(Visitor&) const;
-
-private:
-	const std::string id;
-	const Type *ty;
 };
 
 } // namespace ast
 } // namespace fabrique
 
 #endif
+

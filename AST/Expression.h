@@ -33,10 +33,7 @@
 #define EXPRESSION_H
 
 #include "ADT/PtrVec.h"
-#include "Support/Printable.h"
-#include "Support/SourceLocation.h"
-#include "Support/Uncopyable.h"
-#include "Support/Visitable.h"
+#include "AST/Node.h"
 #include "Types/Typed.h"
 
 namespace fabrique {
@@ -45,16 +42,14 @@ namespace ast {
 /**
  * Base class for expressions that can be evaluated.
  */
-class Expression
-	: public HasSource, public Printable, public Typed, public Visitable,
-	  Uncopyable
+class Expression : public Node, public Typed
 {
 public:
 	virtual ~Expression() {}
 
 protected:
 	Expression(const Type& t, const SourceRange& src)
-		: HasSource(src), Typed(t)
+		: Node(src), Typed(t)
 	{
 	}
 };
