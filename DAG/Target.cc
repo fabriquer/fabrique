@@ -68,6 +68,9 @@ Target* Target::Create(const string& name, shared_ptr<File>& file)
 
 Target* Target::Create(const string& name, shared_ptr<List>& list)
 {
+	for (auto& f : *list)
+		assert(f);
+
 	SharedPtrVec<File> files;
 	for (auto i : *list)
 	{
