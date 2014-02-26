@@ -71,9 +71,9 @@ List::iterator List::end() const { return v.end(); }
 
 size_t List::size() const { return v.size(); }
 
-const shared_ptr<Value>& List::operator [] (size_t i) const
+const Value& List::operator [] (size_t i) const
 {
-	return v[i];
+	return *v[i];
 }
 
 

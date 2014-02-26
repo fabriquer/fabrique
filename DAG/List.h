@@ -65,7 +65,7 @@ public:
 	iterator begin() const;
 	iterator end() const;
 	size_t size() const;
-	const std::shared_ptr<Value>& operator [] (size_t) const;
+	const Value& operator [] (size_t) const;
 
 	//! List addition is concatenation.
 	virtual std::shared_ptr<Value> Add(std::shared_ptr<Value>&);
