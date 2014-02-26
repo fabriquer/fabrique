@@ -50,9 +50,14 @@ class List;
 class Target : public Value
 {
 public:
-	static Target* Create(const std::string& name, std::shared_ptr<Build>&);
-	static Target* Create(const std::string& name, std::shared_ptr<File>&);
-	static Target* Create(const std::string& name, std::shared_ptr<List>&);
+	static Target* Create(const std::string& name,
+	                      const std::shared_ptr<Build>&);
+
+	static Target* Create(const std::string& name,
+	                      const std::shared_ptr<File>&);
+
+	static Target* Create(const std::string& name,
+	                      const std::shared_ptr<List>&);
 
 	const std::string& name() const { return name_; }
 	const SharedPtrVec<File>& files() const { return files_; }

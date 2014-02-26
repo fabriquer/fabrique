@@ -47,7 +47,7 @@ using std::shared_ptr;
 using std::string;
 
 
-Target* Target::Create(const string& name, shared_ptr<Build>& build)
+Target* Target::Create(const string& name, const shared_ptr<Build>& build)
 {
 	assert(build);
 
@@ -60,13 +60,13 @@ Target* Target::Create(const string& name, shared_ptr<Build>& build)
 	return new Target(name, files, build->source(), build->type());
 }
 
-Target* Target::Create(const string& name, shared_ptr<File>& file)
+Target* Target::Create(const string& name, const shared_ptr<File>& file)
 {
 	SharedPtrVec<File> files(1, file);
 	return new Target(name, files, file->source(), file->type());
 }
 
-Target* Target::Create(const string& name, shared_ptr<List>& list)
+Target* Target::Create(const string& name, const shared_ptr<List>& list)
 {
 	for (auto& f : *list)
 		assert(f);
