@@ -93,15 +93,13 @@ static UniqPtrVec<T>* NodeVec(YYSTYPE& yyunion)
  */
 %union {
 	int intVal;
-
-	fabrique::ast::Node *node;
-	fabrique::UniqPtrVec<fabrique::ast::Node> *nodes;
+	fabrique::Token *token;
 
 	const fabrique::Type *type;
 	fabrique::PtrVec<fabrique::Type> *types;
 
-	//fabrique::SourceRange *src;
-	fabrique::Token *token;
+	fabrique::ast::Node *node;
+	fabrique::UniqPtrVec<fabrique::ast::Node> *nodes;
 };
 
 %token WHITESPACE
