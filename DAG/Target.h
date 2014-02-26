@@ -60,7 +60,7 @@ public:
 	                      const std::shared_ptr<List>&);
 
 	const std::string& name() const { return name_; }
-	const List& files() const { return *files_; }
+	const std::shared_ptr<List>& files() const { return files_; }
 
 	void PrettyPrint(Bytestream&, int indent = 0) const;
 

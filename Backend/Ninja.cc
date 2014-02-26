@@ -80,7 +80,7 @@ string stringify(const shared_ptr<Value>& v)
 	else if (auto target = dynamic_pointer_cast<Target>(v))
 	{
 		vector<string> files;
-		for (auto& f : target->files())
+		for (auto& f : *target->files())
 			files.push_back(stringify(f));
 
 		return fabrique::join(files, " ");

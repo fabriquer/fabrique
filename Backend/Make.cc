@@ -132,7 +132,7 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out)
 			<< Bytestream::Literal
 			;
 
-		for (auto& j : i.second->files())
+		for (auto& j : *i.second->files())
 			out << " " << *j;
 
 		out
