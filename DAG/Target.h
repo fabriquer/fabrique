@@ -60,16 +60,16 @@ public:
 	                      const std::shared_ptr<List>&);
 
 	const std::string& name() const { return name_; }
-	const SharedPtrVec<File>& files() const { return files_; }
+	const List& files() const { return *files_; }
 
 	void PrettyPrint(Bytestream&, int indent = 0) const;
 
 private:
-	Target(const std::string& name, const SharedPtrVec<File>& files,
-	       const SourceRange&, const Type&);
+	Target(const std::string& name, const std::shared_ptr<List>& files,
+	       const Type&);
 
 	const std::string name_;
-	const SharedPtrVec<File> files_;
+	const std::shared_ptr<List> files_;
 };
 
 } // namespace dag

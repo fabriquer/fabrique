@@ -231,7 +231,7 @@ void Build::appendFiles(const shared_ptr<Value>& in,
 
 	else if (const shared_ptr<Target>& t = dynamic_pointer_cast<Target>(in))
 		for (const shared_ptr<Value>& f : t->files())
-			out.push_back(dynamic_pointer_cast<File>(f));
+			appendFiles(f, out);
 
 	else throw WrongTypeException("file|list[file]",
 	                              in->type(), in->source());

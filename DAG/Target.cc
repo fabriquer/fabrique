@@ -57,13 +57,19 @@ Target* Target::Create(const string& name, const shared_ptr<Build>& build)
 	if (build->type().isFile())
 		assert(files.size() == 1);
 
-	return new Target(name, files, build->source(), build->type());
+	shared_ptr<List> l(List::of(build->allOutputs(), build->source()));
+	return new Target(name, l, build->type());
 }
 
 Target* Target::Create(const string& name, const shared_ptr<File>& file)
 {
-	SharedPtrVec<File> files(1, file);
-	return new Target(name, files, file->source(), file->type());
+	assert(file);
+
+	SharedPtrVec<Value> files;
+	files.push_back(file);
+
+	shared_ptr<List> l(List::of(files, file->source()));
+	return new Target(name, l, file->type());
 }
 
 Target* Target::Create(const string& name, const shared_ptr<List>& list)
@@ -71,36 +77,12 @@ Target* Target::Create(const string& name, const shared_ptr<List>& list)
 	for (auto& f : *list)
 		assert(f);
 
-	SharedPtrVec<File> files;
-	for (auto i : *list)
-	{
-		//
-		// If we are referencing an existing target,
-		// pass its files through to the new target.
-		//
-		if (auto t = dynamic_pointer_cast<Target>(i))
-		{
-			const SharedPtrVec<File>& f = t->files();
-			files.insert(files.end(), f.begin(), f.end());
-		}
-
-		//
-		// Otherwise, we had better have a file.
-		//
-		else if (auto f = dynamic_pointer_cast<File>(i))
-			files.push_back(f);
-
-		else
-			assert(false && "not a Target or File");
-	}
-
-	return new Target(name, files, list->source(), list->type());
+	return new Target(name, list, list->type());
 }
 
 
-Target::Target(const string& name, const SharedPtrVec<File>& files,
-               const SourceRange& src, const Type& ty)
-	: Value(ty, src), name_(name), files_(files)
+Target::Target(const string& name, const shared_ptr<List>& files, const Type& t)
+	: Value(t, files->source()), name_(name), files_(files)
 {
 }
 
@@ -108,15 +90,8 @@ Target::Target(const string& name, const SharedPtrVec<File>& files,
 void Target::PrettyPrint(Bytestream& out, int indent) const
 {
 	if (type().isFile())
-		out << *files_.front();
+		out << **files_->begin();
 
 	else
-	{
-		out << Bytestream::Operator << "[";
-
-		for (auto f : files_)
-			out << " " << *f;
-
-		out << Bytestream::Operator << " ]";
-	}
+		out << *files_;
 }
