@@ -122,6 +122,17 @@ Build::Build(shared_ptr<Rule>& rule,
 	  in(inputs), out(outputs), deps(dependencies), extraOut(extraOut),
 	  args(arguments)
 {
+	for (auto& f : in)
+		assert(f);
+
+	for (auto& f : out)
+		assert(f);
+
+	for (auto& f : deps)
+		assert(f);
+
+	for (auto& f : extraOut)
+		assert(f);
 }
 
 
@@ -223,4 +234,7 @@ void Build::appendFiles(shared_ptr<Value>& in, vector<shared_ptr<File>>& out)
 
 	else throw WrongTypeException("file|list[file]",
 	                              in->type(), in->source());
+
+	for (auto& f : out)
+		assert(f);
 }

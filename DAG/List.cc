@@ -52,6 +52,9 @@ List::List(const SharedPtrVec<Value>& v, const Type& t, const SourceRange& src)
 {
 	if (v.size() > 0)
 		assert(t.isListOf(v.front()->type()));
+
+	for (auto& value : v)
+		assert(value);
 }
 
 List::iterator List::begin() const { return v.begin(); }
