@@ -47,6 +47,15 @@ using std::string;
 using std::vector;
 
 
+List* List::of(const SharedPtrVec<Value>& values, const SourceRange& src)
+{
+	assert(not values.empty());
+	const Type& t = Type::ListOf(values.front()->type());
+
+	return new List(values, t, src);
+}
+
+
 List::List(const SharedPtrVec<Value>& v, const Type& t, const SourceRange& src)
 	: Value(t, src), v(v), elementType(t[0])
 {

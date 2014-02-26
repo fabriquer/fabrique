@@ -46,6 +46,18 @@ namespace dag {
 class List : public Value
 {
 public:
+	template<class T>
+	static List* of(const SharedPtrVec<T>& values, const SourceRange& src)
+	{
+		SharedPtrVec<Value> v;
+		for (const std::shared_ptr<T>& x : values)
+			v.push_back(x);
+
+		return List::of(v, src);
+	}
+
+	static List* of(const SharedPtrVec<Value>&, const SourceRange&);
+
 	List(const SharedPtrVec<Value>&, const Type&, const SourceRange&);
 
 	typedef SharedPtrVec<Value>::const_iterator iterator;

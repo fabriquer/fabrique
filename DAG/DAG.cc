@@ -486,7 +486,7 @@ bool DAGBuilder::Enter(const ast::FileList& l)
 
 	ExitScope();
 
-	currentValue.emplace(new List(files, l.type(), l.source()));
+	currentValue.emplace(List::of(files, l.source()));
 
 	return false;
 }
@@ -516,7 +516,7 @@ bool DAGBuilder::Enter(const ast::ForeachExpr& f)
 		ExitScope();
 	}
 
-	currentValue.emplace(new List(values, f.type(), f.source()));
+	currentValue.emplace(List::of(values, f.source()));
 	return false;
 }
 
@@ -552,7 +552,7 @@ bool DAGBuilder::Enter(const ast::List& l)
 
 	for (ConstPtr<ast::Expression>& e : l)
 	{
-		if (e->type() != subtype)
+		if (!e->type().isSubtype(subtype))
 			throw WrongTypeException(subtype,
 			                         e->type(), e->source());
 
