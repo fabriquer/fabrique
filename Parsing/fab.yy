@@ -87,10 +87,7 @@ static UniqPtrVec<T>* NodeVec(YYSTYPE& yyunion)
 
 %pure-parser
 
-/**
- * Since we're using C++, we don't have to use hopefully-typed unions:
- * we can use run-time type information!
- */
+/** Yacc representation of 'a thing that we've lexed and/or parsed'. */
 %union {
 	int intVal;
 	fabrique::Token *token;
