@@ -87,6 +87,38 @@ Target::Target(const string& name, const shared_ptr<List>& files, const Type& t)
 }
 
 
+// Just pass operations through to the underlying List.
+shared_ptr<Value> Target::Add(shared_ptr<Value>& rhs)
+{
+	return files_->Add(rhs);
+}
+
+shared_ptr<Value> Target::PrefixWith(shared_ptr<Value>& rhs)
+{
+	return files_->PrefixWith(rhs);
+}
+
+shared_ptr<Value> Target::ScalarAdd(shared_ptr<Value>& rhs)
+{
+	return files_->ScalarAdd(rhs);
+}
+
+shared_ptr<Value> Target::And(shared_ptr<Value>& rhs)
+{
+	return files_->And(rhs);
+}
+
+shared_ptr<Value> Target::Or(shared_ptr<Value>& rhs)
+{
+	return files_->Or(rhs);
+}
+
+shared_ptr<Value> Target::Xor(shared_ptr<Value>& rhs)
+{
+	return files_->Xor(rhs);
+}
+
+
 void Target::PrettyPrint(Bytestream& out, int indent) const
 {
 	if (type().isFile())

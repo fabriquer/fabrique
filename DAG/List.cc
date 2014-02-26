@@ -30,6 +30,7 @@
  */
 
 #include "DAG/List.h"
+#include "DAG/Target.h"
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
 #include "Support/SourceLocation.h"
@@ -82,6 +83,9 @@ shared_ptr<Value> List::Add(shared_ptr<Value>& n)
 	SourceRange loc = SourceRange::Over(this, n.get());
 
 	shared_ptr<List> next = std::dynamic_pointer_cast<List>(n);
+	if (auto target = std::dynamic_pointer_cast<Target>(n))
+		next = target->files();
+
 	if (not next)
 		throw SemanticException(
 			"lists can only be concatenated with lists", loc);
