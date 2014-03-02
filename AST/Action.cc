@@ -1,4 +1,4 @@
-/** @file Action.cc    Definition of @ref Action. */
+/** @file AST/Action.cc    Definition of @ref fabrique::ast::Action. */
 /*
  * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
@@ -77,7 +77,7 @@ Action* Action::Create(UniqPtrVec<Argument>& args,
 	//
 	// Build the parameter map.
 	//
-	static SourceRange nowhere = SourceRange::None;
+	const static SourceRange& nowhere = SourceRange::None();
 	const Type *fileListTy = ctx.fileListType();
 	UniqPtrVec<Parameter> parameters;
 
@@ -111,14 +111,14 @@ Action* Action::Create(UniqPtrVec<Argument>& args,
 }
 
 
-Action::Action(UniqPtrVec<Argument>& args, UniqPtrVec<Parameter>& params,
+Action::Action(UniqPtrVec<Argument>& a, UniqPtrVec<Parameter>& params,
                const FunctionType& ty, const SourceRange& loc)
-	: Expression(ty, loc), Callable(params), args(std::move(args))
+	: Expression(ty, loc), Callable(params), args_(std::move(a))
 {
 }
 
 
-void Action::PrettyPrint(Bytestream& out, int indent) const
+void Action::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
 	out
 		<< Bytestream::Action << "action"
@@ -126,12 +126,12 @@ void Action::PrettyPrint(Bytestream& out, int indent) const
 		<< Bytestream::Reset
 		;
 
-	for (size_t i = 0; i < args.size(); )
+	for (size_t i = 0; i < args_.size(); )
 	{
-		assert(args[i] != NULL);
+		assert(args_[i] != NULL);
 
-		out << *args[i];
-		if (++i < args.size())
+		out << *args_[i];
+		if (++i < args_.size())
 			out << Bytestream::Operator << ", ";
 	}
 
@@ -159,7 +159,7 @@ void Action::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
 	{
-		for (auto& a : args)
+		for (auto& a : args_)
 			a->Accept(v);
 
 		for (auto& p : parameters())

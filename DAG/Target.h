@@ -1,4 +1,4 @@
-/** @file Target.h    Declaration of @ref Target. */
+/** @file DAG/Target.h    Declaration of @ref fabrique::dag::Target. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -69,7 +69,7 @@ public:
 	virtual std::shared_ptr<Value> Or(std::shared_ptr<Value>&);
 	virtual std::shared_ptr<Value> Xor(std::shared_ptr<Value>&);
 
-	void PrettyPrint(Bytestream&, int indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 
 private:
 	Target(const std::string& name, const std::shared_ptr<List>& files,

@@ -1,4 +1,4 @@
-/** @file Null.h    Declaration of @ref NullBackend. */
+/** @file Backend/Null.h    Declaration of fabrique::backend::NullBackend. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -49,6 +49,8 @@ namespace backend {
 class NullBackend : public Backend
 {
 public:
+	virtual ~NullBackend();
+
 	std::string DefaultFilename() const { return ""; }
 	void Process(const dag::DAG&, Bytestream&) {}
 };

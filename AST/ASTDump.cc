@@ -1,4 +1,4 @@
-/** @file ASTDump.cc    Definition of @ref ASTDump. */
+/** @file AST/ASTDump.cc    Definition of @ref fabrique::ast::ASTDump. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -46,9 +46,9 @@ ASTDump* ASTDump::Create(fabrique::Bytestream& out)
 #define DUMP_NODE(type)                                                      \
 bool ASTDump::Enter(const type& n)                                           \
 {                                                                            \
-	Write(#type, &n); indent++; return true;                             \
+	Write(#type, &n); indent_++; return true;                             \
 }                                                                            \
-void ASTDump::Leave(const type& n) { indent--; }
+void ASTDump::Leave(const type&) { indent_--; }
 
 DUMP_NODE(Action)
 DUMP_NODE(Argument)
@@ -72,12 +72,12 @@ DUMP_NODE(Value)
 
 void ASTDump::Write(const string& s, const void *ptr)
 {
-	const size_t indentLen = 2 * this->indent;
+	const size_t indentLen = 2 * this->indent_;
 	std::vector<char> indentChars(indentLen, ' ');
 	string indent(indentChars.data(), indentLen);
 
-	out
-		<< indent << s
+	out_
+		<< indent_ << s
 		<< " @ " << (unsigned long) ptr
 		<< "\n"
 		;

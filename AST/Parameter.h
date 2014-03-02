@@ -1,4 +1,4 @@
-/** @file Parameter.h    Declaration of @ref Parameter. */
+/** @file AST/Parameter.h    Declaration of @ref fabrique::ast::Parameter. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -41,7 +41,7 @@ namespace fabrique {
 namespace ast {
 
 /**
- * A formal parameter in a @ref Function.
+ * A formal parameter in a @ref fabrique::ast::Function.
  */
 class Parameter : public Expression
 {
@@ -49,15 +49,18 @@ public:
 	Parameter(UniqPtr<Identifier>& id, const Type& resultTy,
 	          UniqPtr<Expression>&& e = nullptr);
 
-	const Identifier& getName() const { return *name; }
-	const UniqPtr<Expression>& defaultValue() const { return expr; }
+	const Identifier& getName() const { return *name_; }
+	const UniqPtr<Expression>& defaultValue() const
+	{
+		return defaultValue_;
+	}
 
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 
 private:
-	const UniqPtr<Identifier> name;
-	const UniqPtr<Expression> expr;
+	const UniqPtr<Identifier> name_;
+	const UniqPtr<Expression> defaultValue_;
 };
 
 } // namespace ast

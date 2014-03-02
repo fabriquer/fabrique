@@ -1,4 +1,4 @@
-/** @file SymbolReference.cc    Definition of @ref SymbolReference. */
+/** @file AST/SymbolReference.cc    Definition of @ref fabrique::ast::SymbolReference. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -36,23 +36,24 @@
 using namespace fabrique::ast;
 
 
-SymbolReference::SymbolReference(UniqPtr<Identifier>&& id,
+SymbolReference::SymbolReference(UniqPtr<Identifier>&& name,
                                  const Expression& definition,
                                  const SourceRange& src)
-	: Expression(definition.type(), src), id(std::move(id)), def(definition)
+	: Expression(definition.type(), src), name_(std::move(name)),
+	  definition_(definition)
 {
 }
 
-void SymbolReference::PrettyPrint(Bytestream& out, int indent) const
+void SymbolReference::PrettyPrint(Bytestream& out, size_t indent) const
 {
-	out << *id;
+	name_->PrettyPrint(out, indent);
 }
 
 
 void SymbolReference::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
-		id->Accept(v);
+		name_->Accept(v);
 
 	v.Leave(*this);
 }

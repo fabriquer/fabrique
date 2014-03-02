@@ -1,4 +1,4 @@
-/** @file Conditional.cc    Definition of @ref Conditional. */
+/** @file AST/Conditional.cc    Definition of @ref fabrique::ast::Conditional. */
 /*
  * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
@@ -44,21 +44,21 @@ Conditional::Conditional(const SourceRange& ifLoc,
                          UniqPtr<CompoundExpression>& elseResult,
                          const Type& ty)
 	: Expression(ty, SourceRange(ifLoc.begin, elseResult->source().end)),
-	  cond(std::move(condition)),
-	  thenExpr(std::move(thenResult)),
-	  elseExpr(std::move(elseResult))
+	  condition_(std::move(condition)),
+	  thenClause_(std::move(thenResult)),
+	  elseClause_(std::move(elseResult))
 {
 }
 
-void Conditional::PrettyPrint(Bytestream& out, int indent) const
+void Conditional::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
 	out
 		<< Bytestream::Operator << "if ("
-		<< *cond
+		<< *condition_
 		<< Bytestream::Operator << ")\n"
-		<< *thenExpr
+		<< *thenClause_
 		<< Bytestream::Operator << "\nelse\n"
-		<< *elseExpr
+		<< *elseClause_
 		<< Bytestream::Reset
 		;
 }
@@ -68,9 +68,9 @@ void Conditional::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
 	{
-		cond->Accept(v);
-		thenExpr->Accept(v);
-		elseExpr->Accept(v);
+		condition_->Accept(v);
+		thenClause_->Accept(v);
+		elseClause_->Accept(v);
 	}
 
 	v.Leave(*this);

@@ -1,4 +1,4 @@
-/** @file Target.cc    Definition of @ref Target. */
+/** @file DAG/Target.cc    Definition of @ref fabrique::dag::Target. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -119,11 +119,11 @@ shared_ptr<Value> Target::Xor(shared_ptr<Value>& rhs)
 }
 
 
-void Target::PrettyPrint(Bytestream& out, int indent) const
+void Target::PrettyPrint(Bytestream& out, size_t indent) const
 {
 	if (type().isFile())
 		out << **files_->begin();
 
 	else
-		out << *files_;
+		files_->PrettyPrint(out, indent);
 }

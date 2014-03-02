@@ -1,4 +1,4 @@
-/** @file Make.h    Declaration of @ref MakeBackend. */
+/** @file Backend/Make.h    Declaration of fabrique::backend::MakeBackend. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -44,8 +44,9 @@ class Bytestream;
 namespace backend {
 
 /**
- * A backend that produces POSIX make files with no BSD or GNU extensions
- * (see http://pubs.opengroup.org/onlinepubs/009695399/utilities/make.html).
+ * A backend that produces POSIX make files (no BSD or GNU extensions).
+ *
+ * @sa http://pubs.opengroup.org/onlinepubs/009695399/utilities/make.html
  */
 class MakeBackend : public Backend
 {
@@ -57,7 +58,7 @@ public:
 
 private:
 	MakeBackend();
-	const std::string indent;
+	const std::string indent_;
 };
 
 } // namespace backend

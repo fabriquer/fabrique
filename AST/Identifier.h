@@ -1,4 +1,4 @@
-/** @file Identifier.h    Declaration of @ref Identifier. */
+/** @file AST/Identifier.h    Declaration of @ref fabrique::ast::Identifier. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -49,16 +49,13 @@ class Visitor;
 class Identifier : public Node
 {
 public:
-	Identifier(const std::string& s, const Type *ty, const SourceRange& loc)
-		: Node(loc), id(s), ty(ty)
-	{
-	}
+	Identifier(const std::string& name, const Type *, const SourceRange&);
 
-	bool isTyped() const { return (ty != NULL); }
-	const Type* type() const { return ty; }
+	bool isTyped() const { return (type_ != NULL); }
+	const Type* type() const { return type_; }
 
-	void PrettyPrint(Bytestream&, int indent = 0) const;
-	const std::string& name() const { return id; }
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	const std::string& name() const { return name_; }
 
 	bool operator == (const Identifier&) const;
 	bool operator < (const Identifier&) const;
@@ -66,8 +63,8 @@ public:
 	virtual void Accept(Visitor&) const;
 
 private:
-	const std::string id;
-	const Type *ty;
+	const std::string name_;
+	const Type *type_;
 };
 
 } // namespace ast

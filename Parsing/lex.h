@@ -1,4 +1,4 @@
-/** @file lex.h    Meta-include file for lex headers (gen or system). */
+/** @file Parsing/lex.h    Meta-include file for lex headers (gen or system). */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.

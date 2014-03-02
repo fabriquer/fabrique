@@ -1,4 +1,4 @@
-/** @file Bytestream.cc    Definition of @ref Bytestream. */
+/** @file Support/Bytestream.cc    Definition of @ref fabrique::Bytestream. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -44,6 +44,8 @@ using std::ostream;
 using std::string;
 
 
+namespace {
+
 class ANSIStream : public Bytestream
 {
 public:
@@ -86,7 +88,7 @@ class PlainStream : public Bytestream
 {
 public:
 	PlainStream(ostream& o) : Bytestream(o) {}
-	Bytestream& operator << (enum Format f)
+	Bytestream& operator << (enum Format /*f*/)
 	{
 		// Ignore all formatting.
 		return *this;
@@ -96,12 +98,13 @@ public:
 class NullStream : public Bytestream
 {
 public:
-	NullStream() : Bytestream(out) {}
+	NullStream() : Bytestream(out_) {}
 
-	virtual Bytestream& operator << (enum Format) { return *this; }
-	virtual Bytestream& operator << (const Printable&) { return *this; }
-	virtual Bytestream& operator << (const string&) { return *this; }
-	virtual Bytestream& operator << (unsigned long) { return *this; }
+	Bytestream& operator << (enum Format) { return *this; }
+	Bytestream& operator << (const Printable&) { return *this; }
+	Bytestream& operator << (const string&) { return *this; }
+	Bytestream& operator << (int) { return *this; }
+	Bytestream& operator << (unsigned long) { return *this; }
 
 private:
 	/**
@@ -110,11 +113,13 @@ private:
 	 * will never be performed; this saves us the cost of formatting
 	 * characters before throwing them away.
 	 */
-	std::ofstream out;
+	std::ofstream out_;
 };
 
+} // namespace fabrique
 
-static class DebugState
+
+class DebugState
 {
 public:
 	Bytestream *out = &Bytestream::Stderr();
@@ -136,13 +141,19 @@ public:
 
 		return match(name) ? *out : *null;
 	}
-} debugState;
+};
+
+static DebugState& debugState()
+{
+	static DebugState& state = *new DebugState;
+	return state;
+}
 
 
 Bytestream& Bytestream::Stdout()
 {
-	static ANSIStream ANSIOut(std::cout);
-	static PlainStream PlainOut(std::cout);
+	static ANSIStream& ANSIOut = *new ANSIStream(std::cout);
+	static PlainStream& PlainOut = *new PlainStream(std::cout);
 
 	if (isatty(fileno(stdin)))
 	    return ANSIOut;
@@ -152,8 +163,8 @@ Bytestream& Bytestream::Stdout()
 
 Bytestream& Bytestream::Stderr()
 {
-	static ANSIStream ANSIErr(std::cerr);
-	static PlainStream PlainErr(std::cerr);
+	static ANSIStream& ANSIErr = *new ANSIStream(std::cerr);
+	static PlainStream& PlainErr = *new PlainStream(std::cerr);
 
 	if (isatty(fileno(stdin)))
 		return ANSIErr;
@@ -163,22 +174,22 @@ Bytestream& Bytestream::Stderr()
 
 Bytestream& Bytestream::Debug(const string& name)
 {
-	return debugState.get(name);
+	return debugState().get(name);
 }
 
 void Bytestream::SetDebugPattern(const string& pattern)
 {
-	debugState.pattern = pattern;
+	debugState().pattern = pattern;
 }
 
 void Bytestream::SetDebugStream(Bytestream& s)
 {
-	debugState.out = &s;
+	debugState().out = &s;
 }
 
 Bytestream& Bytestream::None()
 {
-	static NullStream stream;
+	static NullStream& stream = *new NullStream;
 	return stream;
 }
 
@@ -201,13 +212,19 @@ Bytestream& Bytestream::operator << (const Printable& p)
 
 Bytestream& Bytestream::operator << (const std::string& s)
 {
-	out << s;
+	out_ << s;
+	return *this;
+}
+
+Bytestream& Bytestream::operator << (int x)
+{
+	out_ << x;
 	return *this;
 }
 
 Bytestream& Bytestream::operator << (unsigned long x)
 {
-	out << x;
+	out_ << x;
 	return *this;
 }
 
@@ -244,7 +261,7 @@ void ANSIStream::set(enum Colour c)
 	assert((c >= Black and c < EndOfColours)
 	       or (c >= Background(Black) and c < Background(EndOfColours)));
 
-	out << "\x1b[" << (30 + (int) c) << "m";
+	out_ << "\x1b[" << (30 + (int) c) << "m";
 }
 
 void ANSIStream::set(enum Modifier m)
@@ -252,7 +269,7 @@ void ANSIStream::set(enum Modifier m)
 	assert(m >= ResetAll and m < EndOfModifiers);
 
 	if (m == ResetAll)
-		out << "\x1b[0m";
+		out_ << "\x1b[0m";
 	else
-		out << "\x1b[" << ((int) m) << "m";
+		out_ << "\x1b[" << ((int) m) << "m";
 }

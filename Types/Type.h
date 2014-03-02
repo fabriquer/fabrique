@@ -1,4 +1,4 @@
-/** @file Type.h    Declaration of @ref Type. */
+/** @file Types/Type.h    Declaration of @ref fabrique::Type. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -53,8 +53,8 @@ public:
 	Type(const Type&) = delete;
 	virtual ~Type() {}
 
-	virtual const std::string& name() const;
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
+	virtual const std::string name() const;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 
 	bool operator == (const Type&) const;
 	bool operator != (const Type& t) const { return !(*this == t); }
@@ -62,8 +62,8 @@ public:
 	bool operator < (const Type& t) const { return isSubtype(t); }
 	bool operator > (const Type& t) const { return isSupertype(t); }
 
-	const PtrVec<Type>& typeParameters() const { return params; }
-	const size_t typeParamCount() const { return params.size(); }
+	const PtrVec<Type>& typeParameters() const { return parameters_; }
+	size_t typeParamCount() const { return parameters_.size(); }
 	const Type& operator [] (size_t i) const;
 
 	bool isSubtype(const Type&) const;
@@ -80,9 +80,9 @@ private:
 	static Type* Create(const std::string&, const PtrVec<Type>& params,
 	                    FabContext&);
 
-	FabContext& parent;
-	const std::string typeName;
-	const PtrVec<Type> params;
+	FabContext& parent_;
+	const std::string typeName_;
+	const PtrVec<Type> parameters_;
 
 	friend class FabContext;
 };

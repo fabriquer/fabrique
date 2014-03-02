@@ -1,4 +1,4 @@
-/** @file ADT/UniqPtr.h    Declaration of @ref fabrique::UniqPtr and @ref Take. */
+/** @file AST/Node.cc    Definition of @ref fabrique::ast::Node. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -29,20 +29,6 @@
  * SUCH DAMAGE.
  */
 
-#ifndef UNIQUE_PTR_H
-#define UNIQUE_PTR_H
+#include "AST/Node.h"
 
-#include <memory>
-
-namespace fabrique {
-
-/** A shorter spelling of std::unique_ptr. */
-template<class T> using UniqPtr = std::unique_ptr<T>;
-
-/** Take ownership of a pointer. */
-template<class T>
-std::unique_ptr<T> Take(T *val) { return std::unique_ptr<T>(val); }
-
-} // namespace fabrique
-
-#endif
+fabrique::ast::Node::~Node() {}

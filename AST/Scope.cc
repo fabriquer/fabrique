@@ -1,4 +1,4 @@
-/** @file Scope.cc    Definition of @ref Scope. */
+/** @file AST/Scope.cc    Definition of @ref fabrique::ast::Scope. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -42,26 +42,26 @@ using namespace fabrique::ast;
 
 
 Scope::Scope(const Scope *parent, const std::string& name)
-	: parent(parent), debugName(name)
+	: parent_(parent), name_(name)
 {
 }
 
 
 Scope::Scope(Scope&& other)
-	: parent(other.parent), symbols(other.symbols),
-	  ownedValues(std::move(other.ownedValues))
+	: parent_(other.parent_), symbols_(other.symbols_),
+	  ownedValues_(std::move(other.ownedValues_))
 {
 }
 
 
 const Expression* Scope::Lookup(const Identifier& name) const
 {
-	auto i = symbols.find(name.name());
-	if (i != symbols.end())
+	auto i = symbols_.find(name.name());
+	if (i != symbols_.end())
 		return i->second;
 
-	if (parent)
-		return parent->Lookup(name);
+	if (parent_)
+		return parent_->Lookup(name);
 
 	return NULL;
 }
@@ -69,7 +69,7 @@ const Expression* Scope::Lookup(const Identifier& name) const
 
 bool Scope::contains(const Identifier& name) const
 {
-	return symbols.find(name.name()) != symbols.end();
+	return symbols_.find(name.name()) != symbols_.end();
 }
 
 
@@ -88,7 +88,7 @@ void Scope::Register(const Parameter *p)
 
 void Scope::Register(const Value& v)
 {
-	Register(v.getName(), &v.getValue());
+	Register(v.name(), &v.value());
 }
 
 
@@ -105,8 +105,8 @@ void Scope::Register(const Identifier& id, const Expression *e)
 		<< "\n"
 		;
 
-	assert(symbols.find(id.name()) == symbols.end());
-	symbols[id.name()] = e;
+	assert(symbols_.find(id.name()) == symbols_.end());
+	symbols_[id.name()] = e;
 }
 
 
@@ -125,7 +125,7 @@ void Scope::Take(Value *v)
 		<< "\n"
 		;
 
-	ownedValues.push_back(std::move(val));
+	ownedValues_.push_back(std::move(val));
 }
 
 
@@ -133,7 +133,7 @@ void Scope::Accept(Visitor& v) const
 {
 	v.Enter(*this);
 
-	for (auto& val : ownedValues)
+	for (auto& val : ownedValues_)
 		val->Accept(v);
 
 	v.Leave(*this);

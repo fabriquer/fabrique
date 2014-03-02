@@ -1,4 +1,4 @@
-/** @file Dot.h    Declaration of @ref DotBackend. */
+/** @file Backend/Dot.h    Declaration of fabrique::backend::DotBackend. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -44,7 +44,9 @@ class Bytestream;
 namespace backend {
 
 /**
- * A backend that produces GraphViz .dot files (see http://www.graphviz.org/).
+ * A backend that produces GraphViz .dot files.
+ *
+ * @sa http://www.graphviz.org/
  */
 class DotBackend : public Backend
 {
@@ -56,7 +58,7 @@ public:
 
 private:
 	DotBackend();
-	const std::string indent;
+	const std::string indent_;
 };
 
 } // namespace backend

@@ -1,4 +1,4 @@
-/** @file UnaryOperation.h    Declaration of @ref UnaryOperation. */
+/** @file AST/UnaryOperation.h    Declaration of @ref fabrique::ast::UnaryOperation. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -60,18 +60,18 @@ public:
 	static UnaryOperation* Create(Operator, const SourceRange& opLoc,
 	                              UniqPtr<Expression>&);
 
-	Operator getOp() const { return op; }
-	const Expression& getSubExpr() const { return *subexpr; }
+	Operator getOp() const { return op_; }
+	const Expression& getSubExpr() const { return *subexpr_; }
 
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 
 private:
 	UnaryOperation(UniqPtr<Expression>& e, enum Operator op,
 	               const Type& ty, const SourceRange& loc);
 
-	const UniqPtr<Expression> subexpr;
-	const Operator op;
+	const UniqPtr<Expression> subexpr_;
+	const Operator op_;
 };
 
 } // namespace ast

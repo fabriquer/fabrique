@@ -1,4 +1,4 @@
-/** @file Build.cc    Definition of @ref Build. */
+/** @file DAG/Build.cc    Definition of @ref fabrique::dag::Build. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -70,24 +70,24 @@ Build* Build::Create(shared_ptr<Rule>& rule, SharedPtrMap<Value>& args,
 
 		else if (type.isFile())
 		{
-			const Type& type = *paramTypes[name];
+			const Type& paramType = *paramTypes[name];
 
-			if (type.typeParamCount() == 0)
+			if (paramType.typeParamCount() == 0)
 				throw SemanticException(
 					"file missing [in] or [out] tag", src);
 
-			if (type[0].name() == "in")
+			if (paramType[0].name() == "in")
 			{
 				appendFiles(arg, dependencies);
 			}
-			else if (type[0].name() == "out")
+			else if (paramType[0].name() == "out")
 			{
 				appendFiles(arg, extraOutputs);
 				arguments[name] = arg;
 			}
 			else
-				throw WrongTypeException("file[in|out]", type,
-					arg->source());
+				throw WrongTypeException("file[in|out]",
+					paramType, src);
 		}
 
 		else
@@ -114,24 +114,25 @@ Build::Build(shared_ptr<Rule>& rule,
              SharedPtrVec<File>& inputs,
              SharedPtrVec<File>& outputs,
              SharedPtrVec<File>& dependencies,
-             SharedPtrVec<File>& extraOut,
+             SharedPtrVec<File>& extraOutputs,
              const ValueMap& arguments,
              const Type& t,
              SourceRange location)
-	: Value(t, location), rule(rule),
-	  in(inputs), out(outputs), deps(dependencies), extraOut(extraOut),
-	  args(arguments)
+	: Value(t, location), rule_(rule),
+	  in_(inputs), out_(outputs), dependencies_(dependencies),
+	  extraOutputs_(extraOutputs),
+	  args_(arguments)
 {
-	for (auto& f : in)
+	for (auto& f : in_)
 		assert(f);
 
-	for (auto& f : out)
+	for (auto& f : out_)
 		assert(f);
 
-	for (auto& f : deps)
+	for (auto& f : dependencies_)
 		assert(f);
 
-	for (auto& f : extraOut)
+	for (auto& f : extraOutputs_)
 		assert(f);
 }
 
@@ -140,10 +141,10 @@ const Build::FileVec Build::allInputs() const
 {
 	FileVec everything;
 
-	for (shared_ptr<File> f : in)
+	for (shared_ptr<File> f : in_)
 		everything.push_back(f);
 
-	for (shared_ptr<File> f : deps)
+	for (shared_ptr<File> f : dependencies_)
 		everything.push_back(f);
 
 	return everything;
@@ -154,47 +155,50 @@ const Build::FileVec Build::allOutputs() const
 {
 	FileVec everything;
 
-	for (shared_ptr<File> f : out)
+	for (shared_ptr<File> f : out_)
 		everything.push_back(f);
 
-	for (shared_ptr<File> f : extraOut)
+	for (shared_ptr<File> f : extraOutputs_)
 		everything.push_back(f);
 
 	return everything;
 }
 
 
-void Build::PrettyPrint(Bytestream& ostream, int indent) const
+void Build::PrettyPrint(Bytestream& out, size_t indent) const
 {
-	ostream
-		<< Bytestream::Reference << rule->name() << " "
+	out
+		<< Bytestream::Reference << rule_->name() << " "
 		<< Bytestream::Operator << "{"
 		;
 
-	for (const shared_ptr<File>& f : in)
-		ostream << " " << *f;
+	for (const shared_ptr<File>& f : in_)
+		out << " " << *f;
 
-	ostream << Bytestream::Operator << " => ";
+	out << Bytestream::Operator << " => ";
 
-	for (const shared_ptr<File>& f : out)
-		ostream << *f << " ";
+	for (const shared_ptr<File>& f : out_)
+		out << *f << " ";
 
-	if (extraOut.size() > 0)
+	if (extraOutputs_.size() > 0)
 	{
-		ostream << " + ";
-		for (shared_ptr<File> f : extraOut)
-			ostream << *f << " ";
+		out << " + ";
+		for (shared_ptr<File> f : extraOutputs_)
+		{
+			f->PrettyPrint(out, indent);
+			out << " ";
+		}
 	}
 
-	ostream << Bytestream::Operator << "}";
+	out << Bytestream::Operator << "}";
 
-	if (args.size() > 0)
+	if (args_.size() > 0)
 	{
-		ostream << Bytestream::Operator << "( ";
+		out << Bytestream::Operator << "( ";
 
-		for (auto& j : args)
+		for (auto& j : args_)
 		{
-			ostream
+			out
 				<< Bytestream::Definition << j.first
 				<< Bytestream::Operator << " = "
 				<< *j.second
@@ -202,10 +206,10 @@ void Build::PrettyPrint(Bytestream& ostream, int indent) const
 				;
 		}
 
-		ostream << Bytestream::Operator << ")";
+		out << Bytestream::Operator << ")";
 	}
 
-	ostream << Bytestream::Reset;
+	out << Bytestream::Reset;
 }
 
 
@@ -219,7 +223,7 @@ void Build::appendFiles(const shared_ptr<Value>& in,
 		// Not sure why std::copy() doesn't work here, but
 		// it doesn't (segfault).
 		//
-		for (shared_ptr<File> i : build->out)
+		for (shared_ptr<File> i : build->out_)
 			out.push_back(i);
 
 	else if (const shared_ptr<File>& file = dynamic_pointer_cast<File>(in))

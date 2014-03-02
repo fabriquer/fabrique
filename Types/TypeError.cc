@@ -1,4 +1,4 @@
-/** @file TypeError.cc    Definition of @ref TypeError. */
+/** @file Types/TypeError.cc    Definition of @ref fabrique::TypeError. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -41,6 +41,10 @@ TypeError::TypeError(const string& message, const SourceRange& src)
 {
 }
 
+TypeError::~TypeError()
+{
+}
+
 WrongTypeException::WrongTypeException(const Type& want, const Type& got,
                                        const SourceRange& src)
 	: WrongTypeException(want.str(), got.str(), src)
@@ -56,5 +60,9 @@ WrongTypeException::WrongTypeException(const string& want, const Type& got,
 WrongTypeException::WrongTypeException(const string& want, const string& got,
                                        const SourceRange& src)
 	: TypeError("expected " + want + ", got " + got, src)
+{
+}
+
+WrongTypeException::~WrongTypeException()
 {
 }

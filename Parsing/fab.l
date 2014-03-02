@@ -14,8 +14,8 @@ void		yyerror(const char *message);
 int		yylex(YYSTYPE *yylval);
 
 /* keep track of column numbers */
-int previousLine = 0;
-int yycolumn = 1;
+static int	previousLine = 0;
+size_t		yycolumn = 1;
 
 /*
  * Before each token is processed, save its string data and
@@ -29,7 +29,7 @@ int yycolumn = 1;
 			<< Bytestream::Action << "lexed: " \
 			<< currentToken << "\n"; \
 	*/ \
-	currentToken = NextToken(); \
+	currentToken_ = NextToken(); \
 	\
 	if (yylineno > previousLine) \
 	{ \

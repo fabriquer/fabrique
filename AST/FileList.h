@@ -1,4 +1,4 @@
-/** @file FileList.h    Declaration of @ref FileList. */
+/** @file AST/FileList.h    Declaration of @ref fabrique::ast::FileList. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -45,25 +45,25 @@ namespace ast {
 class FileList : public Expression
 {
 public:
-	FileList(UniqPtrVec<Filename>& files, UniqPtrVec<Argument>& args,
+	FileList(UniqPtrVec<Filename>& f, UniqPtrVec<Argument>& a,
 	         const Type& ty, const SourceRange& loc)
-		: Expression(ty, loc), files(std::move(files)),
-		  args(std::move(args))
+		: Expression(ty, loc), files_(std::move(f)),
+		  args_(std::move(a))
 	{
 	}
 
-	const UniqPtrVec<Argument>& arguments() const { return args; }
+	const UniqPtrVec<Argument>& arguments() const { return args_; }
 
 	using ConstIterator = UniqPtrVec<Filename>::const_iterator;
-	ConstIterator begin() const { return files.begin(); }
-	ConstIterator end() const { return files.end(); }
+	ConstIterator begin() const { return files_.begin(); }
+	ConstIterator end() const { return files_.end(); }
 
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 
 private:
-	UniqPtrVec<Filename> files;
-	UniqPtrVec<Argument> args;
+	UniqPtrVec<Filename> files_;
+	UniqPtrVec<Argument> args_;
 };
 
 } // namespace ast

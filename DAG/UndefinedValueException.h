@@ -1,4 +1,4 @@
-/** @file exceptions.h    Declaration of basic Fabrique exceptions. */
+/** @file DAG/UndefinedValueException.h    Declaration of @ref fabrique::dag::UndefinedValueException. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -43,9 +43,10 @@ class UndefinedValueException : public SemanticException
 {
 public:
 	UndefinedValueException(const std::string& name, const SourceRange&);
+	virtual ~UndefinedValueException();
 
 private:
-	const std::string name;
+	const std::string name_;
 };
 
 }

@@ -1,4 +1,4 @@
-/** @file Callable.h    Declaration of @ref Callable. */
+/** @file AST/Callable.h    Declaration of @ref fabrique::ast::Callable. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -59,8 +59,8 @@ public:
 	                    const SourceRange&) const;
 
 	using ParamIterator = UniqPtrVec<Parameter>::const_iterator;
-	ParamIterator begin() const { return params.begin(); }
-	ParamIterator end() const { return params.end(); }
+	ParamIterator begin() const { return params_.begin(); }
+	ParamIterator end() const { return params_.end(); }
 
 	/**
 	 * Name all of the arguments in @a v according to the rules for
@@ -99,7 +99,7 @@ private:
 	std::vector<std::string>
 	NameArguments(const std::vector<std::string>&, SourceRange src) const;
 
-	UniqPtrVec<Parameter> params;
+	UniqPtrVec<Parameter> params_;
 };
 
 } // namespace ast

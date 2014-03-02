@@ -1,4 +1,4 @@
-/** @file List.h    Declaration of @ref List. */
+/** @file DAG/List.h    Declaration of @ref fabrique::dag::List. */
 /*
  * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
@@ -73,11 +73,11 @@ public:
 	virtual std::shared_ptr<Value> ScalarAdd(std::shared_ptr<Value>&);
 	virtual bool canScalarAdd(const Value&);
 
-	void PrettyPrint(Bytestream&, int indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 
 private:
-	const SharedPtrVec<Value> v;
-	const Type& elementType;
+	const SharedPtrVec<Value> elements_;
+	const Type& elementType_;
 };
 
 } // namespace dag

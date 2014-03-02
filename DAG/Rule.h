@@ -1,4 +1,4 @@
-/** @file Rule.h    Declaration of @ref Rule. */
+/** @file DAG/Rule.h    Declaration of @ref fabrique::dag::Rule. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -54,30 +54,30 @@ class Rule : public Value
 public:
 	static Rule* Create(std::string name, std::string command,
 	                    const ValueMap& otherArguments, const Type&,
-	                    const SourceRange& from = SourceRange::None);
+	                    const SourceRange& from = SourceRange::None());
 
 	virtual ~Rule() {}
 
-	const std::string& name() const { return ruleName; }
-	const std::string& command() const { return cmd; }
-	const std::string& description() const { return descrip; }
+	const std::string& name() const { return ruleName_; }
+	const std::string& command() const { return command_; }
+	const std::string& description() const { return description_; }
 
 	//! Arguments define the action (e.g., command = 'cc').
-	const ValueMap& arguments() const { return args; }
+	const ValueMap& arguments() const { return arguments_; }
 
-	std::string str() const { return cmd; }
+	std::string str() const { return command_; }
 
-	void PrettyPrint(Bytestream&, int indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 
 private:
 	Rule(const std::string& name, const std::string& command,
 	     const std::string& description, const ValueMap& args,
 	     const Type&, SourceRange location);
 
-	const std::string ruleName;
-	const std::string cmd;
-	const std::string descrip;
-	const ValueMap args;
+	const std::string ruleName_;
+	const std::string command_;
+	const std::string description_;
+	const ValueMap arguments_;
 };
 
 } // namespace dag

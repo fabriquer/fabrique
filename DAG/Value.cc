@@ -1,4 +1,4 @@
-/** @file Value.cc    Definition of @ref Value. */
+/** @file DAG/Value.cc    Definition of @ref fabrique::dag::Value. */
 /*
  * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.

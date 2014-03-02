@@ -1,4 +1,4 @@
-/** @file CompoundExpr.cc    Definition of @ref CompoundExpr. */
+/** @file AST/CompoundExpr.cc    Definition of @ref fabrique::ast::CompoundExpr. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -43,13 +43,13 @@ CompoundExpression::CompoundExpression(UniqPtr<Scope>&& scope,
                                        UniqPtr<Expression>& result,
                                        const SourceRange& loc)
 	: Expression(result->type(), loc), Scope(std::move(*scope)),
-	  res(std::move(result))
+	  result_(std::move(result))
 {
-	assert(res);
+	assert(result_);
 }
 
 
-void CompoundExpression::PrettyPrint(Bytestream& out, int indent) const
+void CompoundExpression::PrettyPrint(Bytestream& out, size_t indent) const
 {
 	std::string tabs(indent, '\t');
 	std::string intabs(indent + 1, '\t');
@@ -61,9 +61,9 @@ void CompoundExpression::PrettyPrint(Bytestream& out, int indent) const
 		out << "\n";
 	}
 
-	assert(res);
+	assert(result_);
 	out
-		<< intabs << *res
+		<< intabs << *result_
 		<< "\n" << Bytestream::Operator << tabs << "}"
 		<< Bytestream::Reset
 		;
@@ -77,7 +77,7 @@ void CompoundExpression::Accept(Visitor& v) const
 		for (auto& val : values())
 			val->Accept(v);
 
-		res->Accept(v);
+		result_->Accept(v);
 	}
 
 	v.Leave(*this);

@@ -1,4 +1,4 @@
-/** @file Rule.cc    Definition of @ref Rule. */
+/** @file DAG/Rule.cc    Definition of @ref fabrique::dag::Rule. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -63,20 +63,20 @@ Rule* Rule::Create(string name, string command, const ValueMap& arguments,
 
 Rule::Rule(const string& name, const string& command, const string& description,
 	   const ValueMap& args, const Type& t, SourceRange location)
-	: Value(t, location), ruleName(name), cmd(command),
-	  descrip(description), args(args)
+	: Value(t, location), ruleName_(name), command_(command),
+	  description_(description), arguments_(args)
 {
 }
 
-void Rule::PrettyPrint(Bytestream& out, int indent) const
+void Rule::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
 	out
-		<< Bytestream::Action << cmd
+		<< Bytestream::Action << command_
 		<< Bytestream::Operator << " {"
-		<< Bytestream::Literal << " '" << descrip << "'"
+		<< Bytestream::Literal << " '" << description_ << "'"
 		;
 
-	for (auto& i : args)
+	for (auto& i : arguments_)
 	{
 		out
 			<< Bytestream::Operator << ", "

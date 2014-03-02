@@ -1,4 +1,4 @@
-/** @file FunctionType.cc    Definition of @ref FunctionType. */
+/** @file Types/FunctionType.cc    Definition of @ref fabrique::FunctionType. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -48,19 +48,19 @@ FunctionType::Create(const PtrVec<Type>& parameterTypes, const Type& retTy)
 }
 
 
-const std::string& FunctionType::name() const
+const std::string FunctionType::name() const
 {
-	static std::string name("function");
+	static const char* name = "function";
 	return name;
 }
 
-void FunctionType::PrettyPrint(Bytestream& out, int indent) const
+void FunctionType::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
 	out
 		<< Bytestream::Operator << "("
-		<< Join<Type>(",", paramTypes)     // don't use csv with spaces
+		<< Join<Type>(",", paramTypes_)    // don't use csv with spaces
 		<< Bytestream::Operator << ")=>"
-		<< retTy
+		<< retTy_
 		<< Bytestream::Reset
 		;
 }

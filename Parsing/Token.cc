@@ -1,4 +1,4 @@
-/** @file Token.cc    Definition of @ref Token. */
+/** @file Parsing/Token.cc    Definition of @ref Token. */
 /*
  * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
@@ -36,25 +36,25 @@ using std::string;
 
 
 Token::Token()
-	: HasSource(SourceRange::None), s("")
+	: HasSource(SourceRange::None()), str_("")
 {
 }
 
 Token::Token(const std::string& s, const SourceRange& src)
-	: HasSource(src), s(s)
+	: HasSource(src), str_(s)
 {
 }
 
 Token::Token(const char *begin, size_t len, const SourceRange& src)
-	: HasSource(src), s(begin, 0, len)
+	: HasSource(src), str_(begin, 0, len)
 {
 }
 
 
-void Token::PrettyPrint(Bytestream& out, int indent) const
+void Token::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
 	out
-		<< Bytestream::Literal << "'" << s << "'"
+		<< Bytestream::Literal << "'" << str_ << "'"
 		<< Bytestream::Operator << " @ " << source()
 		<< Bytestream::Reset
 		;

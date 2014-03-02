@@ -1,6 +1,6 @@
 /**
- * @file SourceLocation.h
- * Declaration of @ref HasSource, @ref SourceLocation and @ref SourceRange.
+ * @file Support/SourceLocation.h
+ * Declaration of @ref fabrique::HasSource, @ref SourceLocation and @ref SourceRange.
  */
 /*
  * Copyright (c) 2013 Jonathan Anderson
@@ -49,20 +49,20 @@ class Lexer;
 class SourceLocation : public Printable
 {
 public:
-	const static SourceLocation Nowhere;
+	//static const SourceLocation& Nowhere();
 
 	SourceLocation(const std::string& filename = "",
-	               int line = 0, int column = 0);
+	               size_t line = 0, size_t column = 0);
 
 	operator bool() const;
 	bool operator == (const SourceLocation&) const;
 	bool operator != (const SourceLocation&) const;
 
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 
 	std::string filename;
-	int line;
-	int column;
+	size_t line;
+	size_t column;
 };
 
 
@@ -71,22 +71,24 @@ class HasSource;
 class SourceRange : public Printable
 {
 public:
-	const static SourceRange None;
+	static const SourceRange& None();
 
 	//! Construct a short (within a single line) range.
 	static SourceRange Span(
-		const std::string& filename, int line,
-		int begincol, int endcol);
+		const std::string& filename, size_t line,
+		size_t begincol, size_t endcol);
 
-	//! Create a range that spans two @ref HasSource objects.
+	//! Create a range that spans two @ref fabrique::HasSource objects.
 	template<class T1, class T2>
 	static SourceRange Over(const T1& b, const T2& e)
 	{
+		const static SourceRange& nowhere = SourceRange::None();
+
 		const SourceRange& begin =
-			b ? b->source() : (e ? e->source() : SourceRange::None);
+			b ? b->source() : (e ? e->source() : nowhere);
 
 		const SourceRange& end =
-			e ? e->source() : (b ? b->source() : SourceRange::None);
+			e ? e->source() : (b ? b->source() : nowhere);
 
 		return SourceRange(begin.begin, end.end);
 	}
@@ -99,7 +101,7 @@ public:
 	bool operator == (const SourceRange&) const;
 	bool operator != (const SourceRange&) const;
 
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 
 	SourceLocation begin;
 	SourceLocation end;
@@ -110,11 +112,11 @@ public:
 class HasSource
 {
 public:
-	HasSource(const SourceRange& src) : src(src) {}
-	const SourceRange& source() const { return src; }
+	HasSource(const SourceRange& src) : src_(src) {}
+	const SourceRange& source() const { return src_; }
 
 private:
-	SourceRange src;
+	SourceRange src_;
 };
 
 } // class fabrique

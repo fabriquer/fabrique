@@ -1,4 +1,4 @@
-/** @file Identifier.cc    Definition of @ref Identifier. */
+/** @file AST/Identifier.cc    Definition of @ref fabrique::ast::Identifier. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -37,12 +37,20 @@
 using namespace fabrique::ast;
 
 
-void Identifier::PrettyPrint(Bytestream& out, int indent) const
+Identifier::Identifier(const std::string& name, const Type *type,
+                       const SourceRange& src)
+	: Node(src), name_(name), type_(type)
 {
-	out << Bytestream::Reference << id;
+}
 
-	if (ty)
-		out << Bytestream::Operator << ":" << Bytestream::Type << *ty;
+void Identifier::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+{
+	out << Bytestream::Reference << name_;
+
+	if (type_)
+		out << Bytestream::Operator << ":"
+		<< Bytestream::Type << *type_
+		;
 
 	out << Bytestream::Reset;
 }

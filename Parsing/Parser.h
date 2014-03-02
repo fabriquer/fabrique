@@ -1,4 +1,4 @@
-/** @file Parser.h    Declaration of @ref Parser. */
+/** @file Parsing/Parser.h    Declaration of @ref Parser. */
 /*
  * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
@@ -62,7 +62,7 @@ public:
 	Parser(FabContext&, const Lexer& lex);
 
 	//! Errors encountered during parsing.
-	const UniqPtrVec<ErrorReport>& errors() const { return errs; }
+	const UniqPtrVec<ErrorReport>& errors() const { return errs_; }
 
 
 	/**
@@ -112,8 +112,8 @@ public:
 
 	//! An expression that can (optionally) include intermediate values.
 	CompoundExpression* CompoundExpr(UniqPtr<Expression>& result,
-	                                 SourceRange begin = SourceRange::None,
-	                                 SourceRange end = SourceRange::None);
+	                                 SourceRange beg = SourceRange::None(),
+	                                 SourceRange end = SourceRange::None());
 
 	//! A @ref Filename that is part of the build DAG.
 	Filename* File(UniqPtr<Expression>& name, const SourceRange& src,
@@ -211,11 +211,11 @@ private:
 	const ErrorReport& ReportError(const std::string&, const SourceRange&);
 	const ErrorReport& ReportError(const std::string&, const HasSource&);
 
-	FabContext& ctx;
-	const Lexer& lex;
+	FabContext& ctx_;
+	const Lexer& lexer_;
 
-	UniqPtrVec<ErrorReport> errs;
-	std::stack<std::unique_ptr<Scope>> scopes;
+	UniqPtrVec<ErrorReport> errs_;
+	std::stack<std::unique_ptr<Scope>> scopes_;
 };
 
 } // namespace ast

@@ -1,4 +1,4 @@
-/** @file Filename.cc    Definition of @ref Filename. */
+/** @file AST/Filename.cc    Definition of @ref fabrique::ast::Filename. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -42,20 +42,21 @@ using std::string;
 
 Filename::Filename(UniqPtr<Expression>& name, UniqPtrVec<Argument>& args,
                    const Type& t, const SourceRange& src)
-	: Expression(t, src), unqualName(std::move(name)), args(std::move(args))
+	: Expression(t, src), unqualName_(std::move(name)),
+	  args_(std::move(args))
 {
 }
 
 
-void Filename::PrettyPrint(Bytestream& out, int indent) const
+void Filename::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
 	out
 		<< Bytestream::Action << "file"
 		<< Bytestream::Operator << "(";
 
-	out << Bytestream::Filename << *unqualName << Bytestream::Reset;
+	out << Bytestream::Filename << *unqualName_ << Bytestream::Reset;
 
-	for (auto& a : args)
+	for (auto& a : args_)
 		out
 			<< Bytestream::Operator << ", "
 			<< Bytestream::Reset << *a;
@@ -70,8 +71,8 @@ void Filename::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
 	{
-		unqualName->Accept(v);
-		for (auto& a : args)
+		unqualName_->Accept(v);
+		for (auto& a : args_)
 			a->Accept(v);
 	}
 

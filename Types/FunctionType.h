@@ -1,4 +1,4 @@
-/** @file FunctionType.h    Declaration of @ref FunctionType. */
+/** @file Types/FunctionType.h    Declaration of @ref fabrique::FunctionType. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -43,11 +43,11 @@ namespace fabrique {
 class FunctionType : public Type
 {
 public:
-	const std::string& name() const;
-	void PrettyPrint(Bytestream&, int indent = 0) const;
+	const std::string name() const override;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 
-	const PtrVec<Type>& parameterTypes() const { return paramTypes; }
-	const Type& returnType() const { return retTy; }
+	const PtrVec<Type>& parameterTypes() const { return paramTypes_; }
+	const Type& returnType() const { return retTy_; }
 
 private:
 	static FunctionType* Create(const PtrVec<Type>& parameterTypes,
@@ -55,12 +55,12 @@ private:
 
 	FunctionType(const PtrVec<Type>& params, const Type& ret,
 		     const PtrVec<Type>& sig)
-		: Type("function", sig, ret), paramTypes(params), retTy(ret)
+		: Type("function", sig, ret), paramTypes_(params), retTy_(ret)
 	{
 	}
 
-	const PtrVec<Type> paramTypes;
-	const Type& retTy;
+	const PtrVec<Type> paramTypes_;
+	const Type& retTy_;
 
 	friend class FabContext;
 };

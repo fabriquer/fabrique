@@ -1,4 +1,4 @@
-/** @file Token.h    Declaration of @ref Token. */
+/** @file Parsing/Token.h    Declaration of @ref Token. */
 /*
  * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
@@ -48,15 +48,15 @@ public:
 	Token(const std::string&, const SourceRange&);
 	Token(const char *begin, size_t len, const SourceRange&);
 
-	size_t length() const { return s.length(); }
+	size_t length() const { return str_.length(); }
 
 	operator std::string() const { return str(); }
-	std::string str() const override { return s; }
+	std::string str() const override { return str_; }
 
-	void PrettyPrint(Bytestream&, int indent = 0) const;
+	void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 
 private:
-	std::string s;
+	std::string str_;
 };
 
 } // namespace fabrique

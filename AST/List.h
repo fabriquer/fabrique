@@ -1,4 +1,4 @@
-/** @file List.h    Declaration of @ref List. */
+/** @file AST/List.h    Declaration of @ref fabrique::ast::List. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -45,19 +45,19 @@ class List : public Expression
 public:
 	List(UniqPtrVec<Expression>& e, const Type& ty,
 	     const SourceRange& loc)
-		: Expression(ty, loc), elements(std::move(e))
+		: Expression(ty, loc), elements_(std::move(e))
 	{
 	}
 
 	using ConstIterator = UniqPtrVec<Expression>::const_iterator;
-	ConstIterator begin() const { return elements.begin(); }
-	ConstIterator end() const { return elements.end(); }
+	ConstIterator begin() const { return elements_.begin(); }
+	ConstIterator end() const { return elements_.end(); }
 
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 
 private:
-	const UniqPtrVec<Expression> elements;
+	const UniqPtrVec<Expression> elements_;
 };
 
 } // namespace ast

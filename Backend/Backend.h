@@ -1,4 +1,4 @@
-/** @file Backend.h    Declaration of @ref Backend. */
+/** @file Backend/Backend.h    Declaration of fabrique::backend::Backend. */
 /*
  * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
@@ -48,6 +48,8 @@ namespace backend {
 class Backend
 {
 public:
+	virtual ~Backend();
+
 	virtual std::string DefaultFilename() const = 0;
 	virtual void Process(const dag::DAG&, Bytestream&) = 0;
 };

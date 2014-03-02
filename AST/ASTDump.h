@@ -1,4 +1,4 @@
-/** @file ASTDump.h    Declaration of @ref ASTDump. */
+/** @file AST/ASTDump.h    Declaration of @ref fabrique::ast::ASTDump. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -70,15 +70,15 @@ public:
 	VISIT(Value)
 
 private:
-	ASTDump(Bytestream& out)
-		: out(out), indent(0)
+	ASTDump(Bytestream& o)
+		: out_(o), indent_(0)
 	{
 	}
 
 	void Write(const std::string& message, const void *ptr);
 
-	Bytestream& out;
-	size_t indent;
+	Bytestream& out_;
+	size_t indent_;
 };
 
 } // namespace ast

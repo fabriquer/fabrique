@@ -1,4 +1,4 @@
-/** @file exceptions.cc    Definition of basic Fabrique exceptions. */
+/** @file Support/exceptions.cc    Definition of basic Fabrique exceptions. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -37,43 +37,54 @@ using std::string;
 
 
 AssertionFailure::AssertionFailure(const string& condition, const string& msg)
-	: cond(condition),
-	  msg(msg.empty() ? ("Assertion failed: " + condition) : msg)
+	: condition_(condition),
+	  message_(msg.empty() ? ("Assertion failed: " + condition) : msg)
 {
 }
 
+AssertionFailure::~AssertionFailure() {}
+
 const char* AssertionFailure::what() const noexcept
 {
-	return msg.c_str();
+	return message_.c_str();
 }
 
 
 DuplicateException::DuplicateException(const string& kind, const string& name)
-	: message("duplicate " + kind + " " + name), kind(kind), name(name)
+	: message_("duplicate " + kind + " " + name), kind_(kind), name_(name)
 {
 }
 
+DuplicateException::~DuplicateException() {}
 
 const char* DuplicateException::what() const noexcept
 {
-	return message.c_str();
+	return message_.c_str();
 }
 
 
 SourceCodeException::SourceCodeException(const string& m, const SourceRange& l)
-	: HasSource(l), err(ErrorReport::Create(m, l))
+	: HasSource(l), err_(ErrorReport::Create(m, l))
 {
 }
 
-const string& SourceCodeException::message() const { return err->getMessage(); }
+SourceCodeException::~SourceCodeException()
+{
+}
+
+const string& SourceCodeException::message() const
+{
+	return err_->getMessage();
+}
+
 const char* SourceCodeException::what() const noexcept
 {
 	return message().c_str();
 }
 
-void SourceCodeException::PrettyPrint(Bytestream& out, int indent) const
+void SourceCodeException::PrettyPrint(Bytestream& out, size_t indent) const
 {
-	err->PrettyPrint(out, indent);
+	err_->PrettyPrint(out, indent);
 }
 
 
@@ -82,7 +93,11 @@ SyntaxError::SyntaxError(const string& message, const SourceRange& loc)
 {
 }
 
+SyntaxError::~SyntaxError() {}
+
 SemanticException::SemanticException(const string& m, const SourceRange& loc)
 	: SourceCodeException(m, loc)
 {
 }
+
+SemanticException::~SemanticException() {}

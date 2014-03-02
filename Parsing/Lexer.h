@@ -1,4 +1,4 @@
-/** @file Lexer.h    Declaration of @ref Lexer. */
+/** @file Parsing/Lexer.h    Declaration of @ref Lexer. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -49,7 +49,8 @@ class Token;
 class Lexer : public yyFlexLexer
 {
 public:
-	Lexer(const std::string& in) : inputFilename(in) {}
+	Lexer(const std::string& in) : inputFilename_(in) {}
+	virtual ~Lexer();
 
 	Token NextToken() const;
 	SourceRange CurrentTokenRange() const;
@@ -65,14 +66,13 @@ private:
 	void BeginString();
 	void AppendChar(char);
 	void EndString(YYSTYPE*);
-	//void SetString(YYSTYPE*);
 
-	const std::string inputFilename;
-	UniqPtrVec<ErrorReport> errs;
+	const std::string inputFilename_;
+	UniqPtrVec<ErrorReport> errs_;
 
-	fabrique::Token currentToken;
-	fabrique::SourceLocation stringStart;
-	std::vector<char> buf;
+	fabrique::Token currentToken_;
+	fabrique::SourceLocation stringStart_;
+	std::vector<char> buffer_;
 };
 
 } // namespace fabrique

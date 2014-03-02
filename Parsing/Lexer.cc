@@ -1,4 +1,4 @@
-/** @file Lexer.h    Definition of @ref Lexer. */
+/** @file Parsing/Lexer.h    Definition of @ref Lexer. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -41,7 +41,12 @@
 using namespace fabrique;
 
 extern int yylineno;
-extern int yycolumn;
+extern size_t yycolumn;
+
+
+Lexer::~Lexer()
+{
+}
 
 
 static SourceRange range(const char *text, size_t len, SourceLocation begin)
@@ -68,11 +73,11 @@ static SourceRange range(const char *text, size_t len, SourceLocation begin)
 
 const ErrorReport& Lexer::Err(const char *message)
 {
-	errs.push_back(
+	errs_.push_back(
 		std::unique_ptr<ErrorReport>(
 			ErrorReport::Create(message, CurrentTokenRange())));
 
-	return *errs.back();
+	return *errs_.back();
 }
 
 Token Lexer::NextToken() const
@@ -82,15 +87,17 @@ Token Lexer::NextToken() const
 
 SourceRange Lexer::CurrentTokenRange() const
 {
-	SourceLocation begin(inputFilename, yylineno, yycolumn);
+	size_t line = static_cast<size_t>(yylineno);
+
+	SourceLocation begin(inputFilename_, line, yycolumn);
 	return range(yytext, yyleng, begin);
 }
 
 
 void Lexer::SetComment(YYSTYPE *yyunion, bool includesNewline)
 {
-	std::string s = currentToken.str();
-	SourceRange src = currentToken.source();
+	std::string s = currentToken_.str();
+	SourceRange src = currentToken_.source();
 
 	if (includesNewline)
 	{
@@ -119,33 +126,33 @@ void Lexer::SetToken(YYSTYPE *yyunion)
 	Bytestream::Debug("lex.token")
 		<< Bytestream::Action << "lexed "
 		<< Bytestream::Type << "token"
-		<< Bytestream::Operator << ": " << currentToken
+		<< Bytestream::Operator << ": " << currentToken_
 		<< Bytestream::Reset << "\n"
 		;
 
-	yyunion->token = new Token(currentToken);
+	yyunion->token = new Token(currentToken_);
 }
 
 
 void Lexer::BeginString()
 {
-	stringStart = currentToken.source().begin;
-	assert(buf.empty());
+	stringStart_ = currentToken_.source().begin;
+	assert(buffer_.empty());
 }
 
 
 void Lexer::AppendChar(char c)
 {
-	buf.push_back(c);
+	buffer_.push_back(c);
 }
 
 
 void Lexer::EndString(YYSTYPE* yyunion)
 {
-	SourceRange src = range(buf.data(), buf.size(), stringStart);
+	SourceRange src = range(buffer_.data(), buffer_.size(), stringStart_);
 
-	std::string s(buf.data(), 0, buf.size());
-	buf.clear();
+	std::string s(buffer_.data(), 0, buffer_.size());
+	buffer_.clear();
 	yyunion->token = new Token(s, src);
 }
 

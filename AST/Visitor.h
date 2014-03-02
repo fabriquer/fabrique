@@ -1,4 +1,4 @@
-/** @file Visitor.h    Declaration of @ref Visitor. */
+/** @file AST/Visitor.h    Declaration of @ref fabrique::ast::Visitor. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -49,6 +49,8 @@ namespace ast {
 class Visitor
 {
 public:
+	virtual ~Visitor();
+
 	VISIT(Action)
 	VISIT(Argument)
 	VISIT(BinaryOperation)

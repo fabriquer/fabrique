@@ -1,4 +1,4 @@
-/** @file Ninja.cc    Definition of @ref NinjaBackend. */
+/** @file Backend/Ninja.cc    Definition of fabrique::backend::NinjaBackend. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -60,34 +60,12 @@ NinjaBackend* NinjaBackend::Create()
 
 
 NinjaBackend::NinjaBackend()
-	: indent("    ")
+	: indent_("    ")
 {
 }
 
 
-string stringify(const shared_ptr<Value>& v)
-{
-	assert(v);
-
-	if (auto list = dynamic_pointer_cast<List>(v))
-	{
-		vector<string> substrings;
-		for (auto& v : *list)
-			substrings.push_back(stringify(v));
-
-		return fabrique::join(substrings, " ");
-	}
-	else if (auto target = dynamic_pointer_cast<Target>(v))
-	{
-		vector<string> files;
-		for (auto& f : *target->files())
-			files.push_back(stringify(f));
-
-		return fabrique::join(files, " ");
-	}
-
-	return v->str();
-}
+static string stringify(const shared_ptr<Value>& v);
 
 void NinjaBackend::Process(const dag::DAG& dag, Bytestream& out)
 {
@@ -224,4 +202,29 @@ void NinjaBackend::Process(const dag::DAG& dag, Bytestream& out)
 				;
 		out << "\n";
 	}
+}
+
+
+static string stringify(const shared_ptr<Value>& v)
+{
+	assert(v);
+
+	if (auto list = dynamic_pointer_cast<List>(v))
+	{
+		vector<string> substrings;
+		for (auto& element : *list)
+			substrings.push_back(stringify(element));
+
+		return fabrique::join(substrings, " ");
+	}
+	else if (auto target = dynamic_pointer_cast<Target>(v))
+	{
+		vector<string> files;
+		for (auto& f : *target->files())
+			files.push_back(stringify(f));
+
+		return fabrique::join(files, " ");
+	}
+
+	return v->str();
 }

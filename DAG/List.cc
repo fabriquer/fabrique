@@ -1,4 +1,4 @@
-/** @file List.cc    Definition of @ref List. */
+/** @file DAG/List.cc    Definition of @ref fabrique::dag::List. */
 /*
  * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
@@ -58,7 +58,7 @@ List* List::of(const SharedPtrVec<Value>& values, const SourceRange& src)
 
 
 List::List(const SharedPtrVec<Value>& v, const Type& t, const SourceRange& src)
-	: Value(t, src), v(v), elementType(t[0])
+	: Value(t, src), elements_(v), elementType_(t[0])
 {
 	if (v.size() > 0)
 		assert(t.isListOf(v.front()->type()));
@@ -67,14 +67,14 @@ List::List(const SharedPtrVec<Value>& v, const Type& t, const SourceRange& src)
 		assert(value);
 }
 
-List::iterator List::begin() const { return v.begin(); }
-List::iterator List::end() const { return v.end(); }
+List::iterator List::begin() const { return elements_.begin(); }
+List::iterator List::end() const { return elements_.end(); }
 
-size_t List::size() const { return v.size(); }
+size_t List::size() const { return elements_.size(); }
 
 const Value& List::operator [] (size_t i) const
 {
-	return *v[i];
+	return *elements_[i];
 }
 
 
@@ -90,8 +90,8 @@ shared_ptr<Value> List::Add(shared_ptr<Value>& n)
 		throw SemanticException(
 			"lists can only be concatenated with lists", loc);
 
-	if (not elementType.isSupertype(next->elementType)
-	    and not next->elementType.isSupertype(elementType))
+	if (not elementType_.isSupertype(next->elementType_)
+	    and not next->elementType_.isSupertype(elementType_))
 		throw SemanticException(
 			"incompatible operands to concatenate (types "
 			+ type().str() + ", " + next->type().str() + ")", loc);
@@ -99,25 +99,26 @@ shared_ptr<Value> List::Add(shared_ptr<Value>& n)
 
 	// The result type is the most general case (supertype).
 	const Type& resultType =
-		next->elementType.isSupertype(type())
+		next->elementType_.isSupertype(type())
 			? next->type()
 			: this->type();
 
-	SharedPtrVec<Value> values(v);
-	values.insert(values.end(), next->v.begin(), next->v.end());
+	SharedPtrVec<Value> values(elements_);
+	values.insert(values.end(),
+	              next->elements_.begin(), next->elements_.end());
 
 	return shared_ptr<Value>(new List(values, resultType, loc));
 }
 
 shared_ptr<Value> List::PrefixWith(shared_ptr<Value>& prefix)
 {
-	if (prefix->type() != elementType)
-		throw WrongTypeException(elementType,
+	if (prefix->type() != elementType_)
+		throw WrongTypeException(elementType_,
 		                         prefix->type(), prefix->source());
 
 	SharedPtrVec<Value> values;
 	values.push_back(prefix);
-	values.insert(values.end(), v.begin(), v.end());
+	values.insert(values.end(), elements_.begin(), elements_.end());
 
 	return shared_ptr<Value>(
 		new List(values, type(), SourceRange::Over(prefix.get(), this))
@@ -129,7 +130,7 @@ shared_ptr<Value> List::ScalarAdd(shared_ptr<Value>& scalar)
 	assert(type().isListOf(scalar->type()));
 
 	SharedPtrVec<Value> values;
-	for (const shared_ptr<Value>& v : this->v)
+	for (const shared_ptr<Value>& v : this->elements_)
 		values.push_back(v->Add(scalar));
 
 	return shared_ptr<Value>(
@@ -142,15 +143,18 @@ bool List::canScalarAdd(const Value& other)
 	return type().isListOf(other.type());
 }
 
-void List::PrettyPrint(Bytestream& out, int indent) const
+void List::PrettyPrint(Bytestream& out, size_t indent) const
 {
 	out
 		<< Bytestream::Operator << "[ "
 		<< Bytestream::Reset
 		;
 
-	for (const shared_ptr<Value>& p : v)
-		out << *p << " ";
+	for (const shared_ptr<Value>& p : elements_)
+	{
+		p->PrettyPrint(out, indent);
+		out << " ";
+	}
 
 	out
 		<< Bytestream::Operator << "]"

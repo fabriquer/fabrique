@@ -1,4 +1,4 @@
-/** @file Scope.h    Declaration of @ref Scope. */
+/** @file AST/Scope.h    Declaration of @ref fabrique::ast::Scope. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -61,15 +61,16 @@ class Scope : public Uncopyable
 public:
 	Scope(const Scope *parent, const std::string& name);
 	Scope(Scope&&);
+	virtual ~Scope() {}
 
 	typedef StringMap<const Expression*> SymbolMap;
 	typedef SymbolMap::const_iterator iterator;
 
-	iterator begin() const { return symbols.begin(); }
-	iterator end() const { return symbols.end(); }
+	iterator begin() const { return symbols_.begin(); }
+	iterator end() const { return symbols_.end(); }
 
-	const std::string& name() const { return debugName; }
-	const UniqPtrVec<Value>& values() const { return ownedValues; }
+	const std::string& name() const { return name_; }
+	const UniqPtrVec<Value>& values() const { return ownedValues_; }
 
 	bool contains(const Identifier&) const;
 	const Expression* Lookup(const Identifier&) const;
@@ -85,11 +86,11 @@ public:
 private:
 	void Register(const Identifier&, const Expression*);
 
-	const Scope *parent;
-	const std::string debugName;
+	const Scope *parent_;
+	const std::string name_;
 
-	SymbolMap symbols;
-	UniqPtrVec<Value> ownedValues;
+	SymbolMap symbols_;
+	UniqPtrVec<Value> ownedValues_;
 };
 
 } // namespace ast

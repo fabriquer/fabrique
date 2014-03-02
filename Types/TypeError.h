@@ -1,4 +1,4 @@
-/** @file TypeError.h    Declaration of @ref TypeError. */
+/** @file Types/TypeError.h    Declaration of @ref fabrique::TypeError. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -40,14 +40,15 @@ namespace fabrique {
 class Type;
 
 
-//! Something is wrong with a @ref Type.
+//! Something is wrong with a @ref fabrique::Type.
 class TypeError : public SemanticException
 {
 public:
 	TypeError(const std::string& message, const SourceRange&);
+	virtual ~TypeError();
 };
 
-//! Something is wrong with a @ref Type.
+//! Something is wrong with a @ref fabrique::Type.
 class WrongTypeException : public TypeError
 {
 public:
@@ -59,6 +60,8 @@ public:
 
 	WrongTypeException(const std::string& expected,
 	                   const std::string& actual, const SourceRange&);
+
+	virtual ~WrongTypeException();
 };
 
 }

@@ -1,4 +1,4 @@
-/** @file Call.cc    Definition of @ref Call. */
+/** @file AST/Call.cc    Definition of @ref fabrique::ast::Call. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -38,24 +38,24 @@
 using namespace fabrique::ast;
 
 
-Call::Call(UniqPtr<SymbolReference>& fn, UniqPtrVec<Argument>& args,
-           const Type& ty, const SourceRange& loc)
-	: Expression(ty, loc), fn(std::move(fn)), args(std::move(args))
+Call::Call(UniqPtr<SymbolReference>& f, UniqPtrVec<Argument>& a,
+           const Type& ty, const SourceRange& src)
+	: Expression(ty, src), target_(std::move(f)), args_(std::move(a))
 {
 }
 
-void Call::PrettyPrint(Bytestream& out, int indent) const
+void Call::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
 	out
-		<< *fn
+		<< *target_
 		<< Bytestream::Operator << "("
 		<< Bytestream::Reset
 		;
 
-	for (size_t i = 0; i < args.size(); )
+	for (size_t i = 0; i < args_.size(); )
 	{
-		out << *args[i];
-		if (++i < args.size())
+		out << *args_[i];
+		if (++i < args_.size())
 			out
 				<< Bytestream::Operator << ", "
 				<< Bytestream::Reset;
@@ -71,8 +71,8 @@ void Call::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
 	{
-		fn->Accept(v);
-		for (auto& a : args)
+		target_->Accept(v);
+		for (auto& a : args_)
 			a->Accept(v);
 	}
 

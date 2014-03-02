@@ -1,4 +1,4 @@
-/** @file Bytestream.h    Declaration of @ref Bytestream. */
+/** @file Support/Bytestream.h    Declaration of @ref fabrique::Bytestream. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -88,34 +88,37 @@ public:
 	static void SetDebugStream(Bytestream&);
 
 	/**
-	 * Construct a formatted @ref Bytestream to wrap an @ref std::ostream.
+	 * Construct a formatted @ref fabrique::Bytestream to wrap an @ref std::ostream.
 	 *
 	 * The caller is responsible for freeing the returned pointer.
 	 */
 	static Bytestream* Formatted(std::ostream&);
 
 	/**
-	 * Construct a plain @ref Bytestream to wrap an @ref std::ostream.
+	 * Construct a plain @ref fabrique::Bytestream to wrap an @ref std::ostream.
 	 *
 	 * The caller is responsible for freeing the returned pointer.
 	 */
 	static Bytestream* Plain(std::ostream&);
 
 
+	virtual ~Bytestream() {}
+
 	virtual Bytestream& operator << (enum Format) = 0;
 	virtual Bytestream& operator << (const Printable&);
 	virtual Bytestream& operator << (const std::string&);
+	virtual Bytestream& operator << (int);
 	virtual Bytestream& operator << (unsigned long);
 
-	std::ostream& raw() { return out; }
+	std::ostream& raw() { return out_; }
 
 protected:
 	Bytestream(std::ostream& o)
-		: out(o)
+		: out_(o)
 	{
 	}
 
-	std::ostream& out;
+	std::ostream& out_;
 };
 
 } // namespace fabrique

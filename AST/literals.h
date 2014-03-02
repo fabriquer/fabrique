@@ -1,4 +1,4 @@
-/** @file literals.h    Declaration of several literal expression types. */
+/** @file AST/literals.h    Declaration of several literal expression types. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -46,17 +46,17 @@ template<class T>
 class Literal : public Expression
 {
 public:
-	const T& value() const { return val; }
+	const T& value() const { return value_; }
 	virtual std::string str() const = 0;
 
 protected:
 	Literal(const T& value, const Type& ty, const SourceRange& loc)
-		: Expression(ty, loc), val(value)
+		: Expression(ty, loc), value_(value)
 	{
 	}
 
 private:
-	const T val;
+	const T value_;
 };
 
 
@@ -70,7 +70,7 @@ public:
 
 	std::string str() const;
 
-	void PrettyPrint(Bytestream&, int indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 };
 
@@ -84,7 +84,7 @@ public:
 
 	std::string str() const;
 
-	void PrettyPrint(Bytestream&, int indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 };
 
@@ -100,7 +100,7 @@ public:
 
 	std::string str() const;
 
-	void PrettyPrint(Bytestream&, int indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 };
 

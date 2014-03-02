@@ -1,4 +1,4 @@
-/** @file File.h    Declaration of @ref File. */
+/** @file AST/Filename.h    Declaration of @ref fabrique::ast::Filename. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -47,17 +47,17 @@ public:
 	Filename(UniqPtr<Expression>& name, UniqPtrVec<Argument>& args,
 	         const Type& ty, const SourceRange& loc);
 
-	const Expression& name() const { return *unqualName; }
+	const Expression& name() const { return *unqualName_; }
 
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 
 private:
 	//! A filename, without qualifiers like "in this subdirectory".
-	const UniqPtr<Expression> unqualName;
+	const UniqPtr<Expression> unqualName_;
 
 	//! Additional information about the file (e.g., "subdir").
-	const UniqPtrVec<Argument> args;
+	const UniqPtrVec<Argument> args_;
 };
 
 } // namespace ast

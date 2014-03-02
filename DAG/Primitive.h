@@ -1,4 +1,4 @@
-/** @file Primitive.h    Declaration of @ref Primitive. */
+/** @file DAG/Primitive.h    Declaration of @ref fabrique::dag::Primitive. */
 /*
  * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
@@ -49,20 +49,21 @@ class Primitive : public Value
 {
 public:
 	virtual std::string str() const = 0;
-	virtual T value() const { return val; }
+	virtual T value() const { return value_; }
 
-	virtual void PrettyPrint(Bytestream& b, int indent = 0) const
+	virtual void
+	PrettyPrint(Bytestream& b, size_t /*indent*/ = 0) const override
 	{
 		b << Bytestream::Literal << str() << Bytestream::Reset;
 	}
 
 protected:
-	Primitive(const Type& t, const T& val, SourceRange loc)
-		: Value(t, loc), val(val)
+	Primitive(const Type& t, const T& val, SourceRange src)
+		: Value(t, src), value_(val)
 	{
 	}
 
-	const T val;
+	const T value_;
 };
 
 
@@ -70,10 +71,10 @@ protected:
 class Boolean : public Primitive<bool>
 {
 public:
-	Boolean(bool, const Type&, SourceRange loc = SourceRange::None);
+	Boolean(bool, const Type&, SourceRange src = SourceRange::None());
 	std::string str() const;
 
-	virtual std::shared_ptr<Value> Negate(const SourceRange& loc) const;
+	virtual std::shared_ptr<Value> Negate(const SourceRange& src) const;
 	virtual std::shared_ptr<Value> And(std::shared_ptr<Value>&);
 	virtual std::shared_ptr<Value> Or(std::shared_ptr<Value>&);
 	virtual std::shared_ptr<Value> Xor(std::shared_ptr<Value>&);
@@ -82,7 +83,7 @@ public:
 class Integer : public Primitive<int>
 {
 public:
-	Integer(int, const Type&, SourceRange loc = SourceRange::None);
+	Integer(int, const Type&, SourceRange src = SourceRange::None());
 	std::string str() const;
 
 	virtual std::shared_ptr<Value> Add(std::shared_ptr<Value>&);
@@ -91,12 +92,12 @@ public:
 class String : public Primitive<std::string>
 {
 public:
-	String(std::string, const Type&, SourceRange loc = SourceRange::None);
+	String(std::string, const Type&, SourceRange src = SourceRange::None());
 	std::string str() const;
 
 	virtual std::shared_ptr<Value> Add(std::shared_ptr<Value>&);
 
-	void PrettyPrint(Bytestream& b, int indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 };
 
 } // namespace dag

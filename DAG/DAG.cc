@@ -1,4 +1,4 @@
-/** @file DAG.cc    Definition of @ref DAG. */
+/** @file DAG/DAG.cc    Definition of @ref fabrique::dag::DAG. */
 /*
  * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
@@ -65,6 +65,8 @@ template<class T>
 using ConstPtr = const std::unique_ptr<T>;
 
 
+namespace {
+
 class ImmutableDAG : public DAG
 {
 public:
@@ -88,6 +90,13 @@ private:
 	const SharedPtrMap<Value> vars_;
 	const SharedPtrMap<Target> targets_;
 };
+
+}
+
+
+namespace fabrique {
+namespace dag {
+
 
 
 //! AST Visitor that flattens the AST into a DAG.
@@ -162,6 +171,9 @@ private:
 	std::stack<shared_ptr<Value>> currentValue;
 };
 
+} // namespace dag
+} // namespace fabrique
+
 
 UniqPtr<DAG> DAG::Flatten(const ast::Scope& s, FabContext& ctx)
 {
@@ -173,7 +185,7 @@ UniqPtr<DAG> DAG::Flatten(const ast::Scope& s, FabContext& ctx)
 }
 
 
-void DAG::PrettyPrint(Bytestream& out, int indent) const
+void DAG::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
 	SharedPtrMap<Value> namedValues;
 	for (auto& i : rules()) namedValues.emplace(i);
@@ -343,11 +355,11 @@ bool DAGBuilder::Enter(const ast::BoolLiteral& b)
 void DAGBuilder::Leave(const ast::BoolLiteral&) {}
 
 
-bool DAGBuilder::Enter(const ast::Call& call) { return false; }
+bool DAGBuilder::Enter(const ast::Call&) { return false; }
 void DAGBuilder::Leave(const ast::Call& call)
 {
 	const ast::SymbolReference& ref = call.target();
-	const string name = ref.getName().name();
+	const string name = ref.name().name();
 	auto& target = dynamic_cast<const ast::Callable&>(ref.definition());
 
 	ValueMap args;
@@ -365,16 +377,16 @@ void DAGBuilder::Leave(const ast::Call& call)
 		auto& params = target.parameters();
 		for (auto& a : args)
 		{
-			const string& name = a.first;
+			const string& argName = a.first;
 
 			auto i = params.begin();
 			for ( ; i != params.end(); i++)
-				if ((*i)->getName().name() == name)
+				if ((*i)->getName().name() == argName)
 					break;
 
 			assert(i != params.end());
 			const Type& t = (*i)->type();
-			paramTypes[name] = &t;
+			paramTypes[argName] = &t;
 		}
 
 		shared_ptr<Build> build(
@@ -585,11 +597,11 @@ void DAGBuilder::Leave(const ast::Scope&)
 	if (not scopes.empty())
 		return;
 
-	const string scopeName = join(this->scopeName, ".");
+	const string currentScopeName = join(this->scopeName, ".");
 
 	for (auto symbol : scopedSymbols)
 	{
-		const string name = join(scopeName, symbol.first, ".");
+		const string name = join(currentScopeName, symbol.first, ".");
 		shared_ptr<Value>& v = symbol.second;
 
 		if (dynamic_pointer_cast<File>(v)
@@ -621,7 +633,7 @@ void DAGBuilder::Leave(const ast::StringLiteral&) {}
 
 bool DAGBuilder::Enter(const ast::SymbolReference& r)
 {
-	const string& name = r.getName().name();
+	const string& name = r.name().name();
 
 	shared_ptr<Value> value = getNamedValue(name);
 	if (not value)
@@ -662,11 +674,11 @@ void DAGBuilder::Leave(const ast::UnaryOperation&) {}
 
 bool DAGBuilder::Enter(const ast::Value& v)
 {
-	currentValueName.push(v.getName().name());
+	currentValueName.push(v.name().name());
 	return true;
 }
 
-void DAGBuilder::Leave(const ast::Value& v)
+void DAGBuilder::Leave(const ast::Value&)
 {
 	// Things like function definitions will never be flattened.
 	if (currentValue.empty())

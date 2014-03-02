@@ -1,4 +1,4 @@
-/** @file Value.h    Declaration of @ref Value. */
+/** @file AST/Value.h    Declaration of @ref fabrique::ast::Value. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -39,24 +39,24 @@
 using namespace fabrique::ast;
 
 
-Value::Value(UniqPtr<Identifier>& id, UniqPtr<Expression>& e)
-	: Expression(e->type(), SourceRange::Over(id, e)),
-	  id(std::move(id)), expr(std::move(e))
+Value::Value(UniqPtr<Identifier>& id, UniqPtr<Expression>& value)
+	: Expression(value->type(), SourceRange::Over(id, value)),
+	  name_(std::move(id)), value_(std::move(value))
 {
 }
 
 
-void Value::PrettyPrint(Bytestream& out, int indent) const
+void Value::PrettyPrint(Bytestream& out, size_t indent) const
 {
 	std::string tabs(indent, '\t');
 
 	out
 		<< tabs
-		<< Bytestream::Definition << id->name()
+		<< Bytestream::Definition << name_->name()
 		<< Bytestream::Operator << ":"
 		<< Bytestream::Type << type()
 		<< Bytestream::Operator << " = "
-		<< Bytestream::Reset << *expr
+		<< Bytestream::Reset << *value_
 		<< Bytestream::Operator << ";"
 		<< Bytestream::Reset
 		;
@@ -66,8 +66,8 @@ void Value::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
 	{
-		id->Accept(v);
-		expr->Accept(v);
+		name_->Accept(v);
+		value_->Accept(v);
 	}
 
 	v.Leave(*this);

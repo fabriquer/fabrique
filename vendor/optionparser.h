@@ -95,14 +95,14 @@
  *
  * @par Changelog:
  * <b>Version 1.3:</b> Compatible with Microsoft Visual C++. @n
- * <b>Version 1.2:</b> Added @ref option::Option::namelen "Option::namelen" and removed the extraction
+ * <b>Version 1.2:</b> Added @ref fabrique::option::Option::namelen "Option::namelen" and removed the extraction
  *                     of short option characters into a special buffer. @n
- *                     Changed @ref option::Arg::Optional "Arg::Optional" to accept arguments if they are attached
+ *                     Changed @ref fabrique::option::Arg::Optional "Arg::Optional" to accept arguments if they are attached
  *                     rather than separate. This is what GNU getopt() does and how POSIX recommends
  *                     utilities should interpret their arguments.@n
  * <b>Version 1.1:</b> Optional mode with argument reordering as done by GNU getopt(), so that
  *                     options and non-options can be mixed. See
- *                     @ref option::Parser::parse() "Parser::parse()".
+ *                     @ref fabrique::option::Parser::parse() "Parser::parse()".
  *
  * @par Feedback:
  * Send questions, bug reports, feature requests etc. to: <tt><b>optionparser-feedback<span id="antispam">&nbsp;(a)&nbsp;</span>lists.sourceforge.net</b></tt>
@@ -183,7 +183,7 @@
  * @li Arguments to both short and long options may start with a @c '-' character. E.g.
  *     <code> -X-X </code>, <code>-X -X</code> or <code> --long-X=-X </code>. If @c -X
  *     and @c --long-X take an argument, that argument will be @c "-X" in all 3 cases.
- * @li If using the built-in @ref option::Arg::Optional "Arg::Optional", optional arguments must
+ * @li If using the built-in @ref fabrique::option::Arg::Optional "Arg::Optional", optional arguments must
  *     be attached.
  * @li the special option @c -- (i.e. without a name) terminates the list of
  *     options. Everything that follows is a non-option argument, even if it starts with
@@ -195,7 +195,7 @@
  *     NOTE: This behaviour is mandated by POSIX, but GNU getopt() only honours this if it is
  *     explicitly requested (e.g. by setting POSIXLY_CORRECT). @n
  *     You can enable the GNU behaviour by passing @c true as first argument to
- *     e.g. @ref option::Parser::parse() "Parser::parse()".
+ *     e.g. @ref fabrique::option::Parser::parse() "Parser::parse()".
  * @li Arguments that look like options (i.e. @c '-' followed by at least 1 character) but
  *     aren't, are NOT treated as non-option arguments. They are treated as unknown options and
  *     are collected into a list of unknown options for error reporting. @n
@@ -207,7 +207,7 @@
  *     @endcode
  *     In this example, @c --strange-filename is a non-option argument. If the @c --
  *     were omitted, it would be treated as an unknown option. @n
- *     See @ref option::Descriptor::longopt for information on how to collect unknown options.
+ *     See @ref fabrique::option::Descriptor::longopt for information on how to collect unknown options.
  *
  */
 
@@ -269,13 +269,13 @@ enum ArgStatus
  *
  * If @c msg is @c true and the function determines that an argument is not acceptable and
  * that this is a fatal error, it should output a message to the user before
- * returning @ref ARG_ILLEGAL. If @c msg is @c false the function should remain silent (or you
+ * returning @ref fabrique::ARG_ILLEGAL. If @c msg is @c false the function should remain silent (or you
  * will get duplicate messages).
  *
- * See @ref ArgStatus for the meaning of the return values.
+ * See @ref fabrique::ArgStatus for the meaning of the return values.
  *
  * While you can provide your own functions,
- * often the following pre-defined checks (which never return @ref ARG_ILLEGAL) will suffice:
+ * often the following pre-defined checks (which never return @ref fabrique::ARG_ILLEGAL) will suffice:
  *
  * @li @c Arg::None @copybrief Arg::None
  * @li @c Arg::Optional @copybrief Arg::Optional
@@ -317,7 +317,7 @@ struct Descriptor
    *
    * If you have options that mean exactly opposite things
    * (e.g. @c --enable-foo and @c --disable-foo ), you should also give them the same
-   * @c index, but distinguish them through different values for @ref type.
+   * @c index, but distinguish them through different values for @ref fabrique::type.
    * That way they end up in the same list and you can just take the last element of the
    * list and use its type. This way you get the usual behaviour where switches later
    * on the command line override earlier ones without having to code it manually.
@@ -329,8 +329,8 @@ struct Descriptor
   const unsigned index;
 
   /**
-   * @brief Used to distinguish between options with the same @ref index.
-   * See @ref index for details.
+   * @brief Used to distinguish between options with the same @ref fabrique::index.
+   * See @ref fabrique::index for details.
    *
    * It is recommended that you use an enum rather than a plain int to make your
    * code more readable.
@@ -346,7 +346,7 @@ struct Descriptor
    * If this Descriptor should not have short option characters, use the empty
    * string "". NULL is not permitted here!
    *
-   * See @ref longopt for more information.
+   * See @ref fabrique::longopt for more information.
    */
   const char* const shortopt;
 
@@ -356,29 +356,29 @@ struct Descriptor
    * If this Descriptor should not have a long option name, use the empty
    * string "". NULL is not permitted here!
    *
-   * While @ref shortopt allows multiple short option characters, each
+   * While @ref fabrique::shortopt allows multiple short option characters, each
    * Descriptor can have only a single long option name. If you have multiple
    * long option names referring to the same option use separate Descriptors
-   * that have the same @ref index and @ref type. You may repeat
+   * that have the same @ref fabrique::index and @ref type. You may repeat
    * short option characters in such an alias Descriptor but there's no need to.
    *
    * @par Dummy Descriptors:
    * You can use dummy Descriptors with an
-   * empty string for both @ref shortopt and @ref longopt to add text to
-   * the usage that is not related to a specific option. See @ref help.
+   * empty string for both @ref fabrique::shortopt and @ref longopt to add text to
+   * the usage that is not related to a specific option. See @ref fabrique::help.
    * The first dummy Descriptor will be used for unknown options (see below).
    *
    * @par Unknown Option Descriptor:
    * The first dummy Descriptor in the list of Descriptors,
-   * whose @ref shortopt and @ref longopt are both the empty string, will be used
+   * whose @ref fabrique::shortopt and @ref longopt are both the empty string, will be used
    * as the Descriptor for unknown options. An unknown option is a string in
    * the argument vector that is not a lone minus @c '-' but starts with a minus
-   * character and does not match any Descriptor's @ref shortopt or @ref longopt. @n
-   * Note that the dummy descriptor's @ref check_arg function @e will be called and
-   * its return value will be evaluated as usual. I.e. if it returns @ref ARG_ILLEGAL
+   * character and does not match any Descriptor's @ref fabrique::shortopt or @ref longopt. @n
+   * Note that the dummy descriptor's @ref fabrique::check_arg function @e will be called and
+   * its return value will be evaluated as usual. I.e. if it returns @ref fabrique::ARG_ILLEGAL
    * the parsing will be aborted with <code>Parser::error()==true</code>. @n
-   * if @c check_arg does not return @ref ARG_ILLEGAL the descriptor's
-   * @ref index @e will be used to pick the linked list into which
+   * if @c check_arg does not return @ref fabrique::ARG_ILLEGAL the descriptor's
+   * @ref fabrique::index @e will be used to pick the linked list into which
    * to put the unknown option. @n
    * If there is no dummy descriptor, unknown options will be dropped silently.
    *
@@ -386,14 +386,14 @@ struct Descriptor
   const char* const longopt;
 
   /**
-   * @brief For each option that matches @ref shortopt or @ref longopt this function
+   * @brief For each option that matches @ref fabrique::shortopt or @ref longopt this function
    * will be called to check a potential argument to the option.
    *
    * This function will be called even if there is no potential argument. In that case
    * it will be passed @c NULL as @c arg parameter. Do not confuse this with the empty
    * string.
    *
-   * See @ref CheckArg for more information.
+   * See @ref fabrique::CheckArg for more information.
    */
   const CheckArg check_arg;
 
@@ -402,7 +402,7 @@ struct Descriptor
    *
    * You can use option::printUsage() to format your usage message based on
    * the @c help texts. You can use dummy Descriptors where
-   * @ref shortopt and @ref longopt are both the empty string to add text to
+   * @ref fabrique::shortopt and @ref longopt are both the empty string to add text to
    * the usage that is not related to a specific option.
    *
    * See option::printUsage() for special formatting characters you can use in
@@ -440,7 +440,7 @@ public:
   /**
    * @brief Pointer to this Option's Descriptor.
    *
-   * Remember that the first dummy descriptor (see @ref Descriptor::longopt) is used
+   * Remember that the first dummy descriptor (see @ref fabrique::Descriptor::longopt) is used
    * for unknown options.
    *
    * @attention
@@ -467,7 +467,7 @@ public:
    * character within the @c argv string.
    *
    * Note that in the case of a short option group or an attached option argument, this
-   * string will contain additional characters following the actual name. Use @ref namelen
+   * string will contain additional characters following the actual name. Use @ref fabrique::namelen
    * to filter out the actual option name only.
    *
    */
@@ -482,9 +482,9 @@ public:
   const char* arg;
 
   /**
-   * @brief The length of the option @ref name.
+   * @brief The length of the option @ref fabrique::name.
    *
-   * Because @ref name points into the actual @c argv string, the option name may be
+   * Because @ref fabrique::name points into the actual @c argv string, the option name may be
    * followed by more characters (e.g. other short options in the same short option group).
    * This value is the number of bytes (not characters!) that are part of the actual name.
    *
@@ -495,8 +495,8 @@ public:
    * In the pathological case of a minus within a short option group (e.g. @c -xf-z), this
    * length is incorrect, because this case will be misinterpreted as a long option and the
    * name will therefore extend to the string's 0-terminator or a following '=" character
-   * if there is one. This is irrelevant for most uses of @ref name and @c namelen. If you
-   * really need to distinguish the case of a long and a short option, compare @ref name to
+   * if there is one. This is irrelevant for most uses of @ref fabrique::name and @c namelen. If you
+   * really need to distinguish the case of a long and a short option, compare @ref fabrique::name to
    * the @c argv pointers. A long option's @c name is always identical to one of them,
    * whereas a short option's is never.
    */
@@ -743,7 +743,7 @@ public:
 
   /**
    * @brief Creates a new Option that is a one-element linked list and has NULL
-   * @ref desc, @ref name, @ref arg and @ref namelen.
+   * @ref fabrique::desc, @ref name, @ref arg and @ref namelen.
    */
   Option() :
       desc(0), name(0), arg(0), namelen(0)
@@ -754,10 +754,10 @@ public:
 
   /**
    * @brief Creates a new Option that is a one-element linked list and has the given
-   * values for @ref desc, @ref name and @ref arg.
+   * values for @ref fabrique::desc, @ref name and @ref arg.
    *
    * If @c name_ points at a character other than '-' it will be assumed to refer to a
-   * short option and @ref namelen will be set to 1. Otherwise the length will extend to
+   * short option and @ref fabrique::namelen will be set to 1. Otherwise the length will extend to
    * the first '=' character or the string's 0-terminator.
    */
   Option(const Descriptor* desc_, const char* name_, const char* arg_)
@@ -791,7 +791,7 @@ private:
    * @brief Sets the fields of this Option to the given values (extracting @c name if necessary).
    *
    * If @c name_ points at a character other than '-' it will be assumed to refer to a
-   * short option and @ref namelen will be set to 1. Otherwise the length will extend to
+   * short option and @ref fabrique::namelen will be set to 1. Otherwise the length will extend to
    * the first '=' character or the string's 0-terminator.
    */
   void init(const Descriptor* desc_, const char* name_, const char* arg_)
@@ -912,7 +912,7 @@ struct Stats
 {
   /**
    * @brief Number of elements needed for a @c buffer[] array to be used for
-   * @ref Parser::parse() "parsing" the same argument vectors that were fed
+   * @ref fabrique::Parser::parse() "parsing" the same argument vectors that were fed
    * into this Stats object.
    *
    * @note
@@ -923,7 +923,7 @@ struct Stats
 
   /**
    * @brief Number of elements needed for an @c options[] array to be used for
-   * @ref Parser::parse() "parsing" the same argument vectors that were fed
+   * @ref fabrique::Parser::parse() "parsing" the same argument vectors that were fed
    * into this Stats object.
    *
    * @note
@@ -945,7 +945,7 @@ struct Stats
   /**
    * @brief Creates a new Stats object and immediately updates it for the
    * given @c usage and argument vector. You may pass 0 for @c argc and/or @c argv,
-   * if you just want to update @ref options_max.
+   * if you just want to update @ref fabrique::options_max.
    *
    * @note
    * The calls to Stats methods must match the later calls to Parser methods.
@@ -985,7 +985,7 @@ struct Stats
   /**
    * @brief Updates this Stats object for the
    * given @c usage and argument vector. You may pass 0 for @c argc and/or @c argv,
-   * if you just want to update @ref options_max.
+   * if you just want to update @ref fabrique::options_max.
    *
    * @note
    * The calls to Stats methods must match the later calls to Parser methods.
@@ -1112,7 +1112,7 @@ public:
    *                The minimum length of this array is the greatest Descriptor::index value that
    *                occurs in @c usage @e PLUS ONE.
    * @param buffer Each argument that is successfully parsed (including unknown arguments, if they
-   *        have a Descriptor whose CheckArg does not return @ref ARG_ILLEGAL) will be stored in this
+   *        have a Descriptor whose CheckArg does not return @ref fabrique::ARG_ILLEGAL) will be stored in this
    *        array. parse() scans the array for the first invalid entry and begins writing at that
    *        index. You can pass @c bufmax to limit the number of options stored.
    * @param min_abbr_len Passing a value <code> min_abbr_len > 0 </code> enables abbreviated long
@@ -1229,9 +1229,9 @@ public:
   /**
    * @brief Returns @c true if an unrecoverable error occurred while parsing options.
    *
-   * An illegal argument to an option (i.e. CheckArg returns @ref ARG_ILLEGAL) is an
+   * An illegal argument to an option (i.e. CheckArg returns @ref fabrique::ARG_ILLEGAL) is an
    * unrecoverable error that aborts the parse. Unknown options are only an error if
-   * their CheckArg function returns @ref ARG_ILLEGAL. Otherwise they are collected.
+   * their CheckArg function returns @ref fabrique::ARG_ILLEGAL. Otherwise they are collected.
    * In that case if you want to exit the program if either an illegal argument
    * or an unknown option has been passed, use code like this
    *
@@ -1357,7 +1357,7 @@ struct Parser::Action
    * @brief Called by Parser::workhorse() for each Option that has been successfully
    * parsed (including unknown
    * options if they have a Descriptor whose Descriptor::check_arg does not return
-   * @ref ARG_ILLEGAL.
+   * @ref fabrique::ARG_ILLEGAL.
    *
    * Returns @c false iff a fatal error has occured and the parse should be aborted.
    */
@@ -1923,8 +1923,8 @@ struct PrintUsageImplementation
     bool hit_target_line; //!< Flag whether we encountered a part with line index target_line_in_block in the current cell.
 
     /** 
-     * @brief Determines the byte and character lengths of the part at @ref ptr and 
-     * stores them in @ref len and @ref screenlen respectively.
+     * @brief Determines the byte and character lengths of the part at @ref fabrique::ptr and 
+     * stores them in @ref fabrique::len and @ref screenlen respectively.
      */
     void update_length()
     {
@@ -1994,7 +1994,7 @@ struct PrintUsageImplementation
 
     /**
      * @brief Moves iteration to the next row (if any). Has to be called once after each call to
-     * @ref nextTable() to move to the 1st row of the table.
+     * @ref fabrique::nextTable() to move to the 1st row of the table.
      * @retval false if moving to next row failed because no further row exists.
      */
     bool nextRow()
@@ -2042,10 +2042,10 @@ struct PrintUsageImplementation
 
     /**
      * @brief Moves iteration to the next part (if any). Has to be called once after each call to
-     * @ref nextRow() to move to the 1st part of the row.
+     * @ref fabrique::nextRow() to move to the 1st part of the row.
      * @retval false if moving to next part failed because no further part exists.
      *
-     * See @ref LinePartIterator for details about the iteration.
+     * See @ref fabrique::LinePartIterator for details about the iteration.
      */
     bool next()
     {
@@ -2117,7 +2117,7 @@ struct PrintUsageImplementation
 
     /**
      * @brief Returns the index (counting from 0) of the column in which
-     * the part pointed to by @ref data() is located.
+     * the part pointed to by @ref fabrique::data() is located.
      */
     int column()
     {
@@ -2134,7 +2134,7 @@ struct PrintUsageImplementation
     }
 
     /**
-     * @brief Returns the length of the part pointed to by @ref data() in raw chars (not UTF-8 characters).
+     * @brief Returns the length of the part pointed to by @ref fabrique::data() in raw chars (not UTF-8 characters).
      */
     int length()
     {
@@ -2142,7 +2142,7 @@ struct PrintUsageImplementation
     }
 
     /**
-     * @brief Returns the width in screen columns of the part pointed to by @ref data().
+     * @brief Returns the width in screen columns of the part pointed to by @ref fabrique::data().
      * Takes multi-byte UTF-8 sequences and wide characters into account.
      */
     int screenLength()
@@ -2196,7 +2196,7 @@ struct PrintUsageImplementation
     const char* datbuf[bufmask + 1];
     /**
      * @brief The indentation of the column to which the LineBuffer outputs. LineBuffer
-     * assumes that the indentation has already been written when @ref process()
+     * assumes that the indentation has already been written when @ref fabrique::process()
      * is called, so this value is only used when a buffer flush requires writing
      * additional lines of output.
      */
@@ -2276,7 +2276,7 @@ struct PrintUsageImplementation
 
     /**
      * @brief Writes out all remaining data from the LineWrapper using @c write.
-     * Unlike @ref process() this method indents all lines including the first and
+     * Unlike @ref fabrique::process() this method indents all lines including the first and
      * will output a \\n at the end (but only if something has been written).
      */
     void flush(IStringWriter& write)

@@ -1,4 +1,4 @@
-/** @file CompoundExpr.h    Declaration of @ref CompoundExpr. */
+/** @file AST/CompoundExpr.h    Declaration of @ref fabrique::ast::CompoundExpr. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -48,7 +48,7 @@ class Value;
 
 
 /**
- * An expression that can contain values.
+ * An expression that can contain intermediate values.
  */
 class CompoundExpression : public Expression, public Scope
 {
@@ -56,13 +56,13 @@ public:
 	CompoundExpression(UniqPtr<Scope>&& values, UniqPtr<Expression>& result,
 	                   const SourceRange& loc);
 
-	const Expression& result() const { return *res; }
+	const Expression& result() const { return *result_; }
 
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 
 private:
-	const UniqPtr<Expression> res;
+	const UniqPtr<Expression> result_;
 };
 
 } // namespace ast

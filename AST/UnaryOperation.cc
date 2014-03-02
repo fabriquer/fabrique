@@ -1,4 +1,4 @@
-/** @file UnaryOperation.cc    Definition of @ref UnaryOperation. */
+/** @file AST/UnaryOperation.cc    Definition of @ref fabrique::ast::UnaryOperation. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -52,7 +52,7 @@ UnaryOperation* UnaryOperation::Create(Operator op, const SourceRange& opLoc,
 
 UnaryOperation::UnaryOperation(UniqPtr<Expression>& e, enum Operator op,
                                const Type& ty, const SourceRange& loc)
-	: Expression(ty, loc), subexpr(std::move(e)), op(op)
+	: Expression(ty, loc), subexpr_(std::move(e)), op_(op)
 {
 }
 
@@ -82,21 +82,21 @@ std::string UnaryOperation::OpStr(Operator op)
 }
 
 
-void UnaryOperation::PrettyPrint(Bytestream& out, int indent) const
+void UnaryOperation::PrettyPrint(Bytestream& out, size_t indent) const
 {
 	out
-		<< Bytestream::Operator << OpStr(op)
+		<< Bytestream::Operator << OpStr(op_)
 		<< Bytestream::Reset << " "
 		;
 
-	subexpr->PrettyPrint(out, indent);
+	subexpr_->PrettyPrint(out, indent);
 }
 
 
 void UnaryOperation::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
-		subexpr->Accept(v);
+		subexpr_->Accept(v);
 
 	v.Leave(*this);
 }

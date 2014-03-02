@@ -1,4 +1,4 @@
-/** @file Join.h    Declaration of the @ref Join ostream helper. */
+/** @file Support/Join.h    Declaration of the @ref fabrique::Join ostream helper. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -52,24 +52,24 @@ public:
 	static Join ssv(const PtrVec<T>& p) { return Join(" ", p); }
 
 	Join(std::string j, const PtrVec<T>& p)
-		: joinStr(j), objects(p)
+		: joinStr_(j), objects_(p)
 	{
 	}
 
 	void Print(Bytestream& out) const
 	{
-		for (size_t i = 0; i < objects.size(); )
+		for (size_t i = 0; i < objects_.size(); )
 		{
-			out << *objects[i];
-			if (++i < objects.size())
-				out << joinStr;
+			out << *objects_[i];
+			if (++i < objects_.size())
+				out << joinStr_;
 		}
 	}
 
 
 private:
-	const std::string joinStr;
-	const PtrVec<T>& objects;
+	const std::string joinStr_;
+	const PtrVec<T>& objects_;
 };
 
 template<class T>

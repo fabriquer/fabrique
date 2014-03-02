@@ -1,4 +1,4 @@
-/** @file File.h    Declaration of @ref File. */
+/** @file DAG/File.h    Declaration of @ref fabrique::dag::File. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -49,13 +49,13 @@ public:
 	File(const std::string& name, const Type&, SourceRange source);
 	virtual ~File() {}
 
-	virtual std::string filename() const { return name; }
-	virtual std::string str() const { return name; }
+	virtual std::string filename() const { return filename_; }
+	virtual std::string str() const { return filename_; }
 
-	void PrettyPrint(Bytestream&, int indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 
 private:
-	const std::string name;
+	const std::string filename_;
 };
 
 } // namespace dag

@@ -1,4 +1,4 @@
-/** @file Typed.h    Declaration of @ref Typed mixin. */
+/** @file Types/Typed.h    Declaration of @ref fabrique::Typed mixin. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -37,15 +37,16 @@ namespace fabrique {
 class Type;
 
 
-/** A mixin type for something that has a @ref fabrique::Type. */
+/** A mixin type for something that has a @ref fabrique::fabrique::Type. */
 class Typed
 {
 public:
-	Typed(const Type& ty) : ty(ty) {}
-	virtual const Type& type() const { return ty; }
+	Typed(const Type& t) : type_(t) {}
+	virtual ~Typed();
+	virtual const Type& type() const { return type_; }
 
 private:
-	const Type& ty;
+	const Type& type_;
 };
 
 } // namespace fabrique

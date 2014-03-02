@@ -1,4 +1,4 @@
-/** @file Printable.h    Declaration of the @ref Printable interface. */
+/** @file Support/Printable.h    Declaration of the @ref fabrique::Printable interface. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -39,11 +39,12 @@ class Visitor;
 
 
 /**
- * A thing that can be visited by a @ref Visitor.
+ * A thing that can be visited by a @ref fabrique::Visitor.
  */
 class Visitable
 {
 public:
+	virtual ~Visitable();
 	virtual void Accept(Visitor&) const = 0;
 };
 

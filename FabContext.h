@@ -1,4 +1,4 @@
-/** @file FabContext.h    Declaration of @ref FabContext. */
+/** @file FabContext.h    Declaration of fabrique::FabContext. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

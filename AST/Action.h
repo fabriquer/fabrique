@@ -1,4 +1,4 @@
-/** @file Action.h    Declaration of @ref Action. */
+/** @file AST/Action.h    Declaration of @ref fabrique::ast::Action. */
 /*
  * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
@@ -66,16 +66,16 @@ public:
 	                      UniqPtr<UniqPtrVec<Parameter>>&,
 	                      const SourceRange&, FabContext&);
 
-	const UniqPtrVec<Argument>& arguments() const { return args; }
+	const UniqPtrVec<Argument>& arguments() const { return args_; }
 
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 
 private:
 	Action(UniqPtrVec<Argument>&, UniqPtrVec<Parameter>&,
 	       const FunctionType&, const SourceRange&);
 
-	UniqPtrVec<Argument> args;
+	UniqPtrVec<Argument> args_;
 };
 
 } // namespace ast

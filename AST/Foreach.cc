@@ -1,4 +1,4 @@
-/** @file ForeachExpr.cc    Declaration of @ref ForeachExpr. */
+/** @file AST/Foreach.cc    Declaration of @ref fabrique::ast::ForeachExpr. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -43,23 +43,23 @@ ForeachExpr::ForeachExpr(UniqPtr<Expression>& list,
                          UniqPtr<CompoundExpression>& body,
                          const Type& resultTy,
                          const SourceRange& source)
-	: Expression(resultTy, source), seq(std::move(list)),
-	  param(std::move(loopParam)), body(std::move(body))
+	: Expression(resultTy, source), source_(std::move(list)),
+	  loopParameter_(std::move(loopParam)), body_(std::move(body))
 {
 }
 
 
-void ForeachExpr::PrettyPrint(Bytestream& out, int indent) const
+void ForeachExpr::PrettyPrint(Bytestream& out, size_t indent) const
 {
 	out
 		<< Bytestream::Operator << "foreach "
-		<< *seq
+		<< *source_
 		<< Bytestream::Operator << " as "
-		<< *param
+		<< *loopParameter_
 		<< "\n"
 		;
 
-	body->PrettyPrint(out, indent + 1);
+	body_->PrettyPrint(out, indent + 1);
 
 	out << Bytestream::Reset;
 }
@@ -69,9 +69,9 @@ void ForeachExpr::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
 	{
-		seq->Accept(v);
-		param->Accept(v);
-		body->Accept(v);
+		source_->Accept(v);
+		loopParameter_->Accept(v);
+		body_->Accept(v);
 	}
 
 	v.Leave(*this);

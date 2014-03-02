@@ -1,4 +1,4 @@
-/** @file Value.h    Declaration of @ref Value. */
+/** @file DAG/Value.h    Declaration of @ref fabrique::dag::Value. */
 /*
  * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
@@ -54,7 +54,7 @@ public:
 	virtual std::shared_ptr<Value> Negate(const SourceRange& loc) const;
 
 	/**
-	 * Add this @ref Value to a following @ref Value.
+	 * Add this @ref fabrique::dag::Value to a following @ref Value.
 	 *
 	 * The implementation of addition is type-dependent: it might make
 	 * sense to add, concatenate or apply a logical AND.
@@ -64,7 +64,7 @@ public:
 	//! Apply the prefix operation: prefix this value with another value.
 	virtual std::shared_ptr<Value> PrefixWith(std::shared_ptr<Value>&);
 
-	//! Add another @ref Value scalar-wise across this @ref Value.
+	//! Add another @ref fabrique::dag::Value scalar-wise across this @ref Value.
 	virtual std::shared_ptr<Value> ScalarAdd(std::shared_ptr<Value>&);
 
 	/** Logical and. */
@@ -77,10 +77,10 @@ public:
 	virtual std::shared_ptr<Value> Xor(std::shared_ptr<Value>&);
 
 	/**
-	 * This @ref Value add @a v to itself in a scalar fashion.
+	 * This @ref Value can add a value to itself in a scalar fashion.
 	 * For instance, [ 1 2 ] can add 3 to itself but not vice versa.
 	 */
-	virtual bool canScalarAdd(const Value& v) { return false; }
+	virtual bool canScalarAdd(const Value&) { return false; }
 
 protected:
 	Value(const Type&, const SourceRange&);

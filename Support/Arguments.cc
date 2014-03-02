@@ -1,4 +1,4 @@
-/** @file Arguments.cc    Definition of @ref Arguments. */
+/** @file Support/Arguments.cc    Definition of @ref fabrique::Arguments. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -69,7 +69,7 @@ static ArgStatus NonEmpty(const option::Option&, bool);
 static ArgStatus IsOutputFormat(const option::Option&, bool);
 
 //! Possible output file formats (name, tool description).
-const static string formatStrings[][2] = {
+const static char* formatStrings[][2] = {
 	{ "null", "No output" },
 	{ "fab", "Fabrique file (possibly modified/optimised)" },
 	{ "dot", "Graphviz .dot graph format" },
@@ -83,6 +83,13 @@ static string formats(std::string separator = ",");
 
 
 const size_t formatsLen = sizeof(formatStrings) / sizeof(formatStrings[0]);
+
+
+// We need to use global constructors/destructors for this interface with
+// optionparser.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wglobal-constructors"
+#pragma clang diagnostic ignored "-Wexit-time-destructors"
 
 const string formatString =
 	("  -f,--format      Format of output file (" + formats() + ").");
@@ -137,6 +144,7 @@ const option::Descriptor usage[] =
 	{ 0, 0, 0, 0, 0, 0 }
 };
 
+#pragma clang diagnostic pop
 
 
 void Arguments::PrintUsage(std::ostream& out)
@@ -175,12 +183,18 @@ Arguments* Arguments::Parse(int argc, char *argv[])
 	                             ? options[DebugPattern].arg
 	                             : "none";
 
-	return new Arguments(help, input, output, outputSpecified, format,
-	                     options[ParseOnly],
-	                     options[PrettyPrintAST],
-	                     options[PrettyPrintDAG],
-	                     options[PrintOutput],
-	                     debugPattern);
+	return new Arguments {
+		help,
+		input,
+		output,
+		outputSpecified,
+		format,
+		options[ParseOnly],
+		options[PrettyPrintAST],
+		options[PrettyPrintDAG],
+		options[PrintOutput],
+		debugPattern
+	};
 }
 
 
@@ -220,8 +234,8 @@ static ArgStatus IsOutputFormat(const Option& opt, bool printErr)
 
 	const string arg(opt.arg);
 
-	for (auto& formatString : formatStrings)
-		if (arg == formatString[0])
+	for (const char** const& format : formatStrings)
+		if (arg == format[0])
 			return ARG_OK;
 
 	return ARG_ILLEGAL;

@@ -1,4 +1,4 @@
-/** @file Builtins.h    Declaration of some builtin constants. */
+/** @file AST/Builtins.h    Declaration of some builtin constants. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -38,7 +38,7 @@
 namespace fabrique {
 namespace ast {
 
-static const std::string Subdirectory = "subdir";
+static const char Subdirectory[] = "subdir";
 
 } // namespace ast
 } // namespace fabrique

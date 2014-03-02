@@ -1,4 +1,4 @@
-/** @file yacc.h    Meta-include file for YACC-generated header. */
+/** @file Parsing/yacc.h    Meta-include file for YACC-generated header. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.

@@ -1,4 +1,4 @@
-/** @file File.cc    Definition of @ref File. */
+/** @file DAG/File.cc    Definition of @ref fabrique::dag::File. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -36,13 +36,13 @@ using namespace fabrique::dag;
 using std::string;
 
 
-File::File(const string& name, const Type& t, SourceRange source)
-	: Value(t, source), name(name)
+File::File(const string& filename, const Type& t, SourceRange source)
+	: Value(t, source), filename_(filename)
 {
 }
 
 
-void File::PrettyPrint(Bytestream& out, int indent) const
+void File::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
-	out << Bytestream::Literal << name << Bytestream::Reset;
+	out << Bytestream::Literal << filename_ << Bytestream::Reset;
 }

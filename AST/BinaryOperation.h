@@ -1,4 +1,4 @@
-/** @file BinaryOperation.h    Declaration of @ref BinaryOperation. */
+/** @file AST/BinaryOperation.h    Declaration of @ref fabrique::ast::BinaryOperation. */
 /*
  * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
@@ -68,20 +68,20 @@ public:
 	static BinaryOperation* Create(
 		UniqPtr<Expression>&&, Operator, UniqPtr<Expression>&&);
 
-	Operator getOp() const { return op; }
-	const Expression& getLHS() const { return *lhs; }
-	const Expression& getRHS() const { return *rhs; }
+	Operator getOp() const { return op_; }
+	const Expression& getLHS() const { return *lhs_; }
+	const Expression& getRHS() const { return *rhs_; }
 
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 
 private:
 	BinaryOperation(UniqPtr<Expression>&& lhs, UniqPtr<Expression>&& rhs,
 	                enum Operator, const Type&, const SourceRange&);
 
-	const std::unique_ptr<Expression> lhs;
-	const std::unique_ptr<Expression> rhs;
-	const Operator op;
+	const std::unique_ptr<Expression> lhs_;
+	const std::unique_ptr<Expression> rhs_;
+	const Operator op_;
 };
 
 } // namespace ast

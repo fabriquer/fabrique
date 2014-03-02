@@ -1,4 +1,4 @@
-/** @file BinaryOperation.cc    Definition of @ref BinaryOperation. */
+/** @file AST/BinaryOperation.cc    Definition of @ref fabrique::ast::BinaryOperation. */
 /*
  * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
@@ -93,7 +93,8 @@ BinaryOperation* BinaryOperation::Create(UniqPtr<Expression>&& lhs,
 BinaryOperation::BinaryOperation(
 		UniqPtr<Expression>&& lhs, UniqPtr<Expression>&& rhs,
 		enum Operator op, const Type& ty, const SourceRange& src)
-	: Expression(ty, src), lhs(std::move(lhs)), rhs(std::move(rhs)), op(op)
+	: Expression(ty, src), lhs_(std::move(lhs)), rhs_(std::move(rhs)),
+	  op_(op)
 {
 }
 
@@ -130,15 +131,15 @@ std::string BinaryOperation::OpStr(Operator op)
 }
 
 
-void BinaryOperation::PrettyPrint(Bytestream& out, int indent) const
+void BinaryOperation::PrettyPrint(Bytestream& out, size_t indent) const
 {
-	lhs->PrettyPrint(out, indent);
+	lhs_->PrettyPrint(out, indent);
 	out
 		<< " "
-		<< Bytestream::Operator << OpStr(op)
+		<< Bytestream::Operator << OpStr(op_)
 		<< Bytestream::Reset
 		<< " ";
-	rhs->PrettyPrint(out, indent);
+	rhs_->PrettyPrint(out, indent);
 }
 
 
@@ -146,8 +147,8 @@ void BinaryOperation::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
 	{
-		lhs->Accept(v);
-		rhs->Accept(v);
+		lhs_->Accept(v);
+		rhs_->Accept(v);
 	}
 
 	v.Leave(*this);

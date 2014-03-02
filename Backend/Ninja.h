@@ -1,4 +1,4 @@
-/** @file Ninja.h    Declaration of @ref NinjaBackend. */
+/** @file Backend/Ninja.h    Declaration of fabrique::backend::NinjaBackend. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -44,8 +44,9 @@ class Bytestream;
 namespace backend {
 
 /**
- * A backend that produces Ninja files
- * (see http://martine.github.io/ninja).
+ * A backend that produces Ninja files.
+ *
+ * @sa http://martine.github.io/ninja
  */
 class NinjaBackend : public Backend
 {
@@ -57,7 +58,7 @@ public:
 
 private:
 	NinjaBackend();
-	const std::string indent;
+	const std::string indent_;
 };
 
 } // namespace backend

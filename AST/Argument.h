@@ -1,4 +1,4 @@
-/** @file Argument.h    Declaration of @ref Argument. */
+/** @file AST/Argument.h    Declaration of @ref fabrique::ast::Argument. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -50,16 +50,16 @@ class Argument : public Expression
 public:
 	Argument(UniqPtr<Identifier>& name, UniqPtr<Expression>& value);
 
-	bool hasName() const { return (bool) name; }
-	const Identifier& getName() const { return *name; }
-	const Expression& getValue() const { return *value; }
+	bool hasName() const { return (bool) name_; }
+	const Identifier& getName() const { return *name_; }
+	const Expression& getValue() const { return *value_; }
 
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 
 private:
-	const UniqPtr<Identifier> name;
-	const UniqPtr<Expression> value;
+	const UniqPtr<Identifier> name_;
+	const UniqPtr<Expression> value_;
 };
 
 } // namespace ast

@@ -1,4 +1,4 @@
-/** @file Make.cc    Definition of @ref MakeBackend. */
+/** @file Backend/Make.cc    Definition of fabrique::backend::MakeBackend. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -67,7 +67,7 @@ MakeBackend* MakeBackend::Create()
 
 
 MakeBackend::MakeBackend()
-	: indent("\t")
+	: indent_("\t")
 {
 }
 
@@ -79,8 +79,8 @@ static string stringify(const shared_ptr<Value>& v)
 	if (auto list = dynamic_pointer_cast<List>(v))
 	{
 		vector<string> substrings;
-		for (auto& v : *list)
-			substrings.push_back(stringify(v));
+		for (auto& element : *list)
+			substrings.push_back(stringify(element));
 
 		return fabrique::join(substrings, " ");
 	}
@@ -114,7 +114,7 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out)
 	{
 		out
 			<< Bytestream::Definition << i.first
-			<< Bytestream::Operator << "=" << indent
+			<< Bytestream::Operator << "=" << indent_
 			<< Bytestream::Literal << stringify(i.second)
 			<< Bytestream::Reset
 			<< "\n"
@@ -212,10 +212,10 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out)
 		// Build the command to be run (substitute $variables).
 		//
 		string command = rule.command();
-		for (auto& i : build.arguments())
+		for (auto& j : build.arguments())
 		{
-			const string name = i.first;
-			const Value& v = *i.second;
+			const string name = j.first;
+			const Value& v = *j.second;
 
 			replace(command, "$" + name, v.str());
 		}
@@ -224,7 +224,7 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out)
 
 		out
 			<< "\n"
-			<< indent << Bytestream::Action << command
+			<< indent_ << Bytestream::Action << command
 			<< "\n"
 			;
 

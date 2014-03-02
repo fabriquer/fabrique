@@ -1,4 +1,4 @@
-/** @file Join.cc    Definition of @ref Join helpers. */
+/** @file Support/Join.cc    Definition of @ref fabrique::Join helpers. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.

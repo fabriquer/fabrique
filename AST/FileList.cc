@@ -1,4 +1,4 @@
-/** @file FileList.cc    Definition of @ref FileList. */
+/** @file AST/FileList.cc    Definition of @ref fabrique::ast::FileList. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -36,14 +36,14 @@
 using namespace fabrique::ast;
 
 
-void FileList::PrettyPrint(Bytestream& out, int indent) const
+void FileList::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
 	out << Bytestream::Operator << "[" << Bytestream::Reset;
 
-	for (auto& file : files)
+	for (auto& file : files_)
 		out << " " << *file;
 
-	for (auto& arg : args)
+	for (auto& arg : args_)
 		out << ", " << *arg;
 
 	out << Bytestream::Operator << " ]" << Bytestream::Reset;
@@ -54,10 +54,10 @@ void FileList::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
 	{
-		for (auto& f : files)
+		for (auto& f : files_)
 			f->Accept(v);
 
-		for (auto& a : args)
+		for (auto& a : args_)
 			a->Accept(v);
 	}
 

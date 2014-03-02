@@ -1,4 +1,4 @@
-/** @file Type.cc    Definition of @ref Type. */
+/** @file Types/Type.cc    Definition of @ref fabrique::Type. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -41,21 +41,21 @@ using namespace fabrique;
 const Type& Type::ListOf(const Type& t)
 {
 	PtrVec<Type> types(1, &t);
-	return *t.parent.type("list", types);
+	return *t.parent_.type("list", types);
 }
 
 
 Type::Type(const std::string& name, const PtrVec<Type>& params,
            FabContext& parent)
-	: parent(parent), typeName(name), params(params)
+	: parent_(parent), typeName_(name), parameters_(params)
 {
-	assert(not name.empty());
+	assert(not typeName_.empty());
 }
 
 Type::Type(const std::string& name, const PtrVec<Type>& params, const Type& t)
-	: parent(t.parent), typeName(name), params(params)
+	: parent_(t.parent_), typeName_(name), parameters_(params)
 {
-	assert(not name.empty());
+	assert(not typeName_.empty());
 }
 
 
@@ -81,14 +81,14 @@ bool Type::operator == (const Type& t) const
 
 const Type& Type::operator [] (size_t i) const
 {
-	assert(params.size() > i);
-	return *params[i];
+	assert(parameters_.size() > i);
+	return *parameters_[i];
 }
 
 bool Type::isSubtype(const Type& t) const
 {
 	// TODO: drop this dirty hack: can pass file to a file[in] parameter
-	if (typeName == "file" and t.typeName == "file")
+	if (typeName_ == "file" and t.typeName_ == "file")
 		return true;
 
 	// for now, this is really easy...
@@ -99,7 +99,7 @@ bool Type::isSubtype(const Type& t) const
 bool Type::isSupertype(const Type &t) const
 {
 	// TODO: drop this dirty hack
-	if (typeName == "file" and t.typeName == "file")
+	if (typeName_ == "file" and t.typeName_ == "file")
 		if (typeParamCount() <= t.typeParamCount())
 			return true;
 
@@ -109,37 +109,37 @@ bool Type::isSupertype(const Type &t) const
 
 bool Type::isFile() const
 {
-	return (typeName == "file");
+	return (typeName_ == "file");
 }
 
 bool Type::isListOf(const Type& t) const
 {
-	if (typeName != "list")
+	if (typeName_ != "list")
 		return false;
 
-	assert(params.size() == 1);
+	assert(parameters_.size() == 1);
 
-	return (t == *params[0]);
+	return (t == *parameters_[0]);
 }
 
 
-const std::string& Type::name() const { return typeName; }
+const std::string Type::name() const { return typeName_; }
 
 
-void Type::PrettyPrint(Bytestream& out, int indent) const
+void Type::PrettyPrint(Bytestream& out, size_t indent) const
 {
-	out << Bytestream::Type << typeName;
+	out << Bytestream::Type << typeName_;
 
-	if (params.size() > 0)
+	if (parameters_.size() > 0)
 	{
 		out
 			<< Bytestream::Operator << "["
 			<< Bytestream::Reset;
 
-		for (size_t i = 0; i < params.size(); )
+		for (size_t i = 0; i < parameters_.size(); )
 		{
-			out << *params[i];
-			if (++i < params.size())
+			parameters_[i]->PrettyPrint(out, indent);
+			if (++i < parameters_.size())
 				out
 					<< Bytestream::Operator << ", "
 					<< Bytestream::Reset;

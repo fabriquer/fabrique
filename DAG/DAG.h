@@ -1,4 +1,4 @@
-/** @file DAG.h    Declaration of @ref DAG. */
+/** @file DAG/DAG.h    Declaration of @ref fabrique::dag::DAG. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -73,7 +73,7 @@ public:
 	virtual const SharedPtrMap<Value>& variables() const = 0;
 	virtual const SharedPtrMap<Target>& targets() const = 0;
 
-	virtual void PrettyPrint(Bytestream&, int) const;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 };
 
 } // namespace dag

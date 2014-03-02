@@ -58,9 +58,8 @@ using namespace fabrique;
 using std::unique_ptr;
 
 
-Bytestream& err = Bytestream::Stderr();
-
-unique_ptr<ast::Scope> Parse(const std::string& filename, FabContext&);
+static Bytestream& err();
+static unique_ptr<ast::Scope> Parse(const std::string& filename, FabContext&);
 
 int main(int argc, char *argv[]) {
 	//
@@ -75,12 +74,10 @@ int main(int argc, char *argv[]) {
 
 
 	//
-	// Set up input, error and debug streams.
+	// Set up debug streams.
 	//
-	Bytestream& err = Bytestream::Stderr();
-
 	Bytestream::SetDebugPattern(args->debugPattern);
-	Bytestream::SetDebugStream(err);
+	Bytestream::SetDebugStream(err());
 
 
 	//
@@ -116,7 +113,7 @@ int main(int argc, char *argv[]) {
 	try { dag = dag::DAG::Flatten(*ast, ctx); }
 	catch (SemanticException& e)
 	{
-		err
+		err()
 			<< Bytestream::Error
 			<< "Semantic error: "
 			<< Bytestream::Reset
@@ -126,7 +123,7 @@ int main(int argc, char *argv[]) {
 	}
 	catch (std::exception& e)
 	{
-		err
+		err()
 			<< Bytestream::Error
 			<< "Unknown error flattening AST into DAG: "
 			<< Bytestream::Reset
@@ -169,7 +166,7 @@ int main(int argc, char *argv[]) {
 
 	else
 	{
-		err << "unknown format '" << args->format << "'\n";
+		err() << "unknown format '" << args->format << "'\n";
 		return 1;
 	}
 
@@ -198,18 +195,25 @@ int main(int argc, char *argv[]) {
 		? *outfileStream
 		: Bytestream::Stdout();
 
-
-	try { backend->Process(*dag, out); }
-	catch (std::exception& e)
-	{
-	}
-
+	backend->Process(*dag, out);
 	return 0;
 }
 
 
 int yyparse(ast::Parser*);
-unique_ptr<Lexer> lex;
+
+/**
+ * This is a bit ugly, but yyerror() and yylex() need a static pointer to
+ * the Lexer and we can't do that without a global constructor and exit-time
+ * destructor. Manually disable the warnings for this case, and let their
+ * ugliness stand as a warning to future generations of programmers who
+ * try to use lex.
+ */
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wglobal-constructors"
+#pragma clang diagnostic ignored "-Wexit-time-destructors"
+static UniqPtr<Lexer> lex;
+#pragma clang diagnostic pop
 
 /*
  * I'd like to get rid of the global yyerror() and yylex() functions
@@ -219,13 +223,13 @@ unique_ptr<Lexer> lex;
 void yyerror(const char *str)
 {
 	assert(lex);
-	err << lex->Err(str);
+	err() << lex->Err(str);
 }
 
-int yylex(void *yylval)
+int yylex(void *yaccUnion)
 {
 	assert(lex);
-	return lex->yylex((YYSTYPE*) yylval);
+	return lex->yylex((YYSTYPE*) yaccUnion);
 }
 
 
@@ -234,7 +238,7 @@ unique_ptr<ast::Scope> Parse(const std::string& filename, FabContext& ctx)
 	std::ifstream infile(filename.c_str());
 	if (!infile)
 	{
-		err
+		err()
 			<< Bytestream::Error << "error: "
 			<< Bytestream::Reset << "failed to open input file '"
 			<< Bytestream::Filename << filename
@@ -246,7 +250,7 @@ unique_ptr<ast::Scope> Parse(const std::string& filename, FabContext& ctx)
 	}
 
 	lex.reset(new Lexer(filename));
-	lex->switch_streams(&infile, &err.raw());
+	lex->switch_streams(&infile, &err().raw());
 
 
 	//
@@ -268,13 +272,13 @@ unique_ptr<ast::Scope> Parse(const std::string& filename, FabContext& ctx)
 		else
 		{
 			for (auto& error : parser->errors())
-				err << *error << "\n";
+				err() << *error << "\n";
 		}
 
 	}
 	catch (SourceCodeException& e)
 	{
-		err
+		err()
 			<< Bytestream::Error
 			<< "Parse error: "
 			<< Bytestream::Reset
@@ -283,4 +287,11 @@ unique_ptr<ast::Scope> Parse(const std::string& filename, FabContext& ctx)
 	}
 
 	return ast;
+}
+
+
+static Bytestream& err()
+{
+	static Bytestream& err = Bytestream::Stderr();
+	return err;
 }

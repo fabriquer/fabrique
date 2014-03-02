@@ -1,4 +1,4 @@
-/** @file PtrVec.h    Declaration of @ref PtrVec. */
+/** @file ADT/PtrVec.h    Declaration of @ref fabrique::PtrVec. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -37,13 +37,13 @@
 
 namespace fabrique {
 
-/** A @ref std::vector that contains const pointers. */
+/** A @ref fabrique::std::vector that contains const pointers. */
 template<class T> using PtrVec = std::vector<const T*>;
 
-/** A @ref std::vector of shared pointers. */
+/** A @ref fabrique::std::vector of shared pointers. */
 template<class T> using SharedPtrVec = std::vector<std::shared_ptr<T>>;
 
-/** A @ref std::vector of pointers whose memory we own. */
+/** A @ref fabrique::std::vector of pointers whose memory we own. */
 template<class T> using UniqPtrVec = std::vector<std::unique_ptr<T>>;
 
 } // namespace fabrique

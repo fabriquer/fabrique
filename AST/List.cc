@@ -1,4 +1,4 @@
-/** @file List.cc    Definition of @ref List. */
+/** @file AST/List.cc    Definition of @ref fabrique::ast::List. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -36,11 +36,13 @@
 using namespace fabrique::ast;
 
 
-void List::PrettyPrint(Bytestream& out, int indent) const
+void List::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
 	out << Bytestream::Operator << "[" << Bytestream::Reset;
-	for (auto& e : elements)
+
+	for (auto& e : elements_)
 		out << " " << *e;
+
 	out << Bytestream::Operator << " ]" << Bytestream::Reset;
 }
 
@@ -49,7 +51,7 @@ void List::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
 	{
-		for (auto& e : elements)
+		for (auto& e : elements_)
 			e->Accept(v);
 	}
 

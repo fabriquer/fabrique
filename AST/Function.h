@@ -1,4 +1,4 @@
-/** @file Function.h    Declaration of @ref Function. */
+/** @file AST/Function.h    Declaration of @ref fabrique::ast::Function. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -56,13 +56,13 @@ public:
 	Function(UniqPtrVec<Parameter>& params, const FunctionType& ty,
 	         UniqPtr<CompoundExpression>& body, const SourceRange& loc);
 
-	const CompoundExpression& body() const { return *expr; }
+	const CompoundExpression& body() const { return *body_; }
 
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 
 private:
-	const UniqPtr<CompoundExpression> expr;
+	const UniqPtr<CompoundExpression> body_;
 };
 
 } // namespace ast

@@ -1,4 +1,4 @@
-/** @file Argument.cc    Definition of @ref Argument. */
+/** @file AST/Argument.cc    Definition of @ref fabrique::ast::Argument. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -38,24 +38,24 @@
 using namespace fabrique::ast;
 
 
-Argument::Argument(UniqPtr<Identifier>& name, UniqPtr<Expression>& value)
-	: Expression(value->type(), SourceRange::Over(name, value)),
-	  name(std::move(name)), value(std::move(value))
+Argument::Argument(UniqPtr<Identifier>& id, UniqPtr<Expression>& value)
+	: Expression(value->type(), SourceRange::Over(id, value)),
+	  name_(std::move(id)), value_(std::move(value))
 {
-	assert(this->value);
+	assert(value_);
 }
 
 
-void Argument::PrettyPrint(Bytestream& out, int indent) const
+void Argument::PrettyPrint(Bytestream& out, size_t indent) const
 {
-	if (name)
+	if (name_)
 		out
-			<< Bytestream::Definition << name->name()
+			<< Bytestream::Definition << name_->name()
 			<< Bytestream::Operator << " = "
 			;
 
-	assert(this->value);
-	value->PrettyPrint(out, indent);
+	assert(this->value_);
+	value_->PrettyPrint(out, indent);
 }
 
 
@@ -63,10 +63,10 @@ void Argument::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
 	{
-		if (name)
-			name->Accept(v);
+		if (name_)
+			name_->Accept(v);
 
-		value->Accept(v);
+		value_->Accept(v);
 	}
 
 	v.Leave(*this);

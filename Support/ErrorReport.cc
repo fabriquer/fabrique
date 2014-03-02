@@ -1,4 +1,4 @@
-/** @file ErrorReport.h    Declaration of @ref ErrorReport. */
+/** @file Support/ErrorReport.h    Declaration of @ref fabrique::ErrorReport. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -42,22 +42,22 @@ using std::string;
 
 
 ErrorReport* ErrorReport::Create(const string& message, const SourceRange& loc,
-                                 int contextLines)
+                                 size_t contextLines)
 {
 	return new ErrorReport(message, loc, loc.begin, contextLines);
 }
 
 
-void ErrorReport::PrettyPrint(Bytestream& out, int indent) const
+void ErrorReport::PrettyPrint(Bytestream& out, size_t indent) const
 {
 	string tabs(indent, '\t');
 
-	out << "\n" << tabs << caret;
+	out << "\n" << tabs << caret_;
 
 	out
 		<< ": "
 		<< Bytestream::Error << "error"
-		<< Bytestream::Reset << ": " << message
+		<< Bytestream::Reset << ": " << message_
 		<< Bytestream::Reset << "\n"
 		;
 
@@ -69,18 +69,18 @@ void ErrorReport::PrettyPrint(Bytestream& out, int indent) const
 	 * how much of the original source buffer lex has kept around, so
 	 * there's no such output for source from stdin.
 	 */
-	string filename(caret.filename);
+	string filename(caret_.filename);
 	const SourceRange& source = this->source();
 	if (filename.empty()) filename = source.begin.filename;
 
 	if (!filename.empty())
 	{
 		std::ifstream sourceFile(filename.c_str());
-		for (int i = 1; i <= caret.line; i++) {
+		for (size_t i = 1; i <= caret_.line; i++) {
 			string line;
 			getline(sourceFile, line);
 
-			if (i >= (caret.line - contextLines))
+			if (i >= (caret_.line - contextLines_))
 				out
 					<< tabs
 					<< Bytestream::Line << i << "\t"
@@ -95,17 +95,17 @@ void ErrorReport::PrettyPrint(Bytestream& out, int indent) const
 		 *
 		 * Otherwise, start where the source range says to.
 		 */
-		const int firstHighlightColumn =
-			source.begin.column < caret.column
-				? caret.column - source.begin.column
-				: caret.column;
+		const size_t firstHighlightColumn =
+			source.begin.column < caret_.column
+				? caret_.column - source.begin.column
+				: caret_.column;
 
-		const int preCaretHighlight =
-			caret.column - firstHighlightColumn;
+		const size_t preCaretHighlight =
+			caret_.column - firstHighlightColumn;
 
-		const int postCaretHighlight =
-			source.end.column >= caret.column
-			  ? source.end.column - caret.column - 1
+		const size_t postCaretHighlight =
+			source.end.column >= caret_.column
+			  ? source.end.column - caret_.column - 1
 			  : 0;
 
 		assert(firstHighlightColumn >= 1);

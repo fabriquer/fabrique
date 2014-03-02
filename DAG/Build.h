@@ -1,4 +1,4 @@
-/** @file Build.h    Declaration of @ref Build. */
+/** @file DAG/Build.h    Declaration of @ref fabrique::dag::Build. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -47,7 +47,7 @@ class Rule;
 
 
 /**
- * An application of a @ref Rule to transform @ref File objects.
+ * An application of a @ref fabrique::dag::Rule to transform @ref File objects.
  */
 class Build : public Value
 {
@@ -59,19 +59,19 @@ public:
 
 	virtual ~Build() {}
 
-	const Rule& buildRule() const { return *rule; }
+	const Rule& buildRule() const { return *rule_; }
 
-	const FileVec& explicitInputs() const { return in; }
-	const FileVec& dependencies() const { return deps; }
+	const FileVec& explicitInputs() const { return in_; }
+	const FileVec& dependencies() const { return dependencies_; }
 	const FileVec allInputs() const;
 
-	const FileVec& outputs() const { return out; }
-	const FileVec& sideEffectOutputs() const { return extraOut; }
+	const FileVec& outputs() const { return out_; }
+	const FileVec& sideEffectOutputs() const { return extraOutputs_; }
 	const FileVec allOutputs() const;
 
-	const ValueMap& arguments() const { return args; }
+	const ValueMap& arguments() const { return args_; }
 
-	void PrettyPrint(Bytestream&, int indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 
 private:
 	Build(std::shared_ptr<Rule>&,
@@ -86,12 +86,12 @@ private:
 	static void appendFiles(const std::shared_ptr<Value>& in,
 	                        SharedPtrVec<File>& out);
 
-	std::shared_ptr<Rule> rule;
-	SharedPtrVec<File> in;
-	SharedPtrVec<File> out;
-	SharedPtrVec<File> deps;
-	SharedPtrVec<File> extraOut;
-	ValueMap args;
+	std::shared_ptr<Rule> rule_;
+	SharedPtrVec<File> in_;
+	SharedPtrVec<File> out_;
+	SharedPtrVec<File> dependencies_;
+	SharedPtrVec<File> extraOutputs_;
+	ValueMap args_;
 };
 
 } // namespace dag

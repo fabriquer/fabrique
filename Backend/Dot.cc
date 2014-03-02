@@ -1,4 +1,4 @@
-/** @file Dot.cc    Definition of @ref DotBackend. */
+/** @file Backend/Dot.cc    Definition of fabrique::backend::DotBackend. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -52,7 +52,7 @@ DotBackend* DotBackend::Create()
 
 
 DotBackend::DotBackend()
-	: indent("\t")
+	: indent_("\t")
 {
 }
 
@@ -65,7 +65,7 @@ void DotBackend::Process(const DAG& dag, Bytestream& out)
 		<< "#\n"
 		<< Bytestream::Definition << "digraph"
 		<< Bytestream::Operator << " {\n"
-		<< indent
+		<< indent_
 		<< Bytestream::Definition << "rankdir"
 		<< Bytestream::Operator << " = "
 		<< Bytestream::Literal << "\"LR\""
@@ -79,7 +79,7 @@ void DotBackend::Process(const DAG& dag, Bytestream& out)
 		const std::string name = build.str();
 
 		out
-			<< indent
+			<< indent_
 			<< Bytestream::Literal << "\"" << name << "\""
 			<< Bytestream::Operator << " [ "
 			<< Bytestream::Definition << "shape"
@@ -94,7 +94,7 @@ void DotBackend::Process(const DAG& dag, Bytestream& out)
 
 		for (const shared_ptr<File>& f : build.allInputs())
 			out
-				<< indent
+				<< indent_
 				<< Bytestream::Operator << "\""
 				<< *f
 				<< Bytestream::Operator << "\" -> "
@@ -104,7 +104,7 @@ void DotBackend::Process(const DAG& dag, Bytestream& out)
 
 		for (const shared_ptr<File>& f : build.outputs())
 			out
-				<< indent
+				<< indent_
 				<< Bytestream::Literal << "\"" << name << "\""
 				<< Bytestream::Operator << " -> \""
 				<< Bytestream::Literal << *f
@@ -113,7 +113,7 @@ void DotBackend::Process(const DAG& dag, Bytestream& out)
 
 		for (const shared_ptr<File>& f : build.sideEffectOutputs())
 			out
-				<< indent
+				<< indent_
 				<< Bytestream::Literal << "\"" << name << "\""
 				<< Bytestream::Operator << " -> \""
 				<< Bytestream::Literal << *f

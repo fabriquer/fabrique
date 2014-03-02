@@ -1,4 +1,4 @@
-/** @file Node.h    Declaration of @ref ast::Node. */
+/** @file AST/Node.h    Declaration of @ref fabrique::ast::ast::Node. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -47,17 +47,13 @@ class Node : public HasSource, public Printable, public Visitable,
              private Uncopyable
 {
 public:
-	virtual ~Node() {}
+	virtual ~Node();
 
 protected:
-	Node(const SourceRange& src)
-		: HasSource(src)
-	{
-	}
+	Node(const SourceRange& src) : HasSource(src) {}
 };
 
 } // namespace ast
 } // namespace fabrique
 
 #endif
-

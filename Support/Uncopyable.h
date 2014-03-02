@@ -1,4 +1,4 @@
-/** @file Uncopyable.h    Declaration of @ref Uncopyable. */
+/** @file Support/Uncopyable.h    Declaration of @ref fabrique::Uncopyable. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -32,6 +32,7 @@
 #ifndef UNCOPYABLE_H
 #define UNCOPYABLE_H
 
+namespace fabrique {
 
 /**
  * An object that cannot be copy-constructed.
@@ -44,5 +45,7 @@ protected:
 private:
 	Uncopyable(const Uncopyable&) = delete;
 };
+
+}
 
 #endif

@@ -1,6 +1,6 @@
 /**
- * @file SourceLocation.cc
- * Definition of @ref SourceLocation and @ref SourceRange.
+ * @file Support/SourceLocation.cc
+ * Definition of @ref fabrique::SourceLocation and @ref SourceRange.
  */
 /*
  * Copyright (c) 2013 Jonathan Anderson
@@ -40,14 +40,17 @@
 using namespace fabrique;
 
 
-const SourceLocation SourceLocation::Nowhere;
-
-
-SourceLocation::SourceLocation(const std::string& file, int line, int column)
-	: filename(file), line(line), column(column)
+static const SourceLocation& Nowhere()
 {
-	assert(line >= 0);
-	assert(column >= 0);
+	static SourceLocation& nowhere = *new SourceLocation;
+	return nowhere;
+}
+
+
+SourceLocation::SourceLocation(const std::string& file,
+                               size_t lineno, size_t colno)
+	: filename(file), line(lineno), column(colno)
+{
 }
 
 SourceLocation::operator bool() const
@@ -69,7 +72,7 @@ bool SourceLocation::operator != (const SourceLocation& other) const
 }
 
 
-void SourceLocation::PrettyPrint(Bytestream& out, int indent) const
+void SourceLocation::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
 	out
 		<< Bytestream::Filename
@@ -93,28 +96,31 @@ void SourceLocation::PrettyPrint(Bytestream& out, int indent) const
 
 
 
-const SourceRange SourceRange::None(
-	SourceLocation::Nowhere, SourceLocation::Nowhere);
-
-
-SourceRange::SourceRange(const SourceLocation& begin, const SourceLocation& end)
-	: begin(begin), end(end)
+const SourceRange& SourceRange::None()
 {
-}
-
-SourceRange::SourceRange(const SourceRange& begin, const SourceRange& end)
-	: SourceRange(begin.begin, end.end)
-{
-}
-
-SourceRange::SourceRange(const HasSource& begin, const HasSource& end)
-	: SourceRange(begin.source(), end.source())
-{
+	static SourceRange& none = *new SourceRange(Nowhere(), Nowhere());
+	return none;
 }
 
 
-SourceRange SourceRange::Span(const std::string& filename, int line,
-                              int begin, int end)
+SourceRange::SourceRange(const SourceLocation& b, const SourceLocation& e)
+	: begin(b), end(e)
+{
+}
+
+SourceRange::SourceRange(const SourceRange& b, const SourceRange& e)
+	: SourceRange(b.begin, e.end)
+{
+}
+
+SourceRange::SourceRange(const HasSource& b, const HasSource& e)
+	: SourceRange(b.source(), e.source())
+{
+}
+
+
+SourceRange SourceRange::Span(const std::string& filename, size_t line,
+                              size_t begin, size_t end)
 {
 	return SourceRange(
 		SourceLocation(filename, line, begin),
@@ -140,7 +146,7 @@ bool SourceRange::operator != (const SourceRange& other) const
 }
 
 
-void SourceRange::PrettyPrint(Bytestream& out, int indent) const
+void SourceRange::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
 	out
 		<< Bytestream::Filename << begin.filename

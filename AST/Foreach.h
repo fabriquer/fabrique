@@ -1,4 +1,4 @@
-/** @file Foreach.h    Declaration of @ref Foreach. */
+/** @file AST/Foreach.h    Declaration of @ref fabrique::ast::Foreach. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -57,17 +57,17 @@ public:
 	            const Type& resultTy,
 	            const SourceRange& source);
 
-	const Expression& targetSequence() const { return *seq; }
-	const Parameter& loopParameter() const { return *param; }
-	const CompoundExpression& loopBody() const { return *body; }
+	const Expression& targetSequence() const { return *source_; }
+	const Parameter& loopParameter() const { return *loopParameter_; }
+	const CompoundExpression& loopBody() const { return *body_; }
 
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 
 private:
-	const UniqPtr<Expression> seq;
-	const UniqPtr<Parameter> param;
-	const UniqPtr<CompoundExpression> body;
+	const UniqPtr<Expression> source_;
+	const UniqPtr<Parameter> loopParameter_;
+	const UniqPtr<CompoundExpression> body_;
 };
 
 } // namespace ast

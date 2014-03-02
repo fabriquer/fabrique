@@ -1,4 +1,4 @@
-/** @file Arguments.h    Declaration of @ref Arguments. */
+/** @file Support/Arguments.h    Declaration of @ref fabrique::Arguments. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -33,7 +33,7 @@
 #define ARGUMENTS_H
 
 // Include Matthias Benkmann's "Lean Mean C++ Option Parser".
-#include "vendor/optionparser.h"
+#include <optionparser.h>
 
 #include <ostream>
 #include <string>
@@ -70,22 +70,6 @@ public:
 	const bool printOutput;
 
 	const std::string debugPattern;
-
-private:
-	Arguments(const bool help,
-	          const std::string& input, const std::string& output,
-		  bool outputFileSpecified,
-	          const std::string& format, bool parseOnly,
-	          bool printAST, bool printDAG, bool printOut,
-		  const std::string& debugPattern)
-		: help(help), input(input), output(output),
-		  outputFileSpecified(outputFileSpecified),
-		  format(format), parseOnly(parseOnly),
-		  printAST(printAST), printDAG(printDAG), printOutput(printOut),
-		  debugPattern(debugPattern)
-	{
-	}
-
 };
 
 } // namespace fabrique

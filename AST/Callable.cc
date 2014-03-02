@@ -1,4 +1,4 @@
-/** @file Callable.cc    Definition of @ref Callable. */
+/** @file AST/Callable.cc    Definition of @ref fabrique::ast::Callable. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -44,13 +44,13 @@ using std::vector;
 
 
 Callable::Callable(UniqPtrVec<Parameter>& params)
-	: params(std::move(params))
+	: params_(std::move(params))
 {
 }
 
 const UniqPtrVec<Parameter>& Callable::parameters() const
 {
-	return params;
+	return params_;
 }
 
 void Callable::CheckArguments(const UniqPtrVec<Argument>& args,
@@ -58,7 +58,7 @@ void Callable::CheckArguments(const UniqPtrVec<Argument>& args,
 {
 	StringMap<const Argument*> namedArguments = NameArguments(args);
 
-	for (auto& p : params)
+	for (auto& p : params_)
 	{
 		const string& name = p->getName().name();
 		const Argument *arg = namedArguments[name];
@@ -86,13 +86,13 @@ Callable::NameArguments(const vector<string>& args, SourceRange src) const
 		dbg << " " << (a.empty() ? "<unnamed>" : a);
 
 	dbg << "\n to parameters:\n ";
-	for (auto& p : params)
+	for (auto& p : params_)
 		dbg << " " << *p;
 
 	dbg << "\n";
 
 	bool doneWithPositionalArgs = false;
-	ParamIterator nextParameter = params.begin();
+	ParamIterator nextParameter = params_.begin();
 
 	for (string argName : args)
 	{
@@ -103,7 +103,7 @@ Callable::NameArguments(const vector<string>& args, SourceRange src) const
 					"positional argument after keywords",
 					src);
 
-			if (nextParameter == params.end())
+			if (nextParameter == params_.end())
 				throw SyntaxError(
 					"too many positional arguments", src);
 

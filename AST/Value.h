@@ -1,4 +1,4 @@
-/** @file Value.h    Declaration of @ref Value. */
+/** @file AST/Value.h    Declaration of @ref fabrique::ast::Value. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -47,15 +47,15 @@ class Value : public Expression
 public:
 	Value(UniqPtr<Identifier>&, UniqPtr<Expression>&);
 
-	const Identifier& getName() const { return *id; }
-	const Expression& getValue() const { return *expr; }
+	const Identifier& name() const { return *name_; }
+	const Expression& value() const { return *value_; }
 
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 
 private:
-	const UniqPtr<Identifier> id;
-	const UniqPtr<Expression> expr;
+	const UniqPtr<Identifier> name_;
+	const UniqPtr<Expression> value_;
 };
 
 } // namespace ast

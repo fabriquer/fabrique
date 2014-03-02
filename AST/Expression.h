@@ -1,4 +1,4 @@
-/** @file Expression.h    Declaration of @ref Expression. */
+/** @file AST/Expression.h    Declaration of @ref fabrique::ast::Expression. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -45,7 +45,7 @@ namespace ast {
 class Expression : public Node, public Typed
 {
 public:
-	virtual ~Expression() {}
+	virtual ~Expression();
 
 protected:
 	Expression(const Type& t, const SourceRange& src)

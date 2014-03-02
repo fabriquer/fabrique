@@ -1,4 +1,4 @@
-/** @file Function.cc    Definition of @ref Function. */
+/** @file AST/Function.cc    Definition of @ref fabrique::ast::Function. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -42,12 +42,12 @@ using namespace fabrique::ast;
 
 Function::Function(UniqPtrVec<Parameter>& params, const FunctionType& ty,
                    UniqPtr<CompoundExpression>& body, const SourceRange& loc)
-	: Expression(ty, loc), Callable(params), expr(std::move(body))
+	: Expression(ty, loc), Callable(params), body_(std::move(body))
 {
 }
 
 
-void Function::PrettyPrint(Bytestream& out, int indent) const
+void Function::PrettyPrint(Bytestream& out, size_t indent) const
 {
 	std::string tabs(indent, '\t');
 	std::string intabs(indent + 1, '\t');
@@ -75,7 +75,7 @@ void Function::PrettyPrint(Bytestream& out, int indent) const
 		<< dynamic_cast<const FunctionType&>(type()).returnType()
 		<< "\n";
 
-	expr->PrettyPrint(out, indent);
+	body_->PrettyPrint(out, indent);
 
 	out << Bytestream::Reset;
 }
@@ -88,7 +88,7 @@ void Function::Accept(Visitor& v) const
 		for (auto& p : parameters())
 			p->Accept(v);
 
-		expr->Accept(v);
+		body_->Accept(v);
 	}
 
 	v.Leave(*this);

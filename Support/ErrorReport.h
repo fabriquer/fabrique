@@ -1,4 +1,4 @@
-/** @file ErrorReport.h    Declaration of @ref ErrorReport. */
+/** @file Support/ErrorReport.h    Declaration of @ref fabrique::ErrorReport. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -45,25 +45,25 @@ class ErrorReport : public HasSource, public Printable
 public:
 	static ErrorReport*
 	Create(const std::string& message,
-	       const SourceRange& loc = SourceRange::None,
-	       int contextLines = 3);
+	       const SourceRange& loc = SourceRange::None(),
+	       size_t contextLines = 3);
 
 	virtual ~ErrorReport() {}
 
-	const std::string& getMessage() const { return message; }
-	void PrettyPrint(Bytestream& out, int indent = 0) const;
+	const std::string& getMessage() const { return message_; }
+	void PrettyPrint(Bytestream& out, size_t indent = 0) const override;
 
 private:
 	ErrorReport(const std::string& message, const SourceRange& range,
-	            const SourceLocation& loc, int contextLines)
-		: HasSource(range), message(message), caret(loc),
-		  contextLines(contextLines)
+	            const SourceLocation& loc, size_t lines)
+		: HasSource(range), message_(message), caret_(loc),
+		  contextLines_(lines)
 	{
 	}
 
-	const std::string message;
-	const SourceLocation caret;
-	const int contextLines;
+	const std::string message_;
+	const SourceLocation caret_;
+	const size_t contextLines_;
 };
 
 } // namespace fabrique

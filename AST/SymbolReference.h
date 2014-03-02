@@ -1,4 +1,4 @@
-/** @file SymbolReference.h    Declaration of @ref SymbolReference. */
+/** @file AST/SymbolReference.h    Declaration of @ref fabrique::ast::SymbolReference. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -47,24 +47,18 @@ namespace ast {
 class SymbolReference : public Expression
 {
 public:
-	/**
-	 * Constructor.
-	 *
-	 * @a id            the name of the referenced symbol
-	 * @a definition    the referenced thing itself
-	 */
-	SymbolReference(UniqPtr<Identifier>&& id, const Expression& definition,
+	SymbolReference(UniqPtr<Identifier>&&, const Expression& definition,
 	                const SourceRange&);
 
-	const Identifier& getName() const { return *id; }
-	const Expression& definition() const { return def; }
+	const Identifier& name() const { return *name_; }
+	const Expression& definition() const { return definition_; }
 
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 
 private:
-	const std::unique_ptr<Identifier> id;
-	const Expression& def;
+	const std::unique_ptr<Identifier> name_;
+	const Expression& definition_;
 };
 
 } // namespace ast

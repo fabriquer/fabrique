@@ -1,4 +1,4 @@
-/** @file Parameter.cc    Definition of @ref Parameter. */
+/** @file AST/Parameter.cc    Definition of @ref fabrique::ast::Parameter. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -37,21 +37,21 @@ using namespace fabrique::ast;
 
 
 Parameter::Parameter(UniqPtr<Identifier>& name, const Type& resultTy,
-                     UniqPtr<Expression>&& e)
-	: Expression(resultTy, SourceRange::Over(name, e)),
-	  name(std::move(name)), expr(std::move(e))
+                     UniqPtr<Expression>&& defaultValue)
+	: Expression(resultTy, SourceRange::Over(name, defaultValue)),
+	  name_(std::move(name)), defaultValue_(std::move(defaultValue))
 {
 }
 
 
-void Parameter::PrettyPrint(Bytestream& out, int indent) const
+void Parameter::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
-	out << *name;
+	out << *name_;
 
-	if (expr)
+	if (defaultValue_)
 		out
 			<< Bytestream::Operator << " = "
-			<< *expr
+			<< *defaultValue_
 			;
 }
 
@@ -60,9 +60,9 @@ void Parameter::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
 	{
-		name->Accept(v);
-		if (expr)
-			expr->Accept(v);
+		name_->Accept(v);
+		if (defaultValue_)
+			defaultValue_->Accept(v);
 	}
 
 	v.Leave(*this);

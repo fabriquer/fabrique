@@ -1,4 +1,4 @@
-/** @file literals.h    Declaration of several literal expression types. */
+/** @file AST/literals.h    Declaration of several literal expression types. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -41,7 +41,7 @@ std::string BoolLiteral::str() const
 	return (value() ? "true" : "false");
 }
 
-void BoolLiteral::PrettyPrint(Bytestream& out, int indent) const
+void BoolLiteral::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
 	out
 		<< Bytestream::Literal << str()
@@ -56,7 +56,7 @@ std::string IntLiteral::str() const
 	return std::to_string(value());
 }
 
-void IntLiteral::PrettyPrint(Bytestream& out, int indent) const
+void IntLiteral::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
 	out << Bytestream::Literal << value() << Bytestream::Reset;
 }
@@ -66,7 +66,7 @@ void IntLiteral::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }
 
 std::string StringLiteral::str() const { return value(); }
 
-void StringLiteral::PrettyPrint(Bytestream& out, int indent) const
+void StringLiteral::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
 	out << Bytestream::Literal << "'";
 

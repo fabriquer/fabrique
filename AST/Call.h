@@ -1,4 +1,4 @@
-/** @file Call.h    Declaration of @ref Call. */
+/** @file AST/Call.h    Declaration of @ref fabrique::ast::Call. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -51,23 +51,23 @@ namespace ast {
 class Call : public Expression
 {
 public:
-	Call(UniqPtr<SymbolReference>& fn, UniqPtrVec<Argument>&,
+	Call(UniqPtr<SymbolReference>& target, UniqPtrVec<Argument>&,
 	     const Type& resultType, const SourceRange&);
 
-	const SymbolReference& target() const { return *fn; }
+	const SymbolReference& target() const { return *target_; }
 
-	const UniqPtrVec<Argument>& arguments() const { return args; }
+	const UniqPtrVec<Argument>& arguments() const { return args_; }
 
 	using ParamIterator = UniqPtrVec<Argument>::const_iterator;
-	ParamIterator begin() const { return args.begin(); }
-	ParamIterator end() const { return args.end(); }
+	ParamIterator begin() const { return args_.begin(); }
+	ParamIterator end() const { return args_.end(); }
 
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 
 private:
-	const UniqPtr<SymbolReference> fn;
-	const UniqPtrVec<Argument> args;
+	const UniqPtr<SymbolReference> target_;
+	const UniqPtrVec<Argument> args_;
 };
 
 } // namespace ast

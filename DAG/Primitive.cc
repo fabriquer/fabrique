@@ -1,4 +1,4 @@
-/** @file Primitive.cc    Definition of @ref Primitive. */
+/** @file DAG/Primitive.cc    Definition of @ref fabrique::dag::Primitive. */
 /*
  * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
@@ -51,7 +51,7 @@ Boolean::Boolean(bool b, const Type& t, SourceRange loc)
 
 shared_ptr<Value> Boolean::Negate(const SourceRange& loc) const
 {
-	return shared_ptr<Value>(new Boolean(not val, type(), loc));
+	return shared_ptr<Value>(new Boolean(not value_, type(), loc));
 }
 
 shared_ptr<Value> Boolean::And(shared_ptr<Value>& v)
@@ -60,7 +60,7 @@ shared_ptr<Value> Boolean::And(shared_ptr<Value>& v)
 	assert(other);
 
 	return shared_ptr<Value>(
-		new Boolean(val and other->val,
+		new Boolean(value_ and other->value_,
 			Type::GetSupertype(type(), other->type()),
 			SourceRange(*this, *other))
 	);
@@ -72,7 +72,7 @@ shared_ptr<Value> Boolean::Or(shared_ptr<Value>& v)
 	assert(other);
 
 	return shared_ptr<Value>(
-		new Boolean(val or other->val,
+		new Boolean(value_ or other->value_,
 			Type::GetSupertype(type(), other->type()),
 			SourceRange(*this, *other))
 	);
@@ -84,13 +84,13 @@ shared_ptr<Value> Boolean::Xor(shared_ptr<Value>& v)
 	assert(other);
 
 	return shared_ptr<Value>(
-		new Boolean(val xor other->val,
+		new Boolean(value_ xor other->value_,
 			Type::GetSupertype(type(), other->type()),
 			SourceRange(*this, *other))
 	);
 }
 
-string Boolean::str() const { return val ? "true" : "false"; }
+string Boolean::str() const { return value_ ? "true" : "false"; }
 
 
 Integer::Integer(int i, const Type& t, SourceRange loc)
@@ -98,7 +98,7 @@ Integer::Integer(int i, const Type& t, SourceRange loc)
 {
 }
 
-string Integer::str() const { return std::to_string(val); }
+string Integer::str() const { return std::to_string(value_); }
 
 shared_ptr<Value> Integer::Add(shared_ptr<Value>& v)
 {
@@ -109,7 +109,7 @@ shared_ptr<Value> Integer::Add(shared_ptr<Value>& v)
 		throw WrongTypeException("int", v->type(), v->source());
 
 	return shared_ptr<Value>(
-		new Integer(this->val + other->val, type(), loc));
+		new Integer(this->value_ + other->value_, type(), loc));
 }
 
 
@@ -118,7 +118,7 @@ String::String(string s, const Type& t, SourceRange loc)
 {
 }
 
-string String::str() const { return val; }
+string String::str() const { return value_; }
 
 shared_ptr<Value> String::Add(shared_ptr<Value>& v)
 {
@@ -129,10 +129,10 @@ shared_ptr<Value> String::Add(shared_ptr<Value>& v)
 		throw WrongTypeException("string", v->type(), v->source());
 
 	return shared_ptr<Value>(
-		new String(this->val + other->val, type(), loc));
+		new String(this->value_ + other->value_, type(), loc));
 }
 
-void String::PrettyPrint(Bytestream& b, int indent) const
+void String::PrettyPrint(Bytestream& b, size_t /*indent*/) const
 {
 	b << Bytestream::Literal << "'" << str() << "'" << Bytestream::Reset;
 }

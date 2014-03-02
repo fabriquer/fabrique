@@ -1,4 +1,4 @@
-/** @file Parser.cc    Definition of @ref Parser. */
+/** @file Parsing/Parser.cc    Definition of @ref Parser. */
 /*
  * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
@@ -40,6 +40,8 @@
 
 #include "FabContext.h"
 
+#include <cassert>
+
 using namespace fabrique::ast;
 
 using fabrique::ErrorReport;
@@ -51,9 +53,9 @@ using std::unique_ptr;
 
 
 Parser::Parser(FabContext& ctx, const Lexer& lex)
-	: ctx(ctx), lex(lex)
+	: ctx_(ctx), lexer_(lex)
 {
-	scopes.emplace(new Scope(nullptr, "file scope"));
+	scopes_.emplace(new Scope(nullptr, "file scope"));
 }
 
 
@@ -64,26 +66,26 @@ Parser::Parser(FabContext& ctx, const Lexer& lex)
 Scope& Parser::EnterScope(const string& name)
 {
 	Bytestream::Debug("parser.scope")
-		<< string(scopes.size(), ' ')
+		<< string(scopes_.size(), ' ')
 		<< Bytestream::Operator << " >> "
 		<< Bytestream::Type << "scope"
 		<< Bytestream::Literal << " '" << name << "'"
 		<< Bytestream::Reset << "\n"
 		;
 
-	scopes.emplace(new Scope(&CurrentScope(), name));
-	return *scopes.top();
+	scopes_.emplace(new Scope(&CurrentScope(), name));
+	return *scopes_.top();
 }
 
 unique_ptr<Scope> Parser::ExitScope()
 {
-	unique_ptr<Scope> scope = std::move(scopes.top());
-	FabAssert(scope and not scopes.top());
-	scopes.pop();
+	unique_ptr<Scope> scope = std::move(scopes_.top());
+	assert(scope and not scopes_.top());
+	scopes_.pop();
 
 	Bytestream& dbg = Bytestream::Debug("parser.scope");
 	dbg
-		<< string(scopes.size(), ' ')
+		<< string(scopes_.size(), ' ')
 		<< Bytestream::Operator << " << "
 		<< Bytestream::Type << "scope"
 		<< Bytestream::Literal << " '" << scope->name() << "'"
@@ -107,7 +109,7 @@ unique_ptr<Scope> Parser::ExitScope()
 //
 const Type* Parser::getType(const string& name, const PtrVec<Type>& params)
 {
-	return ctx.type(name, params);
+	return ctx_.type(name, params);
 }
 
 const Type* Parser::getType(const string& name, const Type& param)
@@ -118,7 +120,7 @@ const Type* Parser::getType(const string& name, const Type& param)
 const Type* Parser::getType(UniqPtr<Identifier>&& name,
                             UniqPtr<const PtrVec<Type>>&& params)
 {
-	static const PtrVec<Type> empty;
+	static const PtrVec<Type>& empty = *new PtrVec<Type>;
 	if (not name)
 		return nullptr;
 
@@ -135,7 +137,7 @@ Action* Parser::DefineAction(UniqPtr<UniqPtrVec<Argument>>& args,
 		return nullptr;
 
 	ExitScope();
-	return Action::Create(*args, params, src, ctx);
+	return Action::Create(*args, params, src, ctx_);
 }
 
 
@@ -197,9 +199,9 @@ CompoundExpression* Parser::CompoundExpr(UniqPtr<Expression>& result,
 		return nullptr;
 
 	SourceRange src = result->source();
-	if (begin != SourceRange::None)
+	if (begin != SourceRange::None())
 	{
-		FabAssert(end != SourceRange::None);
+		assert(end != SourceRange::None());
 		src = SourceRange(begin, end);
 	}
 
@@ -211,7 +213,7 @@ CompoundExpression* Parser::CompoundExpr(UniqPtr<Expression>& result,
 Filename* Parser::File(UniqPtr<Expression>& name, const SourceRange& src,
                        UniqPtr<UniqPtrVec<Argument>>&& args)
 {
-	static UniqPtrVec<Argument> empty;
+	static UniqPtrVec<Argument>& empty = *new UniqPtrVec<Argument>;
 
 	if (not name->type().isSubtype(*getType("string")))
 	{
@@ -220,7 +222,7 @@ Filename* Parser::File(UniqPtr<Expression>& name, const SourceRange& src,
 		return nullptr;
 	}
 
-	return new Filename(name, args ? *args : empty, *ctx.fileType(), src);
+	return new Filename(name, args ? *args : empty, *ctx_.fileType(), src);
 }
 
 
@@ -228,9 +230,9 @@ FileList* Parser::Files(const SourceRange& begin,
                         UniqPtr<UniqPtrVec<Filename>>& files,
                         UniqPtr<UniqPtrVec<Argument>>&& args)
 {
-	static UniqPtrVec<Argument> emptyArgs;
+	static UniqPtrVec<Argument>& emptyArgs = *new UniqPtrVec<Argument>;
 
-	const Type& ty = *ctx.fileListType();
+	const Type& ty = *ctx_.fileListType();
 	SourceRange src(begin);
 
 	return new FileList(*files, args ? *args : emptyArgs, ty, src);
@@ -242,7 +244,7 @@ ForeachExpr* Parser::Foreach(UniqPtr<Expression>& source,
                              UniqPtr<CompoundExpression>& body,
                              const SourceRange& begin)
 {
-	SourceRange loc(begin, lex.CurrentTokenRange());
+	SourceRange loc(begin, lexer_.CurrentTokenRange());
 	ExitScope();
 
 	const Type& resultTy = *getType("list", body->type());
@@ -275,7 +277,7 @@ Function* Parser::DefineFunction(const SourceRange& begin,
 
 	ExitScope();
 
-	const FunctionType *ty = ctx.functionType(parameterTypes, *resultType);
+	const FunctionType *ty = ctx_.functionType(parameterTypes, *resultType);
 	return new Function(*params, *ty, body, loc);
 }
 
@@ -294,9 +296,9 @@ Identifier* Parser::Id(UniqPtr<Identifier>&& untyped, const Type *ty)
 	if (not untyped)
 		return nullptr;
 
-	FabAssert(not untyped->isTyped());
+	assert(not untyped->isTyped());
 
-	SourceRange loc(untyped->source().begin, lex.CurrentTokenRange().end);
+	SourceRange loc(untyped->source().begin, lexer_.CurrentTokenRange().end);
 	return new Identifier(untyped->name(), ty, loc);
 }
 
@@ -324,7 +326,7 @@ List* Parser::ListOf(UniqPtrVec<Expression>& elements,
 {
 	const Type *elementType =
 		elements.empty()
-			? ctx.nilType()
+			? ctx_.nilType()
 			: &elements.front()->type();
 
 	const Type *ty = getType("list", PtrVec<Type>(1, elementType));
@@ -335,19 +337,19 @@ List* Parser::ListOf(UniqPtrVec<Expression>& elements,
 BoolLiteral* Parser::True()
 {
 	return new BoolLiteral(true, *getType("bool"),
-	                       lex.CurrentTokenRange());
+	                       lexer_.CurrentTokenRange());
 }
 
 BoolLiteral* Parser::False()
 {
 	return new BoolLiteral(false, *getType("bool"),
-	                       lex.CurrentTokenRange());
+	                       lexer_.CurrentTokenRange());
 }
 
 IntLiteral* Parser::ParseInt(int value)
 {
 	return new IntLiteral(value, *getType("int"),
-	                      lex.CurrentTokenRange());
+	                      lexer_.CurrentTokenRange());
 }
 
 StringLiteral* Parser::ParseString(UniqPtr<fabrique::Token>&& t)
@@ -444,8 +446,8 @@ bool Parser::DefineValue(UniqPtr<Identifier>& id, UniqPtr<Expression>& e)
 Scope& Parser::CurrentScope()
 {
 	// We must always have at least a top-level scope on the stack.
-	FabAssert(scopes.size() > 0);
-	return *scopes.top();
+	assert(scopes_.size() > 0);
+	return *scopes_.top();
 }
 
 
@@ -461,8 +463,8 @@ void Parser::AddToScope(const PtrVec<Argument>& args)
 
 fabrique::Token* Parser::Token(YYSTYPE& yyunion)
 {
-	FabAssert(yyunion.token);
-	FabAssert(dynamic_cast<fabrique::Token*>(yyunion.token));
+	assert(yyunion.token);
+	assert(dynamic_cast<fabrique::Token*>(yyunion.token));
 
 	return yyunion.token;
 }
@@ -495,9 +497,9 @@ const ErrorReport& Parser::ReportError(const string& msg, const HasSource& s)
 const ErrorReport& Parser::ReportError(const string& message,
                                        const SourceRange& location)
 {
-	errs.push_back(
+	errs_.push_back(
 		unique_ptr<ErrorReport>(ErrorReport::Create(message, location))
 	);
 
-	return *errs.back();
+	return *errs_.back();
 }

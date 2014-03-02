@@ -1,4 +1,4 @@
-/** @file Printable.h    Declaration of the @ref Printable interface. */
+/** @file Support/Printable.h    Declaration of the @ref fabrique::Printable interface. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -50,9 +50,12 @@ public:
 	 * Print a human-readable representation to an output stream
 	 * and return that output stream.
 	 */
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const = 0;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const = 0;
 
 	virtual std::string str() const;
+
+protected:
+	virtual ~Printable() {}
 };
 
 } // namespace fabrique

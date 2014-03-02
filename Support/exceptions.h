@@ -1,4 +1,4 @@
-/** @file exceptions.h    Declaration of basic Fabrique exceptions. */
+/** @file Support/exceptions.h    Declaration of basic Fabrique exceptions. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -50,22 +50,16 @@ public:
 	AssertionFailure(const std::string& condition,
 	                 const std::string& message = "");
 
+	virtual ~AssertionFailure();
+
 	const char* what() const noexcept;
-	const std::string& condition() const noexcept { return cond; }
-	const std::string& message() const noexcept { return msg; }
+	const std::string& condition() const noexcept { return condition_; }
+	const std::string& message() const noexcept { return message_; }
 
 private:
-	const std::string cond;
-	const std::string msg;
+	const std::string condition_;
+	const std::string message_;
 };
-
-#ifdef NDEBUG
-#define FabAssert()
-#else
-#define FabAssert(condition, ...) \
-	if (not condition) \
-		throw AssertionFailure(#condition __VA_ARGS__)
-#endif
 
 
 //! An unexpected duplicate was encountered.
@@ -73,12 +67,14 @@ class DuplicateException : public std::exception
 {
 public:
 	DuplicateException(const std::string& kind, const std::string& name);
+	virtual ~DuplicateException();
+
 	const char* what() const noexcept;
 
 private:
-	const std::string message;
-	const std::string kind;
-	const std::string name;
+	const std::string message_;
+	const std::string kind_;
+	const std::string name_;
 };
 
 
@@ -89,16 +85,18 @@ class SourceCodeException
 	: public std::exception, public HasSource, public Printable
 {
 public:
+	virtual ~SourceCodeException();
+
 	const std::string& message() const;
 	virtual const char* what() const noexcept;
 
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 
 protected:
 	SourceCodeException(const std::string& message, const SourceRange&);
 
 private:
-	std::shared_ptr<ErrorReport> err;
+	std::shared_ptr<ErrorReport> err_;
 };
 
 
@@ -107,6 +105,7 @@ class SyntaxError : public SourceCodeException
 {
 public:
 	SyntaxError(const std::string& message, const SourceRange&);
+	virtual ~SyntaxError();
 };
 
 //! A semantic error is present in the Fabrique description.
@@ -114,6 +113,7 @@ class SemanticException : public SourceCodeException
 {
 public:
 	SemanticException(const std::string& message, const SourceRange&);
+	virtual ~SemanticException();
 };
 
 }

@@ -1,4 +1,4 @@
-/** @file Conditional.h    Declaration of @ref Conditional. */
+/** @file AST/Conditional.h    Declaration of @ref fabrique::ast::Conditional. */
 /*
  * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
@@ -49,21 +49,21 @@ class Conditional : public Expression
 public:
 	Conditional(const SourceRange& ifLoc,
 	            UniqPtr<Expression>& condition,
-	            UniqPtr<CompoundExpression>& then,
-	            UniqPtr<CompoundExpression>& elseResult,
+	            UniqPtr<CompoundExpression>& thenClause,
+	            UniqPtr<CompoundExpression>& elseClause,
 	            const Type& resultTy);
 
-	const Expression& condition() const { return *cond; }
-	const Expression& thenClause() const { return *thenExpr; }
-	const Expression& elseClause() const { return *elseExpr; }
+	const Expression& condition() const { return *condition_; }
+	const Expression& thenClause() const { return *thenClause_; }
+	const Expression& elseClause() const { return *elseClause_; }
 
-	virtual void PrettyPrint(Bytestream&, int indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 
 private:
-	const std::unique_ptr<Expression> cond;
-	const std::unique_ptr<CompoundExpression> thenExpr;
-	const std::unique_ptr<CompoundExpression> elseExpr;
+	const std::unique_ptr<Expression> condition_;
+	const std::unique_ptr<CompoundExpression> thenClause_;
+	const std::unique_ptr<CompoundExpression> elseClause_;
 };
 
 } // namespace ast
