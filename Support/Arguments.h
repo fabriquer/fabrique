@@ -33,7 +33,7 @@
 #define ARGUMENTS_H
 
 // Include Matthias Benkmann's "Lean Mean C++ Option Parser".
-#include "Support/optionparser.h"
+#include "vendor/optionparser.h"
 
 #include <ostream>
 #include <string>
