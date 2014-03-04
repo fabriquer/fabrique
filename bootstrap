@@ -99,16 +99,26 @@ else: cxxflags += [ '-D NDEBUG' ]
 gencxxflags = cxxflags
 cxxflags = cxxflags + warnings
 
+def which(name):
+	for p in os.environ.get('PATH', '').split(os.pathsep):
+		fullname = os.path.join(p, name)
+		if os.path.isfile(fullname) and os.access(fullname, os.X_OK):
+			return fullname
+
+	raise OSError('no %s in $PATH (%s)' % (
+		name, os.environ.get('PATH')))
+
+
 variables = {
 	# paths
 	'path': os.pathsep.join([ builddir, os.environ['PATH'] ]),
 
 	# tools
-	'cc': 'clang',
-	'cxx': 'clang++',
-	'lex': 'flex',
-	'lit': 'llvm-lit',
-	'yacc': 'byacc',
+	'cc': which('clang'),
+	'cxx': which('clang++'),
+	'lex': which('flex'),
+	'lit': which('llvm-lit'),
+	'yacc': which('byacc'),
 
 	# flags
 	'cxxflags': ' '.join(cxxflags),
