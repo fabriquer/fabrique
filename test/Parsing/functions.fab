@@ -6,7 +6,7 @@
 # CHECK: foo:(list[int])=>list[int] = function(ints:list[int]): list[int]
 # CHECK-NEXT: {
 # CHECK-NEXT:   local_var:int = 42;
-# CHECK-NEXT:   foreach ints as x
+# CHECK-NEXT:   foreach x:int <- ints
 # CHECK-NEXT:   {
 # CHECK-NEXT:     y:int = x + local_var;
 # CHECK-NEXT:     y + 1
@@ -16,7 +16,7 @@ foo = function(ints:list[int]): list[int]
 {
 	local_var = 42;
 
-	foreach ints as x:int
+	foreach x <- ints
 	{
 		y = x + local_var;
 		y + 1
@@ -25,11 +25,11 @@ foo = function(ints:list[int]): list[int]
 
 # CHECK: bar:(list[string])=>list[file] = function(names:list[string]): list[file]
 # CHECK-NEXT: {
-# CHECK-NEXT:   foreach names as name
+# CHECK-NEXT:   foreach name:string <- names
 # CHECK-NEXT:   {
 # CHECK-NEXT:     file(name)
 # CHECK-NEXT:   }
 # CHECK-NEXT: }
 bar = function(names:list[string]): list[file]
-	foreach names as name:string
+	foreach name <- names
 		file(name);

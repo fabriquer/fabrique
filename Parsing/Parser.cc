@@ -353,13 +353,13 @@ Mapping* Parser::Map(UniqPtr<Expression>& source, UniqPtr<Identifier>& target)
 		}
 	}
 	else
-		id.reset(Id(std::move(id), &Type::ListOf(elementType)));
+		id.reset(Id(std::move(id), &elementType));
 
 
 	UniqPtr<Parameter> parameter(Param(std::move(id)));
 
-	SourceRange src(*source, *parameter);
-	return new Mapping(source, parameter, src);
+	SourceRange src(*parameter, *source);
+	return new Mapping(parameter, source, src);
 }
 
 BoolLiteral* Parser::True()

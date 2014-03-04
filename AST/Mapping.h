@@ -49,18 +49,18 @@ class Parameter;
 class Mapping : public ast::Node
 {
 public:
-	Mapping(UniqPtr<Expression>& source, UniqPtr<Parameter>& target,
+	Mapping(UniqPtr<Parameter>& target, UniqPtr<Expression>& source,
 	        const SourceRange& src);
 
-	const Expression& source() const { return *source_; }
 	const Parameter& target() const { return *target_; }
+	const Expression& source() const { return *source_; }
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 
 private:
-	const UniqPtr<Expression> source_;
 	const UniqPtr<Parameter> target_;
+	const UniqPtr<Expression> source_;
 };
 
 } // namespace ast

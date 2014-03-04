@@ -16,7 +16,7 @@ lex = action('$LEX -c++ --yyclass=$classname --outfile=$out $in'
 
 cc_all = function(srcs:list[string]): list[file]
 {
-	foreach srcs as src:string
+	foreach src <- srcs
 	{
 		obj = file(src + '.o');
 		build = cc(in = file(src), out = obj);

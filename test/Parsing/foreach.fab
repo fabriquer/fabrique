@@ -3,11 +3,12 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: foo:list[int] = foreach [ 1 2 3 ] as x
+# CHECK: foo:list[int] = foreach x:int <- [ 1 2 3 ]
 # CHECK-NEXT: {
 # CHECK-NEXT:   x
 # CHECK-NEXT: };
-foo = foreach [ 1 2 3 ] as x:int {
+foo = foreach x <- [ 1 2 3 ]
+{
 	x
 };
 
@@ -16,8 +17,8 @@ foo = foreach [ 1 2 3 ] as x:int {
 # Also check the shorthand version:
 #
 
-# CHECK: bar:list[int] = foreach [ 1 2 3 ] as x
+# CHECK: bar:list[int] = foreach x:int <- [ 1 2 3 ]
 # CHECK-NEXT: {
 # CHECK-NEXT:   x
 # CHECK-NEXT: };
-bar = foreach [ 1 2 3 ] as x:int x;
+bar = foreach x <- [ 1 2 3 ] x;

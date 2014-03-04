@@ -7,7 +7,7 @@ foo = function(ints:list[int]): list[int]
 {
 	local_var = 42;
 
-	foreach ints as x:int
+	foreach x <- ints
 	{
 		y = x + local_var;
 		y + 1

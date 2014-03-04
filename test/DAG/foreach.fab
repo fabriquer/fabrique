@@ -7,5 +7,5 @@
 small = [ 0 1 2 ];
 
 # CHECK-DAG: list[int] large = [ 1 2 3 ]
-large = foreach small as x:int
+large = foreach x <- small
 	x + 1;

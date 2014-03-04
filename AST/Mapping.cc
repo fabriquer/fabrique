@@ -36,9 +36,9 @@
 using namespace fabrique::ast;
 
 
-Mapping::Mapping(UniqPtr<Expression>& source, UniqPtr<Parameter>& target,
+Mapping::Mapping(UniqPtr<Parameter>& target, UniqPtr<Expression>& source,
                  const SourceRange& src)
-	: Node(src), source_(std::move(source)), target_(std::move(target))
+	: Node(src), target_(std::move(target)), source_(std::move(source))
 {
 }
 
@@ -46,16 +46,15 @@ Mapping::Mapping(UniqPtr<Expression>& source, UniqPtr<Parameter>& target,
 void Mapping::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
 	out
-		<< *source_
-		<< Bytestream::Operator
-		<< " as "
 		<< *target_
+		<< Bytestream::Operator << " <- "
+		<< *source_
 		;
 }
 
 
 void Mapping::Accept(Visitor& v) const
 {
-	source_->Accept(v);
 	target_->Accept(v);
+	source_->Accept(v);
 }

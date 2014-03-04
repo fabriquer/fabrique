@@ -404,10 +404,10 @@ literal:
 	;
 
 mapping:
-	expression AS identifier
+	identifier INPUT expression
 	{
-		auto source = TakeNode<Expression>($1);
-		auto target = TakeNode<Identifier>($3);
+		auto target = TakeNode<Identifier>($1);
+		auto source = TakeNode<Expression>($3);
 
 		SetOrDie($$, p->Map(source, target));
 	}

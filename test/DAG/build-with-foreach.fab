@@ -19,7 +19,7 @@ link = action('cc $in -o $out' <- in:list[file], out:file);
 # CHECK-DAG: build: cc { foo.c => foo.c.o }
 # CHECK-DAG: build: cc { bar.c => bar.c.o }
 # CHECK-DAG: build: cc { baz.c => baz.c.o }
-objs = foreach srcs as src:string
+objs = foreach src <- srcs
 {
 	obj = file(src + '.o');
 	build = cc(in = file(src), out = obj);

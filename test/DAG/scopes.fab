@@ -7,7 +7,7 @@
 foo = 1;
 
 # CHECK-DAG: list[string] bar = [ 'hello!' 'world!' ]
-bar = foreach [ 'hello' 'world' ] as foo:string
+bar = foreach foo <- [ 'hello' 'world' ]
 {
 	foo + '!'
 };

@@ -27,7 +27,7 @@ baz = true;
 # CHECK: parsed expression: ints:list[int] @ %s:27:16-30
 wibble = function(ints:list[int]): list[int]
 {
-	foreach ints as x:int
+	foreach x <- ints
 	{
 		x + 1
 	}
