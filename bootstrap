@@ -100,6 +100,9 @@ gencxxflags = cxxflags
 cxxflags = cxxflags + warnings
 
 variables = {
+	# paths
+	'path': os.pathsep.join([ builddir, os.environ['PATH'] ]),
+
 	# tools
 	'cc': 'clang',
 	'cxx': 'clang++',
@@ -187,22 +190,14 @@ for (name, variables) in rules.items():
 # Rebuild the Ninja file:
 out.write('''build build.ninja: rebuild %s
   args = %s
-  path = %s
 
 ''' % (
 	bootstrap,
 	' '.join([ "'%s'" % a for a in sys.argv[1:] ]),
-	os.environ['PATH'])
-)
-
-path = [ builddir ] + os.environ['PATH'].split(os.pathsep)
-path = os.pathsep.join(path)
+))
 
 # Unit tests:
-out.write('''build test: lit %s/test | fab
-  path = %s
-
-''' % (srcroot, path))
+out.write('build test: lit %s/test | fab\n' % srcroot)
 
 
 # Main executable
