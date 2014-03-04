@@ -1,6 +1,6 @@
 /** @file AST/Foreach.h    Declaration of @ref fabrique::ast::Foreach. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -33,7 +33,7 @@
 #define FOREACH_H
 
 #include "AST/CompoundExpr.h"
-#include "AST/Expression.h"
+#include "AST/Mapping.h"
 
 namespace fabrique {
 
@@ -51,22 +51,18 @@ class Value;
 class ForeachExpr : public Expression
 {
 public:
-	ForeachExpr(UniqPtr<Expression>& list,
-	            UniqPtr<Parameter>& loopParam,
-	            UniqPtr<CompoundExpression>& body,
-	            const Type& resultTy,
-	            const SourceRange& source);
+	ForeachExpr(UniqPtr<Mapping>&, UniqPtr<CompoundExpression>& body,
+	            const Type&, const SourceRange&);
 
-	const Expression& targetSequence() const { return *source_; }
-	const Parameter& loopParameter() const { return *loopParameter_; }
+	const Expression& sourceSequence() const { return mapping_->source(); }
+	const Parameter& loopParameter() const { return mapping_->target(); }
 	const CompoundExpression& loopBody() const { return *body_; }
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 
 private:
-	const UniqPtr<Expression> source_;
-	const UniqPtr<Parameter> loopParameter_;
+	const UniqPtr<Mapping> mapping_;
 	const UniqPtr<CompoundExpression> body_;
 };
 

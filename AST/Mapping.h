@@ -1,6 +1,6 @@
-/** @file AST/ast.h    Meta-include file for all AST node types. */
+/** @file AST/Mapping.h    Declaration of @ref fabrique::ast::Mapping. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,29 +29,41 @@
  * SUCH DAMAGE.
  */
 
-#ifndef AST_H
-#define AST_H
+#ifndef MAPPING_H
+#define MAPPING_H
 
-#include "Action.h"
-#include "Argument.h"
-#include "BinaryOperation.h"
-#include "Builtins.h"
-#include "Call.h"
-#include "CompoundExpr.h"
-#include "Conditional.h"
-#include "Filename.h"
-#include "FileList.h"
-#include "Foreach.h"
-#include "Function.h"
-#include "Identifier.h"
-#include "List.h"
-#include "Mapping.h"
-#include "Parameter.h"
-#include "Scope.h"
-#include "SymbolReference.h"
-#include "UnaryOperation.h"
-#include "Value.h"
+#include "AST/Node.h"
 
-#include "literals.h"
+namespace fabrique {
+namespace ast {
+
+class Expression;
+class Identifier;
+class Parameter;
+
+
+/**
+ * An expression that maps a sequence into a variable
+ * (e.g., at the beginning of a foreach loop).
+ */
+class Mapping : public ast::Node
+{
+public:
+	Mapping(UniqPtr<Expression>& source, UniqPtr<Parameter>& target,
+	        const SourceRange& src);
+
+	const Expression& source() const { return *source_; }
+	const Parameter& target() const { return *target_; }
+
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	virtual void Accept(Visitor&) const;
+
+private:
+	const UniqPtr<Expression> source_;
+	const UniqPtr<Parameter> target_;
+};
+
+} // namespace ast
+} // namespace fabrique
 
 #endif

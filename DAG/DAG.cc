@@ -509,7 +509,7 @@ bool DAGBuilder::Enter(const ast::ForeachExpr& f)
 {
 	SharedPtrVec<Value> values;
 
-	auto target = flatten(f.targetSequence());
+	auto target = flatten(f.sourceSequence());
 	assert(target->type().name() == "list");
 	shared_ptr<List> input = dynamic_pointer_cast<List>(target);
 	const ast::Parameter& loopParam = f.loopParameter();

@@ -1,6 +1,6 @@
 /** @file AST/Foreach.cc    Declaration of @ref fabrique::ast::ForeachExpr. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -34,17 +34,16 @@
 #include "AST/Value.h"
 #include "AST/Visitor.h"
 #include "Support/Bytestream.h"
+#include "Types/Type.h"
 
 using namespace fabrique::ast;
 
 
-ForeachExpr::ForeachExpr(UniqPtr<Expression>& list,
-                         UniqPtr<Parameter>& loopParam,
+ForeachExpr::ForeachExpr(UniqPtr<Mapping>& mapping,
                          UniqPtr<CompoundExpression>& body,
-                         const Type& resultTy,
-                         const SourceRange& source)
-	: Expression(resultTy, source), source_(std::move(list)),
-	  loopParameter_(std::move(loopParam)), body_(std::move(body))
+                         const Type& type, const SourceRange& source)
+	: Expression(type, source),
+	  mapping_(std::move(mapping)), body_(std::move(body))
 {
 }
 
@@ -53,9 +52,7 @@ void ForeachExpr::PrettyPrint(Bytestream& out, size_t indent) const
 {
 	out
 		<< Bytestream::Operator << "foreach "
-		<< *source_
-		<< Bytestream::Operator << " as "
-		<< *loopParameter_
+		<< *mapping_
 		<< "\n"
 		;
 
@@ -69,8 +66,7 @@ void ForeachExpr::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
 	{
-		source_->Accept(v);
-		loopParameter_->Accept(v);
+		mapping_->Accept(v);
 		body_->Accept(v);
 	}
 

@@ -350,14 +350,13 @@ fileInList:
 	;
 
 foreach:
-	foreachbegin expression AS parameter compoundExpr
+	foreachbegin mapping compoundExpr
 	{
 		SourceRange begin = Take(Parser::Token($1))->source();
-		auto seq = TakeNode<Expression>($2);
-		auto loopParameter = TakeNode<Parameter>($4);
-		auto body = TakeNode<CompoundExpression>($5);
+		auto mapping = TakeNode<Mapping>($2);
+		auto body = TakeNode<CompoundExpression>($3);
 
-		SetOrDie($$, p->Foreach(seq, loopParameter, body, begin));
+		SetOrDie($$, p->Foreach(mapping, body, begin));
 	}
 	;
 
@@ -402,6 +401,16 @@ literal:
 	| FALSE			{ SetOrDie($$, p->False()); }
 	| INT_LITERAL		{ SetOrDie($$, p->ParseInt($1.intVal)); }
 	| STRING_LITERAL	{ SetOrDie($$, p->ParseString(Take($1.token))); }
+	;
+
+mapping:
+	expression AS identifier
+	{
+		auto source = TakeNode<Expression>($1);
+		auto target = TakeNode<Identifier>($3);
+
+		SetOrDie($$, p->Map(source, target));
+	}
 	;
 
 name:

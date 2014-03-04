@@ -129,8 +129,7 @@ public:
 	 *   foreach x in some_list: x + 1
 	 * .
 	 */
-	ForeachExpr* Foreach(UniqPtr<Expression>& source,
-	                     UniqPtr<Parameter>& loopParam,
+	ForeachExpr* Foreach(UniqPtr<Mapping>&,
 	                     UniqPtr<CompoundExpression>& body,
 	                     const SourceRange& start);
 
@@ -167,6 +166,9 @@ public:
 
 	//! Define a @ref List of expressions.
 	List* ListOf(UniqPtrVec<Expression>&, const SourceRange&);
+
+	//! Define a mapping from a sequence to a name.
+	Mapping* Map(UniqPtr<Expression>& source, UniqPtr<Identifier>& target);
 
 
 	// literals

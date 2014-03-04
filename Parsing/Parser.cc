@@ -239,16 +239,15 @@ FileList* Parser::Files(const SourceRange& begin,
 }
 
 
-ForeachExpr* Parser::Foreach(UniqPtr<Expression>& source,
-                             UniqPtr<Parameter>& loopParam,
+ForeachExpr* Parser::Foreach(UniqPtr<Mapping>& mapping,
                              UniqPtr<CompoundExpression>& body,
                              const SourceRange& begin)
 {
-	SourceRange loc(begin, lexer_.CurrentTokenRange());
+	SourceRange src(begin, body->source());
 	ExitScope();
 
 	const Type& resultTy = *getType("list", body->type());
-	return new ForeachExpr(source, loopParam, body, resultTy, loc);
+	return new ForeachExpr(mapping, body, resultTy, src);
 }
 
 
@@ -333,6 +332,35 @@ List* Parser::ListOf(UniqPtrVec<Expression>& elements,
 	return new List(elements, *ty, src);
 }
 
+
+Mapping* Parser::Map(UniqPtr<Expression>& source, UniqPtr<Identifier>& target)
+{
+	if (not source or not target)
+		return nullptr;
+
+	UniqPtr<Identifier> id(std::move(target));
+
+	assert(source->type().typeParamCount() == 1);
+	const Type& elementType = source->type()[0];
+
+	if (id->type())
+	{
+		if (not id->type()->isSupertype(elementType))
+		{
+			ReportError("incompatible types",
+			            SourceRange::Over(source, target));
+			return nullptr;
+		}
+	}
+	else
+		id.reset(Id(std::move(id), &Type::ListOf(elementType)));
+
+
+	UniqPtr<Parameter> parameter(Param(std::move(id)));
+
+	SourceRange src(*source, *parameter);
+	return new Mapping(source, parameter, src);
+}
 
 BoolLiteral* Parser::True()
 {

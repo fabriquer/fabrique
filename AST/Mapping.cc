@@ -1,6 +1,6 @@
-/** @file AST/ast.h    Meta-include file for all AST node types. */
+/** @file AST/Mapping.cc    Definition of @ref fabrique::ast::Mapping. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,29 +29,33 @@
  * SUCH DAMAGE.
  */
 
-#ifndef AST_H
-#define AST_H
+#include "AST/Mapping.h"
+#include "AST/Parameter.h"
+#include "AST/Visitor.h"
+#include "Support/Bytestream.h"
+using namespace fabrique::ast;
 
-#include "Action.h"
-#include "Argument.h"
-#include "BinaryOperation.h"
-#include "Builtins.h"
-#include "Call.h"
-#include "CompoundExpr.h"
-#include "Conditional.h"
-#include "Filename.h"
-#include "FileList.h"
-#include "Foreach.h"
-#include "Function.h"
-#include "Identifier.h"
-#include "List.h"
-#include "Mapping.h"
-#include "Parameter.h"
-#include "Scope.h"
-#include "SymbolReference.h"
-#include "UnaryOperation.h"
-#include "Value.h"
 
-#include "literals.h"
+Mapping::Mapping(UniqPtr<Expression>& source, UniqPtr<Parameter>& target,
+                 const SourceRange& src)
+	: Node(src), source_(std::move(source)), target_(std::move(target))
+{
+}
 
-#endif
+
+void Mapping::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+{
+	out
+		<< *source_
+		<< Bytestream::Operator
+		<< " as "
+		<< *target_
+		;
+}
+
+
+void Mapping::Accept(Visitor& v) const
+{
+	source_->Accept(v);
+	target_->Accept(v);
+}
