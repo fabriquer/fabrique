@@ -207,7 +207,8 @@ out.write('''build build.ninja: rebuild %s
 ))
 
 # Unit tests:
-out.write('build test: lit %s/test | fab\n' % srcroot)
+out.write('build test: phony run-tests\n')
+out.write('build run-tests: lit %s/test | fab\n' % srcroot)
 
 
 # Main executable
