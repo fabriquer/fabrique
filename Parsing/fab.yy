@@ -147,15 +147,15 @@ expression:
 action:
 	actionBegin '(' argumentList ')'
 	{
-		SourceRange begin = Take(Parser::Token($1))->source();
+		SourceRange begin = Take(Parser::ParseToken($1))->source();
 		auto args = Take(NodeVec<Argument>($3));
-		SourceRange end = Take(Parser::Token($4))->source();
+		SourceRange end = Take(Parser::ParseToken($4))->source();
 
 		SetOrDie($$, p->DefineAction(args, SourceRange(begin, end)));
 	}
 	| actionBegin '(' argumentList INPUT parameterList ')'
 	{
-		SourceRange begin = Take(Parser::Token($1))->source();
+		SourceRange begin = Take(Parser::ParseToken($1))->source();
 		auto args = Take(NodeVec<Argument>($3));
 		auto params = Take(NodeVec<Parameter>($5));
 
@@ -257,18 +257,18 @@ compoundBody:
 	}
 	| '{' expression '}'
 	{
-		SourceRange begin = Take(Parser::Token($1))->source();
+		SourceRange begin = Take(Parser::ParseToken($1))->source();
 		auto result = TakeNode<Expression>($2);
-		SourceRange end = Take(Parser::Token($3))->source();
+		SourceRange end = Take(Parser::ParseToken($3))->source();
 
 		SetOrDie($$, p->CompoundExpr(result, begin, end));
 	}
 	| '{' values expression '}'
 	{
-		SourceRange begin = Take(Parser::Token($1))->source();
+		SourceRange begin = Take(Parser::ParseToken($1))->source();
 		// NOTE: values have already been added to the scope by Parser
 		auto result = TakeNode<Expression>($3);
-		SourceRange end = Take(Parser::Token($4))->source();
+		SourceRange end = Take(Parser::ParseToken($4))->source();
 
 		SetOrDie($$, p->CompoundExpr(result, begin, end));
 	}
@@ -277,7 +277,7 @@ compoundBody:
 conditional:
 	IF expression compoundExpr ELSE compoundExpr
 	{
-		SourceRange begin = Take(Parser::Token($1))->source();
+		SourceRange begin = Take(Parser::ParseToken($1))->source();
 		auto condition = TakeNode<Expression>($2);
 		auto then = TakeNode<CompoundExpression>($3);
 		auto elseClause = TakeNode<CompoundExpression>($5);
@@ -289,7 +289,7 @@ conditional:
 file:
 	FILE_TOKEN '(' expression argumentList ')'
 	{
-		SourceRange begin = Take(Parser::Token($1))->source();
+		SourceRange begin = Take(Parser::ParseToken($1))->source();
 		auto name = TakeNode<Expression>($3);
 		auto arguments = Take(NodeVec<Argument>($4));
 
@@ -352,7 +352,7 @@ fileInList:
 foreach:
 	foreachbegin mapping compoundExpr
 	{
-		SourceRange begin = Take(Parser::Token($1))->source();
+		SourceRange begin = Take(Parser::ParseToken($1))->source();
 		auto mapping = TakeNode<Mapping>($2);
 		auto body = TakeNode<CompoundExpression>($3);
 
@@ -367,7 +367,7 @@ foreachbegin:
 function:
 	functiondecl '(' parameterList ')' ':' type compoundExpr
 	{
-		SourceRange begin = Take(Parser::Token($1))->source();
+		SourceRange begin = Take(Parser::ParseToken($1))->source();
 		auto params = Take(NodeVec<Parameter>($3));
 		auto *retTy = $6.type;
 		auto body = TakeNode<CompoundExpression>($7);

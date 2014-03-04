@@ -200,7 +200,7 @@ public:
 	//
 	// Low-level but type-safe getters and setters for the YYSTYPE union:
 	//
-	static Token* Token(YYSTYPE&);
+	static Token* ParseToken(YYSTYPE&);
 	static bool Set(YYSTYPE&, Node*);
 
 

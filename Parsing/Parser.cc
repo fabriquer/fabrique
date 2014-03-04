@@ -489,7 +489,7 @@ void Parser::AddToScope(const PtrVec<Argument>& args)
 }
 
 
-fabrique::Token* Parser::Token(YYSTYPE& yyunion)
+fabrique::Token* Parser::ParseToken(YYSTYPE& yyunion)
 {
 	assert(yyunion.token);
 	assert(dynamic_cast<fabrique::Token*>(yyunion.token));
