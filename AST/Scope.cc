@@ -75,6 +75,7 @@ bool Scope::contains(const Identifier& name) const
 
 void Scope::Register(const Argument *a)
 {
+	assert(a);
 	assert(a->hasName());
 	Register(a->getName(), &a->getValue());
 }
@@ -82,6 +83,7 @@ void Scope::Register(const Argument *a)
 
 void Scope::Register(const Parameter *p)
 {
+	assert(p);
 	Register(p->getName(), p);
 }
 
