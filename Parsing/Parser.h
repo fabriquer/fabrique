@@ -106,6 +106,9 @@ public:
 	BinaryOperation* BinaryOp(BinaryOperation::Operator,
 	                          UniqPtr<Expression>&, UniqPtr<Expression>&);
 
+	bool Builtin(const std::string& name, int value);
+	bool Builtin(const std::string& name, const std::string& value);
+
 	//! A call to an @ref Action or @ref Function.
 	Call* CreateCall(UniqPtr<Identifier>&, UniqPtr<UniqPtrVec<Argument>>&,
 	                 const SourceRange& end);

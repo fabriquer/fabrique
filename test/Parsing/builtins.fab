@@ -1,0 +1,10 @@
+#
+# RUN: fab --parse-only --print-ast %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: foo:string = srcroot;
+foo = srcroot;
+
+# CHECK: bar:string = buildroot;
+bar = buildroot;

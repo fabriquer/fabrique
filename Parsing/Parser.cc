@@ -161,6 +161,31 @@ BinaryOperation* Parser::BinaryOp(BinaryOperation::Operator op,
 }
 
 
+bool Parser::Builtin(const string& name, int value)
+{
+	SourceRange src = SourceRange::Span("(builtin)", 0, 0, 0);
+	UniqPtr<Token> token(new Token(name, src));
+
+	UniqPtr<Identifier> id(Id(std::move(token)));
+	UniqPtr<Expression> val(ParseInt(value));
+
+	return DefineValue(id, val);
+}
+
+
+bool Parser::Builtin(const string& name, const std::string& value)
+{
+	SourceRange src = SourceRange::Span("(builtin)", 0, 0, 0);
+	UniqPtr<Token> nameToken(new Token(name, src));
+	UniqPtr<Token> valueToken(new Token(value, src));
+
+	UniqPtr<Identifier> id(Id(std::move(nameToken)));
+	UniqPtr<Expression> val(ParseString(std::move(valueToken)));
+
+	return DefineValue(id, val);
+}
+
+
 Call* Parser::CreateCall(UniqPtr<Identifier>& name,
                          UniqPtr<UniqPtrVec<Argument>>& args,
                          const SourceRange& end)

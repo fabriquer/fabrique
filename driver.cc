@@ -56,11 +56,13 @@
 #include <memory>
 
 using namespace fabrique;
+using std::string;
 using std::unique_ptr;
 
 
 static Bytestream& err();
-static unique_ptr<ast::Scope> Parse(const std::string& filename, FabContext&);
+static unique_ptr<ast::Scope> Parse(const string& filename, FabContext&,
+                                    string buildroot);
 
 int main(int argc, char *argv[]) {
 	//
@@ -72,6 +74,8 @@ int main(int argc, char *argv[]) {
 		Arguments::PrintUsage(std::cerr);
 		return (args ? 0 : 1);
 	}
+
+	string buildroot = AbsoluteDirectory(args->output);
 
 
 	//
@@ -85,7 +89,8 @@ int main(int argc, char *argv[]) {
 	// Parse the file, optionally pretty-printing it.
 	//
 	FabContext ctx;
-	unique_ptr<ast::Scope> ast = Parse(args->input, ctx);
+	unique_ptr<ast::Scope> ast(Parse(args->input, ctx, buildroot));
+
 	if (not ast)
 		return -1;
 
@@ -182,9 +187,8 @@ int main(int argc, char *argv[]) {
 
 
 
-	const std::string filename = JoinPath(
-		AbsoluteDirectory(args->output), backend->DefaultFilename());
-
+	const string filename =
+		JoinPath(buildroot, backend->DefaultFilename());
 
 	if (not args->printOutput and args->format != "null")
 	{
@@ -234,34 +238,31 @@ int yylex(void *yaccUnion)
 }
 
 
-unique_ptr<ast::Scope> Parse(const std::string& filename, FabContext& ctx)
+unique_ptr<ast::Scope> Parse(const string& filename, FabContext& ctx,
+                             string buildroot)
 {
-	std::ifstream infile(filename.c_str());
-	if (!infile)
-	{
-		err()
-			<< Bytestream::Error << "error: "
-			<< Bytestream::Reset << "failed to open input file '"
-			<< Bytestream::Filename << filename
-			<< Bytestream::Reset << "': "
-			<< strerror(errno)
-			<< "\n"
-			;
-		return unique_ptr<ast::Scope>();
-	}
-
-	lex.reset(new Lexer(filename));
-	lex->switch_streams(&infile, &err().raw());
-
-
-	//
-	// Parse the Fabrique input.
-	//
 	unique_ptr<ast::Scope> ast;
 
 	try
 	{
+		std::ifstream infile(filename.c_str());
+		if (!infile)
+			throw UserError("no such file: '" + filename + "'");
+
+		// Set up lex.
+		lex.reset(new Lexer(filename));
+		lex->switch_streams(&infile, &err().raw());
+
+
+		// Set up the parser.
 		unique_ptr<ast::Parser> parser(new ast::Parser(ctx, *lex));
+
+		//
+		// Define some magic builtins:
+		//
+		parser->Builtin("srcroot", DirectoryOf(filename));
+		parser->Builtin("buildroot", buildroot);
+
 		int result = yyparse(parser.get());
 		lex.reset();
 
@@ -275,7 +276,17 @@ unique_ptr<ast::Scope> Parse(const std::string& filename, FabContext& ctx)
 			for (auto& error : parser->errors())
 				err() << *error << "\n";
 		}
+	}
+	catch (OSError& e)
+	{
+		err()
+			<< Bytestream::Error << e.message()
+			<< Bytestream::Operator << ": "
+			<< Bytestream::Reset << e.description()
+			<< "\n"
+			;
 
+		ast.reset();
 	}
 	catch (SourceCodeException& e)
 	{
@@ -285,6 +296,8 @@ unique_ptr<ast::Scope> Parse(const std::string& filename, FabContext& ctx)
 			<< Bytestream::Reset
 			<< e
 			<< "\n";
+
+		ast.reset();
 	}
 
 	return ast;
