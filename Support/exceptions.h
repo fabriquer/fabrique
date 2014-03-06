@@ -78,6 +78,44 @@ private:
 };
 
 
+//! An error that has an OS-specific description.
+class OSError : public std::exception
+{
+public:
+	virtual ~OSError();
+
+	virtual const std::string& message() const { return message_; }
+	virtual const std::string& description() const { return description_; }
+
+	const char* what() const noexcept { return completeMessage_.c_str(); }
+
+protected:
+	OSError(const std::string& message, const std::string& description);
+
+private:
+	const std::string message_;
+	const std::string description_;
+	const std::string completeMessage_;
+};
+
+
+
+//! An error in user input.
+class UserError : public std::exception
+{
+public:
+	UserError(const std::string& message);
+	virtual ~UserError();
+
+	virtual const std::string& message() const { return message_; }
+	const char* what() const noexcept { return message_.c_str(); }
+
+private:
+	const std::string message_;
+};
+
+
+
 class ErrorReport;
 
 //! Base class for exceptions related to invalid source code.

@@ -63,6 +63,23 @@ const char* DuplicateException::what() const noexcept
 }
 
 
+OSError::OSError(const string& message, const string& description)
+	: message_(message), description_(description),
+	  completeMessage_(message + ": " + description)
+{
+}
+
+OSError::~OSError() {}
+
+
+UserError::UserError(const string& message)
+	: message_(message)
+{
+}
+
+UserError::~UserError() {}
+
+
 SourceCodeException::SourceCodeException(const string& m, const SourceRange& l)
 	: HasSource(l), err_(ErrorReport::Create(m, l))
 {
