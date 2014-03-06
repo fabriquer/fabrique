@@ -1,6 +1,6 @@
 #
 # RUN: fab --print-dag --format=ninja --output=%t %s
-# RUN: FileCheck %s -input-file %t
+# RUN: FileCheck %s -input-file %t/build.ninja
 #
 
 cc = action('cc -c $in -o $out' <- in:file, out:file);

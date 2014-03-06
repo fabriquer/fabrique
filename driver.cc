@@ -45,6 +45,7 @@
 #include "Support/Arguments.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
+#include "Support/os.h"
 
 #include "FabContext.h"
 
@@ -179,13 +180,13 @@ int main(int argc, char *argv[]) {
 	std::ofstream outfile;
 	unique_ptr<Bytestream> outfileStream;
 
-	const std::string filename =
-		args->outputFileSpecified
-		? args->output
-		: backend->DefaultFilename();
 
 
-	if (not args->printOutput and not filename.empty() and filename != "-")
+	const std::string filename = JoinPath(
+		AbsoluteDirectory(args->output), backend->DefaultFilename());
+
+
+	if (not args->printOutput and args->format != "null")
 	{
 		outfile.open(filename.c_str());
 		outfileStream.reset(Bytestream::Plain(outfile));

@@ -115,7 +115,7 @@ const option::Descriptor usage[] =
 	},
 	{
 		OutputFile, SetOpt, "o", "output", option::Arg::Optional,
-		"  -o,--output      Output file: defaults to stdout ('-')."
+		"  -o,--output      Output file (default: current directory)."
 	},
 	{
 		Format, SetOpt, "f", "format", IsOutputFormat,
@@ -171,7 +171,7 @@ Arguments* Arguments::Parse(int argc, char *argv[])
 
 	const string output = options[OutputFile]
 	                       ? options[OutputFile].arg
-	                       : "-";
+	                       : ".";
 
 	const bool outputSpecified = options[OutputFile];
 

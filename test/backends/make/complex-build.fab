@@ -1,6 +1,6 @@
 #
 # RUN: fab --print-dag --format=make --output=%t %s
-# RUN: FileCheck %s -input-file %t
+# RUN: FileCheck %s -input-file %t/Makefile
 #
 
 cc = action('cc -c $in -o $out' <- in:file, out:file);

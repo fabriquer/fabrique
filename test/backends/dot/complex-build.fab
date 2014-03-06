@@ -1,6 +1,6 @@
 #
 # RUN: fab --print-dag --format=dot --output=%t %s
-# RUN: FileCheck %s -input-file %t
+# RUN: FileCheck %s -input-file %t/build.dot
 #
 
 cc = action('cc -c $in -o $out' <- in:file, out:file);

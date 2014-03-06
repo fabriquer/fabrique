@@ -1,6 +1,6 @@
 #
 # RUN: fab --format=make --output=%t %s
-# RUN: FileCheck %s -input-file %t
+# RUN: FileCheck %s -input-file %t/Makefile
 #
 
 lex = action('$LEX -c++ --header-file=$header --outfile=$out $in'
