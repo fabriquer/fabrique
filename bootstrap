@@ -46,7 +46,7 @@ cxx_srcs = {
 	'Support/': (
 		'Arguments', 'Bytestream', 'ErrorReport', 'Join',
 		'Printable', 'SourceLocation', 'Visitable',
-		'exceptions',
+		'exceptions', 'os-posix',
 	),
 	'Types/': (
 		'FunctionType', 'Type', 'TypeError', 'Typed',
