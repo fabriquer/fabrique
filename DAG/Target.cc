@@ -33,6 +33,7 @@
 #include "DAG/File.h"
 #include "DAG/List.h"
 #include "DAG/Target.h"
+#include "DAG/Visitor.h"
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
 #include "Support/exceptions.h"
@@ -126,4 +127,13 @@ void Target::PrettyPrint(Bytestream& out, size_t indent) const
 
 	else
 		files_->PrettyPrint(out, indent);
+}
+
+
+void Target::Accept(Visitor& v) const
+{
+	if (v.Visit(*this))
+	{
+		files_->Accept(v);
+	}
 }

@@ -78,6 +78,8 @@ public:
 	virtual std::shared_ptr<Value> And(std::shared_ptr<Value>&);
 	virtual std::shared_ptr<Value> Or(std::shared_ptr<Value>&);
 	virtual std::shared_ptr<Value> Xor(std::shared_ptr<Value>&);
+
+	void Accept(Visitor& v) const override;
 };
 
 class Integer : public Primitive<int>
@@ -87,6 +89,8 @@ public:
 	std::string str() const;
 
 	virtual std::shared_ptr<Value> Add(std::shared_ptr<Value>&);
+
+	void Accept(Visitor& v) const override;
 };
 
 class String : public Primitive<std::string>
@@ -98,6 +102,8 @@ public:
 	virtual std::shared_ptr<Value> Add(std::shared_ptr<Value>&);
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+
+	void Accept(Visitor& v) const override;
 };
 
 } // namespace dag

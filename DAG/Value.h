@@ -45,6 +45,8 @@ class Type;
 
 namespace dag {
 
+class Visitor;
+
 
 //! The result of evaluating an expression.
 class Value : public HasSource, public Printable, public Typed
@@ -81,6 +83,8 @@ public:
 	 * For instance, [ 1 2 ] can add 3 to itself but not vice versa.
 	 */
 	virtual bool canScalarAdd(const Value&) { return false; }
+
+	virtual void Accept(Visitor&) const = 0;
 
 protected:
 	Value(const Type&, const SourceRange&);

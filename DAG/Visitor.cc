@@ -1,6 +1,6 @@
-/** @file DAG/File.h    Declaration of @ref fabrique::dag::File. */
+/** @file DAG/Visitor.cc    Definition of @ref fabrique::dag::Visitor. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,37 +29,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DAG_FILE_H
-#define DAG_FILE_H
+#include "DAG/Visitor.h"
+using namespace fabrique::dag;
 
-#include "DAG/Value.h"
-
-#include <string>
-
-
-namespace fabrique {
-namespace dag {
-
-/**
- * A reference to a file on disk (source or target).
- */
-class File : public Value
-{
-public:
-	File(const std::string& name, const Type&, SourceRange source);
-	virtual ~File() {}
-
-	virtual std::string filename() const { return filename_; }
-	virtual std::string str() const { return filename_; }
-
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
-	void Accept(Visitor&) const override;
-
-private:
-	const std::string filename_;
-};
-
-} // namespace dag
-} // namespace fabrique
-
-#endif
+Visitor::~Visitor() {}

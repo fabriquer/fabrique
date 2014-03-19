@@ -70,6 +70,7 @@ public:
 	virtual std::shared_ptr<Value> Xor(std::shared_ptr<Value>&);
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	void Accept(Visitor& v) const override;
 
 private:
 	Target(const std::string& name, const std::shared_ptr<List>& files,

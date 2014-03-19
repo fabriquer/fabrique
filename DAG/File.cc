@@ -30,6 +30,7 @@
  */
 
 #include "DAG/File.h"
+#include "DAG/Visitor.h"
 #include "Support/Bytestream.h"
 
 using namespace fabrique::dag;
@@ -45,4 +46,10 @@ File::File(const string& filename, const Type& t, SourceRange source)
 void File::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
 	out << Bytestream::Literal << filename_ << Bytestream::Reset;
+}
+
+
+void File::Accept(Visitor& v) const
+{
+	v.Visit(*this);
 }

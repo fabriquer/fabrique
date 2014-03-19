@@ -30,6 +30,7 @@
  */
 
 #include "DAG/Primitive.h"
+#include "DAG/Visitor.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 #include "Types/Type.h"
@@ -92,6 +93,11 @@ shared_ptr<Value> Boolean::Xor(shared_ptr<Value>& v)
 
 string Boolean::str() const { return value_ ? "true" : "false"; }
 
+void Boolean::Accept(Visitor& v) const
+{
+	v.Visit(*this);
+}
+
 
 Integer::Integer(int i, const Type& t, SourceRange loc)
 	: Primitive(t, i, loc)
@@ -110,6 +116,11 @@ shared_ptr<Value> Integer::Add(shared_ptr<Value>& v)
 
 	return shared_ptr<Value>(
 		new Integer(this->value_ + other->value_, type(), loc));
+}
+
+void Integer::Accept(Visitor& v) const
+{
+	v.Visit(*this);
 }
 
 
@@ -135,4 +146,9 @@ shared_ptr<Value> String::Add(shared_ptr<Value>& v)
 void String::PrettyPrint(Bytestream& b, size_t /*indent*/) const
 {
 	b << Bytestream::Literal << "'" << str() << "'" << Bytestream::Reset;
+}
+
+void String::Accept(Visitor& v) const
+{
+	v.Visit(*this);
 }

@@ -74,6 +74,7 @@ public:
 	virtual bool canScalarAdd(const Value&);
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	void Accept(Visitor& v) const override;
 
 private:
 	const SharedPtrVec<Value> elements_;

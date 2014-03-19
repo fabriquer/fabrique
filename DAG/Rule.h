@@ -68,6 +68,7 @@ public:
 	std::string str() const { return command_; }
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	void Accept(Visitor& v) const override;
 
 private:
 	Rule(const std::string& name, const std::string& command,

@@ -72,6 +72,7 @@ public:
 	const ValueMap& arguments() const { return args_; }
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	void Accept(Visitor& v) const override;
 
 private:
 	Build(std::shared_ptr<Rule>&,

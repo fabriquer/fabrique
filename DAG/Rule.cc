@@ -31,6 +31,7 @@
 
 #include "DAG/File.h"
 #include "DAG/Rule.h"
+#include "DAG/Visitor.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 
@@ -90,4 +91,14 @@ void Rule::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 		<< Bytestream::Operator << " }"
 		<< Bytestream::Reset
 		;
+}
+
+
+void Rule::Accept(Visitor& v) const
+{
+	if (v.Visit(*this))
+	{
+		for (auto a : arguments_)
+			a.second->Accept(v);
+	}
 }

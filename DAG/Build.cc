@@ -34,6 +34,7 @@
 #include "DAG/List.h"
 #include "DAG/Rule.h"
 #include "DAG/Target.h"
+#include "DAG/Visitor.h"
 
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
@@ -210,6 +211,22 @@ void Build::PrettyPrint(Bytestream& out, size_t indent) const
 	}
 
 	out << Bytestream::Reset;
+}
+
+
+void Build::Accept(Visitor& v) const
+{
+	if (v.Visit(*this))
+	{
+		for (auto a : args_)
+			a.second->Accept(v);
+
+		for (auto f : allInputs())
+			f->Accept(v);
+
+		for (auto f : allOutputs())
+			f->Accept(v);
+	}
 }
 
 

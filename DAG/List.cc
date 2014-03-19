@@ -31,6 +31,7 @@
 
 #include "DAG/List.h"
 #include "DAG/Target.h"
+#include "DAG/Visitor.h"
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
 #include "Support/SourceLocation.h"
@@ -160,4 +161,14 @@ void List::PrettyPrint(Bytestream& out, size_t indent) const
 		<< Bytestream::Operator << "]"
 		<< Bytestream::Reset
 		;
+}
+
+
+void List::Accept(Visitor& v) const
+{
+	if (v.Visit(*this))
+	{
+		for (auto& e : elements_)
+			e->Accept(v);
+	}
 }

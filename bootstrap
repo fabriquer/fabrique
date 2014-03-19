@@ -38,7 +38,7 @@ cxx_srcs = {
 	),
 	'DAG/': (
 		'Build', 'DAG', 'File', 'List', 'Primitive', 'Rule',
-		'Target', 'UndefinedValueException', 'Value',
+		'Target', 'UndefinedValueException', 'Value', 'Visitor',
 	),
 	'Parsing/': (
 		'Lexer', 'Parser', 'Token',
