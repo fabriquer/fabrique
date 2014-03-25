@@ -46,6 +46,10 @@ class Bytestream;
 class Printable
 {
 public:
+	Printable() {}
+	Printable(const Printable&) {}
+	Printable& operator= (const Printable&) { return *this; }
+
 	/**
 	 * Print a human-readable representation to an output stream
 	 * and return that output stream.

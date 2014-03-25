@@ -96,7 +96,7 @@ warnings = [
 if args.debug: cxxflags += [ '-g', '-ggdb' ]
 else: cxxflags += [ '-D NDEBUG' ]
 
-gencxxflags = cxxflags
+gencxxflags = cxxflags + [ '-Wno-deprecated-register' ]
 cxxflags = cxxflags + warnings
 
 def which(name):
