@@ -48,12 +48,20 @@ namespace {
 class PosixError : public fabrique::OSError
 {
 public:
-	PosixError(const string& message)
+	explicit PosixError(string message)
 		: OSError(message, strerror(errno))
 	{
 	}
 
+	PosixError(PosixError&& e)
+		: OSError(e)
+	{
+	}
+
 	virtual ~PosixError() {}
+
+private:
+	PosixError(const PosixError&) = delete;
 };
 
 #if defined(__DARWIN_UNIX03)

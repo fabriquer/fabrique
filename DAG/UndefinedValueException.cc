@@ -41,6 +41,12 @@ dag::UndefinedValueException::UndefinedValueException(const string& name,
 {
 }
 
+dag::UndefinedValueException::UndefinedValueException(
+	const UndefinedValueException& orig)
+	: SemanticException(orig.message(), orig.source()), name_(orig.name_)
+{
+}
+
 dag::UndefinedValueException::~UndefinedValueException()
 {
 }

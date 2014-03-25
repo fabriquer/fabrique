@@ -50,6 +50,8 @@ public:
 	AssertionFailure(const std::string& condition,
 	                 const std::string& message = "");
 
+	AssertionFailure(const AssertionFailure&);
+
 	virtual ~AssertionFailure();
 
 	const char* what() const noexcept;
@@ -67,6 +69,7 @@ class DuplicateException : public std::exception
 {
 public:
 	DuplicateException(const std::string& kind, const std::string& name);
+	DuplicateException(const DuplicateException&);
 	virtual ~DuplicateException();
 
 	const char* what() const noexcept;
@@ -82,6 +85,7 @@ private:
 class OSError : public std::exception
 {
 public:
+	OSError(const OSError&);
 	virtual ~OSError();
 
 	virtual const std::string& message() const { return message_; }
@@ -105,6 +109,7 @@ class UserError : public std::exception
 {
 public:
 	UserError(const std::string& message);
+	UserError(const UserError&);
 	virtual ~UserError();
 
 	virtual const std::string& message() const { return message_; }
@@ -132,6 +137,7 @@ public:
 
 protected:
 	SourceCodeException(const std::string& message, const SourceRange&);
+	SourceCodeException(const SourceCodeException&);
 
 private:
 	std::shared_ptr<ErrorReport> err_;
@@ -143,6 +149,7 @@ class SyntaxError : public SourceCodeException
 {
 public:
 	SyntaxError(const std::string& message, const SourceRange&);
+	SyntaxError(const SyntaxError&);
 	virtual ~SyntaxError();
 };
 
@@ -151,6 +158,7 @@ class SemanticException : public SourceCodeException
 {
 public:
 	SemanticException(const std::string& message, const SourceRange&);
+	SemanticException(const SemanticException&);
 	virtual ~SemanticException();
 };
 

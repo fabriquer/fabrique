@@ -45,6 +45,7 @@ class TypeError : public SemanticException
 {
 public:
 	TypeError(const std::string& message, const SourceRange&);
+	TypeError(const TypeError&);
 	virtual ~TypeError();
 };
 
@@ -61,6 +62,7 @@ public:
 	WrongTypeException(const std::string& expected,
 	                   const std::string& actual, const SourceRange&);
 
+	WrongTypeException(const WrongTypeException&);
 	virtual ~WrongTypeException();
 };
 

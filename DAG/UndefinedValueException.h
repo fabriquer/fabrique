@@ -43,6 +43,7 @@ class UndefinedValueException : public SemanticException
 {
 public:
 	UndefinedValueException(const std::string& name, const SourceRange&);
+	UndefinedValueException(const UndefinedValueException&);
 	virtual ~UndefinedValueException();
 
 private:

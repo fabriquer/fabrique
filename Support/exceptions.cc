@@ -42,6 +42,11 @@ AssertionFailure::AssertionFailure(const string& condition, const string& msg)
 {
 }
 
+AssertionFailure::AssertionFailure(const AssertionFailure& orig)
+	: condition_(orig.condition_), message_(orig.message_)
+{
+}
+
 AssertionFailure::~AssertionFailure() {}
 
 const char* AssertionFailure::what() const noexcept
@@ -52,6 +57,11 @@ const char* AssertionFailure::what() const noexcept
 
 DuplicateException::DuplicateException(const string& kind, const string& name)
 	: message_("duplicate " + kind + " " + name), kind_(kind), name_(name)
+{
+}
+
+DuplicateException::DuplicateException(const DuplicateException& orig)
+	: message_(orig.message_), kind_(orig.kind_), name_(orig.name_)
 {
 }
 
@@ -69,6 +79,12 @@ OSError::OSError(const string& message, const string& description)
 {
 }
 
+OSError::OSError(const OSError& orig)
+	: message_(orig.message_), description_(orig.description_),
+	  completeMessage_(orig.completeMessage_)
+{
+}
+
 OSError::~OSError() {}
 
 
@@ -77,11 +93,21 @@ UserError::UserError(const string& message)
 {
 }
 
+UserError::UserError(const UserError& orig)
+	: message_(orig.message_)
+{
+}
+
 UserError::~UserError() {}
 
 
 SourceCodeException::SourceCodeException(const string& m, const SourceRange& l)
 	: HasSource(l), err_(ErrorReport::Create(m, l))
+{
+}
+
+SourceCodeException::SourceCodeException(const SourceCodeException& orig)
+	: HasSource(orig.source()), err_(orig.err_)
 {
 }
 
@@ -107,6 +133,11 @@ void SourceCodeException::PrettyPrint(Bytestream& out, size_t indent) const
 
 SyntaxError::SyntaxError(const string& message, const SourceRange& loc)
 	: SourceCodeException(message, loc)
+{
+}
+
+SyntaxError::SyntaxError(const SyntaxError& orig)
+	: SourceCodeException(orig.message(), orig.source())
 {
 }
 

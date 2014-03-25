@@ -41,6 +41,11 @@ TypeError::TypeError(const string& message, const SourceRange& src)
 {
 }
 
+TypeError::TypeError(const TypeError& orig)
+	: SemanticException(orig.message(), orig.source())
+{
+}
+
 TypeError::~TypeError()
 {
 }
@@ -60,6 +65,11 @@ WrongTypeException::WrongTypeException(const string& want, const Type& got,
 WrongTypeException::WrongTypeException(const string& want, const string& got,
                                        const SourceRange& src)
 	: TypeError("expected " + want + ", got " + got, src)
+{
+}
+
+WrongTypeException::WrongTypeException(const WrongTypeException& orig)
+	: TypeError(orig.message(), orig.source())
 {
 }
 
