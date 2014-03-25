@@ -34,10 +34,12 @@
 #include "DAG/Build.h"
 #include "DAG/DAG.h"
 #include "DAG/File.h"
+#include "DAG/Formatter.h"
 #include "DAG/List.h"
 #include "DAG/Primitive.h"
 #include "DAG/Rule.h"
 #include "DAG/Target.h"
+#include "DAG/Value.h"
 
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
@@ -47,6 +49,7 @@
 using namespace fabrique::backend;
 using namespace fabrique::dag;
 
+using fabrique::Bytestream;
 using std::dynamic_pointer_cast;
 using std::shared_ptr;
 using std::string;
@@ -57,6 +60,23 @@ namespace fabrique
 static bool replace(string& s, const string& pattern, const string&);
 static bool replace(string& s, const string& pattern, const Build::FileVec&);
 }
+
+
+class MakeFormatter : public Formatter
+{
+public:
+	using Formatter::Format;
+
+	string Format(const Boolean&);
+	string Format(const Build&);
+	string Format(const File&);
+	string Format(const Integer&);
+	string Format(const List&);
+	string Format(const Rule&);
+	string Format(const String&);
+	string Format(const Target&);
+};
+
 
 
 
@@ -72,25 +92,10 @@ MakeBackend::MakeBackend()
 }
 
 
-static string stringify(const shared_ptr<Value>& v)
-{
-	assert(v);
-
-	if (auto list = dynamic_pointer_cast<List>(v))
-	{
-		vector<string> substrings;
-		for (auto& element : *list)
-			substrings.push_back(stringify(element));
-
-		return fabrique::join(substrings, " ");
-	}
-
-	return v->str();
-}
-
-
 void MakeBackend::Process(const dag::DAG& dag, Bytestream& out)
 {
+	MakeFormatter formatter;
+
 	// Header comment:
 	out
 		<< Bytestream::Comment
@@ -115,7 +120,7 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out)
 		out
 			<< Bytestream::Definition << i.first
 			<< Bytestream::Operator << "=" << indent_
-			<< Bytestream::Literal << stringify(i.second)
+			<< Bytestream::Literal << formatter.Format(*i.second)
 			<< Bytestream::Reset
 			<< "\n"
 			;
@@ -125,20 +130,13 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out)
 
 	// Explicitly-named pseudo-targets:
 	for (auto& i : dag.targets())
-	{
 		out
 			<< Bytestream::Definition << i.first
-			<< Bytestream::Operator << " :"
+			<< Bytestream::Operator << " : "
 			<< Bytestream::Literal
-			;
-
-		for (auto& j : *i.second->files())
-			out << " " << *j;
-
-		out
+			<< formatter.Format(*i.second)
 			<< "\n"
 			;
-	}
 
 	out << "\n";
 
@@ -177,8 +175,9 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out)
 
 			for (const shared_ptr<File>& f : outputs)
 			{
-				pseudoTargets[f->filename()] = pseudoName;
-				out << " " << *f;
+				string name = f->filename();
+				pseudoTargets[name] = pseudoName;
+				out << " " << name;
 			}
 
 			out << "\n";
@@ -204,14 +203,14 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out)
 		{
 			out << " |";
 			for (const shared_ptr<File>& f : build.explicitInputs())
-				out << " " << *f;
+				out << " " << f->filename();
 		}
 
 
 		//
 		// Build the command to be run (substitute $variables).
 		//
-		string command = rule.command();
+		string command = formatter.Format(rule);
 		for (auto& j : build.arguments())
 		{
 			const string name = j.first;
@@ -256,4 +255,50 @@ static bool fabrique::replace(string& haystack, const string& pattern,
 	replacement = replacement.substr(0, replacement.length() - 1);
 
 	return replace(haystack, pattern, replacement);
+}
+
+
+string MakeFormatter::Format(const Boolean& b)
+{
+	return (b.value() ? "true" : "false");
+}
+
+string MakeFormatter::Format(const Build&)
+{
+	assert(false && "called MakeFormatter::Format(Build&)");
+}
+
+string MakeFormatter::Format(const File& f)
+{
+	return f.filename();
+}
+
+string MakeFormatter::Format(const Integer& i)
+{
+	return std::to_string(i.value());
+}
+
+string MakeFormatter::Format(const List& l)
+{
+	vector<string> substrings;
+
+	for (const shared_ptr<Value>& element : l)
+		substrings.push_back(Format(*element));
+
+	return fabrique::join(substrings, " ");
+}
+
+string MakeFormatter::Format(const Rule& rule)
+{
+	return rule.command();
+}
+
+string MakeFormatter::Format(const String& s)
+{
+	return s.value();
+}
+
+string MakeFormatter::Format(const Target& t)
+{
+	return Format(*t.files());
 }

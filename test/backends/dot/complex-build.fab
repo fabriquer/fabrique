@@ -28,7 +28,7 @@ bin = link(objs, out = file('foo'));
 # CHECK-DAG: "cc { bar.c => bar.c.o }" [ shape =
 # CHECK-DAG: "cc { baz.c => baz.c.o }" [ shape =
 # CHECK-DAG: "link { foo.c.o bar.c.o baz.c.o => foo }" [ shape =
-# CHECK-DAG: "lex { foo.yy => foo.c }( classname = 'FooClass' )" [ shape =
+# CHECK-DAG: "lex { foo.yy => foo.c } ( classname = 'FooClass' )" [ shape =
 #
 # CHECK-DAG: "foo.yy" -> "lex { foo.yy => foo.c }{{.*}}";
 # CHECK-DAG: "lex { foo.yy => foo.c }{{.*}}" -> "foo.c";

@@ -34,6 +34,7 @@
 #include "DAG/Build.h"
 #include "DAG/DAG.h"
 #include "DAG/File.h"
+#include "DAG/Formatter.h"
 #include "DAG/List.h"
 #include "DAG/Primitive.h"
 #include "DAG/Rule.h"
@@ -53,6 +54,22 @@ using std::string;
 using std::vector;
 
 
+class NinjaFormatter : public Formatter
+{
+public:
+	using Formatter::Format;
+
+	string Format(const Boolean&);
+	string Format(const Build&);
+	string Format(const File&);
+	string Format(const Integer&);
+	string Format(const List&);
+	string Format(const Rule&);
+	string Format(const String&);
+	string Format(const Target&);
+};
+
+
 NinjaBackend* NinjaBackend::Create()
 {
 	return new NinjaBackend;
@@ -65,10 +82,10 @@ NinjaBackend::NinjaBackend()
 }
 
 
-static string stringify(const shared_ptr<Value>& v);
-
 void NinjaBackend::Process(const dag::DAG& dag, Bytestream& out)
 {
+	NinjaFormatter formatter;
+
 	// Header comment:
 	out
 		<< Bytestream::Comment
@@ -92,7 +109,7 @@ void NinjaBackend::Process(const dag::DAG& dag, Bytestream& out)
 		out
 			<< Bytestream::Definition << i.first
 			<< Bytestream::Operator << " = "
-			<< Bytestream::Literal << stringify(i.second)
+			<< Bytestream::Literal << formatter.Format(*i.second)
 			<< Bytestream::Reset
 			<< "\n"
 			;
@@ -133,7 +150,8 @@ void NinjaBackend::Process(const dag::DAG& dag, Bytestream& out)
 			out
 				<< Bytestream::Definition << "  " << a.first
 				<< Bytestream::Operator << " = "
-				<< Bytestream::Literal << stringify(a.second)
+				<< Bytestream::Literal
+				<< formatter.Format(*a.second)
 				<< Bytestream::Reset << "\n"
 				;
 
@@ -148,7 +166,7 @@ void NinjaBackend::Process(const dag::DAG& dag, Bytestream& out)
 			<< Bytestream::Definition << i.first
 			<< Bytestream::Operator << " : "
 			<< Bytestream::Action << "phony "
-			<< Bytestream::Literal << stringify(i.second)
+			<< Bytestream::Literal << formatter.Format(*i.second)
 			<< "\n"
 			;
 
@@ -171,10 +189,10 @@ void NinjaBackend::Process(const dag::DAG& dag, Bytestream& out)
 
 		out << Bytestream::Type << "build";
 		for (const shared_ptr<File>& f : build.outputs())
-			out << " " << *f;
+			out << " " << f->filename();
 
 		for (const shared_ptr<File>& f : build.sideEffectOutputs())
-			out << " " << *f;
+			out << " " << f->filename();
 
 		out
 			<< Bytestream::Operator << ": "
@@ -182,13 +200,13 @@ void NinjaBackend::Process(const dag::DAG& dag, Bytestream& out)
 			;
 
 		for (const shared_ptr<File>& f : build.explicitInputs())
-			out << " " << *f;
+			out << " " << f->filename();
 
 		if (build.dependencies().size() > 0)
 		{
 			out << " |";
 			for (const shared_ptr<File>& f : build.explicitInputs())
-				out << " " << *f;
+				out << " " << f->filename();
 		}
 
 		out << "\n";
@@ -197,7 +215,8 @@ void NinjaBackend::Process(const dag::DAG& dag, Bytestream& out)
 			out
 				<< Bytestream::Definition << "  " << a.first
 				<< Bytestream::Operator << " = "
-				<< Bytestream::Literal << stringify(a.second)
+				<< Bytestream::Literal
+				<< formatter.Format(*a.second)
 				<< Bytestream::Reset << "\n"
 				;
 		out << "\n";
@@ -205,26 +224,47 @@ void NinjaBackend::Process(const dag::DAG& dag, Bytestream& out)
 }
 
 
-static string stringify(const shared_ptr<Value>& v)
+string NinjaFormatter::Format(const Boolean& b)
 {
-	assert(v);
+	return b.value() ? "true" : "false";
+}
 
-	if (auto list = dynamic_pointer_cast<List>(v))
-	{
-		vector<string> substrings;
-		for (auto& element : *list)
-			substrings.push_back(stringify(element));
+string NinjaFormatter::Format(const Build&)
+{
+	assert(false && "called NinjaFormatter(const Build&)");
+}
 
-		return fabrique::join(substrings, " ");
-	}
-	else if (auto target = dynamic_pointer_cast<Target>(v))
-	{
-		vector<string> files;
-		for (auto& f : *target->files())
-			files.push_back(stringify(f));
+string NinjaFormatter::Format(const File& f)
+{
+	return f.filename();
+}
 
-		return fabrique::join(files, " ");
-	}
+string NinjaFormatter::Format(const Integer& i)
+{
+	return std::to_string(i.value());
+}
 
-	return v->str();
+string NinjaFormatter::Format(const List& l)
+{
+	std::vector<string> substrings;
+
+	for (const shared_ptr<Value>& element : l)
+		substrings.push_back(Format(*element));
+
+	return fabrique::join(substrings, " ");
+}
+
+string NinjaFormatter::Format(const Rule& rule)
+{
+	return rule.command();
+}
+
+string NinjaFormatter::Format(const String& s)
+{
+	return s.value();
+}
+
+string NinjaFormatter::Format(const Target& t)
+{
+	return Format(*t.files());
 }
