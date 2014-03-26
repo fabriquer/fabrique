@@ -79,6 +79,19 @@ static const char* dirname(const char *filename)
 }
 
 
+bool fabrique::FileExists(const string& filename)
+{
+	struct stat s;
+	if (stat(filename.c_str(), &s) == 0)
+		return S_ISREG(s.st_mode);
+
+	if (errno == ENOENT)
+		return false;
+
+	throw PosixError("error examining " + filename);
+}
+
+
 string fabrique::AbsoluteDirectory(string name, bool createIfMissing)
 {
 	const char *cname = name.c_str();

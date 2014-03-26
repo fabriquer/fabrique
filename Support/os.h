@@ -37,6 +37,8 @@
 
 namespace fabrique {
 
+bool FileExists(const std::string& filename);
+
 std::string AbsoluteDirectory(std::string name, bool createIfMissing = true);
 std::string DirectoryOf(std::string filename);
 std::string JoinPath(const std::string&, const std::string&);
