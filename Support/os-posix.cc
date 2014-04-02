@@ -79,11 +79,11 @@ static const char* dirname(const char *filename)
 }
 
 
-bool fabrique::FileExists(const string& filename)
+bool fabrique::FileExists(const string& filename, bool directory)
 {
 	struct stat s;
 	if (stat(filename.c_str(), &s) == 0)
-		return S_ISREG(s.st_mode);
+		return directory ? S_ISDIR(s.st_mode) : S_ISREG(s.st_mode);
 
 	if (errno == ENOENT)
 		return false;
