@@ -189,10 +189,10 @@ void NinjaBackend::Process(const dag::DAG& dag, Bytestream& out)
 
 		out << Bytestream::Type << "build";
 		for (const shared_ptr<File>& f : build.outputs())
-			out << " " << f->filename();
+			out << " " << formatter.Format(*f);
 
 		for (const shared_ptr<File>& f : build.sideEffectOutputs())
-			out << " " << f->filename();
+			out << " " << formatter.Format(*f);
 
 		out
 			<< Bytestream::Operator << ": "
@@ -200,13 +200,13 @@ void NinjaBackend::Process(const dag::DAG& dag, Bytestream& out)
 			;
 
 		for (const shared_ptr<File>& f : build.explicitInputs())
-			out << " " << f->filename();
+			out << " " << formatter.Format(*f);
 
 		if (build.dependencies().size() > 0)
 		{
 			out << " |";
 			for (const shared_ptr<File>& f : build.explicitInputs())
-				out << " " << f->filename();
+				out << " " << formatter.Format(*f);
 		}
 
 		out << "\n";
@@ -236,7 +236,7 @@ string NinjaFormatter::Format(const Build&)
 
 string NinjaFormatter::Format(const File& f)
 {
-	return f.filename();
+	return f.fullName();
 }
 
 string NinjaFormatter::Format(const Integer& i)

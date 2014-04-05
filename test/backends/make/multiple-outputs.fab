@@ -6,6 +6,6 @@
 lex = action('$LEX -c++ --header-file=$header --outfile=$out $in'
               <- in:file, out:file, header:file[out]);
 
-# CHECK: foo.c foo.h : foo.yy
-# CHECK-NEXT: $LEX -c++ --header-file=foo.h --outfile=foo.c foo.yy
+# CHECK: $buildroot/foo.c $buildroot/foo.h : $srcroot/foo.yy
+# CHECK-NEXT: $LEX -c++ --header-file=$buildroot/foo.h --outfile=$buildroot/foo.c $srcroot/foo.yy
 gen = lex(file('foo.yy'), file('foo.c'), header = file('foo.h'));

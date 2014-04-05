@@ -175,7 +175,7 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out)
 
 			for (const shared_ptr<File>& f : outputs)
 			{
-				string name = f->filename();
+				string name = formatter.Format(*f);
 				pseudoTargets[name] = pseudoName;
 				out << " " << name;
 			}
@@ -189,7 +189,7 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out)
 		out << Bytestream::Definition;
 
 		for (const shared_ptr<File>& f : outputs)
-			out << f->filename() << " ";
+			out << formatter.Format(*f) << " ";
 
 		out
 			<< Bytestream::Operator << ":"
@@ -197,13 +197,13 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out)
 			;
 
 		for (const shared_ptr<File>& f : build.explicitInputs())
-			out << " " << f->filename();
+			out << " " << formatter.Format(*f);
 
 		if (build.dependencies().size() > 0)
 		{
 			out << " |";
 			for (const shared_ptr<File>& f : build.explicitInputs())
-				out << " " << f->filename();
+				out << " " << formatter.Format(*f);
 		}
 
 
@@ -216,7 +216,7 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out)
 			const string name = j.first;
 			const Value& v = *j.second;
 
-			replace(command, "$" + name, v.str());
+			replace(command, "$" + name, formatter.Format(v));
 		}
 		replace(command, "$in", build.explicitInputs());
 		replace(command, "$out", build.outputs());
@@ -249,7 +249,7 @@ static bool fabrique::replace(string& haystack, const string& pattern,
 	std::ostringstream oss;
 
 	for (const shared_ptr<File>& f : files)
-		oss << f->filename() << " ";
+		oss << f->fullName() << " ";
 
 	string replacement = oss.str();
 	replacement = replacement.substr(0, replacement.length() - 1);
@@ -270,7 +270,7 @@ string MakeFormatter::Format(const Build&)
 
 string MakeFormatter::Format(const File& f)
 {
-	return f.filename();
+	return f.fullName();
 }
 
 string MakeFormatter::Format(const Integer& i)

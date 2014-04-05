@@ -96,6 +96,24 @@ void DotBackend::Process(const DAG& dag, Bytestream& out)
 		<< Bytestream::Reset << "\n\n"
 		;
 
+
+	out << Bytestream::Comment << "# Files:\n" ;
+	for (auto& f : dag.files())
+	{
+		out
+			<< indent_
+			<< Bytestream::Definition
+			<< "\"" << formatter.Format(*f) << "\""
+			<< Bytestream::Operator << " [ "
+			<< Bytestream::Definition << "shape"
+			<< Bytestream::Operator << " = "
+			<< Bytestream::Literal
+			<< (f->generated() ? "octagon" : "ellipse")
+			<< Bytestream::Operator << " ];\n"
+			;
+	}
+	out << "\n";
+
 	for (auto& i : dag.builds())
 	{
 		const dag::Build& build = *i;

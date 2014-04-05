@@ -9,6 +9,6 @@
 lex = action('$LEX -c++ --yyclass=$classname --outfile=$out $in'
               <- classname:string);
 
-# CHECK: build foo.c: lex foo.yy
+# CHECK: build $buildroot/foo.c: lex $srcroot/foo.yy
 # CHECK-NEXT: classname = FooClass
 gen = lex(files(foo.yy), files(foo.c), classname = 'FooClass');

@@ -10,8 +10,8 @@ foo = 'a string';
 # If a value is a file or list of files, it should generate a psuedo-target:
 #
 
-# CHECK-DAG: build bar : phony a.c
+# CHECK-DAG: build bar : phony $srcroot/a.c
 bar = file('a.c');
 
-# CHECK-DAG: build baz : phony b.c c.c
+# CHECK-DAG: build baz : phony $srcroot/b.c $srcroot/c.c
 baz = files(b.c c.c);
