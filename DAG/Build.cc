@@ -64,10 +64,10 @@ Build* Build::Create(shared_ptr<Rule>& rule, SharedPtrMap<Value>& args,
 		const Type& type = i.second->type();
 
 		if (name == "in")
-			appendFiles(arg, inputs);
+			AppendFiles(arg, inputs);
 
 		else if (name == "out")
-			appendFiles(arg, outputs);
+			AppendFiles(arg, outputs, true);
 
 		else if (type.isFile())
 		{
@@ -79,11 +79,11 @@ Build* Build::Create(shared_ptr<Rule>& rule, SharedPtrMap<Value>& args,
 
 			if (paramType[0].name() == "in")
 			{
-				appendFiles(arg, dependencies);
+				AppendFiles(arg, dependencies);
 			}
 			else if (paramType[0].name() == "out")
 			{
-				appendFiles(arg, extraOutputs);
+				AppendFiles(arg, extraOutputs, true);
 				arguments[name] = arg;
 			}
 			else
@@ -230,29 +230,28 @@ void Build::Accept(Visitor& v) const
 }
 
 
-void Build::appendFiles(const shared_ptr<Value>& in,
-                        vector<shared_ptr<File>>& out)
+void Build::AppendFiles(const shared_ptr<Value>& in,
+                        vector<shared_ptr<File>>& out, bool generated)
 {
 	assert(in);
 
-	if (shared_ptr<Build> build = dynamic_pointer_cast<Build>(in))
-		//
-		// Not sure why std::copy() doesn't work here, but
-		// it doesn't (segfault).
-		//
-		for (shared_ptr<File> i : build->out_)
-			out.push_back(i);
-
-	else if (const shared_ptr<File>& file = dynamic_pointer_cast<File>(in))
+	if (const shared_ptr<File>& file = dynamic_pointer_cast<File>(in))
+	{
 		out.push_back(file);
+		if (generated and not file->generated())
+			file->setGenerated(true);
+	}
+	else if (shared_ptr<Build> build = dynamic_pointer_cast<Build>(in))
+		for (shared_ptr<File> i : build->out_)
+			AppendFiles(i, out, generated);
 
 	else if (const shared_ptr<List>& list = dynamic_pointer_cast<List>(in))
 		for (const shared_ptr<Value>& value : *list)
-			appendFiles(value, out);
+			AppendFiles(value, out, generated);
 
 	else if (const shared_ptr<Target>& t = dynamic_pointer_cast<Target>(in))
 		for (const shared_ptr<Value>& f : *t->files())
-			appendFiles(f, out);
+			AppendFiles(f, out, generated);
 
 	else throw WrongTypeException("file|list[file]",
 	                              in->type(), in->source());

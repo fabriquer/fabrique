@@ -32,14 +32,21 @@
 #include "DAG/File.h"
 #include "DAG/Visitor.h"
 #include "Support/Bytestream.h"
+#include "Support/os.h"
 
 using namespace fabrique::dag;
 using std::string;
 
 
-File::File(const string& filename, const Type& t, SourceRange source)
-	: Value(t, source), filename_(filename)
+File::File(string filename, const Type& t, SourceRange source)
+	: Value(t, source), filename_(filename), generated_(false)
 {
+}
+
+
+string File::fullName() const
+{
+	return JoinPath(generated() ? "$buildroot" : "$srcroot", filename());
 }
 
 
