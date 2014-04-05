@@ -119,7 +119,7 @@ string fabrique::AbsoluteDirectory(string name, bool createIfMissing)
 }
 
 
-string fabrique::DirectoryOf(string filename)
+string fabrique::DirectoryOf(string filename, bool absolute)
 {
 	const char *dir = dirname(filename.c_str());
 
@@ -133,7 +133,8 @@ string fabrique::DirectoryOf(string filename)
 	if (not S_ISDIR(s.st_mode))
 		throw PosixError(filename + " is not a directory");
 
-	return dir;
+
+	return absolute ? AbsoluteDirectory(dir) : dir;
 }
 
 
