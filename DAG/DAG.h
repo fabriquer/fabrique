@@ -67,6 +67,9 @@ class DAG : public Printable
 public:
 	static UniqPtr<DAG> Flatten(const ast::Scope&, FabContext&);
 
+	virtual const std::string& buildroot() const = 0;
+	virtual const std::string& srcroot() const = 0;
+
 	virtual const SharedPtrVec<File>& files() const = 0;
 	virtual const SharedPtrVec<Build>& builds() const = 0;
 	virtual const SharedPtrMap<Rule>& rules() const = 0;

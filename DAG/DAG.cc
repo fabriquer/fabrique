@@ -70,9 +70,13 @@ namespace {
 class ImmutableDAG : public DAG
 {
 public:
-	ImmutableDAG(SharedPtrVec<File>& files, SharedPtrVec<Build>& builds,
+	ImmutableDAG(string buildroot, string srcroot,
+	             SharedPtrVec<File>& files, SharedPtrVec<Build>& builds,
 	             SharedPtrMap<Rule>& rules, SharedPtrMap<Value>& variables,
 	             SharedPtrMap<Target>& targets);
+
+	const string& buildroot() const { return buildroot_; }
+	const string& srcroot() const { return srcroot_; }
 
 	const SharedPtrVec<File>& files() const override { return files_; }
 	const SharedPtrVec<Build>& builds() const override { return builds_; }
@@ -84,6 +88,9 @@ public:
 	}
 
 private:
+	const string buildroot_;
+	const string srcroot_;
+
 	const SharedPtrVec<File> files_;
 	const SharedPtrVec<Build> builds_;
 	const SharedPtrMap<Rule> rules_;
@@ -104,7 +111,8 @@ class DAGBuilder : public ast::Visitor
 {
 public:
 	DAGBuilder(FabContext& ctx)
-		: fileType(*ctx.fileType()), stringTy(*ctx.type("string"))
+		: ctx_(ctx), stringTy(*ctx.type("string"))
+
 	{
 	}
 
@@ -149,14 +157,13 @@ private:
 	shared_ptr<Value> flatten(const ast::Expression&);
 
 
+	FabContext& ctx_;
+
 	//! The components of the current scope's fully-qualified name.
 	std::deque<string> scopeName;
 
 	//! Symbols defined in this scope (or the one up from it, or up...).
 	std::deque<ValueMap> scopes;
-
-	//! The type of individual source (or target) files.
-	const Type& fileType;
 
 	//! The type of generated strings.
 	const Type& stringTy;
@@ -175,13 +182,15 @@ private:
 } // namespace fabrique
 
 
-UniqPtr<DAG> DAG::Flatten(const ast::Scope& s, FabContext& ctx)
+UniqPtr<DAG> DAG::Flatten(const ast::Scope& root, FabContext& ctx)
 {
-	DAGBuilder f(ctx);
-	s.Accept(f);
+	DAGBuilder builder(ctx);
+	root.Accept(builder);
 
 	return UniqPtr<DAG>(new ImmutableDAG(
-		f.files_, f.builds_, f.rules_, f.variables_, f.targets_));
+		ctx.buildroot(), ctx.srcroot(),
+		builder.files_, builder.builds_, builder.rules_,
+		builder.variables_, builder.targets_));
 }
 
 
@@ -231,10 +240,12 @@ void DAG::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 
 
 ImmutableDAG::ImmutableDAG(
+		string buildroot, string sourceroot,
 		SharedPtrVec<File>& files, SharedPtrVec<Build>& builds,
 		SharedPtrMap<Rule>& rules, SharedPtrMap<Value>& variables,
 		SharedPtrMap<Target>& targets)
-	: files_(files), builds_(builds), rules_(rules),
+	: buildroot_(buildroot), srcroot_(sourceroot),
+	  files_(files), builds_(builds), rules_(rules),
 	  vars_(variables), targets_(targets)
 {
 }
@@ -712,7 +723,7 @@ void DAGBuilder::Leave(const ast::Value&)
 
 	else if (auto list = dynamic_pointer_cast<List>(val))
 	{
-		if (list->type().isListOf(fileType))
+		if (list->type().isListOf(*ctx_.fileType()))
 			val.reset(Target::Create(name, list));
 	}
 

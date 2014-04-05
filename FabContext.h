@@ -51,6 +51,14 @@ class Type;
 class FabContext
 {
 public:
+	FabContext(std::string srcroot, std::string buildroot)
+		: srcroot_(srcroot), buildroot_(buildroot)
+	{
+	}
+
+	const std::string& srcroot() const { return srcroot_; }
+	const std::string& buildroot() const { return buildroot_; }
+
 	//! Find or create a @ref Type.
 	const Type* type(const std::string& name,
 	                 const PtrVec<Type>& params = PtrVec<Type>());
@@ -72,6 +80,9 @@ public:
 	                                 const Type& returnType);
 
 private:
+	const std::string srcroot_;
+	const std::string buildroot_;
+
 	typedef std::pair<std::string,PtrVec<Type> > TypeName;
 	std::map<TypeName,std::unique_ptr<Type>> types;
 };

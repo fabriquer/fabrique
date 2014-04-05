@@ -62,7 +62,7 @@ using std::unique_ptr;
 
 static Bytestream& err();
 static unique_ptr<ast::Scope> Parse(const string& filename, FabContext&,
-                                    string buildroot);
+                                    string srcroot, string buildroot);
 
 int main(int argc, char *argv[]) {
 	//
@@ -75,7 +75,9 @@ int main(int argc, char *argv[]) {
 		return (args ? 0 : 1);
 	}
 
+	string srcroot = DirectoryOf(args->input);
 	string buildroot = AbsoluteDirectory(args->output);
+	FabContext ctx(srcroot, buildroot);
 
 
 	//
@@ -88,8 +90,7 @@ int main(int argc, char *argv[]) {
 	//
 	// Parse the file, optionally pretty-printing it.
 	//
-	FabContext ctx;
-	unique_ptr<ast::Scope> ast(Parse(args->input, ctx, buildroot));
+	unique_ptr<ast::Scope> ast(Parse(args->input, ctx, srcroot, buildroot));
 
 	if (not ast)
 		return -1;
@@ -239,7 +240,7 @@ int yylex(void *yaccUnion)
 
 
 unique_ptr<ast::Scope> Parse(const string& filename, FabContext& ctx,
-                             string buildroot)
+                             string srcroot, string buildroot)
 {
 	unique_ptr<ast::Scope> ast;
 
@@ -260,7 +261,7 @@ unique_ptr<ast::Scope> Parse(const string& filename, FabContext& ctx,
 		//
 		// Define some magic builtins:
 		//
-		parser->Builtin("srcroot", DirectoryOf(filename));
+		parser->Builtin("srcroot", srcroot);
 		parser->Builtin("buildroot", buildroot);
 
 		int result = yyparse(parser.get());
