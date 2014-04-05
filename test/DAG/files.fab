@@ -6,14 +6,17 @@
 # CHECK-DAG: file foo = Inputs/foo.txt
 foo = file('Inputs/foo.txt');
 
+# A value that happens to be called 'subdir' shouldn't change anything.
+subdir = 'foo';
+
 # CHECK-DAG: list[file] bar = [ Inputs/foo.txt Inputs/bar.txt ]
 bar = files(Inputs/foo.txt Inputs/bar.txt);
 
 # CHECK-DAG: list[file] baz = [ Inputs/foo.txt Inputs/bar.txt ]
 baz = files(Inputs/foo.txt file('Inputs/bar.txt'));
 
-# CHECK-DAG: list[file] wibble = [ foo.txt ]
-wibble = files(foo.txt);
+# CHECK-DAG: list[file] wibble = [ Inputs/foo.txt ]
+wibble = files(foo.txt, subdir = 'Inputs');
 
 # CHECK-DAG: file wobble = Inputs/foo.txt
 wobble = foo;

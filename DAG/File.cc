@@ -44,6 +44,15 @@ File::File(string filename, const Type& t, SourceRange source)
 }
 
 
+string File::filename() const
+{
+	if (subdirectory_.empty())
+		return filename_;
+
+	return JoinPath(subdirectory_, filename_);
+}
+
+
 string File::fullName() const
 {
 	return JoinPath(generated() ? "$buildroot" : "$srcroot", filename());
@@ -52,7 +61,7 @@ string File::fullName() const
 
 void File::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
-	out << Bytestream::Literal << filename_ << Bytestream::Reset;
+	out << Bytestream::Literal << filename() << Bytestream::Reset;
 }
 
 

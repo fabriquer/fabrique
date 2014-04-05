@@ -49,18 +49,22 @@ public:
 	File(std::string name, const Type&, SourceRange);
 	virtual ~File() {}
 
-	virtual std::string filename() const { return filename_; }
+	virtual std::string filename() const;
 	virtual std::string fullName() const;
 	virtual std::string str() const { return filename_; }
 
 	bool generated() const { return generated_; }
 	void setGenerated(bool gen) { generated_ = gen; }
 
+	std::string subdirectory() const { return subdirectory_; }
+	void setSubdirectory(std::string subdir) { subdirectory_ = subdir; }
+
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	void Accept(Visitor&) const override;
 
 private:
 	const std::string filename_;
+	std::string subdirectory_;
 	bool generated_;
 };
 

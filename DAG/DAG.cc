@@ -45,6 +45,7 @@
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
 #include "Support/exceptions.h"
+#include "Support/os.h"
 
 #include "Types/FunctionType.h"
 #include "Types/Type.h"
@@ -462,9 +463,6 @@ bool DAGBuilder::Enter(const ast::Filename& f)
 {
 	string name = flatten(f.name())->str();
 
-	if (shared_ptr<Value> subdir = getNamedValue(ast::Subdirectory))
-		name = join(subdir->str(), name, "/");
-
 	shared_ptr<File> file(new File(name, f.type(), f.source()));
 	files_.push_back(file);
 	currentValue.push(file);
@@ -477,37 +475,29 @@ void DAGBuilder::Leave(const ast::Filename&) {}
 bool DAGBuilder::Enter(const ast::FileList& l)
 {
 	SharedPtrVec<Value> files;
-	ValueMap listScope;
+	string subdir;
 
 	for (ConstPtr<ast::Argument>& arg : l.arguments())
 	{
 		const string name = arg->getName().name();
-		shared_ptr<Value> value = flatten(arg->getValue());
-
 		if (name == ast::Subdirectory)
-			if (shared_ptr<Value> existing = getNamedValue(name))
-			{
-				string base = existing->str();
-				string subdir = join(base, value->str(), "/");
-				SourceRange loc = arg->source();
+			subdir = flatten(arg->getValue())->str();
 
-				value.reset(new String(subdir, stringTy, loc));
-			}
-
-		listScope[name] = value;
+		else
+			throw SemanticException("unexpected argument",
+			                        arg->source());
 	}
-
-	EnterScope("file list");
 
 	for (ConstPtr<ast::Filename>& file : l)
 	{
-		shared_ptr<Value> f = flatten(*file);
+		auto f = dynamic_pointer_cast<File>(flatten(*file));
+		assert(f);
+
+		if (not subdir.empty())
+			f->setSubdirectory(subdir);
+
 		files.push_back(f);
-
-		assert(f == dynamic_pointer_cast<File>(f));
 	}
-
-	ExitScope();
 
 	currentValue.emplace(List::of(files, l.source()));
 
