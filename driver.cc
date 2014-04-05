@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
 		return (args ? 0 : 1);
 	}
 
-	string srcroot = DirectoryOf(args->input);
+	string srcroot = DirectoryOf(args->input, true);
 	string buildroot = AbsoluteDirectory(args->output);
 	FabContext ctx(srcroot, buildroot);
 
