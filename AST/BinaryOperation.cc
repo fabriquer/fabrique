@@ -83,7 +83,8 @@ BinaryOperation* BinaryOperation::Create(UniqPtr<Expression>&& lhs,
 	}
 
 	if (not resultType)
-		throw SemanticException("incompatible types", loc);
+		throw SemanticException("incompatible types: "
+		                         + lt.str() + " vs " + rt.str(), loc);
 
 	return new BinaryOperation(
 		std::move(lhs), std::move(rhs), op, *resultType, loc);

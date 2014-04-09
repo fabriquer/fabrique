@@ -335,7 +335,8 @@ Conditional* Parser::IfElse(const SourceRange& ifLocation,
 	const Type &tt(thenResult->type()), &et(elseResult->type());
 	if (!tt.isSupertype(et) and !et.isSupertype(tt))
 	{
-		ReportError("incompatible types",
+		ReportError("incompatible types for conditional clauses: "
+		            + tt.str() + " vs " + et.str(),
 		            SourceRange::Over(thenResult, elseResult));
 		return nullptr;
 	}
@@ -372,7 +373,9 @@ Mapping* Parser::Map(UniqPtr<Expression>& source, UniqPtr<Identifier>& target)
 	{
 		if (not id->type()->isSupertype(elementType))
 		{
-			ReportError("incompatible types",
+			ReportError("incompatible types for map: "
+			            + id->type()->str() + " vs "
+			            + elementType.str(),
 			            SourceRange::Over(source, target));
 			return nullptr;
 		}
