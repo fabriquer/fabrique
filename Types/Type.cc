@@ -98,13 +98,7 @@ bool Type::isSubtype(const Type& t) const
 
 bool Type::isSupertype(const Type &t) const
 {
-	// TODO: drop this dirty hack
-	if (typeName_ == "file" and t.typeName_ == "file")
-		if (typeParamCount() <= t.typeParamCount())
-			return true;
-
-	// for now, this is really easy...
-	return (&t == this);
+	return t.isSubtype(*this);
 }
 
 bool Type::isFile() const
