@@ -491,7 +491,9 @@ bool Parser::DefineValue(UniqPtr<Identifier>& id, UniqPtr<Expression>& e)
 
 	if (id->isTyped() and !e->type().isSupertype(*id->type()))
 	{
-		ReportError("type mismatch", range);
+		ReportError("assigning " + e->type().str()
+		             + " to identifier of type " + id->type()->str(),
+		            range);
 		return false;
 	}
 
