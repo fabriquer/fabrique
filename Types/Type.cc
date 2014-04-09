@@ -91,6 +91,14 @@ bool Type::isSubtype(const Type& t) const
 	if (typeName_ == "file" and t.typeName_ == "file")
 		return true;
 
+	// TODO: drop this dirty hack: list[nil] is a subtype of list[*]
+	if (typeName_ == "list" and t.typeName_ == typeName_)
+	{
+		assert(t.parameters_.size() == 1);
+		if (parameters_.front()->typeName_ == "nil")
+			return true;
+	}
+
 	// for now, this is really easy...
 	return (&t == this);
 }
