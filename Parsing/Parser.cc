@@ -426,7 +426,7 @@ Parameter* Parser::Param(UniqPtr<Identifier>&& name,
 	}
 
 	if (defaultValue != nullptr and name->isTyped()
-	    and !defaultValue->type().isSupertype(*name->type()))
+	    and !defaultValue->type().isSubtype(*name->type()))
 	{
 		ReportError("type mismatch", *defaultValue);
 		return nullptr;
