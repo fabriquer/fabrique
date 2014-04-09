@@ -38,6 +38,7 @@
 namespace fabrique {
 
 bool FileExists(const std::string& filename, bool directory = false);
+bool PathIsAbsolute(const std::string&);
 
 std::string AbsoluteDirectory(std::string name, bool createIfMissing = true);
 std::string DirectoryOf(std::string filename, bool absolute = false);

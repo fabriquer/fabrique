@@ -92,6 +92,12 @@ bool fabrique::FileExists(const string& filename, bool directory)
 }
 
 
+bool fabrique::PathIsAbsolute(const string& path)
+{
+	return (not path.empty() and path[0] == '/');
+}
+
+
 string fabrique::AbsoluteDirectory(string name, bool createIfMissing)
 {
 	const char *cname = name.c_str();
