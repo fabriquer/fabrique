@@ -46,7 +46,7 @@ enum optionNames
 	Usage,
 	Help,
 	Format,
-	OutputFile,
+	OutputDirectory,
 	ParseOnly,
 	PrettyPrintAST,
 	PrettyPrintDAG,
@@ -114,8 +114,8 @@ const option::Descriptor usage[] =
 		"  -h,--help        Print usage and exit."
 	},
 	{
-		OutputFile, SetOpt, "o", "output", option::Arg::Optional,
-		"  -o,--output      Output file (default: current directory)."
+		OutputDirectory, SetOpt, "o", "output", option::Arg::Optional,
+		"  -o,--output      Output directory (default: .)."
 	},
 	{
 		Format, SetOpt, "f", "format", IsOutputFormat,
@@ -169,11 +169,11 @@ Arguments* Arguments::Parse(int argc, char *argv[])
 	                      ? opts.nonOption(0)
 	                      : "fabfile";
 
-	const string output = options[OutputFile]
-	                       ? options[OutputFile].arg
+	const string output = options[OutputDirectory]
+	                       ? options[OutputDirectory].arg
 	                       : ".";
 
-	const bool outputSpecified = options[OutputFile];
+	const bool outputSpecified = options[OutputDirectory];
 
 	const string format = options[Format]
 	                       ? options[Format].arg
