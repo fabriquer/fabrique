@@ -219,7 +219,7 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out)
 			replace(command, "$" + name, formatter.Format(v));
 		}
 		replace(command, "$in", build.explicitInputs());
-		replace(command, "$out", build.outputs());
+		replace(command, "$out", build.explicitOutputs());
 
 		out
 			<< "\n"

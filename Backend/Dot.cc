@@ -143,7 +143,7 @@ void DotBackend::Process(const DAG& dag, Bytestream& out)
 				<< Bytestream::Operator << ";\n"
 				;
 
-		for (const shared_ptr<File>& f : build.outputs())
+		for (const shared_ptr<File>& f : build.explicitOutputs())
 			out
 				<< indent_
 				<< Bytestream::Literal << "\"" << name << "\""
@@ -193,7 +193,7 @@ string DotFormatter::Format(const Build& build)
 
 	substrings.push_back("=>");
 
-	for (auto& i : build.outputs())
+	for (auto& i : build.explicitOutputs())
 		substrings.push_back(Format(*i));
 
 	if (not build.sideEffectOutputs().empty())

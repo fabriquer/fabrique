@@ -65,7 +65,7 @@ public:
 	const FileVec& dependencies() const { return dependencies_; }
 	const FileVec allInputs() const;
 
-	const FileVec& outputs() const { return out_; }
+	const FileVec& explicitOutputs() const { return out_; }
 	const FileVec& sideEffectOutputs() const { return extraOutputs_; }
 	const FileVec allOutputs() const;
 
