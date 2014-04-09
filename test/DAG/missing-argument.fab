@@ -1,0 +1,12 @@
+#
+# RUN: fab --format=null --print-dag %s 2> %t || true
+# RUN: FileCheck %s -input-file %t
+#
+
+
+lex = action('$LEX --header-file=$header --outfile=$out $in',
+             description = 'Processing $in'
+	     <- in:file, out:file, header:file[out]);
+
+# CHECK: error: missing argument to 'header'
+lexer = lex(file('foo.l'), file('foo.lex.c'));
