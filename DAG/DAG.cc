@@ -462,8 +462,9 @@ void DAGBuilder::Leave(const ast::Conditional&) {}
 bool DAGBuilder::Enter(const ast::Filename& f)
 {
 	string name = flatten(f.name())->str();
+	const bool absolute = PathIsAbsolute(name);
 
-	shared_ptr<File> file(new File(name, f.type(), f.source()));
+	shared_ptr<File> file(new File(name, absolute, f.type(), f.source()));
 	files_.push_back(file);
 	currentValue.push(file);
 

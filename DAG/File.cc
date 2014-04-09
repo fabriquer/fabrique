@@ -32,20 +32,25 @@
 #include "DAG/File.h"
 #include "DAG/Visitor.h"
 #include "Support/Bytestream.h"
+#include "Support/exceptions.h"
 #include "Support/os.h"
 
 using namespace fabrique::dag;
 using std::string;
 
 
-File::File(string filename, const Type& t, SourceRange source)
-	: Value(t, source), filename_(filename), generated_(false)
+File::File(string filename, bool absolute, const Type& t, SourceRange source)
+	: Value(t, source), filename_(filename),
+	  absolute_(absolute), generated_(false)
 {
 }
 
 
 string File::filename() const
 {
+	if (absolute_)
+		return filename_;
+
 	if (subdirectory_.empty())
 		return filename_;
 
@@ -55,7 +60,20 @@ string File::filename() const
 
 string File::fullName() const
 {
+	if (absolute_)
+		return filename_;
+
 	return JoinPath(generated() ? "$buildroot" : "$srcroot", filename());
+}
+
+
+void File::setGenerated(bool gen)
+{
+	if (absolute_ and gen)
+		throw SemanticException(
+			"cannot generate a file with absolute path", source());
+
+	generated_ = gen;
 }
 
 

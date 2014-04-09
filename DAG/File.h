@@ -46,15 +46,18 @@ namespace dag {
 class File : public Value
 {
 public:
-	File(std::string name, const Type&, SourceRange);
+	File(std::string name, bool absolute, const Type&, SourceRange);
 	virtual ~File() {}
 
 	virtual std::string filename() const;
 	virtual std::string fullName() const;
 	virtual std::string str() const { return filename_; }
 
+	//! This file refers to an absolute path.
+	bool absolute() const { return absolute_; }
+
 	bool generated() const { return generated_; }
-	void setGenerated(bool gen) { generated_ = gen; }
+	void setGenerated(bool);
 
 	std::string subdirectory() const { return subdirectory_; }
 	void setSubdirectory(std::string subdir) { subdirectory_ = subdir; }
@@ -65,6 +68,7 @@ public:
 private:
 	const std::string filename_;
 	std::string subdirectory_;
+	const bool absolute_;
 	bool generated_;
 };
 
