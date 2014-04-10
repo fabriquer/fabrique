@@ -18,9 +18,9 @@
 #---------------------------------------------------------------------------
 
 DOXYFILE_ENCODING      = UTF-8
-PROJECT_NAME           = "Fabriquer"
+PROJECT_NAME           = "Fabrique"
 PROJECT_NUMBER         =
-PROJECT_BRIEF          = "A build language for complex"
+PROJECT_BRIEF          = "A build language for complex systems"
 PROJECT_LOGO           =
 OUTPUT_DIRECTORY       = build/doxygen
 CREATE_SUBDIRS         = NO
@@ -448,7 +448,7 @@ HTML_INDEX_NUM_ENTRIES = 100
 
 GENERATE_DOCSET        = YES
 DOCSET_FEEDNAME        = "Doxygen generated docs"
-DOCSET_BUNDLE_ID       = io.github.fabriquer.fabriquer
+DOCSET_BUNDLE_ID       = io.github.fabriquer.fabrique
 DOCSET_PUBLISHER_ID    = io.github.fabriquer
 DOCSET_PUBLISHER_NAME  = Fabriquer
 

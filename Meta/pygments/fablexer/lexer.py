@@ -4,8 +4,8 @@ from pygments.token import *
 __all__ = [ 'FabLexer' ]
 
 class FabLexer(RegexLexer):
-	name = 'Fabriquer'
-	aliases = [ 'fab', 'fabriquer' ]
+	name = 'Fabrique'
+	aliases = [ 'fab', 'fabrique' ]
 	filenames = [ '*.fab', 'fabfile' ]
 
 	tokens = {
