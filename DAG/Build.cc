@@ -154,15 +154,25 @@ const Build::FileVec Build::allInputs() const
 
 const Build::FileVec Build::allOutputs() const
 {
-	FileVec everything;
+	FileVec all;
 
 	for (shared_ptr<File> f : out_)
-		everything.push_back(f);
+		all.push_back(f);
 
 	for (shared_ptr<File> f : extraOutputs_)
-		everything.push_back(f);
+	{
+		const std::string name = f->fullName();
 
-	return everything;
+		auto sameName = [&] (shared_ptr<File>& x)
+		{
+			return (x->fullName() == name);
+		};
+
+		if (find_if(all.begin(), all.end(), sameName) == all.end())
+			all.push_back(f);
+	}
+
+	return all;
 }
 
 
