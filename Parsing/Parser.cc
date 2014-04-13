@@ -535,9 +535,17 @@ bool Parser::Set(YYSTYPE& yyunion, Node *e)
 	if (not e)
 		return false;
 
-	Bytestream::Debug("parser.node")
+	Bytestream& dbg = Bytestream::Debug("parser.node");
+	dbg
 		<< Bytestream::Action << "parsed "
 		<< Bytestream::Type << "AST node"
+		<< Bytestream::Reset
+		;
+
+	if (auto *typed = dynamic_cast<const Typed*>(e))
+		dbg << " of type " << typed->type();
+
+	dbg
 		<< Bytestream::Operator << ": "
 		<< Bytestream::Reset << *e
 		<< Bytestream::Operator << " @ " << e->source()
