@@ -108,10 +108,10 @@ string fabrique::AbsoluteDirectory(string name, bool createIfMissing)
 		if (errno == ENOENT and createIfMissing)
 		{
 			if (mkdir(cname, 0777) != 0)
-				throw PosixError("error creating " + name);
+				throw PosixError("creating directory " + name);
 		}
 		else
-			throw PosixError("error reading " + name);
+			throw PosixError("reading directory " + name);
 	}
 
 	char *absolutePath = realpath(cname, NULL);
