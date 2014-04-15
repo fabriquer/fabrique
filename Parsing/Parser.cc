@@ -369,12 +369,12 @@ Mapping* Parser::Map(UniqPtr<Expression>& source, UniqPtr<Identifier>& target)
 	assert(source->type().typeParamCount() == 1);
 	const Type& elementType = source->type()[0];
 
-	if (id->type())
+	if (id->isTyped())
 	{
-		if (not id->type()->isSupertype(elementType))
+		if (not id->type().isSupertype(elementType))
 		{
 			ReportError("incompatible types for map: "
-			            + id->type()->str() + " vs "
+			            + id->type().str() + " vs "
 			            + elementType.str(),
 			            SourceRange::Over(source, target));
 			return nullptr;
@@ -420,8 +420,6 @@ Parameter* Parser::Param(UniqPtr<Identifier>&& name,
 	if (not name)
 		return nullptr;
 
-	const Type *nameType = name->type();
-
 	if (not name->isTyped() and not defaultValue)
 	{
 		ReportError("expected type or default value", *name);
@@ -429,15 +427,16 @@ Parameter* Parser::Param(UniqPtr<Identifier>&& name,
 	}
 
 	if (defaultValue != nullptr and name->isTyped()
-	    and !defaultValue->type().isSubtype(*name->type()))
+	    and !defaultValue->type().isSubtype(name->type()))
 	{
-		ReportError("expected type " + name->type()->str()
+		ReportError("expected type " + name->type().str()
 		            + ", got " + defaultValue->type().str(),
 		            *defaultValue);
 		return nullptr;
 	}
 
-	const Type& resultType = nameType ? *nameType : defaultValue->type();
+	const Type& resultType =
+		name->isTyped() ? name->type() : defaultValue->type();
 
 	auto *p = new Parameter(name, resultType, std::move(defaultValue));
 	CurrentScope().Register(p);
@@ -489,10 +488,10 @@ bool Parser::DefineValue(UniqPtr<Identifier>& id, UniqPtr<Expression>& e)
 
 	SourceRange range = SourceRange::Over(id, e);
 
-	if (id->isTyped() and !e->type().isSupertype(*id->type()))
+	if (id->isTyped() and !e->type().isSupertype(id->type()))
 	{
 		ReportError("assigning " + e->type().str()
-		             + " to identifier of type " + id->type()->str(),
+		             + " to identifier of type " + id->type().str(),
 		            range);
 		return false;
 	}
@@ -544,6 +543,12 @@ bool Parser::Set(YYSTYPE& yyunion, Node *e)
 
 	if (auto *typed = dynamic_cast<const Typed*>(e))
 		dbg << " of type " << typed->type();
+
+	else if (auto *ot = dynamic_cast<const OptionallyTyped*>(e))
+	{
+		if (ot->isTyped())
+			dbg << " with type " << ot->type();
+	}
 
 	dbg
 		<< Bytestream::Operator << ": "

@@ -1,6 +1,6 @@
-/** @file AST/Identifier.h    Declaration of @ref fabrique::ast::Identifier. */
+//! @file Types/OptionallyTyped.h Declaration of @ref fabrique::OptionallyTyped mixin.
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,41 +29,28 @@
  * SUCH DAMAGE.
  */
 
-#ifndef IDENTIFIER_H
-#define IDENTIFIER_H
-
-#include "AST/Node.h"
-#include "Types/OptionallyTyped.h"
-
-#include <string>
+#ifndef OPTIONALLY_TYPED_H
+#define OPTIONALLY_TYPED_H
 
 namespace fabrique {
-namespace ast {
 
-class Visitor;
+class Type;
 
 
-/**
- * The name of a value, function, parameter or argument.
- */
-class Identifier : public Node, public OptionallyTyped
+/** A mixin type for something that may have a @ref fabrique::fabrique::Type. */
+class OptionallyTyped
 {
 public:
-	Identifier(const std::string& name, const Type*, const SourceRange&);
+	OptionallyTyped(const Type *t) : type_(t) {}
+	virtual ~OptionallyTyped();
 
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
-	const std::string& name() const { return name_; }
-
-	bool operator == (const Identifier&) const;
-	bool operator < (const Identifier&) const;
-
-	virtual void Accept(Visitor&) const;
+	bool isTyped() const { return type_; }
+	const Type& type() const { return *type_; }
 
 private:
-	const std::string name_;
+	const Type *type_;
 };
 
-} // namespace ast
 } // namespace fabrique
 
 #endif

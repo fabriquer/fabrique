@@ -39,7 +39,7 @@ using namespace fabrique::ast;
 
 Identifier::Identifier(const std::string& name, const Type *type,
                        const SourceRange& src)
-	: Node(src), name_(name), type_(type)
+	: Node(src), OptionallyTyped(type), name_(name)
 {
 }
 
@@ -47,9 +47,9 @@ void Identifier::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
 	out << Bytestream::Reference << name_;
 
-	if (type_)
+	if (isTyped())
 		out << Bytestream::Operator << ":"
-		<< Bytestream::Type << *type_
+		<< Bytestream::Type << type()
 		;
 
 	out << Bytestream::Reset;
@@ -66,5 +66,5 @@ bool Identifier::operator == (const Identifier& other) const
 
 bool Identifier::operator < (const Identifier& other) const
 {
-	return name() < other.name() or type() < other.type();
+	return name() < other.name() or type().isSubtype(other.type());
 }

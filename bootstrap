@@ -49,7 +49,7 @@ cxx_srcs = {
 		'exceptions', 'os-posix',
 	),
 	'Types/': (
-		'FunctionType', 'Type', 'TypeError', 'Typed',
+		'FunctionType', 'OptionallyTyped', 'Type', 'TypeError', 'Typed',
 	),
 	'': (
 		'FabContext',
