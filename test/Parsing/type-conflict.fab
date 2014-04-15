@@ -3,5 +3,5 @@
 # RUN: FileCheck %s -input-file %t.err
 #
 
-# CHECK: {{/.*}}.fab:{{[0-9:]+}}: error: type mismatch
+# CHECK: {{/.*}}.fab:{{[0-9:]+}}: error: assigning int to identifier of type string
 foo:string = 42;
