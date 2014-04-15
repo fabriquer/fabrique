@@ -123,8 +123,9 @@ int main(int argc, char *argv[]) {
 		err()
 			<< Bytestream::Error
 			<< "Semantic error: "
-			<< Bytestream::Reset
+			<< Bytestream::ErrorMessage
 			<< e
+			<< Bytestream::Reset
 			<< "\n";
 		return 1;
 	}
@@ -132,9 +133,10 @@ int main(int argc, char *argv[]) {
 	{
 		err()
 			<< Bytestream::Error
-			<< "Unknown error flattening AST into DAG: "
-			<< Bytestream::Reset
+			<< "Unknown error: "
+			<< Bytestream::ErrorMessage
 			<< e.what()
+			<< Bytestream::Reset
 			<< "\n";
 		return 1;
 	}
@@ -283,7 +285,8 @@ unique_ptr<ast::Scope> Parse(const string& filename, FabContext& ctx,
 		err()
 			<< Bytestream::Error << e.message()
 			<< Bytestream::Operator << ": "
-			<< Bytestream::Reset << e.description()
+			<< Bytestream::ErrorMessage << e.description()
+			<< Bytestream::Reset
 			<< "\n"
 			;
 
@@ -292,10 +295,9 @@ unique_ptr<ast::Scope> Parse(const string& filename, FabContext& ctx,
 	catch (SourceCodeException& e)
 	{
 		err()
-			<< Bytestream::Error
-			<< "Parse error: "
+			<< Bytestream::Error << "Parse error: "
+			<< Bytestream::ErrorMessage << e
 			<< Bytestream::Reset
-			<< e
 			<< "\n";
 
 		ast.reset();

@@ -59,6 +59,7 @@ public:
 		// Error reporting:
 		Error,
 		ErrorLoc,
+		ErrorMessage,
 
 		// Source locations:
 		Column,
