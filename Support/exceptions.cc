@@ -29,6 +29,7 @@
  * SUCH DAMAGE.
  */
 
+#include "Support/Bytestream.h"
 #include "Support/ErrorReport.h"
 #include "Support/exceptions.h"
 
@@ -86,6 +87,16 @@ OSError::OSError(const OSError& orig)
 }
 
 OSError::~OSError() {}
+
+void OSError::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+{
+	out
+		<< Bytestream::Error << "OS error: "
+		<< Bytestream::Reset << message_ << ": "
+		<< Bytestream::ErrorMessage << description_
+		<< Bytestream::Reset
+		;
+}
 
 
 UserError::UserError(const string& message)

@@ -82,7 +82,7 @@ private:
 
 
 //! An error that has an OS-specific description.
-class OSError : public std::exception
+class OSError : public std::exception, public Printable
 {
 public:
 	OSError(const OSError&);
@@ -92,6 +92,7 @@ public:
 	virtual const std::string& description() const { return description_; }
 
 	const char* what() const noexcept { return completeMessage_.c_str(); }
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const;
 
 protected:
 	OSError(const std::string& message, const std::string& description);
