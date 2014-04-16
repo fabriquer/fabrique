@@ -1,4 +1,4 @@
-/** @file FabContext.h    Declaration of fabrique::FabContext. */
+/** @file Types/FileType.h    Declaration of @ref fabrique::FileType. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -29,75 +29,50 @@
  * SUCH DAMAGE.
  */
 
-#ifndef CONTEXT_H
-#define CONTEXT_H
+#ifndef FILE_TYPE_H
+#define FILE_TYPE_H
 
-#include "ADT/PtrVec.h"
 #include "Types/Type.h"
-
-#include <map>
-#include <memory>
-#include <string>
 
 namespace fabrique {
 
-class FunctionType;
 class SourceRange;
-class Type;
 
 
 /**
- * A context object that holds state for a compilation (e.g., type objects).
+ * A type that represents an ordered sequence.
  */
-class FabContext
+class FileType : public Type
 {
 public:
-	FabContext(std::string srcroot, std::string buildroot);
+	virtual bool isSubtype(const Type&) const override;
+	virtual bool isFile() const override { return true; }
 
-	const std::string& srcroot() const { return srcroot_; }
-	const std::string& buildroot() const { return buildroot_; }
+	virtual bool isInputFile() const;
+	virtual bool isOutputFile() const;
 
-	//! Find an existing type (nil type if not found).
-	const Type& find(const std::string& name, const SourceRange& src,
-	                 const PtrVec<Type>& params = PtrVec<Type>());
-
-	//! The type of a typeless thing.
-	const Type& nilType();
-
-	//! The type of a list.
-	const Type& listOf(const Type&, const SourceRange&);
-
-	//! A file in a build.
-	const Type& fileType();
-
-	//! A list of files (a pretty fundamental type!).
-	const Type& fileListType();
-
-	//! A function type for a simple (one in, one out) function.
-	const FunctionType& functionType(const Type& in, const Type& out);
-
-	//! A function type, which incorporates the function's signature.
-	const FunctionType& functionType(const PtrVec<Type>& argumentTypes,
-	                                 const Type& returnType);
-
-	//! A string of characters.
-	const Type& stringType();
+protected:
+	virtual Type* Parameterise(
+		const PtrVec<Type>&, const SourceRange&) const override;
 
 private:
-	typedef std::pair<std::string,PtrVec<Type> > TypeName;
+	enum class Tag
+	{
+		None,
+		Input,
+		Output,
+		Invalid,
+	};
 
-	const Type& Register(Type*);
-	static TypeName QualifiedName(const std::string& name,
-	                              const PtrVec<Type>& params = PtrVec<Type>());
+	static FileType* Create(FabContext&);
 
-	Type* rawSequenceType_;
+	FileType(Tag tag, const PtrVec<Type>&, FabContext&);
 
-	const std::string srcroot_;
-	const std::string buildroot_;
-
-	std::map<TypeName,std::unique_ptr<Type>> types;
+	const Tag tag_;
+	friend class FabContext;
 };
 
 } // namespace fabrique
 
 #endif
+

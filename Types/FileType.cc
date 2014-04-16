@@ -1,6 +1,6 @@
-/** @file DAG/List.h    Declaration of @ref fabrique::dag::List. */
+/** @file Types/FileType.cc    Definition of @ref fabrique::FileType. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,62 +29,74 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DAG_LIST_H
-#define DAG_LIST_H
+#include "Types/FileType.h"
+#include "Support/exceptions.h"
 
-#include "DAG/Value.h"
-#include "Types/SequenceType.h"
+#include <cassert>
 
-#include <memory>
-#include <vector>
+using namespace fabrique;
 
 
-namespace fabrique {
-namespace dag {
+static const char *InTagName = "in";
+static const char *OutTagName = "out";
 
 
-//! The result of evaluating an expression.
-class List : public Value
+FileType::FileType(Tag tag, const PtrVec<Type>& params, FabContext& ctx)
+	: Type("file", params, ctx), tag_(tag)
 {
-public:
-	template<class T>
-	static List* of(const SharedPtrVec<T>& values, const SourceRange& src)
-	{
-		SharedPtrVec<Value> v;
-		for (const std::shared_ptr<T>& x : values)
-			v.push_back(x);
+}
 
-		return List::of(v, src);
-	}
 
-	static List* of(const SharedPtrVec<Value>&, const SourceRange&);
+bool FileType::isInputFile() const
+{
+	return (tag_ == Tag::Input);
+}
 
-	List(const SharedPtrVec<Value>&, const Type&, const SourceRange&);
 
-	virtual const SequenceType& type() const override;
+bool FileType::isOutputFile() const
+{
+	return (tag_ == Tag::Output);
+}
 
-	typedef SharedPtrVec<Value>::const_iterator iterator;
 
-	iterator begin() const;
-	iterator end() const;
-	size_t size() const;
-	const Value& operator [] (size_t) const;
+bool FileType::isSubtype(const Type& candidateSupertype) const
+{
+	if (not candidateSupertype.isFile())
+		return false;
 
-	//! List addition is concatenation.
-	virtual std::shared_ptr<Value> Add(std::shared_ptr<Value>&) override;
-	virtual std::shared_ptr<Value> PrefixWith(std::shared_ptr<Value>&) override;
-	virtual std::shared_ptr<Value> ScalarAdd(std::shared_ptr<Value>&) override;
-	virtual bool canScalarAdd(const Value&) override;
+	auto& t = dynamic_cast<const FileType&>(candidateSupertype);
+	if (not t)
+		return false;
 
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
-	void Accept(Visitor& v) const override;
+	if (tag_ == t.tag_)
+		return true;
 
-private:
-	const SharedPtrVec<Value> elements_;
-	const Type& elementType_;
-};
+	// Can always pass a file to a file[in] or file[out] parameter.
+	if (tag_ == Tag::None)
+		return true;
 
-} // namespace dag
-} // namespace fabrique
+	return false;
+}
 
-#endif // !DAG_LIST_H
+
+FileType* FileType::Create(FabContext& ctx)
+{
+	return new FileType(Tag::None, PtrVec<Type>(), ctx);
+}
+
+
+Type* FileType::Parameterise(const PtrVec<Type>& params, const SourceRange& src) const
+{
+	assert(tag_ == Tag::None);
+	assert(params.size() == 1);
+
+	const std::string name = params[0]->name();
+
+	if (name == InTagName)
+		return new FileType(Tag::Input, params, context());
+
+	else if (name == OutTagName)
+		return new FileType(Tag::Output, params, context());
+
+	throw SemanticException("invalid file tag '" + name + "'", src);
+}

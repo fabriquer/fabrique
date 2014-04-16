@@ -81,8 +81,8 @@ private:
 	      SharedPtrVec<File>& dependencies,
 	      SharedPtrVec<File>& extraOutputs,
 	      const ValueMap& arguments,
-	      const Type& t,
-	      SourceRange src);
+	      const Type&,
+	      SourceRange);
 
 	static void AppendFiles(const std::shared_ptr<Value>& in,
 	                        SharedPtrVec<File>& out,

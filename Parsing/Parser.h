@@ -83,12 +83,11 @@ public:
 
 
 	//! Find or create a @ref Type.
-	const Type* getType(const std::string& name,
+	const Type& getType(const std::string& name,
+	                    const SourceRange& begin, const SourceRange& end,
 	                    const PtrVec<Type>& params = PtrVec<Type>());
 
-	const Type* getType(const std::string& name, const Type& typeParam);
-
-	const Type* getType(UniqPtr<Identifier>&&,
+	const Type& getType(UniqPtr<Identifier>&&,
 	                    UniqPtr<const PtrVec<Type>>&& params = nullptr);
 
 

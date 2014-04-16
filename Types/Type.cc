@@ -38,10 +38,9 @@
 using namespace fabrique;
 
 
-const Type& Type::ListOf(const Type& t)
+const Type& Type::ListOf(const Type& t, const SourceRange& src)
 {
-	PtrVec<Type> types(1, &t);
-	return *t.parent_.type("list", types);
+	return t.parent_.listOf(t, src);
 }
 
 
@@ -52,18 +51,35 @@ Type::Type(const std::string& name, const PtrVec<Type>& params,
 	assert(not typeName_.empty());
 }
 
-Type::Type(const std::string& name, const PtrVec<Type>& params, const Type& t)
-	: parent_(t.parent_), typeName_(name), parameters_(params)
+
+bool Type::isSupertype(const Type& t) const
 {
-	assert(not typeName_.empty());
+	return t.isSubtype(*this);
+}
+
+
+Type::operator bool() const
+{
+	assert(this);
+	return this->valid();
 }
 
 
 const Type& Type::GetSupertype(const Type& x, const Type& y)
 {
-	assert(x.isSupertype(y) or y.isSupertype(x));
-	return (x.isSupertype(y) ? x : y);
+	if (x.isSupertype(y))
+		return x;
+
+	if (y.isSupertype(x))
+		return y;
+
+	return x.parent_.nilType();
 }
+
+
+const Type& Type::onAddTo(const Type& t) const { return t.parent_.nilType(); }
+
+const Type& Type::onPrefixWith(const Type& t) const { return t.parent_.nilType(); }
 
 
 Type* Type::Create(const std::string& name, const PtrVec<Type>& params,
@@ -85,43 +101,23 @@ const Type& Type::operator [] (size_t i) const
 	return *parameters_[i];
 }
 
+Type* Type::Parameterise(const PtrVec<Type>&, const SourceRange&) const
+{
+	assert(false && "called Type::Parameterise()");
+	return nullptr;
+}
+
+const Type& Type::Map(TypesMapper convert, const SourceRange& src) const
+{
+	PtrVec<Type> newTypeParams = convert(parameters_);
+	return parent_.find(typeName_, src, newTypeParams);
+}
+
+
 bool Type::isSubtype(const Type& t) const
 {
-	// TODO: drop this dirty hack: can pass file to a file[in] parameter
-	if (typeName_ == "file" and t.typeName_ == "file")
-		return true;
-
-	// TODO: drop this dirty hack: list[nil] is a subtype of list[*]
-	if (typeName_ == "list" and t.typeName_ == typeName_)
-	{
-		assert(t.parameters_.size() == 1);
-		if (parameters_.front()->typeName_ == "nil")
-			return true;
-	}
-
-	// for now, this is really easy...
+	// The default implementation of this is really easy.
 	return (&t == this);
-}
-
-
-bool Type::isSupertype(const Type &t) const
-{
-	return t.isSubtype(*this);
-}
-
-bool Type::isFile() const
-{
-	return (typeName_ == "file");
-}
-
-bool Type::isListOf(const Type& t) const
-{
-	if (typeName_ != "list")
-		return false;
-
-	assert(parameters_.size() == 1);
-
-	return (t == *parameters_[0]);
 }
 
 

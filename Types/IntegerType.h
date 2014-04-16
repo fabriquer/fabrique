@@ -1,6 +1,6 @@
-/** @file DAG/List.h    Declaration of @ref fabrique::dag::List. */
+/** @file Types/IntegerType.h    Declaration of @ref fabrique::IntegerType. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,62 +29,34 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DAG_LIST_H
-#define DAG_LIST_H
+#ifndef INTEGER_TYPE_H
+#define INTEGER_TYPE_H
 
-#include "DAG/Value.h"
-#include "Types/SequenceType.h"
-
-#include <memory>
-#include <vector>
-
+#include "Types/Type.h"
 
 namespace fabrique {
-namespace dag {
+
+class FabContext;
 
 
-//! The result of evaluating an expression.
-class List : public Value
+/**
+ * A type that represents an ordered sequence.
+ */
+class IntegerType : public Type
 {
 public:
-	template<class T>
-	static List* of(const SharedPtrVec<T>& values, const SourceRange& src)
-	{
-		SharedPtrVec<Value> v;
-		for (const std::shared_ptr<T>& x : values)
-			v.push_back(x);
+	virtual ~IntegerType();
+	static const Type& get(FabContext&);
 
-		return List::of(v, src);
-	}
+	virtual const Type& onAddTo(const Type&) const override;
 
-	static List* of(const SharedPtrVec<Value>&, const SourceRange&);
-
-	List(const SharedPtrVec<Value>&, const Type&, const SourceRange&);
-
-	virtual const SequenceType& type() const override;
-
-	typedef SharedPtrVec<Value>::const_iterator iterator;
-
-	iterator begin() const;
-	iterator end() const;
-	size_t size() const;
-	const Value& operator [] (size_t) const;
-
-	//! List addition is concatenation.
-	virtual std::shared_ptr<Value> Add(std::shared_ptr<Value>&) override;
-	virtual std::shared_ptr<Value> PrefixWith(std::shared_ptr<Value>&) override;
-	virtual std::shared_ptr<Value> ScalarAdd(std::shared_ptr<Value>&) override;
-	virtual bool canScalarAdd(const Value&) override;
-
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
-	void Accept(Visitor& v) const override;
+protected:
+	IntegerType(FabContext&);
 
 private:
-	const SharedPtrVec<Value> elements_;
-	const Type& elementType_;
+	friend class FabContext;
 };
 
-} // namespace dag
 } // namespace fabrique
 
-#endif // !DAG_LIST_H
+#endif

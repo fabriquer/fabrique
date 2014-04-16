@@ -1,6 +1,6 @@
-/** @file DAG/List.h    Declaration of @ref fabrique::dag::List. */
+/** @file Types/SequenceType.cc    Definition of @ref fabrique::SequenceType. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,62 +29,70 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DAG_LIST_H
-#define DAG_LIST_H
-
-#include "DAG/Value.h"
 #include "Types/SequenceType.h"
-
-#include <memory>
-#include <vector>
-
-
-namespace fabrique {
-namespace dag {
+#include <cassert>
+using namespace fabrique;
 
 
-//! The result of evaluating an expression.
-class List : public Value
+static const char* Name = "list";
+
+
+SequenceType::SequenceType(const Type& elementTy)
+	: Type(Name, PtrVec<Type>(1, &elementTy), elementTy.context()),
+	  elementType_(elementTy)
 {
-public:
-	template<class T>
-	static List* of(const SharedPtrVec<T>& values, const SourceRange& src)
-	{
-		SharedPtrVec<Value> v;
-		for (const std::shared_ptr<T>& x : values)
-			v.push_back(x);
+}
 
-		return List::of(v, src);
-	}
 
-	static List* of(const SharedPtrVec<Value>&, const SourceRange&);
+SequenceType::~SequenceType()
+{
+}
 
-	List(const SharedPtrVec<Value>&, const Type&, const SourceRange&);
 
-	virtual const SequenceType& type() const override;
+bool SequenceType::isSubtype(const Type& other) const
+{
+	if (not other.isOrdered())
+		return false;
 
-	typedef SharedPtrVec<Value>::const_iterator iterator;
+	auto& t = dynamic_cast<const SequenceType&>(other);
+	assert(t.typeParamCount() == t.typeParamCount());
 
-	iterator begin() const;
-	iterator end() const;
-	size_t size() const;
-	const Value& operator [] (size_t) const;
+	// Sequences are covariant: list[subtype] is a subtype of list[super].
+	if (elementType().isSubtype(t.elementType()))
+		return true;
 
-	//! List addition is concatenation.
-	virtual std::shared_ptr<Value> Add(std::shared_ptr<Value>&) override;
-	virtual std::shared_ptr<Value> PrefixWith(std::shared_ptr<Value>&) override;
-	virtual std::shared_ptr<Value> ScalarAdd(std::shared_ptr<Value>&) override;
-	virtual bool canScalarAdd(const Value&) override;
+	return false;
+}
 
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
-	void Accept(Visitor& v) const override;
 
-private:
-	const SharedPtrVec<Value> elements_;
-	const Type& elementType_;
-};
+const Type& SequenceType::onAddTo(const Type& t) const
+{
+	if (isSubtype(t))
+		return *this;
 
-} // namespace dag
-} // namespace fabrique
+	if (t.isSubtype(*this))
+		return t;
 
-#endif // !DAG_LIST_H
+	return context().nilType();
+}
+
+const Type& SequenceType::onPrefixWith(const Type& t) const
+{
+	if (t == elementType_)
+		return *this;
+
+	return context().nilType();
+}
+
+
+RawSequenceType::RawSequenceType(FabContext& ctx)
+	: Type(Name, PtrVec<Type>(), ctx)
+{
+}
+
+
+Type* RawSequenceType::Parameterise(const PtrVec<Type>& t, const SourceRange&) const
+{
+	assert(t.size() == 1);
+	return new SequenceType(*t.front());
+}

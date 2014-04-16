@@ -55,7 +55,8 @@ private:
 
 	FunctionType(const PtrVec<Type>& params, const Type& ret,
 		     const PtrVec<Type>& sig)
-		: Type("function", sig, ret), paramTypes_(params), retTy_(ret)
+		: Type("function", sig, ret.context()),
+		  paramTypes_(params), retTy_(ret)
 	{
 	}
 

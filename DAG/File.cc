@@ -36,6 +36,7 @@
 #include "Support/os.h"
 
 using namespace fabrique::dag;
+using std::shared_ptr;
 using std::string;
 
 
@@ -74,6 +75,29 @@ void File::setGenerated(bool gen)
 			"cannot generate a file with absolute path", source());
 
 	generated_ = gen;
+}
+
+
+
+shared_ptr<Value> File::Add(shared_ptr<Value>& suffix)
+{
+	shared_ptr<File> f(new File(filename_ + suffix->str(), absolute_, type(),
+	                            SourceRange::Over(this, suffix)));
+
+	f->setSubdirectory(subdirectory_);
+
+	return f;
+}
+
+
+shared_ptr<Value> File::PrefixWith(shared_ptr<Value>& prefix)
+{
+	shared_ptr<File> f(new File(prefix->str() + filename_, absolute_, type(),
+	                            SourceRange::Over(prefix, this)));
+
+	f->setSubdirectory(subdirectory_);
+
+	return f;
 }
 
 

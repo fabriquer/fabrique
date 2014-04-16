@@ -79,6 +79,9 @@ private:
 	BinaryOperation(UniqPtr<Expression>&& lhs, UniqPtr<Expression>&& rhs,
 	                enum Operator, const Type&, const SourceRange&);
 
+	static const Type& ResultType(const Type& lhs, const Type& rhs,
+                                      Operator, SourceRange&);
+
 	const std::unique_ptr<Expression> lhs_;
 	const std::unique_ptr<Expression> rhs_;
 	const Operator op_;

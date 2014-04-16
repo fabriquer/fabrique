@@ -1,4 +1,4 @@
-/** @file FabContext.h    Declaration of fabrique::FabContext. */
+/** @file Types/SequenceType.h    Declaration of @ref fabrique::SequenceType. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -29,73 +29,53 @@
  * SUCH DAMAGE.
  */
 
-#ifndef CONTEXT_H
-#define CONTEXT_H
+#ifndef SEQUENCE_TYPE_H
+#define SEQUENCE_TYPE_H
 
-#include "ADT/PtrVec.h"
 #include "Types/Type.h"
-
-#include <map>
-#include <memory>
-#include <string>
 
 namespace fabrique {
 
-class FunctionType;
-class SourceRange;
-class Type;
+
+/**
+ * A type that represents an ordered sequence.
+ */
+class SequenceType : public Type
+{
+public:
+	virtual ~SequenceType();
+	const Type& elementType() const { return elementType_; }
+
+	virtual bool isSubtype(const Type&) const override;
+
+	virtual bool isOrdered() const override { return true; }
+
+	virtual const Type& onAddTo(const Type&) const override;
+	virtual const Type& onPrefixWith(const Type&) const override;
+
+protected:
+	SequenceType(const Type& elementTy);
+
+private:
+	const Type& elementType_;
+	friend class FabContext;
+	friend class RawSequenceType;
+};
 
 
 /**
- * A context object that holds state for a compilation (e.g., type objects).
+ * An unparameterised sequence (e.g., `list`):
+ * used to generate parameterised sequences (e.g., `list[foo]`).
  */
-class FabContext
+class RawSequenceType : public Type
 {
 public:
-	FabContext(std::string srcroot, std::string buildroot);
+	virtual Type* Parameterise(
+		const PtrVec<Type>&, const SourceRange&) const override;
 
-	const std::string& srcroot() const { return srcroot_; }
-	const std::string& buildroot() const { return buildroot_; }
-
-	//! Find an existing type (nil type if not found).
-	const Type& find(const std::string& name, const SourceRange& src,
-	                 const PtrVec<Type>& params = PtrVec<Type>());
-
-	//! The type of a typeless thing.
-	const Type& nilType();
-
-	//! The type of a list.
-	const Type& listOf(const Type&, const SourceRange&);
-
-	//! A file in a build.
-	const Type& fileType();
-
-	//! A list of files (a pretty fundamental type!).
-	const Type& fileListType();
-
-	//! A function type for a simple (one in, one out) function.
-	const FunctionType& functionType(const Type& in, const Type& out);
-
-	//! A function type, which incorporates the function's signature.
-	const FunctionType& functionType(const PtrVec<Type>& argumentTypes,
-	                                 const Type& returnType);
-
-	//! A string of characters.
-	const Type& stringType();
-
-private:
-	typedef std::pair<std::string,PtrVec<Type> > TypeName;
-
-	const Type& Register(Type*);
-	static TypeName QualifiedName(const std::string& name,
-	                              const PtrVec<Type>& params = PtrVec<Type>());
-
-	Type* rawSequenceType_;
-
-	const std::string srcroot_;
-	const std::string buildroot_;
-
-	std::map<TypeName,std::unique_ptr<Type>> types;
+protected:
+	RawSequenceType(FabContext&);
+	friend class FabContext;
 };
 
 } // namespace fabrique

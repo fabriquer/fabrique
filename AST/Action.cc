@@ -33,6 +33,7 @@
 #include "AST/Action.h"
 #include "AST/Visitor.h"
 #include "Support/Bytestream.h"
+#include "Types/FileType.h"
 #include "Types/FunctionType.h"
 #include "FabContext.h"
 
@@ -52,24 +53,25 @@ Action* Action::Create(UniqPtrVec<Argument>& args,
 	//
 	// Identify the input and output types for FunctionType.
 	//
-	const Type *inType = NULL, *outType = NULL;
 	int extraOut = 0;
+	const Parameter *in = NULL, *out = NULL;
+
 	if (params)
-		for (auto& p : *params)
+		for (auto i = params->begin(); i != params->end(); i++)
 		{
-			const std::string& name = p->getName().name();
+			const Parameter& p = **i;
+			const string name = p.getName().name();
 
 			if (name == "in")
-				inType = &p->type();
+				in = i->get();
 
 			else if (name == "out")
-				outType = &p->type();
+				out = i->get();
 
-			else
+			else if (p.type().isFile())
 			{
-				const Type& ty = p->type();
-				if (ty.isFile() and ty.typeParamCount() > 0
-				    and ty[0].name() == "out")
+				auto& t = dynamic_cast<const FileType&>(p.type());
+				if (t.isOutputFile())
 					++extraOut;
 			}
 		}
@@ -78,34 +80,42 @@ Action* Action::Create(UniqPtrVec<Argument>& args,
 	// Build the parameter map.
 	//
 	const static SourceRange& nowhere = SourceRange::None();
-	const Type *fileListTy = ctx.fileListType();
+	const Type& fileList = ctx.fileListType();
+	const bool noExplicitInput = (not params or not in);
+	const bool noExplicitOutput = (not params or not out);
 	UniqPtrVec<Parameter> parameters;
 
 	// If we don't have explicit 'in' or 'out' parameters, generate them.
-	if (not inType)
+	if (noExplicitInput)
 	{
-		inType = fileListTy;
-		UniqPtr<Identifier> name(new Identifier("in", inType, nowhere));
-		parameters.push_back(Take(new Parameter(name, *inType)));
+		UniqPtr<Identifier> name(new Identifier("in", &fileList, nowhere));
+		parameters.push_back(Take(new Parameter(name, fileList)));
+		in = (--parameters.end())->get();
 	}
 
-	if (not outType)
+	if (noExplicitOutput)
 	{
-		outType = fileListTy;
-		UniqPtr<Identifier> name(
-			new Identifier("out", outType, nowhere));
-		parameters.push_back(Take(new Parameter(name, *outType)));
+		UniqPtr<Identifier> name(new Identifier("out", &fileList, nowhere));
+		parameters.push_back(Take(new Parameter(name, fileList)));
+		out = (--parameters.end())->get();
 	}
+
 
 	// Add all explicit parameters.
 	if (params)
 		for (auto& p : *params)
 			parameters.push_back(std::move(p));
 
-	if (extraOut > 0)
-		outType = fileListTy;
+	// Create the Action (and its type).
+	assert(in);
+	assert(out);
 
-	const FunctionType& type = *ctx.functionType(*inType, *outType);
+	const Type& returnType =
+		(extraOut > 0 or noExplicitOutput)
+		? fileList
+		: out->type();
+
+	const FunctionType& type = ctx.functionType(in->type(), returnType);
 
 	return new Action(args, parameters, type, src);
 }

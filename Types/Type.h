@@ -32,26 +32,33 @@
 #ifndef TYPE_H
 #define TYPE_H
 
+#include <functional>
+
 #include "ADT/PtrVec.h"
 #include "Support/Printable.h"
+#include "Support/Uncopyable.h"
 #include "FabContext.h"
 
 #include <string>
 
 namespace fabrique {
 
+class SourceRange;
+
 
 /**
  * The name of a value, function, parameter or argument.
  */
-class Type : public Printable
+class Type : public Printable, public Uncopyable
 {
 public:
 	static const Type& GetSupertype(const Type&, const Type&);
-	static const Type& ListOf(const Type&);
+	static const Type& ListOf(const Type&, const SourceRange&);
 
-	Type(const Type&) = delete;
+	Type(std::weak_ptr<Type> parent) = delete;
 	virtual ~Type() {}
+
+	FabContext& context() const { return parent_; }
 
 	virtual const std::string name() const;
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
@@ -59,22 +66,30 @@ public:
 	bool operator == (const Type&) const;
 	bool operator != (const Type& t) const { return !(*this == t); }
 
-	bool operator < (const Type& t) const { return isSubtype(t); }
-	bool operator > (const Type& t) const { return isSupertype(t); }
-
 	const PtrVec<Type>& typeParameters() const { return parameters_; }
 	size_t typeParamCount() const { return parameters_.size(); }
 	const Type& operator [] (size_t i) const;
 
-	bool isSubtype(const Type&) const;
-	bool isSupertype(const Type&) const;
+	typedef std::function<PtrVec<Type> (const PtrVec<Type>&)> TypesMapper;
+	const Type& Map(TypesMapper, const SourceRange&) const;
 
-	bool isFile() const;
-	bool isListOf(const Type&) const;
+	virtual bool isSubtype(const Type&) const;
+	virtual bool isSupertype(const Type&) const;
+
+	operator bool() const;
+
+	virtual bool valid() const { return true; }
+	virtual bool isFile() const { return false; }
+	virtual bool isOrdered() const { return false; }
+	virtual bool canBeNegated() const { return false; }
+
+	virtual const Type& onAddTo(const Type&) const;
+	virtual const Type& onPrefixWith(const Type&) const;
+
 
 protected:
 	Type(const std::string&, const PtrVec<Type>& params, FabContext&);
-	Type(const std::string&, const PtrVec<Type>& params, const Type&);
+	virtual Type* Parameterise(const PtrVec<Type>&, const SourceRange&) const;
 
 private:
 	static Type* Create(const std::string&, const PtrVec<Type>& params,

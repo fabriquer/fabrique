@@ -35,7 +35,10 @@
 #include "Parsing/Token.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
+#include "Types/BooleanType.h"
 #include "Types/FunctionType.h"
+#include "Types/IntegerType.h"
+#include "Types/StringType.h"
 #include "Types/Type.h"
 
 #include "FabContext.h"
@@ -103,28 +106,31 @@ unique_ptr<Scope> Parser::ExitScope()
 }
 
 
-
-//
-// Type creation (memoised):
-//
-const Type* Parser::getType(const string& name, const PtrVec<Type>& params)
+const Type& Parser::getType(const string& name,
+                            const SourceRange& begin, const SourceRange& end,
+                            const PtrVec<Type>& params)
 {
-	return ctx_.type(name, params);
+	const SourceRange src(begin, end);
+
+	const Type& t = ctx_.find(name, src, params);
+	if (not t)
+	{
+		ReportError("unknown type", src);
+		return t;
+	}
+
+	return t;
 }
 
-const Type* Parser::getType(const string& name, const Type& param)
-{
-	return getType(name, PtrVec<Type>(1, &param));
-}
-
-const Type* Parser::getType(UniqPtr<Identifier>&& name,
+const Type& Parser::getType(UniqPtr<Identifier>&& name,
                             UniqPtr<const PtrVec<Type>>&& params)
 {
 	static const PtrVec<Type>& empty = *new PtrVec<Type>;
 	if (not name)
-		return nullptr;
+		return ctx_.nilType();
 
-	return getType(name->name(), params ? *params : empty);
+	const SourceRange src = name->source();
+	return getType(name->name(), src, src, params ? *params : empty);
 }
 
 
@@ -240,14 +246,14 @@ Filename* Parser::File(UniqPtr<Expression>& name, const SourceRange& src,
 {
 	static UniqPtrVec<Argument>& empty = *new UniqPtrVec<Argument>;
 
-	if (not name->type().isSubtype(*getType("string")))
+	if (not name->type().isSubtype(StringType::get(ctx_)))
 	{
 		ReportError("filename should be of type 'string', not '"
 		             + name->type().str() + "'", *name);
 		return nullptr;
 	}
 
-	return new Filename(name, args ? *args : empty, *ctx_.fileType(), src);
+	return new Filename(name, args ? *args : empty, ctx_.fileType(), src);
 }
 
 
@@ -257,7 +263,7 @@ FileList* Parser::Files(const SourceRange& begin,
 {
 	static UniqPtrVec<Argument>& emptyArgs = *new UniqPtrVec<Argument>;
 
-	const Type& ty = *ctx_.fileListType();
+	const Type& ty = ctx_.fileListType();
 	SourceRange src(begin);
 
 	return new FileList(*files, args ? *args : emptyArgs, ty, src);
@@ -271,7 +277,7 @@ ForeachExpr* Parser::Foreach(UniqPtr<Mapping>& mapping,
 	SourceRange src(begin, body->source());
 	ExitScope();
 
-	const Type& resultTy = *getType("list", body->type());
+	const Type& resultTy = ctx_.listOf(body->type(), src);
 	return new ForeachExpr(mapping, body, resultTy, src);
 }
 
@@ -284,11 +290,12 @@ Function* Parser::DefineFunction(const SourceRange& begin,
 	if (not params or not body)
 		return nullptr;
 
-	if (!body->type().isSupertype(*resultType))
+	if (!body->type().isSubtype(*resultType))
 	{
 		ReportError(
 			"wrong return type ("
-			+ body->type().str() + " != " + resultType->str()
+			+ body->type().str() + " not a subtype of "
+			+ resultType->str()
 			+ ")", *body);
 		return nullptr;
 	}
@@ -301,8 +308,8 @@ Function* Parser::DefineFunction(const SourceRange& begin,
 
 	ExitScope();
 
-	const FunctionType *ty = ctx_.functionType(parameterTypes, *resultType);
-	return new Function(*params, *ty, body, loc);
+	const FunctionType& ty = ctx_.functionType(parameterTypes, *resultType);
+	return new Function(*params, ty, body, loc);
 }
 
 
@@ -320,9 +327,17 @@ Identifier* Parser::Id(UniqPtr<Identifier>&& untyped, const Type *ty)
 	if (not untyped)
 		return nullptr;
 
+	SourceRange loc(untyped->source().begin, lexer_.CurrentTokenRange().end);
+
+	assert(ty);
+	if (not *ty)
+	{
+		ReportError("invalid type", loc);
+		return nullptr;
+	}
+
 	assert(not untyped->isTyped());
 
-	SourceRange loc(untyped->source().begin, lexer_.CurrentTokenRange().end);
 	return new Identifier(untyped->name(), ty, loc);
 }
 
@@ -349,13 +364,13 @@ Conditional* Parser::IfElse(const SourceRange& ifLocation,
 List* Parser::ListOf(UniqPtrVec<Expression>& elements,
                      const SourceRange& src)
 {
-	const Type *elementType =
+	const Type& elementType =
 		elements.empty()
 			? ctx_.nilType()
-			: &elements.front()->type();
+			: elements.front()->type();
 
-	const Type *ty = getType("list", PtrVec<Type>(1, elementType));
-	return new List(elements, *ty, src);
+	const Type& ty = ctx_.listOf(elementType, src);
+	return new List(elements, ty, src);
 }
 
 
@@ -366,6 +381,17 @@ Mapping* Parser::Map(UniqPtr<Expression>& source, UniqPtr<Identifier>& target)
 
 	UniqPtr<Identifier> id(std::move(target));
 
+	Bytestream& dbg = Bytestream::Debug("parser.map");
+	dbg
+		<< "mapping: " << *id
+		<< Bytestream::Operator << " <- "
+		<< *source
+		<< Bytestream::Operator << ":"
+		<< source->type()
+		<< "\n"
+		;
+
+	assert(source->type());
 	assert(source->type().typeParamCount() == 1);
 	const Type& elementType = source->type()[0];
 
@@ -392,25 +418,25 @@ Mapping* Parser::Map(UniqPtr<Expression>& source, UniqPtr<Identifier>& target)
 
 BoolLiteral* Parser::True()
 {
-	return new BoolLiteral(true, *getType("bool"),
+	return new BoolLiteral(true, BooleanType::get(ctx_),
 	                       lexer_.CurrentTokenRange());
 }
 
 BoolLiteral* Parser::False()
 {
-	return new BoolLiteral(false, *getType("bool"),
+	return new BoolLiteral(false, BooleanType::get(ctx_),
 	                       lexer_.CurrentTokenRange());
 }
 
 IntLiteral* Parser::ParseInt(int value)
 {
-	return new IntLiteral(value, *getType("int"),
+	return new IntLiteral(value, IntegerType::get(ctx_),
 	                      lexer_.CurrentTokenRange());
 }
 
 StringLiteral* Parser::ParseString(UniqPtr<fabrique::Token>&& t)
 {
-	return new StringLiteral(*t, *getType("string"), t->source());
+	return new StringLiteral(*t, StringType::get(ctx_), t->source());
 }
 
 
@@ -420,14 +446,14 @@ Parameter* Parser::Param(UniqPtr<Identifier>&& name,
 	if (not name)
 		return nullptr;
 
-	if (not name->isTyped() and not defaultValue)
+	if (not (name->isTyped() or (defaultValue and defaultValue->type())))
 	{
 		ReportError("expected type or default value", *name);
 		return nullptr;
 	}
 
-	if (defaultValue != nullptr and name->isTyped()
-	    and !defaultValue->type().isSubtype(name->type()))
+	if (name->isTyped() and defaultValue
+	    and not defaultValue->type().isSubtype(name->type()))
 	{
 		ReportError("expected type " + name->type().str()
 		            + ", got " + defaultValue->type().str(),
@@ -437,6 +463,7 @@ Parameter* Parser::Param(UniqPtr<Identifier>&& name,
 
 	const Type& resultType =
 		name->isTyped() ? name->type() : defaultValue->type();
+	assert(resultType);
 
 	auto *p = new Parameter(name, resultType, std::move(defaultValue));
 	CurrentScope().Register(p);
@@ -454,7 +481,7 @@ SymbolReference* Parser::Reference(UniqPtr<Identifier>&& id)
 		return nullptr;
 	}
 
-	if (&e->type() == nullptr)
+	if (not e->type())
 	{
 		ReportError("reference to value with unknown type", *id);
 		return nullptr;

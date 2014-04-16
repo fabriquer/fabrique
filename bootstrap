@@ -49,7 +49,9 @@ cxx_srcs = {
 		'exceptions', 'os-posix',
 	),
 	'Types/': (
-		'FunctionType', 'OptionallyTyped', 'Type', 'TypeError', 'Typed',
+		'BooleanType', 'FileType', 'FunctionType', 'IntegerType',
+		'OptionallyTyped', 'SequenceType', 'StringType',
+		'Type', 'TypeError', 'Typed',
 	),
 	'': (
 		'FabContext',

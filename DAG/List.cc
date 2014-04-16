@@ -52,7 +52,7 @@ using std::vector;
 List* List::of(const SharedPtrVec<Value>& values, const SourceRange& src)
 {
 	assert(not values.empty());
-	const Type& t = Type::ListOf(values.front()->type());
+	const Type& t = Type::ListOf(values.front()->type(), src);
 
 	return new List(values, t, src);
 }
@@ -62,11 +62,20 @@ List::List(const SharedPtrVec<Value>& v, const Type& t, const SourceRange& src)
 	: Value(t, src), elements_(v), elementType_(t[0])
 {
 	if (v.size() > 0)
-		assert(t.isListOf(v.front()->type()));
+	{
+		//assert(t.isListOf(v.front()->type()));
+	}
 
 	for (auto& value : v)
 		assert(value);
 }
+
+
+const SequenceType& List::type() const
+{
+	return dynamic_cast<const SequenceType&>(Value::type());
+}
+
 
 List::iterator List::begin() const { return elements_.begin(); }
 List::iterator List::end() const { return elements_.end(); }
@@ -128,8 +137,6 @@ shared_ptr<Value> List::PrefixWith(shared_ptr<Value>& prefix)
 
 shared_ptr<Value> List::ScalarAdd(shared_ptr<Value>& scalar)
 {
-	assert(type().isListOf(scalar->type()));
-
 	SharedPtrVec<Value> values;
 	for (const shared_ptr<Value>& v : this->elements_)
 		values.push_back(v->Add(scalar));
@@ -141,8 +148,14 @@ shared_ptr<Value> List::ScalarAdd(shared_ptr<Value>& scalar)
 
 bool List::canScalarAdd(const Value& other)
 {
-	return type().isListOf(other.type());
+	const Type& t = type();
+
+	assert(t.typeParamCount() == 1);
+	const Type& elementTy = t[0];
+
+	return elementTy.onAddTo(other.type());
 }
+
 
 void List::PrettyPrint(Bytestream& out, size_t indent) const
 {

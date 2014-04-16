@@ -104,7 +104,7 @@ Build* Build::Create(shared_ptr<Rule>& rule, SharedPtrMap<Value>& args,
 		(outputs.size() == 1 and extraOutputs.empty()
 		 and out.type().isFile())
 			? out.type()
-			: Type::ListOf(out.type());
+			: Type::ListOf(out.type(), out.source());
 
 	return new Build(rule, inputs, outputs, dependencies, extraOutputs,
 	                 arguments, type, src);

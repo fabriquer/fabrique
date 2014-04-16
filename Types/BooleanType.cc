@@ -1,6 +1,6 @@
-/** @file DAG/List.h    Declaration of @ref fabrique::dag::List. */
+/** @file Types/BooleanType.h    Declaration of @ref fabrique::BooleanType. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,62 +29,36 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DAG_LIST_H
-#define DAG_LIST_H
-
-#include "DAG/Value.h"
-#include "Types/SequenceType.h"
-
-#include <memory>
-#include <vector>
+#include "Types/BooleanType.h"
+#include "Support/SourceLocation.h"
+using namespace fabrique;
 
 
-namespace fabrique {
-namespace dag {
+static const char *Name = "bool";
 
 
-//! The result of evaluating an expression.
-class List : public Value
+BooleanType::BooleanType(FabContext& ctx)
+	: Type(Name, PtrVec<Type>(), ctx)
 {
-public:
-	template<class T>
-	static List* of(const SharedPtrVec<T>& values, const SourceRange& src)
-	{
-		SharedPtrVec<Value> v;
-		for (const std::shared_ptr<T>& x : values)
-			v.push_back(x);
+}
 
-		return List::of(v, src);
-	}
+BooleanType::~BooleanType() {}
 
-	static List* of(const SharedPtrVec<Value>&, const SourceRange&);
 
-	List(const SharedPtrVec<Value>&, const Type&, const SourceRange&);
+const Type& BooleanType::get(FabContext& ctx)
+{
+	const Type& existing = ctx.find(Name, SourceRange::None());
+	if (existing)
+		return existing;
 
-	virtual const SequenceType& type() const override;
+	return *new BooleanType(ctx);
+}
 
-	typedef SharedPtrVec<Value>::const_iterator iterator;
 
-	iterator begin() const;
-	iterator end() const;
-	size_t size() const;
-	const Value& operator [] (size_t) const;
+const Type& BooleanType::onAddTo(const Type& other) const
+{
+	if (other.isSubtype(*this))
+		return *this;
 
-	//! List addition is concatenation.
-	virtual std::shared_ptr<Value> Add(std::shared_ptr<Value>&) override;
-	virtual std::shared_ptr<Value> PrefixWith(std::shared_ptr<Value>&) override;
-	virtual std::shared_ptr<Value> ScalarAdd(std::shared_ptr<Value>&) override;
-	virtual bool canScalarAdd(const Value&) override;
-
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
-	void Accept(Visitor& v) const override;
-
-private:
-	const SharedPtrVec<Value> elements_;
-	const Type& elementType_;
-};
-
-} // namespace dag
-} // namespace fabrique
-
-#endif // !DAG_LIST_H
+	return context().nilType();
+}

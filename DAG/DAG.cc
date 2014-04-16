@@ -112,7 +112,7 @@ class DAGBuilder : public ast::Visitor
 {
 public:
 	DAGBuilder(FabContext& ctx)
-		: ctx_(ctx), stringTy(*ctx.type("string"))
+		: ctx_(ctx)
 
 	{
 	}
@@ -165,9 +165,6 @@ private:
 
 	//! Symbols defined in this scope (or the one up from it, or up...).
 	std::deque<ValueMap> scopes;
-
-	//! The type of generated strings.
-	const Type& stringTy;
 
 	/** The name of the value we are currently processing. */
 	std::stack<string> currentValueName;
@@ -276,7 +273,7 @@ bool DAGBuilder::Enter(const ast::Action& a)
 			continue;
 		}
 
-		shared_ptr<Value> v(new String(value->str(), stringTy,
+		shared_ptr<Value> v(new String(value->str(), ctx_.stringType(),
 		                               arg->source()));
 		arguments.emplace(arg->getName().name(), v);
 	}
@@ -512,7 +509,8 @@ bool DAGBuilder::Enter(const ast::ForeachExpr& f)
 	SharedPtrVec<Value> values;
 
 	auto target = flatten(f.sourceSequence());
-	assert(target->type().name() == "list");
+	assert(target->type().isOrdered());
+
 	shared_ptr<List> input = dynamic_pointer_cast<List>(target);
 	const ast::Parameter& loopParam = f.loopParameter();
 
@@ -714,7 +712,7 @@ void DAGBuilder::Leave(const ast::Value&)
 
 	else if (auto list = dynamic_pointer_cast<List>(val))
 	{
-		if (list->type().isListOf(*ctx_.fileType()))
+		if (list->type().elementType().isFile())
 			val.reset(Target::Create(name, list));
 	}
 

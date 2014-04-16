@@ -62,6 +62,12 @@ public:
 	std::string subdirectory() const { return subdirectory_; }
 	void setSubdirectory(std::string subdir) { subdirectory_ = subdir; }
 
+	//! Name a file with my name + a suffix.
+	virtual std::shared_ptr<Value> Add(std::shared_ptr<Value>&);
+
+	//! Name a file with a prefix + my name.
+	virtual std::shared_ptr<Value> PrefixWith(std::shared_ptr<Value>&);
+
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	void Accept(Visitor&) const override;
 

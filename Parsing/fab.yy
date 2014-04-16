@@ -454,20 +454,24 @@ parameterList:
 type:
 	name
 	{
-		$$.type = p->getType(TakeNode<Identifier>($1));
+		$$.type = &p->getType(TakeNode<Identifier>($1));
 	}
 	| name '[' types ']'
 	{
 		auto *subtypes = $3.types;
-		$$.type = p->getType(TakeNode<Identifier>($1), Take(subtypes));
+		$$.type = &p->getType(TakeNode<Identifier>($1), Take(subtypes));
 	}
 	| FILE_TOKEN
 	{
-		$$.type = p->getType("file");
+		SourceRange src = Take($1.token)->source();
+		$$.type = &p->getType("file", src, src);
 	}
 	| FILE_TOKEN '[' types ']'
 	{
-		$$.type = p->getType("file", *$3.types);
+		SourceRange begin = Take($1.token)->source();
+		SourceRange end = Take($4.token)->source();
+
+		$$.type = &p->getType("file", begin, end, *$3.types);
 	}
 	;
 

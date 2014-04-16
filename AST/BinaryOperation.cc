@@ -33,11 +33,19 @@
 #include "AST/Visitor.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
-#include "Types/Type.h"
+#include "Types/SequenceType.h"
 
 #include <cassert>
 
 using namespace fabrique::ast;
+using std::function;
+using std::shared_ptr;
+
+
+namespace fabrique
+{
+	Type::TypesMapper AddElementTypeTo(const Type&);
+}
 
 
 BinaryOperation* BinaryOperation::Create(UniqPtr<Expression>&& lhs,
@@ -48,46 +56,10 @@ BinaryOperation* BinaryOperation::Create(UniqPtr<Expression>&& lhs,
 	assert(rhs);
 
 	SourceRange loc = SourceRange::Over(lhs, rhs);
-	const Type &lt = lhs->type(), &rt = rhs->type();
-	const Type *resultType = NULL;
-
-	switch (op)
-	{
-		case Add:
-			if (lt.isSubtype(rt) or rt.isSubtype(lt))
-				resultType = &Type::GetSupertype(lt, rt);
-			break;
-
-		case Prefix:
-			if (rt.isListOf(lt))
-				resultType = &rt;
-			break;
-
-		case ScalarAdd:
-			if (lt.isListOf(rt))
-				resultType = &lt;
-
-			else if (rt.isListOf(lt))
-				resultType = &rt;
-			break;
-
-		case And:
-		case Or:
-		case Xor:
-			if (lt == rt)
-				resultType = &lt;
-			break;
-
-		case Invalid:
-			break;
-	}
-
-	if (not resultType)
-		throw SemanticException("incompatible types: "
-		                         + lt.str() + " vs " + rt.str(), loc);
+	const Type& resultType = ResultType(lhs->type(), rhs->type(), op, loc);
 
 	return new BinaryOperation(
-		std::move(lhs), std::move(rhs), op, *resultType, loc);
+		std::move(lhs), std::move(rhs), op, resultType, loc);
 }
 
 
@@ -161,4 +133,72 @@ fabrique::operator << (Bytestream& out, BinaryOperation::Operator op)
 {
 	out << BinaryOperation::OpStr(op);
 	return out;
+}
+
+
+
+const fabrique::Type& BinaryOperation::ResultType(const Type& lhs, const Type& rhs,
+                                                  Operator op, SourceRange& loc)
+{
+	switch (op)
+	{
+		case Add:
+			if (auto& t = lhs.onAddTo(rhs))
+				return t;
+
+			if (auto& t = rhs.onAddTo(lhs))
+				return t;
+
+			break;
+
+		case Prefix:
+			if (auto& t = rhs.onPrefixWith(lhs))
+				return t;
+
+			break;
+
+		case ScalarAdd:
+		{
+			if (lhs.isOrdered() and lhs.typeParamCount() == 1
+			    and lhs[0].onAddTo(rhs))
+			{
+				return lhs.Map(AddElementTypeTo(rhs), loc);
+			}
+
+			if (rhs.isOrdered() and rhs.typeParamCount() == 1
+			    and rhs[0].onAddTo(lhs))
+			{
+				return rhs.Map(AddElementTypeTo(lhs), loc);
+			}
+
+			break;
+		}
+
+		case And:
+		case Or:
+		case Xor:
+			if (lhs == rhs)
+				return lhs;
+			break;
+
+		case Invalid:
+			break;
+	}
+
+	throw SemanticException("incompatible types: "
+                         + lhs.str() + " vs " + rhs.str(), loc);
+}
+
+
+namespace fabrique
+{
+	Type::TypesMapper AddElementTypeTo(const Type& t)
+	{
+		return [&](const PtrVec<Type>& params)
+		{
+			assert(params.size() == 1);
+			const Type& elemTy = *params.front();
+			return PtrVec<Type>(1, &elemTy.onAddTo(t));
+		};
+	}
 }
