@@ -75,122 +75,147 @@ int main(int argc, char *argv[]) {
 		return (args ? 0 : 1);
 	}
 
-	string srcroot = DirectoryOf(args->input, true);
-	string buildroot = AbsoluteDirectory(args->output);
-	FabContext ctx(srcroot, buildroot);
-
-
 	//
 	// Set up debug streams.
 	//
 	Bytestream::SetDebugPattern(args->debugPattern);
 	Bytestream::SetDebugStream(err());
 
-
 	//
-	// Parse the file, optionally pretty-printing it.
+	// Parse the file, build the DAG and pass it to the backed.
+	// These operations can report errors with exceptions, so put them in
+	// a `try` block.
 	//
-	unique_ptr<ast::Scope> ast(Parse(args->input, ctx, args->printAST));
+	try
+	{
+		string srcroot = DirectoryOf(args->input, true);
+		string buildroot = AbsoluteDirectory(args->output);
+		FabContext ctx(srcroot, buildroot);
 
-	if (not ast)
-		return -1;
+		//
+		// Parse the file, optionally pretty-printing it.
+		//
+		unique_ptr<ast::Scope> ast(
+			Parse(args->input, ctx, args->printAST));
 
-	if (args->parseOnly)
+		if (not ast)
+			return -1;
+
+		if (args->parseOnly)
+			return 0;
+
+
+		//
+		// Convert the parsed AST into a DAG.
+		//
+		unique_ptr<dag::DAG> dag;
+		dag = dag::DAG::Flatten(*ast, ctx);
+
+		// DAG errors should be reported as exceptions.
+		assert(dag);
+
+		if (args->printDAG)
+		{
+			Bytestream::Stdout()
+				<< Bytestream::Comment
+				<< "#\n"
+				<< "# DAG pretty-printed from '"
+				<< args->input << "'\n"
+				<< "#\n"
+				<< Bytestream::Reset
+				<< *dag
+				;
+		}
+
+
+		//
+		// What should we do with it now?
+		//
+		unique_ptr<backend::Backend> backend;
+
+		if (args->format == "null")
+			backend.reset(new backend::NullBackend());
+
+		else if (args->format == "make")
+			backend.reset(backend::MakeBackend::Create());
+
+		else if (args->format == "ninja")
+			backend.reset(backend::NinjaBackend::Create());
+
+		else if (args->format == "dot")
+			backend.reset(backend::DotBackend::Create());
+
+		else
+		{
+			err() << "unknown format '" << args->format << "'\n";
+			return 1;
+		}
+
+		assert(backend);
+
+
+		//
+		// Where should output go?
+		//
+		std::ofstream outfile;
+		unique_ptr<Bytestream> outfileStream;
+
+		const string filename =
+			JoinPath(buildroot, backend->DefaultFilename());
+
+		if (not args->printOutput and args->format != "null")
+		{
+			outfile.open(filename.c_str());
+			outfileStream.reset(Bytestream::Plain(outfile));
+		}
+
+		Bytestream& out = outfileStream
+			? *outfileStream
+			: Bytestream::Stdout();
+
+		backend->Process(*dag, out);
+
 		return 0;
-
-
-	//
-	// Convert the parsed AST into a DAG.
-	//
-	unique_ptr<dag::DAG> dag;
-	try { dag = dag::DAG::Flatten(*ast, ctx); }
-	catch (SemanticException& e)
+	}
+	catch (const UserError& e)
 	{
 		err()
-			<< Bytestream::Error
-			<< "Semantic error: "
-			<< Bytestream::ErrorMessage
-			<< e
-			<< Bytestream::Reset
-			<< "\n";
-		return 1;
+			<< Bytestream::Error << "Error: "
+			<< Bytestream::Reset << e
+			;
 	}
-	catch (std::exception& e)
+	catch (const OSError& e)
 	{
 		err()
-			<< Bytestream::Error
-			<< "Unknown error: "
-			<< Bytestream::ErrorMessage
-			<< e.what()
-			<< Bytestream::Reset
-			<< "\n";
-		return 1;
+			<< Bytestream::Error << e.message()
+			<< Bytestream::Operator << ": "
+			<< Bytestream::ErrorMessage << e.description()
+			;
 	}
-
-	assert(dag);
-
-	if (args->printDAG)
+	catch (const SourceCodeException& e)
 	{
-		Bytestream::Stdout()
-			<< Bytestream::Comment
-			<< "#\n"
-			<< "# DAG pretty-printed from '" << args->input << "'\n"
-			<< "#\n"
-			<< Bytestream::Reset
-			<< *dag
+		err()
+			<< Bytestream::Error << "Parse error: "
+			<< Bytestream::ErrorMessage << e
+			;
+	}
+	catch (const SemanticException& e)
+	{
+		err()
+			<< Bytestream::Error << "Semantic error: "
+			<< Bytestream::ErrorMessage << e
+			;
+	}
+	catch (const std::exception& e)
+	{
+		err()
+			<< Bytestream::Error << "Uncaught exception: "
+			<< Bytestream::ErrorMessage << e.what()
 			;
 	}
 
-
-	//
-	// What should we do with it now?
-	//
-	unique_ptr<backend::Backend> backend;
-
-	if (args->format == "null")
-		backend.reset(new backend::NullBackend());
-
-	else if (args->format == "make")
-		backend.reset(backend::MakeBackend::Create());
-
-	else if (args->format == "ninja")
-		backend.reset(backend::NinjaBackend::Create());
-
-	else if (args->format == "dot")
-		backend.reset(backend::DotBackend::Create());
-
-	else
-	{
-		err() << "unknown format '" << args->format << "'\n";
-		return 1;
-	}
-
-	assert(backend);
-
-
-	//
-	// Where should output go?
-	//
-	std::ofstream outfile;
-	unique_ptr<Bytestream> outfileStream;
-
-
-
-	const string filename =
-		JoinPath(buildroot, backend->DefaultFilename());
-
-	if (not args->printOutput and args->format != "null")
-	{
-		outfile.open(filename.c_str());
-		outfileStream.reset(Bytestream::Plain(outfile));
-	}
-
-	Bytestream& out = outfileStream
-		? *outfileStream
-		: Bytestream::Stdout();
-
-	backend->Process(*dag, out);
-	return 0;
+	err() << Bytestream::Reset << "\n";
+	return 1;
 }
 
 
@@ -232,61 +257,36 @@ unique_ptr<ast::Scope> Parse(const string& filename, FabContext& ctx,
 {
 	unique_ptr<ast::Scope> ast;
 
-	try
+	std::ifstream infile(filename.c_str());
+	if (!infile)
+		throw UserError("no such file: '" + filename + "'");
+
+	// Set up lex.
+	lex.reset(new Lexer(filename));
+	lex->switch_streams(&infile, &err().raw());
+
+
+	// Set up the parser.
+	unique_ptr<ast::Parser> parser(new ast::Parser(ctx, *lex));
+
+	//
+	// Define some magic builtins:
+	//
+	parser->Builtin("srcroot", ctx.srcroot());
+	parser->Builtin("buildroot", ctx.buildroot());
+
+	int result = yyparse(parser.get());
+	lex.reset();
+
+	if (result == 0)
 	{
-		std::ifstream infile(filename.c_str());
-		if (!infile)
-			throw UserError("no such file: '" + filename + "'");
-
-		// Set up lex.
-		lex.reset(new Lexer(filename));
-		lex->switch_streams(&infile, &err().raw());
-
-
-		// Set up the parser.
-		unique_ptr<ast::Parser> parser(new ast::Parser(ctx, *lex));
-
-		//
-		// Define some magic builtins:
-		//
-		parser->Builtin("srcroot", ctx.srcroot());
-		parser->Builtin("buildroot", ctx.buildroot());
-
-		int result = yyparse(parser.get());
-		lex.reset();
-
-		if (result == 0)
-		{
-			ast = parser->ExitScope();
-			assert(parser->errors().empty());
-		}
-		else
-		{
-			for (auto& error : parser->errors())
-				err() << *error << "\n";
-		}
+		ast = parser->ExitScope();
+		assert(parser->errors().empty());
 	}
-	catch (OSError& e)
+	else
 	{
-		err()
-			<< Bytestream::Error << e.message()
-			<< Bytestream::Operator << ": "
-			<< Bytestream::ErrorMessage << e.description()
-			<< Bytestream::Reset
-			<< "\n"
-			;
-
-		ast.reset();
-	}
-	catch (SourceCodeException& e)
-	{
-		err()
-			<< Bytestream::Error << "Parse error: "
-			<< Bytestream::ErrorMessage << e
-			<< Bytestream::Reset
-			<< "\n";
-
-		ast.reset();
+		for (auto& error : parser->errors())
+			err() << *error << "\n";
 	}
 
 	if (printAST)
