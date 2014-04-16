@@ -7,6 +7,9 @@
 # CHECK:   = action('$CC -c $in -o $out' <- in:list[file], out:list[file])
 default_type = action('$CC -c $in -o $out');
 
+# CHECK: cxx:(list[file])=>file = action('$CXX -c $in -o $out' <- in:list[file], out:file);
+cxx = action('$CXX -c $in -o $out' <- in:list[file], out:file);
+
 # CHECK: cxx_one:(file)=>file = action('$CXX{{.*}} -o $out',
 # CHECK:            description = 'Compiling $in', depfile = '$out.d'
 # CHECK:            <- in:file, out:file);
