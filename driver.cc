@@ -62,7 +62,8 @@ using std::unique_ptr;
 
 static Bytestream& err();
 static unique_ptr<ast::Scope> Parse(const string& filename, FabContext&,
-                                    string srcroot, string buildroot);
+                                    string srcroot, string buildroot,
+                                    bool printAST);
 
 int main(int argc, char *argv[]) {
 	//
@@ -90,24 +91,11 @@ int main(int argc, char *argv[]) {
 	//
 	// Parse the file, optionally pretty-printing it.
 	//
-	unique_ptr<ast::Scope> ast(Parse(args->input, ctx, srcroot, buildroot));
+	unique_ptr<ast::Scope> ast(
+		Parse(args->input, ctx, srcroot, buildroot, args->printAST));
 
 	if (not ast)
 		return -1;
-
-	if (args->printAST)
-	{
-		Bytestream::Stdout()
-			<< Bytestream::Comment
-			<< "#\n"
-			<< "# AST pretty-printed from '" << args->input << "'\n"
-			<< "#\n"
-			<< Bytestream::Reset
-			;
-
-		for (auto& val : ast->values())
-			Bytestream::Stdout() << *val << "\n";
-	}
 
 	if (args->parseOnly)
 		return 0;
@@ -242,7 +230,7 @@ int yylex(void *yaccUnion)
 
 
 unique_ptr<ast::Scope> Parse(const string& filename, FabContext& ctx,
-                             string srcroot, string buildroot)
+                             string srcroot, string buildroot, bool printAST)
 {
 	unique_ptr<ast::Scope> ast;
 
@@ -301,6 +289,20 @@ unique_ptr<ast::Scope> Parse(const string& filename, FabContext& ctx,
 			<< "\n";
 
 		ast.reset();
+	}
+
+	if (printAST)
+	{
+		Bytestream::Stdout()
+			<< Bytestream::Comment
+			<< "#\n"
+			<< "# AST pretty-printed from '" << filename << "'\n"
+			<< "#\n"
+			<< Bytestream::Reset
+			;
+
+		for (auto& val : ast->values())
+			Bytestream::Stdout() << *val << "\n";
 	}
 
 	return ast;
