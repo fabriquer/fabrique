@@ -510,20 +510,25 @@ bool DAGBuilder::Enter(const ast::ForeachExpr& f)
 
 	auto target = flatten(f.sourceSequence());
 	assert(target->type().isOrdered());
-
-	shared_ptr<List> input = dynamic_pointer_cast<List>(target);
-	const ast::Parameter& loopParam = f.loopParameter();
+	assert(target->asList());
 
 	//
 	// For each input element, put its value in scope as the loop parameter
 	// and then evaluate the CompoundExpression.
 	//
-	for (const shared_ptr<Value>& element : *input)
+	const ast::Parameter& loopParam = f.loopParameter();
+	for (const shared_ptr<Value>& element : *target->asList())
 	{
-		ValueMap& scope = EnterScope("foreach body");
+		assert(element->type().isSubtype(f.loopParameter().type()));
 
+		ValueMap& scope = EnterScope("foreach body");
 		scope[loopParam.getName().name()] = element;
-		values.push_back(flatten(f.loopBody()));
+
+		shared_ptr<Value> result = flatten(f.loopBody());
+		assert(result);
+		assert(result->type().isSubtype(f.loopBody().type()));
+
+		values.push_back(std::move(result));
 
 		ExitScope();
 	}
