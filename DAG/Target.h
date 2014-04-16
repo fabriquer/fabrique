@@ -76,6 +76,8 @@ private:
 	Target(const std::string& name, const std::shared_ptr<List>& files,
 	       const Type&);
 
+	const std::shared_ptr<Value> underlyingFiles() const;
+
 	const std::string name_;
 	const std::shared_ptr<List> files_;
 };

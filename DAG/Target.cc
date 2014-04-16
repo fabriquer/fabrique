@@ -91,42 +91,38 @@ Target::Target(const string& name, const shared_ptr<List>& files, const Type& t)
 // Just pass operations through to the underlying List.
 shared_ptr<Value> Target::Add(shared_ptr<Value>& rhs)
 {
-	return files_->Add(rhs);
+	return underlyingFiles()->Add(rhs);
 }
 
 shared_ptr<Value> Target::PrefixWith(shared_ptr<Value>& rhs)
 {
-	return files_->PrefixWith(rhs);
+	return underlyingFiles()->PrefixWith(rhs);
 }
 
 shared_ptr<Value> Target::ScalarAdd(shared_ptr<Value>& rhs)
 {
-	return files_->ScalarAdd(rhs);
+	return underlyingFiles()->ScalarAdd(rhs);
 }
 
 shared_ptr<Value> Target::And(shared_ptr<Value>& rhs)
 {
-	return files_->And(rhs);
+	return underlyingFiles()->And(rhs);
 }
 
 shared_ptr<Value> Target::Or(shared_ptr<Value>& rhs)
 {
-	return files_->Or(rhs);
+	return underlyingFiles()->Or(rhs);
 }
 
 shared_ptr<Value> Target::Xor(shared_ptr<Value>& rhs)
 {
-	return files_->Xor(rhs);
+	return underlyingFiles()->Xor(rhs);
 }
 
 
 void Target::PrettyPrint(Bytestream& out, size_t indent) const
 {
-	if (type().isFile())
-		out << **files_->begin();
-
-	else
-		files_->PrettyPrint(out, indent);
+	underlyingFiles()->PrettyPrint(out, indent);
 }
 
 
@@ -134,6 +130,16 @@ void Target::Accept(Visitor& v) const
 {
 	if (v.Visit(*this))
 	{
-		files_->Accept(v);
+		underlyingFiles()->Accept(v);
 	}
+}
+
+
+const shared_ptr<Value> Target::underlyingFiles() const
+{
+	if (type().isOrdered())
+		return files_;
+
+	assert(files_->size() == 1);
+	return *files_->begin();
 }
