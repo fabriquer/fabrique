@@ -80,6 +80,7 @@ public:
 
 	virtual bool valid() const { return true; }
 	virtual bool isFile() const { return false; }
+	virtual bool isString() const { return false; }
 	virtual bool isOrdered() const { return false; }
 	virtual bool canBeNegated() const { return false; }
 

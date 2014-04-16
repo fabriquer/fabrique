@@ -48,6 +48,8 @@ public:
 	virtual ~StringType();
 	static const Type& get(FabContext&);
 
+	virtual bool isString() const override { return true; }
+
 	virtual const Type& onAddTo(const Type&) const override;
 	virtual const Type& onPrefixWith(const Type&) const override;
 
