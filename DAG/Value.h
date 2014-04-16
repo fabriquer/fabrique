@@ -45,6 +45,7 @@ class Type;
 
 namespace dag {
 
+class List;
 class Visitor;
 
 
@@ -77,6 +78,9 @@ public:
 
 	/** Logical xor. */
 	virtual std::shared_ptr<Value> Xor(std::shared_ptr<Value>&);
+
+	//! A list representation of this value (or nullptr).
+	virtual const List* asList() const { return nullptr; }
 
 	/**
 	 * This @ref Value can add a value to itself in a scalar fashion.

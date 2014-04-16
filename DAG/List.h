@@ -74,6 +74,7 @@ public:
 	virtual std::shared_ptr<Value> Add(std::shared_ptr<Value>&) override;
 	virtual std::shared_ptr<Value> PrefixWith(std::shared_ptr<Value>&) override;
 	virtual std::shared_ptr<Value> ScalarAdd(std::shared_ptr<Value>&) override;
+	virtual const List* asList() const override { return this; }
 	virtual bool canScalarAdd(const Value&) override;
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;

@@ -69,6 +69,8 @@ public:
 	virtual std::shared_ptr<Value> Or(std::shared_ptr<Value>&);
 	virtual std::shared_ptr<Value> Xor(std::shared_ptr<Value>&);
 
+	virtual const List* asList() const override { return files_.get(); }
+
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	void Accept(Visitor& v) const override;
 
