@@ -106,7 +106,7 @@ private:
 
 
 //! An error in user input.
-class UserError : public std::exception
+class UserError : public std::exception, public Printable
 {
 public:
 	UserError(const std::string& message);
@@ -115,6 +115,8 @@ public:
 
 	virtual const std::string& message() const { return message_; }
 	const char* what() const noexcept { return message_.c_str(); }
+
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 
 private:
 	const std::string message_;

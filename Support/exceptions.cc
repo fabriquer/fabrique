@@ -111,6 +111,11 @@ UserError::UserError(const UserError& orig)
 
 UserError::~UserError() {}
 
+void UserError::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+{
+	out << Bytestream::ErrorMessage << message_ << Bytestream::Reset;
+}
+
 
 SourceCodeException::SourceCodeException(const string& m, const SourceRange& l)
 	: HasSource(l), err_(ErrorReport::Create(m, l))
