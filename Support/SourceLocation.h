@@ -82,15 +82,15 @@ public:
 
 	//! Create a range that spans two @ref fabrique::HasSource objects.
 	template<class T1, class T2>
-	static SourceRange Over(const T1& b, const T2& e)
+	static SourceRange Over(const T1& x, const T2& y)
 	{
 		const static SourceRange& nowhere = SourceRange::None();
 
-		const SourceRange& begin =
-			b ? b->source() : (e ? e->source() : nowhere);
+		const SourceRange& xsrc = x ? x->source() : nowhere;
+		const SourceRange& ysrc = y ? y->source() : nowhere;
 
-		const SourceRange& end =
-			e ? e->source() : (b ? b->source() : nowhere);
+		const SourceRange& begin = (xsrc and xsrc < ysrc) ? xsrc : ysrc;
+		const SourceRange& end = (ysrc and xsrc < ysrc) ? ysrc : xsrc;
 
 		return SourceRange(begin.begin, end.end);
 	}
