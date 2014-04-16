@@ -55,6 +55,8 @@ public:
 	               size_t line = 0, size_t column = 0);
 
 	operator bool() const;
+	bool operator < (const SourceLocation&) const;
+	bool operator > (const SourceLocation&) const;
 	bool operator == (const SourceLocation&) const;
 	bool operator != (const SourceLocation&) const;
 
@@ -98,6 +100,8 @@ public:
 	SourceRange(const HasSource& begin, const HasSource& end);
 
 	operator bool() const;
+	bool operator < (const SourceRange&) const;
+	bool operator > (const SourceRange&) const;
 	bool operator == (const SourceRange&) const;
 	bool operator != (const SourceRange&) const;
 

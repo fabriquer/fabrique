@@ -58,6 +58,20 @@ SourceLocation::operator bool() const
 	return not (line == 0);
 }
 
+bool SourceLocation::operator < (const SourceLocation& other) const
+{
+	return filename < other.filename
+		or line < other.line
+		or column < other.column;
+}
+
+bool SourceLocation::operator > (const SourceLocation& other) const
+{
+	return filename > other.filename
+		or line > other.line
+		or column > other.column;
+}
+
 bool SourceLocation::operator == (const SourceLocation& other) const
 {
 	return filename == other.filename
@@ -132,6 +146,16 @@ SourceRange SourceRange::Span(const std::string& filename, size_t line,
 SourceRange::operator bool() const
 {
 	return begin and end;
+}
+
+bool SourceRange::operator < (const SourceRange& other) const
+{
+	return begin < other.begin or end < other.end;
+}
+
+bool SourceRange::operator > (const SourceRange& other) const
+{
+	return begin > other.begin or end > other.end;
 }
 
 bool SourceRange::operator == (const SourceRange& other) const
