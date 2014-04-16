@@ -79,6 +79,29 @@ bool FileType::isSubtype(const Type& candidateSupertype) const
 }
 
 
+const Type& FileType::onAddTo(const Type& t) const
+{
+	/// We can add strings to files, creating files with longer names.
+	if (t.isString())
+		return *this;
+
+	return context().nilType();
+}
+
+
+const Type& FileType::onPrefixWith(const Type& t) const
+{
+	/**!
+	 * We can also prefix files with strings. This modifies the filename,
+	 * but not the `subdir` or `{src|build}root` directories.
+	 */
+	if (t.isString())
+		return *this;
+
+	return context().nilType();
+}
+
+
 FileType* FileType::Create(FabContext& ctx)
 {
 	return new FileType(Tag::None, PtrVec<Type>(), ctx);

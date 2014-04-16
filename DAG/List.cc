@@ -92,10 +92,7 @@ shared_ptr<Value> List::Add(shared_ptr<Value>& n)
 {
 	SourceRange loc = SourceRange::Over(this, n.get());
 
-	shared_ptr<List> next = std::dynamic_pointer_cast<List>(n);
-	if (auto target = std::dynamic_pointer_cast<Target>(n))
-		next = target->files();
-
+	const List *next = n->asList();
 	if (not next)
 		throw SemanticException(
 			"lists can only be concatenated with lists", loc);
@@ -106,18 +103,11 @@ shared_ptr<Value> List::Add(shared_ptr<Value>& n)
 			"incompatible operands to concatenate (types "
 			+ type().str() + ", " + next->type().str() + ")", loc);
 
-
-	// The result type is the most general case (supertype).
-	const Type& resultType =
-		next->elementType_.isSupertype(type())
-			? next->type()
-			: this->type();
-
 	SharedPtrVec<Value> values(elements_);
-	values.insert(values.end(),
-	              next->elements_.begin(), next->elements_.end());
+	auto& nextElem = next->elements_;
+	values.insert(values.end(), nextElem.begin(), nextElem.end());
 
-	return shared_ptr<Value>(new List(values, resultType, loc));
+	return shared_ptr<Value>(List::of(values, loc));
 }
 
 shared_ptr<Value> List::PrefixWith(shared_ptr<Value>& prefix)

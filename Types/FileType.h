@@ -51,6 +51,9 @@ public:
 	virtual bool isInputFile() const;
 	virtual bool isOutputFile() const;
 
+	virtual const Type& onAddTo(const Type&) const override;
+	virtual const Type& onPrefixWith(const Type&) const override;
+
 protected:
 	virtual Type* Parameterise(
 		const PtrVec<Type>&, const SourceRange&) const override;

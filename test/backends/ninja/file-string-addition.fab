@@ -1,0 +1,18 @@
+#
+# RUN: fab --format=ninja --output=%t %s
+# RUN: FileCheck %s -input-file %t/build.ninja
+#
+
+# CHECK-DAG: build foo : phony $srcroot/foo.txt
+foo = file('foo.txt');
+
+# CHECK-DAG: build bar : phony $srcroot/foo.txt.gz
+bar = foo + '.gz';
+
+process = action('process $in -o $out' <- in:file, out:file);
+
+# CHECK-DAG: build $buildroot/foo.txt.out: process $srcroot/foo.txt
+foo_out = process(foo, foo + '.out');
+
+# CHECK-DAG: build $buildroot/foo.txt.gz.out: process $srcroot/foo.txt.gz
+bar_out = process(bar, bar + '.out');

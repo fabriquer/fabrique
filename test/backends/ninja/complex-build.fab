@@ -8,24 +8,23 @@ link = action('cc $in -o $out' <- in:list[file], out:file);
 lex = action('$LEX -c++ --yyclass=$classname --outfile=$out $in'
               <- in:file, out:file, classname:string);
 
-cc_all = function(srcs:list[string]): list[file]
+cc_all = function(srcs:list[file]): list[file]
 {
 	foreach src <- srcs
 	{
-		obj = file(src + '.o');
-		build = cc(in = file(src), out = obj);
+		obj = src + '.o';
+		build = cc(in = src, out = obj);
 		obj
 	}
 };
 
-srcs = [ 'foo.c' 'bar.c' ];
 gen = lex(file('foo.yy'), file('foo.c'), classname = 'FooClass');
+srcs = [ gen file('bar.c') ];
 objs = cc_all(srcs);
 bin = link(objs, out = file('foo'));
 
 
-# TODO(JA): change 'srcs' to a list[file] once we support filename extraction
-# CHECK-TODO: srcs = $buildroot/foo.c $srcroot/bar.c
+# CHECK-DAG: build srcs : phony $buildroot/foo.c $srcroot/bar.c
 #
 # CHECK-DAG: rule cc
 # CHECK-NEXT-TODO: command = cc -c $in -o $out
@@ -43,10 +42,7 @@ bin = link(objs, out = file('foo'));
 # CHECK-DAG: build $buildroot/foo.c: lex $srcroot/foo.yy
 # CHECK-NEXT-TODO:  classname = FooClass
 #
-# TODO(JA): this also depends on filename extraction: we currently construct
-#           two independent references to 'foo.c' and only know that one of
-#           them (the one in the call to 'cc_all') is generated
-# CHECK-DAG-TODO: build $buildroot/foo.c.o: cc $buildroot/foo.c
+# CHECK-DAG: build $buildroot/foo.c.o: cc $buildroot/foo.c
 # CHECK-DAG: build $buildroot/bar.c.o: cc $srcroot/bar.c
 #
 # CHECK-DAG: build $buildroot/foo: link $buildroot/foo.c.o $buildroot/bar.c.o

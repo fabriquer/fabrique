@@ -26,5 +26,4 @@ bar_o = cc(file('bar.c'), file('bar.o'));
 # CHECK-DAG: "foo.o" -> "link { foo.o bar.o => bin }{{.*}}";
 # CHECK-DAG: "bar.o" -> "link { foo.o bar.o => bin }{{.*}}";
 # CHECK-DAG: "link { foo.o bar.o => bin }{{.*}}" -> "bin";
-# TODO: foo_o ++ bar_o once concatenation works
-bin = link(in = files(foo.o bar.o), out = file('bin'));
+bin = link(in = [ foo_o bar_o ], out = file('bin'));
