@@ -64,7 +64,7 @@ string File::fullName() const
 	if (absolute_)
 		return filename_;
 
-	return JoinPath(generated() ? "$buildroot" : "$srcroot", filename());
+	return JoinPath(generated() ? "${buildroot}" : "${srcroot}", filename());
 }
 
 

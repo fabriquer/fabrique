@@ -3,9 +3,9 @@
 # RUN: FileCheck %s -input-file %t/build.ninja
 #
 
-cc = action('cc -c $in -o $out' <- in:file, out:file);
-link = action('cc $in -o $out' <- in:list[file], out:file);
-lex = action('$LEX -c++ --yyclass=$classname --outfile=$out $in'
+cc = action('cc -c ${in} -o ${out}' <- in:file, out:file);
+link = action('cc ${in} -o ${out}' <- in:list[file], out:file);
+lex = action('${LEX} -c++ --yyclass=${classname} --outfile=${out} ${in}'
               <- in:file, out:file, classname:string);
 
 cc_all = function(srcs:list[file]): list[file]
@@ -24,25 +24,25 @@ objs = cc_all(srcs);
 bin = link(objs, out = file('foo'));
 
 
-# CHECK-DAG: build srcs : phony $buildroot/foo.c $srcroot/bar.c
+# CHECK-DAG: build srcs : phony ${buildroot}/foo.c ${srcroot}/bar.c
 #
 # CHECK-DAG: rule cc
-# CHECK-NEXT-TODO: command = cc -c $in -o $out
+# CHECK-NEXT-TODO: command = cc -c ${in} -o ${out}
 #
 # CHECK-DAG: rule link
-# CHECK-NEXT-TODO: command = cc $in -o $out
+# CHECK-NEXT-TODO: command = cc ${in} -o ${out}
 #
 # CHECK-DAG: rule lex
-# CHECK-NEXT-TODO: comamand = $LEX -c++ --yyclass=$classname --outfile=$out
+# CHECK-NEXT-TODO: comamand = ${LEX} -c++ --yyclass=${classname} --outfile=${out}
 #
-# CHECK-DAG: build gen : phony $buildroot/foo.c
-# CHECK-DAG: build objs : phony $buildroot/foo.c.o $buildroot/bar.c.o
-# CHECK-DAG: build bin : phony $buildroot/foo
+# CHECK-DAG: build gen : phony ${buildroot}/foo.c
+# CHECK-DAG: build objs : phony ${buildroot}/foo.c.o ${buildroot}/bar.c.o
+# CHECK-DAG: build bin : phony ${buildroot}/foo
 #
-# CHECK-DAG: build $buildroot/foo.c: lex $srcroot/foo.yy
+# CHECK-DAG: build ${buildroot}/foo.c: lex ${srcroot}/foo.yy
 # CHECK-NEXT-TODO:  classname = FooClass
 #
-# CHECK-DAG: build $buildroot/foo.c.o: cc $buildroot/foo.c
-# CHECK-DAG: build $buildroot/bar.c.o: cc $srcroot/bar.c
+# CHECK-DAG: build ${buildroot}/foo.c.o: cc ${buildroot}/foo.c
+# CHECK-DAG: build ${buildroot}/bar.c.o: cc ${srcroot}/bar.c
 #
-# CHECK-DAG: build $buildroot/foo: link $buildroot/foo.c.o $buildroot/bar.c.o
+# CHECK-DAG: build ${buildroot}/foo: link ${buildroot}/foo.c.o ${buildroot}/bar.c.o

@@ -3,9 +3,9 @@
 # RUN: FileCheck %s -input-file %t/Makefile
 #
 
-cc = action('cc -c $in -o $out' <- in:file, out:file);
-link = action('cc $in -o $out' <- in:list[file], out:file);
-lex = action('$LEX -c++ --yyclass=$classname --outfile=$out $in'
+cc = action('cc -c ${in} -o ${out}' <- in:file, out:file);
+link = action('cc ${in} -o ${out}' <- in:list[file], out:file);
+lex = action('${LEX} -c++ --yyclass=${classname} --outfile=${out} ${in}'
               <- in:file, out:file, classname:string);
 
 cc_all = function(srcs:list[string]): list[file]
@@ -26,21 +26,21 @@ bin = link(objs, out = file('foo'));
 
 # CHECK: srcs= foo.c bar.c baz.c
 #
-# CHECK-DAG: bin : $buildroot/foo
-# CHECK-DAG: gen : $buildroot/foo.c
-# CHECK-DAG: objs : $buildroot/foo.c.o $buildroot/bar.c.o $buildroot/baz.c.o
+# CHECK-DAG: bin : ${buildroot}/foo
+# CHECK-DAG: gen : ${buildroot}/foo.c
+# CHECK-DAG: objs : ${buildroot}/foo.c.o ${buildroot}/bar.c.o ${buildroot}/baz.c.o
 #
-# CHECK-DAG: $buildroot/foo.c : $srcroot/foo.yy
-# CHECK-NEXT-TODO:  $LEX -c++ --yyclass=FooClass --outfile=foo.c foo.yy
+# CHECK-DAG: ${buildroot}/foo.c : ${srcroot}/foo.yy
+# CHECK-NEXT-TODO:  ${LEX} -c++ --yyclass=FooClass --outfile=foo.c foo.yy
 #
-# CHECK-DAG: $buildroot/foo.c.o : $srcroot/foo.c
-# CHECK-NEXT-TODO:  cc -c $srcroot/bfoo.c -o $buildroot/foo.c.o
+# CHECK-DAG: ${buildroot}/foo.c.o : ${srcroot}/foo.c
+# CHECK-NEXT-TODO:  cc -c ${srcroot}/bfoo.c -o ${buildroot}/foo.c.o
 #
-# CHECK-DAG: $buildroot/bar.c.o : $srcroot/bar.c
-# CHECK-NEXT-TODO:  cc -c $srcroot/bbar.c -o $buildroot/bar.c.o
+# CHECK-DAG: ${buildroot}/bar.c.o : ${srcroot}/bar.c
+# CHECK-NEXT-TODO:  cc -c ${srcroot}/bbar.c -o ${buildroot}/bar.c.o
 #
-# CHECK-DAG: $buildroot/baz.c.o : $srcroot/baz.c
-# CHECK-NEXT-TODO:  cc -c $srcroot/bbaz.c -o $buildroot/baz.c.o
+# CHECK-DAG: ${buildroot}/baz.c.o : ${srcroot}/baz.c
+# CHECK-NEXT-TODO:  cc -c ${srcroot}/bbaz.c -o ${buildroot}/baz.c.o
 #
-# CHECK-DAG: $buildroot/foo : $buildroot/foo.c.o $buildroot/bar.c.o $buildroot/baz.c.o
-# CHECK-NEXT-TODO:  cc $buildroot/foo.c.o $buildroot/bar.c.o $buildroot/baz.c.o -o $buildroot/foo
+# CHECK-DAG: ${buildroot}/foo : ${buildroot}/foo.c.o ${buildroot}/bar.c.o ${buildroot}/baz.c.o
+# CHECK-NEXT-TODO:  cc ${buildroot}/foo.c.o ${buildroot}/bar.c.o ${buildroot}/baz.c.o -o ${buildroot}/foo

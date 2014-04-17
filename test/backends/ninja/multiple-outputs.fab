@@ -4,11 +4,11 @@
 #
 
 # CHECK: rule lex
-# CHECK-NEXT:  command = $LEX -c++ --header-file=$header --outfile=$out $in
-# CHECK-NEXT:  description = $LEX -c++ --header-file=$header --outfile=$out $in
-lex = action('$LEX -c++ --header-file=$header --outfile=$out $in'
+# CHECK-NEXT:  command = ${LEX} -c++ --header-file=${header} --outfile=${out} ${in}
+# CHECK-NEXT:  description = ${LEX} -c++ --header-file=${header} --outfile=${out} ${in}
+lex = action('${LEX} -c++ --header-file=${header} --outfile=${out} ${in}'
               <- in:file, out:file, header:file[out]);
 
-# CHECK: build $buildroot/foo.c $buildroot/foo.h: lex $srcroot/foo.yy
-# CHECK-NEXT: header = $buildroot/foo.h
+# CHECK: build ${buildroot}/foo.c ${buildroot}/foo.h: lex ${srcroot}/foo.yy
+# CHECK-NEXT: header = ${buildroot}/foo.h
 gen = lex(file('foo.yy'), file('foo.c'), header = file('foo.h'));

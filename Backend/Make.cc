@@ -57,8 +57,8 @@ using std::vector;
 
 namespace fabrique
 {
-static bool replace(string& s, const string& pattern, const string&);
-static bool replace(string& s, const string& pattern, const Build::FileVec&);
+static int replace(string& s, const string& pattern, const string&);
+static int replace(string& s, const string& pattern, const Build::FileVec&);
 }
 
 
@@ -214,12 +214,12 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out)
 		for (auto& j : build.arguments())
 		{
 			const string name = j.first;
-			const Value& v = *j.second;
+			const string str = formatter.Format(*j.second);
 
-			replace(command, "$" + name, formatter.Format(v));
+			replace(command, "${" + name + "}", str);
 		}
-		replace(command, "$in", build.explicitInputs());
-		replace(command, "$out", build.explicitOutputs());
+		replace(command, "${in}", build.explicitInputs());
+		replace(command, "${out}", build.explicitOutputs());
 
 		out
 			<< "\n"
@@ -232,19 +232,25 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out)
 }
 
 
-static bool fabrique::replace(string& haystack, const string& needle,
-                              const string& replacement)
+static int fabrique::replace(string& haystack, const string& needle,
+                             const string& replacement)
 {
-	size_t i = haystack.find(needle);
-	if (i == string::npos)
-		return false;
+	int replaced = 0;
 
-	haystack.replace(i, needle.length(), replacement);
-	return true;
+	while (true)
+	{
+		size_t i = haystack.find(needle);
+		if (i == string::npos)
+			break;
+
+		haystack.replace(i, needle.length(), replacement);
+	}
+
+	return replaced;
 }
 
-static bool fabrique::replace(string& haystack, const string& pattern,
-                              const Build::FileVec& files)
+static int fabrique::replace(string& haystack, const string& pattern,
+                             const Build::FileVec& files)
 {
 	std::ostringstream oss;
 
