@@ -57,8 +57,8 @@ using std::vector;
 
 namespace fabrique
 {
-static int replace(string& s, const string& pattern, const string&);
-static int replace(string& s, const string& pattern, const Build::FileVec&);
+static int replaceAll(string& s, const string& pattern, const string&);
+static int replaceAll(string& s, const string& pattern, const Build::FileVec&);
 }
 
 
@@ -216,10 +216,10 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out)
 			const string name = j.first;
 			const string str = formatter.Format(*j.second);
 
-			replace(command, "${" + name + "}", str);
+			replaceAll(command, "${" + name + "}", str);
 		}
-		replace(command, "${in}", build.explicitInputs());
-		replace(command, "${out}", build.explicitOutputs());
+		replaceAll(command, "${in}", build.explicitInputs());
+		replaceAll(command, "${out}", build.explicitOutputs());
 
 		out
 			<< "\n"
@@ -232,8 +232,8 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out)
 }
 
 
-static int fabrique::replace(string& haystack, const string& needle,
-                             const string& replacement)
+static int fabrique::replaceAll(string& haystack, const string& needle,
+                                const string& replacement)
 {
 	int replaced = 0;
 
@@ -249,8 +249,8 @@ static int fabrique::replace(string& haystack, const string& needle,
 	return replaced;
 }
 
-static int fabrique::replace(string& haystack, const string& pattern,
-                             const Build::FileVec& files)
+static int fabrique::replaceAll(string& haystack, const string& pattern,
+                                const Build::FileVec& files)
 {
 	std::ostringstream oss;
 
@@ -260,7 +260,7 @@ static int fabrique::replace(string& haystack, const string& pattern,
 	string replacement = oss.str();
 	replacement = replacement.substr(0, replacement.length() - 1);
 
-	return replace(haystack, pattern, replacement);
+	return replaceAll(haystack, pattern, replacement);
 }
 
 
