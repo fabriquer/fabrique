@@ -64,12 +64,10 @@ cxx_srcs = list(itertools.chain(*[
 		for (subdir,srcs) in cxx_srcs.items()
 ]))
 
-srcroot = os.path.dirname(os.path.realpath(bootstrap))
-
 lex = { 'Parsing/fab.l': 'Parsing/fab.lex' }
 yacc = { 'Parsing/fab.yy': 'Parsing/fab.yacc' }
 
-src_root = os.path.dirname(os.path.realpath(__file__))
+src_root = os.path.dirname(os.path.realpath('.'))
 
 cxxflags = [
 	'-I', src_root, '-I', builddir,
@@ -92,7 +90,7 @@ warnings = [
 	'-Wno-padded',
 
 	# Treat vendor headers as system headers: disable warnings.
-	'-isystem %s/vendor' % srcroot
+	'-isystem %s/vendor' % src_root
 ]
 
 if args.debug: cxxflags += [ '-g', '-ggdb' ]
@@ -210,7 +208,7 @@ out.write('''build build.ninja: rebuild %s
 
 # Unit tests:
 out.write('build test: phony run-tests\n')
-out.write('build run-tests: lit %s/test | fab\n' % srcroot)
+out.write('build run-tests: lit %s/test | fab\n' % src_root)
 
 
 # Main executable
