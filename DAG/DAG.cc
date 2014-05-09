@@ -45,7 +45,6 @@
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
 #include "Support/exceptions.h"
-#include "Support/os.h"
 
 #include "Types/FunctionType.h"
 #include "Types/Type.h"
@@ -459,9 +458,8 @@ void DAGBuilder::Leave(const ast::Conditional&) {}
 bool DAGBuilder::Enter(const ast::Filename& f)
 {
 	string name = flatten(f.name())->str();
-	const bool absolute = PathIsAbsolute(name);
 
-	shared_ptr<File> file(new File(name, absolute, f.type(), f.source()));
+	shared_ptr<File> file(File::Create(name, f.type(), f.source()));
 	files_.push_back(file);
 	currentValue.push(file);
 

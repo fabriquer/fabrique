@@ -46,7 +46,9 @@ namespace dag {
 class File : public Value
 {
 public:
-	File(std::string name, bool absolute, const Type&, SourceRange);
+	static File* Create(std::string fullPath, const Type&, SourceRange);
+	static File* Create(std::string directory, std::string filename,
+	                    const Type&, SourceRange);
 	virtual ~File() {}
 
 	virtual std::string filename() const;
@@ -72,6 +74,8 @@ public:
 	void Accept(Visitor&) const override;
 
 private:
+	File(std::string name, bool absolute, const Type&, SourceRange);
+
 	const std::string filename_;
 	std::string subdirectory_;
 	const bool absolute_;

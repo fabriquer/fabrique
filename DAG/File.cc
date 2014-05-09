@@ -40,6 +40,19 @@ using std::shared_ptr;
 using std::string;
 
 
+File* File::Create(string fullPath, const Type& t, SourceRange src)
+{
+	return new File(fullPath, PathIsAbsolute(fullPath), t, src);
+}
+
+File* File::Create(string directory, string filename, const Type& t,
+                   SourceRange src)
+{
+	string fullName(JoinPath(directory, filename));
+	return Create(fullName, t, src);
+}
+
+
 File::File(string filename, bool absolute, const Type& t, SourceRange source)
 	: Value(t, source), filename_(filename),
 	  absolute_(absolute), generated_(false)
