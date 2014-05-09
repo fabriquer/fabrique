@@ -85,6 +85,10 @@ const Type& FileType::onAddTo(const Type& t) const
 	if (t.isString())
 		return *this;
 
+	/// We can also concatenate filenames together.
+	if (t.isSubtype(*this))
+		return *this;
+
 	return context().nilType();
 }
 
