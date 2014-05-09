@@ -144,6 +144,13 @@ string fabrique::DirectoryOf(string filename, bool absolute)
 }
 
 
+string fabrique::FilenameComponent(string pathIncludingDirectory)
+{
+	const char *cname = pathIncludingDirectory.c_str();
+	return basename(const_cast<char*>(cname));
+}
+
+
 string fabrique::JoinPath(const string& x, const string& y)
 {
 	return x + "/" + y;

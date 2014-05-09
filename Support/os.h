@@ -42,6 +42,7 @@ bool PathIsAbsolute(const std::string&);
 
 std::string AbsoluteDirectory(std::string name, bool createIfMissing = true);
 std::string DirectoryOf(std::string filename, bool absolute = false);
+std::string FilenameComponent(std::string pathIncludingDirectory);
 std::string JoinPath(const std::string&, const std::string&);
 std::string JoinPath(const std::vector<std::string>&);
 
