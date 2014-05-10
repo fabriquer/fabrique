@@ -401,6 +401,9 @@ void DAGBuilder::Leave(const ast::Call& call)
 			Build::Create(rule, args, paramTypes, call.source()));
 
 		builds_.push_back(build);
+		for (const shared_ptr<File>& f : build->allOutputs())
+			files_.push_back(f);
+
 		currentValue.push(build);
 	}
 	else
