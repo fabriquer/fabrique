@@ -141,6 +141,21 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out)
 	out << "\n";
 
 
+	// 'clean' target:
+	out
+		<< Bytestream::Definition << "clean"
+		<< Bytestream::Operator << " :\n"
+		<< Bytestream::Action << "\techo \"cleaning...\"\n"
+		<< Bytestream::Action << "\trm -rf"
+		;
+
+	for (auto& f : dag.files())
+		if (f->generated())
+			out << " " << formatter.Format(*f);
+
+	out << Bytestream::Reset << "\n\n";
+
+
 	// Build steps:
 	out
 		<< Bytestream::Comment
