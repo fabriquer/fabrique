@@ -33,6 +33,7 @@
 #define JOIN_H
 
 #include "ADT/PtrVec.h"
+#include "Support/Printable.h"
 
 #include <sstream>
 #include <string>
@@ -41,11 +42,10 @@
 namespace fabrique {
 
 class Bytestream;
-class Printable;
 
 
 template<class T>
-class Join
+class Join : public Printable
 {
 public:
 	static Join csv(const PtrVec<T>& p) { return Join(", ", p); }
@@ -56,7 +56,7 @@ public:
 	{
 	}
 
-	void Print(Bytestream& out) const
+	virtual void PrettyPrint(Bytestream& out, size_t) const override
 	{
 		for (size_t i = 0; i < objects_.size(); )
 		{
@@ -71,13 +71,6 @@ private:
 	const std::string joinStr_;
 	const PtrVec<T>& objects_;
 };
-
-template<class T>
-Bytestream& operator<< (Bytestream& out, const Join<T>& j)
-{
-	j.Print(out);
-	return out;
-}
 
 
 template<class T>
