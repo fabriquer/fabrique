@@ -40,10 +40,19 @@ namespace fabrique {
 bool FileExists(const std::string& filename, bool directory = false);
 bool PathIsAbsolute(const std::string&);
 
+//! Find the absolute version of a directory, optionally creating it.
 std::string AbsoluteDirectory(std::string name, bool createIfMissing = true);
+
+//! Find the directory containing a file, optionally returning an absolute path.
 std::string DirectoryOf(std::string filename, bool absolute = false);
+
+//! Find the non-directory component of a path.
 std::string FilenameComponent(std::string pathIncludingDirectory);
+
+//! Join two path components (a directory and a filename).
 std::string JoinPath(const std::string&, const std::string&);
+
+//! Join an arbitrary number of path components (directories and maybe a filename).
 std::string JoinPath(const std::vector<std::string>&);
 
 }
