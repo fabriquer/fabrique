@@ -167,6 +167,12 @@ string fabrique::FilenameComponent(string pathIncludingDirectory)
 
 string fabrique::JoinPath(const string& x, const string& y)
 {
+	if (x.empty())
+		return y;
+
+	if (y.empty())
+		return x;
+
 	return x + "/" + y;
 }
 
