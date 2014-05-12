@@ -125,6 +125,12 @@ string fabrique::AbsoluteDirectory(string name, bool createIfMissing)
 }
 
 
+string fabrique::CreateDirCommand(string dir)
+{
+	return "if [ ! -e \"" + dir + "\" ]; then mkdir -p \"" + dir + "\"; fi";
+}
+
+
 string fabrique::DirectoryOf(string filename, bool absolute)
 {
 	const char *dir = dirname(filename.c_str());
