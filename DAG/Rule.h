@@ -60,6 +60,8 @@ public:
 
 	const std::string& name() const { return ruleName_; }
 	const std::string& command() const { return command_; }
+
+	bool hasDescription() const { return not description_.empty(); }
 	const std::string& description() const { return description_; }
 
 	//! Arguments define the action (e.g., command = 'cc').
