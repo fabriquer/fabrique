@@ -43,6 +43,7 @@
 
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
+#include "Support/os.h"
 
 #include <cassert>
 
@@ -225,6 +226,20 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out)
 		//
 		// Build the command to be run (substitute $variables).
 		//
+		std::function<string (const shared_ptr<File>&)> shortName =
+			[](const shared_ptr<File>& f) { return f->relativeName(); };
+
+		string description =
+			rule.hasDescription()
+			? rule.description()
+			: rule.name()
+			  + " [ "
+			  + join(build.allInputs(), shortName, " ")
+			  + " ] => [ "
+			  + join(build.allOutputs(), shortName, " ")
+			  + " ]"
+			;
+
 		string command = formatter.Format(rule);
 		for (auto& j : build.arguments())
 		{
@@ -232,14 +247,19 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out)
 			const string str = formatter.Format(*j.second);
 
 			replaceAll(command, "${" + name + "}", str);
+			replaceAll(description, "${" + name + "}", str);
 		}
 		replaceAll(command, "${in}", build.explicitInputs());
+		replaceAll(description, "${in}", build.explicitInputs());
+
 		replaceAll(command, "${out}", build.explicitOutputs());
+		replaceAll(description, "${out}", build.explicitOutputs());
 
 		out
 			<< "\n"
-			<< indent_ << Bytestream::Action << command
-			<< "\n"
+			<< indent_ << Bytestream::Action
+			<< "echo \"" << description << "\"\n"
+			<< indent_ << Bytestream::Action << command << "\n"
 			;
 
 		out << "\n";
