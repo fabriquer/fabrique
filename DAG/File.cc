@@ -92,6 +92,12 @@ string File::directory() const
 }
 
 
+string File::relativeName() const
+{
+	return JoinPath(subdirectory_, filename_);
+}
+
+
 string File::fullName() const
 {
 	return JoinPath(directory(), filename_);

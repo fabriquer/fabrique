@@ -52,6 +52,7 @@ public:
 	virtual ~File() {}
 
 	virtual std::string filename() const;
+	virtual std::string relativeName() const;
 	virtual std::string fullName() const;
 	virtual std::string str() const { return filename_; }
 
