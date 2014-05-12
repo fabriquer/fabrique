@@ -72,12 +72,26 @@ string File::filename() const
 }
 
 
+string File::directory() const
+{
+	if (absolute_)
+		return DirectoryOf(filename_);
+
+	const string root = generated() ? "${buildroot}" : "${srcroot}";
+
+	if (subdirectory_.empty())
+		return root;
+
+	return JoinPath(root, subdirectory_);
+}
+
+
 string File::fullName() const
 {
 	if (absolute_)
 		return filename_;
 
-	return JoinPath(generated() ? "${buildroot}" : "${srcroot}", filename());
+	return JoinPath(directory(), filename_);
 }
 
 
