@@ -460,9 +460,21 @@ void DAGBuilder::Leave(const ast::Conditional&) {}
 
 bool DAGBuilder::Enter(const ast::Filename& f)
 {
-	string name = flatten(f.name())->str();
+	const string filename = flatten(f.name())->str();
 
-	shared_ptr<File> file(File::Create(name, f.type(), f.source()));
+	string subdirectory;
+	for (const UniqPtr<ast::Argument>& a : f.arguments())
+	{
+		if (a->getName().name() == "subdir")
+			subdirectory = flatten(a->getValue())->str();
+
+		else
+			throw SemanticException("unknown argument", a->source());
+	}
+
+	shared_ptr<File> file(
+		File::Create(subdirectory, filename, f.type(), f.source()));
+
 	files_.push_back(file);
 	currentValue.push(file);
 

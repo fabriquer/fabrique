@@ -14,7 +14,7 @@ cc = action('${CC} ${in} -o ${out}' <- in:file, out:file);
 
 # CHECK-DAG: ${buildroot}/foo/subdir/foo.c.o : ${srcroot}/foo/subdir/foo.c
 # CHECK-DAG: ${CC} ${srcroot}/foo/subdir/foo.c -o ${buildroot}/foo/subdir/foo.c.o
-foo = file('foo/subdir/foo.c');
+foo = file('foo.c', subdir = 'foo/subdir');
 foo_o = cc(foo, foo + '.o');
 
 # CHECK-DAG: ${buildroot}/bar/subdir/bar.c.o : ${srcroot}/bar/subdir/bar.c
