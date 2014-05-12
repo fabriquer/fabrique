@@ -1,4 +1,8 @@
-/** @file Support/Join.h    Declaration of the @ref fabrique::Join ostream helper. */
+/**
+ * @file Support/Join.h
+ * Declaration of the @ref fabrique::Join ostream helper and some helper functions
+ * for joining strings.
+ */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -73,6 +77,7 @@ private:
 };
 
 
+//! Join the elements of a string container.
 template<class T>
 std::string join(const T& c, const std::string& delim = ",")
 {
@@ -87,6 +92,7 @@ std::string join(const T& c, const std::string& delim = ",")
 	return buffer.str();
 }
 
+//! Special case: join two strings.
 std::string join(const std::string&, const std::string&,
                  const std::string& delim = ", ");
 
