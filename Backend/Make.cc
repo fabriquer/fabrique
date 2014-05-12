@@ -217,7 +217,7 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out)
 		if (outputs.size() > 1)
 		{
 			const string pseudoName =
-				rule.name() + "_" + std::to_string(buildID);
+				rule.name() + "_" + std::to_string(++buildID);
 
 			out
 				<< Bytestream::Definition << pseudoName
