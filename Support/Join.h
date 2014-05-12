@@ -1,7 +1,7 @@
 /**
  * @file Support/Join.h
  * Declaration of the @ref fabrique::Join ostream helper and some helper functions
- * for joining strings.
+ * for joining strings (or things that be made into strings) together.
  */
 /*
  * Copyright (c) 2013 Jonathan Anderson
@@ -39,6 +39,7 @@
 #include "ADT/PtrVec.h"
 #include "Support/Printable.h"
 
+#include <functional>
 #include <sstream>
 #include <string>
 
@@ -95,6 +96,33 @@ std::string join(const T& c, const std::string& delim = ",")
 //! Special case: join two strings.
 std::string join(const std::string&, const std::string&,
                  const std::string& delim = ", ");
+
+//! Join a formatted range of values.
+template <class InputIterator, class T>
+std::string join(const InputIterator& begin, const InputIterator& end,
+                 std::function<std::string (const T&)> format,
+                 const std::string& delim = ",")
+{
+	if (begin == end)
+		return "";
+
+	const InputIterator last = end - 1;
+
+	std::stringstream buffer;
+	std::ostream_iterator<std::string> out(buffer, delim.c_str());
+	std::transform(begin, last, out, format);
+	buffer << format(*last);
+
+	return buffer.str();
+}
+
+//! Format and join the elements of a container.
+template<class Container, class T>
+std::string join(const Container& xs, std::function<std::string (const T&)> format,
+                 const std::string& delim = ",")
+{
+	return join(xs.begin(), xs.end(), format, delim);
+}
 
 } // namespace fabrique
 
