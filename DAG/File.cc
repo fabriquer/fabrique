@@ -42,19 +42,25 @@ using std::string;
 
 File* File::Create(string fullPath, const Type& t, SourceRange src)
 {
-	return new File(fullPath, PathIsAbsolute(fullPath), t, src);
+	const string filename(FilenameComponent(fullPath));
+	const string subdir(DirectoryOf(fullPath));
+
+	return Create(subdir, filename, t, src);
 }
 
-File* File::Create(string directory, string filename, const Type& t,
-                   SourceRange src)
+File* File::Create(string dir, string path, const Type& t, SourceRange src)
 {
-	string fullName(JoinPath(directory, filename));
-	return Create(fullName, t, src);
+	const string filename(FilenameComponent(path));
+	const string subdir(DirectoryOf(path));
+	const string directory(JoinPath(dir, subdir));
+
+	return new File(filename, directory, PathIsAbsolute(directory), t, src);
 }
 
 
-File::File(string filename, bool absolute, const Type& t, SourceRange source)
-	: Value(t, source), filename_(filename),
+File::File(string filename, string subdirectory, bool absolute,
+           const Type& t, SourceRange source)
+	: Value(t, source), filename_(filename), subdirectory_(subdirectory),
 	  absolute_(absolute), generated_(false)
 {
 }
@@ -75,7 +81,7 @@ string File::filename() const
 string File::directory() const
 {
 	if (absolute_)
-		return DirectoryOf(filename_);
+		return subdirectory_;
 
 	const string root = generated() ? "${buildroot}" : "${srcroot}";
 
@@ -88,9 +94,6 @@ string File::directory() const
 
 string File::fullName() const
 {
-	if (absolute_)
-		return filename_;
-
 	return JoinPath(directory(), filename_);
 }
 
@@ -108,10 +111,9 @@ void File::setGenerated(bool gen)
 
 shared_ptr<Value> File::Add(shared_ptr<Value>& suffix)
 {
-	shared_ptr<File> f(new File(filename_ + suffix->str(), absolute_, type(),
-	                            SourceRange::Over(this, suffix)));
-
-	f->setSubdirectory(subdirectory_);
+	shared_ptr<File> f(
+		new File(filename_ + suffix->str(), subdirectory_, absolute_,
+		         type(), SourceRange::Over(this, suffix)));
 
 	return f;
 }
@@ -119,10 +121,9 @@ shared_ptr<Value> File::Add(shared_ptr<Value>& suffix)
 
 shared_ptr<Value> File::PrefixWith(shared_ptr<Value>& prefix)
 {
-	shared_ptr<File> f(new File(prefix->str() + filename_, absolute_, type(),
-	                            SourceRange::Over(prefix, this)));
-
-	f->setSubdirectory(subdirectory_);
+	shared_ptr<File> f(
+		new File(prefix->str() + filename_, subdirectory_, absolute_,
+		         type(), SourceRange::Over(prefix, this)));
 
 	return f;
 }
@@ -130,7 +131,13 @@ shared_ptr<Value> File::PrefixWith(shared_ptr<Value>& prefix)
 
 void File::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
-	out << Bytestream::Literal << filename() << Bytestream::Reset;
+	if (not subdirectory_.empty())
+		out
+			<< Bytestream::Literal << subdirectory_
+			<< Bytestream::Operator << "/"
+			;
+
+	out << Bytestream::Filename << filename_ << Bytestream::Reset;
 }
 
 

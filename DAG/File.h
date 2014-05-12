@@ -76,7 +76,8 @@ public:
 	void Accept(Visitor&) const override;
 
 private:
-	File(std::string name, bool absolute, const Type&, SourceRange);
+	File(std::string name, std::string subdirectory, bool absolute,
+	     const Type&, SourceRange);
 
 	const std::string filename_;
 	std::string subdirectory_;
