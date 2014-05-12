@@ -10,8 +10,8 @@ foo = 'a string';
 # If a value is a file or list of files, it should generate a psuedo-target:
 #
 
-# CHECK: bar : ${srcroot}/a.c
+# CHECK-DAG: bar : ${srcroot}/a.c
 bar = file('a.c');
 
-# CHECK: baz : ${srcroot}/b.c ${srcroot}/c.c
+# CHECK-DAG: baz : ${srcroot}/b.c ${srcroot}/c.c
 baz = files(b.c c.c);

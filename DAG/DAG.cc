@@ -60,6 +60,7 @@ using namespace fabrique::dag;
 using std::dynamic_pointer_cast;
 using std::shared_ptr;
 using std::string;
+using std::vector;
 
 template<class T>
 using ConstPtr = const std::unique_ptr<T>;
@@ -73,7 +74,7 @@ public:
 	ImmutableDAG(string buildroot, string srcroot,
 	             SharedPtrVec<File>& files, SharedPtrVec<Build>& builds,
 	             SharedPtrMap<Rule>& rules, SharedPtrMap<Value>& variables,
-	             SharedPtrMap<Target>& targets);
+	             SharedPtrMap<Target>& targets, vector<BuildTarget>& top);
 
 	const string& buildroot() const { return buildroot_; }
 	const string& srcroot() const { return srcroot_; }
@@ -87,6 +88,11 @@ public:
 		return targets_;
 	}
 
+	const vector<BuildTarget>& topLevelTargets() const override
+	{
+		return topLevelTargets_;
+	}
+
 private:
 	const string buildroot_;
 	const string srcroot_;
@@ -96,6 +102,7 @@ private:
 	const SharedPtrMap<Rule> rules_;
 	const SharedPtrMap<Value> vars_;
 	const SharedPtrMap<Target> targets_;
+	const vector<BuildTarget> topLevelTargets_;
 };
 
 }
@@ -145,6 +152,7 @@ public:
 	SharedPtrMap<Rule> rules_;
 	SharedPtrMap<Value> variables_;
 	SharedPtrMap<Target> targets_;
+	vector<DAG::BuildTarget> topLevelTargets_;
 
 private:
 	ValueMap& EnterScope(const string& name);
@@ -187,7 +195,7 @@ UniqPtr<DAG> DAG::Flatten(const ast::Scope& root, FabContext& ctx)
 	return UniqPtr<DAG>(new ImmutableDAG(
 		ctx.buildroot(), ctx.srcroot(),
 		builder.files_, builder.builds_, builder.rules_,
-		builder.variables_, builder.targets_));
+		builder.variables_, builder.targets_, builder.topLevelTargets_));
 }
 
 
@@ -240,10 +248,10 @@ ImmutableDAG::ImmutableDAG(
 		string buildroot, string sourceroot,
 		SharedPtrVec<File>& files, SharedPtrVec<Build>& builds,
 		SharedPtrMap<Rule>& rules, SharedPtrMap<Value>& variables,
-		SharedPtrMap<Target>& targets)
+		SharedPtrMap<Target>& targets, vector<BuildTarget>& topLevelTargets)
 	: buildroot_(buildroot), srcroot_(sourceroot),
 	  files_(files), builds_(builds), rules_(rules),
-	  vars_(variables), targets_(targets)
+	  vars_(variables), targets_(targets), topLevelTargets_(topLevelTargets)
 {
 }
 
@@ -554,7 +562,7 @@ void DAGBuilder::Leave(const ast::ForeachExpr&) {}
 
 
 bool DAGBuilder::Enter(const ast::Function&) { return false; }
-void DAGBuilder::Leave(const ast::Function&) {}
+void DAGBuilder::Leave(const ast::Function&) { currentValueName.pop(); }
 
 
 bool DAGBuilder::Enter(const ast::Identifier&) { return false; }
@@ -734,6 +742,8 @@ void DAGBuilder::Leave(const ast::Value&)
 			val.reset(Target::Create(name, list));
 	}
 
+	if (currentValueName.empty())
+		topLevelTargets_.emplace_back(name, val);
 
 	currentScope.emplace(name, std::move(val));
 

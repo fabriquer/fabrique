@@ -76,6 +76,11 @@ public:
 	virtual const SharedPtrMap<Value>& variables() const = 0;
 	virtual const SharedPtrMap<Target>& targets() const = 0;
 
+	typedef std::pair<std::string,std::shared_ptr<Value>> BuildTarget;
+
+	//! A file's top-level targets, in order of original definition.
+	virtual const std::vector<BuildTarget>& topLevelTargets() const = 0;
+
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 };
 

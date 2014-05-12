@@ -130,15 +130,29 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out)
 	out << "\n";
 
 
-	// Explicitly-named pseudo-targets:
-	for (auto& i : dag.targets())
+	//
+	// Explicitly-named pseudo-targets, in reverse declaration order.
+	//
+	// Make treats the first target as the automatic target, whereas fabfiles
+	// necessarily define subtargets first and top-level targets last.
+	//
+	const auto& topLevelTargets = dag.topLevelTargets();
+	for (auto i = topLevelTargets.rbegin(); i != topLevelTargets.rend(); i++)
+	{
+		const string& name = i->first;
+		const shared_ptr<Value>& target = i->second;
+
+		if (dynamic_pointer_cast<Rule>(target))
+			continue;
+
 		out
-			<< Bytestream::Definition << i.first
+			<< Bytestream::Definition << name
 			<< Bytestream::Operator << " : "
 			<< Bytestream::Literal
-			<< formatter.Format(*i.second)
+			<< formatter.Format(*target)
 			<< "\n"
 			;
+	}
 
 	out << "\n";
 
