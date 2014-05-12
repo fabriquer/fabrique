@@ -121,6 +121,9 @@ string fabrique::AbsoluteDirectory(string name, bool createIfMissing)
 	string path(absolutePath);
 	free(absolutePath);
 
+	if (path == ".")
+		return "";
+
 	return path;
 }
 
@@ -138,15 +141,20 @@ string fabrique::DirectoryOf(string filename, bool absolute)
 	if (not dir)
 		throw PosixError("error looking for parent of " + filename);
 
+	const string relative(dir);
+	if (not absolute)
+		return (relative == ".") ? "" : relative;
+
+	const string absoluteDir(AbsoluteDirectory(dir));
+
 	struct stat s;
-	if (stat(dir, &s) != 0)
-		throw PosixError("error getting information: " + string(dir));
+	if (stat(absoluteDir.c_str(), &s) != 0)
+		throw PosixError("error querying " + absoluteDir);
 
 	if (not S_ISDIR(s.st_mode))
 		throw PosixError(filename + " is not a directory");
 
-
-	return absolute ? AbsoluteDirectory(dir) : dir;
+	return absoluteDir;
 }
 
 
