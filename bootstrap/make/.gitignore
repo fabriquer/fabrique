@@ -1,0 +1,5 @@
+fab
+*.o
+*.o.d
+fab.lex.*
+fab.yacc.*
