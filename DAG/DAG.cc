@@ -106,7 +106,7 @@ namespace dag {
 
 
 
-//! AST Visitor that flattens the AST into a DAG.
+//! AST Visitor that flattens the AST into a DAG by evaluating expressions.
 class DAGBuilder : public ast::Visitor
 {
 public:
@@ -154,7 +154,7 @@ private:
 	//! Get a named value from the current scope or a parent scope.
 	shared_ptr<Value> getNamedValue(const std::string& name);
 
-	shared_ptr<Value> flatten(const ast::Expression&);
+	shared_ptr<Value> eval(const ast::Expression&);
 
 
 	FabContext& ctx_;
@@ -258,8 +258,8 @@ bool DAGBuilder::Enter(const ast::Action& a)
 
 	for (ConstPtr<ast::Argument>& arg : a.arguments())
 	{
-		// Flatten the argument and convert it to a string.
-		shared_ptr<Value> value = flatten(arg->getValue());
+		// Evaluate the argument as a string.
+		shared_ptr<Value> value = eval(arg->getValue());
 
 		// The only keyword-less argument to action() is its command.
 		if (not arg->hasName() or arg->getName().name() == "command")
@@ -288,7 +288,7 @@ void DAGBuilder::Leave(const ast::Action&) {}
 
 bool DAGBuilder::Enter(const ast::Argument& arg)
 {
-	currentValue.emplace(flatten(arg.getValue()));
+	currentValue.emplace(eval(arg.getValue()));
 	return false;
 }
 
@@ -297,8 +297,8 @@ void DAGBuilder::Leave(const ast::Argument&) {}
 
 bool DAGBuilder::Enter(const ast::BinaryOperation& o)
 {
-	shared_ptr<Value> lhs = flatten(o.getLHS());
-	shared_ptr<Value> rhs = flatten(o.getRHS());
+	shared_ptr<Value> lhs = eval(o.getLHS());
+	shared_ptr<Value> rhs = eval(o.getRHS());
 
 	assert(lhs and rhs);
 
@@ -372,7 +372,7 @@ void DAGBuilder::Leave(const ast::Call& call)
 
 	ValueMap args;
 	for (auto& i : target.NameArguments(call.arguments()))
-		args[i.first] = std::move(flatten(*i.second));
+		args[i.first] = std::move(eval(*i.second));
 
 
 	//
@@ -420,7 +420,7 @@ void DAGBuilder::Leave(const ast::Call& call)
 		for (auto& i : args)
 			scope[i.first] = i.second;
 
-		currentValue.emplace(flatten(fn.body()));
+		currentValue.emplace(eval(fn.body()));
 		ExitScope();
 	}
 }
@@ -442,14 +442,14 @@ void DAGBuilder::Leave(const ast::CompoundExpression& e)
 bool DAGBuilder::Enter(const ast::Conditional& c)
 {
 	shared_ptr<Boolean> cond =
-		dynamic_pointer_cast<Boolean>(flatten(c.condition()));
+		dynamic_pointer_cast<Boolean>(eval(c.condition()));
 
 	if (not cond)
 		throw WrongTypeException("bool", c.type(), c.source());
 
-	// Flatten either the "then" or the "else" clause.
+	// Evaluate either the "then" or the "else" clause.
 	currentValue.emplace(
-		flatten(cond->value() ? c.thenClause() : c.elseClause())
+		eval(cond->value() ? c.thenClause() : c.elseClause())
 	);
 
 	return false;
@@ -460,13 +460,13 @@ void DAGBuilder::Leave(const ast::Conditional&) {}
 
 bool DAGBuilder::Enter(const ast::Filename& f)
 {
-	const string filename = flatten(f.name())->str();
+	const string filename = eval(f.name())->str();
 
 	string subdirectory;
 	for (const UniqPtr<ast::Argument>& a : f.arguments())
 	{
 		if (a->getName().name() == "subdir")
-			subdirectory = flatten(a->getValue())->str();
+			subdirectory = eval(a->getValue())->str();
 
 		else
 			throw SemanticException("unknown argument", a->source());
@@ -492,7 +492,7 @@ bool DAGBuilder::Enter(const ast::FileList& l)
 	{
 		const string name = arg->getName().name();
 		if (name == ast::Subdirectory)
-			subdir = flatten(arg->getValue())->str();
+			subdir = eval(arg->getValue())->str();
 
 		else
 			throw SemanticException("unexpected argument",
@@ -501,7 +501,7 @@ bool DAGBuilder::Enter(const ast::FileList& l)
 
 	for (ConstPtr<ast::Filename>& file : l)
 	{
-		auto f = dynamic_pointer_cast<File>(flatten(*file));
+		auto f = dynamic_pointer_cast<File>(eval(*file));
 		assert(f);
 
 		if (not subdir.empty())
@@ -521,7 +521,7 @@ bool DAGBuilder::Enter(const ast::ForeachExpr& f)
 {
 	SharedPtrVec<Value> values;
 
-	auto target = flatten(f.sourceSequence());
+	auto target = eval(f.sourceSequence());
 	assert(target->type().isOrdered());
 	assert(target->asList());
 
@@ -537,7 +537,7 @@ bool DAGBuilder::Enter(const ast::ForeachExpr& f)
 		ValueMap& scope = EnterScope("foreach body");
 		scope[loopParam.getName().name()] = element;
 
-		shared_ptr<Value> result = flatten(f.loopBody());
+		shared_ptr<Value> result = eval(f.loopBody());
 		assert(result);
 		assert(result->type().isSubtype(f.loopBody().type()));
 
@@ -586,7 +586,7 @@ bool DAGBuilder::Enter(const ast::List& l)
 			throw WrongTypeException(subtype,
 			                         e->type(), e->source());
 
-		values.push_back(flatten(*e));
+		values.push_back(eval(*e));
 	}
 
 	currentValue.emplace(new List(values, l.type(), l.source()));
@@ -667,7 +667,7 @@ void DAGBuilder::Leave(const ast::SymbolReference&) {}
 
 bool DAGBuilder::Enter(const ast::UnaryOperation& o)
 {
-	shared_ptr<Value> subexpr = flatten(o.getSubExpr());
+	shared_ptr<Value> subexpr = eval(o.getSubExpr());
 	assert(subexpr);
 
 	shared_ptr<Value> result;
@@ -698,7 +698,7 @@ bool DAGBuilder::Enter(const ast::Value& v)
 
 void DAGBuilder::Leave(const ast::Value&)
 {
-	// Things like function definitions will never be flattened.
+	// Things like function definitions will never be evaluated.
 	if (currentValue.empty())
 		return;
 
@@ -828,7 +828,7 @@ shared_ptr<Value> DAGBuilder::getNamedValue(const string& name)
 	return NULL;
 }
 
-shared_ptr<Value> DAGBuilder::flatten(const ast::Expression& e)
+shared_ptr<Value> DAGBuilder::eval(const ast::Expression& e)
 {
 	e.Accept(*this);
 
