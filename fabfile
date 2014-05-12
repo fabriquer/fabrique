@@ -1,0 +1,153 @@
+#
+# Fabrique build description for Fabrique.
+#
+
+
+# TODO: allow these to be set/overridden on the command line, config file...
+debug:bool = true;
+asserts:bool = true;
+debug_and_asserts = debug and asserts;
+
+CXX = file('/usr/bin/clang++');   # specify a precise C++ compiler
+LEX = 'flex';      # use whatever 'flex' is lying around on the PATH
+YACC = 'byacc';
+
+
+# TODO: once include works, extract these into a tools.fab or somesuch
+
+### Compile one C++ source file into an object file.
+compile_cxx = action('${CXX} -c ${cxxflags} -MMD -MF ${out}.d ${in} -o ${out}',
+             description = 'Compiling ${in}'
+	     <- in:file, out:file, depfile:file[out]);
+
+# TODO: default arg
+cxx = function(srcs:list[file]): list[file]
+	foreach src <- srcs {
+		obj = src + '.o';
+		outs = compile_cxx(in = src, out = obj, depfile = obj + '.d');
+		obj
+	}
+;
+
+raw_lex = action('${LEX} ${flags} --header-file=${header} --outfile=${gen} ${in}',
+                 description = 'Processing ${in}'
+                 <- in:file, out:file, gen:file[out], header:file[out],
+                    flags:list[string] = []);
+
+lex = function(in:file, out:file, header_out:file, flags:list[string] = []): file
+{
+	lex = raw_lex(in, out, out, header_out, flags);
+	out
+};
+
+# Yacc's command-line arguments are confusing and don't expose information like
+# the name of the generated header file, so we wrap it in a function that does.
+raw_yacc = action('${YACC} -d -t -o ${out} ${in}',
+                  description = 'Processing ${in}'
+                  <- in:file, out:file, header:file[out]);
+
+yacc = function(in:file, outname:string): file
+{
+	parser = file(outname + '.cc');
+	header = file(outname + '.h');
+	gen = raw_yacc(in, out = parser, header = header);
+
+	parser
+};
+
+link_binary = action('${CXX} -o ${out} ${in}', description = 'Linking ${out}'
+                     <- in:list[file], out:file);
+
+
+#
+# CXXFLAGS:
+#
+includes = foreach dir <- [ srcroot buildroot ] '-I ' + dir;
+warnings = [
+	# Use lots and lots of warnings.
+	'-Weverything'
+
+	# We intentionally hide yyFlexLexer::yylex().
+	'-Wno-overloaded-virtual'
+
+	# We really really don't care about C++98 compatibility.
+	'-Wno-c++98-compat' '-Wno-c++98-compat-pedantic'
+
+	# We aren't attempting to preserve an ABI. At least not yet.
+	'-Wno-padded'
+
+	# Treat vendor headers as system headers: disable warnings.
+	'-isystem ' + srcroot + '/vendor'
+];
+
+cxxoptions = [ '-std=c++11' ];
+
+dbgflags =
+	if debug [ '-g' '-ggdb' ]
+	else [ '-D NDEBUG' ]
+	;
+
+gencxxflags = [ '-Wno-deprecated-register' ];
+
+cxxflags = cxxoptions + includes + warnings + dbgflags;
+
+
+cxx_srcs =
+	files(driver.cc FabContext.cc)
+	+
+	files(
+		Action.cc Argument.cc ASTDump.cc BinaryOperation.cc
+		Call.cc Callable.cc CompoundExpr.cc Conditional.cc
+		Expression.cc Filename.cc FileList.cc
+		Foreach.cc Function.cc Identifier.cc
+		List.cc Mapping.cc Node.cc Parameter.cc
+		Scope.cc SymbolReference.cc UnaryOperation.cc
+		Value.cc Visitor.cc
+		literals.cc
+		,
+		subdir = 'AST')
+	+
+	files(
+		Backend.cc Dot.cc Make.cc Ninja.cc Null.cc
+		,
+		subdir = 'Backend'
+	)
+	+
+	files(
+		Build.cc DAG.cc File.cc Formatter.cc
+		List.cc Primitive.cc Rule.cc Target.cc
+		UndefinedValueException.cc Value.cc Visitor.cc
+		,
+		subdir = 'DAG'
+	)
+	+
+	files(
+		Lexer.cc Parser.cc Token.cc
+		,
+		subdir = 'Parsing')
+	+
+	files(
+		Arguments.cc Bytestream.cc ErrorReport.cc Join.cc
+		Printable.cc SourceLocation.cc Visitable.cc
+		exceptions.cc file('os-posix.cc')
+		,
+		subdir = 'Support'
+	)
+	+
+	files(
+		BooleanType.cc FileType.cc FunctionType.cc IntegerType.cc
+		OptionallyTyped.cc SequenceType.cc StringType.cc
+		Type.cc TypeError.cc Typed.cc
+		,
+		subdir = 'Types'
+	)
+	;
+
+
+lexer = lex(file('Parsing/fab.l'), out = file('Parsing/fab.lex.cc'),
+		flags = [ '-c++'], header_out = file('Parsing/fab.lex.h'));
+
+parser = yacc(file('Parsing/fab.yy'), 'Parsing/fab.yacc');
+gen = [ lexer parser ];
+objs = cxx(gen + cxx_srcs);
+fab = link_binary(objs, out = file('fab'));
