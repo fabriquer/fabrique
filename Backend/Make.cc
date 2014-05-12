@@ -214,7 +214,7 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out)
 		//
 
 		Build::FileVec outputs = build.allOutputs();
-		if (not outputs.empty())
+		if (outputs.size() > 1)
 		{
 			const string pseudoName =
 				rule.name() + "_" + std::to_string(buildID);
