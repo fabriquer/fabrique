@@ -16,15 +16,16 @@ YACC = 'byacc';
 # TODO: once include works, extract these into a tools.fab or somesuch
 
 ### Compile one C++ source file into an object file.
-compile_cxx = action('${CXX} -c ${cxxflags} -MMD -MF ${out}.d ${in} -o ${out}',
+compile_cxx = action('${CXX} -c ${flags} -MMD -MF ${out}.d ${in} -o ${out}',
              description = 'Compiling ${in}'
-	     <- in:file, out:file, depfile:file[out]);
+	     <- in:file, out:file, depfile:file[out], flags:list[string]);
 
 # TODO: default arg
-cxx = function(srcs:list[file]): list[file]
+cxx = function(srcs:list[file], flags:list[string]): list[file]
 	foreach src <- srcs {
 		obj = src + '.o';
-		outs = compile_cxx(in = src, out = obj, depfile = obj + '.d');
+		outs = compile_cxx(in = src, out = obj, depfile = obj + '.d',
+		                   flags = flags);
 		obj
 	}
 ;
@@ -60,9 +61,22 @@ link_binary = action('${CXX} -o ${out} ${in}', description = 'Linking ${out}'
 
 
 #
-# CXXFLAGS:
+# C++ compilation flags:
 #
+cxxoptions = [ '-std=c++11' ];
+
+dbgflags =
+	if debug [ '-g' '-ggdb' ]
+	else [ '-D NDEBUG' ]
+	;
+
 includes = foreach dir <- [ srcroot buildroot ] '-I ' + dir;
+
+# Treat vendor headers as system headers (disable warnings).
+vendor = [ '-isystem ' + srcroot + '/vendor' ];
+
+common_cxx_flags = cxxoptions + dbgflags + includes + vendor;
+
 warnings = [
 	# Use lots and lots of warnings.
 	'-Weverything'
@@ -75,21 +89,10 @@ warnings = [
 
 	# We aren't attempting to preserve an ABI. At least not yet.
 	'-Wno-padded'
-
-	# Treat vendor headers as system headers: disable warnings.
-	'-isystem ' + srcroot + '/vendor'
 ];
 
-cxxoptions = [ '-std=c++11' ];
-
-dbgflags =
-	if debug [ '-g' '-ggdb' ]
-	else [ '-D NDEBUG' ]
-	;
-
-gencxxflags = [ '-Wno-deprecated-register' ];
-
-cxxflags = cxxoptions + includes + warnings + dbgflags;
+normal_cxx_flags = common_cxx_flags + warnings;
+generated_cxx_flags = common_cxx_flags + [ '-Wno-deprecated-register' ];
 
 
 cxx_srcs =
@@ -149,5 +152,6 @@ lexer = lex(file('Parsing/fab.l'), out = file('Parsing/fab.lex.cc'),
 
 parser = yacc(file('Parsing/fab.yy'), 'Parsing/fab.yacc');
 gen = [ lexer parser ];
-objs = cxx(gen + cxx_srcs);
+objs = cxx(gen, flags = generated_cxx_flags) + cxx(cxx_srcs, normal_cxx_flags);
+
 fab = link_binary(objs, out = file('fab'));
