@@ -31,14 +31,16 @@ cxx_srcs : ${srcroot}/driver.cc ${srcroot}/FabContext.cc ${srcroot}/AST/Action.c
 
 clean :
 	echo "cleaning..."
-	rm -rf ${buildroot}/Parsing/fab.lex.h ${buildroot}/Parsing/fab.lex.cc ${buildroot}/Parsing/fab.lex.cc ${buildroot}/Parsing/fab.lex.h ${buildroot}/Parsing/fab.yacc.cc ${buildroot}/Parsing/fab.yacc.cc ${buildroot}/Parsing/fab.lex.cc.o ${buildroot}/Parsing/fab.lex.cc.o.d ${buildroot}/Parsing/fab.yacc.cc.o ${buildroot}/Parsing/fab.yacc.cc.o.d ${buildroot}/driver.cc.o ${buildroot}/driver.cc.o.d ${buildroot}/FabContext.cc.o ${buildroot}/FabContext.cc.o.d ${buildroot}/AST/Action.cc.o ${buildroot}/AST/Action.cc.o.d ${buildroot}/AST/Argument.cc.o ${buildroot}/AST/Argument.cc.o.d ${buildroot}/AST/ASTDump.cc.o ${buildroot}/AST/ASTDump.cc.o.d ${buildroot}/AST/BinaryOperation.cc.o ${buildroot}/AST/BinaryOperation.cc.o.d ${buildroot}/AST/Call.cc.o ${buildroot}/AST/Call.cc.o.d ${buildroot}/AST/Callable.cc.o ${buildroot}/AST/Callable.cc.o.d ${buildroot}/AST/CompoundExpr.cc.o ${buildroot}/AST/CompoundExpr.cc.o.d ${buildroot}/AST/Conditional.cc.o ${buildroot}/AST/Conditional.cc.o.d ${buildroot}/AST/Expression.cc.o ${buildroot}/AST/Expression.cc.o.d ${buildroot}/AST/Filename.cc.o ${buildroot}/AST/Filename.cc.o.d ${buildroot}/AST/FileList.cc.o ${buildroot}/AST/FileList.cc.o.d ${buildroot}/AST/Foreach.cc.o ${buildroot}/AST/Foreach.cc.o.d ${buildroot}/AST/Function.cc.o ${buildroot}/AST/Function.cc.o.d ${buildroot}/AST/Identifier.cc.o ${buildroot}/AST/Identifier.cc.o.d ${buildroot}/AST/List.cc.o ${buildroot}/AST/List.cc.o.d ${buildroot}/AST/Mapping.cc.o ${buildroot}/AST/Mapping.cc.o.d ${buildroot}/AST/Node.cc.o ${buildroot}/AST/Node.cc.o.d ${buildroot}/AST/Parameter.cc.o ${buildroot}/AST/Parameter.cc.o.d ${buildroot}/AST/Scope.cc.o ${buildroot}/AST/Scope.cc.o.d ${buildroot}/AST/SymbolReference.cc.o ${buildroot}/AST/SymbolReference.cc.o.d ${buildroot}/AST/UnaryOperation.cc.o ${buildroot}/AST/UnaryOperation.cc.o.d ${buildroot}/AST/Value.cc.o ${buildroot}/AST/Value.cc.o.d ${buildroot}/AST/Visitor.cc.o ${buildroot}/AST/Visitor.cc.o.d ${buildroot}/AST/literals.cc.o ${buildroot}/AST/literals.cc.o.d ${buildroot}/Backend/Backend.cc.o ${buildroot}/Backend/Backend.cc.o.d ${buildroot}/Backend/Dot.cc.o ${buildroot}/Backend/Dot.cc.o.d ${buildroot}/Backend/Make.cc.o ${buildroot}/Backend/Make.cc.o.d ${buildroot}/Backend/Ninja.cc.o ${buildroot}/Backend/Ninja.cc.o.d ${buildroot}/Backend/Null.cc.o ${buildroot}/Backend/Null.cc.o.d ${buildroot}/DAG/Build.cc.o ${buildroot}/DAG/Build.cc.o.d ${buildroot}/DAG/DAG.cc.o ${buildroot}/DAG/DAG.cc.o.d ${buildroot}/DAG/File.cc.o ${buildroot}/DAG/File.cc.o.d ${buildroot}/DAG/Formatter.cc.o ${buildroot}/DAG/Formatter.cc.o.d ${buildroot}/DAG/List.cc.o ${buildroot}/DAG/List.cc.o.d ${buildroot}/DAG/Primitive.cc.o ${buildroot}/DAG/Primitive.cc.o.d ${buildroot}/DAG/Rule.cc.o ${buildroot}/DAG/Rule.cc.o.d ${buildroot}/DAG/Target.cc.o ${buildroot}/DAG/Target.cc.o.d ${buildroot}/DAG/UndefinedValueException.cc.o ${buildroot}/DAG/UndefinedValueException.cc.o.d ${buildroot}/DAG/Value.cc.o ${buildroot}/DAG/Value.cc.o.d ${buildroot}/DAG/Visitor.cc.o ${buildroot}/DAG/Visitor.cc.o.d ${buildroot}/Parsing/Lexer.cc.o ${buildroot}/Parsing/Lexer.cc.o.d ${buildroot}/Parsing/Parser.cc.o ${buildroot}/Parsing/Parser.cc.o.d ${buildroot}/Parsing/Token.cc.o ${buildroot}/Parsing/Token.cc.o.d ${buildroot}/Support/Arguments.cc.o ${buildroot}/Support/Arguments.cc.o.d ${buildroot}/Support/Bytestream.cc.o ${buildroot}/Support/Bytestream.cc.o.d ${buildroot}/Support/ErrorReport.cc.o ${buildroot}/Support/ErrorReport.cc.o.d ${buildroot}/Support/Join.cc.o ${buildroot}/Support/Join.cc.o.d ${buildroot}/Support/Printable.cc.o ${buildroot}/Support/Printable.cc.o.d ${buildroot}/Support/SourceLocation.cc.o ${buildroot}/Support/SourceLocation.cc.o.d ${buildroot}/Support/Visitable.cc.o ${buildroot}/Support/Visitable.cc.o.d ${buildroot}/Support/exceptions.cc.o ${buildroot}/Support/exceptions.cc.o.d ${buildroot}/Support/os-posix.cc.o ${buildroot}/Support/os-posix.cc.o.d ${buildroot}/Types/BooleanType.cc.o ${buildroot}/Types/BooleanType.cc.o.d ${buildroot}/Types/FileType.cc.o ${buildroot}/Types/FileType.cc.o.d ${buildroot}/Types/FunctionType.cc.o ${buildroot}/Types/FunctionType.cc.o.d ${buildroot}/Types/IntegerType.cc.o ${buildroot}/Types/IntegerType.cc.o.d ${buildroot}/Types/OptionallyTyped.cc.o ${buildroot}/Types/OptionallyTyped.cc.o.d ${buildroot}/Types/SequenceType.cc.o ${buildroot}/Types/SequenceType.cc.o.d ${buildroot}/Types/StringType.cc.o ${buildroot}/Types/StringType.cc.o.d ${buildroot}/Types/Type.cc.o ${buildroot}/Types/Type.cc.o.d ${buildroot}/Types/TypeError.cc.o ${buildroot}/Types/TypeError.cc.o.d ${buildroot}/Types/Typed.cc.o ${buildroot}/Types/Typed.cc.o.d ${buildroot}/fab ${buildroot}/fab
+	rm -rf ${buildroot}/Parsing/fab.lex.h ${buildroot}/Parsing/fab.lex.cc ${buildroot}/Parsing/fab.lex.cc ${buildroot}/Parsing/fab.lex.h ${buildroot}/Parsing/fab.yacc.cc ${buildroot}/Parsing/fab.yacc.h ${buildroot}/Parsing/fab.yacc.cc ${buildroot}/Parsing/fab.yacc.h ${buildroot}/Parsing/fab.lex.cc.o ${buildroot}/Parsing/fab.lex.cc.o.d ${buildroot}/Parsing/fab.yacc.cc.o ${buildroot}/Parsing/fab.yacc.cc.o.d ${buildroot}/driver.cc.o ${buildroot}/driver.cc.o.d ${buildroot}/FabContext.cc.o ${buildroot}/FabContext.cc.o.d ${buildroot}/AST/Action.cc.o ${buildroot}/AST/Action.cc.o.d ${buildroot}/AST/Argument.cc.o ${buildroot}/AST/Argument.cc.o.d ${buildroot}/AST/ASTDump.cc.o ${buildroot}/AST/ASTDump.cc.o.d ${buildroot}/AST/BinaryOperation.cc.o ${buildroot}/AST/BinaryOperation.cc.o.d ${buildroot}/AST/Call.cc.o ${buildroot}/AST/Call.cc.o.d ${buildroot}/AST/Callable.cc.o ${buildroot}/AST/Callable.cc.o.d ${buildroot}/AST/CompoundExpr.cc.o ${buildroot}/AST/CompoundExpr.cc.o.d ${buildroot}/AST/Conditional.cc.o ${buildroot}/AST/Conditional.cc.o.d ${buildroot}/AST/Expression.cc.o ${buildroot}/AST/Expression.cc.o.d ${buildroot}/AST/Filename.cc.o ${buildroot}/AST/Filename.cc.o.d ${buildroot}/AST/FileList.cc.o ${buildroot}/AST/FileList.cc.o.d ${buildroot}/AST/Foreach.cc.o ${buildroot}/AST/Foreach.cc.o.d ${buildroot}/AST/Function.cc.o ${buildroot}/AST/Function.cc.o.d ${buildroot}/AST/Identifier.cc.o ${buildroot}/AST/Identifier.cc.o.d ${buildroot}/AST/List.cc.o ${buildroot}/AST/List.cc.o.d ${buildroot}/AST/Mapping.cc.o ${buildroot}/AST/Mapping.cc.o.d ${buildroot}/AST/Node.cc.o ${buildroot}/AST/Node.cc.o.d ${buildroot}/AST/Parameter.cc.o ${buildroot}/AST/Parameter.cc.o.d ${buildroot}/AST/Scope.cc.o ${buildroot}/AST/Scope.cc.o.d ${buildroot}/AST/SymbolReference.cc.o ${buildroot}/AST/SymbolReference.cc.o.d ${buildroot}/AST/UnaryOperation.cc.o ${buildroot}/AST/UnaryOperation.cc.o.d ${buildroot}/AST/Value.cc.o ${buildroot}/AST/Value.cc.o.d ${buildroot}/AST/Visitor.cc.o ${buildroot}/AST/Visitor.cc.o.d ${buildroot}/AST/literals.cc.o ${buildroot}/AST/literals.cc.o.d ${buildroot}/Backend/Backend.cc.o ${buildroot}/Backend/Backend.cc.o.d ${buildroot}/Backend/Dot.cc.o ${buildroot}/Backend/Dot.cc.o.d ${buildroot}/Backend/Make.cc.o ${buildroot}/Backend/Make.cc.o.d ${buildroot}/Backend/Ninja.cc.o ${buildroot}/Backend/Ninja.cc.o.d ${buildroot}/Backend/Null.cc.o ${buildroot}/Backend/Null.cc.o.d ${buildroot}/DAG/Build.cc.o ${buildroot}/DAG/Build.cc.o.d ${buildroot}/DAG/DAG.cc.o ${buildroot}/DAG/DAG.cc.o.d ${buildroot}/DAG/File.cc.o ${buildroot}/DAG/File.cc.o.d ${buildroot}/DAG/Formatter.cc.o ${buildroot}/DAG/Formatter.cc.o.d ${buildroot}/DAG/List.cc.o ${buildroot}/DAG/List.cc.o.d ${buildroot}/DAG/Primitive.cc.o ${buildroot}/DAG/Primitive.cc.o.d ${buildroot}/DAG/Rule.cc.o ${buildroot}/DAG/Rule.cc.o.d ${buildroot}/DAG/Target.cc.o ${buildroot}/DAG/Target.cc.o.d ${buildroot}/DAG/UndefinedValueException.cc.o ${buildroot}/DAG/UndefinedValueException.cc.o.d ${buildroot}/DAG/Value.cc.o ${buildroot}/DAG/Value.cc.o.d ${buildroot}/DAG/Visitor.cc.o ${buildroot}/DAG/Visitor.cc.o.d ${buildroot}/Parsing/Lexer.cc.o ${buildroot}/Parsing/Lexer.cc.o.d ${buildroot}/Parsing/Parser.cc.o ${buildroot}/Parsing/Parser.cc.o.d ${buildroot}/Parsing/Token.cc.o ${buildroot}/Parsing/Token.cc.o.d ${buildroot}/Support/Arguments.cc.o ${buildroot}/Support/Arguments.cc.o.d ${buildroot}/Support/Bytestream.cc.o ${buildroot}/Support/Bytestream.cc.o.d ${buildroot}/Support/ErrorReport.cc.o ${buildroot}/Support/ErrorReport.cc.o.d ${buildroot}/Support/Join.cc.o ${buildroot}/Support/Join.cc.o.d ${buildroot}/Support/Printable.cc.o ${buildroot}/Support/Printable.cc.o.d ${buildroot}/Support/SourceLocation.cc.o ${buildroot}/Support/SourceLocation.cc.o.d ${buildroot}/Support/Visitable.cc.o ${buildroot}/Support/Visitable.cc.o.d ${buildroot}/Support/exceptions.cc.o ${buildroot}/Support/exceptions.cc.o.d ${buildroot}/Support/os-posix.cc.o ${buildroot}/Support/os-posix.cc.o.d ${buildroot}/Types/BooleanType.cc.o ${buildroot}/Types/BooleanType.cc.o.d ${buildroot}/Types/FileType.cc.o ${buildroot}/Types/FileType.cc.o.d ${buildroot}/Types/FunctionType.cc.o ${buildroot}/Types/FunctionType.cc.o.d ${buildroot}/Types/IntegerType.cc.o ${buildroot}/Types/IntegerType.cc.o.d ${buildroot}/Types/OptionallyTyped.cc.o ${buildroot}/Types/OptionallyTyped.cc.o.d ${buildroot}/Types/SequenceType.cc.o ${buildroot}/Types/SequenceType.cc.o.d ${buildroot}/Types/StringType.cc.o ${buildroot}/Types/StringType.cc.o.d ${buildroot}/Types/Type.cc.o ${buildroot}/Types/Type.cc.o.d ${buildroot}/Types/TypeError.cc.o ${buildroot}/Types/TypeError.cc.o.d ${buildroot}/Types/Typed.cc.o ${buildroot}/Types/Typed.cc.o.d ${buildroot}/fab ${buildroot}/fab
 
 ${buildroot}/Parsing/fab.lex.h : | ${buildroot}/Parsing
 ${buildroot}/Parsing/fab.lex.cc : | ${buildroot}/Parsing
 ${buildroot}/Parsing/fab.lex.cc : | ${buildroot}/Parsing
 ${buildroot}/Parsing/fab.lex.h : | ${buildroot}/Parsing
 ${buildroot}/Parsing/fab.yacc.cc : | ${buildroot}/Parsing
+${buildroot}/Parsing/fab.yacc.h : | ${buildroot}/Parsing
 ${buildroot}/Parsing/fab.yacc.cc : | ${buildroot}/Parsing
+${buildroot}/Parsing/fab.yacc.h : | ${buildroot}/Parsing
 ${buildroot}/Parsing/fab.lex.cc.o : | ${buildroot}/Parsing
 ${buildroot}/Parsing/fab.lex.cc.o : ${buildroot}/Parsing/fab.yacc.h
 ${buildroot}/Parsing/fab.lex.cc.o.d : | ${buildroot}/Parsing
@@ -196,336 +198,337 @@ ${buildroot}/Parsing/fab.lex.cc ${buildroot}/Parsing/fab.lex.h : ${srcroot}/Pars
 	echo "Processing ${srcroot}/Parsing/fab.l"
 	${LEX} -c++ --header-file=${buildroot}/Parsing/fab.lex.h --outfile=${buildroot}/Parsing/fab.lex.cc ${srcroot}/Parsing/fab.l
 
-${buildroot}/Parsing/fab.yacc.cc : ${srcroot}/Parsing/fab.yy
+raw_yacc_2 : ${buildroot}/Parsing/fab.yacc.cc ${buildroot}/Parsing/fab.yacc.h
+${buildroot}/Parsing/fab.yacc.cc ${buildroot}/Parsing/fab.yacc.h : ${srcroot}/Parsing/fab.yy
 	echo "Processing ${srcroot}/Parsing/fab.yy"
-	${YACC} ${yaccflags} -o ${buildroot}/Parsing/fab.yacc.cc ${srcroot}/Parsing/fab.yy
+	${YACC} -d -t -o ${buildroot}/Parsing/fab.yacc.cc ${srcroot}/Parsing/fab.yy
 
-compile_cxx_2 : ${buildroot}/Parsing/fab.lex.cc.o ${buildroot}/Parsing/fab.lex.cc.o.d
+compile_cxx_3 : ${buildroot}/Parsing/fab.lex.cc.o ${buildroot}/Parsing/fab.lex.cc.o.d
 ${buildroot}/Parsing/fab.lex.cc.o ${buildroot}/Parsing/fab.lex.cc.o.d : ${buildroot}/Parsing/fab.lex.cc
 	echo "Compiling ${buildroot}/Parsing/fab.lex.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/Parsing/fab.lex.cc.o.d ${buildroot}/Parsing/fab.lex.cc -o ${buildroot}/Parsing/fab.lex.cc.o
 
-compile_cxx_3 : ${buildroot}/Parsing/fab.yacc.cc.o ${buildroot}/Parsing/fab.yacc.cc.o.d
+compile_cxx_4 : ${buildroot}/Parsing/fab.yacc.cc.o ${buildroot}/Parsing/fab.yacc.cc.o.d
 ${buildroot}/Parsing/fab.yacc.cc.o ${buildroot}/Parsing/fab.yacc.cc.o.d : ${buildroot}/Parsing/fab.yacc.cc
 	echo "Compiling ${buildroot}/Parsing/fab.yacc.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/Parsing/fab.yacc.cc.o.d ${buildroot}/Parsing/fab.yacc.cc -o ${buildroot}/Parsing/fab.yacc.cc.o
 
-compile_cxx_4 : ${buildroot}/driver.cc.o ${buildroot}/driver.cc.o.d
+compile_cxx_5 : ${buildroot}/driver.cc.o ${buildroot}/driver.cc.o.d
 ${buildroot}/driver.cc.o ${buildroot}/driver.cc.o.d : ${srcroot}/driver.cc
 	echo "Compiling ${srcroot}/driver.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/driver.cc.o.d ${srcroot}/driver.cc -o ${buildroot}/driver.cc.o
 
-compile_cxx_5 : ${buildroot}/FabContext.cc.o ${buildroot}/FabContext.cc.o.d
+compile_cxx_6 : ${buildroot}/FabContext.cc.o ${buildroot}/FabContext.cc.o.d
 ${buildroot}/FabContext.cc.o ${buildroot}/FabContext.cc.o.d : ${srcroot}/FabContext.cc
 	echo "Compiling ${srcroot}/FabContext.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/FabContext.cc.o.d ${srcroot}/FabContext.cc -o ${buildroot}/FabContext.cc.o
 
-compile_cxx_6 : ${buildroot}/AST/Action.cc.o ${buildroot}/AST/Action.cc.o.d
+compile_cxx_7 : ${buildroot}/AST/Action.cc.o ${buildroot}/AST/Action.cc.o.d
 ${buildroot}/AST/Action.cc.o ${buildroot}/AST/Action.cc.o.d : ${srcroot}/AST/Action.cc
 	echo "Compiling ${srcroot}/AST/Action.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/AST/Action.cc.o.d ${srcroot}/AST/Action.cc -o ${buildroot}/AST/Action.cc.o
 
-compile_cxx_7 : ${buildroot}/AST/Argument.cc.o ${buildroot}/AST/Argument.cc.o.d
+compile_cxx_8 : ${buildroot}/AST/Argument.cc.o ${buildroot}/AST/Argument.cc.o.d
 ${buildroot}/AST/Argument.cc.o ${buildroot}/AST/Argument.cc.o.d : ${srcroot}/AST/Argument.cc
 	echo "Compiling ${srcroot}/AST/Argument.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/AST/Argument.cc.o.d ${srcroot}/AST/Argument.cc -o ${buildroot}/AST/Argument.cc.o
 
-compile_cxx_8 : ${buildroot}/AST/ASTDump.cc.o ${buildroot}/AST/ASTDump.cc.o.d
+compile_cxx_9 : ${buildroot}/AST/ASTDump.cc.o ${buildroot}/AST/ASTDump.cc.o.d
 ${buildroot}/AST/ASTDump.cc.o ${buildroot}/AST/ASTDump.cc.o.d : ${srcroot}/AST/ASTDump.cc
 	echo "Compiling ${srcroot}/AST/ASTDump.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/AST/ASTDump.cc.o.d ${srcroot}/AST/ASTDump.cc -o ${buildroot}/AST/ASTDump.cc.o
 
-compile_cxx_9 : ${buildroot}/AST/BinaryOperation.cc.o ${buildroot}/AST/BinaryOperation.cc.o.d
+compile_cxx_10 : ${buildroot}/AST/BinaryOperation.cc.o ${buildroot}/AST/BinaryOperation.cc.o.d
 ${buildroot}/AST/BinaryOperation.cc.o ${buildroot}/AST/BinaryOperation.cc.o.d : ${srcroot}/AST/BinaryOperation.cc
 	echo "Compiling ${srcroot}/AST/BinaryOperation.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/AST/BinaryOperation.cc.o.d ${srcroot}/AST/BinaryOperation.cc -o ${buildroot}/AST/BinaryOperation.cc.o
 
-compile_cxx_10 : ${buildroot}/AST/Call.cc.o ${buildroot}/AST/Call.cc.o.d
+compile_cxx_11 : ${buildroot}/AST/Call.cc.o ${buildroot}/AST/Call.cc.o.d
 ${buildroot}/AST/Call.cc.o ${buildroot}/AST/Call.cc.o.d : ${srcroot}/AST/Call.cc
 	echo "Compiling ${srcroot}/AST/Call.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/AST/Call.cc.o.d ${srcroot}/AST/Call.cc -o ${buildroot}/AST/Call.cc.o
 
-compile_cxx_11 : ${buildroot}/AST/Callable.cc.o ${buildroot}/AST/Callable.cc.o.d
+compile_cxx_12 : ${buildroot}/AST/Callable.cc.o ${buildroot}/AST/Callable.cc.o.d
 ${buildroot}/AST/Callable.cc.o ${buildroot}/AST/Callable.cc.o.d : ${srcroot}/AST/Callable.cc
 	echo "Compiling ${srcroot}/AST/Callable.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/AST/Callable.cc.o.d ${srcroot}/AST/Callable.cc -o ${buildroot}/AST/Callable.cc.o
 
-compile_cxx_12 : ${buildroot}/AST/CompoundExpr.cc.o ${buildroot}/AST/CompoundExpr.cc.o.d
+compile_cxx_13 : ${buildroot}/AST/CompoundExpr.cc.o ${buildroot}/AST/CompoundExpr.cc.o.d
 ${buildroot}/AST/CompoundExpr.cc.o ${buildroot}/AST/CompoundExpr.cc.o.d : ${srcroot}/AST/CompoundExpr.cc
 	echo "Compiling ${srcroot}/AST/CompoundExpr.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/AST/CompoundExpr.cc.o.d ${srcroot}/AST/CompoundExpr.cc -o ${buildroot}/AST/CompoundExpr.cc.o
 
-compile_cxx_13 : ${buildroot}/AST/Conditional.cc.o ${buildroot}/AST/Conditional.cc.o.d
+compile_cxx_14 : ${buildroot}/AST/Conditional.cc.o ${buildroot}/AST/Conditional.cc.o.d
 ${buildroot}/AST/Conditional.cc.o ${buildroot}/AST/Conditional.cc.o.d : ${srcroot}/AST/Conditional.cc
 	echo "Compiling ${srcroot}/AST/Conditional.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/AST/Conditional.cc.o.d ${srcroot}/AST/Conditional.cc -o ${buildroot}/AST/Conditional.cc.o
 
-compile_cxx_14 : ${buildroot}/AST/Expression.cc.o ${buildroot}/AST/Expression.cc.o.d
+compile_cxx_15 : ${buildroot}/AST/Expression.cc.o ${buildroot}/AST/Expression.cc.o.d
 ${buildroot}/AST/Expression.cc.o ${buildroot}/AST/Expression.cc.o.d : ${srcroot}/AST/Expression.cc
 	echo "Compiling ${srcroot}/AST/Expression.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/AST/Expression.cc.o.d ${srcroot}/AST/Expression.cc -o ${buildroot}/AST/Expression.cc.o
 
-compile_cxx_15 : ${buildroot}/AST/Filename.cc.o ${buildroot}/AST/Filename.cc.o.d
+compile_cxx_16 : ${buildroot}/AST/Filename.cc.o ${buildroot}/AST/Filename.cc.o.d
 ${buildroot}/AST/Filename.cc.o ${buildroot}/AST/Filename.cc.o.d : ${srcroot}/AST/Filename.cc
 	echo "Compiling ${srcroot}/AST/Filename.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/AST/Filename.cc.o.d ${srcroot}/AST/Filename.cc -o ${buildroot}/AST/Filename.cc.o
 
-compile_cxx_16 : ${buildroot}/AST/FileList.cc.o ${buildroot}/AST/FileList.cc.o.d
+compile_cxx_17 : ${buildroot}/AST/FileList.cc.o ${buildroot}/AST/FileList.cc.o.d
 ${buildroot}/AST/FileList.cc.o ${buildroot}/AST/FileList.cc.o.d : ${srcroot}/AST/FileList.cc
 	echo "Compiling ${srcroot}/AST/FileList.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/AST/FileList.cc.o.d ${srcroot}/AST/FileList.cc -o ${buildroot}/AST/FileList.cc.o
 
-compile_cxx_17 : ${buildroot}/AST/Foreach.cc.o ${buildroot}/AST/Foreach.cc.o.d
+compile_cxx_18 : ${buildroot}/AST/Foreach.cc.o ${buildroot}/AST/Foreach.cc.o.d
 ${buildroot}/AST/Foreach.cc.o ${buildroot}/AST/Foreach.cc.o.d : ${srcroot}/AST/Foreach.cc
 	echo "Compiling ${srcroot}/AST/Foreach.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/AST/Foreach.cc.o.d ${srcroot}/AST/Foreach.cc -o ${buildroot}/AST/Foreach.cc.o
 
-compile_cxx_18 : ${buildroot}/AST/Function.cc.o ${buildroot}/AST/Function.cc.o.d
+compile_cxx_19 : ${buildroot}/AST/Function.cc.o ${buildroot}/AST/Function.cc.o.d
 ${buildroot}/AST/Function.cc.o ${buildroot}/AST/Function.cc.o.d : ${srcroot}/AST/Function.cc
 	echo "Compiling ${srcroot}/AST/Function.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/AST/Function.cc.o.d ${srcroot}/AST/Function.cc -o ${buildroot}/AST/Function.cc.o
 
-compile_cxx_19 : ${buildroot}/AST/Identifier.cc.o ${buildroot}/AST/Identifier.cc.o.d
+compile_cxx_20 : ${buildroot}/AST/Identifier.cc.o ${buildroot}/AST/Identifier.cc.o.d
 ${buildroot}/AST/Identifier.cc.o ${buildroot}/AST/Identifier.cc.o.d : ${srcroot}/AST/Identifier.cc
 	echo "Compiling ${srcroot}/AST/Identifier.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/AST/Identifier.cc.o.d ${srcroot}/AST/Identifier.cc -o ${buildroot}/AST/Identifier.cc.o
 
-compile_cxx_20 : ${buildroot}/AST/List.cc.o ${buildroot}/AST/List.cc.o.d
+compile_cxx_21 : ${buildroot}/AST/List.cc.o ${buildroot}/AST/List.cc.o.d
 ${buildroot}/AST/List.cc.o ${buildroot}/AST/List.cc.o.d : ${srcroot}/AST/List.cc
 	echo "Compiling ${srcroot}/AST/List.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/AST/List.cc.o.d ${srcroot}/AST/List.cc -o ${buildroot}/AST/List.cc.o
 
-compile_cxx_21 : ${buildroot}/AST/Mapping.cc.o ${buildroot}/AST/Mapping.cc.o.d
+compile_cxx_22 : ${buildroot}/AST/Mapping.cc.o ${buildroot}/AST/Mapping.cc.o.d
 ${buildroot}/AST/Mapping.cc.o ${buildroot}/AST/Mapping.cc.o.d : ${srcroot}/AST/Mapping.cc
 	echo "Compiling ${srcroot}/AST/Mapping.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/AST/Mapping.cc.o.d ${srcroot}/AST/Mapping.cc -o ${buildroot}/AST/Mapping.cc.o
 
-compile_cxx_22 : ${buildroot}/AST/Node.cc.o ${buildroot}/AST/Node.cc.o.d
+compile_cxx_23 : ${buildroot}/AST/Node.cc.o ${buildroot}/AST/Node.cc.o.d
 ${buildroot}/AST/Node.cc.o ${buildroot}/AST/Node.cc.o.d : ${srcroot}/AST/Node.cc
 	echo "Compiling ${srcroot}/AST/Node.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/AST/Node.cc.o.d ${srcroot}/AST/Node.cc -o ${buildroot}/AST/Node.cc.o
 
-compile_cxx_23 : ${buildroot}/AST/Parameter.cc.o ${buildroot}/AST/Parameter.cc.o.d
+compile_cxx_24 : ${buildroot}/AST/Parameter.cc.o ${buildroot}/AST/Parameter.cc.o.d
 ${buildroot}/AST/Parameter.cc.o ${buildroot}/AST/Parameter.cc.o.d : ${srcroot}/AST/Parameter.cc
 	echo "Compiling ${srcroot}/AST/Parameter.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/AST/Parameter.cc.o.d ${srcroot}/AST/Parameter.cc -o ${buildroot}/AST/Parameter.cc.o
 
-compile_cxx_24 : ${buildroot}/AST/Scope.cc.o ${buildroot}/AST/Scope.cc.o.d
+compile_cxx_25 : ${buildroot}/AST/Scope.cc.o ${buildroot}/AST/Scope.cc.o.d
 ${buildroot}/AST/Scope.cc.o ${buildroot}/AST/Scope.cc.o.d : ${srcroot}/AST/Scope.cc
 	echo "Compiling ${srcroot}/AST/Scope.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/AST/Scope.cc.o.d ${srcroot}/AST/Scope.cc -o ${buildroot}/AST/Scope.cc.o
 
-compile_cxx_25 : ${buildroot}/AST/SymbolReference.cc.o ${buildroot}/AST/SymbolReference.cc.o.d
+compile_cxx_26 : ${buildroot}/AST/SymbolReference.cc.o ${buildroot}/AST/SymbolReference.cc.o.d
 ${buildroot}/AST/SymbolReference.cc.o ${buildroot}/AST/SymbolReference.cc.o.d : ${srcroot}/AST/SymbolReference.cc
 	echo "Compiling ${srcroot}/AST/SymbolReference.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/AST/SymbolReference.cc.o.d ${srcroot}/AST/SymbolReference.cc -o ${buildroot}/AST/SymbolReference.cc.o
 
-compile_cxx_26 : ${buildroot}/AST/UnaryOperation.cc.o ${buildroot}/AST/UnaryOperation.cc.o.d
+compile_cxx_27 : ${buildroot}/AST/UnaryOperation.cc.o ${buildroot}/AST/UnaryOperation.cc.o.d
 ${buildroot}/AST/UnaryOperation.cc.o ${buildroot}/AST/UnaryOperation.cc.o.d : ${srcroot}/AST/UnaryOperation.cc
 	echo "Compiling ${srcroot}/AST/UnaryOperation.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/AST/UnaryOperation.cc.o.d ${srcroot}/AST/UnaryOperation.cc -o ${buildroot}/AST/UnaryOperation.cc.o
 
-compile_cxx_27 : ${buildroot}/AST/Value.cc.o ${buildroot}/AST/Value.cc.o.d
+compile_cxx_28 : ${buildroot}/AST/Value.cc.o ${buildroot}/AST/Value.cc.o.d
 ${buildroot}/AST/Value.cc.o ${buildroot}/AST/Value.cc.o.d : ${srcroot}/AST/Value.cc
 	echo "Compiling ${srcroot}/AST/Value.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/AST/Value.cc.o.d ${srcroot}/AST/Value.cc -o ${buildroot}/AST/Value.cc.o
 
-compile_cxx_28 : ${buildroot}/AST/Visitor.cc.o ${buildroot}/AST/Visitor.cc.o.d
+compile_cxx_29 : ${buildroot}/AST/Visitor.cc.o ${buildroot}/AST/Visitor.cc.o.d
 ${buildroot}/AST/Visitor.cc.o ${buildroot}/AST/Visitor.cc.o.d : ${srcroot}/AST/Visitor.cc
 	echo "Compiling ${srcroot}/AST/Visitor.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/AST/Visitor.cc.o.d ${srcroot}/AST/Visitor.cc -o ${buildroot}/AST/Visitor.cc.o
 
-compile_cxx_29 : ${buildroot}/AST/literals.cc.o ${buildroot}/AST/literals.cc.o.d
+compile_cxx_30 : ${buildroot}/AST/literals.cc.o ${buildroot}/AST/literals.cc.o.d
 ${buildroot}/AST/literals.cc.o ${buildroot}/AST/literals.cc.o.d : ${srcroot}/AST/literals.cc
 	echo "Compiling ${srcroot}/AST/literals.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/AST/literals.cc.o.d ${srcroot}/AST/literals.cc -o ${buildroot}/AST/literals.cc.o
 
-compile_cxx_30 : ${buildroot}/Backend/Backend.cc.o ${buildroot}/Backend/Backend.cc.o.d
+compile_cxx_31 : ${buildroot}/Backend/Backend.cc.o ${buildroot}/Backend/Backend.cc.o.d
 ${buildroot}/Backend/Backend.cc.o ${buildroot}/Backend/Backend.cc.o.d : ${srcroot}/Backend/Backend.cc
 	echo "Compiling ${srcroot}/Backend/Backend.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/Backend/Backend.cc.o.d ${srcroot}/Backend/Backend.cc -o ${buildroot}/Backend/Backend.cc.o
 
-compile_cxx_31 : ${buildroot}/Backend/Dot.cc.o ${buildroot}/Backend/Dot.cc.o.d
+compile_cxx_32 : ${buildroot}/Backend/Dot.cc.o ${buildroot}/Backend/Dot.cc.o.d
 ${buildroot}/Backend/Dot.cc.o ${buildroot}/Backend/Dot.cc.o.d : ${srcroot}/Backend/Dot.cc
 	echo "Compiling ${srcroot}/Backend/Dot.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/Backend/Dot.cc.o.d ${srcroot}/Backend/Dot.cc -o ${buildroot}/Backend/Dot.cc.o
 
-compile_cxx_32 : ${buildroot}/Backend/Make.cc.o ${buildroot}/Backend/Make.cc.o.d
+compile_cxx_33 : ${buildroot}/Backend/Make.cc.o ${buildroot}/Backend/Make.cc.o.d
 ${buildroot}/Backend/Make.cc.o ${buildroot}/Backend/Make.cc.o.d : ${srcroot}/Backend/Make.cc
 	echo "Compiling ${srcroot}/Backend/Make.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/Backend/Make.cc.o.d ${srcroot}/Backend/Make.cc -o ${buildroot}/Backend/Make.cc.o
 
-compile_cxx_33 : ${buildroot}/Backend/Ninja.cc.o ${buildroot}/Backend/Ninja.cc.o.d
+compile_cxx_34 : ${buildroot}/Backend/Ninja.cc.o ${buildroot}/Backend/Ninja.cc.o.d
 ${buildroot}/Backend/Ninja.cc.o ${buildroot}/Backend/Ninja.cc.o.d : ${srcroot}/Backend/Ninja.cc
 	echo "Compiling ${srcroot}/Backend/Ninja.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/Backend/Ninja.cc.o.d ${srcroot}/Backend/Ninja.cc -o ${buildroot}/Backend/Ninja.cc.o
 
-compile_cxx_34 : ${buildroot}/Backend/Null.cc.o ${buildroot}/Backend/Null.cc.o.d
+compile_cxx_35 : ${buildroot}/Backend/Null.cc.o ${buildroot}/Backend/Null.cc.o.d
 ${buildroot}/Backend/Null.cc.o ${buildroot}/Backend/Null.cc.o.d : ${srcroot}/Backend/Null.cc
 	echo "Compiling ${srcroot}/Backend/Null.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/Backend/Null.cc.o.d ${srcroot}/Backend/Null.cc -o ${buildroot}/Backend/Null.cc.o
 
-compile_cxx_35 : ${buildroot}/DAG/Build.cc.o ${buildroot}/DAG/Build.cc.o.d
+compile_cxx_36 : ${buildroot}/DAG/Build.cc.o ${buildroot}/DAG/Build.cc.o.d
 ${buildroot}/DAG/Build.cc.o ${buildroot}/DAG/Build.cc.o.d : ${srcroot}/DAG/Build.cc
 	echo "Compiling ${srcroot}/DAG/Build.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/DAG/Build.cc.o.d ${srcroot}/DAG/Build.cc -o ${buildroot}/DAG/Build.cc.o
 
-compile_cxx_36 : ${buildroot}/DAG/DAG.cc.o ${buildroot}/DAG/DAG.cc.o.d
+compile_cxx_37 : ${buildroot}/DAG/DAG.cc.o ${buildroot}/DAG/DAG.cc.o.d
 ${buildroot}/DAG/DAG.cc.o ${buildroot}/DAG/DAG.cc.o.d : ${srcroot}/DAG/DAG.cc
 	echo "Compiling ${srcroot}/DAG/DAG.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/DAG/DAG.cc.o.d ${srcroot}/DAG/DAG.cc -o ${buildroot}/DAG/DAG.cc.o
 
-compile_cxx_37 : ${buildroot}/DAG/File.cc.o ${buildroot}/DAG/File.cc.o.d
+compile_cxx_38 : ${buildroot}/DAG/File.cc.o ${buildroot}/DAG/File.cc.o.d
 ${buildroot}/DAG/File.cc.o ${buildroot}/DAG/File.cc.o.d : ${srcroot}/DAG/File.cc
 	echo "Compiling ${srcroot}/DAG/File.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/DAG/File.cc.o.d ${srcroot}/DAG/File.cc -o ${buildroot}/DAG/File.cc.o
 
-compile_cxx_38 : ${buildroot}/DAG/Formatter.cc.o ${buildroot}/DAG/Formatter.cc.o.d
+compile_cxx_39 : ${buildroot}/DAG/Formatter.cc.o ${buildroot}/DAG/Formatter.cc.o.d
 ${buildroot}/DAG/Formatter.cc.o ${buildroot}/DAG/Formatter.cc.o.d : ${srcroot}/DAG/Formatter.cc
 	echo "Compiling ${srcroot}/DAG/Formatter.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/DAG/Formatter.cc.o.d ${srcroot}/DAG/Formatter.cc -o ${buildroot}/DAG/Formatter.cc.o
 
-compile_cxx_39 : ${buildroot}/DAG/List.cc.o ${buildroot}/DAG/List.cc.o.d
+compile_cxx_40 : ${buildroot}/DAG/List.cc.o ${buildroot}/DAG/List.cc.o.d
 ${buildroot}/DAG/List.cc.o ${buildroot}/DAG/List.cc.o.d : ${srcroot}/DAG/List.cc
 	echo "Compiling ${srcroot}/DAG/List.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/DAG/List.cc.o.d ${srcroot}/DAG/List.cc -o ${buildroot}/DAG/List.cc.o
 
-compile_cxx_40 : ${buildroot}/DAG/Primitive.cc.o ${buildroot}/DAG/Primitive.cc.o.d
+compile_cxx_41 : ${buildroot}/DAG/Primitive.cc.o ${buildroot}/DAG/Primitive.cc.o.d
 ${buildroot}/DAG/Primitive.cc.o ${buildroot}/DAG/Primitive.cc.o.d : ${srcroot}/DAG/Primitive.cc
 	echo "Compiling ${srcroot}/DAG/Primitive.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/DAG/Primitive.cc.o.d ${srcroot}/DAG/Primitive.cc -o ${buildroot}/DAG/Primitive.cc.o
 
-compile_cxx_41 : ${buildroot}/DAG/Rule.cc.o ${buildroot}/DAG/Rule.cc.o.d
+compile_cxx_42 : ${buildroot}/DAG/Rule.cc.o ${buildroot}/DAG/Rule.cc.o.d
 ${buildroot}/DAG/Rule.cc.o ${buildroot}/DAG/Rule.cc.o.d : ${srcroot}/DAG/Rule.cc
 	echo "Compiling ${srcroot}/DAG/Rule.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/DAG/Rule.cc.o.d ${srcroot}/DAG/Rule.cc -o ${buildroot}/DAG/Rule.cc.o
 
-compile_cxx_42 : ${buildroot}/DAG/Target.cc.o ${buildroot}/DAG/Target.cc.o.d
+compile_cxx_43 : ${buildroot}/DAG/Target.cc.o ${buildroot}/DAG/Target.cc.o.d
 ${buildroot}/DAG/Target.cc.o ${buildroot}/DAG/Target.cc.o.d : ${srcroot}/DAG/Target.cc
 	echo "Compiling ${srcroot}/DAG/Target.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/DAG/Target.cc.o.d ${srcroot}/DAG/Target.cc -o ${buildroot}/DAG/Target.cc.o
 
-compile_cxx_43 : ${buildroot}/DAG/UndefinedValueException.cc.o ${buildroot}/DAG/UndefinedValueException.cc.o.d
+compile_cxx_44 : ${buildroot}/DAG/UndefinedValueException.cc.o ${buildroot}/DAG/UndefinedValueException.cc.o.d
 ${buildroot}/DAG/UndefinedValueException.cc.o ${buildroot}/DAG/UndefinedValueException.cc.o.d : ${srcroot}/DAG/UndefinedValueException.cc
 	echo "Compiling ${srcroot}/DAG/UndefinedValueException.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/DAG/UndefinedValueException.cc.o.d ${srcroot}/DAG/UndefinedValueException.cc -o ${buildroot}/DAG/UndefinedValueException.cc.o
 
-compile_cxx_44 : ${buildroot}/DAG/Value.cc.o ${buildroot}/DAG/Value.cc.o.d
+compile_cxx_45 : ${buildroot}/DAG/Value.cc.o ${buildroot}/DAG/Value.cc.o.d
 ${buildroot}/DAG/Value.cc.o ${buildroot}/DAG/Value.cc.o.d : ${srcroot}/DAG/Value.cc
 	echo "Compiling ${srcroot}/DAG/Value.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/DAG/Value.cc.o.d ${srcroot}/DAG/Value.cc -o ${buildroot}/DAG/Value.cc.o
 
-compile_cxx_45 : ${buildroot}/DAG/Visitor.cc.o ${buildroot}/DAG/Visitor.cc.o.d
+compile_cxx_46 : ${buildroot}/DAG/Visitor.cc.o ${buildroot}/DAG/Visitor.cc.o.d
 ${buildroot}/DAG/Visitor.cc.o ${buildroot}/DAG/Visitor.cc.o.d : ${srcroot}/DAG/Visitor.cc
 	echo "Compiling ${srcroot}/DAG/Visitor.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/DAG/Visitor.cc.o.d ${srcroot}/DAG/Visitor.cc -o ${buildroot}/DAG/Visitor.cc.o
 
-compile_cxx_46 : ${buildroot}/Parsing/Lexer.cc.o ${buildroot}/Parsing/Lexer.cc.o.d
+compile_cxx_47 : ${buildroot}/Parsing/Lexer.cc.o ${buildroot}/Parsing/Lexer.cc.o.d
 ${buildroot}/Parsing/Lexer.cc.o ${buildroot}/Parsing/Lexer.cc.o.d : ${srcroot}/Parsing/Lexer.cc
 	echo "Compiling ${srcroot}/Parsing/Lexer.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/Parsing/Lexer.cc.o.d ${srcroot}/Parsing/Lexer.cc -o ${buildroot}/Parsing/Lexer.cc.o
 
-compile_cxx_47 : ${buildroot}/Parsing/Parser.cc.o ${buildroot}/Parsing/Parser.cc.o.d
+compile_cxx_48 : ${buildroot}/Parsing/Parser.cc.o ${buildroot}/Parsing/Parser.cc.o.d
 ${buildroot}/Parsing/Parser.cc.o ${buildroot}/Parsing/Parser.cc.o.d : ${srcroot}/Parsing/Parser.cc
 	echo "Compiling ${srcroot}/Parsing/Parser.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/Parsing/Parser.cc.o.d ${srcroot}/Parsing/Parser.cc -o ${buildroot}/Parsing/Parser.cc.o
 
-compile_cxx_48 : ${buildroot}/Parsing/Token.cc.o ${buildroot}/Parsing/Token.cc.o.d
+compile_cxx_49 : ${buildroot}/Parsing/Token.cc.o ${buildroot}/Parsing/Token.cc.o.d
 ${buildroot}/Parsing/Token.cc.o ${buildroot}/Parsing/Token.cc.o.d : ${srcroot}/Parsing/Token.cc
 	echo "Compiling ${srcroot}/Parsing/Token.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/Parsing/Token.cc.o.d ${srcroot}/Parsing/Token.cc -o ${buildroot}/Parsing/Token.cc.o
 
-compile_cxx_49 : ${buildroot}/Support/Arguments.cc.o ${buildroot}/Support/Arguments.cc.o.d
+compile_cxx_50 : ${buildroot}/Support/Arguments.cc.o ${buildroot}/Support/Arguments.cc.o.d
 ${buildroot}/Support/Arguments.cc.o ${buildroot}/Support/Arguments.cc.o.d : ${srcroot}/Support/Arguments.cc
 	echo "Compiling ${srcroot}/Support/Arguments.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/Support/Arguments.cc.o.d ${srcroot}/Support/Arguments.cc -o ${buildroot}/Support/Arguments.cc.o
 
-compile_cxx_50 : ${buildroot}/Support/Bytestream.cc.o ${buildroot}/Support/Bytestream.cc.o.d
+compile_cxx_51 : ${buildroot}/Support/Bytestream.cc.o ${buildroot}/Support/Bytestream.cc.o.d
 ${buildroot}/Support/Bytestream.cc.o ${buildroot}/Support/Bytestream.cc.o.d : ${srcroot}/Support/Bytestream.cc
 	echo "Compiling ${srcroot}/Support/Bytestream.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/Support/Bytestream.cc.o.d ${srcroot}/Support/Bytestream.cc -o ${buildroot}/Support/Bytestream.cc.o
 
-compile_cxx_51 : ${buildroot}/Support/ErrorReport.cc.o ${buildroot}/Support/ErrorReport.cc.o.d
+compile_cxx_52 : ${buildroot}/Support/ErrorReport.cc.o ${buildroot}/Support/ErrorReport.cc.o.d
 ${buildroot}/Support/ErrorReport.cc.o ${buildroot}/Support/ErrorReport.cc.o.d : ${srcroot}/Support/ErrorReport.cc
 	echo "Compiling ${srcroot}/Support/ErrorReport.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/Support/ErrorReport.cc.o.d ${srcroot}/Support/ErrorReport.cc -o ${buildroot}/Support/ErrorReport.cc.o
 
-compile_cxx_52 : ${buildroot}/Support/Join.cc.o ${buildroot}/Support/Join.cc.o.d
+compile_cxx_53 : ${buildroot}/Support/Join.cc.o ${buildroot}/Support/Join.cc.o.d
 ${buildroot}/Support/Join.cc.o ${buildroot}/Support/Join.cc.o.d : ${srcroot}/Support/Join.cc
 	echo "Compiling ${srcroot}/Support/Join.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/Support/Join.cc.o.d ${srcroot}/Support/Join.cc -o ${buildroot}/Support/Join.cc.o
 
-compile_cxx_53 : ${buildroot}/Support/Printable.cc.o ${buildroot}/Support/Printable.cc.o.d
+compile_cxx_54 : ${buildroot}/Support/Printable.cc.o ${buildroot}/Support/Printable.cc.o.d
 ${buildroot}/Support/Printable.cc.o ${buildroot}/Support/Printable.cc.o.d : ${srcroot}/Support/Printable.cc
 	echo "Compiling ${srcroot}/Support/Printable.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/Support/Printable.cc.o.d ${srcroot}/Support/Printable.cc -o ${buildroot}/Support/Printable.cc.o
 
-compile_cxx_54 : ${buildroot}/Support/SourceLocation.cc.o ${buildroot}/Support/SourceLocation.cc.o.d
+compile_cxx_55 : ${buildroot}/Support/SourceLocation.cc.o ${buildroot}/Support/SourceLocation.cc.o.d
 ${buildroot}/Support/SourceLocation.cc.o ${buildroot}/Support/SourceLocation.cc.o.d : ${srcroot}/Support/SourceLocation.cc
 	echo "Compiling ${srcroot}/Support/SourceLocation.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/Support/SourceLocation.cc.o.d ${srcroot}/Support/SourceLocation.cc -o ${buildroot}/Support/SourceLocation.cc.o
 
-compile_cxx_55 : ${buildroot}/Support/Visitable.cc.o ${buildroot}/Support/Visitable.cc.o.d
+compile_cxx_56 : ${buildroot}/Support/Visitable.cc.o ${buildroot}/Support/Visitable.cc.o.d
 ${buildroot}/Support/Visitable.cc.o ${buildroot}/Support/Visitable.cc.o.d : ${srcroot}/Support/Visitable.cc
 	echo "Compiling ${srcroot}/Support/Visitable.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/Support/Visitable.cc.o.d ${srcroot}/Support/Visitable.cc -o ${buildroot}/Support/Visitable.cc.o
 
-compile_cxx_56 : ${buildroot}/Support/exceptions.cc.o ${buildroot}/Support/exceptions.cc.o.d
+compile_cxx_57 : ${buildroot}/Support/exceptions.cc.o ${buildroot}/Support/exceptions.cc.o.d
 ${buildroot}/Support/exceptions.cc.o ${buildroot}/Support/exceptions.cc.o.d : ${srcroot}/Support/exceptions.cc
 	echo "Compiling ${srcroot}/Support/exceptions.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/Support/exceptions.cc.o.d ${srcroot}/Support/exceptions.cc -o ${buildroot}/Support/exceptions.cc.o
 
-compile_cxx_57 : ${buildroot}/Support/os-posix.cc.o ${buildroot}/Support/os-posix.cc.o.d
+compile_cxx_58 : ${buildroot}/Support/os-posix.cc.o ${buildroot}/Support/os-posix.cc.o.d
 ${buildroot}/Support/os-posix.cc.o ${buildroot}/Support/os-posix.cc.o.d : ${srcroot}/Support/os-posix.cc
 	echo "Compiling ${srcroot}/Support/os-posix.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/Support/os-posix.cc.o.d ${srcroot}/Support/os-posix.cc -o ${buildroot}/Support/os-posix.cc.o
 
-compile_cxx_58 : ${buildroot}/Types/BooleanType.cc.o ${buildroot}/Types/BooleanType.cc.o.d
+compile_cxx_59 : ${buildroot}/Types/BooleanType.cc.o ${buildroot}/Types/BooleanType.cc.o.d
 ${buildroot}/Types/BooleanType.cc.o ${buildroot}/Types/BooleanType.cc.o.d : ${srcroot}/Types/BooleanType.cc
 	echo "Compiling ${srcroot}/Types/BooleanType.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/Types/BooleanType.cc.o.d ${srcroot}/Types/BooleanType.cc -o ${buildroot}/Types/BooleanType.cc.o
 
-compile_cxx_59 : ${buildroot}/Types/FileType.cc.o ${buildroot}/Types/FileType.cc.o.d
+compile_cxx_60 : ${buildroot}/Types/FileType.cc.o ${buildroot}/Types/FileType.cc.o.d
 ${buildroot}/Types/FileType.cc.o ${buildroot}/Types/FileType.cc.o.d : ${srcroot}/Types/FileType.cc
 	echo "Compiling ${srcroot}/Types/FileType.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/Types/FileType.cc.o.d ${srcroot}/Types/FileType.cc -o ${buildroot}/Types/FileType.cc.o
 
-compile_cxx_60 : ${buildroot}/Types/FunctionType.cc.o ${buildroot}/Types/FunctionType.cc.o.d
+compile_cxx_61 : ${buildroot}/Types/FunctionType.cc.o ${buildroot}/Types/FunctionType.cc.o.d
 ${buildroot}/Types/FunctionType.cc.o ${buildroot}/Types/FunctionType.cc.o.d : ${srcroot}/Types/FunctionType.cc
 	echo "Compiling ${srcroot}/Types/FunctionType.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/Types/FunctionType.cc.o.d ${srcroot}/Types/FunctionType.cc -o ${buildroot}/Types/FunctionType.cc.o
 
-compile_cxx_61 : ${buildroot}/Types/IntegerType.cc.o ${buildroot}/Types/IntegerType.cc.o.d
+compile_cxx_62 : ${buildroot}/Types/IntegerType.cc.o ${buildroot}/Types/IntegerType.cc.o.d
 ${buildroot}/Types/IntegerType.cc.o ${buildroot}/Types/IntegerType.cc.o.d : ${srcroot}/Types/IntegerType.cc
 	echo "Compiling ${srcroot}/Types/IntegerType.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/Types/IntegerType.cc.o.d ${srcroot}/Types/IntegerType.cc -o ${buildroot}/Types/IntegerType.cc.o
 
-compile_cxx_62 : ${buildroot}/Types/OptionallyTyped.cc.o ${buildroot}/Types/OptionallyTyped.cc.o.d
+compile_cxx_63 : ${buildroot}/Types/OptionallyTyped.cc.o ${buildroot}/Types/OptionallyTyped.cc.o.d
 ${buildroot}/Types/OptionallyTyped.cc.o ${buildroot}/Types/OptionallyTyped.cc.o.d : ${srcroot}/Types/OptionallyTyped.cc
 	echo "Compiling ${srcroot}/Types/OptionallyTyped.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/Types/OptionallyTyped.cc.o.d ${srcroot}/Types/OptionallyTyped.cc -o ${buildroot}/Types/OptionallyTyped.cc.o
 
-compile_cxx_63 : ${buildroot}/Types/SequenceType.cc.o ${buildroot}/Types/SequenceType.cc.o.d
+compile_cxx_64 : ${buildroot}/Types/SequenceType.cc.o ${buildroot}/Types/SequenceType.cc.o.d
 ${buildroot}/Types/SequenceType.cc.o ${buildroot}/Types/SequenceType.cc.o.d : ${srcroot}/Types/SequenceType.cc
 	echo "Compiling ${srcroot}/Types/SequenceType.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/Types/SequenceType.cc.o.d ${srcroot}/Types/SequenceType.cc -o ${buildroot}/Types/SequenceType.cc.o
 
-compile_cxx_64 : ${buildroot}/Types/StringType.cc.o ${buildroot}/Types/StringType.cc.o.d
+compile_cxx_65 : ${buildroot}/Types/StringType.cc.o ${buildroot}/Types/StringType.cc.o.d
 ${buildroot}/Types/StringType.cc.o ${buildroot}/Types/StringType.cc.o.d : ${srcroot}/Types/StringType.cc
 	echo "Compiling ${srcroot}/Types/StringType.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/Types/StringType.cc.o.d ${srcroot}/Types/StringType.cc -o ${buildroot}/Types/StringType.cc.o
 
-compile_cxx_65 : ${buildroot}/Types/Type.cc.o ${buildroot}/Types/Type.cc.o.d
+compile_cxx_66 : ${buildroot}/Types/Type.cc.o ${buildroot}/Types/Type.cc.o.d
 ${buildroot}/Types/Type.cc.o ${buildroot}/Types/Type.cc.o.d : ${srcroot}/Types/Type.cc
 	echo "Compiling ${srcroot}/Types/Type.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/Types/Type.cc.o.d ${srcroot}/Types/Type.cc -o ${buildroot}/Types/Type.cc.o
 
-compile_cxx_66 : ${buildroot}/Types/TypeError.cc.o ${buildroot}/Types/TypeError.cc.o.d
+compile_cxx_67 : ${buildroot}/Types/TypeError.cc.o ${buildroot}/Types/TypeError.cc.o.d
 ${buildroot}/Types/TypeError.cc.o ${buildroot}/Types/TypeError.cc.o.d : ${srcroot}/Types/TypeError.cc
 	echo "Compiling ${srcroot}/Types/TypeError.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/Types/TypeError.cc.o.d ${srcroot}/Types/TypeError.cc -o ${buildroot}/Types/TypeError.cc.o
 
-compile_cxx_67 : ${buildroot}/Types/Typed.cc.o ${buildroot}/Types/Typed.cc.o.d
+compile_cxx_68 : ${buildroot}/Types/Typed.cc.o ${buildroot}/Types/Typed.cc.o.d
 ${buildroot}/Types/Typed.cc.o ${buildroot}/Types/Typed.cc.o.d : ${srcroot}/Types/Typed.cc
 	echo "Compiling ${srcroot}/Types/Typed.cc"
 	${CXX} -c ${cxxflags} -MMD -MF ${buildroot}/Types/Typed.cc.o.d ${srcroot}/Types/Typed.cc -o ${buildroot}/Types/Typed.cc.o
