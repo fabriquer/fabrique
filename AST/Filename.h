@@ -48,6 +48,7 @@ public:
 	         const Type& ty, const SourceRange& loc);
 
 	const Expression& name() const { return *unqualName_; }
+	const UniqPtrVec<Argument>& arguments() const { return args_; }
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
