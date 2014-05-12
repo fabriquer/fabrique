@@ -1,0 +1,23 @@
+#
+# RUN: fab --format=make --output=%t %s
+# RUN: FileCheck %s -input-file %t/Makefile
+#
+
+cc = action('${CC} ${in} -o ${out}' <- in:file, out:file);
+
+# CHECK-DAG: ${buildroot}/foo/subdir:
+# CHECK-DAG: mkdir -p "${buildroot}/foo/subdir"
+#
+# CHECK-DAG: ${buildroot}/bar/subdir:
+# CHECK-DAG: mkdir -p "${buildroot}/bar/subdir"
+
+
+# CHECK-DAG: ${buildroot}/foo/subdir/foo.c.o : ${srcroot}/foo/subdir/foo.c
+# CHECK-DAG: ${CC} ${srcroot}/foo/subdir/foo.c -o ${buildroot}/foo/subdir/foo.c.o
+foo = file('foo/subdir/foo.c');
+foo_o = cc(foo, foo + '.o');
+
+# CHECK-DAG: ${buildroot}/bar/subdir/bar.c.o : ${srcroot}/bar/subdir/bar.c
+# CHECK-DAG: ${CC} ${srcroot}/bar/subdir/bar.c -o ${buildroot}/bar/subdir/bar.c.o
+bar = file('bar/subdir/bar.c');
+bar_o = cc(bar, bar + '.o');
