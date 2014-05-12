@@ -36,11 +36,11 @@ clean :
 ${buildroot}/Parsing/fab.lex.h : | ${buildroot}/Parsing
 ${buildroot}/Parsing/fab.lex.cc : | ${buildroot}/Parsing
 ${buildroot}/Parsing/fab.lex.cc : | ${buildroot}/Parsing
-${buildroot}/Parsing/fab.lex.cc : parser
 ${buildroot}/Parsing/fab.lex.h : | ${buildroot}/Parsing
 ${buildroot}/Parsing/fab.yacc.cc : | ${buildroot}/Parsing
 ${buildroot}/Parsing/fab.yacc.cc : | ${buildroot}/Parsing
 ${buildroot}/Parsing/fab.lex.cc.o : | ${buildroot}/Parsing
+${buildroot}/Parsing/fab.lex.cc.o : ${buildroot}/Parsing/fab.yacc.h
 ${buildroot}/Parsing/fab.lex.cc.o.d : | ${buildroot}/Parsing
 ${buildroot}/Parsing/fab.yacc.cc.o : | ${buildroot}/Parsing
 ${buildroot}/Parsing/fab.yacc.cc.o.d : | ${buildroot}/Parsing
