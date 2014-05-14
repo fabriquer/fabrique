@@ -1,0 +1,10 @@
+#
+# RUN: fab --format=ninja --output=%t %s
+# RUN: FileCheck %s -input-file %t/build.ninja
+#
+
+# CHECK-DAG: foo = /usr/bin/cc
+foo = '/usr/bin/cc';
+
+# CHECK-DAG: bar = /usr/bin/cc
+bar = file('/usr/bin/cc');
