@@ -1,0 +1,22 @@
+#
+# RUN: fab --format=null --print-dag %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK-DAG: (file)=>file cc = cc -c ${src} -o ${obj}
+cc = action('cc -c ${src} -o ${obj}' <- src:file[in], obj:file[out]);
+
+# CHECK-DAG: (list[file])=>file link = cc ${objects} -o ${bin}
+link = action('cc ${objects} -o ${bin}'
+              <- objects:list[file[in]], bin:file[out]);
+
+# CHECK-DAG: list[file] srcs = [ hello.c world.c ]
+srcs = files(hello.c world.c);
+
+# CHECK-DAG: list[file] objs = [ hello.c.o world.c.o ]
+objs = foreach src <- srcs
+	cc(src, obj = src + '.o')
+	;
+
+# CHECK-DAG: file: hello-world
+helloworld = link(objs, bin = file('hello-world'));

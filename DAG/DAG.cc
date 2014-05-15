@@ -654,17 +654,23 @@ void DAGBuilder::Leave(const ast::Scope&)
 		const string name = join(currentScopeName, symbol.first, ".");
 		shared_ptr<Value>& v = symbol.second;
 
-		// Everything but Builds and Rules should be included in variables.
-		if (not dynamic_pointer_cast<Build>(v)
-		    and not dynamic_pointer_cast<Rule>(v))
-			variables_[name] = v;
-
-		// Some things should be treated specially.
 		if (auto rule = dynamic_pointer_cast<Rule>(v))
+		{
 			rules_[name] = rule;
-
+		}
 		else if (auto target = dynamic_pointer_cast<Target>(v))
+		{
 			targets_[name] = target;
+			variables_[name] = target->files();
+		}
+		else if (dynamic_pointer_cast<Build>(v))
+		{
+			// Builds should not be included in variables.
+		}
+		else
+		{
+			variables_[name] = v;
+		}
 	}
 }
 

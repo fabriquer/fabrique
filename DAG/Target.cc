@@ -48,17 +48,18 @@ using std::shared_ptr;
 using std::string;
 
 
+namespace fabrique
+{
+	static SharedPtrVec<File> Files(const shared_ptr<Build>& v);
+	static SharedPtrVec<File> Files(const shared_ptr<List>& v);
+}
+
+
 Target* Target::Create(const string& name, const shared_ptr<Build>& build)
 {
 	assert(build);
 
-	SharedPtrVec<File> files(build->outputs());
-	assert(not files.empty());
-
-	if (build->type().isFile())
-		assert(files.size() == 1);
-
-	shared_ptr<List> l(List::of(build->outputs(), build->source()));
+	shared_ptr<List> l(List::of(Files(build), build->source()));
 	return new Target(name, l, build->type());
 }
 
@@ -75,16 +76,16 @@ Target* Target::Create(const string& name, const shared_ptr<File>& file)
 
 Target* Target::Create(const string& name, const shared_ptr<List>& list)
 {
-	for (auto& f : *list)
-		assert(f);
-
-	return new Target(name, list, list->type());
+	shared_ptr<List> l(List::of(Files(list), list->source()));
+	return new Target(name, l, list->type());
 }
 
 
 Target::Target(const string& name, const shared_ptr<List>& files, const Type& t)
 	: Value(t, files->source()), name_(name), files_(files)
 {
+	for (auto& f : *files)
+		assert(dynamic_pointer_cast<File>(f));
 }
 
 
@@ -142,4 +143,53 @@ const shared_ptr<Value> Target::underlyingFiles() const
 
 	assert(files_->size() == 1);
 	return *files_->begin();
+}
+
+
+
+static fabrique::SharedPtrVec<File> fabrique::Files(const shared_ptr<Build>& b)
+{
+	SharedPtrVec<File> files(b->outputs());
+	assert(not files.empty());
+
+	if (b->type().isFile())
+		assert(files.size() == 1);
+
+	return b->outputs();
+}
+
+static fabrique::SharedPtrVec<File> fabrique::Files(const shared_ptr<List>& v)
+{
+	SharedPtrVec<File> files;
+
+	for (auto& element : *v)
+	{
+		assert(element);
+
+		if (auto file = dynamic_pointer_cast<File>(element))
+		{
+			files.push_back(file);
+		}
+		else if (auto build = dynamic_pointer_cast<Build>(element))
+		{
+			auto sub(Files(build));
+			files.insert(files.end(), sub.begin(), sub.end());
+		}
+		else if (auto target = dynamic_pointer_cast<Target>(element))
+		{
+			auto sub(Files(target->files()));
+			files.insert(files.end(), sub.begin(), sub.end());
+		}
+		else if (auto list = dynamic_pointer_cast<List>(element))
+		{
+			auto sub(Files(list));
+			files.insert(files.end(), sub.begin(), sub.end());
+		}
+		else
+		{
+			assert(false && "invalid list element");
+		}
+	}
+
+	return files;
 }
