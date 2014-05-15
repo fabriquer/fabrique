@@ -8,8 +8,8 @@ debug:bool = true;
 asserts:bool = true;
 debug_and_asserts = debug and asserts;
 
-CXX = file('/usr/bin/clang++');   # specify a precise C++ compiler
-LEX = 'flex';      # use whatever 'flex' is lying around on the PATH
+CXX = 'c++';
+LEX = 'flex';
 YACC = 'byacc';
 
 

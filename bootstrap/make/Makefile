@@ -48,7 +48,7 @@ dbgflags : -g -ggdb
 cxxoptions : -std=c++11
 YACC : byacc
 LEX : flex
-CXX : /usr/bin/clang++
+CXX : c++
 debug_and_asserts : true
 asserts : true
 debug : true
