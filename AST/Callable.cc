@@ -46,11 +46,18 @@ using std::vector;
 Callable::Callable(UniqPtrVec<Parameter>& params)
 	: params_(std::move(params))
 {
+	for (auto& p : params_)
+		paramNames_.insert(p->getName().name());
 }
 
 const UniqPtrVec<Parameter>& Callable::parameters() const
 {
 	return params_;
+}
+
+const std::set<string>& Callable::parameterNames() const
+{
+	return paramNames_;
 }
 
 void Callable::CheckArguments(const UniqPtrVec<Argument>& args,

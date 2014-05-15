@@ -39,6 +39,8 @@
 #include "AST/SymbolReference.h"
 
 #include <memory>
+#include <set>
+#include <string>
 
 namespace fabrique {
 namespace ast {
@@ -55,6 +57,7 @@ public:
 	Callable(UniqPtrVec<Parameter>&);
 
 	const UniqPtrVec<Parameter>& parameters() const;
+	const std::set<std::string>& parameterNames() const;
 	void CheckArguments(const UniqPtrVec<Argument>&,
 	                    const SourceRange&) const;
 
@@ -100,6 +103,7 @@ private:
 	NameArguments(const std::vector<std::string>&, SourceRange src) const;
 
 	UniqPtrVec<Parameter> params_;
+	std::set<std::string> paramNames_;
 };
 
 } // namespace ast
