@@ -7,6 +7,6 @@
 lex = action('$LEX -c++ --header-file=$header --outfile=$out $in'
               <- in:file[in], out:file[out], header:file[out]);
 
-# CHECK-DAG: build: lex { foo.yy => foo.h foo.c }( )
-# CHECK-DAG: list[file] gen = [ foo.h foo.c ]
+# CHECK-DAG: build: lex { foo.yy => foo.{{[ch]}} foo.{{[ch]}} }( )
+# CHECK-DAG: list[file] gen = [ foo.{{[ch]}} foo.{{[ch]}} ]
 gen = lex(file('foo.yy'), file('foo.c'), header = file('foo.h'));
