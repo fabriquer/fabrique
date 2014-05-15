@@ -54,6 +54,8 @@ public:
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	const std::string& name() const { return name_; }
 
+	bool reservedName() const;
+
 	bool operator == (const Identifier&) const;
 	bool operator < (const Identifier&) const;
 

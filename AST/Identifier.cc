@@ -37,11 +37,25 @@
 using namespace fabrique::ast;
 
 
+static const char* ReservedNames[] = { "in", "out" };
+
+
 Identifier::Identifier(const std::string& name, const Type *type,
                        const SourceRange& src)
 	: Node(src), OptionallyTyped(type), name_(name)
 {
 }
+
+
+bool Identifier::reservedName() const
+{
+	for (const char *reserved : ReservedNames)
+		if (name_ == reserved)
+			return true;
+
+	return false;
+}
+
 
 void Identifier::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
