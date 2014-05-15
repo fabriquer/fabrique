@@ -52,13 +52,13 @@ Target* Target::Create(const string& name, const shared_ptr<Build>& build)
 {
 	assert(build);
 
-	SharedPtrVec<File> files(build->allOutputs());
+	SharedPtrVec<File> files(build->outputs());
 	assert(not files.empty());
 
 	if (build->type().isFile())
 		assert(files.size() == 1);
 
-	shared_ptr<List> l(List::of(build->allOutputs(), build->source()));
+	shared_ptr<List> l(List::of(build->outputs(), build->source()));
 	return new Target(name, l, build->type());
 }
 

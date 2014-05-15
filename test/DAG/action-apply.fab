@@ -6,7 +6,7 @@
 # CHECK-DAG: (file)=>file compile_one_cxx_file = $CXX -c $cxxflags
 compile_one_cxx_file = action('$CXX -c $cxxflags -MMD -MF $out.d $in -o $out',
 	description = 'Compiling $in', depfile = '$out.d'
-	<- in:file, out:file);
+	<- in:file[in], out:file[out]);
 
 # CHECK-DAG: build: compile_one_cxx_file { a.cc => a.o }
 # CHECK-DAG: file single_object = a.o

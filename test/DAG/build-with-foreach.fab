@@ -7,10 +7,10 @@
 srcs = files(foo.c bar.c baz.c);
 
 # CHECK-DAG: (file)=>file cc = cc -c $in -o $out
-cc = action('cc -c $in -o $out' <- in:file, out:file);
+cc = action('cc -c $in -o $out' <- in:file[in], out:file[out]);
 
 # CHECK-DAG: (list[file])=>file link = cc $in -o $out
-link = action('cc $in -o $out' <- in:list[file], out:file);
+link = action('cc $in -o $out' <- in:list[file[in]], out:file[out]);
 
 # CHECK-DAG: list[file] objs = [ foo.c.o bar.c.o baz.c.o ]
 # CHECK-DAG: build: cc { foo.c => foo.c.o }

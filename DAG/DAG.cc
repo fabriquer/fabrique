@@ -46,6 +46,7 @@
 #include "Support/Join.h"
 #include "Support/exceptions.h"
 
+#include "Types/FileType.h"
 #include "Types/FunctionType.h"
 #include "Types/Type.h"
 #include "Types/TypeError.h"
@@ -285,6 +286,10 @@ bool DAGBuilder::Enter(const ast::Action& a)
 		arguments.emplace(arg->getName().name(), v);
 	}
 
+	// Ensure that files are properly tagged as input or output.
+	for (ConstPtr<ast::Parameter>& p : a.parameters())
+		FileType::CheckFileTags(p->type(), p->source());
+
 	currentValue.emplace(Rule::Create(currentValueName.top(),
 	                                  command, arguments, a.type()));
 
@@ -395,10 +400,11 @@ void DAGBuilder::Leave(const ast::Call& call)
 		{
 			const string& argName = a.first;
 
-			auto i = params.begin();
-			for ( ; i != params.end(); i++)
-				if ((*i)->getName().name() == argName)
-					break;
+			auto i = std::find_if(params.begin(), params.end(),
+				[&argName](const UniqPtr<ast::Parameter>& p)
+				{
+					return p->getName().name() == argName;
+				});
 
 			assert(i != params.end());
 			const Type& t = (*i)->type();
@@ -409,7 +415,7 @@ void DAGBuilder::Leave(const ast::Call& call)
 			Build::Create(rule, args, paramTypes, call.source()));
 
 		builds_.push_back(build);
-		for (const shared_ptr<File>& f : build->allOutputs())
+		for (const shared_ptr<File>& f : build->outputs())
 			files_.push_back(f);
 
 		currentValue.push(build);

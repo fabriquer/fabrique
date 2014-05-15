@@ -188,7 +188,7 @@ void NinjaBackend::Process(const dag::DAG& dag, Bytestream& out)
 		const dag::Build& build = *i;
 
 		out << Bytestream::Type << "build";
-		for (const shared_ptr<File>& f : build.allOutputs())
+		for (const shared_ptr<File>& f : build.outputs())
 			out << " " << formatter.Format(*f);
 
 		out
@@ -196,15 +196,8 @@ void NinjaBackend::Process(const dag::DAG& dag, Bytestream& out)
 			<< Bytestream::Reference << build.buildRule().name()
 			;
 
-		for (const shared_ptr<File>& f : build.explicitInputs())
+		for (const shared_ptr<File>& f : build.inputs())
 			out << " " << formatter.Format(*f);
-
-		if (build.dependencies().size() > 0)
-		{
-			out << " |";
-			for (const shared_ptr<File>& f : build.explicitInputs())
-				out << " " << formatter.Format(*f);
-		}
 
 		out << "\n";
 

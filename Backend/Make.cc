@@ -227,7 +227,7 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out)
 		// a pseudo-target that points to all outputs.
 		//
 
-		Build::FileVec outputs = build.allOutputs();
+		Build::FileVec outputs = build.outputs();
 		if (outputs.size() > 1)
 		{
 			const string pseudoName =
@@ -261,15 +261,8 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out)
 			<< Bytestream::Literal
 			;
 
-		for (const shared_ptr<File>& f : build.explicitInputs())
+		for (const shared_ptr<File>& f : build.inputs())
 			out << " " << formatter.Format(*f);
-
-		if (build.dependencies().size() > 0)
-		{
-			out << " |";
-			for (const shared_ptr<File>& f : build.explicitInputs())
-				out << " " << formatter.Format(*f);
-		}
 
 
 		//
@@ -283,9 +276,9 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out)
 			? rule.description()
 			: rule.name()
 			  + " [ "
-			  + join(build.allInputs(), shortName, " ")
+			  + join(build.inputs(), shortName, " ")
 			  + " ] => [ "
-			  + join(build.allOutputs(), shortName, " ")
+			  + join(build.outputs(), shortName, " ")
 			  + " ]"
 			;
 
@@ -298,11 +291,11 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out)
 			replaceAll(command, "${" + name + "}", str);
 			replaceAll(description, "${" + name + "}", str);
 		}
-		replaceAll(command, "${in}", build.explicitInputs());
-		replaceAll(description, "${in}", build.explicitInputs());
+		replaceAll(command, "${in}", build.inputs());
+		replaceAll(description, "${in}", build.inputs());
 
-		replaceAll(command, "${out}", build.explicitOutputs());
-		replaceAll(description, "${out}", build.explicitOutputs());
+		replaceAll(command, "${out}", build.outputs());
+		replaceAll(description, "${out}", build.outputs());
 
 		out
 			<< "\n"

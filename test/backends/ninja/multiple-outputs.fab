@@ -3,12 +3,22 @@
 # RUN: FileCheck %s -input-file %t/build.ninja
 #
 
-# CHECK: rule lex
-# CHECK-NEXT:  command = ${LEX} -c++ --header-file=${header} --outfile=${out} ${in}
-# CHECK-NEXT:  description = ${LEX} -c++ --header-file=${header} --outfile=${out} ${in}
+# CHECK-DAG: rule lex
+# CHECK-DAG:  command = ${LEX} -c++ --header-file=${header} --outfile=${out} ${in}
+# CHECK-DAG:  description = ${LEX} -c++ --header-file=${header} --outfile=${out} ${in}
 lex = action('${LEX} -c++ --header-file=${header} --outfile=${out} ${in}'
-              <- in:file, out:file, header:file[out]);
+              <- in:file[in], out:file[out], header:file[out]);
 
-# CHECK: build ${buildroot}/foo.c ${buildroot}/foo.h: lex ${srcroot}/foo.yy
-# CHECK-NEXT: header = ${buildroot}/foo.h
+# CHECK-DAG: rule cxx
+# CHECK-DAG:  command = ${CXX} -c ${flags} -MMD -MF ${depfile} ${src} -o ${obj}
+# CHECK-DAG:  description = Compiling ${in}
+cxx = action('${CXX} -c ${flags} -MMD -MF ${depfile} ${src} -o ${obj}',
+             description = 'Compiling ${in}'
+             <- src:file[in], obj:file[out], depfile:file[out], flags:list[string]);
+
+# CHECK-DAG: build ${buildroot}/foo.h ${buildroot}/foo.c: lex ${srcroot}/foo.yy
 gen = lex(file('foo.yy'), file('foo.c'), header = file('foo.h'));
+
+# CHECK-DAG: build ${buildroot}/foo.o.d ${buildroot}/foo.o: cxx ${srcroot}/foo.c
+obj = cxx(src = file('foo.c'), obj = file('foo.o'), depfile = file('foo.o.d'),
+          flags = [ '-Weverything' ]);

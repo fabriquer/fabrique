@@ -4,14 +4,14 @@
 #
 
 lex = action('$LEX -c++ --header=$header --outfile=$out $in'
-              <- in:file, out:file, header:file[out]);
+              <- in:file[in], out:file[out], header:file[out]);
 
-cc = action('$CC -c $in -o $out' <- in:file, out:file);
-link = action('$CC $in -o $out' <- in:list[file], out:file);
+cc = action('$CC -c $in -o $out' <- in:file[in], out:file[out]);
+link = action('$CC $in -o $out' <- in:list[file[in]], out:file[out]);
 
-# CHECK-DAG: "foo.yy" -> "lex { foo.yy => foo.c + foo.h }{{.*}}";
-# CHECK-DAG: "lex { foo.yy => foo.c + foo.h }{{.*}}" -> "foo.c";
-# CHECK-DAG: "lex { foo.yy => foo.c + foo.h }{{.*}}" -> "foo.h";
+# CHECK-DAG: "foo.yy" -> [[BUILD:"lex { foo.yy => foo.h foo.c }"]];
+# CHECK-DAG: [[BUILD]] -> "foo.c";
+# CHECK-DAG: [[BUILD]] -> "foo.h";
 foo_c = file('foo.c');
 foo_lex = lex(file('foo.yy'), out = foo_c, header = file('foo.h'));
 

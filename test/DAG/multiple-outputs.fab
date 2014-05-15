@@ -5,8 +5,8 @@
 
 # CHECK-DAG: (file)=>list[file] lex = $LEX -c++ --header-file=$header --outfile=$out $in
 lex = action('$LEX -c++ --header-file=$header --outfile=$out $in'
-              <- in:file, out:file, header:file[out]);
+              <- in:file[in], out:file[out], header:file[out]);
 
-# CHECK-DAG: build: lex { foo.yy => foo.c + foo.h }( header = foo.h )
-# CHECK-DAG: list[file] gen = [ foo.c foo.h ]
+# CHECK-DAG: build: lex { foo.yy => foo.h foo.c }( )
+# CHECK-DAG: list[file] gen = [ foo.h foo.c ]
 gen = lex(file('foo.yy'), file('foo.c'), header = file('foo.h'));

@@ -16,48 +16,48 @@ YACC = 'byacc';
 # TODO: once include works, extract these into a tools.fab or somesuch
 
 ### Compile one C++ source file into an object file.
-compile_cxx = action('${CXX} -c ${flags} -MMD -MF ${out}.d ${in} -o ${out}',
+compile_cxx = action('${CXX} -c ${flags} -MMD -MF ${depfile} ${src} -o ${obj}',
              description = 'Compiling ${in}'
-	     <- in:file, out:file, depfile:file[out], flags:list[string]);
+	     <- src:file[in], obj:file[out], flags:list[string], depfile:file[out]);
 
 # TODO: default arg
 cxx = function(srcs:list[file], flags:list[string]): list[file]
 	foreach src <- srcs {
 		obj = src + '.o';
-		outs = compile_cxx(in = src, out = obj, depfile = obj + '.d',
-		                   flags = flags);
+		outs = compile_cxx(src, obj, flags, depfile = obj + '.d');
 		obj
 	}
 ;
 
-raw_lex = action('${LEX} ${flags} --header-file=${header} --outfile=${gen} ${in}',
+raw_lex = action('${LEX} ${flags} --header-file=${header} --outfile=${gen} ${src}',
                  description = 'Processing ${in}'
-                 <- in:file, out:file, gen:file[out], header:file[out],
+                 <- src:file[in], gen:file[out], header:file[out],
                     flags:list[string] = []);
 
-lex = function(in:file, out:file, header_out:file, flags:list[string] = []): file
+lex = function(src:file, gen:file, header_out:file, flags:list[string] = []): file
 {
-	lex = raw_lex(in, out, out, header_out, flags);
-	out
+	lex = raw_lex(src, gen, header_out, flags);
+	gen
 };
 
 # Yacc's command-line arguments are confusing and don't expose information like
 # the name of the generated header file, so we wrap it in a function that does.
-raw_yacc = action('${YACC} -d -t -o ${out} ${in}',
+raw_yacc = action('${YACC} -d -t -o ${gen} ${src}',
                   description = 'Processing ${in}'
-                  <- in:file, out:file, header:file[out]);
+                  <- src:file[in], gen:file[out], header:file[out]);
 
-yacc = function(in:file, outname:string): file
+yacc = function(src:file, outname:string): file
 {
 	parser = file(outname + '.cc');
 	header = file(outname + '.h');
-	gen = raw_yacc(in, out = parser, header = header);
+	gen = raw_yacc(src, gen = parser, header = header);
 
 	parser
 };
 
-link_binary = action('${CXX} -o ${out} ${in}', description = 'Linking ${out}'
-                     <- in:list[file], out:file);
+link_binary = action('${CXX} -o ${binary} ${objects}',
+                     description = 'Linking ${binary}'
+                     <- objects:list[file[in]], binary:file[out]);
 
 
 #
@@ -147,11 +147,11 @@ cxx_srcs =
 	;
 
 
-lexer = lex(file('Parsing/fab.l'), out = file('Parsing/fab.lex.cc'),
-		flags = [ '-c++'], header_out = file('Parsing/fab.lex.h'));
+lexer = lex(file('Parsing/fab.l'), gen = file('Parsing/fab.lex.cc'),
+            flags = [ '-c++'], header_out = file('Parsing/fab.lex.h'));
 
 parser = yacc(file('Parsing/fab.yy'), 'Parsing/fab.yacc');
 gen = [ lexer parser ];
 objs = cxx(gen, flags = generated_cxx_flags) + cxx(cxx_srcs, normal_cxx_flags);
 
-fab = link_binary(objs, out = file('fab'));
+fab = link_binary(objs, binary = file('fab'));

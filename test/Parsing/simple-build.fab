@@ -6,16 +6,16 @@
 # CHECK: src:file = file('Inputs/foo.c');
 src = file('Inputs/foo.c');
 
-# CHECK: cc:(file)=>file =
-# CHECK:   action('cc -c $in -o $out' <- in:file, out:file);
-cc = action('cc -c $in -o $out' <- in:file, out:file);
+# CHECK: cc:(file)=>file = action(
+# CHECK:   'cc -c $src -o $obj' <- src:file[in], obj:file[out]);
+cc = action('cc -c $src -o $obj' <- src:file[in], obj:file[out]);
 
-# CHECK: link:(file)=>file =
-# CHECK:   action('cc $in -o $out' <- in:file, out:file);
-link = action('cc $in -o $out' <- in:file, out:file);
+# CHECK: link:(list[file])=>file =
+# CHECK:   action('cc $objects -o $bin' <- objects:list[file], bin:file[out]);
+link = action('cc $objects -o $bin' <- objects:list[file], bin:file[out]);
 
 # CHECK: obj:file = cc(src, file('foo.o'));
 obj = cc(src, file('foo.o'));
 
-# CHECK: bin:file = link(obj, file('foo'));
-bin = link(obj, file('foo'));
+# CHECK: bin:file = link([ obj ], file('foo'));
+bin = link([ obj ], file('foo'));

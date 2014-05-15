@@ -61,13 +61,8 @@ public:
 
 	const Rule& buildRule() const { return *rule_; }
 
-	const FileVec& explicitInputs() const { return in_; }
-	const FileVec& dependencies() const { return dependencies_; }
-	const FileVec allInputs() const;
-
-	const FileVec& explicitOutputs() const { return out_; }
-	const FileVec& sideEffectOutputs() const { return extraOutputs_; }
-	const FileVec allOutputs() const;
+	const FileVec inputs() const { return in_; }
+	const FileVec outputs() const { return out_; }
 
 	const ValueMap& arguments() const { return args_; }
 
@@ -78,8 +73,6 @@ private:
 	Build(std::shared_ptr<Rule>&,
 	      SharedPtrVec<File>& inputs,
 	      SharedPtrVec<File>& outputs,
-	      SharedPtrVec<File>& dependencies,
-	      SharedPtrVec<File>& extraOutputs,
 	      const ValueMap& arguments,
 	      const Type&,
 	      SourceRange);
@@ -91,8 +84,6 @@ private:
 	std::shared_ptr<Rule> rule_;
 	SharedPtrVec<File> in_;
 	SharedPtrVec<File> out_;
-	SharedPtrVec<File> dependencies_;
-	SharedPtrVec<File> extraOutputs_;
 	ValueMap args_;
 };
 

@@ -38,8 +38,11 @@
 #include "DAG/Rule.h"
 #include "DAG/Target.h"
 #include "DAG/Value.h"
+
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
+
+#include "Types/FileType.h"
 
 #include <cassert>
 
@@ -133,7 +136,7 @@ void DotBackend::Process(const DAG& dag, Bytestream& out)
 			<< "\"" << build.buildRule().name() << "\""
 			<< Bytestream::Operator << " ];\n";
 
-		for (const shared_ptr<File>& f : build.allInputs())
+		for (const shared_ptr<File>& f : build.inputs())
 			out
 				<< indent_
 				<< Bytestream::Operator << "\""
@@ -143,16 +146,7 @@ void DotBackend::Process(const DAG& dag, Bytestream& out)
 				<< Bytestream::Operator << ";\n"
 				;
 
-		for (const shared_ptr<File>& f : build.explicitOutputs())
-			out
-				<< indent_
-				<< Bytestream::Literal << "\"" << name << "\""
-				<< Bytestream::Operator << " -> \""
-				<< Bytestream::Literal << formatter.Format(*f)
-				<< Bytestream::Operator << "\";\n"
-				;
-
-		for (const shared_ptr<File>& f : build.sideEffectOutputs())
+		for (const shared_ptr<File>& f : build.outputs())
 			out
 				<< indent_
 				<< Bytestream::Literal << "\"" << name << "\""
@@ -182,33 +176,26 @@ string DotFormatter::Format(const Build& build)
 	substrings.push_back(build.buildRule().name());
 	substrings.push_back("{");
 
-	for (auto& i : build.explicitInputs())
-		substrings.push_back(Format(*i));
-
-	if (not build.dependencies().empty())
-		substrings.push_back("+");
-
-	for (auto& i : build.dependencies())
+	for (auto& i : build.inputs())
 		substrings.push_back(Format(*i));
 
 	substrings.push_back("=>");
 
-	for (auto& i : build.explicitOutputs())
-		substrings.push_back(Format(*i));
-
-	if (not build.sideEffectOutputs().empty())
-		substrings.push_back("+");
-
-	for (auto& i : build.sideEffectOutputs())
+	for (auto& i : build.outputs())
 		substrings.push_back(Format(*i));
 
 	substrings.push_back("}");
 
-	if (not build.arguments().empty())
+	std::vector<std::pair<string,shared_ptr<Value>>> arguments;
+	for (auto& i : build.arguments())  // TODO: why does std::copy_if segfault?
+		if (not fabrique::FileType::isFileOrFiles(i.second->type()))
+			arguments.push_back(i);
+
+	if (not arguments.empty())
 	{
 		substrings.push_back("(");
 
-		for (auto& i : build.arguments())
+		for (auto& i : arguments)
 		{
 			substrings.push_back(i.first);
 			substrings.push_back("=");

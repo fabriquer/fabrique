@@ -4,11 +4,11 @@
 #
 
 # CHECK: rule lex
-# CHECK-NEXT:  command = ${LEX} -c++ --yyclass=${classname} --outfile=${out} ${in}
-# CHECK-NEXT:  description = ${LEX} -c++ --yyclass=${classname} --outfile=${out} ${in}
-lex = action('${LEX} -c++ --yyclass=${classname} --outfile=${out} ${in}'
-              <- classname:string);
+# CHECK-NEXT:  command = ${LEX} -c++ --yyclass=${classname} --outfile=${gen} ${src}
+# CHECK-NEXT:  description = ${LEX} -c++ --yyclass=${classname} --outfile=${gen}
+lex = action('${LEX} -c++ --yyclass=${classname} --outfile=${gen} ${src}'
+              <- src:file[in], gen:file[out], classname:string);
 
 # CHECK: build ${buildroot}/foo.c: lex ${srcroot}/foo.yy
 # CHECK-NEXT: classname = FooClass
-gen = lex(files(foo.yy), files(foo.c), classname = 'FooClass');
+gen = lex(file('foo.yy'), file('foo.c'), classname = 'FooClass');

@@ -35,87 +35,80 @@
 #include "Support/Bytestream.h"
 #include "Types/FileType.h"
 #include "Types/FunctionType.h"
+#include "Types/SequenceType.h"
+#include "Types/TypeError.h"
 #include "FabContext.h"
 
 #include <cassert>
 
 using namespace fabrique::ast;
+using fabrique::FileType;
+using fabrique::SequenceType;
 using fabrique::StringMap;
+using fabrique::Type;
 using fabrique::UniqPtrMap;
 using fabrique::UniqPtrVec;
 using std::string;
+
+
+typedef std::function<bool (const Type&)> TypePredicate;
+
+template<class T>
+size_t Count(const UniqPtrVec<T>& values, TypePredicate predicate)
+{
+	size_t count = 0;
+
+	for (auto& v : values)
+	{
+		const Type& t = v->type();
+
+		// If we have a list of input files, treat it as "more than one".
+		if (t.isOrdered())
+		{
+			auto& seqType = dynamic_cast<const SequenceType&>(t);
+			if (predicate(seqType.elementType()))
+				count += 2;
+		}
+		else if (predicate(v->type()))
+		{
+			count += 1;
+		}
+	}
+
+	return count;
+}
 
 
 Action* Action::Create(UniqPtrVec<Argument>& args,
                        UniqPtr<UniqPtrVec<Parameter>>& params,
                        const SourceRange& src, FabContext& ctx)
 {
-	//
-	// Identify the input and output types for FunctionType.
-	//
-	int extraOut = 0;
-	const Parameter *in = NULL, *out = NULL;
-
+	UniqPtrVec<Parameter> parameters;
 	if (params)
-		for (auto i = params->begin(); i != params->end(); i++)
+	{
+		// Verify that all file parameters are either inputs or outputs.
+		for (auto& p : *params)
 		{
-			const Parameter& p = **i;
-			const string name = p.getName().name();
-
-			if (name == "in")
-				in = i->get();
-
-			else if (name == "out")
-				out = i->get();
-
-			else if (p.type().isFile())
+			const Type& t = p->type();
+			if (t.isFile())
 			{
-				auto& t = dynamic_cast<const FileType&>(p.type());
-				if (t.isOutputFile())
-					++extraOut;
+				auto& file = dynamic_cast<const FileType&>(t);
+				if (not file.isInputFile()
+				    and not file.isOutputFile())
+					throw WrongTypeException(
+						"file[in|out]", t, p->source());
 			}
 		}
 
-	//
-	// Build the parameter map.
-	//
-	const static SourceRange& nowhere = SourceRange::None();
+		parameters = std::move(*params);
+	}
+
+	const Type& file = ctx.fileType();
 	const Type& fileList = ctx.fileListType();
-	const bool noExplicitInput = (not params or not in);
-	const bool noExplicitOutput = (not params or not out);
-	UniqPtrVec<Parameter> parameters;
 
-	// If we don't have explicit 'in' or 'out' parameters, generate them.
-	if (noExplicitInput)
-	{
-		UniqPtr<Identifier> name(new Identifier("in", &fileList, nowhere));
-		parameters.push_back(Take(new Parameter(name, fileList)));
-		in = (--parameters.end())->get();
-	}
-
-	if (noExplicitOutput)
-	{
-		UniqPtr<Identifier> name(new Identifier("out", &fileList, nowhere));
-		parameters.push_back(Take(new Parameter(name, fileList)));
-		out = (--parameters.end())->get();
-	}
-
-
-	// Add all explicit parameters.
-	if (params)
-		for (auto& p : *params)
-			parameters.push_back(std::move(p));
-
-	// Create the Action (and its type).
-	assert(in);
-	assert(out);
-
-	const Type& returnType =
-		(extraOut > 0 or noExplicitOutput)
-		? fileList
-		: out->type();
-
-	const FunctionType& type = ctx.functionType(in->type(), returnType);
+	const FunctionType& type = ctx.functionType(
+		Count(parameters, FileType::isInput) == 1 ? file : fileList,
+		Count(parameters, FileType::isOutput) == 1 ? file : fileList);
 
 	return new Action(args, parameters, type, src);
 }

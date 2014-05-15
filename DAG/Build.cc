@@ -40,6 +40,7 @@
 #include "Support/Join.h"
 #include "Support/exceptions.h"
 
+#include "Types/FileType.h"
 #include "Types/FunctionType.h"
 #include "Types/TypeError.h"
 
@@ -51,77 +52,47 @@ using std::shared_ptr;
 using std::vector;
 
 
-Build* Build::Create(shared_ptr<Rule>& rule, SharedPtrMap<Value>& args,
+Build* Build::Create(shared_ptr<Rule>& rule, SharedPtrMap<Value>& arguments,
                      ConstPtrMap<Type>& paramTypes, const SourceRange& src)
 {
-	SharedPtrVec<File> inputs, outputs, dependencies, extraOutputs;
-	ValueMap arguments;
+	SharedPtrVec<File> inputs, outputs;
 
-	for (auto& i : args)
+	for (auto& i : arguments)
 	{
 		const std::string& name = i.first;
 		shared_ptr<Value>& arg = i.second;
-		const Type& type = i.second->type();
+		const Type& argType = i.second->type();
+		const Type& paramType = *paramTypes[name];
 
-		if (name == "in")
+		if (not argType.isSubtype(paramType))
+			throw WrongTypeException(paramType, argType, arg->source());
+
+		if (FileType::isInput(paramType))
 			AppendFiles(arg, inputs);
 
-		else if (name == "out")
+		else if (FileType::isOutput(paramType))
 			AppendFiles(arg, outputs, true);
-
-		else if (type.isFile())
-		{
-			const Type& paramType = *paramTypes[name];
-
-			if (paramType.typeParamCount() == 0)
-				throw SemanticException(
-					"file missing [in] or [out] tag", src);
-
-			if (paramType[0].name() == "in")
-			{
-				AppendFiles(arg, dependencies);
-			}
-			else if (paramType[0].name() == "out")
-			{
-				AppendFiles(arg, extraOutputs, true);
-				arguments[name] = arg;
-			}
-			else
-				throw WrongTypeException("file[in|out]",
-					paramType, src);
-		}
-
-		else
-			arguments[name] = arg;
 	}
 
-	// TODO: allow input-less actions (e.g. 'cat uname -a > file')?
-	assert(not inputs.empty());
 	assert(not outputs.empty());
 
 	const File& out = *outputs.front();
 	const Type& type =
-		(outputs.size() == 1 and extraOutputs.empty()
-		 and out.type().isFile())
-			? out.type()
+		(outputs.size() == 1)
+		 	? outputs.front()->type()
 			: Type::ListOf(out.type(), out.source());
 
-	return new Build(rule, inputs, outputs, dependencies, extraOutputs,
-	                 arguments, type, src);
+	return new Build(rule, inputs, outputs, arguments, type, src);
 }
 
 
 Build::Build(shared_ptr<Rule>& rule,
              SharedPtrVec<File>& inputs,
              SharedPtrVec<File>& outputs,
-             SharedPtrVec<File>& dependencies,
-             SharedPtrVec<File>& extraOutputs,
              const ValueMap& arguments,
              const Type& t,
              SourceRange location)
-	: Value(t, location), rule_(rule),
-	  in_(inputs), out_(outputs), dependencies_(dependencies),
-	  extraOutputs_(extraOutputs),
+	: Value(t, location), rule_(rule), in_(inputs), out_(outputs),
 	  args_(arguments)
 {
 	for (auto& f : in_)
@@ -129,54 +100,10 @@ Build::Build(shared_ptr<Rule>& rule,
 
 	for (auto& f : out_)
 		assert(f);
-
-	for (auto& f : dependencies_)
-		assert(f);
-
-	for (auto& f : extraOutputs_)
-		assert(f);
 }
 
 
-const Build::FileVec Build::allInputs() const
-{
-	FileVec everything;
-
-	for (shared_ptr<File> f : in_)
-		everything.push_back(f);
-
-	for (shared_ptr<File> f : dependencies_)
-		everything.push_back(f);
-
-	return everything;
-}
-
-
-const Build::FileVec Build::allOutputs() const
-{
-	FileVec all;
-
-	for (shared_ptr<File> f : out_)
-		all.push_back(f);
-
-	for (shared_ptr<File> f : extraOutputs_)
-	{
-		const std::string name = f->fullName();
-
-		auto sameName = [&] (shared_ptr<File>& x)
-		{
-			return (x->fullName() == name);
-		};
-
-		if (find_if(all.begin(), all.end(), sameName) == all.end())
-			all.push_back(f);
-	}
-
-	return all;
-}
-
-
-void Build::PrettyPrint(Bytestream& out, size_t indent) const
+void Build::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
 	out
 		<< Bytestream::Reference << rule_->name() << " "
@@ -191,16 +118,6 @@ void Build::PrettyPrint(Bytestream& out, size_t indent) const
 	for (const shared_ptr<File>& f : out_)
 		out << *f << " ";
 
-	if (extraOutputs_.size() > 0)
-	{
-		out << " + ";
-		for (shared_ptr<File> f : extraOutputs_)
-		{
-			f->PrettyPrint(out, indent);
-			out << " ";
-		}
-	}
-
 	out << Bytestream::Operator << "}";
 
 	if (args_.size() > 0)
@@ -209,6 +126,9 @@ void Build::PrettyPrint(Bytestream& out, size_t indent) const
 
 		for (auto& j : args_)
 		{
+			if (FileType::isFileOrFiles(j.second->type()))
+				continue;
+
 			out
 				<< Bytestream::Definition << j.first
 				<< Bytestream::Operator << " = "
@@ -231,10 +151,10 @@ void Build::Accept(Visitor& v) const
 		for (auto a : args_)
 			a.second->Accept(v);
 
-		for (auto f : allInputs())
+		for (auto f : inputs())
 			f->Accept(v);
 
-		for (auto f : allOutputs())
+		for (auto f : outputs())
 			f->Accept(v);
 	}
 }

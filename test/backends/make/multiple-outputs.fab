@@ -4,9 +4,9 @@
 #
 
 lex = action('${LEX} -c++ --header-file=${header} --outfile=${out} ${in}'
-              <- in:file, out:file, header:file[out]);
+              <- in:file[in], out:file[out], header:file[out]);
 
-# CHECK: ${buildroot}/foo.c ${buildroot}/foo.h : ${srcroot}/foo.yy
+# CHECK: ${buildroot}/foo.h ${buildroot}/foo.c : ${srcroot}/foo.yy
 # CHECK-NEXT: echo "${LEX}
 # CHECK-NEXT: ${LEX} -c++ --header-file=${buildroot}/foo.h --outfile=${buildroot}/foo.c ${srcroot}/foo.yy
 gen = lex(file('foo.yy'), file('foo.c'), header = file('foo.h'));

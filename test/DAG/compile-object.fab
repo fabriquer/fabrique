@@ -7,7 +7,7 @@
 src = file('Inputs/foo.c');
 
 # CHECK-DAG: (file)=>file cc = cc -c -D $foo $in -o $out
-cc = action('cc -c -D $foo $in -o $out' <- in:file, out:file, foo:string);
+cc = action('cc -c -D $foo $in -o $out' <- in:file[in], out:file[out], foo:string);
 
 # CHECK-DAG: build: cc { Inputs/foo.c => foo.o }( foo = 'SOME_DEFINITION' )
 # CHECK-DAG: file obj = foo.o

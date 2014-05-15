@@ -3,7 +3,7 @@
 # RUN: FileCheck %s -input-file %t/Makefile
 #
 
-cc = action('${CC} ${in} -o ${out}' <- in:file, out:file);
+cc = action('${CC} ${in} -o ${out}' <- in:file[in], out:file[out]);
 
 # CHECK-DAG: ${buildroot}/foo/subdir:
 # CHECK-DAG: mkdir -p "${buildroot}/foo/subdir"

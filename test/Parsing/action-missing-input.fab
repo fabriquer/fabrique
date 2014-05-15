@@ -3,10 +3,10 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-cc = action('cc -c $in -o $out' <- in:file, out:file);
+cc = action('cc -c $src -o $obj' <- src:file[in], obj:file[out]);
 
-# CHECK: {{.*}}.fab:[[line:[0-9]+]]:{{.*}} missing argument to 'in'
-obj = cc(out = file('foo.c'));
+# CHECK: {{.*}}.fab:[[line:[0-9]+]]:{{.*}} missing argument to 'src'
+obj = cc(obj = file('foo.c'));
 
-# CHECK: [[line]] obj = cc(out = file('foo.c'));
+# CHECK: [[line]] obj = cc(obj = file('foo.c'));
 # CHECK-NEXT:           ^~~~~~~~~~~~~~~~~~~~~~~
