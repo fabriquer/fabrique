@@ -30,6 +30,8 @@
  */
 
 #include "Types/FileType.h"
+#include "Types/SequenceType.h"
+#include "Types/TypeError.h"
 #include "Support/exceptions.h"
 
 #include <cassert>
@@ -39,6 +41,53 @@ using namespace fabrique;
 
 static const char *InTagName = "in";
 static const char *OutTagName = "out";
+
+
+bool FileType::isInput(const Type& t)
+{
+	if (t.isFile())
+		return dynamic_cast<const FileType&>(t).isInputFile();
+
+	if (t.isOrdered())
+		return isInput(dynamic_cast<const SequenceType&>(t).elementType());
+
+	return false;
+}
+
+bool FileType::isOutput(const Type& t)
+{
+	if (t.isFile())
+		return dynamic_cast<const FileType&>(t).isOutputFile();
+
+	if (t.isOrdered())
+		return isOutput(dynamic_cast<const SequenceType&>(t).elementType());
+
+	return false;
+}
+
+bool FileType::isFileOrFiles(const Type& t)
+{
+	if (t.isOrdered())
+		return isFileOrFiles(
+			dynamic_cast<const SequenceType&>(t).elementType());
+
+	return t.isFile();
+}
+
+void FileType::CheckFileTags(const Type& t, SourceRange src)
+{
+	if (t.isFile())
+	{
+		auto& file = dynamic_cast<const FileType&>(t);
+		if (not file.isInputFile() and not file.isOutputFile())
+			throw WrongTypeException("file[in|out]", file, src);
+	}
+	else if (t.isOrdered())
+	{
+		auto& seq = dynamic_cast<const SequenceType&>(t);
+		CheckFileTags(seq.elementType(), src);
+	}
+}
 
 
 FileType::FileType(Tag tag, const PtrVec<Type>& params, FabContext& ctx)

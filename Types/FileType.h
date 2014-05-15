@@ -45,6 +45,11 @@ class SourceRange;
 class FileType : public Type
 {
 public:
+	static bool isInput(const Type&);
+	static bool isOutput(const Type&);
+	static bool isFileOrFiles(const Type&);
+	static void CheckFileTags(const Type&, SourceRange);
+
 	virtual bool isSubtype(const Type&) const override;
 	virtual bool isFile() const override { return true; }
 
