@@ -18,16 +18,19 @@ YACC = 'byacc';
 ### Compile one C++ source file into an object file.
 compile_cxx = action('${CXX} -c ${flags} -MMD -MF ${depfile} ${src} -o ${obj}',
              description = 'Compiling ${in}'
-	     <- src:file[in], obj:file[out], flags:list[string], depfile:file[out]);
+	     <- src:file[in], obj:file[out], flags:list[string], depfile:file[out],
+	        otherDeps:list[file[in]] = []);
 
 # TODO: default arg
-cxx = function(srcs:list[file], flags:list[string]): list[file]
+cxx = function(srcs:list[file], flags:list[string],
+               deps:list[file[in]] = []): list[file]
+{
 	foreach src <- srcs {
 		obj = src + '.o';
-		outs = compile_cxx(src, obj, flags, depfile = obj + '.d');
+		outs = compile_cxx(src, obj, flags, obj + '.d', deps);
 		obj
 	}
-;
+};
 
 raw_lex = action('${LEX} ${flags} --header-file=${header} --outfile=${gen} ${src}',
                  description = 'Processing ${in}'
@@ -151,7 +154,8 @@ lexer = lex(file('Parsing/fab.l'), gen = file('Parsing/fab.lex.cc'),
             flags = [ '-c++'], header_out = file('Parsing/fab.lex.h'));
 
 parser = yacc(file('Parsing/fab.yy'), 'Parsing/fab.yacc');
-gen = [ lexer parser ];
-objs = cxx(gen, flags = generated_cxx_flags) + cxx(cxx_srcs, normal_cxx_flags);
+gen = cxx([ lexer ], flags = generated_cxx_flags, deps = [ parser ])
+	+ cxx([ parser ], flags = generated_cxx_flags);
+objs = gen + cxx(cxx_srcs, normal_cxx_flags);
 
 fab = link_binary(objs, binary = file('fab'));
