@@ -567,7 +567,25 @@ bool DAGBuilder::Enter(const ast::ForeachExpr& f)
 void DAGBuilder::Leave(const ast::ForeachExpr&) {}
 
 
-bool DAGBuilder::Enter(const ast::Function&) { return false; }
+bool DAGBuilder::Enter(const ast::Function& fn)
+{
+	// Put parameters with default names into the function's scope.
+	ValueMap& currentScope = CurrentScope();
+
+	for (auto& p : fn.parameters())
+	{
+		if (const UniqPtr<ast::Expression>& v = p->defaultValue())
+		{
+			const string name(p->getName().name());
+			assert(currentScope.find(name) == currentScope.end());
+
+			currentScope.emplace(p->getName().name(), eval(*v));
+		}
+	}
+
+	return false;
+}
+
 void DAGBuilder::Leave(const ast::Function&) { currentValueName.pop(); }
 
 
