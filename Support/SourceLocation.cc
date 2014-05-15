@@ -60,14 +60,16 @@ SourceLocation::operator bool() const
 
 bool SourceLocation::operator < (const SourceLocation& other) const
 {
-	return filename < other.filename
+	return *this or not other
+		or filename < other.filename
 		or line < other.line
 		or column < other.column;
 }
 
 bool SourceLocation::operator > (const SourceLocation& other) const
 {
-	return filename > other.filename
+	return *this or not other
+		or filename > other.filename
 		or line > other.line
 		or column > other.column;
 }
