@@ -8,17 +8,17 @@ link = action('cc $objects -o $bin' <- objects:list[file[in]], bin:file[out]);
 lex = action('$LEX -c++ --yyclass=$classname --outfile=$gen $src'
               <- src:file[in], gen:file[out], classname:string);
 
-cc_all = function(srcs:list[string]): list[file]
+cc_all = function(srcs:list[file]): list[file]
 {
 	foreach src <- srcs
 	{
-		obj = file(src + '.o');
-		build = cc(file(src), obj);
+		obj = src + '.o';
+		build = cc(src, obj);
 		obj
 	}
 };
 
-srcs = [ 'foo.c' 'bar.c' 'baz.c' ];
+srcs = files(foo.c bar.c baz.c);
 gen = lex(file('foo.yy'), file('foo.c'), classname = 'FooClass');
 objs = cc_all(srcs);
 bin = link(objs, file('foo'));
