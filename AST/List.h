@@ -49,6 +49,8 @@ public:
 	{
 	}
 
+	const UniqPtrVec<Expression>& elements() const { return elements_; }
+
 	using ConstIterator = UniqPtrVec<Expression>::const_iterator;
 	ConstIterator begin() const { return elements_.begin(); }
 	ConstIterator end() const { return elements_.end(); }
