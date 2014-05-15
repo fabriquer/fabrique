@@ -3,17 +3,17 @@
 # RUN: FileCheck %s -input-file %t/build.ninja
 #
 
-cc = action('cc -c ${in} -o ${out}' <- in:file[in], out:file[out]);
-link = action('cc ${in} -o ${out}' <- in:list[file[in]], out:file[out]);
-lex = action('${LEX} -c++ --yyclass=${classname} --outfile=${out} ${in}'
-              <- in:file[in], out:file[out], classname:string);
+cc = action('cc -c ${src} -o ${obj}' <- src:file[in], obj:file[out]);
+link = action('cc ${objects} -o ${bin}' <- objects:list[file[in]], bin:file[out]);
+lex = action('${LEX} -c++ --yyclass=${classname} --outfile=${gen} ${src}'
+              <- src:file[in], gen:file[out], classname:string);
 
 cc_all = function(srcs:list[file]): list[file]
 {
 	foreach src <- srcs
 	{
 		obj = src + '.o';
-		build = cc(in = src, out = obj);
+		build = cc(src, obj);
 		obj
 	}
 };
@@ -21,7 +21,7 @@ cc_all = function(srcs:list[file]): list[file]
 gen = lex(file('foo.yy'), file('foo.c'), classname = 'FooClass');
 srcs = [ gen file('bar.c') ];
 objs = cc_all(srcs);
-bin = link(objs, out = file('foo'));
+bin = link(objs, file('foo'));
 
 
 # CHECK-DAG: build srcs : phony ${buildroot}/foo.c ${srcroot}/bar.c

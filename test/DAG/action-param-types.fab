@@ -5,16 +5,8 @@
 
 
 #
-# An action must specify the types of its inputs other than 'in' and 'out'.
+# An action must specify the types of its inputs.
 #
-# CHECK-DAG: (file)=>list[file] lex = $LEX -c++ --header-file=$header --outfile=$out $in
-lex = action('$LEX -c++ --header-file=$header --outfile=$out $in'
-              <- in:file[in], out:file[out], header:file[out]);
-
-#
-# An action *may* specify the types of 'in' and 'out'. This is useful when
-# e.g. you know that the input will only ever be a single file, not a list
-# of files.
-#
-# CHECK-DAG: (list[file])=>file cxx = $CXX -c $in -o $out
-cxx = action('$CXX -c $in -o $out' <- in:list[file[in]], out:file[out]);
+# CHECK-DAG: (file)=>list[file] lex = $LEX -c++ --header-file=$header --outfile=$gen $src
+lex = action('$LEX -c++ --header-file=$header --outfile=$gen $src'
+              <- src:file[in], gen:file[out], header:file[out]);

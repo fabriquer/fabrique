@@ -32,6 +32,7 @@
 #include "AST/Parameter.h"
 #include "AST/Visitor.h"
 #include "Support/Bytestream.h"
+#include "Support/exceptions.h"
 
 using namespace fabrique::ast;
 
@@ -41,6 +42,8 @@ Parameter::Parameter(UniqPtr<Identifier>& name, const Type& resultTy,
 	: Expression(resultTy, SourceRange::Over(name, defaultValue)),
 	  name_(std::move(name)), defaultValue_(std::move(defaultValue))
 {
+	if (name_->reservedName())
+		throw SyntaxError("reserved name", name_->source());
 }
 
 

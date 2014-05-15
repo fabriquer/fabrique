@@ -3,11 +3,11 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK-DAG: (file)=>file compile_one_cxx_file = $CXX -c $cxxflags
-compile_one_cxx_file = action('$CXX -c $cxxflags -MMD -MF $out.d $in -o $out',
-	description = 'Compiling $in', depfile = '$out.d'
-	<- in:file[in], out:file[out]);
+# CHECK-DAG: (file)=>list[file] compile_one_cxx_file = $CXX -c $cxxflags
+compile_one_cxx_file = action('$CXX -c $cxxflags -MMD -MF $depfile $src -o $obj',
+	description = 'Compiling $src'
+	<- src:file[in], obj:file[out], depfile:file[out]);
 
-# CHECK-DAG: build: compile_one_cxx_file { a.cc => a.o }
-# CHECK-DAG: file single_object = a.o
-single_object = compile_one_cxx_file(file('a.cc'), out = file('a.o'));
+# CHECK-DAG: build: compile_one_cxx_file { a.cc => a.o{{(.d)?}} a.o{{(.d)?}} }
+# CHECK-DAG: list[file] single_object = [ a.o{{(.d)?}} a.o{{(.d)?}} ]
+single_object = compile_one_cxx_file(file('a.cc'), obj = file('a.o'), depfile = file('a.o.d'));

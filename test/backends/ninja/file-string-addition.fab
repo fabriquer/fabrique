@@ -9,7 +9,7 @@ foo = file('foo.txt');
 # CHECK-DAG: build bar : phony ${srcroot}/foo.txt.gz
 bar = foo + '.gz';
 
-process = action('process ${in} -o ${out}' <- in:file[in], out:file[out]);
+process = action('process ${src} -o ${gen}' <- src:file[in], gen:file[out]);
 
 # CHECK-DAG: build ${buildroot}/foo.txt.out: process ${srcroot}/foo.txt
 foo_out = process(foo, foo + '.out');

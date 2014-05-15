@@ -6,11 +6,11 @@
 # CHECK-DAG: list[file] srcs = [ foo.c bar.c baz.c ]
 srcs = files(foo.c bar.c baz.c);
 
-# CHECK-DAG: (file)=>file cc = cc -c $in -o $out
-cc = action('cc -c $in -o $out' <- in:file[in], out:file[out]);
+# CHECK-DAG: (file)=>file cc = cc -c $src -o $obj
+cc = action('cc -c $src -o $obj' <- src:file[in], obj:file[out]);
 
-# CHECK-DAG: (list[file])=>file link = cc $in -o $out
-link = action('cc $in -o $out' <- in:list[file[in]], out:file[out]);
+# CHECK-DAG: (list[file])=>file link = cc $objects -o $bin
+link = action('cc $objects -o $bin' <- objects:list[file[in]], bin:file[out]);
 
 # CHECK-DAG: list[file] objs = [ foo.c.o bar.c.o baz.c.o ]
 # CHECK-DAG: build: cc { foo.c => foo.c.o }
@@ -19,10 +19,10 @@ link = action('cc $in -o $out' <- in:list[file[in]], out:file[out]);
 objs = foreach src <- srcs
 {
 	obj = src + '.o';
-	build = cc(in = src, out = obj);
+	build = cc(src, obj);
 	obj
 };
 
 # CHECK-DAG: build: link { foo.c.o bar.c.o baz.c.o => foo }
 # CHECK-DAG: file bin = foo
-bin = link(objs, out = file('foo'));
+bin = link(objs, file('foo'));

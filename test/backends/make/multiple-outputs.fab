@@ -3,8 +3,8 @@
 # RUN: FileCheck %s -input-file %t/Makefile
 #
 
-lex = action('${LEX} -c++ --header-file=${header} --outfile=${out} ${in}'
-              <- in:file[in], out:file[out], header:file[out]);
+lex = action('${LEX} -c++ --header-file=${header} --outfile=${gen} ${src}'
+              <- src:file[in], gen:file[out], header:file[out]);
 
 # CHECK: ${buildroot}/foo.{{[ch]}} ${buildroot}/foo.{{[ch]}} : ${srcroot}/foo.yy
 # CHECK-NEXT: echo "${LEX}

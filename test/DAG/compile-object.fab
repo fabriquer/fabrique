@@ -6,9 +6,9 @@
 # CHECK-DAG: file src = Inputs/foo.c
 src = file('Inputs/foo.c');
 
-# CHECK-DAG: (file)=>file cc = cc -c -D $foo $in -o $out
-cc = action('cc -c -D $foo $in -o $out' <- in:file[in], out:file[out], foo:string);
+# CHECK-DAG: (file)=>file cc = cc -c -D $foo $src -o $obj
+cc = action('cc -c -D $foo $src -o $obj' <- src:file[in], obj:file[out], foo:string);
 
 # CHECK-DAG: build: cc { Inputs/foo.c => foo.o }( foo = 'SOME_DEFINITION' )
 # CHECK-DAG: file obj = foo.o
-obj = cc(src, out = file('foo.o'), foo = 'SOME_DEFINITION');
+obj = cc(src, file('foo.o'), foo = 'SOME_DEFINITION');

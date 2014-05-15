@@ -3,8 +3,8 @@
 # RUN: FileCheck %s -input-file %t/Makefile
 #
 
-lex = action('${LEX} -c++ --yyclass=${classname} --outfile=${out} ${in}'
-              <- in:file[in], out:file[out], classname:string);
+lex = action('${LEX} -c++ --yyclass=${classname} --outfile=${gen} ${src}'
+              <- src:file[in], gen:file[out], classname:string);
 
 # CHECK: ${buildroot}/foo.c : ${srcroot}/foo.yy
 # CHECK-NEXT: echo "${LEX}

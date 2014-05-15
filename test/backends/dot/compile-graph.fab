@@ -3,21 +3,21 @@
 # RUN: FileCheck %s -input-file %t/build.dot
 #
 
-lex = action('$LEX -c++ --header=$header --outfile=$out $in'
-              <- in:file[in], out:file[out], header:file[out]);
+lex = action('$LEX -c++ --header=$header --outfile=$gen $src'
+              <- src:file[in], gen:file[out], header:file[out]);
 
-cc = action('$CC -c $in -o $out' <- in:file[in], out:file[out]);
-link = action('$CC $in -o $out' <- in:list[file[in]], out:file[out]);
+cc = action('$CC -c $src -o $obj' <- src:file[in], obj:file[out]);
+link = action('$CC $objects -o $bin' <- objects:list[file[in]], bin:file[out]);
 
 # CHECK-DAG: "foo.yy" -> [[BUILD:"lex { foo.yy => foo.[ch] foo.[ch] }"]];
 # CHECK-DAG: [[BUILD]] -> "foo.c";
 # CHECK-DAG: [[BUILD]] -> "foo.h";
 foo_c = file('foo.c');
-foo_lex = lex(file('foo.yy'), out = foo_c, header = file('foo.h'));
+foo_lex = lex(file('foo.yy'), gen = foo_c, header = file('foo.h'));
 
 # CHECK-DAG: "foo.c" -> "cc { foo.c => foo.o }{{.*}}";
 # CHECK-DAG: "cc { foo.c => foo.o }{{.*}}" -> "foo.o"
-foo_o = cc(foo_c, out = file('foo.o'));
+foo_o = cc(foo_c, obj = file('foo.o'));
 
 # CHECK-DAG: "bar.c" -> "cc { bar.c => bar.o }{{.*}}";
 # CHECK-DAG: "cc { bar.c => bar.o }{{.*}}" -> "bar.o"
@@ -26,4 +26,4 @@ bar_o = cc(file('bar.c'), file('bar.o'));
 # CHECK-DAG: "foo.o" -> "link { foo.o bar.o => bin }{{.*}}";
 # CHECK-DAG: "bar.o" -> "link { foo.o bar.o => bin }{{.*}}";
 # CHECK-DAG: "link { foo.o bar.o => bin }{{.*}}" -> "bin";
-bin = link(in = [ foo_o bar_o ], out = file('bin'));
+bin = link(objects = [ foo_o bar_o ], bin = file('bin'));

@@ -4,10 +4,10 @@
 #
 
 # CHECK-DAG: rule lex
-# CHECK-DAG:  command = ${LEX} -c++ --header-file=${header} --outfile=${out} ${in}
-# CHECK-DAG:  description = ${LEX} -c++ --header-file=${header} --outfile=${out} ${in}
-lex = action('${LEX} -c++ --header-file=${header} --outfile=${out} ${in}'
-              <- in:file[in], out:file[out], header:file[out]);
+# CHECK-DAG:  command = ${LEX} -c++ --header-file=${header} --outfile=${gen} ${src}
+# CHECK-DAG:  description = ${LEX} -c++ --header-file=${header} --outfile=${gen}
+lex = action('${LEX} -c++ --header-file=${header} --outfile=${gen} ${src}'
+              <- src:file[in], gen:file[out], header:file[out]);
 
 # CHECK-DAG: rule cxx
 # CHECK-DAG:  command = ${CXX} -c ${flags} -MMD -MF ${depfile} ${src} -o ${obj}
