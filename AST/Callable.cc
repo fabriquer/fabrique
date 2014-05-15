@@ -63,6 +63,19 @@ const std::set<string>& Callable::parameterNames() const
 void Callable::CheckArguments(const UniqPtrVec<Argument>& args,
                               const SourceRange& src) const
 {
+	const auto& names = parameterNames();
+
+	for (auto& a : args)
+	{
+		if (a->hasName())
+		{
+			const string name(a->getName().name());
+			if (find(names.begin(), names.end(), name) == names.end())
+				throw SemanticException(
+					"invalid parameter", a->source());
+		}
+	}
+
 	StringMap<const Argument*> namedArguments = NameArguments(args);
 
 	for (auto& p : params_)
