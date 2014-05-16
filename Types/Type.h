@@ -37,12 +37,12 @@
 #include "ADT/PtrVec.h"
 #include "Support/Printable.h"
 #include "Support/Uncopyable.h"
-#include "FabContext.h"
 
 #include <string>
 
 namespace fabrique {
 
+class FabContext;
 class SourceRange;
 
 

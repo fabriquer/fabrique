@@ -31,6 +31,7 @@
 
 #include "Types/StringType.h"
 #include "Support/SourceLocation.h"
+#include "FabContext.h"
 using namespace fabrique;
 
 

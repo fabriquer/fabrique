@@ -51,6 +51,8 @@
 #include "Types/Type.h"
 #include "Types/TypeError.h"
 
+#include "FabContext.h"
+
 #include <cassert>
 #include <deque>
 #include <stack>

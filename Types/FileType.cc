@@ -33,6 +33,7 @@
 #include "Types/SequenceType.h"
 #include "Types/TypeError.h"
 #include "Support/exceptions.h"
+#include "FabContext.h"
 
 #include <cassert>
 

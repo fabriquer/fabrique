@@ -30,6 +30,7 @@
  */
 
 #include "Types/SequenceType.h"
+#include "FabContext.h"
 #include <cassert>
 using namespace fabrique;
 
