@@ -140,6 +140,7 @@ public:
 	VISIT(ast::ForeachExpr)
 	VISIT(ast::Function)
 	VISIT(ast::Identifier)
+	VISIT(ast::Import)
 	VISIT(ast::IntLiteral)
 	VISIT(ast::List)
 	VISIT(ast::Parameter)
@@ -593,6 +594,10 @@ void DAGBuilder::Leave(const ast::Function&) { currentValueName.pop(); }
 
 bool DAGBuilder::Enter(const ast::Identifier&) { return false; }
 void DAGBuilder::Leave(const ast::Identifier&) {}
+
+
+bool DAGBuilder::Enter(const ast::Import&) { return false; }
+void DAGBuilder::Leave(const ast::Import&) {}
 
 
 bool DAGBuilder::Enter(const ast::IntLiteral& i)

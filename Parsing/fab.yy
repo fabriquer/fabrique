@@ -102,7 +102,7 @@ static UniqPtrVec<T>* NodeVec(YYSTYPE& yyunion)
 %token WHITESPACE
 %token IDENTIFIER FILENAME
 %token IF ELSE FOREACH AS
-%token ACTION FILE_TOKEN FILES FUNCTION RETURN
+%token ACTION FILE_TOKEN FILES FUNCTION IMPORT RETURN
 %token OPERATOR
 %token INPUT
 %token TRUE FALSE
@@ -134,6 +134,7 @@ expression:
 	{
 		SetOrDie($$, p->Reference(TakeNode<Identifier>($1)));
 	}
+	| import
 	| '[' listElements ']'
 	{
 		SourceRange src(*Take($1.token), *Take($3.token));
@@ -383,6 +384,17 @@ functiondecl:
 identifier:
 	name			/* keep result of 'name' production */
 	| name ':' type		{ SetOrDie($$, p->Id(TakeNode<Identifier>($1), $3.type)); }
+	;
+
+import:
+	IMPORT '(' literal ')'
+	{
+		auto begin = Take($1.token);
+		auto name = TakeNode<StringLiteral>($3);
+		auto end = Take($4.token);
+
+		SetOrDie($$, p->ImportModule(name, SourceRange::Over(begin, end)));
+	}
 	;
 
 listElements:

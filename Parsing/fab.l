@@ -95,6 +95,7 @@ action			SetToken(yylval);		return ACTION;
 files			SetToken(yylval);		return FILES;
 file			SetToken(yylval);		return FILE_TOKEN;
 function		SetToken(yylval);		return FUNCTION;
+import			SetToken(yylval);		return IMPORT;
 return			SetToken(yylval);		return RETURN;
 not			SetToken(yylval);		return NOT;
 and			SetToken(yylval);		return AND;

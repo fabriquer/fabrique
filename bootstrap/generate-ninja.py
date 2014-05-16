@@ -28,7 +28,7 @@ cxx_srcs = {
 	'AST/': (
 		'Action', 'Argument', 'ASTDump', 'BinaryOperation', 'Call',
 		'Callable', 'CompoundExpr', 'Conditional', 'Expression',
-		'Filename', 'FileList', 'Foreach', 'Function', 'Identifier',
+		'Filename', 'FileList', 'Foreach', 'Function', 'Identifier', 'Import',
 		'List', 'Mapping', 'Node', 'Parameter', 'Scope',
 		'SymbolReference', 'UnaryOperation', 'Value', 'Visitor',
 		'literals',

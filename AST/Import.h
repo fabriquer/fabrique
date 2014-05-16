@@ -1,6 +1,6 @@
-/** @file AST/ast.h    Meta-include file for all AST node types. */
+/** @file AST/Import.h    Declaration of @ref fabrique::ast::Import. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,30 +29,40 @@
  * SUCH DAMAGE.
  */
 
-#ifndef AST_H
-#define AST_H
+#ifndef IMPORT_H
+#define IMPORT_H
 
-#include "Action.h"
-#include "Argument.h"
-#include "BinaryOperation.h"
-#include "Builtins.h"
-#include "Call.h"
-#include "CompoundExpr.h"
-#include "Conditional.h"
-#include "Filename.h"
-#include "FileList.h"
-#include "Foreach.h"
-#include "Function.h"
-#include "Identifier.h"
-#include "Import.h"
-#include "List.h"
-#include "Mapping.h"
-#include "Parameter.h"
-#include "Scope.h"
-#include "SymbolReference.h"
-#include "UnaryOperation.h"
-#include "Value.h"
+#include "ADT/UniqPtr.h"
+#include "AST/Expression.h"
 
-#include "literals.h"
+namespace fabrique {
+namespace ast {
+
+class Scope;
+class StringLiteral;
+
+
+/**
+ * An expression that imports a Fabrique module.
+ */
+class Import : public Expression
+{
+public:
+	Import(UniqPtr<StringLiteral>& name, UniqPtr<Scope>&,
+	       const Type&, SourceRange);
+
+	const StringLiteral& name() const { return *name_; }
+	const Scope& scope() const { return *scope_; }
+
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	virtual void Accept(Visitor&) const;
+
+private:
+	const UniqPtr<StringLiteral> name_;
+	const UniqPtr<Scope> scope_;
+};
+
+} // namespace ast
+} // namespace fabrique
 
 #endif

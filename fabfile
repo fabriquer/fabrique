@@ -107,7 +107,7 @@ cxx_srcs =
 		Action.cc Argument.cc ASTDump.cc BinaryOperation.cc
 		Call.cc Callable.cc CompoundExpr.cc Conditional.cc
 		Expression.cc Filename.cc FileList.cc
-		Foreach.cc Function.cc Identifier.cc
+		Foreach.cc Function.cc Identifier.cc Import.cc
 		List.cc Mapping.cc Node.cc Parameter.cc
 		Scope.cc SymbolReference.cc UnaryOperation.cc
 		Value.cc Visitor.cc

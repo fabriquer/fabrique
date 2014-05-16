@@ -63,6 +63,7 @@ public:
 	VISIT(ForeachExpr)
 	VISIT(Function)
 	VISIT(Identifier)
+	VISIT(Import)
 	VISIT(IntLiteral)
 	VISIT(List)
 	VISIT(Parameter)

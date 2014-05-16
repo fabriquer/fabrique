@@ -39,7 +39,9 @@
 #include "Types/FunctionType.h"
 #include "Types/IntegerType.h"
 #include "Types/StringType.h"
+#include "Types/StructureType.h"
 #include "Types/Type.h"
+#include "Support/os.h"
 
 #include "FabContext.h"
 
@@ -355,6 +357,27 @@ Identifier* Parser::Id(UniqPtr<Identifier>&& untyped, const Type *ty)
 	assert(not untyped->isTyped());
 
 	return new Identifier(untyped->name(), ty, loc);
+}
+
+
+Import* Parser::ImportModule(UniqPtr<StringLiteral>& name, SourceRange src)
+{
+	const string filename = name->str();
+
+	std::ifstream input(FindModule(ctx_.srcroot(), "", filename));
+	if (not input.good())
+		throw UserError("Can't open '" + filename + "'");
+
+	EnterScope(filename);
+	UniqPtr<Scope> module = ParseFile(input, filename);
+	if (not module)
+		return nullptr;
+
+	std::vector<StructureType::Field> fields;
+	for (const UniqPtr<Value>& value : module->values())
+		fields.emplace_back(value->name().name(), value->type());
+
+	return new Import(name, module, ctx_.structureType(fields), src);
 }
 
 

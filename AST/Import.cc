@@ -1,6 +1,6 @@
-/** @file AST/ast.h    Meta-include file for all AST node types. */
+/** @file AST/Import.cc    Definition of @ref fabrique::ast::Import. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,30 +29,40 @@
  * SUCH DAMAGE.
  */
 
-#ifndef AST_H
-#define AST_H
+#include "AST/Import.h"
+#include "AST/Scope.h"
+#include "AST/Value.h"
+#include "AST/Visitor.h"
+#include "Support/Bytestream.h"
+#include "Support/exceptions.h"
 
-#include "Action.h"
-#include "Argument.h"
-#include "BinaryOperation.h"
-#include "Builtins.h"
-#include "Call.h"
-#include "CompoundExpr.h"
-#include "Conditional.h"
-#include "Filename.h"
-#include "FileList.h"
-#include "Foreach.h"
-#include "Function.h"
-#include "Identifier.h"
-#include "Import.h"
-#include "List.h"
-#include "Mapping.h"
-#include "Parameter.h"
-#include "Scope.h"
-#include "SymbolReference.h"
-#include "UnaryOperation.h"
-#include "Value.h"
+using namespace fabrique::ast;
 
-#include "literals.h"
 
-#endif
+Import::Import(UniqPtr<StringLiteral>& name, UniqPtr<Scope>& scope,
+               const Type& ty, SourceRange src)
+	: Expression(ty, src), name_(std::move(name)), scope_(std::move(scope))
+{
+}
+
+
+void Import::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+{
+	out
+		<< Bytestream::Action << "import"
+		<< Bytestream::Operator << "("
+		<< *name_
+		<< Bytestream::Operator << ")"
+		;
+}
+
+
+void Import::Accept(Visitor& v) const
+{
+	if (v.Enter(*this))
+	{
+		name_->Accept(v);
+	}
+
+	v.Leave(*this);
+}
