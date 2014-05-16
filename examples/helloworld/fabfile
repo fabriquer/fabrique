@@ -1,0 +1,14 @@
+cc = action('cc -c ${src} -o ${obj}',
+            description = 'Compiling ${src}'
+            <- src:file[in], obj:file[out]);
+
+link = action('cc ${objects} -o ${bin}',
+            description = 'Linking ${bin}'
+              <- objects:list[file[in]], bin:file[out]);
+
+srcs = files(hello.c world.c);
+objs = foreach src <- srcs
+	cc(src, obj = src + '.o')
+	;
+
+helloworld = link(objs, bin = file('hello-world'));
