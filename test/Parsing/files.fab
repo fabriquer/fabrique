@@ -12,7 +12,7 @@ bar = files(     Inputs/foo.txt     );
 # CHECK: baz:list[file] = [ file('Inputs/foo.txt') file('Inputs/baz.txt') ];
 baz = files(
 	Inputs/foo.txt
-	file('Inputs/baz.txt')
+	Inputs/baz.txt
 );
 
 # CHECK: wibble:list[file] = [ file('wibble.txt'), subdir = 'Inputs' ];

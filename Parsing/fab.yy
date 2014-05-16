@@ -343,11 +343,6 @@ fileInList:
 		UniqPtr<Expression> name(p->ParseString(Take($1.token)));
 		SetOrDie($$, p->File(name, name->source()));
 	}
-	| IDENTIFIER
-	{
-		UniqPtr<Expression> name(p->ParseString(Take($1.token)));
-		SetOrDie($$,p->File(name, name->source()));
-	}
 	;
 
 foreach:

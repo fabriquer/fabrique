@@ -51,6 +51,10 @@ size_t		yycolumn = 1;
 %x SQSTR
 %x DQSTR
 
+/* raw filenames can only be used inside of 'files()': */
+%x SAW_FILES
+%x IN_FILES
+
 comment		#.*\n
 identifier	[_a-zA-Z][_a-zA-Z0-9]*
 filename	[_a-zA-Z0-9\.\/]+
@@ -84,6 +88,36 @@ whitespace	[ \r]+
 <SQSTR,DQSTR>\n	{ printf("invalid string"); exit(1); }	// other characters
 <SQSTR,DQSTR>.	{ AppendChar(*yytext); }
 
+files			{
+	BEGIN SAW_FILES;
+	SetToken(yylval);
+	return FILES;
+}
+
+<SAW_FILES>\(		{
+	BEGIN IN_FILES;
+	return '(';
+}
+
+<IN_FILES>{filename}	{
+	SetToken(yylval);
+	return FILENAME;
+}
+
+<IN_FILES>\)		{
+	/* Closing parenthesis puts us back in normal mode. */
+	BEGIN 0;
+	SetToken(yylval);
+	return ')';
+}
+
+<IN_FILES>\,		{
+	/* A comma also puts us back (parse arguments, not raw filenames). */
+	BEGIN 0;
+	SetToken(yylval);
+	return ',';
+}
+
 true							return TRUE;
 false							return FALSE;
 {digit}+		yylval->intVal = atoi(yytext);	return INT_LITERAL;
@@ -92,7 +126,6 @@ else			SetToken(yylval);		return ELSE;
 foreach			SetToken(yylval);		return FOREACH;
 as			SetToken(yylval);		return AS;
 action			SetToken(yylval);		return ACTION;
-files			SetToken(yylval);		return FILES;
 file			SetToken(yylval);		return FILE_TOKEN;
 function		SetToken(yylval);		return FUNCTION;
 import			SetToken(yylval);		return IMPORT;
@@ -108,7 +141,6 @@ xor			SetToken(yylval);		return XOR;
 "{"|"}"|"("|")"|"["|"]"	SetToken(yylval);		return *yytext;
 ":"|","|";"|"="		SetToken(yylval);		return *yytext;
 {identifier}		SetToken(yylval);		return IDENTIFIER;
-{filename}		SetToken(yylval);		return FILENAME;
 {tab}			yycolumn += 7;			/* ignore */
 {newline}						/* ignore */
 {whitespace}						/* ignore */
