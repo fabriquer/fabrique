@@ -34,6 +34,7 @@
 #include "Support/Bytestream.h"
 #include "Types/Type.h"
 
+#include <cassert>
 #include <iomanip>
 
 using namespace fabrique::ast;
@@ -43,6 +44,8 @@ Value::Value(UniqPtr<Identifier>& id, UniqPtr<Expression>& value)
 	: Expression(value->type(), SourceRange::Over(id, value)),
 	  name_(std::move(id)), value_(std::move(value))
 {
+	assert(name_);
+	assert(value_);
 }
 
 
