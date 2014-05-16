@@ -278,16 +278,16 @@ unique_ptr<ast::Scope> Parse(const string& filename, FabContext& ctx,
 	int result = yyparse(parser.get());
 	lex.reset();
 
-	if (result == 0)
-	{
-		ast = parser->ExitScope();
-		assert(parser->errors().empty());
-	}
-	else
+	if (result != 0)
 	{
 		for (auto& error : parser->errors())
 			err() << *error << "\n";
+
+		return ast;
 	}
+
+	ast = parser->ExitScope();
+	assert(parser->errors().empty());
 
 	if (printAST)
 	{
