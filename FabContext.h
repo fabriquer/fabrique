@@ -34,6 +34,7 @@
 
 #include "ADT/PtrVec.h"
 #include "Types/Type.h"
+#include "Types/StructureType.h"
 
 #include <map>
 #include <memory>
@@ -79,6 +80,10 @@ public:
 	//! A function type, which incorporates the function's signature.
 	const FunctionType& functionType(const PtrVec<Type>& argumentTypes,
 	                                 const Type& returnType);
+
+	//! A structure type describes its fields' names and types.
+	const StructureType& structureType(
+		const std::vector<StructureType::Field>&);
 
 	//! A string of characters.
 	const Type& stringType();

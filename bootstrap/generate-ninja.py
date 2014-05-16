@@ -50,7 +50,7 @@ cxx_srcs = {
 	),
 	'Types/': (
 		'BooleanType', 'FileType', 'FunctionType', 'IntegerType',
-		'OptionallyTyped', 'SequenceType', 'StringType',
+		'OptionallyTyped', 'SequenceType', 'StringType', 'StructureType',
 		'Type', 'TypeError', 'Typed',
 	),
 	'': (

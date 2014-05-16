@@ -144,7 +144,7 @@ cxx_srcs =
 	+
 	files(
 		BooleanType.cc FileType.cc FunctionType.cc IntegerType.cc
-		OptionallyTyped.cc SequenceType.cc StringType.cc
+		OptionallyTyped.cc SequenceType.cc StringType.cc StructureType.cc
 		Type.cc TypeError.cc Typed.cc
 		,
 		subdir = 'Types'

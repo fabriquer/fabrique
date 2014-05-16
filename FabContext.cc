@@ -150,6 +150,14 @@ FabContext::functionType(const PtrVec<Type>& argTypes, const Type& retType)
 	return *t;
 }
 
+const StructureType&
+FabContext::structureType(const std::vector<StructureType::Field>& fields)
+{
+	StructureType *t = StructureType::Create(fields, *this);
+	//Register(t);
+
+	return *t;
+}
 
 const Type&
 FabContext::Register(Type *t)
