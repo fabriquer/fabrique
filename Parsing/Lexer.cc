@@ -39,6 +39,7 @@
 #include <map>
 
 using namespace fabrique;
+using std::string;
 
 extern int yylineno;
 extern size_t yycolumn;
@@ -96,7 +97,7 @@ SourceRange Lexer::CurrentTokenRange() const
 
 void Lexer::SetComment(YYSTYPE *yyunion, bool includesNewline)
 {
-	std::string s = currentToken_.str();
+	string s = currentToken_.str();
 	SourceRange src = currentToken_.source();
 
 	if (includesNewline)
@@ -151,7 +152,7 @@ void Lexer::EndString(YYSTYPE* yyunion)
 {
 	SourceRange src = range(buffer_.data(), buffer_.size(), stringStart_);
 
-	std::string s(buffer_.data(), 0, buffer_.size());
+	string s(buffer_.data(), 0, buffer_.size());
 	buffer_.clear();
 	yyunion->token = new Token(s, src);
 }
