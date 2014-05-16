@@ -59,7 +59,10 @@ namespace ast {
 class Parser
 {
 public:
-	Parser(FabContext&, const Lexer& lex);
+	Parser(FabContext&);
+
+	//! Parse Fabrique input (usually a file) into a @ref Scope.
+	std::unique_ptr<Scope> ParseFile(std::istream&, std::string name);
 
 	//! Errors encountered during parsing.
 	const UniqPtrVec<ErrorReport>& errors() const { return errs_; }
@@ -74,12 +77,6 @@ public:
 	 * @param  name    a name used to describe the scope (for debugging)
 	 */
 	Scope& EnterScope(const std::string& name);
-
-	/**
-	 * Leave an AST @ref Scope, returning ownership of that scope
-	 * (and, transitively, everything it contains).
-	 */
-	std::unique_ptr<Scope> ExitScope();
 
 
 	//! Find or create a @ref Type.
@@ -209,6 +206,12 @@ public:
 private:
 	Scope& CurrentScope();
 
+	/**
+	 * Leave an AST @ref Scope, returning ownership of that scope
+	 * (and, transitively, everything it contains).
+	 */
+	std::unique_ptr<Scope> ExitScope();
+
 	//! Add an @ref Argument vector to the current scope.
 	void AddToScope(const PtrVec<Argument>&);
 
@@ -216,7 +219,7 @@ private:
 	const ErrorReport& ReportError(const std::string&, const HasSource&);
 
 	FabContext& ctx_;
-	const Lexer& lexer_;
+	Lexer& lexer_;
 
 	UniqPtrVec<ErrorReport> errs_;
 	std::stack<std::unique_ptr<Scope>> scopes_;

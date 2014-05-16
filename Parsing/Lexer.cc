@@ -44,31 +44,60 @@ using std::string;
 extern int yylineno;
 extern size_t yycolumn;
 
+static SourceRange range(const char *text, size_t len, SourceLocation begin);
+
+
+/*
+ * I'd love to get rid of the global yyerror() and yylex() functions
+ * (since they assume that there is only one lexer),
+ * but this is a limitation of byacc.
+ */
+void yyerror(const char *str)
+{
+	Bytestream::Stderr() << Lexer::instance().Err(str);
+}
+
+int yylex(void *yaccUnion)
+{
+	return Lexer::instance().yylex((YYSTYPE*) yaccUnion);
+}
+
+
+Lexer& Lexer::instance()
+{
+	static Lexer& instance = *new Lexer();
+	return instance;
+}
+
 
 Lexer::~Lexer()
 {
 }
 
 
-static SourceRange range(const char *text, size_t len, SourceLocation begin)
+void Lexer::PushFile(std::istream& input, string name)
 {
-	size_t line = begin.line;
-	size_t column = begin.column;
+	yy_buffer_state *buffer = yy_create_buffer(&input, 4096);
+	yypush_buffer_state(buffer);
+	assert(yyin);
 
-	for (size_t i = 0; i < len; i++)
-	{
-		if (text[i] == '\n')
-		{
-			line++;
-			column = 1;
-		}
-		else
-			column++;
-	}
+	filenames_.push(name);
+}
 
-	SourceLocation end(begin.filename, line, column);
+void Lexer::PopFile()
+{
+	assert(not filenames_.empty());
 
-	return SourceRange(begin, end);
+	const string filename = filenames_.top();
+	filenames_.pop();
+
+	Bytestream::Debug("lexer")
+		<< Bytestream::Action << "leaving "
+		<< Bytestream::Filename << filename
+		<< Bytestream::Reset << "\n"
+		;
+
+	yypop_buffer_state();
 }
 
 
@@ -90,7 +119,7 @@ SourceRange Lexer::CurrentTokenRange() const
 {
 	size_t line = static_cast<size_t>(yylineno);
 
-	SourceLocation begin(inputFilename_, line, yycolumn);
+	SourceLocation begin(currentFilename(), line, yycolumn);
 	return range(yytext, yyleng, begin);
 }
 
@@ -158,5 +187,36 @@ void Lexer::EndString(YYSTYPE* yyunion)
 }
 
 
+std::string Lexer::currentFilename() const
+{
+	if (filenames_.empty())
+		return "";
+
+	return filenames_.top();
+}
+
+
 int yyFlexLexer::yylex() { assert(false && "unreachable"); return 0; }
 int yyFlexLexer::yywrap() { return 1; }
+
+
+static SourceRange range(const char *text, size_t len, SourceLocation begin)
+{
+	size_t line = begin.line;
+	size_t column = begin.column;
+
+	for (size_t i = 0; i < len; i++)
+	{
+		if (text[i] == '\n')
+		{
+			line++;
+			column = 1;
+		}
+		else
+			column++;
+	}
+
+	SourceLocation end(begin.filename, line, column);
+
+	return SourceRange(begin, end);
+}

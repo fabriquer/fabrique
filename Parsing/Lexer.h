@@ -39,6 +39,9 @@
 #include "yacc.h"
 
 #include <list>
+#include <stack>
+
+struct yy_buffer_state;
 
 namespace fabrique {
 
@@ -49,8 +52,13 @@ class Token;
 class Lexer : public yyFlexLexer
 {
 public:
-	Lexer(const std::string& in) : inputFilename_(in) {}
+	//! Access the singleton @ref Lexer instance.
+	static Lexer& instance();
+
 	virtual ~Lexer();
+
+	void PushFile(std::istream& input, std::string name);
+	void PopFile();
 
 	Token NextToken() const;
 	SourceRange CurrentTokenRange() const;
@@ -67,7 +75,9 @@ private:
 	void AppendChar(char);
 	void EndString(YYSTYPE*);
 
-	const std::string inputFilename_;
+	std::string currentFilename() const;
+
+	std::stack<std::string> filenames_;
 	UniqPtrVec<ErrorReport> errs_;
 
 	fabrique::Token currentToken_;

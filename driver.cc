@@ -219,55 +219,15 @@ int main(int argc, char *argv[]) {
 }
 
 
-int yyparse(ast::Parser*);
-
-/**
- * This is a bit ugly, but yyerror() and yylex() need a static pointer to
- * the Lexer and we can't do that without a global constructor and exit-time
- * destructor. Manually disable the warnings for this case, and let their
- * ugliness stand as a warning to future generations of programmers who
- * try to use lex.
- */
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wglobal-constructors"
-#pragma clang diagnostic ignored "-Wexit-time-destructors"
-static UniqPtr<Lexer> lex;
-#pragma clang diagnostic pop
-
-/*
- * I'd like to get rid of the global yyerror() and yylex() functions
- * (since they assume that there is only one lexer),
- * but this is a limitation of byacc.
- */
-void yyerror(const char *str)
-{
-	assert(lex);
-	err() << lex->Err(str);
-}
-
-int yylex(void *yaccUnion)
-{
-	assert(lex);
-	return lex->yylex((YYSTYPE*) yaccUnion);
-}
-
-
 unique_ptr<ast::Scope> Parse(const string& filename, FabContext& ctx,
                              bool printAST)
 {
-	unique_ptr<ast::Scope> ast;
-
 	std::ifstream infile(filename.c_str());
 	if (!infile)
 		throw UserError("no such file: '" + filename + "'");
 
-	// Set up lex.
-	lex.reset(new Lexer(filename));
-	lex->switch_streams(&infile, &err().raw());
-
-
-	// Set up the parser.
-	unique_ptr<ast::Parser> parser(new ast::Parser(ctx, *lex));
+	// Create the parser.
+	unique_ptr<ast::Parser> parser(new ast::Parser(ctx));
 
 	//
 	// Define some magic builtins:
@@ -275,18 +235,14 @@ unique_ptr<ast::Scope> Parse(const string& filename, FabContext& ctx,
 	parser->Builtin("srcroot", ctx.srcroot());
 	parser->Builtin("buildroot", ctx.buildroot());
 
-	int result = yyparse(parser.get());
-	lex.reset();
-
-	if (result != 0)
+	unique_ptr<ast::Scope> ast(parser->ParseFile(infile, filename));
+	if (not ast)
 	{
 		for (auto& error : parser->errors())
 			err() << *error << "\n";
 
 		return ast;
 	}
-
-	ast = parser->ExitScope();
 	assert(parser->errors().empty());
 
 	if (printAST)
