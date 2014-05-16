@@ -95,7 +95,9 @@ warnings = [
 ];
 
 normal_cxx_flags = common_cxx_flags + warnings;
-generated_cxx_flags = common_cxx_flags + [ '-Wno-deprecated-register' ];
+generated_cxx_flags =
+	common_cxx_flags + [ '-Wno-deprecated-register' ]
+	+ if debug [ '-D' 'YYDEBUG' ] else [];
 
 
 cxx_srcs =
