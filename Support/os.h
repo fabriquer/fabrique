@@ -52,6 +52,10 @@ std::string DirectoryOf(std::string filename, bool absolute = false);
 //! Find the non-directory component of a path.
 std::string FilenameComponent(std::string pathIncludingDirectory);
 
+//! Find a Fabrique module within the current search paths.
+std::ifstream FindModule(std::string srcroot, std::string subdir,
+                         std::string filename);
+
 //! Join two path components (a directory and a filename).
 std::string JoinPath(const std::string&, const std::string&);
 

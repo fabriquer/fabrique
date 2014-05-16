@@ -34,6 +34,8 @@
 #include "Support/exceptions.h"
 #include "Support/os.h"
 
+#include <fstream>
+
 #include <sys/stat.h>
 
 #include <libgen.h>
@@ -162,6 +164,26 @@ string fabrique::FilenameComponent(string pathIncludingDirectory)
 {
 	const char *cname = pathIncludingDirectory.c_str();
 	return basename(const_cast<char*>(cname));
+}
+
+
+std::ifstream fabrique::FindModule(string srcroot, string subdir, string name)
+{
+	const string paths[] = {
+		srcroot,
+		"/usr/local/share/fabrique",
+	};
+
+	const string relativeName = JoinPath(subdir, name);
+
+	for (const string& path : paths)
+	{
+		const string fullPath = JoinPath(path, relativeName);
+		if (FileExists(fullPath))
+			return std::move(std::ifstream(fullPath));
+	}
+
+	throw UserError("unable to find module '" + name + "'");
 }
 
 
