@@ -152,6 +152,12 @@ const Type& Parser::getType(UniqPtr<Identifier>&& name,
 }
 
 
+const FunctionType& Parser::FnType(const PtrVec<Type>& inputs,
+                                   const Type& output, SourceRange)
+{
+	return ctx_.functionType(inputs, output);
+}
+
 
 Action* Parser::DefineAction(UniqPtr<UniqPtrVec<Argument>>& args,
                              const SourceRange& src,

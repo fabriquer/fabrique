@@ -87,6 +87,8 @@ public:
 	const Type& getType(UniqPtr<Identifier>&&,
 	                    UniqPtr<const PtrVec<Type>>&& params = nullptr);
 
+	const FunctionType& FnType(const PtrVec<Type>& inputs,
+	                           const Type& output, SourceRange);
 
 
 	//! Define a build @ref Action.

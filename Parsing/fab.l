@@ -135,6 +135,7 @@ and			SetToken(yylval);		return AND;
 or			SetToken(yylval);		return OR;
 xor			SetToken(yylval);		return XOR;
 "<-"			SetToken(yylval);		return INPUT;
+"=>"			SetToken(yylval);		return PRODUCES;
 "+"			SetToken(yylval);		return ADD;
 "::"			SetToken(yylval);		return PREFIX;
 ".+"			SetToken(yylval);		return SCALAR_ADD;

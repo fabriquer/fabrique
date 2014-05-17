@@ -33,3 +33,7 @@ foo = function(ints:list[int]): list[int]
 bar = function(names:list[string]): list[file]
 	foreach name <- names
 		file(name);
+
+# CHECK: baz:(int)=>int = function(x:int): int
+# CHECK:   x + 1
+baz:(int)=>int = function(x:int): int x + 1;

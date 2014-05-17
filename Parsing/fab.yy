@@ -9,6 +9,8 @@
 #include "Parsing/fab.yacc.h"
 #include "Parsing/yacc.h"
 
+#include "Types/FunctionType.h"
+
 #include <cassert>
 
 using namespace fabrique;
@@ -104,7 +106,7 @@ static UniqPtrVec<T>* NodeVec(YYSTYPE& yyunion)
 %token IF ELSE FOREACH AS
 %token ACTION FILE_TOKEN FILES FUNCTION IMPORT RETURN
 %token OPERATOR
-%token INPUT
+%token INPUT PRODUCES
 %token TRUE FALSE
 %token NOT
 %token STRING_LITERAL INT_LITERAL
@@ -498,6 +500,17 @@ type:
 		SourceRange end = Take($4.token)->source();
 
 		$$.type = &p->getType("file", begin, end, *$3.types);
+	}
+	| '(' types ')' PRODUCES type
+	{
+		SourceRange begin = Take($1.token)->source();
+		auto argTypes(Take($2.types));
+		SourceRange end = Take($3.token)->source();
+		const Type *returnType = $5.type;
+
+		SourceRange src(begin, end);
+
+		$$.type = &p->FnType(*argTypes, *returnType, src);
 	}
 	;
 

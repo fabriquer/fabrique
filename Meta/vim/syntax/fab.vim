@@ -44,6 +44,7 @@ syn match	fabNot		'\<not\>'
 syn match	fabOr		'\<or\>'
 syn match	fabParen	'[\[\]{}()]'
 syn match	fabPrefix	'::'
+syn match	fabProduces	'=>'
 syn match	fabScalarAdd	'.+'
 syn match	fabSemicolon	';'
 syn match	fabXor		'\<xor\>'
@@ -56,6 +57,7 @@ hi def link	fabNot		Operator
 hi def link	fabOr		Operator
 hi def link	fabParen	Operator
 hi def link	fabPrefix	Operator
+hi def link	fabProduces	Operator
 hi def link	fabScalarAdd	Operator
 hi def link	fabSemicolon	Operator
 hi def link	fabXor		Operator
