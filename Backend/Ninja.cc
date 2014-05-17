@@ -190,13 +190,14 @@ void NinjaBackend::Process(const dag::DAG& dag, Bytestream& out)
 	{
 		const dag::Build& build = *i;
 
-		out << Bytestream::Type << "build";
+		out << Bytestream::Type << "build" << Bytestream::Filename;
 		for (const shared_ptr<File>& f : build.outputs())
 			out << " " << formatter.Format(*f);
 
 		out
 			<< Bytestream::Operator << ": "
-			<< Bytestream::Reference << build.buildRule().name()
+			<< Bytestream::Action << build.buildRule().name()
+			<< Bytestream::Filename
 			;
 
 		for (const shared_ptr<File>& f : build.inputs())
