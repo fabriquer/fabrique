@@ -286,9 +286,9 @@ conditional:
 	;
 
 fieldAccess:
-	expression '.' name
+	reference '.' name
 	{
-		auto structure = TakeNode<Expression>($1);
+		auto structure = TakeNode<SymbolReference>($1);
 		auto field = TakeNode<Identifier>($3);
 
 		SetOrDie($$, p->FieldAccess(structure, field));

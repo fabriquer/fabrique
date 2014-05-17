@@ -30,12 +30,14 @@
  */
 
 #include "AST/FieldAccess.h"
+#include "AST/Identifier.h"
+#include "AST/SymbolReference.h"
 #include "AST/Visitor.h"
 #include "Support/Bytestream.h"
 using namespace fabrique::ast;
 
 
-FieldAccess::FieldAccess(UniqPtr<Expression>& base, UniqPtr<Identifier>& field)
+FieldAccess::FieldAccess(UniqPtr<SymbolReference>& base, UniqPtr<Identifier>& field)
 	: Expression(field->type(), SourceRange::Over(base, field)),
 	  base_(std::move(base)), field_(std::move(field))
 {

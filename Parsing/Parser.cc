@@ -252,7 +252,7 @@ CompoundExpression* Parser::CompoundExpr(UniqPtr<Expression>& result,
 
 
 
-FieldAccess* Parser::FieldAccess(UniqPtr<Expression>& structure,
+FieldAccess* Parser::FieldAccess(UniqPtr<SymbolReference>& structure,
                                  UniqPtr<Identifier>& field)
 {
 	return new class FieldAccess(structure, field);

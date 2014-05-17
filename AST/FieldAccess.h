@@ -34,12 +34,13 @@
 
 #include "ADT/UniqPtr.h"
 #include "AST/Expression.h"
-#include "AST/Identifier.h"
 
 namespace fabrique {
 namespace ast {
 
+class Identifier;
 class StringLiteral;
+class SymbolReference;
 
 
 /**
@@ -48,16 +49,16 @@ class StringLiteral;
 class FieldAccess : public Expression
 {
 public:
-	FieldAccess(UniqPtr<Expression>& base, UniqPtr<Identifier>& field);
+	FieldAccess(UniqPtr<SymbolReference>& base, UniqPtr<Identifier>& field);
 
-	const Expression& base() const { return *base_; }
+	const SymbolReference& base() const { return *base_; }
 	const Identifier& field() const { return *field_; }
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 
 private:
-	const UniqPtr<Expression> base_;
+	const UniqPtr<SymbolReference> base_;
 	const UniqPtr<Identifier> field_;
 };
 

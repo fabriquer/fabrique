@@ -115,7 +115,7 @@ public:
 	                                 SourceRange end = SourceRange::None());
 
 	//! An expression that indirects into a structure.
-	FieldAccess* FieldAccess(UniqPtr<Expression>& structure,
+	FieldAccess* FieldAccess(UniqPtr<SymbolReference>& structure,
 	                         UniqPtr<Identifier>& field);
 
 	//! A @ref Filename that is part of the build DAG.
