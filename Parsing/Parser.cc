@@ -41,6 +41,7 @@
 #include "Types/StringType.h"
 #include "Types/StructureType.h"
 #include "Types/Type.h"
+#include "Types/TypeError.h"
 #include "Support/os.h"
 
 #include "FabContext.h"
@@ -261,6 +262,25 @@ CompoundExpression* Parser::CompoundExpr(UniqPtr<Expression>& result,
 FieldAccess* Parser::FieldAccess(UniqPtr<SymbolReference>& structure,
                                  UniqPtr<Identifier>& field)
 {
+	const Scope& scope =
+		dynamic_cast<const HasScope&>(structure->definition()).scope();
+
+	const Expression *e = scope.Lookup(*field);
+	if (not e)
+		throw SemanticException("no such field", field->source());
+
+	if (field->isTyped())
+	{
+		if (field->type() != e->type())
+			throw WrongTypeException(e->type(), field->type(),
+			                         field->source());
+	}
+	else
+	{
+		assert(e);
+		field.reset(Id(std::move(field), &e->type()));
+	}
+
 	return new class FieldAccess(structure, field);
 }
 
