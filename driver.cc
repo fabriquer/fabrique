@@ -206,6 +206,8 @@ int main(int argc, char *argv[]) {
 			<< Bytestream::ErrorMessage << e
 			;
 	}
+#ifdef NDEBUG
+	// In debug mode, let uncaught exceptions propagate to ease debugging.
 	catch (const std::exception& e)
 	{
 		err()
@@ -213,6 +215,7 @@ int main(int argc, char *argv[]) {
 			<< Bytestream::ErrorMessage << e.what()
 			;
 	}
+#endif
 
 	err() << Bytestream::Reset << "\n";
 	return 1;
