@@ -64,16 +64,23 @@ Structure::~Structure() {}
 void Structure::PrettyPrint(Bytestream& out, size_t indent) const
 {
 	const string tab(indent, '\t');
+	const string innerTab(indent + 1, '\t');
 
-	out << Bytestream::Operator << "{";
+	out << Bytestream::Operator << "{\n"
+		;
 
 	for (auto& i : values_)
 	{
 		out
+			<< innerTab
 			<< i.second->type() << " "
-			<< i.first
+			<< Bytestream::Definition << i.first
 			<< Bytestream::Operator << " = "
-			<< *i.second
+			;
+
+		i.second->PrettyPrint(out, indent + 1);
+
+		out
 			<< Bytestream::Reset << "\n"
 			;
 	}
