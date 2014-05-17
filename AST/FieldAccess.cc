@@ -46,7 +46,11 @@ FieldAccess::FieldAccess(UniqPtr<SymbolReference>& base, UniqPtr<Identifier>& fi
 
 void FieldAccess::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
-	out << *base_ << Bytestream::Operator << "." << *field_;
+	out
+		<< *base_
+		<< Bytestream::Operator << "."
+		<< Bytestream::Reference << field_->name()
+		;
 }
 
 
