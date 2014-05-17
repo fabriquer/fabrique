@@ -1,0 +1,4 @@
+cc = action('cc -c ${src} -o ${obj}' <- src:file[in], obj:file[out]);
+link = action('cc ${objects} -o ${bin}' <- objects:list[file[in]], bin:file[out]);
+lex = action('${LEX} -c++ --yyclass=${classname} --outfile=${gen} ${src}'
+              <- src:file[in], gen:file[out], classname:string);

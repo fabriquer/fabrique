@@ -3,5 +3,15 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: submodule:struct[string] = import('Inputs/submodule.fab');
+# CHECK: submodule:struct[string, (file)=>file, (int)=>int]
+# CHECK:   = import('Inputs/submodule.fab');
 submodule = import('Inputs/submodule.fab');
+
+# CHECK: foo:string = submodule.foo;
+foo = submodule.foo;
+
+# CHECK: bar:(file)=>file = submodule.bar;
+bar:(file)=>file = submodule.bar;
+
+# CHECK: baz:(int)=>int = submodule.baz;
+baz = submodule.baz;
