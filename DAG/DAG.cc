@@ -710,7 +710,7 @@ void DAGBuilder::Leave(const ast::StringLiteral&) {}
 bool DAGBuilder::Enter(const ast::SymbolReference& r)
 {
 	static Bytestream& debug = Bytestream::Debug("dag.lookup");
-	const string& name = r.name().str();
+	const string& name = Type::UntypedPart(r.name().str());
 
 	shared_ptr<Structure> base;
 	shared_ptr<Value> value;
