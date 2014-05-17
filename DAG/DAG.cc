@@ -710,14 +710,57 @@ void DAGBuilder::Leave(const ast::StringLiteral&) {}
 
 bool DAGBuilder::Enter(const ast::SymbolReference& r)
 {
+	static Bytestream& debug = Bytestream::Debug("dag.lookup");
 	const string& name = r.name().str();
 
-	shared_ptr<Value> value = getNamedValue(name);
-	if (not value)
-		throw UndefinedValueException(name, r.source());
+	shared_ptr<Structure> base;
+	shared_ptr<Value> value;
+
+	//
+	// A symbol reference can have multiple dot-separated components:
+	//
+	// foo = bar.baz.wibble;
+	//
+	// In this case, 'bar' and 'bar.baz' must both be structures
+	// (things that can contain named things), but 'wibble' can
+	// be any kind of Value.
+	//
+	// Iterate over each name component.
+	//
+	for (size_t begin = 0, end; begin < name.length(); begin = end + 1)
+	{
+		end = name.find('.', begin + 1);
+		const string component = name.substr(begin, end - begin);
+
+		debug
+			<< Bytestream::Action << "lookup component "
+			<< Bytestream::Operator << "'"
+			<< Bytestream::Literal << component
+			<< Bytestream::Operator << "'"
+			<< Bytestream::Reset << "\n"
+			;
+
+		value = base
+			? base->field(component)
+			: getNamedValue(component);
+
+		if (not value)
+			throw UndefinedValueException(
+				name.substr(0, end), r.source());
+
+		// Is this the last component?
+		if (end == string::npos)
+			break;
+
+		// Not the last component: must be a structure!
+		base = dynamic_pointer_cast<Structure>(value);
+		if (not base)
+			throw SemanticException(
+				name.substr(0, end) + " is not a structure",
+				r.source());
+	}
 
 	currentValue.emplace(value);
-
 	return false;
 }
 
