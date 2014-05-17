@@ -34,6 +34,7 @@
 
 #include "ADT/PtrVec.h"
 #include "ADT/StringMap.h"
+#include "AST/Value.h"
 #include "Support/Uncopyable.h"
 
 #include <map>
