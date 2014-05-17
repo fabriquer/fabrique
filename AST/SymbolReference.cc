@@ -45,6 +45,12 @@ SymbolReference::SymbolReference(UniqPtr<Node>&& name,
 {
 }
 
+
+const Expression& SymbolReference::definition() const
+{
+	return definition_.definition();
+}
+
 void SymbolReference::PrettyPrint(Bytestream& out, size_t indent) const
 {
 	name_->PrettyPrint(out, indent);

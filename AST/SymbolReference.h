@@ -50,7 +50,7 @@ public:
 	SymbolReference(UniqPtr<Node>&& name, const Expression& definition);
 
 	const Node& name() const { return *name_; }
-	const Expression& definition() const { return definition_; }
+	const Expression& definition() const override;
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
