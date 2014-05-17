@@ -49,6 +49,8 @@ public:
 	const PtrVec<Type>& parameterTypes() const { return paramTypes_; }
 	const Type& returnType() const { return retTy_; }
 
+	virtual bool isSubtype(const Type&) const override;
+
 	virtual bool isFunction() const override { return true; }
 
 private:

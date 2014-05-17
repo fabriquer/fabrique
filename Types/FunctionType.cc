@@ -54,6 +54,39 @@ const std::string FunctionType::name() const
 	return name;
 }
 
+
+bool FunctionType::isSubtype(const Type& other) const
+{
+	if (not other.isFunction())
+		return false;
+
+	auto& t = dynamic_cast<const FunctionType&>(other);
+
+	//
+	// Functions are covariant in their return types
+	// and contravariant in their argument types.
+	//
+	// x:(special_int)=>special_int = ...
+	// y:(special_int)=>int = x        # this is ok
+	// z:(int)=>special_int = x        # this is not ok
+	//
+
+	if (t.typeParameters().size() != typeParameters().size())
+		return false;
+
+	for (size_t i = 0; i < typeParameters().size(); i++)
+	{
+		const Type& mine = *typeParameters()[i];
+		const Type& theirs = *t.typeParameters()[i];
+
+		if (not theirs.isSubtype(mine))
+			return false;
+	}
+
+	return retTy_.isSubtype(t.retTy_);
+}
+
+
 void FunctionType::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
 	out
