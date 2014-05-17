@@ -49,6 +49,8 @@ public:
 	const PtrVec<Type>& parameterTypes() const { return paramTypes_; }
 	const Type& returnType() const { return retTy_; }
 
+	virtual bool isFunction() const override { return true; }
+
 private:
 	static FunctionType* Create(const PtrVec<Type>& parameterTypes,
 	                            const Type& retTy);
