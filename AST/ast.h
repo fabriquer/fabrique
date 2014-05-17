@@ -44,6 +44,7 @@
 #include "FileList.h"
 #include "Foreach.h"
 #include "Function.h"
+#include "HasScope.h"
 #include "Identifier.h"
 #include "Import.h"
 #include "List.h"

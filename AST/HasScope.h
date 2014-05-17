@@ -1,4 +1,4 @@
-/** @file AST/Import.cc    Definition of @ref fabrique::ast::Import. */
+/** @file AST/HasScope.h    Declaration of @ref fabrique::ast::HasScope mixin. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -29,40 +29,30 @@
  * SUCH DAMAGE.
  */
 
-#include "AST/Import.h"
-#include "AST/Scope.h"
-#include "AST/Value.h"
-#include "AST/Visitor.h"
-#include "Support/Bytestream.h"
-#include "Support/exceptions.h"
+#ifndef HAS_SCOPE_H
+#define HAS_SCOPE_H
 
-using namespace fabrique::ast;
+#include "ADT/UniqPtr.h"
 
+namespace fabrique {
+namespace ast {
 
-Import::Import(UniqPtr<StringLiteral>& name, UniqPtr<Scope>& scope,
-               const Type& ty, SourceRange src)
-	: Expression(ty, src), HasScope(std::move(scope)), name_(std::move(name))
+class Scope;
+
+/** A mixin type for something that has a @ref fabrique::fabrique::Type. */
+class HasScope
 {
-}
+public:
+	HasScope(UniqPtr<Scope>&&);
+	virtual ~HasScope();
 
+	virtual const Scope& scope() const { return *scope_; }
 
-void Import::PrettyPrint(Bytestream& out, size_t /*indent*/) const
-{
-	out
-		<< Bytestream::Action << "import"
-		<< Bytestream::Operator << "("
-		<< *name_
-		<< Bytestream::Operator << ")"
-		;
-}
+private:
+	const UniqPtr<Scope> scope_;
+};
 
+} // namespace ast
+} // namespace fabrique
 
-void Import::Accept(Visitor& v) const
-{
-	if (v.Enter(*this))
-	{
-		name_->Accept(v);
-	}
-
-	v.Leave(*this);
-}
+#endif

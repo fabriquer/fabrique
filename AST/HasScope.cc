@@ -1,4 +1,4 @@
-/** @file AST/Import.cc    Definition of @ref fabrique::ast::Import. */
+/** @file AST/HasScope.cc    Definition of @ref fabrique::ast::HasScope mixin. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -29,40 +29,16 @@
  * SUCH DAMAGE.
  */
 
-#include "AST/Import.h"
+#include "AST/HasScope.h"
 #include "AST/Scope.h"
-#include "AST/Value.h"
-#include "AST/Visitor.h"
-#include "Support/Bytestream.h"
-#include "Support/exceptions.h"
-
 using namespace fabrique::ast;
 
 
-Import::Import(UniqPtr<StringLiteral>& name, UniqPtr<Scope>& scope,
-               const Type& ty, SourceRange src)
-	: Expression(ty, src), HasScope(std::move(scope)), name_(std::move(name))
+HasScope::HasScope(UniqPtr<Scope>&& s)
+	: scope_(std::move(s))
 {
 }
 
-
-void Import::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+HasScope::~HasScope()
 {
-	out
-		<< Bytestream::Action << "import"
-		<< Bytestream::Operator << "("
-		<< *name_
-		<< Bytestream::Operator << ")"
-		;
-}
-
-
-void Import::Accept(Visitor& v) const
-{
-	if (v.Enter(*this))
-	{
-		name_->Accept(v);
-	}
-
-	v.Leave(*this);
 }

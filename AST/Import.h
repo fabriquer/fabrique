@@ -34,6 +34,7 @@
 
 #include "ADT/UniqPtr.h"
 #include "AST/Expression.h"
+#include "AST/HasScope.h"
 
 namespace fabrique {
 namespace ast {
@@ -45,21 +46,19 @@ class StringLiteral;
 /**
  * An expression that imports a Fabrique module.
  */
-class Import : public Expression
+class Import : public Expression, public HasScope
 {
 public:
 	Import(UniqPtr<StringLiteral>& name, UniqPtr<Scope>&,
 	       const Type&, SourceRange);
 
 	const StringLiteral& name() const { return *name_; }
-	const Scope& scope() const { return *scope_; }
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 
 private:
 	const UniqPtr<StringLiteral> name_;
-	const UniqPtr<Scope> scope_;
 };
 
 } // namespace ast
