@@ -258,7 +258,6 @@ string NinjaFormatter::Format(const String& s)
 
 string NinjaFormatter::Format(const Structure&)
 {
-	assert(false && "called NinjaFormatter::Format(Structure&)");
 	return "";
 }
 

@@ -384,7 +384,6 @@ string MakeFormatter::Format(const String& s)
 
 string MakeFormatter::Format(const Structure&)
 {
-	assert(false && "called MakeFormatter::Format(Structure&)");
 	return "";
 }
 

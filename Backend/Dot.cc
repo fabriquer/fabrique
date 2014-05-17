@@ -242,7 +242,6 @@ string DotFormatter::Format(const String& s)
 
 string DotFormatter::Format(const Structure&)
 {
-	assert(false && "called DotFormatter::Format(Structure&)");
 	return "";
 }
 
