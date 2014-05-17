@@ -61,6 +61,18 @@ Structure::Structure(vector<NamedValue>& values, const Type& t, SourceRange src)
 Structure::~Structure() {}
 
 
+std::shared_ptr<Value> Structure::field(const std::string& name) const
+{
+	for (auto& i : values_)
+	{
+		if (i.first == name)
+			return i.second;
+	}
+
+	return std::shared_ptr<Value>();
+}
+
+
 void Structure::PrettyPrint(Bytestream& out, size_t indent) const
 {
 	const string tab(indent, '\t');

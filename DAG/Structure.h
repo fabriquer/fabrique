@@ -52,6 +52,12 @@ public:
 	static Structure* Create(std::vector<NamedValue>&, const Type&);
 	virtual ~Structure();
 
+	std::shared_ptr<Value> field(const std::string& name) const;
+	std::shared_ptr<Value> operator[] (const std::string& name) const
+	{
+		return field(name);
+	}
+
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	void Accept(Visitor&) const override;
 
