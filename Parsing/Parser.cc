@@ -530,6 +530,22 @@ SymbolReference* Parser::Reference(UniqPtr<Identifier>&& id)
 }
 
 
+SymbolReference* Parser::Reference(UniqPtr<class FieldAccess>&& access)
+{
+	auto& base = dynamic_cast<const HasScope&>(access->base().definition());
+	assert(&base);
+
+	const Expression *e = base.scope().Lookup(access->field());
+	if (not e)
+	{
+		ReportError("struct does not contain value", access->field());
+		return nullptr;
+	}
+
+	return new SymbolReference(std::move(access), *e);
+}
+
+
 UnaryOperation* Parser::UnaryOp(UnaryOperation::Operator op,
                                 const SourceRange& opSrc,
                                 UniqPtr<Expression>& e)

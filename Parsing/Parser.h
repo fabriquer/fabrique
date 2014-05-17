@@ -191,6 +191,7 @@ public:
 
 	//! Reference a @ref Value in scope.
 	SymbolReference* Reference(UniqPtr<Identifier>&&);
+	SymbolReference* Reference(UniqPtr<class FieldAccess>&&);
 
 
 	//! Create a @ref UnaryOperation (currently just 'not').

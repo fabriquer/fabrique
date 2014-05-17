@@ -126,7 +126,6 @@ expression:
 	| call
 	| conditional
 	| '(' expression ')'	{ SetOrDie($$, $2.node); }
-	| fieldAccess
 	| file
 	| fileList
 	| foreach
@@ -461,6 +460,11 @@ parameterList:
 	;
 
 reference:
+	fieldAccess
+	{
+		SetOrDie($$, p->Reference(TakeNode<FieldAccess>($1)));
+	}
+	|
 	identifier
 	{
 		SetOrDie($$, p->Reference(TakeNode<Identifier>($1)));
