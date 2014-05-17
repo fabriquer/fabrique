@@ -526,7 +526,7 @@ SymbolReference* Parser::Reference(UniqPtr<Identifier>&& id)
 		return nullptr;
 	}
 
-	return new SymbolReference(std::move(id), *e, id->source());
+	return new SymbolReference(std::move(id), *e);
 }
 
 

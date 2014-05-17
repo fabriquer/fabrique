@@ -37,10 +37,9 @@ using namespace fabrique::ast;
 
 
 SymbolReference::SymbolReference(UniqPtr<Identifier>&& name,
-                                 const Expression& definition,
-                                 const SourceRange& src)
-	: Expression(definition.type(), src), name_(std::move(name)),
-	  definition_(definition)
+                                 const Expression& definition)
+	: Expression(definition.type(), name->source()),
+	  name_(std::move(name)), definition_(definition)
 {
 }
 

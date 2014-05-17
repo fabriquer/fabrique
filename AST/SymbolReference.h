@@ -47,8 +47,7 @@ namespace ast {
 class SymbolReference : public Expression
 {
 public:
-	SymbolReference(UniqPtr<Identifier>&&, const Expression& definition,
-	                const SourceRange&);
+	SymbolReference(UniqPtr<Identifier>&& name, const Expression& definition);
 
 	const Identifier& name() const { return *name_; }
 	const Expression& definition() const { return definition_; }
