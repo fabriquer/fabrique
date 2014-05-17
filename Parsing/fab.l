@@ -57,7 +57,7 @@ size_t		yycolumn = 1;
 
 comment		#.*\n
 identifier	[_a-zA-Z][_a-zA-Z0-9]*
-filename	[_a-zA-Z0-9\.\/]+
+filename	[_a-zA-Z0-9\.\/\-]+
 digit		[0-9]
 tab		[\t]
 newline		[\n]
