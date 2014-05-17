@@ -33,13 +33,13 @@
 #define SYMBOL_REFERENCE_H
 
 #include "Expression.h"
-#include "Identifier.h"
-#include "Value.h"
 
 #include <memory>
 
 namespace fabrique {
 namespace ast {
+
+class Node;
 
 /**
  * A reference to a named symbol.
@@ -47,16 +47,16 @@ namespace ast {
 class SymbolReference : public Expression
 {
 public:
-	SymbolReference(UniqPtr<Identifier>&& name, const Expression& definition);
+	SymbolReference(UniqPtr<Node>&& name, const Expression& definition);
 
-	const Identifier& name() const { return *name_; }
+	const Node& name() const { return *name_; }
 	const Expression& definition() const { return definition_; }
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 
 private:
-	const std::unique_ptr<Identifier> name_;
+	const std::unique_ptr<Node> name_;
 	const Expression& definition_;
 };
 

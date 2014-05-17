@@ -29,14 +29,16 @@
  * SUCH DAMAGE.
  */
 
+#include "AST/Node.h"
 #include "AST/SymbolReference.h"
 #include "AST/Visitor.h"
+
 #include "Support/Bytestream.h"
 
 using namespace fabrique::ast;
 
 
-SymbolReference::SymbolReference(UniqPtr<Identifier>&& name,
+SymbolReference::SymbolReference(UniqPtr<Node>&& name,
                                  const Expression& definition)
 	: Expression(definition.type(), name->source()),
 	  name_(std::move(name)), definition_(definition)

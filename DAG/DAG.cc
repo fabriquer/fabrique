@@ -385,7 +385,7 @@ bool DAGBuilder::Enter(const ast::Call&) { return false; }
 void DAGBuilder::Leave(const ast::Call& call)
 {
 	const ast::SymbolReference& ref = call.target();
-	const string name = ref.name().name();
+	const string name = ref.name().str();
 	auto& target = dynamic_cast<const ast::Callable&>(ref.definition());
 
 	ValueMap args;
@@ -710,7 +710,7 @@ void DAGBuilder::Leave(const ast::StringLiteral&) {}
 
 bool DAGBuilder::Enter(const ast::SymbolReference& r)
 {
-	const string& name = r.name().name();
+	const string& name = r.name().str();
 
 	shared_ptr<Value> value = getNamedValue(name);
 	if (not value)
