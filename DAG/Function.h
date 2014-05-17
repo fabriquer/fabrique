@@ -1,4 +1,4 @@
-/** @file DAG/Visitor.h    Declaration of @ref fabrique::dag::Visitor. */
+/** @file DAG/Function.h    Declaration of @ref fabrique::dag::Function. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -29,38 +29,40 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DAG_VISITOR_H
-#define DAG_VISITOR_H
+#ifndef DAG_FUNCTION_H
+#define DAG_FUNCTION_H
+
+#include "DAG/Value.h"
+
 
 namespace fabrique {
+namespace ast
+{
+	class Function;
+}
+
 namespace dag {
 
-class Boolean;
-class Build;
-class File;
-class Function;
-class Integer;
-class List;
-class Rule;
-class String;
-class Structure;
-class Target;
-
-class Visitor
+/**
+ * A reference to an user-defined function.
+ *
+ * Currently, we just keep a reference to the AST function around.
+ * This is ok only because the AST outlives the DAG, but it's not a great
+ * approach and we should consider how to fix it in the future.
+ */
+class Function : public Value
 {
 public:
-	virtual ~Visitor();
+	Function(const ast::Function&);
+	virtual ~Function();
 
-	virtual bool Visit(const Boolean&) = 0;
-	virtual bool Visit(const Build&) = 0;
-	virtual bool Visit(const File&) = 0;
-	virtual bool Visit(const Function&) = 0;
-	virtual bool Visit(const Integer&) = 0;
-	virtual bool Visit(const List&) = 0;
-	virtual bool Visit(const Rule&) = 0;
-	virtual bool Visit(const String&) = 0;
-	virtual bool Visit(const Structure&) = 0;
-	virtual bool Visit(const Target&) = 0;
+	const ast::Function& function() const { return function_; }
+
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	void Accept(Visitor&) const override;
+
+private:
+	const ast::Function& function_;
 };
 
 } // namespace dag

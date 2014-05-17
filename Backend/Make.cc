@@ -72,6 +72,7 @@ public:
 	string Format(const Boolean&);
 	string Format(const Build&);
 	string Format(const File&);
+	string Format(const Function&);
 	string Format(const Integer&);
 	string Format(const List&);
 	string Format(const Rule&);
@@ -355,6 +356,11 @@ string MakeFormatter::Format(const Build&)
 string MakeFormatter::Format(const File& f)
 {
 	return f.fullName();
+}
+
+string MakeFormatter::Format(const Function&)
+{
+	return "";
 }
 
 string MakeFormatter::Format(const Integer& i)

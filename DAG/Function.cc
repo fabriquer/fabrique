@@ -1,4 +1,4 @@
-/** @file DAG/Visitor.h    Declaration of @ref fabrique::dag::Visitor. */
+/** @file DAG/Function.cc    Definition of @ref fabrique::dag::Function. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -29,41 +29,26 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DAG_VISITOR_H
-#define DAG_VISITOR_H
+#include "AST/Function.h"
+#include "DAG/Function.h"
+#include "DAG/Visitor.h"
+#include "Support/Bytestream.h"
+using namespace fabrique::dag;
 
-namespace fabrique {
-namespace dag {
 
-class Boolean;
-class Build;
-class File;
-class Function;
-class Integer;
-class List;
-class Rule;
-class String;
-class Structure;
-class Target;
-
-class Visitor
+Function::Function(const ast::Function& fn)
+	: Value(fn.type(), fn.source()), function_(fn)
 {
-public:
-	virtual ~Visitor();
+}
 
-	virtual bool Visit(const Boolean&) = 0;
-	virtual bool Visit(const Build&) = 0;
-	virtual bool Visit(const File&) = 0;
-	virtual bool Visit(const Function&) = 0;
-	virtual bool Visit(const Integer&) = 0;
-	virtual bool Visit(const List&) = 0;
-	virtual bool Visit(const Rule&) = 0;
-	virtual bool Visit(const String&) = 0;
-	virtual bool Visit(const Structure&) = 0;
-	virtual bool Visit(const Target&) = 0;
-};
+Function::~Function() {}
 
-} // namespace dag
-} // namespace fabrique
+void Function::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+{
+	out << Bytestream::Action << "a function" << Bytestream::Reset;
+}
 
-#endif
+void Function::Accept(Visitor& v) const
+{
+	v.Visit(*this);
+}

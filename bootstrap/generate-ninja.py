@@ -38,7 +38,8 @@ cxx_srcs = {
 		'Backend', 'Dot', 'Make', 'Ninja', 'Null',
 	),
 	'DAG/': (
-		'Build', 'DAG', 'File', 'Formatter', 'List', 'Primitive',
+		'Build', 'DAG', 'File', 'Formatter', 'Function',
+		'List', 'Primitive',
 		'Rule', 'Structure', 'Target', 'UndefinedValueException',
 		'Value', 'Visitor',
 	),

@@ -122,7 +122,7 @@ cxx_srcs =
 	)
 	+
 	files(
-		Build.cc DAG.cc File.cc Formatter.cc
+		Build.cc DAG.cc File.cc Formatter.cc Function.cc
 		List.cc Primitive.cc Rule.cc Structure.cc Target.cc
 		UndefinedValueException.cc Value.cc Visitor.cc
 		,

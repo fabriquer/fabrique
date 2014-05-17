@@ -63,6 +63,7 @@ public:
 	string Format(const Boolean&);
 	string Format(const Build&);
 	string Format(const File&);
+	string Format(const Function&);
 	string Format(const Integer&);
 	string Format(const List&);
 	string Format(const Rule&);
@@ -229,6 +230,11 @@ string NinjaFormatter::Format(const Build&)
 string NinjaFormatter::Format(const File& f)
 {
 	return f.fullName();
+}
+
+string NinjaFormatter::Format(const Function&)
+{
+	return "";
 }
 
 string NinjaFormatter::Format(const Integer& i)

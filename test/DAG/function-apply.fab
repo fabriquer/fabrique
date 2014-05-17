@@ -3,7 +3,6 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK-NOT: increment =
 increment = function(x:int): int
 	x + 1;
 

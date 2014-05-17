@@ -35,6 +35,7 @@
 #include "DAG/Build.h"
 #include "DAG/DAG.h"
 #include "DAG/File.h"
+#include "DAG/Function.h"
 #include "DAG/List.h"
 #include "DAG/Primitive.h"
 #include "DAG/Rule.h"
@@ -385,8 +386,8 @@ bool DAGBuilder::Enter(const ast::Call&) { return false; }
 void DAGBuilder::Leave(const ast::Call& call)
 {
 	const ast::SymbolReference& ref = call.target();
-	const string name = ref.name().str();
 	auto& target = dynamic_cast<const ast::Callable&>(ref.definition());
+	shared_ptr<Value> value = eval(ref);
 
 	ValueMap args;
 	for (auto& i : target.NameArguments(call.arguments()))
@@ -396,7 +397,7 @@ void DAGBuilder::Leave(const ast::Call& call)
 	//
 	// The target must be an action or a function.
 	//
-	if (auto rule = dynamic_pointer_cast<Rule>(getNamedValue(name)))
+	if (auto rule = dynamic_pointer_cast<Rule>(value))
 	{
 		// Builds need the parameter types, not just the argument types.
 		ConstPtrMap<Type> paramTypes;
@@ -425,10 +426,8 @@ void DAGBuilder::Leave(const ast::Call& call)
 
 		currentValue.push(build);
 	}
-	else
+	else if (auto fn = dynamic_pointer_cast<Function>(value))
 	{
-		auto& fn = dynamic_cast<const ast::Function&>(ref.definition());
-
 		//
 		// We evaluate the function with the given arguments by
 		// putting these names into the local scope and then
@@ -439,7 +438,20 @@ void DAGBuilder::Leave(const ast::Call& call)
 		for (auto& i : args)
 			scope[i.first] = i.second;
 
-		currentValue.emplace(eval(fn.body()));
+		// Get default parameter values.
+		for (auto& p : fn->function().parameters())
+		{
+			if (const UniqPtr<ast::Expression>& v = p->defaultValue())
+			{
+				const string name(p->getName().name());
+				if (scope.find(name) != scope.end())
+					continue;
+
+				scope.emplace(p->getName().name(), eval(*v));
+			}
+		}
+
+		currentValue.emplace(eval(fn->function().body()));
 		ExitScope();
 	}
 }
@@ -578,24 +590,11 @@ void DAGBuilder::Leave(const ast::ForeachExpr&) {}
 
 bool DAGBuilder::Enter(const ast::Function& fn)
 {
-	// Put parameters with default names into the function's scope.
-	ValueMap& currentScope = CurrentScope();
-
-	for (auto& p : fn.parameters())
-	{
-		if (const UniqPtr<ast::Expression>& v = p->defaultValue())
-		{
-			const string name(p->getName().name());
-			assert(currentScope.find(name) == currentScope.end());
-
-			currentScope.emplace(p->getName().name(), eval(*v));
-		}
-	}
-
+	currentValue.emplace(new dag::Function(fn));
 	return false;
 }
 
-void DAGBuilder::Leave(const ast::Function&) { currentValueName.pop(); }
+void DAGBuilder::Leave(const ast::Function&) {}
 
 
 bool DAGBuilder::Enter(const ast::Identifier&) { return false; }

@@ -62,6 +62,7 @@ public:
 	string Format(const Boolean&);
 	string Format(const Build&);
 	string Format(const File&);
+	string Format(const Function&);
 	string Format(const Integer&);
 	string Format(const List&);
 	string Format(const Rule&);
@@ -213,6 +214,11 @@ string DotFormatter::Format(const Build& build)
 string DotFormatter::Format(const File& f)
 {
 	return f.filename();
+}
+
+string DotFormatter::Format(const Function&)
+{
+	return "";
 }
 
 string DotFormatter::Format(const Integer& i)

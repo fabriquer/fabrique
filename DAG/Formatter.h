@@ -51,6 +51,7 @@ public:
 	virtual std::string Format(const Boolean&) = 0;
 	virtual std::string Format(const Build&) = 0;
 	virtual std::string Format(const File&) = 0;
+	virtual std::string Format(const Function&) = 0;
 	virtual std::string Format(const Integer&) = 0;
 	virtual std::string Format(const List&) = 0;
 	virtual std::string Format(const Rule&) = 0;
@@ -61,6 +62,7 @@ public:
 	bool Visit(const Boolean&);
 	bool Visit(const Build&);
 	bool Visit(const File&);
+	bool Visit(const Function&);
 	bool Visit(const Integer&);
 	bool Visit(const List&);
 	bool Visit(const Rule&);
