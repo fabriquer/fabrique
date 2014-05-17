@@ -36,11 +36,22 @@
 #include <cassert>
 
 using namespace fabrique;
+using std::string;
 
 
 const Type& Type::ListOf(const Type& t, const SourceRange& src)
 {
 	return t.parent_.listOf(t, src);
+}
+
+
+string Type::UntypedPart(string name)
+{
+	const size_t i = name.find(':');
+	if (i == string::npos)
+		return name;
+
+	return name.substr(0, i);
 }
 
 

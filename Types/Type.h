@@ -55,6 +55,8 @@ public:
 	static const Type& GetSupertype(const Type&, const Type&);
 	static const Type& ListOf(const Type&, const SourceRange&);
 
+	static std::string UntypedPart(std::string typedName);
+
 	Type(std::weak_ptr<Type> parent) = delete;
 	virtual ~Type() {}
 
