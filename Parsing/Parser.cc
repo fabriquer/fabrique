@@ -210,21 +210,14 @@ bool Parser::Builtin(const string& name, const std::string& value)
 }
 
 
-Call* Parser::CreateCall(UniqPtr<Identifier>& name,
+Call* Parser::CreateCall(UniqPtr<SymbolReference>& ref,
                          UniqPtr<UniqPtrVec<Argument>>& args,
                          const SourceRange& end)
 {
-	if (not name or not args)
+	if (not ref or not args)
 		return nullptr;
 
-	SourceRange src(name->source(), end);
-
-	UniqPtr<SymbolReference> ref(Reference(std::move(name)));
-	if (not ref)
-	{
-		ReportError("call to undefined action/function", src);
-		return nullptr;
-	}
+	SourceRange src(ref->source(), end);
 
 	// Run the arguments through Callable::CheckArguments to validate
 	// various rules (e.g. no positional arguments after keyword arguments).

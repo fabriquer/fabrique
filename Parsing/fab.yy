@@ -131,10 +131,6 @@ expression:
 	| fileList
 	| foreach
 	| function
-	| identifier
-	{
-		SetOrDie($$, p->Reference(TakeNode<Identifier>($1)));
-	}
 	| import
 	| '[' listElements ']'
 	{
@@ -143,6 +139,7 @@ expression:
 
 		SetOrDie($$, p->ListOf(*elements, src));
 	}
+	| reference
 	| unaryOperation
 	;
 
@@ -228,13 +225,13 @@ binaryOperator:
 	;
 
 call:
-	identifier '(' argumentList ')'
+	reference '(' argumentList ')'
 	{
-		auto fnName = TakeNode<Identifier>($1);
+		auto target = TakeNode<SymbolReference>($1);
 		auto arguments = Take(NodeVec<Argument>($3));
 		auto end = Take($4.token);
 
-		SetOrDie($$, p->CreateCall(fnName, arguments, end->source()));
+		SetOrDie($$, p->CreateCall(target, arguments, end->source()));
 	}
 	;
 
@@ -460,6 +457,13 @@ parameterList:
 	{
 		$$.nodes = $1.nodes;
 		Append($$, TakeNode<Parameter>($3));
+	}
+	;
+
+reference:
+	identifier
+	{
+		SetOrDie($$, p->Reference(TakeNode<Identifier>($1)));
 	}
 	;
 
