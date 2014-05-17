@@ -137,7 +137,7 @@ cxx_srcs =
 	files(
 		Arguments.cc Bytestream.cc ErrorReport.cc Join.cc
 		Printable.cc SourceLocation.cc Visitable.cc
-		exceptions.cc file('os-posix.cc')
+		exceptions.cc os-posix.cc
 		,
 		subdir = 'Support'
 	)
