@@ -76,6 +76,7 @@ public:
 	string Format(const List&);
 	string Format(const Rule&);
 	string Format(const String&);
+	string Format(const Structure&);
 	string Format(const Target&);
 };
 
@@ -379,6 +380,12 @@ string MakeFormatter::Format(const Rule& rule)
 string MakeFormatter::Format(const String& s)
 {
 	return s.value();
+}
+
+string MakeFormatter::Format(const Structure&)
+{
+	assert(false && "called MakeFormatter::Format(Structure&)");
+	return "";
 }
 
 string MakeFormatter::Format(const Target& t)

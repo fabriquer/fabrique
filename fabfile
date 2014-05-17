@@ -106,7 +106,7 @@ cxx_srcs =
 	files(
 		Action.cc Argument.cc ASTDump.cc BinaryOperation.cc
 		Call.cc Callable.cc CompoundExpr.cc Conditional.cc
-		Expression.cc Filename.cc FileList.cc
+		Expression.cc FieldAccess.cc Filename.cc FileList.cc
 		Foreach.cc Function.cc Identifier.cc Import.cc
 		List.cc Mapping.cc Node.cc Parameter.cc
 		Scope.cc SymbolReference.cc UnaryOperation.cc
@@ -123,7 +123,7 @@ cxx_srcs =
 	+
 	files(
 		Build.cc DAG.cc File.cc Formatter.cc
-		List.cc Primitive.cc Rule.cc Target.cc
+		List.cc Primitive.cc Rule.cc Structure.cc Target.cc
 		UndefinedValueException.cc Value.cc Visitor.cc
 		,
 		subdir = 'DAG'

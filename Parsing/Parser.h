@@ -114,6 +114,10 @@ public:
 	                                 SourceRange beg = SourceRange::None(),
 	                                 SourceRange end = SourceRange::None());
 
+	//! An expression that indirects into a structure.
+	FieldAccess* FieldAccess(UniqPtr<Expression>& structure,
+	                         UniqPtr<Identifier>& field);
+
 	//! A @ref Filename that is part of the build DAG.
 	Filename* File(UniqPtr<Expression>& name, const SourceRange& src,
 	               UniqPtr<UniqPtrVec<Argument>>&& arguments = nullptr);

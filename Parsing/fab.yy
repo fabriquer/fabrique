@@ -126,6 +126,7 @@ expression:
 	| call
 	| conditional
 	| '(' expression ')'	{ SetOrDie($$, $2.node); }
+	| fieldAccess
 	| file
 	| fileList
 	| foreach
@@ -284,6 +285,16 @@ conditional:
 		auto elseClause = TakeNode<CompoundExpression>($5);
 
 		SetOrDie($$, p->IfElse(begin, condition, then, elseClause));
+	}
+	;
+
+fieldAccess:
+	expression '.' name
+	{
+		auto structure = TakeNode<Expression>($1);
+		auto field = TakeNode<Identifier>($3);
+
+		SetOrDie($$, p->FieldAccess(structure, field));
 	}
 	;
 

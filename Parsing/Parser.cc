@@ -259,6 +259,13 @@ CompoundExpression* Parser::CompoundExpr(UniqPtr<Expression>& result,
 
 
 
+FieldAccess* Parser::FieldAccess(UniqPtr<Expression>& structure,
+                                 UniqPtr<Identifier>& field)
+{
+	return new class FieldAccess(structure, field);
+}
+
+
 Filename* Parser::File(UniqPtr<Expression>& name, const SourceRange& src,
                        UniqPtr<UniqPtrVec<Argument>>&& args)
 {

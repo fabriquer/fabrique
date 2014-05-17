@@ -1,6 +1,6 @@
-/** @file AST/ast.h    Meta-include file for all AST node types. */
+/** @file DAG/Structure.h    Declaration of @ref fabrique::dag::Structure. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,31 +29,39 @@
  * SUCH DAMAGE.
  */
 
-#ifndef AST_H
-#define AST_H
+#ifndef DAG_STRUCTURE_H
+#define DAG_STRUCTURE_H
 
-#include "Action.h"
-#include "Argument.h"
-#include "BinaryOperation.h"
-#include "Builtins.h"
-#include "Call.h"
-#include "CompoundExpr.h"
-#include "Conditional.h"
-#include "FieldAccess.h"
-#include "Filename.h"
-#include "FileList.h"
-#include "Foreach.h"
-#include "Function.h"
-#include "Identifier.h"
-#include "Import.h"
-#include "List.h"
-#include "Mapping.h"
-#include "Parameter.h"
-#include "Scope.h"
-#include "SymbolReference.h"
-#include "UnaryOperation.h"
-#include "Value.h"
+#include "ADT/StringMap.h"
+#include "DAG/Value.h"
 
-#include "literals.h"
+#include <memory>
+
+
+namespace fabrique {
+namespace dag {
+
+/**
+ * A reference to a file on disk (source or target).
+ */
+class Structure : public Value
+{
+public:
+	typedef std::pair<std::string,std::shared_ptr<Value>> NamedValue;
+
+	static Structure* Create(std::vector<NamedValue>&, const Type&);
+	virtual ~Structure();
+
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	void Accept(Visitor&) const override;
+
+private:
+	Structure(std::vector<NamedValue>&, const Type&, SourceRange);
+
+	const std::vector<NamedValue> values_;
+};
+
+} // namespace dag
+} // namespace fabrique
 
 #endif

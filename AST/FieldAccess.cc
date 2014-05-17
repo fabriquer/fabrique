@@ -1,6 +1,6 @@
-/** @file AST/ast.h    Meta-include file for all AST node types. */
+/** @file AST/FieldAccess.cc    Definition of @ref fabrique::ast::FieldAccess. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,31 +29,32 @@
  * SUCH DAMAGE.
  */
 
-#ifndef AST_H
-#define AST_H
+#include "AST/FieldAccess.h"
+#include "AST/Visitor.h"
+#include "Support/Bytestream.h"
+using namespace fabrique::ast;
 
-#include "Action.h"
-#include "Argument.h"
-#include "BinaryOperation.h"
-#include "Builtins.h"
-#include "Call.h"
-#include "CompoundExpr.h"
-#include "Conditional.h"
-#include "FieldAccess.h"
-#include "Filename.h"
-#include "FileList.h"
-#include "Foreach.h"
-#include "Function.h"
-#include "Identifier.h"
-#include "Import.h"
-#include "List.h"
-#include "Mapping.h"
-#include "Parameter.h"
-#include "Scope.h"
-#include "SymbolReference.h"
-#include "UnaryOperation.h"
-#include "Value.h"
 
-#include "literals.h"
+FieldAccess::FieldAccess(UniqPtr<Expression>& base, UniqPtr<Identifier>& field)
+	: Expression(field->type(), SourceRange::Over(base, field)),
+	  base_(std::move(base)), field_(std::move(field))
+{
+}
 
-#endif
+
+void FieldAccess::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+{
+	out << *base_ << Bytestream::Operator << "." << *field_;
+}
+
+
+void FieldAccess::Accept(Visitor& v) const
+{
+	if (v.Enter(*this))
+	{
+		base_->Accept(v);
+		field_->Accept(v);
+	}
+
+	v.Leave(*this);
+}

@@ -1,6 +1,6 @@
-/** @file AST/ast.h    Meta-include file for all AST node types. */
+/** @file DAG/Structure.h    Declaration of @ref fabrique::dag::Structure. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,31 +29,62 @@
  * SUCH DAMAGE.
  */
 
-#ifndef AST_H
-#define AST_H
+#include "DAG/Structure.h"
+#include "DAG/Visitor.h"
+#include "Support/Bytestream.h"
+#include "Types/Type.h"
 
-#include "Action.h"
-#include "Argument.h"
-#include "BinaryOperation.h"
-#include "Builtins.h"
-#include "Call.h"
-#include "CompoundExpr.h"
-#include "Conditional.h"
-#include "FieldAccess.h"
-#include "Filename.h"
-#include "FileList.h"
-#include "Foreach.h"
-#include "Function.h"
-#include "Identifier.h"
-#include "Import.h"
-#include "List.h"
-#include "Mapping.h"
-#include "Parameter.h"
-#include "Scope.h"
-#include "SymbolReference.h"
-#include "UnaryOperation.h"
-#include "Value.h"
+#include <cassert>
 
-#include "literals.h"
+using namespace fabrique::dag;
+using std::string;
+using std::vector;
 
-#endif
+
+Structure* Structure::Create(vector<NamedValue>& values, const Type& t)
+{
+	assert(not values.empty());
+
+	SourceRange begin = values.front().second->source();
+	SourceRange end = (--values.end())->second->source();
+
+	return new Structure(values, t, SourceRange(begin, end));
+}
+
+
+Structure::Structure(vector<NamedValue>& values, const Type& t, SourceRange src)
+	: Value(t, src), values_(values)
+{
+}
+
+
+Structure::~Structure() {}
+
+
+void Structure::PrettyPrint(Bytestream& out, size_t indent) const
+{
+	const string tab(indent, '\t');
+
+	out << Bytestream::Operator << "{";
+
+	for (auto& i : values_)
+	{
+		out
+			<< i.second->type() << " "
+			<< i.first
+			<< Bytestream::Operator << " = "
+			<< *i.second
+			<< Bytestream::Reset << "\n"
+			;
+	}
+
+	out << Bytestream::Operator << tab << "}";
+}
+
+
+void Structure::Accept(Visitor& v) const
+{
+	if (v.Visit(*this))
+		for (auto& i : values_)
+			i.second->Accept(v);
+}

@@ -1,6 +1,6 @@
-/** @file AST/ast.h    Meta-include file for all AST node types. */
+/** @file AST/FieldAccess.h    Declaration of @ref fabrique::ast::FieldAccess. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,31 +29,39 @@
  * SUCH DAMAGE.
  */
 
-#ifndef AST_H
-#define AST_H
+#ifndef FIELD_ACCESS_H
+#define FIELD_ACCESS_H
 
-#include "Action.h"
-#include "Argument.h"
-#include "BinaryOperation.h"
-#include "Builtins.h"
-#include "Call.h"
-#include "CompoundExpr.h"
-#include "Conditional.h"
-#include "FieldAccess.h"
-#include "Filename.h"
-#include "FileList.h"
-#include "Foreach.h"
-#include "Function.h"
-#include "Identifier.h"
-#include "Import.h"
-#include "List.h"
-#include "Mapping.h"
-#include "Parameter.h"
-#include "Scope.h"
-#include "SymbolReference.h"
-#include "UnaryOperation.h"
-#include "Value.h"
+#include "ADT/UniqPtr.h"
+#include "AST/Expression.h"
+#include "AST/Identifier.h"
 
-#include "literals.h"
+namespace fabrique {
+namespace ast {
+
+class StringLiteral;
+
+
+/**
+ * An expression that imports a Fabrique module.
+ */
+class FieldAccess : public Expression
+{
+public:
+	FieldAccess(UniqPtr<Expression>& base, UniqPtr<Identifier>& field);
+
+	const Expression& base() const { return *base_; }
+	const Identifier& field() const { return *field_; }
+
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	virtual void Accept(Visitor&) const;
+
+private:
+	const UniqPtr<Expression> base_;
+	const UniqPtr<Identifier> field_;
+};
+
+} // namespace ast
+} // namespace fabrique
 
 #endif

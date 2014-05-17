@@ -28,9 +28,9 @@ cxx_srcs = {
 	'AST/': (
 		'Action', 'Argument', 'ASTDump', 'BinaryOperation', 'Call',
 		'Callable', 'CompoundExpr', 'Conditional', 'Expression',
-		'Filename', 'FileList', 'Foreach', 'Function', 'Identifier', 'Import',
-		'List', 'Mapping', 'Node', 'Parameter', 'Scope',
-		'SymbolReference', 'UnaryOperation', 'Value', 'Visitor',
+		'FieldAccess', 'Filename', 'FileList', 'Foreach', 'Function',
+		'Identifier', 'Import', 'List', 'Mapping', 'Node', 'Parameter',
+		'Scope', 'SymbolReference', 'UnaryOperation', 'Value', 'Visitor',
 		'literals',
 	),
 	'Backend/': (
@@ -38,7 +38,8 @@ cxx_srcs = {
 	),
 	'DAG/': (
 		'Build', 'DAG', 'File', 'Formatter', 'List', 'Primitive',
-		'Rule', 'Target', 'UndefinedValueException', 'Value', 'Visitor',
+		'Rule', 'Structure', 'Target', 'UndefinedValueException',
+		'Value', 'Visitor',
 	),
 	'Parsing/': (
 		'Lexer', 'Parser', 'Token',

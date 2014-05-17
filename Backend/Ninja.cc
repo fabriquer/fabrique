@@ -38,6 +38,7 @@
 #include "DAG/List.h"
 #include "DAG/Primitive.h"
 #include "DAG/Rule.h"
+#include "DAG/Structure.h"
 #include "DAG/Target.h"
 
 #include "Support/Bytestream.h"
@@ -66,6 +67,7 @@ public:
 	string Format(const List&);
 	string Format(const Rule&);
 	string Format(const String&);
+	string Format(const Structure&);
 	string Format(const Target&);
 };
 
@@ -252,6 +254,12 @@ string NinjaFormatter::Format(const Rule& rule)
 string NinjaFormatter::Format(const String& s)
 {
 	return s.value();
+}
+
+string NinjaFormatter::Format(const Structure&)
+{
+	assert(false && "called NinjaFormatter::Format(Structure&)");
+	return "";
 }
 
 string NinjaFormatter::Format(const Target& t)

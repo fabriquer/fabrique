@@ -38,6 +38,7 @@
 #include "DAG/List.h"
 #include "DAG/Primitive.h"
 #include "DAG/Rule.h"
+#include "DAG/Structure.h"
 #include "DAG/Target.h"
 #include "DAG/UndefinedValueException.h"
 #include "DAG/Value.h"
@@ -135,6 +136,7 @@ public:
 	VISIT(ast::Call)
 	VISIT(ast::CompoundExpression)
 	VISIT(ast::Conditional)
+	VISIT(ast::FieldAccess)
 	VISIT(ast::Filename)
 	VISIT(ast::FileList)
 	VISIT(ast::ForeachExpr)
@@ -475,6 +477,10 @@ bool DAGBuilder::Enter(const ast::Conditional& c)
 void DAGBuilder::Leave(const ast::Conditional&) {}
 
 
+bool DAGBuilder::Enter(const ast::FieldAccess&) { return true; }
+void DAGBuilder::Leave(const ast::FieldAccess&) {}
+
+
 bool DAGBuilder::Enter(const ast::Filename& f)
 {
 	const string filename = eval(f.name())->str();
@@ -596,7 +602,18 @@ bool DAGBuilder::Enter(const ast::Identifier&) { return false; }
 void DAGBuilder::Leave(const ast::Identifier&) {}
 
 
-bool DAGBuilder::Enter(const ast::Import&) { return false; }
+bool DAGBuilder::Enter(const ast::Import& import)
+{
+	std::vector<Structure::NamedValue> values;
+
+	for (auto& i : import.scope())
+		values.emplace_back(i.first, eval(*i.second));
+
+	currentValue.emplace(Structure::Create(values, import.type()));
+
+	return false;
+}
+
 void DAGBuilder::Leave(const ast::Import&) {}
 
 

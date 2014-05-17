@@ -36,6 +36,7 @@
 #include "DAG/List.h"
 #include "DAG/Primitive.h"
 #include "DAG/Rule.h"
+#include "DAG/Structure.h"
 #include "DAG/Target.h"
 #include "DAG/Value.h"
 
@@ -65,6 +66,7 @@ public:
 	string Format(const List&);
 	string Format(const Rule&);
 	string Format(const String&);
+	string Format(const Structure&);
 	string Format(const Target&);
 };
 
@@ -236,6 +238,12 @@ string DotFormatter::Format(const Rule& rule)
 string DotFormatter::Format(const String& s)
 {
 	return "'" + s.value() + "'";
+}
+
+string DotFormatter::Format(const Structure&)
+{
+	assert(false && "called DotFormatter::Format(Structure&)");
+	return "";
 }
 
 string DotFormatter::Format(const Target& t)
