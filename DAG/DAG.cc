@@ -296,8 +296,10 @@ bool DAGBuilder::Enter(const ast::Action& a)
 	for (ConstPtr<ast::Parameter>& p : a.parameters())
 		FileType::CheckFileTags(p->type(), p->source());
 
-	currentValue.emplace(Rule::Create(currentValueName.top(),
-	                                  command, arguments, a.type()));
+	shared_ptr<Rule> rule(Rule::Create(currentValueName.top(),
+	                                   command, arguments, a.type()));
+	currentValue.emplace(rule);
+	rules_[rule->name()] = rule;
 
 	return false;
 }
@@ -604,9 +606,14 @@ void DAGBuilder::Leave(const ast::Identifier&) {}
 bool DAGBuilder::Enter(const ast::Import& import)
 {
 	std::vector<Structure::NamedValue> values;
+	const string name = currentValueName.top();
 
 	for (auto& i : import.scope())
+	{
+		currentValueName.push(name + "." + i.first);
 		values.emplace_back(i.first, eval(*i.second));
+		currentValueName.pop();
+	}
 
 	currentValue.emplace(Structure::Create(values, import.type()));
 
