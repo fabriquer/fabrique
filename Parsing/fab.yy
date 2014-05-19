@@ -515,6 +515,11 @@ type:
 	;
 
 types:
+	/* empty */
+	{
+		$$.types = new PtrVec<Type>();
+	}
+	|
 	type
 	{
 		$$.types = new PtrVec<Type>(1, $1.type);
