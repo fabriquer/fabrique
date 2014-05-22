@@ -537,22 +537,22 @@ Parameter* Parser::Param(UniqPtr<Identifier>&& name,
 }
 
 
-SymbolReference* Parser::Reference(UniqPtr<Identifier>&& id)
+SymbolReference* Parser::Reference(UniqPtr<Identifier>&& name)
 {
-	const Expression *e = CurrentScope().Lookup(*id);
+	const Expression *e = CurrentScope().Lookup(*name);
 	if (e == nullptr)
 	{
-		ReportError("reference to undefined value", *id);
+		ReportError("reference to undefined value", *name);
 		return nullptr;
 	}
 
 	if (not e->type())
 	{
-		ReportError("reference to value with unknown type", *id);
+		ReportError("reference to value with unknown type", *name);
 		return nullptr;
 	}
 
-	return new SymbolReference(std::move(id), *e);
+	return new SymbolReference(std::move(name), *e);
 }
 
 
