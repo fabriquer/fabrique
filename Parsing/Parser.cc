@@ -225,18 +225,25 @@ Call* Parser::CreateCall(UniqPtr<SymbolReference>& ref,
 		return nullptr;
 
 	SourceRange src(ref->source(), end);
+	auto& fnType = dynamic_cast<const FunctionType&>(ref->type());
 
-	// Run the arguments through Callable::CheckArguments to validate
-	// various rules (e.g. no positional arguments after keyword arguments).
-	auto& callable = dynamic_cast<const Callable&>(ref->definition());
-	try { callable.CheckArguments(*args, src); }
-	catch (SourceCodeException& e)
+	// Do some sanity checking on the arguments (the kind that doesn't
+	// require deep knowledge of the callee).
+	bool seenKeywordArgument = false;
+	for (auto& a : *args)
 	{
-		ReportError(e.message(), e.source());
-		return nullptr;
+		if (a->hasName())
+			seenKeywordArgument = true;
+
+		else if (seenKeywordArgument)
+		{
+			ReportError(
+				"positional argument after keyword argument",
+				a->source());
+			return nullptr;
+		}
 	}
 
-	auto& fnType = dynamic_cast<const FunctionType&>(ref->type());
 	return new Call(ref, *args, fnType.returnType(), src);
 }
 

@@ -389,6 +389,8 @@ void DAGBuilder::Leave(const ast::Call& call)
 {
 	const ast::SymbolReference& ref = call.target();
 	auto& target = dynamic_cast<const ast::Callable&>(ref.definition());
+	target.CheckArguments(call.arguments(), call.source());
+
 	shared_ptr<Value> value = eval(ref);
 
 	ValueMap args;
