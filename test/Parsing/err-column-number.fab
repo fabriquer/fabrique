@@ -3,5 +3,15 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: {{.*}}.fab:7:5: error: syntax error
-le$x = action('$LEX -c++ --header-file=$header --outfile=$out $in')
+# CHECK: err-column-number.fab:16:9: error: reference to undefined value
+
+a_submodule = import('Inputs/submodule.fab');
+
+foo = action('${FOO} ${src} -o ${output}' <- src:file[in], output:file[out]);
+
+bar = function(src:file, outname:string): file
+{
+	baz = foo(src, file(outname));
+
+	nothing
+};

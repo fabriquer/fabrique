@@ -78,6 +78,7 @@ private:
 	std::string currentFilename() const;
 
 	std::stack<std::string> filenames_;
+	std::stack<SourceLocation> locations_;
 	UniqPtrVec<ErrorReport> errs_;
 
 	fabrique::Token currentToken_;

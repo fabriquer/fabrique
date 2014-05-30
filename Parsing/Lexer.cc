@@ -77,6 +77,10 @@ Lexer::~Lexer()
 
 void Lexer::PushFile(std::istream& input, string name)
 {
+	locations_.push(CurrentTokenRange().end);
+	yylineno = 1;
+	yycolumn = 1;
+
 	yy_buffer_state *buffer = yy_create_buffer(&input, 4096);
 	yypush_buffer_state(buffer);
 	assert(yyin);
@@ -98,6 +102,10 @@ void Lexer::PopFile()
 		;
 
 	yypop_buffer_state();
+
+	SourceLocation loc = locations_.top();
+	yylineno = static_cast<int>(loc.line);
+	yycolumn = loc.column;
 }
 
 
