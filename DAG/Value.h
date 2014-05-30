@@ -35,6 +35,7 @@
 #include "ADT/StringMap.h"
 #include "Support/Printable.h"
 #include "Support/SourceLocation.h"
+#include "Support/Uncopyable.h"
 #include "Types/Typed.h"
 
 #include <string>
@@ -50,7 +51,8 @@ class Visitor;
 
 
 //! The result of evaluating an expression.
-class Value : public HasSource, public Printable, public Typed
+class Value : public HasSource, public Printable, public Typed,
+              public Uncopyable
 {
 public:
 	//! Unary 'not' operator.
