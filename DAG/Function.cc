@@ -36,8 +36,11 @@
 using namespace fabrique::dag;
 
 
-Function::Function(const ast::Function& fn)
-	: Value(fn.type(), fn.source()), function_(fn)
+Function::Function(const ast::Function& fn,
+                   const SharedPtrVec<Parameter>& parameters,
+                   ValueMap&& scope)
+	: Callable(parameters), Value(fn.type(), fn.source()), function_(fn),
+	  containingScope_(std::move(scope))
 {
 }
 

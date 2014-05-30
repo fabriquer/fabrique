@@ -6,5 +6,20 @@
 increment = function(x:int): int
 	x + 1;
 
-# CHECK: int incremented = 1
+# CHECK-DAG: int incremented = 1
 incremented = increment(0);
+
+
+#
+# Functions should act as closures:
+#
+makeClosure = function(x:int): (int)=>int
+{
+	function(y:int): int
+		x + y
+};
+
+foo = makeClosure(4);
+
+# CHECK-DAG: int bar = 5
+bar = foo(1);

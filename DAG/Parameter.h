@@ -1,6 +1,6 @@
-/** @file AST/Action.h    Declaration of @ref fabrique::ast::Action. */
+/** @file DAG/Parameter.h    Declaration of @ref fabrique::dag::Parameter. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,56 +29,47 @@
  * SUCH DAMAGE.
  */
 
-#ifndef ACTION_H
-#define ACTION_H
+#ifndef DAG_PARAMETER_H
+#define DAG_PARAMETER_H
 
-#include "ADT/PtrVec.h"
+#include "Support/Printable.h"
+#include "Support/SourceLocation.h"
+#include "Support/Uncopyable.h"
+#include "Types/Typed.h"
 
-#include "AST/Argument.h"
-#include "AST/Expression.h"
-#include "AST/HasParameters.h"
-#include "AST/Parameter.h"
+#include <memory>
+#include <string>
 
 namespace fabrique {
+namespace dag {
 
-class FabContext;
-class FunctionType;
-
-namespace ast {
+class Value;
 
 
-/**
- * A build action that can transform inputs into outputs.
- */
-class Action : public Expression, public HasParameters
+//! The result of evaluating an expression.
+class Parameter : public HasSource, public Printable, public Typed,
+                  public Uncopyable
 {
 public:
-	/**
-	 * An action definition has both arguments and parameters.
-	 * Arguments define the action itself and parameters declare what
-	 * callers can pass in.
-	 *
-	 * If no explicit 'in' or 'out' parameters are specified, an action
-	 * assumes that the first two parameters are in:list[file] and
-	 * out:list[file].
-	 */
-	static Action* Create(UniqPtrVec<Argument>&,
-	                      UniqPtr<UniqPtrVec<Parameter>>&,
-	                      const SourceRange&, FabContext&);
+	Parameter(const std::string& name, const Type& type,
+	          std::shared_ptr<Value>& defaultValue, const SourceRange&);
 
-	const UniqPtrVec<Argument>& arguments() const { return args_; }
+	virtual ~Parameter();
 
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
-	virtual void Accept(Visitor&) const;
+	const std::string& name() const { return name_; }
+	const std::shared_ptr<Value>& defaultValue() const
+	{
+		return defaultValue_;
+	}
+
+	virtual void PrettyPrint(Bytestream&, size_t indent) const override;
 
 private:
-	Action(UniqPtrVec<Argument>&, UniqPtrVec<Parameter>&,
-	       const FunctionType&, const SourceRange&);
-
-	UniqPtrVec<Argument> args_;
+	const std::string name_;
+	const std::shared_ptr<Value> defaultValue_;
 };
 
-} // namespace ast
+} // namespace dag
 } // namespace fabrique
 
-#endif
+#endif // !DAG_PARAMETER_H

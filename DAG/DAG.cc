@@ -33,10 +33,12 @@
 #include "AST/Visitor.h"
 
 #include "DAG/Build.h"
+#include "DAG/Callable.h"
 #include "DAG/DAG.h"
 #include "DAG/File.h"
 #include "DAG/Function.h"
 #include "DAG/List.h"
+#include "DAG/Parameter.h"
 #include "DAG/Primitive.h"
 #include "DAG/Rule.h"
 #include "DAG/Structure.h"
@@ -166,11 +168,17 @@ private:
 	ValueMap ExitScope();
 	ValueMap& CurrentScope();
 
+	//! Make a deep copy of the current scope and all of its parents.
+	ValueMap CopyCurrentScope();
+
 	//! Get a named value from the current scope or a parent scope.
 	shared_ptr<Value> getNamedValue(const std::string& name);
 
+	//! Evaluate an expression as, well, a @ref Value.
 	shared_ptr<Value> eval(const ast::Expression&);
 
+	//! Parameters aren't really values: we can't store them, etc.
+	Parameter* ConvertParameter(const ast::Parameter&);
 
 	FabContext& ctx_;
 
@@ -292,12 +300,18 @@ bool DAGBuilder::Enter(const ast::Action& a)
 		arguments.emplace(arg->getName().name(), v);
 	}
 
-	// Ensure that files are properly tagged as input or output.
+	SharedPtrVec<Parameter> parameters;
 	for (ConstPtr<ast::Parameter>& p : a.parameters())
+	{
+		// Ensure that files are properly tagged as input or output.
 		FileType::CheckFileTags(p->type(), p->source());
 
+		parameters.emplace_back(ConvertParameter(*p));
+	}
+
 	shared_ptr<Rule> rule(Rule::Create(currentValueName.top(),
-	                                   command, arguments, a.type()));
+	                                   command, arguments, parameters,
+	                                   a.type()));
 	currentValue.emplace(rule);
 	rules_[rule->name()] = rule;
 
@@ -387,39 +401,37 @@ void DAGBuilder::Leave(const ast::BoolLiteral&) {}
 bool DAGBuilder::Enter(const ast::Call&) { return false; }
 void DAGBuilder::Leave(const ast::Call& call)
 {
-	const ast::SymbolReference& ref = call.target();
-	auto& target = dynamic_cast<const ast::Callable&>(ref.definition());
-	target.CheckArguments(call.arguments(), call.source());
+	shared_ptr<Value> value = eval(call.target());
 
-	shared_ptr<Value> value = eval(ref);
+	auto target = dynamic_pointer_cast<Callable>(value);
+	assert(target);
+
+	//
+	// Check argument legality.
+	//
+	for (auto& a : call.arguments())
+		if (a->hasName()
+		    and not target->hasParameterNamed(a->getName().name()))
+			// TODO: argument, not parameter!
+			throw SemanticException(
+				"invalid parameter", a->source());
 
 	ValueMap args;
-	for (auto& i : target.NameArguments(call.arguments()))
+	for (auto& i : target->NameArguments(call.arguments()))
 		args[i.first] = std::move(eval(*i.second));
+
+	target->CheckArguments(args, call.source());
 
 
 	//
 	// The target must be an action or a function.
 	//
-	if (auto rule = dynamic_pointer_cast<Rule>(value))
+	if (auto rule = dynamic_pointer_cast<Rule>(target))
 	{
 		// Builds need the parameter types, not just the argument types.
 		ConstPtrMap<Type> paramTypes;
-		auto& params = target.parameters();
-		for (auto& a : args)
-		{
-			const string& argName = a.first;
-
-			auto i = std::find_if(params.begin(), params.end(),
-				[&argName](const UniqPtr<ast::Parameter>& p)
-				{
-					return p->getName().name() == argName;
-				});
-
-			assert(i != params.end());
-			const Type& t = (*i)->type();
-			paramTypes[argName] = &t;
-		}
+		for (auto& p : target->parameters())
+			paramTypes[p->name()] = &p->type();
 
 		shared_ptr<Build> build(
 			Build::Create(rule, args, paramTypes, call.source()));
@@ -430,8 +442,16 @@ void DAGBuilder::Leave(const ast::Call& call)
 
 		currentValue.push(build);
 	}
-	else if (auto fn = dynamic_pointer_cast<Function>(value))
+	else if (auto fn = dynamic_pointer_cast<Function>(target))
 	{
+		//
+		// When executing a function, we don't use symbols in scope
+		// at the call site, only those in scope at the function
+		// definition site.
+		//
+		std::deque<ValueMap> callSiteScopes(std::move(scopes));
+		scopes.push_back(fn->scope());
+
 		//
 		// We evaluate the function with the given arguments by
 		// putting these names into the local scope and then
@@ -457,6 +477,12 @@ void DAGBuilder::Leave(const ast::Call& call)
 
 		currentValue.emplace(eval(fn->function().body()));
 		ExitScope();
+
+		// Pop the function's containing scope.
+		ExitScope();
+
+		// Go back to the normal scope stack.
+		scopes = std::move(callSiteScopes);
 	}
 }
 
@@ -594,7 +620,25 @@ void DAGBuilder::Leave(const ast::ForeachExpr&) {}
 
 bool DAGBuilder::Enter(const ast::Function& fn)
 {
-	currentValue.emplace(new dag::Function(fn));
+	ValueMap scope(CopyCurrentScope());
+
+	Bytestream& dbg = Bytestream::Debug("dag.fnscope");
+	dbg << Bytestream::Action << "Copied scope:\n";
+	for (auto i : scope)
+		dbg << "  "
+			<< Bytestream::Definition << i.first
+			<< Bytestream::Operator << ":"
+			<< *i.second
+			<< "\n"
+			;
+
+	SharedPtrVec<Parameter> parameters;
+	for (auto& p : fn.parameters())
+		parameters.emplace_back(ConvertParameter(*p));
+
+	currentValue.emplace(
+		new dag::Function(fn, parameters, std::move(scope)));
+
 	return false;
 }
 
@@ -607,15 +651,18 @@ void DAGBuilder::Leave(const ast::Identifier&) {}
 
 bool DAGBuilder::Enter(const ast::Import& import)
 {
-	std::vector<Structure::NamedValue> values;
 	const string name = currentValueName.top();
+	std::vector<Structure::NamedValue> values;
 
-	for (auto& i : import.scope())
-	{
-		currentValueName.push(name + "." + i.first);
-		values.emplace_back(i.first, eval(*i.second));
-		currentValueName.pop();
-	}
+	EnterScope(name);
+
+	for (auto& v : import.scope().values())
+		eval(*v);
+
+	const ValueMap& scope = ExitScope();
+
+	for (auto& i : scope)
+		values.emplace_back(i.first, i.second);
 
 	currentValue.emplace(Structure::Create(values, import.type()));
 
@@ -808,9 +855,7 @@ bool DAGBuilder::Enter(const ast::Value& v)
 
 void DAGBuilder::Leave(const ast::Value&)
 {
-	// Things like function definitions will never be evaluated.
-	if (currentValue.empty())
-		return;
+	assert(not currentValue.empty());
 
 	ValueMap& currentScope = CurrentScope();
 
@@ -853,6 +898,8 @@ void DAGBuilder::Leave(const ast::Value&)
 		dbg << Bytestream::Definition << " " << i.first;
 
 	dbg << Bytestream::Reset << "\n";
+
+	currentValue.emplace(val);
 }
 
 
@@ -894,6 +941,27 @@ ValueMap DAGBuilder::ExitScope()
 ValueMap& DAGBuilder::CurrentScope()
 {
 	return scopes.back();
+}
+
+ValueMap DAGBuilder::CopyCurrentScope()
+{
+	ValueMap copy;
+
+	for (auto i = scopes.rbegin(); i != scopes.rend(); i++)
+	{
+		// Unfortunately, std::copy() doesn't work here because
+		// it wants to copy *into* the string part of a const
+		// pair<string,SharedPtr<Value>>.
+		for (auto j : *i)
+		{
+			string name = j.first;
+			shared_ptr<Value> value = j.second;
+
+			copy.emplace(name, value);
+		}
+	}
+
+	return copy;
 }
 
 
@@ -949,4 +1017,18 @@ shared_ptr<Value> DAGBuilder::eval(const ast::Expression& e)
 	currentValue.pop();
 
 	return v;
+}
+
+
+Parameter* DAGBuilder::ConvertParameter(const ast::Parameter& p)
+{
+	const string name = p.getName().name();
+	const Type& type = p.type();
+	SourceRange src = p.source();
+
+	shared_ptr<Value> defaultValue;
+	if (auto& v = p.defaultValue())
+		defaultValue = eval(*v);
+
+	return new Parameter(name, type, defaultValue, src);
 }

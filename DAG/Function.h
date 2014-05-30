@@ -32,6 +32,8 @@
 #ifndef DAG_FUNCTION_H
 #define DAG_FUNCTION_H
 
+#include "ADT/PtrVec.h"
+#include "DAG/Callable.h"
 #include "DAG/Value.h"
 
 
@@ -50,19 +52,24 @@ namespace dag {
  * This is ok only because the AST outlives the DAG, but it's not a great
  * approach and we should consider how to fix it in the future.
  */
-class Function : public Value
+class Function : public Callable, public Value
 {
 public:
-	Function(const ast::Function&);
+	Function(const ast::Function&, const SharedPtrVec<Parameter>&,
+	         ValueMap&& scope);
 	virtual ~Function();
 
 	const ast::Function& function() const { return function_; }
+
+	//! A copy of the scope containing the function (at definition).
+	const ValueMap& scope() const { return containingScope_; }
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	void Accept(Visitor&) const override;
 
 private:
 	const ast::Function& function_;
+	const ValueMap containingScope_;
 };
 
 } // namespace dag

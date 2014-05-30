@@ -1,6 +1,6 @@
-/** @file AST/Action.h    Declaration of @ref fabrique::ast::Action. */
+/** @file DAG/Callable.h    Declaration of @ref fabrique::dag::Callable. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,53 +29,82 @@
  * SUCH DAMAGE.
  */
 
-#ifndef ACTION_H
-#define ACTION_H
+#ifndef DAG_CALLABLE_H
+#define DAG_CALLABLE_H
 
 #include "ADT/PtrVec.h"
+#include "ADT/StringMap.h"
+#include "DAG/Value.h"
+#include "Support/SourceLocation.h"
 
-#include "AST/Argument.h"
-#include "AST/Expression.h"
-#include "AST/HasParameters.h"
-#include "AST/Parameter.h"
+#include <memory>
+#include <set>
+#include <string>
 
 namespace fabrique {
 
-class FabContext;
-class FunctionType;
+class Type;
 
-namespace ast {
+namespace dag {
+
+class Argument;
+class Parameter;
 
 
 /**
- * A build action that can transform inputs into outputs.
+ * A mixin type for something that can be called with parameters.
  */
-class Action : public Expression, public HasParameters
+class Callable
 {
 public:
+	virtual ~Callable();
+
+	const SharedPtrVec<Parameter>& parameters() const;
+
+	bool hasParameterNamed(const std::string&) const;
+	void CheckArguments(const ValueMap& args, const SourceRange&) const;
+
 	/**
-	 * An action definition has both arguments and parameters.
-	 * Arguments define the action itself and parameters declare what
-	 * callers can pass in.
-	 *
-	 * If no explicit 'in' or 'out' parameters are specified, an action
-	 * assumes that the first two parameters are in:list[file] and
-	 * out:list[file].
+	 * Name all of the arguments in @a v according to the rules for
+	 * positional and keyword arguments.
 	 */
-	static Action* Create(UniqPtrVec<Argument>&,
-	                      UniqPtr<UniqPtrVec<Parameter>>&,
-	                      const SourceRange&, FabContext&);
+	template<class T>
+	StringMap<const T*> NameArguments(const UniqPtrVec<T>& v) const
+	{
+		std::vector<std::string> names;
+		SourceLocation begin, end;
 
-	const UniqPtrVec<Argument>& arguments() const { return args_; }
+		// Build a vector of what we currently know about the
+		// arguments' names.
+		for (auto& i : v)
+		{
+			const SourceRange& src = i->source();
+			if (not begin) begin = src.begin;
+			end = src.end;
 
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
-	virtual void Accept(Visitor&) const;
+			names.push_back(
+				i->hasName() ? i->getName().name() : "");
+		}
+
+		// Fill in any gaps with knowledge about formal parameters.
+		names = NameArguments(names, SourceRange(begin, end));
+
+		// Return the result.
+		StringMap<const T*> result;
+		for (size_t i = 0; i < v.size(); i++)
+			result.emplace(names[i], v[i].get());
+
+		return result;
+	}
+
+protected:
+	Callable(const SharedPtrVec<Parameter>&);
 
 private:
-	Action(UniqPtrVec<Argument>&, UniqPtrVec<Parameter>&,
-	       const FunctionType&, const SourceRange&);
+	std::vector<std::string>
+	NameArguments(const std::vector<std::string>&, SourceRange src) const;
 
-	UniqPtrVec<Argument> args_;
+	const SharedPtrVec<Parameter> parameters_;
 };
 
 } // namespace ast

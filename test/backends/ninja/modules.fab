@@ -3,8 +3,6 @@
 # RUN: FileCheck %s -input-file %t/build.ninja
 #
 
-# CHECK-DAG: rule tools.cc
-# CHECK-NEXT-TODO: command = cc -c ${in} -o ${out}
 tools = import('Inputs/tools.fab');
 
 # CHECK-DAG: rule cc
@@ -12,9 +10,9 @@ tools = import('Inputs/tools.fab');
 cc = tools.cc;
 
 # CHECK-DAG: build foo : phony ${buildroot}/foo.o
-# CHECK-DAG: build ${buildroot}/foo.o: tools.cc ${srcroot}/foo.c
+# CHECK-DAG: build ${buildroot}/foo.o: cc ${srcroot}/foo.c
 foo = cc(file('foo.c'), file('foo.o'));
 
 # CHECK-DAG: build bar : phony ${buildroot}/bar.o
-# CHECK-DAG: build ${buildroot}/bar.o: tools.cc ${srcroot}/bar.c
+# CHECK-DAG: build ${buildroot}/bar.o: cc ${srcroot}/bar.c
 bar = tools.cc(file('bar.c'), file('bar.o'));

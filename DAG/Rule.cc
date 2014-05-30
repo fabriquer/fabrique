@@ -40,6 +40,7 @@ using std::string;
 
 
 Rule* Rule::Create(string name, string command, const ValueMap& arguments,
+                   const SharedPtrVec<Parameter>& parameters,
                    const Type& t, const SourceRange& location)
 {
 	ValueMap args(arguments);
@@ -58,14 +59,16 @@ Rule* Rule::Create(string name, string command, const ValueMap& arguments,
 		description = command;
 	}
 
-	return new Rule(name, command, description, args, t, location);
+	return new Rule(name, command, description, args, parameters,
+	                t, location);
 }
 
 
 Rule::Rule(const string& name, const string& command, const string& description,
-	   const ValueMap& args, const Type& t, SourceRange location)
-	: Value(t, location), ruleName_(name), command_(command),
-	  description_(description), arguments_(args)
+	   const ValueMap& args, const SharedPtrVec<Parameter>& parameters,
+	   const Type& t, SourceRange location)
+	: Callable(parameters), Value(t, location), ruleName_(name),
+	  command_(command), description_(description), arguments_(args)
 {
 }
 

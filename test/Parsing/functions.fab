@@ -46,3 +46,23 @@ wibble:()=>()=>int = function(): ()=>int
 		42
 	}
 };
+
+wobble = wibble();
+
+
+#
+# Functions should act as closures:
+#
+
+# CHECK: makeClosure:(int)=>(int)=>int = function(x:int): (int)=>int
+makeClosure = function(x:int): (int)=>int
+{
+	function(y:int): int
+		x + y
+};
+
+# CHECK: theClosure:(int)=>int = makeClosure(4);
+theClosure = makeClosure(4);
+
+# CHECK: closed:int = theClosure(1);
+closed = theClosure(1);

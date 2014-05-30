@@ -33,6 +33,7 @@
 #define DAG_ACTION_H
 
 #include "ADT/StringMap.h"
+#include "DAG/Callable.h"
 #include "DAG/DAG.h"
 #include "DAG/Value.h"
 #include "Support/Printable.h"
@@ -49,11 +50,13 @@ class File;
 /**
  * An action that transforms files into other files.
  */
-class Rule : public Value
+class Rule : public Callable, public Value
 {
 public:
 	static Rule* Create(std::string name, std::string command,
-	                    const ValueMap& otherArguments, const Type&,
+	                    const ValueMap& arguments,
+	                    const SharedPtrVec<Parameter>& parameters,
+	                    const Type&,
 	                    const SourceRange& from = SourceRange::None());
 
 	virtual ~Rule() {}
@@ -75,6 +78,7 @@ public:
 private:
 	Rule(const std::string& name, const std::string& command,
 	     const std::string& description, const ValueMap& args,
+	     const SharedPtrVec<Parameter>& parameters,
 	     const Type&, SourceRange location);
 
 	const std::string ruleName_;

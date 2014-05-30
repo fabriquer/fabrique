@@ -1,4 +1,7 @@
-/** @file AST/Callable.h    Declaration of @ref fabrique::ast::Callable. */
+/**
+ * @file AST/HasParameters.h
+ * Declaration of @ref fabrique::ast::HasParameters.
+ */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -51,10 +54,10 @@ class Argument;
 /**
  * A mixin type for something that can be called with parameters.
  */
-class Callable
+class HasParameters
 {
 public:
-	Callable(UniqPtrVec<Parameter>&);
+	HasParameters(UniqPtrVec<Parameter>&);
 
 	const UniqPtrVec<Parameter>& parameters() const;
 	const std::set<std::string>& parameterNames() const;

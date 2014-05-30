@@ -27,9 +27,9 @@ if not os.path.isdir(builddir):
 cxx_srcs = {
 	'AST/': (
 		'Action', 'Argument', 'ASTDump', 'BinaryOperation', 'Call',
-		'Callable', 'CompoundExpr', 'Conditional', 'Expression',
+		'CompoundExpr', 'Conditional', 'Expression',
 		'FieldAccess', 'Filename', 'FileList', 'Foreach', 'Function',
-		'HasScope', 'Identifier', 'Import', 'List',
+		'HasParameters', 'HasScope', 'Identifier', 'Import', 'List',
 		'Mapping', 'Node', 'Parameter',
 		'Scope', 'SymbolReference', 'UnaryOperation', 'Value', 'Visitor',
 		'literals',
@@ -38,8 +38,8 @@ cxx_srcs = {
 		'Backend', 'Dot', 'Make', 'Ninja', 'Null',
 	),
 	'DAG/': (
-		'Build', 'DAG', 'File', 'Formatter', 'Function',
-		'List', 'Primitive',
+		'Build', 'Callable', 'DAG', 'File', 'Formatter', 'Function',
+		'List', 'Parameter', 'Primitive',
 		'Rule', 'Structure', 'Target', 'UndefinedValueException',
 		'Value', 'Visitor',
 	),

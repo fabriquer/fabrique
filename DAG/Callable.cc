@@ -29,67 +29,72 @@
  * SUCH DAMAGE.
  */
 
-#include "AST/Argument.h"
-#include "AST/Callable.h"
+#include "DAG/Callable.h"
+#include "DAG/Parameter.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 #include "Types/Type.h"
 #include "Types/TypeError.h"
 
-using namespace fabrique::ast;
-using fabrique::UniqPtrVec;
-using fabrique::StringMap;
+#include <cassert>
+
+using namespace fabrique;
+using namespace fabrique::dag;
 using std::string;
 using std::vector;
 
 
-Callable::Callable(UniqPtrVec<Parameter>& params)
-	: params_(std::move(params))
+Callable::Callable(const SharedPtrVec<Parameter>& p)
+	: parameters_(p)
 {
-	for (auto& p : params_)
-		paramNames_.insert(p->getName().name());
 }
 
-const UniqPtrVec<Parameter>& Callable::parameters() const
+Callable::~Callable()
 {
-	return params_;
 }
 
-const std::set<string>& Callable::parameterNames() const
+const SharedPtrVec<Parameter>& Callable::parameters() const
 {
-	return paramNames_;
+	return parameters_;
 }
 
-void Callable::CheckArguments(const UniqPtrVec<Argument>& args,
+
+bool Callable::hasParameterNamed(const std::string& name) const
+{
+	auto nameMatches = [&name](const std::shared_ptr<Parameter>& p)
+	{
+		return p->name() == name;
+	};
+
+	const auto& p = parameters_;
+	return (find_if(p.begin(), p.end(), nameMatches) != p.end());
+}
+
+
+void Callable::CheckArguments(const ValueMap& args,
                               const SourceRange& src) const
 {
-	const auto& names = parameterNames();
-
-	for (auto& a : args)
+	for (auto& p : parameters_)
 	{
-		if (a->hasName())
+		const string& name = p->name();
+		const Type& t = p->type();
+
+		auto i = args.find(name);
+		if (i == args.end())
 		{
-			const string name(a->getName().name());
-			if (find(names.begin(), names.end(), name) == names.end())
-				throw SemanticException(
-					"invalid parameter", a->source());
-		}
-	}
+			// Some arguments are optional.
+			if (p->defaultValue())
+				continue;
 
-	StringMap<const Argument*> namedArguments = NameArguments(args);
-
-	for (auto& p : params_)
-	{
-		const string& name = p->getName().name();
-		const Argument *arg = namedArguments[name];
-
-		if (not arg and not p->defaultValue())
 			throw SemanticException(
 				"missing argument to '" + name + "'", src);
+		}
 
-		if (arg and not arg->type().isSubtype(p->type()))
-			throw WrongTypeException(p->type(),
-			                         arg->type(), arg->source());
+		const std::shared_ptr<Value>& arg = i->second;
+		assert(arg);
+
+		if (not arg->type().isSubtype(t))
+			throw WrongTypeException(t, arg->type(), arg->source());
 	}
 }
 
@@ -106,13 +111,18 @@ Callable::NameArguments(const vector<string>& args, SourceRange src) const
 		dbg << " " << (a.empty() ? "<unnamed>" : a);
 
 	dbg << "\n to parameters:\n ";
-	for (auto& p : params_)
-		dbg << " " << *p;
+	for (auto& p : parameters_)
+		dbg << " "
+			<< Bytestream::Definition << p->name()
+			<< Bytestream::Operator << ":"
+			<< p->type()
+			<< Bytestream::Reset
+			;
 
 	dbg << "\n";
 
 	bool doneWithPositionalArgs = false;
-	ParamIterator nextParameter = params_.begin();
+	auto nextParameter = parameters_.begin();
 
 	for (string argName : args)
 	{
@@ -123,12 +133,12 @@ Callable::NameArguments(const vector<string>& args, SourceRange src) const
 					"positional argument after keywords",
 					src);
 
-			if (nextParameter == params_.end())
+			if (nextParameter == parameters_.end())
 				throw SyntaxError(
 					"too many positional arguments", src);
 
 			const Parameter& p = **nextParameter++;
-			argName = p.getName().name();
+			argName = p.name();
 		}
 		else
 			doneWithPositionalArgs = true;

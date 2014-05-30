@@ -1,6 +1,6 @@
-/** @file AST/Action.h    Declaration of @ref fabrique::ast::Action. */
+/** @file DAG/Parameter.cc    Definition of @ref fabrique::dag::Parameter. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,56 +29,36 @@
  * SUCH DAMAGE.
  */
 
-#ifndef ACTION_H
-#define ACTION_H
+#include "DAG/Parameter.h"
+#include "DAG/Value.h"
+#include "Support/Bytestream.h"
+#include "Types/Type.h"
 
-#include "ADT/PtrVec.h"
+using namespace fabrique::dag;
+using std::shared_ptr;
+using std::string;
 
-#include "AST/Argument.h"
-#include "AST/Expression.h"
-#include "AST/HasParameters.h"
-#include "AST/Parameter.h"
-
-namespace fabrique {
-
-class FabContext;
-class FunctionType;
-
-namespace ast {
-
-
-/**
- * A build action that can transform inputs into outputs.
- */
-class Action : public Expression, public HasParameters
+Parameter::Parameter(const string& name, const Type& t,
+                     shared_ptr<Value>& v, const SourceRange& src)
+	: HasSource(src), Typed(t), name_(name), defaultValue_(v)
 {
-public:
-	/**
-	 * An action definition has both arguments and parameters.
-	 * Arguments define the action itself and parameters declare what
-	 * callers can pass in.
-	 *
-	 * If no explicit 'in' or 'out' parameters are specified, an action
-	 * assumes that the first two parameters are in:list[file] and
-	 * out:list[file].
-	 */
-	static Action* Create(UniqPtrVec<Argument>&,
-	                      UniqPtr<UniqPtrVec<Parameter>>&,
-	                      const SourceRange&, FabContext&);
+}
 
-	const UniqPtrVec<Argument>& arguments() const { return args_; }
+Parameter::~Parameter()
+{
+}
 
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
-	virtual void Accept(Visitor&) const;
+void Parameter::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+{
+	out
+		<< Bytestream::Definition << name_
+		<< Bytestream::Operator << ":"
+		<< type()
+		;
 
-private:
-	Action(UniqPtrVec<Argument>&, UniqPtrVec<Parameter>&,
-	       const FunctionType&, const SourceRange&);
-
-	UniqPtrVec<Argument> args_;
-};
-
-} // namespace ast
-} // namespace fabrique
-
-#endif
+	if (defaultValue_)
+		out
+			<< Bytestream::Operator << " = "
+			<< *defaultValue_
+			;
+}

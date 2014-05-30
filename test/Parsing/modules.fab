@@ -3,7 +3,7 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: submodule:struct[string, (file)=>file, (int)=>int]
+# CHECK: submodule:struct[string, (file)=>file, (int)=>int, (int)=>int]
 # CHECK:   = import('Inputs/submodule.fab');
 submodule = import('Inputs/submodule.fab');
 
@@ -13,5 +13,8 @@ foo = submodule.foo;
 # CHECK: bar:(file)=>file = submodule.bar;
 bar:(file)=>file = submodule.bar;
 
-# CHECK: baz:(int)=>int = submodule.baz;
-baz = submodule.baz;
+# CHECK: my_baz:(int)=>int = submodule.baz;
+my_baz = submodule.baz;
+
+# CHECK-DAG: wibbled:int = submodule.wibble(1);
+wibbled = submodule.wibble(1);

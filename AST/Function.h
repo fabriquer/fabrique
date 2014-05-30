@@ -1,6 +1,6 @@
 /** @file AST/Function.h    Declaration of @ref fabrique::ast::Function. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -32,8 +32,8 @@
 #ifndef FUNCTION_H
 #define FUNCTION_H
 
-#include "AST/Callable.h"
 #include "AST/Expression.h"
+#include "AST/HasParameters.h"
 
 namespace fabrique {
 
@@ -50,7 +50,7 @@ class Value;
 /**
  * A function allows users to create build abstractions.
  */
-class Function : public Expression, public Callable
+class Function : public Expression, public HasParameters
 {
 public:
 	Function(UniqPtrVec<Parameter>& params, const FunctionType& ty,
