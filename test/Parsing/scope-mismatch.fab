@@ -3,7 +3,7 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: {{.*}}:8:{{[0-9]+}}: error: syntax error
+# CHECK: {{.*}}:10:{{[0-9]+}}: error: syntax error
 foo = function(xs:list[int])
 {
 	foreach x <- xs:

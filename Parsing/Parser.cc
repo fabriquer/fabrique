@@ -341,7 +341,7 @@ Function* Parser::DefineFunction(const SourceRange& begin,
 	if (not params or not body)
 		return nullptr;
 
-	if (!body->type().isSubtype(*resultType))
+	if (resultType and not body->type().isSubtype(*resultType))
 	{
 		ReportError(
 			"wrong return type ("
@@ -359,7 +359,8 @@ Function* Parser::DefineFunction(const SourceRange& begin,
 
 	ExitScope();
 
-	const FunctionType& ty = ctx_.functionType(parameterTypes, *resultType);
+	const Type& retTy = resultType ? *resultType : body->type();
+	const FunctionType& ty = ctx_.functionType(parameterTypes, retTy);
 	return new Function(*params, ty, body, loc);
 }
 

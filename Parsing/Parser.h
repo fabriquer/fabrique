@@ -142,7 +142,7 @@ public:
 	Function* DefineFunction(const SourceRange& begin,
 	                         UniqPtr<UniqPtrVec<Parameter>>& params,
 	                         UniqPtr<CompoundExpression>& body,
-	                         const Type *ty);
+	                         const Type *ty = nullptr);
 
 
 	//! An untyped @ref Identifier: just a name.

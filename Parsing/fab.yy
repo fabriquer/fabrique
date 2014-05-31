@@ -379,6 +379,15 @@ function:
 
 		SetOrDie($$, p->DefineFunction(begin, params, body, retTy));
 	}
+	|
+	functiondecl '(' parameterList ')' compoundExpr
+	{
+		SourceRange begin = Take(Parser::ParseToken($1))->source();
+		auto params = Take(NodeVec<Parameter>($3));
+		auto body = TakeNode<CompoundExpression>($5);
+
+		SetOrDie($$, p->DefineFunction(begin, params, body));
+	}
 	;
 
 functiondecl:
