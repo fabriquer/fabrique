@@ -7,3 +7,5 @@ baz = function(x:int): int x + 1;
 wibble = function(x:int): int
 	baz(x)
 	;
+
+f = file('f.txt');

@@ -49,6 +49,7 @@
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
 #include "Support/exceptions.h"
+#include "Support/os.h"
 
 #include "Types/FileType.h"
 #include "Types/FunctionType.h"
@@ -128,6 +129,7 @@ public:
 		: ctx_(ctx)
 
 	{
+		currentSubdirectory_.push("");
 	}
 
 	~DAGBuilder() {}
@@ -190,6 +192,9 @@ private:
 
 	/** The name of the value we are currently processing. */
 	std::stack<string> currentValueName;
+
+	//! The subdirectory that we are currently working from.
+	std::stack<string> currentSubdirectory_;
 
 	/**
 	 * The value currently being processed.
@@ -527,7 +532,7 @@ bool DAGBuilder::Enter(const ast::Filename& f)
 {
 	const string filename = eval(f.name())->str();
 
-	string subdirectory;
+	string subdirectory = currentSubdirectory_.top();
 	for (const UniqPtr<ast::Argument>& a : f.arguments())
 	{
 		if (a->getName().name() == "subdir")
@@ -551,7 +556,7 @@ void DAGBuilder::Leave(const ast::Filename&) {}
 bool DAGBuilder::Enter(const ast::FileList& l)
 {
 	SharedPtrVec<Value> files;
-	string subdir;
+	string subdir = currentSubdirectory_.top();
 
 	for (ConstPtr<ast::Argument>& arg : l.arguments())
 	{
@@ -654,7 +659,12 @@ bool DAGBuilder::Enter(const ast::Import& import)
 	const string name = currentValueName.top();
 	std::vector<Structure::NamedValue> values;
 
+	const string filename = eval(import.name())->str();
+	const string directory =
+		PathIsAbsolute(filename) ? "" : DirectoryOf(filename);
+
 	EnterScope(name);
+	currentSubdirectory_.push(directory);
 
 	for (auto& v : import.scope().values())
 		eval(*v);
@@ -669,7 +679,10 @@ bool DAGBuilder::Enter(const ast::Import& import)
 	return false;
 }
 
-void DAGBuilder::Leave(const ast::Import&) {}
+void DAGBuilder::Leave(const ast::Import&)
+{
+	currentSubdirectory_.pop();
+}
 
 
 bool DAGBuilder::Enter(const ast::IntLiteral& i)
