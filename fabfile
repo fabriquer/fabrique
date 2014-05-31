@@ -8,59 +8,17 @@ debug:bool = true;
 asserts:bool = true;
 debug_and_asserts = debug and asserts;
 
+
+# TODO: pass parameters to modules?
 CXX = 'c++';
+cxx = import('share/fabrique/cxx.fab');
+
 LEX = 'flex';
+lex = import('share/fabrique/lex.fab');
+
 YACC = 'byacc';
+yacc = import('share/fabrique/yacc.fab');
 
-
-# TODO: once include works, extract these into a tools.fab or somesuch
-
-### Compile one C++ source file into an object file.
-compile_cxx = action('${CXX} -c ${flags} -MMD -MF ${depfile} ${src} -o ${obj}',
-             description = 'Compiling ${in}'
-	     <- src:file[in], obj:file[out], flags:list[string], depfile:file[out],
-	        otherDeps:list[file[in]] = []);
-
-# TODO: default arg
-cxx = function(srcs:list[file], flags:list[string],
-               deps:list[file[in]] = []): list[file]
-{
-	foreach src <- srcs {
-		obj = src + '.o';
-		outs = compile_cxx(src, obj, flags, obj + '.d', deps);
-		obj
-	}
-};
-
-raw_lex = action('${LEX} ${flags} --header-file=${header} --outfile=${gen} ${src}',
-                 description = 'Processing ${in}'
-                 <- src:file[in], gen:file[out], header:file[out],
-                    flags:list[string] = []);
-
-lex = function(src:file, gen:file, header_out:file, flags:list[string] = []): file
-{
-	lex = raw_lex(src, gen, header_out, flags);
-	gen
-};
-
-# Yacc's command-line arguments are confusing and don't expose information like
-# the name of the generated header file, so we wrap it in a function that does.
-raw_yacc = action('${YACC} -d -t -o ${gen} ${src}',
-                  description = 'Processing ${in}'
-                  <- src:file[in], gen:file[out], header:file[out]);
-
-yacc = function(src:file, outname:string): file
-{
-	parser = file(outname + '.cc');
-	header = file(outname + '.h');
-	gen = raw_yacc(src, gen = parser, header = header);
-
-	parser
-};
-
-link_binary = action('${CXX} -o ${binary} ${objects}',
-                     description = 'Linking ${binary}'
-                     <- objects:list[file[in]], binary:file[out]);
 
 
 #
@@ -100,66 +58,43 @@ generated_cxx_flags =
 	+ if debug [ '-D' 'YYDEBUG' ] else [];
 
 
+# TODO: allow import('AST/AST.fab').sources;
+ast = import('AST/AST.fab');
+backends = import('Backend/Backend.fab');
+dag = import('DAG/DAG.fab');
+parsing = import('Parsing/Parsing.fab');
+support = import('Support/Support.fab');
+types = import('Types/Types.fab');
+
+#
+# TODO: allow 'for module in [ ast backends dag ]
+# (or even better, foreach dir in [ 'AST' 'Backend' ... ]
+#   {
+#     module = import(dir + '/' + dir + '.fab');
+#     module.sources
+#   }
+#
 cxx_srcs =
 	files(driver.cc FabContext.cc)
-	+
-	files(
-		Action.cc Argument.cc ASTDump.cc BinaryOperation.cc
-		Call.cc CompoundExpr.cc Conditional.cc
-		Expression.cc FieldAccess.cc Filename.cc FileList.cc
-		Foreach.cc Function.cc HasParameters.cc HasScope.cc
-		Identifier.cc Import.cc
-		List.cc Mapping.cc Node.cc Parameter.cc
-		Scope.cc SymbolReference.cc UnaryOperation.cc
-		Value.cc Visitor.cc
-		literals.cc
-		,
-		subdir = 'AST')
-	+
-	files(
-		Backend.cc Dot.cc Make.cc Ninja.cc Null.cc
-		,
-		subdir = 'Backend'
-	)
-	+
-	files(
-		Build.cc Callable.cc DAG.cc File.cc Formatter.cc Function.cc
-		List.cc Parameter.cc Primitive.cc Rule.cc
-		Structure.cc Target.cc
-		UndefinedValueException.cc Value.cc Visitor.cc
-		,
-		subdir = 'DAG'
-	)
-	+
-	files(
-		Lexer.cc Parser.cc Token.cc
-		,
-		subdir = 'Parsing')
-	+
-	files(
-		Arguments.cc Bytestream.cc ErrorReport.cc Join.cc
-		Printable.cc SourceLocation.cc Visitable.cc
-		exceptions.cc os-posix.cc
-		,
-		subdir = 'Support'
-	)
-	+
-	files(
-		BooleanType.cc FileType.cc FunctionType.cc IntegerType.cc
-		OptionallyTyped.cc SequenceType.cc StringType.cc StructureType.cc
-		Type.cc TypeError.cc Typed.cc
-		,
-		subdir = 'Types'
-	)
+	+ ast.sources
+	+ backends.sources
+	+ dag.sources
+	+ parsing.sources
+	+ support.sources
+	+ types.sources
 	;
 
 
-lexer = lex(file('Parsing/fab.l'), gen = file('Parsing/fab.lex.cc'),
-            flags = [ '-c++'], header_out = file('Parsing/fab.lex.h'));
+parser_src = yacc.process(file('Parsing/fab.yy'), 'Parsing/fab.yacc');
+lexer_src = lex.process(
+	src = file('Parsing/fab.l'), gen = file('Parsing/fab.lex.cc'),
+	flags = [ '-c++'], header_out = file('Parsing/fab.lex.h')
+);
 
-parser = yacc(file('Parsing/fab.yy'), 'Parsing/fab.yacc');
-gen = cxx([ lexer ], flags = generated_cxx_flags, deps = [ parser ])
-	+ cxx([ parser ], flags = generated_cxx_flags);
-objs = gen + cxx(cxx_srcs, normal_cxx_flags);
+objects =
+	cxx.compile([ lexer_src ], generated_cxx_flags, deps = [ parser_src ])
+	+ cxx.compile([ parser_src ], generated_cxx_flags)
+	+ cxx.compile(cxx_srcs, normal_cxx_flags)
+	;
 
-fab = link_binary(objs, binary = file('fab'));
+fab = cxx.link_executable(objects, executable = file('fab'));

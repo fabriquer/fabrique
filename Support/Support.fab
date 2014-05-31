@@ -1,0 +1,11 @@
+sources = files(
+	Arguments.cc
+	Bytestream.cc
+	ErrorReport.cc
+	Join.cc
+	Printable.cc
+	SourceLocation.cc
+	Visitable.cc
+	exceptions.cc
+	os-posix.cc
+);

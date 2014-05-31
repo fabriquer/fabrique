@@ -1,0 +1,7 @@
+sources = files(
+	Backend.cc
+	Dot.cc
+	Make.cc
+	Ninja.cc
+	Null.cc
+);

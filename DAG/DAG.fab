@@ -1,0 +1,17 @@
+sources = files(
+	Build.cc
+	Callable.cc
+	DAG.cc
+	File.cc
+	Formatter.cc
+	Function.cc
+	List.cc
+	Parameter.cc
+	Primitive.cc
+	Rule.cc
+	Structure.cc
+	Target.cc
+	UndefinedValueException.cc
+	Value.cc
+	Visitor.cc
+);
