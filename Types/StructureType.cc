@@ -60,5 +60,16 @@ bool StructureType::isSubtype(const Type& t) const
 	if (t.name() != name())
 		return false;
 
-	return false;
+	const PtrVec<Type>& params = typeParameters();
+	const PtrVec<Type>& tparams = t.typeParameters();
+
+	if (tparams.size() != params.size())
+		return false;
+
+	const size_t len = params.size();
+	for (size_t i = 0; i < len; i++)
+		if (not params[i]->isSubtype(*tparams[i]))
+			return false;
+
+	return true;
 }
