@@ -613,7 +613,7 @@ bool Parser::DefineValue(UniqPtr<Identifier>& id, UniqPtr<Expression>& e)
 
 	SourceRange range = SourceRange::Over(id, e);
 
-	if (id->isTyped() and !e->type().isSupertype(id->type()))
+	if (id->isTyped() and !e->type().isSubtype(id->type()))
 	{
 		ReportError("assigning " + e->type().str()
 		             + " to identifier of type " + id->type().str(),

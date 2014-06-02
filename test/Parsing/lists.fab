@@ -1,0 +1,7 @@
+#
+# RUN: fab --parse-only --print-ast %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: default_cflags:list[string] = [ ];
+default_cflags:list[string] = [];
