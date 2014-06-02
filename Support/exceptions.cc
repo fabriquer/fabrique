@@ -56,24 +56,6 @@ const char* AssertionFailure::what() const noexcept
 }
 
 
-DuplicateException::DuplicateException(const string& kind, const string& name)
-	: message_("duplicate " + kind + " " + name), kind_(kind), name_(name)
-{
-}
-
-DuplicateException::DuplicateException(const DuplicateException& orig)
-	: message_(orig.message_), kind_(orig.kind_), name_(orig.name_)
-{
-}
-
-DuplicateException::~DuplicateException() {}
-
-const char* DuplicateException::what() const noexcept
-{
-	return message_.c_str();
-}
-
-
 OSError::OSError(const string& message, const string& description)
 	: message_(message), description_(description),
 	  completeMessage_(message + ": " + description)

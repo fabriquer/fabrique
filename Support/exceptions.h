@@ -64,23 +64,6 @@ private:
 };
 
 
-//! An unexpected duplicate was encountered.
-class DuplicateException : public std::exception
-{
-public:
-	DuplicateException(const std::string& kind, const std::string& name);
-	DuplicateException(const DuplicateException&);
-	virtual ~DuplicateException();
-
-	const char* what() const noexcept;
-
-private:
-	const std::string message_;
-	const std::string kind_;
-	const std::string name_;
-};
-
-
 //! An error that has an OS-specific description.
 class OSError : public std::exception, public Printable
 {
