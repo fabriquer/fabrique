@@ -39,9 +39,10 @@
 using namespace fabrique::ast;
 
 
-Import::Import(UniqPtr<StringLiteral>& name, UniqPtr<Scope>& scope,
-               const Type& ty, SourceRange src)
-	: Expression(ty, src), HasScope(std::move(scope)), name_(std::move(name))
+Import::Import(UniqPtr<StringLiteral>& name, const std::string& subdir,
+               UniqPtr<Scope>& scope, const Type& ty, SourceRange src)
+	: Expression(ty, src), HasScope(std::move(scope)),
+	  name_(std::move(name)), subdirectory_(subdir)
 {
 }
 

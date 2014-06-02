@@ -64,6 +64,7 @@ Parser::Parser(FabContext& ctx)
 	: ctx_(ctx), lexer_(Lexer::instance())
 {
 	scopes_.emplace(new Scope(nullptr, "file scope"));
+	currentSubdirectory_.push("");
 }
 
 
@@ -396,22 +397,30 @@ Identifier* Parser::Id(UniqPtr<Identifier>&& untyped, const Type *ty)
 
 Import* Parser::ImportModule(UniqPtr<StringLiteral>& name, SourceRange src)
 {
-	const string filename = name->str();
+	const string subdir(currentSubdirectory_.top());
+	const string filename = JoinPath(subdir, name->str());
+	const string directory =
+		PathIsAbsolute(filename) ? "" : DirectoryOf(filename);
 
 	std::ifstream input(FindModule(ctx_.srcroot(), "", filename));
 	if (not input.good())
 		throw UserError("Can't open '" + filename + "'");
+
+	currentSubdirectory_.push(directory);
 
 	EnterScope(filename);
 	UniqPtr<Scope> module = ParseFile(input, filename);
 	if (not module)
 		return nullptr;
 
+	currentSubdirectory_.pop();
+
 	std::vector<StructureType::Field> fields;
 	for (const UniqPtr<Value>& value : module->values())
 		fields.emplace_back(value->name().name(), value->type());
 
-	return new Import(name, module, ctx_.structureType(fields), src);
+	return new Import(name, directory, module,
+	                  ctx_.structureType(fields), src);
 }
 
 

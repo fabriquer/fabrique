@@ -104,6 +104,8 @@ void Lexer::PopFile()
 	yypop_buffer_state();
 
 	SourceLocation loc = locations_.top();
+	locations_.pop();
+
 	yylineno = static_cast<int>(loc.line);
 	yycolumn = loc.column;
 }

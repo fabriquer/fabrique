@@ -49,7 +49,6 @@
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
 #include "Support/exceptions.h"
-#include "Support/os.h"
 
 #include "Types/FileType.h"
 #include "Types/FunctionType.h"
@@ -659,12 +658,8 @@ bool DAGBuilder::Enter(const ast::Import& import)
 	const string name = currentValueName.top();
 	std::vector<Structure::NamedValue> values;
 
-	const string filename = eval(import.name())->str();
-	const string directory =
-		PathIsAbsolute(filename) ? "" : DirectoryOf(filename);
-
 	EnterScope(name);
-	currentSubdirectory_.push(directory);
+	currentSubdirectory_.push(import.subdirectory());
 
 	for (auto& v : import.scope().values())
 		eval(*v);

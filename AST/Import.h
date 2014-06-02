@@ -36,6 +36,8 @@
 #include "AST/Expression.h"
 #include "AST/HasScope.h"
 
+#include <string>
+
 namespace fabrique {
 namespace ast {
 
@@ -49,16 +51,18 @@ class StringLiteral;
 class Import : public Expression, public HasScope
 {
 public:
-	Import(UniqPtr<StringLiteral>& name, UniqPtr<Scope>&,
-	       const Type&, SourceRange);
+	Import(UniqPtr<StringLiteral>& name, const std::string& subdirectory,
+	       UniqPtr<Scope>&, const Type&, SourceRange);
 
 	const StringLiteral& name() const { return *name_; }
+	const std::string& subdirectory() const { return subdirectory_; }
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 
 private:
 	const UniqPtr<StringLiteral> name_;
+	const std::string subdirectory_;
 };
 
 } // namespace ast

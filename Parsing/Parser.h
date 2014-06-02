@@ -233,6 +233,9 @@ private:
 
 	UniqPtrVec<ErrorReport> errs_;
 	std::stack<std::unique_ptr<Scope>> scopes_;
+
+	//! The subdirectory that we are currently working from.
+	std::stack<std::string> currentSubdirectory_;
 };
 
 } // namespace ast
