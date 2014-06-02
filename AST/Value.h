@@ -45,7 +45,7 @@ namespace ast {
 class Value : public Expression
 {
 public:
-	Value(UniqPtr<Identifier>&, UniqPtr<Expression>&);
+	Value(UniqPtr<Identifier>&, UniqPtr<Expression>&, const Type& t);
 
 	const Identifier& name() const { return *name_; }
 	const Expression& value() const { return *value_; }

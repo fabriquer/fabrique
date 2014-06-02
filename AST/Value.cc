@@ -40,10 +40,13 @@
 using namespace fabrique::ast;
 
 
-Value::Value(UniqPtr<Identifier>& id, UniqPtr<Expression>& value)
-	: Expression(value->type(), SourceRange::Over(id, value)),
+Value::Value(UniqPtr<Identifier>& id, UniqPtr<Expression>& value, const Type& t)
+	: Expression(t, SourceRange::Over(id, value)),
 	  name_(std::move(id)), value_(std::move(value))
 {
+	assert(not name_->isTyped() or t.isSubtype(name_->type()));
+	assert(value_->type().isSubtype(t));
+
 	assert(name_);
 	assert(value_);
 }
