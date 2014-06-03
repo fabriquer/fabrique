@@ -145,6 +145,7 @@ void Lexer::SetComment(YYSTYPE *yyunion, bool includesNewline)
 
 		src.begin.line--;
 		src = range(s.data(), s.length(), src.begin);
+		yycolumn = 1;
 	}
 
 	yyunion->token = new Token(s, src);
