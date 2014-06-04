@@ -63,20 +63,14 @@ int yyparse(ast::Parser*);
 Parser::Parser(FabContext& ctx)
 	: ctx_(ctx), lexer_(Lexer::instance())
 {
-	scopes_.emplace(new Scope(nullptr, "file scope"));
 	currentSubdirectory_.push("");
-
-	//
-	// Define some magic builtins:
-	//
-	Builtin("srcroot", ctx.srcroot());
-	Builtin("buildroot", ctx.buildroot());
 }
 
 
 UniqPtr<Scope> Parser::ParseFile(std::istream& input, string name)
 {
 	lexer_.PushFile(input, name);
+	EnterScope(name);
 
 	int result = yyparse(this);
 
@@ -102,7 +96,21 @@ Scope& Parser::EnterScope(const string& name)
 		<< Bytestream::Reset << "\n"
 		;
 
-	scopes_.emplace(new Scope(&CurrentScope(), name));
+	if (scopes_.empty())
+	{
+		scopes_.emplace(new Scope(nullptr, name));
+
+		//
+		// Define some magic builtins:
+		//
+		Builtin("srcroot", ctx_.srcroot());
+		Builtin("buildroot", ctx_.buildroot());
+	}
+	else
+	{
+		scopes_.emplace(new Scope(&CurrentScope(), name));
+	}
+
 	return *scopes_.top();
 }
 
@@ -414,7 +422,6 @@ Import* Parser::ImportModule(UniqPtr<StringLiteral>& name, SourceRange src)
 
 	currentSubdirectory_.push(directory);
 
-	EnterScope(filename);
 	UniqPtr<Scope> module = ParseFile(input, filename);
 	if (not module)
 		return nullptr;
