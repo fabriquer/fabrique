@@ -65,6 +65,12 @@ Parser::Parser(FabContext& ctx)
 {
 	scopes_.emplace(new Scope(nullptr, "file scope"));
 	currentSubdirectory_.push("");
+
+	//
+	// Define some magic builtins:
+	//
+	Builtin("srcroot", ctx.srcroot());
+	Builtin("buildroot", ctx.buildroot());
 }
 
 

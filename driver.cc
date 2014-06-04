@@ -225,18 +225,13 @@ int main(int argc, char *argv[]) {
 unique_ptr<ast::Scope> Parse(const string& filename, FabContext& ctx,
                              bool printAST)
 {
-	std::ifstream infile(filename.c_str());
-	if (!infile)
-		throw UserError("no such file: '" + filename + "'");
-
 	// Create the parser.
 	unique_ptr<ast::Parser> parser(new ast::Parser(ctx));
 
-	//
-	// Define some magic builtins:
-	//
-	parser->Builtin("srcroot", ctx.srcroot());
-	parser->Builtin("buildroot", ctx.buildroot());
+	// Open and parse the given file.
+	std::ifstream infile(filename.c_str());
+	if (!infile)
+		throw UserError("no such file: '" + filename + "'");
 
 	unique_ptr<ast::Scope> ast(parser->ParseFile(infile, filename));
 	if (not ast)
