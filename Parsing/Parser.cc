@@ -284,6 +284,9 @@ CompoundExpression* Parser::CompoundExpr(UniqPtr<Expression>& result,
 FieldAccess* Parser::FieldAccess(UniqPtr<SymbolReference>& structure,
                                  UniqPtr<Identifier>& field)
 {
+	if (not structure or not field)
+		return nullptr;
+
 	const Scope& scope =
 		dynamic_cast<const HasScope&>(structure->definition()).scope();
 
@@ -310,6 +313,9 @@ FieldAccess* Parser::FieldAccess(UniqPtr<SymbolReference>& structure,
 Filename* Parser::File(UniqPtr<Expression>& name, const SourceRange& src,
                        UniqPtr<UniqPtrVec<Argument>>&& args)
 {
+	if (not name)
+		return nullptr;
+
 	static UniqPtrVec<Argument>& empty = *new UniqPtrVec<Argument>;
 
 	if (not name->type().isSubtype(StringType::get(ctx_)))
@@ -327,6 +333,9 @@ FileList* Parser::Files(const SourceRange& begin,
                         UniqPtr<UniqPtrVec<Filename>>& files,
                         UniqPtr<UniqPtrVec<Argument>>&& args)
 {
+	if (not files)
+		return nullptr;
+
 	static UniqPtrVec<Argument>& emptyArgs = *new UniqPtrVec<Argument>;
 
 	const Type& ty = ctx_.fileListType();
@@ -340,6 +349,9 @@ ForeachExpr* Parser::Foreach(UniqPtr<Mapping>& mapping,
                              UniqPtr<CompoundExpression>& body,
                              const SourceRange& begin)
 {
+	if (not mapping or not body)
+		return nullptr;
+
 	SourceRange src(begin, body->source());
 	ExitScope();
 
@@ -411,6 +423,9 @@ Identifier* Parser::Id(UniqPtr<Identifier>&& untyped, const Type *ty)
 
 Import* Parser::ImportModule(UniqPtr<StringLiteral>& name, SourceRange src)
 {
+	if (not name)
+		return nullptr;
+
 	const string subdir(currentSubdirectory_.top());
 	const string filename = JoinPath(subdir, name->str());
 	const string directory =
@@ -442,6 +457,9 @@ Conditional* Parser::IfElse(const SourceRange& ifLocation,
                             UniqPtr<CompoundExpression>& thenResult,
                             UniqPtr<CompoundExpression>& elseResult)
 {
+	if (not condition or not thenResult or not elseResult)
+		return nullptr;
+
 	const Type &tt(thenResult->type()), &et(elseResult->type());
 	if (!tt.isSupertype(et) and !et.isSupertype(tt))
 	{
@@ -531,6 +549,9 @@ IntLiteral* Parser::ParseInt(int value)
 
 StringLiteral* Parser::ParseString(UniqPtr<fabrique::Token>&& t)
 {
+	if (not t)
+		return nullptr;
+
 	return new StringLiteral(*t, StringType::get(ctx_), t->source());
 }
 
@@ -569,6 +590,9 @@ Parameter* Parser::Param(UniqPtr<Identifier>&& name,
 
 SymbolReference* Parser::Reference(UniqPtr<Identifier>&& name)
 {
+	if (not name)
+		return nullptr;
+
 	const Expression *e = CurrentScope().Lookup(*name);
 	if (e == nullptr)
 	{
@@ -588,6 +612,9 @@ SymbolReference* Parser::Reference(UniqPtr<Identifier>&& name)
 
 SymbolReference* Parser::Reference(UniqPtr<class FieldAccess>&& access)
 {
+	if (not access)
+		return nullptr;
+
 	auto& base = dynamic_cast<const HasScope&>(access->base().definition());
 	assert(&base);
 
@@ -606,6 +633,9 @@ UnaryOperation* Parser::UnaryOp(UnaryOperation::Operator op,
                                 const SourceRange& opSrc,
                                 UniqPtr<Expression>& e)
 {
+	if (not e)
+		return nullptr;
+
 	return UnaryOperation::Create(op, opSrc, e);
 }
 
