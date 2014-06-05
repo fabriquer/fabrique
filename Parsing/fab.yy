@@ -118,8 +118,7 @@ static UniqPtrVec<T>* NodeVec(YYSTYPE& yyunion)
 %%
 
 fabfile:
-	/* empty */
-	| values
+	values
 	;
 
 expression:
@@ -552,7 +551,7 @@ unaryOperation:
 	;
 
 values:
-	value
+	/* empty */
 	| values value
 	;
 
