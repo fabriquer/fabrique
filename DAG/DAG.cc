@@ -168,6 +168,7 @@ private:
 	ValueMap& EnterScope(const string& name);
 	ValueMap ExitScope();
 	ValueMap& CurrentScope();
+	void DumpScope();
 
 	//! Make a deep copy of the current scope and all of its parents.
 	ValueMap CopyCurrentScope();
@@ -949,6 +950,40 @@ ValueMap DAGBuilder::ExitScope()
 ValueMap& DAGBuilder::CurrentScope()
 {
 	return scopes.back();
+}
+
+void DAGBuilder::DumpScope()
+{
+	Bytestream& out = Bytestream::Debug("dag.scope");
+	size_t depth = 0;
+
+	out
+		<< Bytestream::Operator << "---------------------------\n"
+		<< Bytestream::Definition << "Scopes (parent -> current):\n"
+		<< Bytestream::Operator << "---------------------------\n"
+		;
+
+	for (auto scope = scopes.begin(); scope != scopes.end(); scope++)
+	{
+		const string indent("  ", depth);
+		for (auto i : *scope)
+		{
+			const string name(i.first);
+			const shared_ptr<Value> value(i.second);
+
+			out << indent
+				<< Bytestream::Operator << "- "
+				<< Bytestream::Definition << name
+				<< Bytestream::Operator << ": "
+				<< *value
+				<< Bytestream::Reset << "\n"
+				;
+		}
+
+		depth++;
+	}
+
+	out << Bytestream::Operator << "---------------------------\n";
 }
 
 ValueMap DAGBuilder::CopyCurrentScope()
