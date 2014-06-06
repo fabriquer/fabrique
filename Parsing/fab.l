@@ -104,6 +104,10 @@ files			{
 	return FILENAME;
 }
 
+<IN_FILES>\n		{
+	/* Treat newlines inside of 'files()' like other newlines: ignore. */
+}
+
 <IN_FILES>\)		{
 	/* Closing parenthesis puts us back in normal mode. */
 	BEGIN 0;

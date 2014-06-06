@@ -1,0 +1,15 @@
+#
+# RUN: fab --print-dag --format=null %s 2> %t || true
+# RUN: FileCheck %s -input-file %t
+#
+# This is a regression test: at one point, we didn't deal with newlines
+# in the middle of a 'files()' declaration, so errors later in the file
+# would be reported with the wrong line number.
+#
+
+foo = files(
+	a.txt
+);
+
+# CHECK: err-files-lineno.fab:15:7: error: reference to undefined value
+bar = undefined_value;
