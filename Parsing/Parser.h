@@ -134,14 +134,13 @@ public:
 	 *   foreach x in some_list: x + 1
 	 * .
 	 */
-	ForeachExpr* Foreach(UniqPtr<Mapping>&,
-	                     UniqPtr<CompoundExpression>& body,
+	ForeachExpr* Foreach(UniqPtr<Mapping>&, UniqPtr<Expression>& body,
 	                     const SourceRange& start);
 
 
 	Function* DefineFunction(const SourceRange& begin,
 	                         UniqPtr<UniqPtrVec<Parameter>>& params,
-	                         UniqPtr<CompoundExpression>& body,
+	                         UniqPtr<Expression>& body,
 	                         const Type *ty = nullptr);
 
 
@@ -169,8 +168,8 @@ public:
 	 */
 	Conditional* IfElse(const SourceRange& ifLocation,
 	                    UniqPtr<Expression>& condition,
-	                    UniqPtr<CompoundExpression>& thenResult,
-	                    UniqPtr<CompoundExpression>& elseResult);
+	                    UniqPtr<Expression>& thenResult,
+	                    UniqPtr<Expression>& elseResult);
 
 	//! Define a @ref List of expressions.
 	List* ListOf(UniqPtrVec<Expression>&, const SourceRange&);

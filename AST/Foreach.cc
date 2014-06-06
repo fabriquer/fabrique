@@ -39,8 +39,7 @@
 using namespace fabrique::ast;
 
 
-ForeachExpr::ForeachExpr(UniqPtr<Mapping>& mapping,
-                         UniqPtr<CompoundExpression>& body,
+ForeachExpr::ForeachExpr(UniqPtr<Mapping>& mapping, UniqPtr<Expression>& body,
                          const Type& type, const SourceRange& source)
 	: Expression(type, source),
 	  mapping_(std::move(mapping)), body_(std::move(body))

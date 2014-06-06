@@ -126,6 +126,7 @@ expression:
 	| action
 	| binaryOperation
 	| call
+	| compoundExpr
 	| conditional
 	| '(' expression ')'	{ SetOrDie($$, $2.node); }
 	| file
@@ -237,33 +238,7 @@ call:
 	;
 
 compoundExpr:
-	compoundBegin compoundBody
-	{
-		SetOrDie($$, TakeNode<CompoundExpression>($2).release());
-	}
-	;
-
-compoundBegin:
-	{
-		p->EnterScope("compound expression");
-	}
-	;
-
-compoundBody:
-	expression
-	{
-		auto singleton = TakeNode<Expression>($1);
-		SetOrDie($$, p->CompoundExpr(singleton));
-	}
-	| '{' expression '}'
-	{
-		SourceRange begin = Take(Parser::ParseToken($1))->source();
-		auto result = TakeNode<Expression>($2);
-		SourceRange end = Take(Parser::ParseToken($3))->source();
-
-		SetOrDie($$, p->CompoundExpr(result, begin, end));
-	}
-	| '{' values expression '}'
+	compoundBegin values expression '}'
 	{
 		SourceRange begin = Take(Parser::ParseToken($1))->source();
 		// NOTE: values have already been added to the scope by Parser
@@ -274,13 +249,21 @@ compoundBody:
 	}
 	;
 
+compoundBegin:
+	'{'
+	{
+		p->EnterScope("compound expression");
+		$$.token = $1.token;
+	}
+	;
+
 conditional:
-	IF expression compoundExpr ELSE compoundExpr
+	IF expression expression ELSE expression
 	{
 		SourceRange begin = Take(Parser::ParseToken($1))->source();
 		auto condition = TakeNode<Expression>($2);
-		auto then = TakeNode<CompoundExpression>($3);
-		auto elseClause = TakeNode<CompoundExpression>($5);
+		auto then = TakeNode<Expression>($3);
+		auto elseClause = TakeNode<Expression>($5);
 
 		SetOrDie($$, p->IfElse(begin, condition, then, elseClause));
 	}
@@ -355,11 +338,11 @@ fileInList:
 	;
 
 foreach:
-	foreachbegin mapping compoundExpr
+	foreachbegin mapping expression
 	{
 		SourceRange begin = Take(Parser::ParseToken($1))->source();
 		auto mapping = TakeNode<Mapping>($2);
-		auto body = TakeNode<CompoundExpression>($3);
+		auto body = TakeNode<Expression>($3);
 
 		SetOrDie($$, p->Foreach(mapping, body, begin));
 	}
@@ -370,21 +353,21 @@ foreachbegin:
 	;
 
 function:
-	functiondecl '(' parameterList ')' ':' type compoundExpr
+	functiondecl '(' parameterList ')' ':' type expression
 	{
 		SourceRange begin = Take(Parser::ParseToken($1))->source();
 		auto params = Take(NodeVec<Parameter>($3));
 		auto *retTy = $6.type;
-		auto body = TakeNode<CompoundExpression>($7);
+		auto body = TakeNode<Expression>($7);
 
 		SetOrDie($$, p->DefineFunction(begin, params, body, retTy));
 	}
 	|
-	functiondecl '(' parameterList ')' compoundExpr
+	functiondecl '(' parameterList ')' expression
 	{
 		SourceRange begin = Take(Parser::ParseToken($1))->source();
 		auto params = Take(NodeVec<Parameter>($3));
-		auto body = TakeNode<CompoundExpression>($5);
+		auto body = TakeNode<Expression>($5);
 
 		SetOrDie($$, p->DefineFunction(begin, params, body));
 	}

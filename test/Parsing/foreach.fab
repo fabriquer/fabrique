@@ -18,7 +18,6 @@ foo = foreach x <- [ 1 2 3 ]
 #
 
 # CHECK: bar:list[int] = foreach x:int <- [ 1 2 3 ]
-# CHECK-NEXT: {
 # CHECK-NEXT:   x
-# CHECK-NEXT: };
+# CHECK:        ;
 bar = foreach x <- [ 1 2 3 ] x;

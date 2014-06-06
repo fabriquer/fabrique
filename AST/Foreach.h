@@ -51,19 +51,19 @@ class Value;
 class ForeachExpr : public Expression
 {
 public:
-	ForeachExpr(UniqPtr<Mapping>&, UniqPtr<CompoundExpression>& body,
+	ForeachExpr(UniqPtr<Mapping>&, UniqPtr<Expression>& body,
 	            const Type&, const SourceRange&);
 
 	const Expression& sourceSequence() const { return mapping_->source(); }
 	const Parameter& loopParameter() const { return mapping_->target(); }
-	const CompoundExpression& loopBody() const { return *body_; }
+	const Expression& loopBody() const { return *body_; }
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 
 private:
 	const UniqPtr<Mapping> mapping_;
-	const UniqPtr<CompoundExpression> body_;
+	const UniqPtr<Expression> body_;
 };
 
 } // namespace ast

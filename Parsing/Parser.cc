@@ -346,7 +346,7 @@ FileList* Parser::Files(const SourceRange& begin,
 
 
 ForeachExpr* Parser::Foreach(UniqPtr<Mapping>& mapping,
-                             UniqPtr<CompoundExpression>& body,
+                             UniqPtr<Expression>& body,
                              const SourceRange& begin)
 {
 	if (not mapping or not body)
@@ -362,7 +362,7 @@ ForeachExpr* Parser::Foreach(UniqPtr<Mapping>& mapping,
 
 Function* Parser::DefineFunction(const SourceRange& begin,
                                  UniqPtr<UniqPtrVec<Parameter>>& params,
-                                 UniqPtr<CompoundExpression>& body,
+                                 UniqPtr<Expression>& body,
                                  const Type *resultType)
 {
 	if (not params or not body)
@@ -454,8 +454,8 @@ Import* Parser::ImportModule(UniqPtr<StringLiteral>& name, SourceRange src)
 
 Conditional* Parser::IfElse(const SourceRange& ifLocation,
                             UniqPtr<Expression>& condition,
-                            UniqPtr<CompoundExpression>& thenResult,
-                            UniqPtr<CompoundExpression>& elseResult)
+                            UniqPtr<Expression>& thenResult,
+                            UniqPtr<Expression>& elseResult)
 {
 	if (not condition or not thenResult or not elseResult)
 		return nullptr;

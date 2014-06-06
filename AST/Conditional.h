@@ -49,8 +49,8 @@ class Conditional : public Expression
 public:
 	Conditional(const SourceRange& ifLoc,
 	            UniqPtr<Expression>& condition,
-	            UniqPtr<CompoundExpression>& thenClause,
-	            UniqPtr<CompoundExpression>& elseClause,
+	            UniqPtr<Expression>& thenClause,
+	            UniqPtr<Expression>& elseClause,
 	            const Type& resultTy);
 
 	const Expression& condition() const { return *condition_; }
@@ -62,8 +62,8 @@ public:
 
 private:
 	const std::unique_ptr<Expression> condition_;
-	const std::unique_ptr<CompoundExpression> thenClause_;
-	const std::unique_ptr<CompoundExpression> elseClause_;
+	const std::unique_ptr<Expression> thenClause_;
+	const std::unique_ptr<Expression> elseClause_;
 };
 
 } // namespace ast

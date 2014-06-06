@@ -40,8 +40,8 @@ using namespace fabrique::ast;
 
 Conditional::Conditional(const SourceRange& ifLoc,
                          UniqPtr<Expression>& condition,
-                         UniqPtr<CompoundExpression>& thenResult,
-                         UniqPtr<CompoundExpression>& elseResult,
+                         UniqPtr<Expression>& thenResult,
+                         UniqPtr<Expression>& elseResult,
                          const Type& ty)
 	: Expression(ty, SourceRange(ifLoc.begin, elseResult->source().end)),
 	  condition_(std::move(condition)),

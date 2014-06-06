@@ -41,7 +41,7 @@ using namespace fabrique::ast;
 
 
 Function::Function(UniqPtrVec<Parameter>& params, const FunctionType& ty,
-                   UniqPtr<CompoundExpression>& body, const SourceRange& loc)
+                   UniqPtr<Expression>& body, const SourceRange& loc)
 	: Expression(ty, loc), HasParameters(params), body_(std::move(body))
 {
 }

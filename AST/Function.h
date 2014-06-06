@@ -42,7 +42,6 @@ class Type;
 
 namespace ast {
 
-class CompoundExpression;
 class Parameter;
 class Value;
 
@@ -54,15 +53,15 @@ class Function : public Expression, public HasParameters
 {
 public:
 	Function(UniqPtrVec<Parameter>& params, const FunctionType& ty,
-	         UniqPtr<CompoundExpression>& body, const SourceRange& loc);
+	         UniqPtr<Expression>& body, const SourceRange& loc);
 
-	const CompoundExpression& body() const { return *body_; }
+	const Expression& body() const { return *body_; }
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 
 private:
-	const UniqPtr<CompoundExpression> body_;
+	const UniqPtr<Expression> body_;
 };
 
 } // namespace ast

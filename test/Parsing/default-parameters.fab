@@ -4,9 +4,8 @@
 #
 
 # CHECK: increment:(int,int)=>int = function(x:int, increment:int = 1): int
-# CHECK-NEXT: {
 # CHECK-NEXT:   x + increment
-# CHECK-NEXT: };
+# CHECK:        ;
 increment = function(x:int, increment:int = 1): int
 	x + increment;
 

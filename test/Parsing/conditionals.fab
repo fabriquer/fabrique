@@ -7,21 +7,23 @@
 foo = true;
 
 # CHECK: bar:int = if (foo)
-# CHECK-NEXT: {
 # CHECK-NEXT:   42
-# CHECK-NEXT: }
 # CHECK-NEXT: else
-# CHECK-NEXT: {
 # CHECK-NEXT:   31415926
-# CHECK-NEXT: };
 bar = if foo 42 else 31415926;
 
 # CHECK: baz:string = if (not foo)
-# CHECK-NEXT: {
 # CHECK-NEXT:   'hello'
+# CHECK-NEXT: else
+# CHECK-NEXT:   'world'
+baz = if not foo "hello" else "world";
+
+# CHECK: wibble:string = if (foo)
+# CHECK-NEXT: {
+# CHECK-NEXT:   'a'
 # CHECK-NEXT: }
 # CHECK-NEXT: else
 # CHECK-NEXT: {
-# CHECK-NEXT:   'world'
+# CHECK-NEXT:   'b'
 # CHECK-NEXT: };
-baz = if not foo "hello" else "world";
+wibble = if foo { 'a' } else { 'b' };
