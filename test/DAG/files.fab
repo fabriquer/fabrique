@@ -6,9 +6,6 @@
 # CHECK-DAG: file foo = Inputs/foo.txt
 foo = file('Inputs/foo.txt');
 
-# A value that happens to be called 'subdir' shouldn't change anything.
-subdir = 'foo';
-
 # CHECK-DAG: list[file] bar = [ Inputs/foo.txt Inputs/bar.txt ]
 bar = files(Inputs/foo.txt Inputs/bar.txt);
 

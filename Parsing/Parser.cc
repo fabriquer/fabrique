@@ -105,6 +105,7 @@ Scope& Parser::EnterScope(const string& name)
 		//
 		Builtin("srcroot", ctx_.srcroot());
 		Builtin("buildroot", ctx_.buildroot());
+		Builtin(ast::Subdirectory, "");
 	}
 	else
 	{

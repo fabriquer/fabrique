@@ -30,6 +30,7 @@
  */
 
 #include "AST/ast.h"
+#include "AST/Builtins.h"
 #include "AST/Visitor.h"
 
 #include "DAG/Build.h"
@@ -128,7 +129,6 @@ public:
 		: ctx_(ctx)
 
 	{
-		currentSubdirectory_.push("");
 	}
 
 	~DAGBuilder() {}
@@ -192,9 +192,6 @@ private:
 
 	/** The name of the value we are currently processing. */
 	std::stack<string> currentValueName;
-
-	//! The subdirectory that we are currently working from.
-	std::stack<string> currentSubdirectory_;
 
 	/**
 	 * The value currently being processed.
@@ -532,7 +529,9 @@ bool DAGBuilder::Enter(const ast::Filename& f)
 {
 	const string filename = eval(f.name())->str();
 
-	string subdirectory = currentSubdirectory_.top();
+	assert(getNamedValue(ast::Subdirectory));
+	string subdirectory = getNamedValue(ast::Subdirectory)->str();
+
 	for (const UniqPtr<ast::Argument>& a : f.arguments())
 	{
 		if (a->getName().name() == "subdir")
@@ -556,7 +555,9 @@ void DAGBuilder::Leave(const ast::Filename&) {}
 bool DAGBuilder::Enter(const ast::FileList& l)
 {
 	SharedPtrVec<Value> files;
-	string subdir = currentSubdirectory_.top();
+
+	assert(getNamedValue(ast::Subdirectory));
+	string subdir = getNamedValue(ast::Subdirectory)->str();
 
 	for (ConstPtr<ast::Argument>& arg : l.arguments())
 	{
@@ -659,13 +660,18 @@ bool DAGBuilder::Enter(const ast::Import& import)
 	const string name = currentValueName.top();
 	std::vector<Structure::NamedValue> values;
 
+	EnterScope("import(" + name + ")");
+	shared_ptr<Value> subdir(
+		new String(import.subdirectory(), ctx_.stringType()));
+	CurrentScope().emplace(ast::Subdirectory, subdir);
+
 	EnterScope(name);
-	currentSubdirectory_.push(import.subdirectory());
 
 	for (auto& v : import.scope().values())
 		eval(*v);
 
 	const ValueMap& scope = ExitScope();
+	ExitScope();
 
 	for (auto& i : scope)
 		values.emplace_back(i.first, i.second);
@@ -675,10 +681,7 @@ bool DAGBuilder::Enter(const ast::Import& import)
 	return false;
 }
 
-void DAGBuilder::Leave(const ast::Import&)
-{
-	currentSubdirectory_.pop();
-}
+void DAGBuilder::Leave(const ast::Import&) {}
 
 
 bool DAGBuilder::Enter(const ast::IntLiteral& i)
