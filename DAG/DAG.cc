@@ -581,7 +581,7 @@ bool DAGBuilder::Enter(const ast::FileList& l)
 		files.push_back(f);
 	}
 
-	currentValue.emplace(List::of(files, l.source()));
+	currentValue.emplace(List::of(files, l.source(), ctx_));
 
 	return false;
 }
@@ -617,7 +617,7 @@ bool DAGBuilder::Enter(const ast::ForeachExpr& f)
 		ExitScope();
 	}
 
-	currentValue.emplace(List::of(values, f.source()));
+	currentValue.emplace(List::of(values, f.source(), ctx_));
 	return false;
 }
 

@@ -48,16 +48,18 @@ class List : public Value
 {
 public:
 	template<class T>
-	static List* of(const SharedPtrVec<T>& values, const SourceRange& src)
+	static List* of(const SharedPtrVec<T>& values, const SourceRange& src,
+	                FabContext& ctx)
 	{
 		SharedPtrVec<Value> v;
 		for (const std::shared_ptr<T>& x : values)
 			v.push_back(x);
 
-		return List::of(v, src);
+		return List::of(v, src, ctx);
 	}
 
-	static List* of(const SharedPtrVec<Value>&, const SourceRange&);
+	static List* of(const SharedPtrVec<Value>&, const SourceRange&,
+	                FabContext& ctx);
 
 	List(const SharedPtrVec<Value>&, const Type&, const SourceRange&);
 

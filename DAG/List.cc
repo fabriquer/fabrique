@@ -29,6 +29,7 @@
  * SUCH DAMAGE.
  */
 
+#include "FabContext.h"
 #include "DAG/List.h"
 #include "DAG/Target.h"
 #include "DAG/Visitor.h"
@@ -49,12 +50,16 @@ using std::string;
 using std::vector;
 
 
-List* List::of(const SharedPtrVec<Value>& values, const SourceRange& src)
+List* List::of(const SharedPtrVec<Value>& values, const SourceRange& src,
+               FabContext& ctx)
 {
-	assert(not values.empty());
-	const Type& t = Type::ListOf(values.front()->type(), src);
+	const Type& elementTy =
+		values.empty()
+			? ctx.nilType()
+			: values.front()->type()
+		;
 
-	return new List(values, t, src);
+	return new List(values, Type::ListOf(elementTy, src), src);
 }
 
 
@@ -107,7 +112,8 @@ shared_ptr<Value> List::Add(shared_ptr<Value>& n)
 	auto& nextElem = next->elements_;
 	values.insert(values.end(), nextElem.begin(), nextElem.end());
 
-	return shared_ptr<Value>(List::of(values, loc));
+	return shared_ptr<Value>(
+		List::of(values, loc, elementType_.context()));
 }
 
 shared_ptr<Value> List::PrefixWith(shared_ptr<Value>& prefix)

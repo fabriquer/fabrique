@@ -59,7 +59,8 @@ Target* Target::Create(const string& name, const shared_ptr<Build>& build)
 {
 	assert(build);
 
-	shared_ptr<List> l(List::of(Files(build), build->source()));
+	shared_ptr<List> l(List::of(Files(build), build->source(),
+	                            build->type().context()));
 	return new Target(name, l, build->type());
 }
 
@@ -70,13 +71,15 @@ Target* Target::Create(const string& name, const shared_ptr<File>& file)
 	SharedPtrVec<Value> files;
 	files.push_back(file);
 
-	shared_ptr<List> l(List::of(files, file->source()));
+	shared_ptr<List> l(List::of(files, file->source(),
+	                            file->type().context()));
 	return new Target(name, l, file->type());
 }
 
 Target* Target::Create(const string& name, const shared_ptr<List>& list)
 {
-	shared_ptr<List> l(List::of(Files(list), list->source()));
+	shared_ptr<List> l(List::of(Files(list), list->source(),
+	                            list->type().context()));
 	return new Target(name, l, list->type());
 }
 
