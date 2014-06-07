@@ -32,6 +32,7 @@
 #include "DAG/Build.h"
 #include "DAG/File.h"
 #include "DAG/List.h"
+#include "DAG/Parameter.h"
 #include "DAG/Rule.h"
 #include "DAG/Target.h"
 #include "DAG/Visitor.h"
@@ -75,6 +76,14 @@ Build* Build::Create(shared_ptr<Rule>& rule, SharedPtrMap<Value>& arguments,
 	}
 
 	assert(not outputs.empty());
+
+	// Also include unspecified default parameters.
+	for (const shared_ptr<Parameter>& p : rule->parameters())
+	{
+		auto i = arguments.find(p->name());
+		if (i == arguments.end())
+			arguments[p->name()] = p->defaultValue();
+	}
 
 	const File& out = *outputs.front();
 	const Type& type =

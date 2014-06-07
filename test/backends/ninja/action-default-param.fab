@@ -1,0 +1,13 @@
+#
+# RUN: fab --format=ninja --output=%t %s
+# RUN: FileCheck %s -input-file %t/build.ninja
+#
+
+compile = action('$CC -c $src -D NAME=\"${name}\" -o $obj'
+	<- src:file[in], obj:file[out], name:string = 'foo');
+
+# CHECK: build ${buildroot}/a.o: compile ${srcroot}/a.c
+# CHECK-DAG: obj = ${buildroot}/a.o
+# CHECK-DAG: src = ${srcroot}/a.c
+# CHECK-DAG: name = foo
+obj = compile(file('a.c'), obj = file('a.o'));
