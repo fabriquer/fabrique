@@ -76,6 +76,8 @@ void ErrorReport::PrettyPrint(Bytestream& out, size_t indent) const
 	if (!filename.empty())
 	{
 		std::ifstream sourceFile(filename.c_str());
+		assert(sourceFile.good());
+
 		for (size_t i = 1; i <= caret_.line; i++) {
 			string line;
 			getline(sourceFile, line);

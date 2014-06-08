@@ -167,20 +167,24 @@ string fabrique::FilenameComponent(string pathIncludingDirectory)
 }
 
 
-std::ifstream fabrique::FindModule(string srcroot, string subdir, string name)
+std::string fabrique::FindModule(string srcroot, string subdir, string name)
 {
-	const string paths[] = {
-		srcroot,
+	const string relativeName = JoinPath(subdir, name);
+	if (PathIsAbsolute(relativeName) and FileExists(relativeName))
+		return relativeName;
+
+	if (FileExists(JoinPath(srcroot, relativeName)))
+		return relativeName;
+
+	const string searchPaths[] = {
 		"/usr/local/share/fabrique",
 	};
 
-	const string relativeName = JoinPath(subdir, name);
-
-	for (const string& path : paths)
+	for (const string& path : searchPaths)
 	{
 		const string fullPath = JoinPath(path, relativeName);
 		if (FileExists(fullPath))
-			return std::move(std::ifstream(fullPath));
+			return fullPath;
 	}
 
 	throw UserError("unable to find module '" + name + "'");

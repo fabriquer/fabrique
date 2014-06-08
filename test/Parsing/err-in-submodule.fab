@@ -1,0 +1,12 @@
+#
+# RUN: fab --format=null %s 2> %t || true
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: Inputs/submodule-with-error.fab:6:11: error: reference to undefined
+# CHECK-NEXT: 3      #
+# CHECK-NEXT: 4      # Note: we haven't imported any 'c' module!
+# CHECK-NEXT: 5      #
+# CHECK-NEXT: 6      objects = c.compile(sources);
+# CHECK-NEXT:                  ^
+foo = import('Inputs/submodule-with-error.fab');

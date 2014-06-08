@@ -428,17 +428,19 @@ Import* Parser::ImportModule(UniqPtr<StringLiteral>& name, SourceRange src)
 		return nullptr;
 
 	const string subdir(currentSubdirectory_.top());
-	const string filename = JoinPath(subdir, name->str());
-	const string directory =
-		PathIsAbsolute(filename) ? "" : DirectoryOf(filename);
-
-	std::ifstream input(FindModule(ctx_.srcroot(), "", filename));
-	if (not input.good())
-		throw UserError("Can't open '" + filename + "'");
+	const string filename = FindModule(ctx_.srcroot(), subdir, name->str());
+	const string directory = DirectoryOf(filename);
 
 	currentSubdirectory_.push(directory);
 
-	UniqPtr<Scope> module = ParseFile(input, filename);
+	const string absolute =
+		PathIsAbsolute(filename) ? filename : JoinPath(ctx_.srcroot(), filename);
+
+	std::ifstream input(absolute);
+	if (not input.good())
+		throw UserError("Can't open '" + filename + "'");
+
+	UniqPtr<Scope> module = ParseFile(input, absolute);
 	if (not module)
 		return nullptr;
 
