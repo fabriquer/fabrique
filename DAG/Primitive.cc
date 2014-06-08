@@ -137,7 +137,7 @@ shared_ptr<Value> String::Add(shared_ptr<Value>& v)
 
 	shared_ptr<String> other = std::dynamic_pointer_cast<String>(v);
 	if (not other)
-		throw WrongTypeException("string", v->type(), v->source());
+		throw WrongTypeException("string", v->type(), loc);
 
 	return shared_ptr<Value>(
 		new String(this->value_ + other->value_, type(), loc));
