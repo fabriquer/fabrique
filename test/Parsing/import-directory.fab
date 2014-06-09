@@ -1,0 +1,10 @@
+#
+# RUN: fab --parse-only --print-ast %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: foo:struct[string] = import('Inputs');
+foo = import('Inputs');
+
+# CHECK: bar:string = foo.test_value;
+bar = foo.test_value;

@@ -187,6 +187,14 @@ std::string fabrique::FindModule(string srcroot, string subdir, string name)
 			return fullPath;
 	}
 
+	const string dirname = JoinPath(srcroot, relativeName);
+	if (FileExists(dirname, true))
+	{
+		const string fabfile = JoinPath(dirname, "fabfile");
+		if (FileExists(fabfile))
+			return JoinPath(relativeName, "fabfile");
+	}
+
 	throw UserError("unable to find module '" + name + "'");
 }
 

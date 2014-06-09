@@ -1,0 +1,10 @@
+#
+# RUN: fab --format=null --print-dag %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK-DAG: struct[string] submodule = {
+submodule = import('Inputs');
+
+# CHECK-DAG: string foo = 'foo'
+foo = submodule.test_value;
