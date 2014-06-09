@@ -65,6 +65,9 @@ public:
 	//! The type of a typeless thing.
 	const Type& nilType();
 
+	//! The type of a boolean expression.
+	const Type& booleanType();
+
 	//! The type of a list.
 	const Type& listOf(const Type&, const SourceRange&);
 

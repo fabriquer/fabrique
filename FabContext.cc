@@ -64,12 +64,12 @@ namespace
 FabContext::FabContext(std::string srcroot, std::string buildroot)
 	: srcroot_(srcroot), buildroot_(buildroot)
 {
-	Register(new BooleanType(*this));
 	Register(new IntegerType(*this));
 
 	Register(Type::Create("in", PtrVec<Type>(), *this));
 	Register(Type::Create("out", PtrVec<Type>(), *this));
 
+	booleanType();
 	fileType();
 	stringType();
 
@@ -108,6 +108,14 @@ const Type& FabContext::nilType()
 {
 	static const Type& nil = *new NilType(*this);
 	return nil;
+}
+
+const Type& FabContext::booleanType()
+{
+	static const Type& t = Register(
+		new Type("bool", PtrVec<Type>(), *this));
+
+	return t;
 }
 
 const Type& FabContext::listOf(const Type& elementTy, const SourceRange& src)
