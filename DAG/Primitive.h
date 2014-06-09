@@ -74,10 +74,10 @@ public:
 	Boolean(bool, const Type&, SourceRange src = SourceRange::None());
 	std::string str() const;
 
-	virtual std::shared_ptr<Value> Negate(const SourceRange& src) const override;
-	virtual std::shared_ptr<Value> And(std::shared_ptr<Value>&) override;
-	virtual std::shared_ptr<Value> Or(std::shared_ptr<Value>&) override;
-	virtual std::shared_ptr<Value> Xor(std::shared_ptr<Value>&) override;
+	virtual ValuePtr Negate(const SourceRange& src) const override;
+	virtual ValuePtr And(ValuePtr&) override;
+	virtual ValuePtr Or(ValuePtr&) override;
+	virtual ValuePtr Xor(ValuePtr&) override;
 
 	void Accept(Visitor& v) const override;
 };
@@ -88,7 +88,7 @@ public:
 	Integer(int, const Type&, SourceRange src = SourceRange::None());
 	std::string str() const;
 
-	virtual std::shared_ptr<Value> Add(std::shared_ptr<Value>&) override;
+	virtual ValuePtr Add(ValuePtr&) override;
 
 	void Accept(Visitor& v) const override;
 };
@@ -99,7 +99,7 @@ public:
 	String(std::string, const Type&, SourceRange src = SourceRange::None());
 	std::string str() const;
 
-	virtual std::shared_ptr<Value> Add(std::shared_ptr<Value>&) override;
+	virtual ValuePtr Add(ValuePtr&) override;
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 

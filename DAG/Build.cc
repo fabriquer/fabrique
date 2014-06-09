@@ -61,7 +61,7 @@ Build* Build::Create(shared_ptr<Rule>& rule, SharedPtrMap<Value>& arguments,
 	for (auto& i : arguments)
 	{
 		const std::string& name = i.first;
-		shared_ptr<Value>& arg = i.second;
+		ValuePtr& arg = i.second;
 		const Type& argType = i.second->type();
 		const Type& paramType = *paramTypes[name];
 
@@ -169,7 +169,7 @@ void Build::Accept(Visitor& v) const
 }
 
 
-void Build::AppendFiles(const shared_ptr<Value>& in,
+void Build::AppendFiles(const ValuePtr& in,
                         vector<shared_ptr<File>>& out, bool generated)
 {
 	assert(in);
@@ -185,11 +185,11 @@ void Build::AppendFiles(const shared_ptr<Value>& in,
 			AppendFiles(i, out, generated);
 
 	else if (const shared_ptr<List>& list = dynamic_pointer_cast<List>(in))
-		for (const shared_ptr<Value>& value : *list)
+		for (const ValuePtr& value : *list)
 			AppendFiles(value, out, generated);
 
 	else if (const shared_ptr<Target>& t = dynamic_pointer_cast<Target>(in))
-		for (const shared_ptr<Value>& f : *t->files())
+		for (const ValuePtr& f : *t->files())
 			AppendFiles(f, out, generated);
 
 	else throw WrongTypeException("file|list[file]",

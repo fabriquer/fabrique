@@ -93,7 +93,7 @@ const Value& List::operator [] (size_t i) const
 }
 
 
-shared_ptr<Value> List::Add(shared_ptr<Value>& n)
+ValuePtr List::Add(ValuePtr& n)
 {
 	SourceRange loc = SourceRange::Over(this, n.get());
 
@@ -112,11 +112,10 @@ shared_ptr<Value> List::Add(shared_ptr<Value>& n)
 	auto& nextElem = next->elements_;
 	values.insert(values.end(), nextElem.begin(), nextElem.end());
 
-	return shared_ptr<Value>(
-		List::of(values, loc, elementType_.context()));
+	return ValuePtr(List::of(values, loc, elementType_.context()));
 }
 
-shared_ptr<Value> List::PrefixWith(shared_ptr<Value>& prefix)
+ValuePtr List::PrefixWith(ValuePtr& prefix)
 {
 	if (prefix->type() != elementType_)
 		throw WrongTypeException(elementType_,
@@ -126,18 +125,18 @@ shared_ptr<Value> List::PrefixWith(shared_ptr<Value>& prefix)
 	values.push_back(prefix);
 	values.insert(values.end(), elements_.begin(), elements_.end());
 
-	return shared_ptr<Value>(
+	return ValuePtr(
 		new List(values, type(), SourceRange::Over(prefix.get(), this))
 	);
 }
 
-shared_ptr<Value> List::ScalarAdd(shared_ptr<Value>& scalar)
+ValuePtr List::ScalarAdd(ValuePtr& scalar)
 {
 	SharedPtrVec<Value> values;
-	for (const shared_ptr<Value>& v : this->elements_)
+	for (const ValuePtr& v : this->elements_)
 		values.push_back(v->Add(scalar));
 
-	return shared_ptr<Value>(
+	return ValuePtr(
 		new List(values, type(), SourceRange::Over(this, scalar.get()))
 	);
 }
@@ -160,7 +159,7 @@ void List::PrettyPrint(Bytestream& out, size_t indent) const
 		<< Bytestream::Reset
 		;
 
-	for (const shared_ptr<Value>& p : elements_)
+	for (const ValuePtr& p : elements_)
 	{
 		p->PrettyPrint(out, indent);
 		out << " ";

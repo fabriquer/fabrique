@@ -47,13 +47,13 @@ namespace dag {
 class Structure : public Value
 {
 public:
-	typedef std::pair<std::string,std::shared_ptr<Value>> NamedValue;
+	typedef std::pair<std::string,ValuePtr> NamedValue;
 
 	static Structure* Create(std::vector<NamedValue>&, const Type&);
 	virtual ~Structure();
 
-	std::shared_ptr<Value> field(const std::string& name) const;
-	std::shared_ptr<Value> operator[] (const std::string& name) const
+	ValuePtr field(const std::string& name) const;
+	ValuePtr operator[] (const std::string& name) const
 	{
 		return field(name);
 	}

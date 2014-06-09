@@ -66,7 +66,7 @@ Structure::Structure(vector<NamedValue>& values, const Type& t, SourceRange src)
 Structure::~Structure() {}
 
 
-std::shared_ptr<Value> Structure::field(const std::string& name) const
+ValuePtr Structure::field(const std::string& name) const
 {
 	for (auto& i : values_)
 	{
@@ -74,7 +74,7 @@ std::shared_ptr<Value> Structure::field(const std::string& name) const
 			return i.second;
 	}
 
-	return std::shared_ptr<Value>();
+	return ValuePtr();
 }
 
 

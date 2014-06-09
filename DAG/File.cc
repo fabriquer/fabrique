@@ -116,7 +116,7 @@ void File::setGenerated(bool gen)
 
 
 
-shared_ptr<Value> File::Add(shared_ptr<Value>& suffix)
+ValuePtr File::Add(ValuePtr& suffix)
 {
 	shared_ptr<File> f(
 		new File(filename_ + suffix->str(), subdirectory_, absolute_,
@@ -126,7 +126,7 @@ shared_ptr<Value> File::Add(shared_ptr<Value>& suffix)
 }
 
 
-shared_ptr<Value> File::PrefixWith(shared_ptr<Value>& prefix)
+ValuePtr File::PrefixWith(ValuePtr& prefix)
 {
 	shared_ptr<File> f(
 		new File(prefix->str() + filename_, subdirectory_, absolute_,

@@ -50,41 +50,41 @@ Boolean::Boolean(bool b, const Type& t, SourceRange loc)
 	// TODO: assert(t is a subtype of bool?)
 }
 
-shared_ptr<Value> Boolean::Negate(const SourceRange& loc) const
+ValuePtr Boolean::Negate(const SourceRange& loc) const
 {
-	return shared_ptr<Value>(new Boolean(not value_, type(), loc));
+	return ValuePtr(new Boolean(not value_, type(), loc));
 }
 
-shared_ptr<Value> Boolean::And(shared_ptr<Value>& v)
+ValuePtr Boolean::And(ValuePtr& v)
 {
 	auto other = dynamic_pointer_cast<Boolean>(v);
 	assert(other);
 
-	return shared_ptr<Value>(
+	return ValuePtr(
 		new Boolean(value_ and other->value_,
 			Type::GetSupertype(type(), other->type()),
 			SourceRange(*this, *other))
 	);
 }
 
-shared_ptr<Value> Boolean::Or(shared_ptr<Value>& v)
+ValuePtr Boolean::Or(ValuePtr& v)
 {
 	auto other = dynamic_pointer_cast<Boolean>(v);
 	assert(other);
 
-	return shared_ptr<Value>(
+	return ValuePtr(
 		new Boolean(value_ or other->value_,
 			Type::GetSupertype(type(), other->type()),
 			SourceRange(*this, *other))
 	);
 }
 
-shared_ptr<Value> Boolean::Xor(shared_ptr<Value>& v)
+ValuePtr Boolean::Xor(ValuePtr& v)
 {
 	auto other = dynamic_pointer_cast<Boolean>(v);
 	assert(other);
 
-	return shared_ptr<Value>(
+	return ValuePtr(
 		new Boolean(value_ xor other->value_,
 			Type::GetSupertype(type(), other->type()),
 			SourceRange(*this, *other))
@@ -106,7 +106,7 @@ Integer::Integer(int i, const Type& t, SourceRange loc)
 
 string Integer::str() const { return std::to_string(value_); }
 
-shared_ptr<Value> Integer::Add(shared_ptr<Value>& v)
+ValuePtr Integer::Add(ValuePtr& v)
 {
 	SourceRange loc = SourceRange(*this, *v);
 
@@ -114,7 +114,7 @@ shared_ptr<Value> Integer::Add(shared_ptr<Value>& v)
 	if (not other)
 		throw WrongTypeException("int", v->type(), v->source());
 
-	return shared_ptr<Value>(
+	return ValuePtr(
 		new Integer(this->value_ + other->value_, type(), loc));
 }
 
@@ -131,7 +131,7 @@ String::String(string s, const Type& t, SourceRange loc)
 
 string String::str() const { return value_; }
 
-shared_ptr<Value> String::Add(shared_ptr<Value>& v)
+ValuePtr String::Add(ValuePtr& v)
 {
 	SourceRange loc = SourceRange(*this, *v);
 
@@ -139,7 +139,7 @@ shared_ptr<Value> String::Add(shared_ptr<Value>& v)
 	if (not other)
 		throw WrongTypeException("string", v->type(), loc);
 
-	return shared_ptr<Value>(
+	return ValuePtr(
 		new String(this->value_ + other->value_, type(), loc));
 }
 

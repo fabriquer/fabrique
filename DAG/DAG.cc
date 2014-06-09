@@ -174,10 +174,10 @@ private:
 	ValueMap CopyCurrentScope();
 
 	//! Get a named value from the current scope or a parent scope.
-	shared_ptr<Value> getNamedValue(const std::string& name);
+	ValuePtr getNamedValue(const std::string& name);
 
 	//! Evaluate an expression as, well, a @ref Value.
-	shared_ptr<Value> eval(const ast::Expression&);
+	ValuePtr eval(const ast::Expression&);
 
 	//! Parameters aren't really values: we can't store them, etc.
 	Parameter* ConvertParameter(const ast::Parameter&);
@@ -197,7 +197,7 @@ private:
 	 * The value currently being processed.
 	 * Visitor methods should leave a single item on this stack.
 	 */
-	std::stack<shared_ptr<Value>> currentValue;
+	std::stack<ValuePtr> currentValue;
 };
 
 } // namespace dag
@@ -226,7 +226,7 @@ void DAG::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 	for (auto& i : namedValues)
 	{
 		const string& name = i.first;
-		const shared_ptr<Value>& v = i.second;
+		const ValuePtr& v = i.second;
 
 		assert(v);
 
@@ -284,7 +284,7 @@ bool DAGBuilder::Enter(const ast::Action& a)
 	for (ConstPtr<ast::Argument>& arg : a.arguments())
 	{
 		// Evaluate the argument as a string.
-		shared_ptr<Value> value = eval(arg->getValue());
+		ValuePtr value = eval(arg->getValue());
 
 		// The only keyword-less argument to action() is its command.
 		if (not arg->hasName() or arg->getName().name() == "command")
@@ -297,7 +297,7 @@ bool DAGBuilder::Enter(const ast::Action& a)
 			continue;
 		}
 
-		shared_ptr<Value> v(new String(value->str(), ctx_.stringType(),
+		ValuePtr v(new String(value->str(), ctx_.stringType(),
 		                               arg->source()));
 		arguments.emplace(arg->getName().name(), v);
 	}
@@ -334,12 +334,12 @@ void DAGBuilder::Leave(const ast::Argument&) {}
 
 bool DAGBuilder::Enter(const ast::BinaryOperation& o)
 {
-	shared_ptr<Value> lhs = eval(o.getLHS());
-	shared_ptr<Value> rhs = eval(o.getRHS());
+	ValuePtr lhs = eval(o.getLHS());
+	ValuePtr rhs = eval(o.getRHS());
 
 	assert(lhs and rhs);
 
-	shared_ptr<Value> result;
+	ValuePtr result;
 	switch (o.getOp())
 	{
 		case ast::BinaryOperation::Add:
@@ -403,7 +403,7 @@ void DAGBuilder::Leave(const ast::BoolLiteral&) {}
 bool DAGBuilder::Enter(const ast::Call&) { return false; }
 void DAGBuilder::Leave(const ast::Call& call)
 {
-	shared_ptr<Value> value = eval(call.target());
+	ValuePtr value = eval(call.target());
 
 	auto target = dynamic_pointer_cast<Callable>(value);
 	assert(target);
@@ -601,14 +601,14 @@ bool DAGBuilder::Enter(const ast::ForeachExpr& f)
 	// and then evaluate the CompoundExpression.
 	//
 	const ast::Parameter& loopParam = f.loopParameter();
-	for (const shared_ptr<Value>& element : *target->asList())
+	for (const ValuePtr& element : *target->asList())
 	{
 		assert(element->type().isSubtype(f.loopParameter().type()));
 
 		ValueMap& scope = EnterScope("foreach body");
 		scope[loopParam.getName().name()] = element;
 
-		shared_ptr<Value> result = eval(f.loopBody());
+		ValuePtr result = eval(f.loopBody());
 		assert(result);
 		assert(result->type().isSubtype(f.loopBody().type()));
 
@@ -661,7 +661,7 @@ bool DAGBuilder::Enter(const ast::Import& import)
 	std::vector<Structure::NamedValue> values;
 
 	EnterScope("import(" + name + ")");
-	shared_ptr<Value> subdir(
+	ValuePtr subdir(
 		new String(import.subdirectory(), ctx_.stringType()));
 	CurrentScope().emplace(ast::Subdirectory, subdir);
 
@@ -743,7 +743,7 @@ void DAGBuilder::Leave(const ast::Scope&)
 	for (auto symbol : scopedSymbols)
 	{
 		const string name = join(currentScopeName, symbol.first, ".");
-		shared_ptr<Value>& v = symbol.second;
+		ValuePtr& v = symbol.second;
 
 		if (auto rule = dynamic_pointer_cast<Rule>(v))
 		{
@@ -781,7 +781,7 @@ bool DAGBuilder::Enter(const ast::SymbolReference& r)
 	const string& name = Type::UntypedPart(r.name().str());
 
 	shared_ptr<Structure> base;
-	shared_ptr<Value> value;
+	ValuePtr value;
 
 	//
 	// A symbol reference can have multiple dot-separated components:
@@ -836,10 +836,10 @@ void DAGBuilder::Leave(const ast::SymbolReference&) {}
 
 bool DAGBuilder::Enter(const ast::UnaryOperation& o)
 {
-	shared_ptr<Value> subexpr = eval(o.getSubExpr());
+	ValuePtr subexpr = eval(o.getSubExpr());
 	assert(subexpr);
 
-	shared_ptr<Value> result;
+	ValuePtr result;
 	switch (o.getOp())
 	{
 		case ast::UnaryOperation::Negate:
@@ -878,7 +878,7 @@ void DAGBuilder::Leave(const ast::Value&)
 		<< Bytestream::Operator << ":"
 		;
 
-	shared_ptr<Value> val = std::move(currentValue.top());
+	ValuePtr val = std::move(currentValue.top());
 	currentValue.pop();
 
 	const string name = currentValueName.top();
@@ -972,7 +972,7 @@ void DAGBuilder::DumpScope()
 		for (auto i : *scope)
 		{
 			const string name(i.first);
-			const shared_ptr<Value> value(i.second);
+			const ValuePtr value(i.second);
 
 			out << indent
 				<< Bytestream::Operator << "- "
@@ -1001,7 +1001,7 @@ ValueMap DAGBuilder::CopyCurrentScope()
 		for (auto j : *i)
 		{
 			string name = j.first;
-			shared_ptr<Value> value = j.second;
+			ValuePtr value = j.second;
 
 			copy.emplace(name, value);
 		}
@@ -1011,7 +1011,7 @@ ValueMap DAGBuilder::CopyCurrentScope()
 }
 
 
-shared_ptr<Value> DAGBuilder::getNamedValue(const string& name)
+ValuePtr DAGBuilder::getNamedValue(const string& name)
 {
 	Bytestream& dbg = Bytestream::Debug("dag.lookup");
 	dbg
@@ -1054,12 +1054,12 @@ shared_ptr<Value> DAGBuilder::getNamedValue(const string& name)
 	return NULL;
 }
 
-shared_ptr<Value> DAGBuilder::eval(const ast::Expression& e)
+ValuePtr DAGBuilder::eval(const ast::Expression& e)
 {
 	e.Accept(*this);
 
 	assert(not currentValue.empty());
-	shared_ptr<Value> v(currentValue.top());
+	ValuePtr v(currentValue.top());
 	currentValue.pop();
 
 	return v;
@@ -1072,7 +1072,7 @@ Parameter* DAGBuilder::ConvertParameter(const ast::Parameter& p)
 	const Type& type = p.type();
 	SourceRange src = p.source();
 
-	shared_ptr<Value> defaultValue;
+	ValuePtr defaultValue;
 	if (auto& v = p.defaultValue())
 		defaultValue = eval(*v);
 

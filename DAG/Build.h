@@ -77,8 +77,7 @@ private:
 	      const Type&,
 	      SourceRange);
 
-	static void AppendFiles(const std::shared_ptr<Value>& in,
-	                        SharedPtrVec<File>& out,
+	static void AppendFiles(const ValuePtr& in, SharedPtrVec<File>& out,
 	                        bool generated = false);
 
 	std::shared_ptr<Rule> rule_;

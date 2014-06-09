@@ -62,12 +62,12 @@ public:
 	const std::string& name() const { return name_; }
 	const std::shared_ptr<List>& files() const { return files_; }
 
-	virtual std::shared_ptr<Value> Add(std::shared_ptr<Value>&) override;
-	virtual std::shared_ptr<Value> PrefixWith(std::shared_ptr<Value>&) override;
-	virtual std::shared_ptr<Value> ScalarAdd(std::shared_ptr<Value>&) override;
-	virtual std::shared_ptr<Value> And(std::shared_ptr<Value>&) override;
-	virtual std::shared_ptr<Value> Or(std::shared_ptr<Value>&) override;
-	virtual std::shared_ptr<Value> Xor(std::shared_ptr<Value>&) override;
+	virtual ValuePtr Add(ValuePtr&) override;
+	virtual ValuePtr PrefixWith(ValuePtr&) override;
+	virtual ValuePtr ScalarAdd(ValuePtr&) override;
+	virtual ValuePtr And(ValuePtr&) override;
+	virtual ValuePtr Or(ValuePtr&) override;
+	virtual ValuePtr Xor(ValuePtr&) override;
 
 	virtual const List* asList() const override { return files_.get(); }
 
@@ -78,7 +78,7 @@ private:
 	Target(const std::string& name, const std::shared_ptr<List>& files,
 	       const Type&);
 
-	const std::shared_ptr<Value> underlyingFiles() const;
+	const ValuePtr underlyingFiles() const;
 
 	const std::string name_;
 	const std::shared_ptr<List> files_;

@@ -73,9 +73,9 @@ public:
 	const Value& operator [] (size_t) const;
 
 	//! List addition is concatenation.
-	virtual std::shared_ptr<Value> Add(std::shared_ptr<Value>&) override;
-	virtual std::shared_ptr<Value> PrefixWith(std::shared_ptr<Value>&) override;
-	virtual std::shared_ptr<Value> ScalarAdd(std::shared_ptr<Value>&) override;
+	virtual ValuePtr Add(ValuePtr&) override;
+	virtual ValuePtr PrefixWith(ValuePtr&) override;
+	virtual ValuePtr ScalarAdd(ValuePtr&) override;
 	virtual const List* asList() const override { return this; }
 	virtual bool canScalarAdd(const Value&) override;
 

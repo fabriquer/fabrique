@@ -90,7 +90,7 @@ void Callable::CheckArguments(const ValueMap& args,
 				"missing argument to '" + name + "'", src);
 		}
 
-		const std::shared_ptr<Value>& arg = i->second;
+		const ValuePtr& arg = i->second;
 		assert(arg);
 
 		if (not arg->type().isSubtype(t))

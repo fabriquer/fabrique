@@ -93,32 +93,32 @@ Target::Target(const string& name, const shared_ptr<List>& files, const Type& t)
 
 
 // Just pass operations through to the underlying List.
-shared_ptr<Value> Target::Add(shared_ptr<Value>& rhs)
+ValuePtr Target::Add(ValuePtr& rhs)
 {
 	return underlyingFiles()->Add(rhs);
 }
 
-shared_ptr<Value> Target::PrefixWith(shared_ptr<Value>& rhs)
+ValuePtr Target::PrefixWith(ValuePtr& rhs)
 {
 	return underlyingFiles()->PrefixWith(rhs);
 }
 
-shared_ptr<Value> Target::ScalarAdd(shared_ptr<Value>& rhs)
+ValuePtr Target::ScalarAdd(ValuePtr& rhs)
 {
 	return underlyingFiles()->ScalarAdd(rhs);
 }
 
-shared_ptr<Value> Target::And(shared_ptr<Value>& rhs)
+ValuePtr Target::And(ValuePtr& rhs)
 {
 	return underlyingFiles()->And(rhs);
 }
 
-shared_ptr<Value> Target::Or(shared_ptr<Value>& rhs)
+ValuePtr Target::Or(ValuePtr& rhs)
 {
 	return underlyingFiles()->Or(rhs);
 }
 
-shared_ptr<Value> Target::Xor(shared_ptr<Value>& rhs)
+ValuePtr Target::Xor(ValuePtr& rhs)
 {
 	return underlyingFiles()->Xor(rhs);
 }
@@ -139,7 +139,7 @@ void Target::Accept(Visitor& v) const
 }
 
 
-const shared_ptr<Value> Target::underlyingFiles() const
+const ValuePtr Target::underlyingFiles() const
 {
 	if (type().isOrdered())
 		return files_;

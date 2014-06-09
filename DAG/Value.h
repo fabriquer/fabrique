@@ -50,13 +50,17 @@ class List;
 class Visitor;
 
 
+class Value;
+typedef std::shared_ptr<Value> ValuePtr;
+
+
 //! The result of evaluating an expression.
 class Value : public HasSource, public Printable, public Typed,
               public Uncopyable
 {
 public:
 	//! Unary 'not' operator.
-	virtual std::shared_ptr<Value> Negate(const SourceRange& loc) const;
+	virtual ValuePtr Negate(const SourceRange& loc) const;
 
 	/**
 	 * Add this @ref fabrique::dag::Value to a following @ref Value.
@@ -64,22 +68,22 @@ public:
 	 * The implementation of addition is type-dependent: it might make
 	 * sense to add, concatenate or apply a logical AND.
 	 */
-	virtual std::shared_ptr<Value> Add(std::shared_ptr<Value>&);
+	virtual ValuePtr Add(ValuePtr&);
 
 	//! Apply the prefix operation: prefix this value with another value.
-	virtual std::shared_ptr<Value> PrefixWith(std::shared_ptr<Value>&);
+	virtual ValuePtr PrefixWith(ValuePtr&);
 
 	//! Add another @ref fabrique::dag::Value scalar-wise across this @ref Value.
-	virtual std::shared_ptr<Value> ScalarAdd(std::shared_ptr<Value>&);
+	virtual ValuePtr ScalarAdd(ValuePtr&);
 
 	/** Logical and. */
-	virtual std::shared_ptr<Value> And(std::shared_ptr<Value>&);
+	virtual ValuePtr And(ValuePtr&);
 
 	/** Logical or. */
-	virtual std::shared_ptr<Value> Or(std::shared_ptr<Value>&);
+	virtual ValuePtr Or(ValuePtr&);
 
 	/** Logical xor. */
-	virtual std::shared_ptr<Value> Xor(std::shared_ptr<Value>&);
+	virtual ValuePtr Xor(ValuePtr&);
 
 	//! A list representation of this value (or nullptr).
 	virtual const List* asList() const { return nullptr; }
@@ -96,7 +100,7 @@ protected:
 	Value(const Type&, const SourceRange&);
 };
 
-typedef StringMap<std::shared_ptr<Value>> ValueMap;
+typedef StringMap<ValuePtr> ValueMap;
 
 } // namespace dag
 } // namespace fabrique
