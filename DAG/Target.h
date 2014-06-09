@@ -62,12 +62,12 @@ public:
 	const std::string& name() const { return name_; }
 	const std::shared_ptr<List>& files() const { return files_; }
 
-	virtual std::shared_ptr<Value> Add(std::shared_ptr<Value>&);
-	virtual std::shared_ptr<Value> PrefixWith(std::shared_ptr<Value>&);
-	virtual std::shared_ptr<Value> ScalarAdd(std::shared_ptr<Value>&);
-	virtual std::shared_ptr<Value> And(std::shared_ptr<Value>&);
-	virtual std::shared_ptr<Value> Or(std::shared_ptr<Value>&);
-	virtual std::shared_ptr<Value> Xor(std::shared_ptr<Value>&);
+	virtual std::shared_ptr<Value> Add(std::shared_ptr<Value>&) override;
+	virtual std::shared_ptr<Value> PrefixWith(std::shared_ptr<Value>&) override;
+	virtual std::shared_ptr<Value> ScalarAdd(std::shared_ptr<Value>&) override;
+	virtual std::shared_ptr<Value> And(std::shared_ptr<Value>&) override;
+	virtual std::shared_ptr<Value> Or(std::shared_ptr<Value>&) override;
+	virtual std::shared_ptr<Value> Xor(std::shared_ptr<Value>&) override;
 
 	virtual const List* asList() const override { return files_.get(); }
 
