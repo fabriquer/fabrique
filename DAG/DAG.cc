@@ -994,7 +994,10 @@ void DAGBuilder::DumpScope()
 		depth++;
 	}
 
-	out << Bytestream::Operator << "---------------------------\n";
+	out
+		<< Bytestream::Operator << "---------------------------\n"
+		<< Bytestream::Reset
+		;
 }
 
 ValueMap DAGBuilder::CopyCurrentScope()
