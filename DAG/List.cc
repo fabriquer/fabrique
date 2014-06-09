@@ -93,7 +93,7 @@ const Value& List::operator [] (size_t i) const
 }
 
 
-ValuePtr List::Add(ValuePtr& n)
+ValuePtr List::Add(ValuePtr& n) const
 {
 	SourceRange loc = SourceRange::Over(this, n.get());
 
@@ -115,7 +115,7 @@ ValuePtr List::Add(ValuePtr& n)
 	return ValuePtr(List::of(values, loc, elementType_.context()));
 }
 
-ValuePtr List::PrefixWith(ValuePtr& prefix)
+ValuePtr List::PrefixWith(ValuePtr& prefix) const
 {
 	if (prefix->type() != elementType_)
 		throw WrongTypeException(elementType_,
@@ -130,7 +130,7 @@ ValuePtr List::PrefixWith(ValuePtr& prefix)
 	);
 }
 
-ValuePtr List::ScalarAdd(ValuePtr& scalar)
+ValuePtr List::ScalarAdd(ValuePtr& scalar) const
 {
 	SharedPtrVec<Value> values;
 	for (const ValuePtr& v : this->elements_)
@@ -141,7 +141,7 @@ ValuePtr List::ScalarAdd(ValuePtr& scalar)
 	);
 }
 
-bool List::canScalarAdd(const Value& other)
+bool List::canScalarAdd(const Value& other) const
 {
 	const Type& t = type();
 

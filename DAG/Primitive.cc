@@ -55,7 +55,7 @@ ValuePtr Boolean::Negate(const SourceRange& loc) const
 	return ValuePtr(new Boolean(not value_, type(), loc));
 }
 
-ValuePtr Boolean::And(ValuePtr& v)
+ValuePtr Boolean::And(ValuePtr& v) const
 {
 	auto other = dynamic_pointer_cast<Boolean>(v);
 	assert(other);
@@ -67,7 +67,7 @@ ValuePtr Boolean::And(ValuePtr& v)
 	);
 }
 
-ValuePtr Boolean::Or(ValuePtr& v)
+ValuePtr Boolean::Or(ValuePtr& v) const
 {
 	auto other = dynamic_pointer_cast<Boolean>(v);
 	assert(other);
@@ -79,7 +79,7 @@ ValuePtr Boolean::Or(ValuePtr& v)
 	);
 }
 
-ValuePtr Boolean::Xor(ValuePtr& v)
+ValuePtr Boolean::Xor(ValuePtr& v) const
 {
 	auto other = dynamic_pointer_cast<Boolean>(v);
 	assert(other);
@@ -106,7 +106,7 @@ Integer::Integer(int i, const Type& t, SourceRange loc)
 
 string Integer::str() const { return std::to_string(value_); }
 
-ValuePtr Integer::Add(ValuePtr& v)
+ValuePtr Integer::Add(ValuePtr& v) const
 {
 	SourceRange loc = SourceRange(*this, *v);
 
@@ -131,7 +131,7 @@ String::String(string s, const Type& t, SourceRange loc)
 
 string String::str() const { return value_; }
 
-ValuePtr String::Add(ValuePtr& v)
+ValuePtr String::Add(ValuePtr& v) const
 {
 	SourceRange loc = SourceRange(*this, *v);
 

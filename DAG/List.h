@@ -73,11 +73,11 @@ public:
 	const Value& operator [] (size_t) const;
 
 	//! List addition is concatenation.
-	virtual ValuePtr Add(ValuePtr&) override;
-	virtual ValuePtr PrefixWith(ValuePtr&) override;
-	virtual ValuePtr ScalarAdd(ValuePtr&) override;
+	virtual ValuePtr Add(ValuePtr&) const override;
+	virtual ValuePtr PrefixWith(ValuePtr&) const override;
+	virtual ValuePtr ScalarAdd(ValuePtr&) const override;
 	virtual const List* asList() const override { return this; }
-	virtual bool canScalarAdd(const Value&) override;
+	virtual bool canScalarAdd(const Value&) const override;
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	void Accept(Visitor& v) const override;

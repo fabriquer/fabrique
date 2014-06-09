@@ -54,37 +54,37 @@ ValuePtr Value::Negate(const SourceRange& opLoc) const
 	);
 }
 
-ValuePtr Value::Add(ValuePtr&)
+ValuePtr Value::Add(ValuePtr&) const
 {
 	throw SemanticException(
 		"addition unsupported by " + type().name(), source());
 }
 
-ValuePtr Value::PrefixWith(ValuePtr&)
+ValuePtr Value::PrefixWith(ValuePtr&) const
 {
 	throw SemanticException(
 		"prefix operation unsupported by " + type().name(), source());
 }
 
-ValuePtr Value::ScalarAdd(ValuePtr&)
+ValuePtr Value::ScalarAdd(ValuePtr&) const
 {
 	throw SemanticException(
 		"scalar addition unsupported by " + type().name(), source());
 }
 
-ValuePtr Value::And(ValuePtr&)
+ValuePtr Value::And(ValuePtr&) const
 {
 	throw SemanticException(
 		"logial AND unsupported by " + type().name(), source());
 }
 
-ValuePtr Value::Or(ValuePtr&)
+ValuePtr Value::Or(ValuePtr&) const
 {
 	throw SemanticException(
 		"logial OR unsupported by " + type().name(), source());
 }
 
-ValuePtr Value::Xor(ValuePtr&)
+ValuePtr Value::Xor(ValuePtr&) const
 {
 	throw SemanticException(
 		"logial XOR unsupported by " + type().name(), source());

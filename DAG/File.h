@@ -68,10 +68,10 @@ public:
 	void setSubdirectory(std::string subdir) { subdirectory_ = subdir; }
 
 	//! Name a file with my name + a suffix.
-	virtual ValuePtr Add(ValuePtr&) override;
+	virtual ValuePtr Add(ValuePtr&) const override;
 
 	//! Name a file with a prefix + my name.
-	virtual ValuePtr PrefixWith(ValuePtr&) override;
+	virtual ValuePtr PrefixWith(ValuePtr&) const override;
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	void Accept(Visitor&) const override;

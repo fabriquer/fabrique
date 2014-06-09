@@ -93,32 +93,32 @@ Target::Target(const string& name, const shared_ptr<List>& files, const Type& t)
 
 
 // Just pass operations through to the underlying List.
-ValuePtr Target::Add(ValuePtr& rhs)
+ValuePtr Target::Add(ValuePtr& rhs) const
 {
 	return underlyingFiles()->Add(rhs);
 }
 
-ValuePtr Target::PrefixWith(ValuePtr& rhs)
+ValuePtr Target::PrefixWith(ValuePtr& rhs) const
 {
 	return underlyingFiles()->PrefixWith(rhs);
 }
 
-ValuePtr Target::ScalarAdd(ValuePtr& rhs)
+ValuePtr Target::ScalarAdd(ValuePtr& rhs) const
 {
 	return underlyingFiles()->ScalarAdd(rhs);
 }
 
-ValuePtr Target::And(ValuePtr& rhs)
+ValuePtr Target::And(ValuePtr& rhs) const
 {
 	return underlyingFiles()->And(rhs);
 }
 
-ValuePtr Target::Or(ValuePtr& rhs)
+ValuePtr Target::Or(ValuePtr& rhs) const
 {
 	return underlyingFiles()->Or(rhs);
 }
 
-ValuePtr Target::Xor(ValuePtr& rhs)
+ValuePtr Target::Xor(ValuePtr& rhs) const
 {
 	return underlyingFiles()->Xor(rhs);
 }

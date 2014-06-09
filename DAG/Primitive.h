@@ -75,9 +75,9 @@ public:
 	std::string str() const;
 
 	virtual ValuePtr Negate(const SourceRange& src) const override;
-	virtual ValuePtr And(ValuePtr&) override;
-	virtual ValuePtr Or(ValuePtr&) override;
-	virtual ValuePtr Xor(ValuePtr&) override;
+	virtual ValuePtr And(ValuePtr&) const override;
+	virtual ValuePtr Or(ValuePtr&) const override;
+	virtual ValuePtr Xor(ValuePtr&) const override;
 
 	void Accept(Visitor& v) const override;
 };
@@ -88,7 +88,7 @@ public:
 	Integer(int, const Type&, SourceRange src = SourceRange::None());
 	std::string str() const;
 
-	virtual ValuePtr Add(ValuePtr&) override;
+	virtual ValuePtr Add(ValuePtr&) const override;
 
 	void Accept(Visitor& v) const override;
 };
@@ -99,7 +99,7 @@ public:
 	String(std::string, const Type&, SourceRange src = SourceRange::None());
 	std::string str() const;
 
-	virtual ValuePtr Add(ValuePtr&) override;
+	virtual ValuePtr Add(ValuePtr&) const override;
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 

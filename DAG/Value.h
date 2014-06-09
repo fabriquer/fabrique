@@ -68,22 +68,22 @@ public:
 	 * The implementation of addition is type-dependent: it might make
 	 * sense to add, concatenate or apply a logical AND.
 	 */
-	virtual ValuePtr Add(ValuePtr&);
+	virtual ValuePtr Add(ValuePtr&) const;
 
 	//! Apply the prefix operation: prefix this value with another value.
-	virtual ValuePtr PrefixWith(ValuePtr&);
+	virtual ValuePtr PrefixWith(ValuePtr&) const;
 
 	//! Add another @ref fabrique::dag::Value scalar-wise across this @ref Value.
-	virtual ValuePtr ScalarAdd(ValuePtr&);
+	virtual ValuePtr ScalarAdd(ValuePtr&) const;
 
 	/** Logical and. */
-	virtual ValuePtr And(ValuePtr&);
+	virtual ValuePtr And(ValuePtr&) const;
 
 	/** Logical or. */
-	virtual ValuePtr Or(ValuePtr&);
+	virtual ValuePtr Or(ValuePtr&) const;
 
 	/** Logical xor. */
-	virtual ValuePtr Xor(ValuePtr&);
+	virtual ValuePtr Xor(ValuePtr&) const;
 
 	//! A list representation of this value (or nullptr).
 	virtual const List* asList() const { return nullptr; }
@@ -92,7 +92,7 @@ public:
 	 * This @ref Value can add a value to itself in a scalar fashion.
 	 * For instance, [ 1 2 ] can add 3 to itself but not vice versa.
 	 */
-	virtual bool canScalarAdd(const Value&) { return false; }
+	virtual bool canScalarAdd(const Value&) const { return false; }
 
 	virtual void Accept(Visitor&) const = 0;
 
