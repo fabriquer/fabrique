@@ -85,6 +85,9 @@ public:
 	/** Logical xor. */
 	virtual ValuePtr Xor(ValuePtr&) const;
 
+	/** Equivalence. */
+	virtual ValuePtr Equals(ValuePtr&) const;
+
 	//! A list representation of this value (or nullptr).
 	virtual const List* asList() const { return nullptr; }
 

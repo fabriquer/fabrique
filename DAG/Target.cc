@@ -123,6 +123,11 @@ ValuePtr Target::Xor(ValuePtr& rhs) const
 	return underlyingFiles()->Xor(rhs);
 }
 
+ValuePtr Target::Equals(ValuePtr& rhs) const
+{
+	return underlyingFiles()->Equals(rhs);
+}
+
 
 void Target::PrettyPrint(Bytestream& out, size_t indent) const
 {

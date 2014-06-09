@@ -78,6 +78,7 @@ public:
 	virtual ValuePtr And(ValuePtr&) const override;
 	virtual ValuePtr Or(ValuePtr&) const override;
 	virtual ValuePtr Xor(ValuePtr&) const override;
+	virtual ValuePtr Equals(ValuePtr&) const override;
 
 	void Accept(Visitor& v) const override;
 };
@@ -89,6 +90,7 @@ public:
 	std::string str() const;
 
 	virtual ValuePtr Add(ValuePtr&) const override;
+	virtual ValuePtr Equals(ValuePtr&) const override;
 
 	void Accept(Visitor& v) const override;
 };
@@ -100,6 +102,7 @@ public:
 	std::string str() const;
 
 	virtual ValuePtr Add(ValuePtr&) const override;
+	virtual ValuePtr Equals(ValuePtr&) const override;
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 

@@ -1,6 +1,6 @@
-/** @file AST/BinaryOperation.h    Declaration of @ref fabrique::ast::BinaryOperation. */
+/** @file DAG/constants.h    Declaration of DAG constants. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,70 +29,20 @@
  * SUCH DAMAGE.
  */
 
-#ifndef BINARY_OPERATOR_H
-#define BINARY_OPERATOR_H
+#ifndef DAG_CONSTANTS_H
+#define DAG_CONSTANTS_H
 
-#include "ADT/UniqPtr.h"
-#include "AST/Expression.h"
+#include <cstddef>
+#include <cstdint>
 
-#include <memory>
 
 namespace fabrique {
+namespace dag {
 
-class Bytestream;
+//! A very safe maximum string length.
+static const size_t MaxStringLength = SIZE_MAX - 1;
 
-namespace ast {
-
-/**
- * An operation with two operands.
- */
-class BinaryOperation : public Expression
-{
-public:
-	enum Operator
-	{
-		Add,
-		Prefix,
-		ScalarAdd,
-		Invalid,
-
-		// logical operators:
-		And,
-		Or,
-		Xor,
-		Equal,
-		NotEqual,
-	};
-
-	static Operator Op(const std::string&);
-	static std::string OpStr(Operator);
-
-	static BinaryOperation* Create(
-		UniqPtr<Expression>&&, Operator, UniqPtr<Expression>&&);
-
-	Operator getOp() const { return op_; }
-	const Expression& getLHS() const { return *lhs_; }
-	const Expression& getRHS() const { return *rhs_; }
-
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
-	virtual void Accept(Visitor&) const;
-
-private:
-	BinaryOperation(UniqPtr<Expression>&& lhs, UniqPtr<Expression>&& rhs,
-	                enum Operator, const Type&, const SourceRange&);
-
-	static const Type& ResultType(const Type& lhs, const Type& rhs,
-                                      Operator, SourceRange&);
-
-	const std::unique_ptr<Expression> lhs_;
-	const std::unique_ptr<Expression> rhs_;
-	const Operator op_;
-};
-
-} // namespace ast
-
-Bytestream& operator << (Bytestream&, enum ast::BinaryOperation::Operator);
-
+} // namespace dag
 } // namespace fabrique
 
 #endif

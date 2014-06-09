@@ -138,6 +138,8 @@ not			SetToken(yylval);		return NOT;
 and			SetToken(yylval);		return AND;
 or			SetToken(yylval);		return OR;
 xor			SetToken(yylval);		return XOR;
+==			SetToken(yylval);		return EQUAL;
+!=			SetToken(yylval);		return NEQUAL;
 "<-"			SetToken(yylval);		return INPUT;
 "=>"			SetToken(yylval);		return PRODUCES;
 "+"			SetToken(yylval);		return ADD;

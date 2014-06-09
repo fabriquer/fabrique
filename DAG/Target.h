@@ -68,6 +68,7 @@ public:
 	virtual ValuePtr And(ValuePtr&) const override;
 	virtual ValuePtr Or(ValuePtr&) const override;
 	virtual ValuePtr Xor(ValuePtr&) const override;
+	virtual ValuePtr Equals(ValuePtr&) const override;
 
 	virtual const List* asList() const override { return files_.get(); }
 

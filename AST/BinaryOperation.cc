@@ -29,6 +29,7 @@
  * SUCH DAMAGE.
  */
 
+#include "FabContext.h"
 #include "AST/BinaryOperation.h"
 #include "AST/Visitor.h"
 #include "Support/Bytestream.h"
@@ -96,6 +97,8 @@ std::string BinaryOperation::OpStr(Operator op)
 		case And:               return "and";
 		case Or:                return "or";
 		case Xor:               return "xor";
+		case Equal:             return "==";
+		case NotEqual:          return "!=";
 		case Invalid:           assert(false && "op == Invalid");
 	}
 
@@ -177,8 +180,10 @@ const fabrique::Type& BinaryOperation::ResultType(const Type& lhs, const Type& r
 		case And:
 		case Or:
 		case Xor:
+		case Equal:
+		case NotEqual:
 			if (lhs == rhs)
-				return lhs;
+				return lhs.context().booleanType();
 			break;
 
 		case Invalid:

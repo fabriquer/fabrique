@@ -111,7 +111,7 @@ static UniqPtrVec<T>* NodeVec(YYSTYPE& yyunion)
 %token NOT
 %token STRING_LITERAL INT_LITERAL
 
-%left AND OR XOR
+%left AND OR XOR EQUAL NEQUAL
 %left ADD SCALAR_ADD
 %right PREFIX
 
@@ -224,6 +224,8 @@ binaryOperator:
 	| AND			{ $$.intVal = BinaryOperation::And; }
 	| OR			{ $$.intVal = BinaryOperation::Or; }
 	| XOR			{ $$.intVal = BinaryOperation::Xor; }
+	| EQUAL			{ $$.intVal = BinaryOperation::Equal; }
+	| NEQUAL		{ $$.intVal = BinaryOperation::NotEqual; }
 	;
 
 call:

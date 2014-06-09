@@ -89,3 +89,9 @@ ValuePtr Value::Xor(ValuePtr&) const
 	throw SemanticException(
 		"logial XOR unsupported by " + type().name(), source());
 }
+
+ValuePtr Value::Equals(ValuePtr&) const
+{
+	throw SemanticException(
+		"equivalence test unsupported by " + type().name(), source());
+}

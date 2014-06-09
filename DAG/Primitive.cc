@@ -29,6 +29,8 @@
  * SUCH DAMAGE.
  */
 
+#include "FabContext.h"
+#include "DAG/constants.h"
 #include "DAG/Primitive.h"
 #include "DAG/Visitor.h"
 #include "Support/Bytestream.h"
@@ -91,6 +93,18 @@ ValuePtr Boolean::Xor(ValuePtr& v) const
 	);
 }
 
+ValuePtr Boolean::Equals(ValuePtr& v) const
+{
+	auto other = dynamic_pointer_cast<Boolean>(v);
+	assert(other);
+
+	return ValuePtr(
+		new Boolean(value_ == other->value_,
+			Type::GetSupertype(type(), other->type()),
+			SourceRange(*this, *other))
+	);
+}
+
 string Boolean::str() const { return value_ ? "true" : "false"; }
 
 void Boolean::Accept(Visitor& v) const
@@ -118,6 +132,19 @@ ValuePtr Integer::Add(ValuePtr& v) const
 		new Integer(this->value_ + other->value_, type(), loc));
 }
 
+ValuePtr Integer::Equals(ValuePtr& v) const
+{
+	SourceRange loc = SourceRange(*this, *v);
+
+	shared_ptr<Integer> other = std::dynamic_pointer_cast<Integer>(v);
+	if (not other)
+		throw WrongTypeException("int", v->type(), v->source());
+
+	const bool eq = this->value_ == other->value_;
+	const Type& boolTy = type().context().booleanType();
+	return ValuePtr(new Boolean(eq, boolTy, loc));
+}
+
 void Integer::Accept(Visitor& v) const
 {
 	v.Visit(*this);
@@ -141,6 +168,27 @@ ValuePtr String::Add(ValuePtr& v) const
 
 	return ValuePtr(
 		new String(this->value_ + other->value_, type(), loc));
+}
+
+ValuePtr String::Equals(ValuePtr& v) const
+{
+	SourceRange loc = SourceRange(*this, *v);
+
+	shared_ptr<String> other = std::dynamic_pointer_cast<String>(v);
+	if (not other)
+		throw WrongTypeException("string", v->type(), loc);
+
+	// Don't trust std::string::compare, it thinks "foo" != "foo\0".
+	const char *x = this->value_.data();
+	const size_t len = strnlen(x, MaxStringLength);
+	if (len == MaxStringLength)
+		throw SemanticException("string too long", source());
+
+	const char *y = other->value_.data();
+	const bool equal = (strncmp(x, y, len) == 0);
+
+	return ValuePtr(
+		new Boolean(equal, type().context().booleanType(), loc));
 }
 
 void String::PrettyPrint(Bytestream& b, size_t /*indent*/) const

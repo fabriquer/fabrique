@@ -376,6 +376,14 @@ bool DAGBuilder::Enter(const ast::BinaryOperation& o)
 			result = lhs->Xor(rhs);
 			break;
 
+		case ast::BinaryOperation::Equal:
+			result = lhs->Equals(rhs);
+			break;
+
+		case ast::BinaryOperation::NotEqual:
+			result = lhs->Equals(rhs)->Negate(o.source());
+			break;
+
 		case ast::BinaryOperation::Invalid:
 			break;
 	}
