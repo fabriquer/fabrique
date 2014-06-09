@@ -108,7 +108,8 @@ void File::setGenerated(bool gen)
 {
 	if (absolute_ and gen)
 		throw SemanticException(
-			"cannot generate a file with absolute path", source());
+			"cannot generate a file with absolute path '"
+			+ relativeName() + "'", source());
 
 	generated_ = gen;
 }
