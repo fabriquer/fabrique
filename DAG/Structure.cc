@@ -43,12 +43,17 @@ using std::vector;
 
 Structure* Structure::Create(vector<NamedValue>& values, const Type& t)
 {
-	assert(not values.empty());
+	SourceRange src(SourceRange::None());
 
-	SourceRange begin = values.front().second->source();
-	SourceRange end = (--values.end())->second->source();
+	if (not values.empty())
+	{
+		SourceRange begin = values.front().second->source();
+		SourceRange end = (--values.end())->second->source();
 
-	return new Structure(values, t, SourceRange(begin, end));
+		src = SourceRange(begin, end);
+	}
+
+	return new Structure(values, t, src);
 }
 
 

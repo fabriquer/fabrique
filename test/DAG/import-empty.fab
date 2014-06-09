@@ -1,0 +1,7 @@
+#
+# RUN: fab --format=null --print-dag %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: struct empty = {
+empty = import('Inputs/empty.fab');
