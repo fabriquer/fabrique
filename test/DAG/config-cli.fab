@@ -1,0 +1,10 @@
+#
+# RUN: fab --format=null --print-dag -D foo=42 -D "bar='Hello, world!'" %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: int foo = 42
+foo = args.foo;
+
+# CHECK: string bar = 'Hello, world!'
+bar = args.bar;

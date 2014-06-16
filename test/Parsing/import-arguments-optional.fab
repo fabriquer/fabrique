@@ -1,0 +1,18 @@
+#
+# RUN: fab --parse-only --print-ast %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+# XFAIL: *
+#
+
+# CHECK: no_args:struct[string] = import('Inputs/accepts-args.fab');
+no_args = import('Inputs/accepts-args.fab');
+
+# CHECK: optional_args:struct[string] = import('Inputs/accepts-args.fab');
+optional_args = import('Inputs/accepts-args.fab');
+
+# CHECK: mandatory_args:struct[string] = import('Inputs/expects-args.fab');
+mandatory_args = import('Inputs/expects-args.fab');
+
+# CHECK: bar:string = foo.test_value;
+bar = foo.test_value;

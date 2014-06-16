@@ -47,6 +47,7 @@
 
 #include <cassert>
 #include <fstream>
+#include <sstream>
 
 using namespace fabrique;
 using namespace fabrique::ast;
@@ -66,23 +67,64 @@ Parser::Parser(TypeContext& ctx, string srcroot)
 }
 
 
+UniqPtr<Scope> Parser::ParseDefinitions(const std::vector<string>& definitions)
+{
+	UniqPtr<Scope> args { new Scope(nullptr, "definitions") };
+	UniqPtr<Scope> empty { new Scope(nullptr, "") };
+
+	for (const string& d : definitions)
+	{
+		std::istringstream input(d + ";");
+		UniqPtr<ast::Scope> definitionTree { ParseFile(input, empty) };
+		if (not definitionTree)
+			throw UserError("invalid definition '" + d + "'");
+
+		for (UniqPtr<ast::Value>& value : definitionTree->TakeValues())
+		{
+			if (value->name().name() == "args")
+				continue;
+
+			Bytestream::Debug("parser.cli.defines")
+				<< Bytestream::Action << "Parsed definition"
+				<< Bytestream::Operator << ": "
+				<< *value
+				<< Bytestream::Reset << "\n"
+				;
+
+			args->Take(value);
+		}
+
+		definitionTree.reset();
+	}
+
+	return std::move(args);
+}
+
+
 UniqPtr<Scope> Parser::ParseFile(std::istream& input, UniqPtr<Scope>& args,
                                  string name, StringMap<string> builtins,
                                  SourceRange openedFrom)
 {
+	assert(args);
+
+	Bytestream::Debug("parser.file")
+		<< Bytestream::Action << "Parsing"
+		<< Bytestream::Type << " file"
+		<< Bytestream::Operator << " '"
+		<< Bytestream::Literal << name
+		<< Bytestream::Operator << "'"
+		<< Bytestream::Reset << " with args: "
+		<< *args
+		<< Bytestream::Reset << "\n"
+		;
+
 	lexer_.PushFile(input, name);
 	EnterScope(name);
 
 	for (std::pair<string,string> i : builtins)
 		Builtin(i.first, i.second);
 
-	Scope& scope = EnterScope("args");
-	for (UniqPtr<Argument>& a : args)
-	{
-		assert(a->hasName());
-		scope.Register(a.get());
-	}
-
+	EnterScope(std::move(*args));
 	UniqPtr<Expression> argStruct(StructInstantiation(openedFrom));
 	UniqPtr<Identifier> id(new Identifier("args", nullptr, openedFrom));
 	DefineValue(id, argStruct);
@@ -463,7 +505,12 @@ Import* Parser::ImportModule(UniqPtr<StringLiteral>& name, UniqPtrVec<Argument>&
 	if (not input.good())
 		throw UserError("Can't open '" + filename + "'");
 
-	UniqPtr<Scope> module = ParseFile(input, absolute, args);
+	EnterScope("import arguments");
+	for (UniqPtr<Argument>& a : args)
+		CurrentScope().Register(a.get());
+	UniqPtr<Scope> argScope = ExitScope();
+
+	UniqPtr<Scope> module = ParseFile(input, argScope, absolute);
 	if (not module)
 		return nullptr;
 

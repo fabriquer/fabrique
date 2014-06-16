@@ -56,12 +56,15 @@
 #include <memory>
 
 using namespace fabrique;
+using std::map;
 using std::string;
 using std::unique_ptr;
+using std::vector;
 
 
 static Bytestream& err();
 static unique_ptr<ast::Scope> Parse(const string& filename, TypeContext&,
+                                    const vector<string>& definitions,
                                     string srcroot, string buildroot, bool printAST);
 
 int main(int argc, char *argv[]) {
@@ -80,7 +83,10 @@ int main(int argc, char *argv[]) {
 	//
 	Bytestream::SetDebugPattern(args->debugPattern);
 	Bytestream::SetDebugStream(err());
-	Arguments::Print(*args, Bytestream::Debug("cli.args"));
+
+	Bytestream& argDebug = Bytestream::Debug("cli.args");
+	Arguments::Print(*args, argDebug);
+	argDebug << Bytestream::Reset << "\n";
 
 	//
 	// Parse the file, build the DAG and pass it to the backed.
@@ -98,7 +104,8 @@ int main(int argc, char *argv[]) {
 		// Parse the file, optionally pretty-printing it.
 		//
 		unique_ptr<ast::Scope> ast(
-			Parse(args->input, ctx, srcroot, buildroot, args->printAST));
+			Parse(args->input, ctx, args->definitions,
+			      srcroot, buildroot, args->printAST));
 
 		if (not ast)
 			return -1;
@@ -225,28 +232,28 @@ int main(int argc, char *argv[]) {
 
 
 unique_ptr<ast::Scope> Parse(const string& filename, TypeContext& ctx,
+                             const vector<string>& definitions,
                              string srcroot, string buildroot, bool printAST)
 {
 
 	// Create the parser.
 	unique_ptr<ast::Parser> parser(new ast::Parser(ctx, srcroot));
 
-	// Open and parse the given file.
+	// Parse command-line arguments.
+	auto args = parser->ParseDefinitions(definitions);
+
+	// Open and parse the top-level build description.
 	std::ifstream infile(filename.c_str());
 	if (!infile)
 		throw UserError("no such file: '" + filename + "'");
 
-	// TODO: parse command-line arguments
-	UniqPtrVec<ast::Argument> arguments;
 	map<string,string> builtins {
 		std::make_pair("srcroot", srcroot),
 		std::make_pair("buildroot", buildroot),
 		std::make_pair(ast::Subdirectory, ""),
 	};
 
-	unique_ptr<ast::Scope> ast(
-		parser->ParseFile(infile, filename, arguments, builtins));
-
+	unique_ptr<ast::Scope> ast(parser->ParseFile(infile, args, filename, builtins));
 	if (not ast)
 	{
 		for (auto& error : parser->errors())

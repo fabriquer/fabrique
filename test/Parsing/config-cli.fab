@@ -1,0 +1,10 @@
+#
+# RUN: fab --parse-only --print-ast -D foo=42 -D 'bar="hello"' %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: foo:int = args.foo;
+foo = args.foo;
+
+# CHECK: bar:string = args.bar;
+bar = args.bar;

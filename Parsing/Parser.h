@@ -58,6 +58,9 @@ class Parser
 public:
 	Parser(TypeContext&, std::string srcroot);
 
+	//! Parse Fabrique fragments defined at, e.g., the command line.
+	UniqPtr<Scope> ParseDefinitions(const std::vector<std::string>& fragments);
+
 	//! Parse Fabrique input (usually a file) into a @ref Scope.
 	std::unique_ptr<Scope> ParseFile(
 		std::istream&, UniqPtr<Scope>& arguments, std::string name = "",

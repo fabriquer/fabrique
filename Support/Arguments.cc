@@ -46,6 +46,7 @@ enum optionNames
 {
 	Usage,
 	Help,
+	Define,
 	Format,
 	OutputDirectory,
 	ParseOnly,
@@ -59,6 +60,7 @@ enum optionNames
 enum optionKind
 {
 	SetOpt,    //!< Set an optional value.
+	AppendOpt, //!< Append an optional value to an ordered list.
 	Enable,    //!< Turn on a boolean value.
 	Disable,   //!< Turn off a boolean value.
 	OtherOpt,  //!< Do something else (e.g., usage description.)
@@ -119,6 +121,10 @@ const option::Descriptor usage[] =
 		"  -o,--output      Output directory (default: .)."
 	},
 	{
+		Define, AppendOpt, "D", "define", Required,
+		"  -D,--define      A value to expose to Fabrique description."
+	},
+	{
 		Format, SetOpt, "f", "format", IsOutputFormat,
 		formatString.c_str()
 	},
@@ -176,6 +182,10 @@ Arguments* Arguments::Parse(int argc, char *argv[])
 
 	const bool outputSpecified = options[OutputDirectory];
 
+	std::vector<string> definitions;
+	for (Option *o = options[Define]; o; o = o->next())
+		definitions.emplace_back(o->arg);
+
 	const string format = options[Format]
 	                       ? options[Format].arg
 	                       : "ninja";
@@ -189,6 +199,7 @@ Arguments* Arguments::Parse(int argc, char *argv[])
 		input,
 		output,
 		outputSpecified,
+		definitions,
 		format,
 		options[ParseOnly],
 		options[PrettyPrintAST],
@@ -204,6 +215,8 @@ Arguments* Arguments::Parse(int argc, char *argv[])
 	<< Bytestream::Operator << " = " \
 	<< Bytestream::Literal << args.name << "\n"
 
+static Bytestream& operator<< (Bytestream& out, const std::vector<string>&);
+
 void Arguments::Print(const Arguments& args, Bytestream& out)
 {
 	const string tab(1, '\t');
@@ -216,6 +229,7 @@ void Arguments::Print(const Arguments& args, Bytestream& out)
 		<< ARG(output)
 		<< ARG(outputFileSpecified)
 		<< ARG(format)
+		<< ARG(definitions)
 		<< ARG(parseOnly)
 		<< ARG(printAST)
 		<< ARG(printDAG)
@@ -283,4 +297,20 @@ static string formats(string separator)
 	}
 
 	return oss.str();
+}
+
+static Bytestream& operator<< (Bytestream& out, const std::vector<string>& v)
+{
+	out << Bytestream::Operator << "[ ";
+
+	for (const string& s : v)
+		out
+			<< Bytestream::Operator << "'"
+			<< Bytestream::Literal << s
+			<< Bytestream::Operator << "' "
+			;
+
+	out << Bytestream::Operator << "]";
+
+	return out;
 }

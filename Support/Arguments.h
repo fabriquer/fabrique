@@ -36,6 +36,7 @@
 #include <optionparser.h>
 
 #include <string>
+#include <vector>
 
 namespace fabrique {
 
@@ -66,6 +67,7 @@ public:
 	const std::string output;
 	const bool outputFileSpecified;
 
+	const std::vector<std::string> definitions;
 	const std::string format;
 	const bool parseOnly;
 	const bool printAST;
