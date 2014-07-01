@@ -2,19 +2,16 @@
 # RUN: fab --format=null --print-dag %s > %t
 # RUN: FileCheck %s -input-file %t
 #
-# XFAIL: *
-#
 
 increment = function(x:int): int x + 1;
 incr_copy = increment;
 
-# CHECK: apply:((int)=>int),x:int): int = function(x:int, fn:(int)=>int): int
-# CHECK:   fn(x)
+# CHECK-DAG: ((int)=>int,int)=>int apply =
 apply = function(fn:(int)=>int,x:int): int
 	fn(x);
 
-# CHECK: foo = 2
+# CHECK-DAG: foo = 2
 foo = apply(increment, 1);
 
-# CHECK: bar = 42
+# CHECK-DAG: bar = 42
 bar = apply(incr_copy, 41);

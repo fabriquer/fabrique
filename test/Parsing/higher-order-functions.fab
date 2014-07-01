@@ -2,8 +2,6 @@
 # RUN: fab --parse-only --print-ast %s > %t
 # RUN: FileCheck %s -input-file %t
 #
-# XFAIL: *
-#
 
 # CHECK: increment:(int)=>int = function(x:int): int
 # CHECK:   x + 1
@@ -12,7 +10,7 @@ increment = function(x:int): int x + 1;
 # CHECK: copy:(int)=>int = increment;
 copy = increment;
 
-# CHECK: apply:(int,(int)=>int): int = function(x:int, fn:(int)=>int): int
+# CHECK: apply:((int)=>int,int)=>int = function(fn:(int)=>int, x:int): int
 # CHECK:   fn(x)
 apply = function(fn:(int)=>int, x:int): int
 	fn(x);
