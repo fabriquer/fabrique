@@ -59,7 +59,9 @@ public:
 	Parser(FabContext&);
 
 	//! Parse Fabrique input (usually a file) into a @ref Scope.
-	std::unique_ptr<Scope> ParseFile(std::istream&, std::string name);
+	std::unique_ptr<Scope> ParseFile(std::istream&, std::string name,
+	                                 UniqPtrVec<Argument>& arguments,
+	                                 SourceRange openedFrom = SourceRange::None());
 
 	//! Errors encountered during parsing.
 	const UniqPtrVec<ErrorReport>& errors() const { return errs_; }
@@ -148,7 +150,8 @@ public:
 	Identifier* Id(UniqPtr<Identifier>&& untyped, const Type*);
 
 	//! An expression that imports a Fabrique module.
-	Import* ImportModule(UniqPtr<StringLiteral>& name, SourceRange);
+	Import* ImportModule(UniqPtr<StringLiteral>& name,
+	                     UniqPtrVec<Argument>& arguments, SourceRange);
 
 	/**
 	 * A conditional if-then-else expression

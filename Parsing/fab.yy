@@ -386,13 +386,28 @@ identifier:
 	;
 
 import:
+	IMPORT '(' literal ',' argumentList ')'
+	{
+		auto begin = Take($1.token);
+		auto name = TakeNode<StringLiteral>($3);
+		auto args = Take(NodeVec<Argument>($5));
+		auto end = Take($6.token);
+
+		SourceRange src = SourceRange::Over(begin, end);
+
+		SetOrDie($$, p->ImportModule(name, *args, src));
+	}
+	|
 	IMPORT '(' literal ')'
 	{
 		auto begin = Take($1.token);
 		auto name = TakeNode<StringLiteral>($3);
 		auto end = Take($4.token);
 
-		SetOrDie($$, p->ImportModule(name, SourceRange::Over(begin, end)));
+		UniqPtrVec<Argument> args;
+		SourceRange src = SourceRange::Over(begin, end);
+
+		SetOrDie($$, p->ImportModule(name, args, src));
 	}
 	;
 

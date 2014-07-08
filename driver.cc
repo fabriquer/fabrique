@@ -233,7 +233,9 @@ unique_ptr<ast::Scope> Parse(const string& filename, FabContext& ctx,
 	if (!infile)
 		throw UserError("no such file: '" + filename + "'");
 
-	unique_ptr<ast::Scope> ast(parser->ParseFile(infile, filename));
+	// TODO: parse command-line arguments
+	UniqPtrVec<ast::Argument> arguments;
+	unique_ptr<ast::Scope> ast(parser->ParseFile(infile, filename, arguments));
 	if (not ast)
 	{
 		for (auto& error : parser->errors())

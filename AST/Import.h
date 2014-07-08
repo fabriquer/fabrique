@@ -41,6 +41,7 @@
 namespace fabrique {
 namespace ast {
 
+class Argument;
 class Scope;
 class StringLiteral;
 
@@ -51,10 +52,12 @@ class StringLiteral;
 class Import : public Expression, public HasScope
 {
 public:
-	Import(UniqPtr<StringLiteral>& name, const std::string& subdirectory,
-	       UniqPtr<Scope>&, const Type&, SourceRange);
+	Import(UniqPtr<StringLiteral>& name, UniqPtrVec<Argument>& arguments,
+	       const std::string& subdirectory, UniqPtr<Scope>&, const Type&,
+	       SourceRange);
 
 	const StringLiteral& name() const { return *name_; }
+	const UniqPtrVec<Argument>& arguments() const { return arguments_; }
 	const std::string& subdirectory() const { return subdirectory_; }
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
@@ -62,6 +65,7 @@ public:
 
 private:
 	const UniqPtr<StringLiteral> name_;
+	const UniqPtrVec<Argument> arguments_;
 	const std::string subdirectory_;
 };
 

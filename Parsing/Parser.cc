@@ -67,7 +67,8 @@ Parser::Parser(FabContext& ctx)
 }
 
 
-UniqPtr<Scope> Parser::ParseFile(std::istream& input, string name)
+UniqPtr<Scope> Parser::ParseFile(std::istream& input, string name,
+                                 UniqPtrVec<Argument>& args, SourceRange openedFrom)
 {
 	lexer_.PushFile(input, name);
 	EnterScope(name);
@@ -422,7 +423,8 @@ Identifier* Parser::Id(UniqPtr<Identifier>&& untyped, const Type *ty)
 }
 
 
-Import* Parser::ImportModule(UniqPtr<StringLiteral>& name, SourceRange src)
+Import* Parser::ImportModule(UniqPtr<StringLiteral>& name, UniqPtrVec<Argument>& args,
+                             SourceRange src)
 {
 	if (not name)
 		return nullptr;
@@ -440,7 +442,7 @@ Import* Parser::ImportModule(UniqPtr<StringLiteral>& name, SourceRange src)
 	if (not input.good())
 		throw UserError("Can't open '" + filename + "'");
 
-	UniqPtr<Scope> module = ParseFile(input, absolute);
+	UniqPtr<Scope> module = ParseFile(input, absolute, args);
 	if (not module)
 		return nullptr;
 
@@ -450,7 +452,7 @@ Import* Parser::ImportModule(UniqPtr<StringLiteral>& name, SourceRange src)
 	for (const UniqPtr<Value>& value : module->values())
 		fields.emplace_back(value->name().name(), value->type());
 
-	return new Import(name, directory, module,
+	return new Import(name, args, directory, module,
 	                  ctx_.structureType(fields), src);
 }
 

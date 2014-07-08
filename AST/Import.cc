@@ -29,6 +29,7 @@
  * SUCH DAMAGE.
  */
 
+#include "AST/Argument.h"
 #include "AST/Import.h"
 #include "AST/Scope.h"
 #include "AST/Value.h"
@@ -39,20 +40,33 @@
 using namespace fabrique::ast;
 
 
-Import::Import(UniqPtr<StringLiteral>& name, const std::string& subdir,
-               UniqPtr<Scope>& scope, const Type& ty, SourceRange src)
+Import::Import(UniqPtr<StringLiteral>& name, UniqPtrVec<Argument>& arguments,
+               const std::string& subdir, UniqPtr<Scope>& scope, const Type& ty,
+               SourceRange src)
 	: Expression(ty, src), HasScope(std::move(scope)),
-	  name_(std::move(name)), subdirectory_(subdir)
+	  name_(std::move(name)), arguments_(std::move(arguments)), subdirectory_(subdir)
 {
 }
 
 
-void Import::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+void Import::PrettyPrint(Bytestream& out, size_t indent) const
 {
 	out
 		<< Bytestream::Action << "import"
 		<< Bytestream::Operator << "("
 		<< *name_
+		;
+
+	if (not arguments_.empty())
+	{
+		for (const UniqPtr<Argument>& a : arguments_)
+		{
+			out << Bytestream::Operator << ", ";
+			a->PrettyPrint(out, indent);
+		}
+	}
+
+	out
 		<< Bytestream::Operator << ")"
 		;
 }
