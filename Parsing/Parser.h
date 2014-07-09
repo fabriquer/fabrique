@@ -32,11 +32,8 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include "ADT/UniqPtr.h"
-#include "AST/BinaryOperation.h"
-#include "AST/Scope.h"
-#include "AST/UnaryOperation.h"
 #include "AST/ast.h"
+#include "ADT/UniqPtr.h"
 #include "Support/ErrorReport.h"
 
 #include <map>
