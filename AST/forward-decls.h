@@ -51,6 +51,7 @@ class Import;
 class List;
 class Parameter;
 class Scope;
+class StructInstantiation;
 class SymbolReference;
 class UnaryOperation;
 class Value;

@@ -1,6 +1,9 @@
-/** @file AST/ast.h    Meta-include file for all AST node types. */
+/**
+ * @file AST/StructInstantiation.h
+ * Declaration of @ref fabrique::ast::StructInstantiation.
+ */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,33 +32,28 @@
  * SUCH DAMAGE.
  */
 
-#ifndef AST_H
-#define AST_H
+#ifndef STRUCT_INSTANTIATION_H
+#define STRUCT_INSTANTIATION_H
 
-#include "Action.h"
-#include "Argument.h"
-#include "BinaryOperation.h"
-#include "Builtins.h"
-#include "Call.h"
-#include "CompoundExpr.h"
-#include "Conditional.h"
-#include "FieldAccess.h"
-#include "Filename.h"
-#include "FileList.h"
-#include "Foreach.h"
-#include "Function.h"
-#include "HasScope.h"
-#include "Identifier.h"
-#include "Import.h"
-#include "List.h"
-#include "Mapping.h"
-#include "Parameter.h"
-#include "Scope.h"
-#include "StructInstantiation.h"
-#include "SymbolReference.h"
-#include "UnaryOperation.h"
-#include "Value.h"
+#include "AST/HasScope.h"
+#include "AST/Value.h"
 
-#include "literals.h"
+namespace fabrique {
+namespace ast {
+
+/**
+ * A list of same-typed expressions.
+ */
+class StructInstantiation : public Expression, public HasScope
+{
+public:
+	StructInstantiation(UniqPtr<Scope>& values, const Type&, const SourceRange&);
+
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	virtual void Accept(Visitor&) const;
+};
+
+} // namespace ast
+} // namespace fabrique
 
 #endif

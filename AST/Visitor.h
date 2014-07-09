@@ -70,6 +70,7 @@ public:
 	VISIT(Parameter)
 	VISIT(Scope)
 	VISIT(StringLiteral)
+	VISIT(StructInstantiation)
 	VISIT(SymbolReference)
 	VISIT(Type)
 	VISIT(UnaryOperation)

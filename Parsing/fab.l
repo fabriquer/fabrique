@@ -134,6 +134,7 @@ file			SetToken(yylval);		return FILE_TOKEN;
 function		SetToken(yylval);		return FUNCTION;
 import			SetToken(yylval);		return IMPORT;
 return			SetToken(yylval);		return RETURN;
+struct			SetToken(yylval);		return STRUCT;
 not			SetToken(yylval);		return NOT;
 and			SetToken(yylval);		return AND;
 or			SetToken(yylval);		return OR;

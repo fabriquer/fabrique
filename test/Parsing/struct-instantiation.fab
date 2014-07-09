@@ -1,0 +1,13 @@
+#
+# RUN: fab --parse-only --print-ast %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: foo:struct[string, string] = struct
+# CHECK: {
+# CHECK-DAG:   foo = 'hi';
+# CHECK-DAG:   bar = 'world';
+foo = struct { foo = 'hi'; bar = 'world'; };
+
+# CHECK: bar:string = foo.bar;
+bar = foo.bar;

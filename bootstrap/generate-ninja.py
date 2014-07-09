@@ -31,7 +31,8 @@ cxx_srcs = {
 		'FieldAccess', 'Filename', 'FileList', 'Foreach', 'Function',
 		'HasParameters', 'HasScope', 'Identifier', 'Import', 'List',
 		'Mapping', 'Node', 'Parameter',
-		'Scope', 'SymbolReference', 'UnaryOperation', 'Value', 'Visitor',
+		'Scope', 'StructInstantiation', 'SymbolReference', 'UnaryOperation',
+                'Value', 'Visitor',
 		'literals',
 	),
 	'Backend/': (

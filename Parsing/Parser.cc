@@ -532,6 +532,19 @@ Mapping* Parser::Map(UniqPtr<Expression>& source, UniqPtr<Identifier>& target)
 	return new Mapping(parameter, source, src);
 }
 
+StructInstantiation* Parser::StructInstantiation(SourceRange src)
+{
+	UniqPtr<Scope> scope(ExitScope());
+
+	std::vector<StructureType::Field> fields;
+	for (auto& i : *scope)
+		fields.emplace_back(i.first, i.second->type());
+
+	const StructureType& t = ctx_.structureType(fields);
+
+	return new ast::StructInstantiation(scope, t, src);
+}
+
 BoolLiteral* Parser::True()
 {
 	return new BoolLiteral(true, BooleanType::get(ctx_),

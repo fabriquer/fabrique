@@ -1,6 +1,9 @@
-/** @file AST/ast.h    Meta-include file for all AST node types. */
+/**
+ * @file AST/StructInstantiation.cc
+ * Definition of @ref fabrique::ast::StructInstantiation.
+ */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,33 +32,54 @@
  * SUCH DAMAGE.
  */
 
-#ifndef AST_H
-#define AST_H
+#include "AST/Scope.h"
+#include "AST/StructInstantiation.h"
+#include "AST/Visitor.h"
+#include "Support/Bytestream.h"
 
-#include "Action.h"
-#include "Argument.h"
-#include "BinaryOperation.h"
-#include "Builtins.h"
-#include "Call.h"
-#include "CompoundExpr.h"
-#include "Conditional.h"
-#include "FieldAccess.h"
-#include "Filename.h"
-#include "FileList.h"
-#include "Foreach.h"
-#include "Function.h"
-#include "HasScope.h"
-#include "Identifier.h"
-#include "Import.h"
-#include "List.h"
-#include "Mapping.h"
-#include "Parameter.h"
-#include "Scope.h"
-#include "StructInstantiation.h"
-#include "SymbolReference.h"
-#include "UnaryOperation.h"
-#include "Value.h"
+using namespace fabrique::ast;
 
-#include "literals.h"
 
-#endif
+StructInstantiation::StructInstantiation(UniqPtr<Scope>& values, const Type& ty,
+                                         const SourceRange& loc)
+	: Expression(ty, loc), HasScope(std::move(values))
+{
+}
+
+void StructInstantiation::PrettyPrint(Bytestream& out, size_t indent) const
+{
+	out
+		<< Bytestream::Definition << "struct\n"
+		<< Bytestream::Operator << std::string(indent, '\t') << "{\n"
+		;
+
+	std::string tabs(indent + 1, '\t');
+	for (auto& i : scope())
+	{
+		out
+			<< tabs
+			<< Bytestream::Definition << i.first
+			<< Bytestream::Operator << " = "
+			;
+
+		i.second->PrettyPrint(out, indent + 1);
+
+		out
+			<< Bytestream::Operator << ";"
+			<< "\n"
+			;
+	}
+
+	out
+		<< Bytestream::Operator << "}"
+		<< Bytestream::Reset
+		;
+}
+
+void StructInstantiation::Accept(Visitor& v) const
+{
+	if (v.Enter(*this))
+		scope().Accept(v);
+
+	v.Leave(*this);
+}

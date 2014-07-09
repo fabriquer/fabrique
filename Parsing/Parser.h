@@ -174,6 +174,9 @@ public:
 	//! Define a mapping from a sequence to a name.
 	Mapping* Map(UniqPtr<Expression>& source, UniqPtr<Identifier>& target);
 
+	//! Turn the current scope into a structure instantiation.
+	StructInstantiation* StructInstantiation(SourceRange);
+
 
 	// literals
 	BoolLiteral* True();

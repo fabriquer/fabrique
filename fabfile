@@ -66,6 +66,8 @@ parsing = import('Parsing/Parsing.fab');
 support = import('Support/Support.fab');
 types = import('Types/Types.fab');
 
+plugins = import('plugins/plugins.fab');
+
 #
 # TODO: allow 'for module in [ ast backends dag ]
 # (or even better, foreach dir in [ 'AST' 'Backend' ... ]
