@@ -72,12 +72,12 @@ private:
 		Invalid,
 	};
 
-	static FileType* Create(FabContext&);
+	static FileType* Create(TypeContext&);
 
-	FileType(Tag tag, const PtrVec<Type>&, FabContext&);
+	FileType(Tag tag, const PtrVec<Type>&, TypeContext&);
 
 	const Tag tag_;
-	friend class FabContext;
+	friend class TypeContext;
 };
 
 } // namespace fabrique

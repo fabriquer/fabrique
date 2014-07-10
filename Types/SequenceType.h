@@ -58,7 +58,7 @@ protected:
 
 private:
 	const Type& elementType_;
-	friend class FabContext;
+	friend class TypeContext;
 	friend class RawSequenceType;
 };
 
@@ -74,8 +74,8 @@ public:
 		const PtrVec<Type>&, const SourceRange&) const override;
 
 protected:
-	RawSequenceType(FabContext&);
-	friend class FabContext;
+	RawSequenceType(TypeContext&);
+	friend class TypeContext;
 };
 
 } // namespace fabrique

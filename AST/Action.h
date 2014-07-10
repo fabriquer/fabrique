@@ -41,8 +41,8 @@
 
 namespace fabrique {
 
-class FabContext;
 class FunctionType;
+class TypeContext;
 
 namespace ast {
 
@@ -64,7 +64,7 @@ public:
 	 */
 	static Action* Create(UniqPtrVec<Argument>&,
 	                      UniqPtr<UniqPtrVec<Parameter>>&,
-	                      const SourceRange&, FabContext&);
+	                      const SourceRange&, TypeContext&);
 
 	const UniqPtrVec<Argument>& arguments() const { return args_; }
 

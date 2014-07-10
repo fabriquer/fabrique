@@ -8,6 +8,7 @@ sources = files(
 	StringType.cc
 	StructureType.cc
 	Type.cc
+	TypeContext.cc
 	TypeError.cc
 	Typed.cc
 );

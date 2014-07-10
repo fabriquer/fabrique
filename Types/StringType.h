@@ -36,7 +36,7 @@
 
 namespace fabrique {
 
-class FabContext;
+class TypeContext;
 
 
 /**
@@ -46,7 +46,7 @@ class StringType : public Type
 {
 public:
 	virtual ~StringType();
-	static const Type& get(FabContext&);
+	static const Type& get(TypeContext&);
 
 	virtual bool isString() const override { return true; }
 
@@ -54,10 +54,10 @@ public:
 	virtual const Type& onPrefixWith(const Type&) const override;
 
 protected:
-	StringType(FabContext&);
+	StringType(TypeContext&);
 
 private:
-	friend class FabContext;
+	friend class TypeContext;
 };
 
 } // namespace fabrique

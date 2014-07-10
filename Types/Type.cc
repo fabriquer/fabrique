@@ -31,7 +31,7 @@
 
 #include "Support/Bytestream.h"
 #include "Types/Type.h"
-#include "FabContext.h"
+#include "Types/TypeContext.h"
 
 #include <cassert>
 
@@ -56,7 +56,7 @@ string Type::UntypedPart(string name)
 
 
 Type::Type(const std::string& name, const PtrVec<Type>& params,
-           FabContext& parent)
+           TypeContext& parent)
 	: parent_(parent), typeName_(name), parameters_(params)
 {
 	assert(not typeName_.empty());
@@ -94,7 +94,7 @@ const Type& Type::onPrefixWith(const Type& t) const { return t.parent_.nilType()
 
 
 Type* Type::Create(const std::string& name, const PtrVec<Type>& params,
-                   FabContext& ctx)
+                   TypeContext& ctx)
 {
 	return new Type(name, params, ctx);
 }

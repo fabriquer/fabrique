@@ -29,7 +29,6 @@
  * SUCH DAMAGE.
  */
 
-#include "FabContext.h"
 #include "DAG/List.h"
 #include "DAG/Target.h"
 #include "DAG/Visitor.h"
@@ -38,6 +37,7 @@
 #include "Support/SourceLocation.h"
 #include "Support/exceptions.h"
 #include "Types/Type.h"
+#include "Types/TypeContext.h"
 #include "Types/TypeError.h"
 
 #include <algorithm>
@@ -51,7 +51,7 @@ using std::vector;
 
 
 List* List::of(const SharedPtrVec<Value>& values, const SourceRange& src,
-               FabContext& ctx)
+               TypeContext& ctx)
 {
 	const Type& elementTy =
 		values.empty()

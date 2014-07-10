@@ -29,13 +29,13 @@
  * SUCH DAMAGE.
  */
 
-#include "FabContext.h"
 #include "DAG/constants.h"
 #include "DAG/Primitive.h"
 #include "DAG/Visitor.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 #include "Types/Type.h"
+#include "Types/TypeContext.h"
 #include "Types/TypeError.h"
 
 #include <cassert>

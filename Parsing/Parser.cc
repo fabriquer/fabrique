@@ -41,10 +41,9 @@
 #include "Types/StringType.h"
 #include "Types/StructureType.h"
 #include "Types/Type.h"
+#include "Types/TypeContext.h"
 #include "Types/TypeError.h"
 #include "Support/os.h"
-
-#include "FabContext.h"
 
 #include <cassert>
 #include <fstream>
@@ -60,7 +59,7 @@ using std::unique_ptr;
 int yyparse(ast::Parser*);
 
 
-Parser::Parser(FabContext& ctx, string srcroot, string buildroot)
+Parser::Parser(TypeContext& ctx, string srcroot, string buildroot)
 	: ctx_(ctx), lexer_(Lexer::instance()), buildroot_(buildroot), srcroot_(srcroot)
 {
 	currentSubdirectory_.push("");

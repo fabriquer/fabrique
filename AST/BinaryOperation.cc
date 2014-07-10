@@ -29,12 +29,12 @@
  * SUCH DAMAGE.
  */
 
-#include "FabContext.h"
 #include "AST/BinaryOperation.h"
 #include "AST/Visitor.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 #include "Types/SequenceType.h"
+#include "Types/TypeContext.h"
 
 #include <cassert>
 

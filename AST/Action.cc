@@ -36,8 +36,8 @@
 #include "Types/FileType.h"
 #include "Types/FunctionType.h"
 #include "Types/SequenceType.h"
+#include "Types/TypeContext.h"
 #include "Types/TypeError.h"
-#include "FabContext.h"
 
 #include <cassert>
 
@@ -81,7 +81,7 @@ size_t Count(const UniqPtrVec<T>& values, TypePredicate predicate)
 
 Action* Action::Create(UniqPtrVec<Argument>& args,
                        UniqPtr<UniqPtrVec<Parameter>>& params,
-                       const SourceRange& src, FabContext& ctx)
+                       const SourceRange& src, TypeContext& ctx)
 {
 	UniqPtrVec<Parameter> parameters;
 	if (params)

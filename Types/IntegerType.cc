@@ -30,15 +30,15 @@
  */
 
 #include "Types/IntegerType.h"
+#include "Types/TypeContext.h"
 #include "Support/SourceLocation.h"
-#include "FabContext.h"
 using namespace fabrique;
 
 
 static const char *Name = "int";
 
 
-IntegerType::IntegerType(FabContext& ctx)
+IntegerType::IntegerType(TypeContext& ctx)
 	: Type(Name, PtrVec<Type>(), ctx)
 {
 }
@@ -46,7 +46,7 @@ IntegerType::IntegerType(FabContext& ctx)
 IntegerType::~IntegerType() {}
 
 
-const Type& IntegerType::get(FabContext& ctx)
+const Type& IntegerType::get(TypeContext& ctx)
 {
 	const Type& existing = ctx.find(Name, SourceRange::None());
 	if (existing)

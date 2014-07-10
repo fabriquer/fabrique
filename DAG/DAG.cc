@@ -54,9 +54,8 @@
 #include "Types/FileType.h"
 #include "Types/FunctionType.h"
 #include "Types/Type.h"
+#include "Types/TypeContext.h"
 #include "Types/TypeError.h"
-
-#include "FabContext.h"
 
 #include <cassert>
 #include <deque>
@@ -125,7 +124,7 @@ namespace dag {
 class DAGBuilder : public ast::Visitor
 {
 public:
-	DAGBuilder(FabContext& ctx)
+	DAGBuilder(TypeContext& ctx)
 		: ctx_(ctx)
 
 	{
@@ -183,7 +182,7 @@ private:
 	//! Parameters aren't really values: we can't store them, etc.
 	Parameter* ConvertParameter(const ast::Parameter&);
 
-	FabContext& ctx_;
+	TypeContext& ctx_;
 
 	//! The components of the current scope's fully-qualified name.
 	std::deque<string> scopeName;
@@ -205,7 +204,7 @@ private:
 } // namespace fabrique
 
 
-UniqPtr<DAG> DAG::Flatten(const ast::Scope& root, FabContext& ctx,
+UniqPtr<DAG> DAG::Flatten(const ast::Scope& root, TypeContext& ctx,
                           string srcroot, string buildroot)
 {
 	DAGBuilder builder(ctx);

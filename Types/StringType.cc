@@ -30,15 +30,15 @@
  */
 
 #include "Types/StringType.h"
+#include "Types/TypeContext.h"
 #include "Support/SourceLocation.h"
-#include "FabContext.h"
 using namespace fabrique;
 
 
 static const char *Name = "string";
 
 
-StringType::StringType(FabContext& ctx)
+StringType::StringType(TypeContext& ctx)
 	: Type(Name, PtrVec<Type>(), ctx)
 {
 }
@@ -46,7 +46,7 @@ StringType::StringType(FabContext& ctx)
 StringType::~StringType() {}
 
 
-const Type& StringType::get(FabContext& ctx)
+const Type& StringType::get(TypeContext& ctx)
 {
 	const Type& existing = ctx.find(Name, SourceRange::None());
 	if (existing)

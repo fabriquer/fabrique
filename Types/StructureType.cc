@@ -34,7 +34,7 @@ using namespace fabrique;
 
 
 StructureType*
-StructureType::Create(const std::vector<Field>& fields, FabContext& ctx)
+StructureType::Create(const std::vector<Field>& fields, TypeContext& ctx)
 {
 	PtrVec<Type> paramTypes;
 	for (auto& field : fields)
@@ -45,7 +45,7 @@ StructureType::Create(const std::vector<Field>& fields, FabContext& ctx)
 
 
 StructureType::StructureType(const std::vector<Field>& fields,
-                             const PtrVec<Type>& paramTypes, FabContext& ctx)
+                             const PtrVec<Type>& paramTypes, TypeContext& ctx)
 	: Type("struct", paramTypes, ctx), fields_(fields)
 {
 }

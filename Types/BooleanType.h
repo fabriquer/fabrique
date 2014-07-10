@@ -36,7 +36,7 @@
 
 namespace fabrique {
 
-class FabContext;
+class TypeContext;
 
 
 /**
@@ -46,15 +46,15 @@ class BooleanType : public Type
 {
 public:
 	virtual ~BooleanType();
-	static const Type& get(FabContext&);
+	static const Type& get(TypeContext&);
 
 	virtual const Type& onAddTo(const Type&) const override;
 
 protected:
-	BooleanType(FabContext&);
+	BooleanType(TypeContext&);
 
 private:
-	friend class FabContext;
+	friend class TypeContext;
 };
 
 } // namespace fabrique

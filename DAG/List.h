@@ -49,7 +49,7 @@ class List : public Value
 public:
 	template<class T>
 	static List* of(const SharedPtrVec<T>& values, const SourceRange& src,
-	                FabContext& ctx)
+	                TypeContext& ctx)
 	{
 		SharedPtrVec<Value> v;
 		for (const std::shared_ptr<T>& x : values)
@@ -59,7 +59,7 @@ public:
 	}
 
 	static List* of(const SharedPtrVec<Value>&, const SourceRange&,
-	                FabContext& ctx);
+	                TypeContext& ctx);
 
 	List(const SharedPtrVec<Value>&, const Type&, const SourceRange&);
 

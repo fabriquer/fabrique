@@ -1,4 +1,4 @@
-/** @file FabContext.cc    Definition of fabrique::FabContext. */
+/** @file TypeContext.cc    Definition of fabrique::TypeContext. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -37,7 +37,7 @@
 #include "Types/StringType.h"
 #include "Support/Bytestream.h"
 #include "Support/SourceLocation.h"
-#include "FabContext.h"
+#include "TypeContext.h"
 
 #include <cassert>
 
@@ -50,7 +50,7 @@ namespace
 	class NilType : public Type
 	{
 	public:
-		NilType(FabContext& ctx)
+		NilType(TypeContext& ctx)
 			: Type("nil", PtrVec<Type>(), ctx)
 		{
 		}
@@ -61,8 +61,7 @@ namespace
 }
 
 
-FabContext::FabContext(std::string srcroot, std::string buildroot)
-	: srcroot_(srcroot), buildroot_(buildroot)
+TypeContext::TypeContext()
 {
 	Register(new IntegerType(*this));
 
@@ -79,7 +78,7 @@ FabContext::FabContext(std::string srcroot, std::string buildroot)
 }
 
 
-const Type& FabContext::find(const string& name, const SourceRange& src,
+const Type& TypeContext::find(const string& name, const SourceRange& src,
                              const PtrVec<Type>& params)
 {
 	auto i = types.find(QualifiedName(name, params));
@@ -104,13 +103,13 @@ const Type& FabContext::find(const string& name, const SourceRange& src,
 	return nilType();
 }
 
-const Type& FabContext::nilType()
+const Type& TypeContext::nilType()
 {
 	static const Type& nil = *new NilType(*this);
 	return nil;
 }
 
-const Type& FabContext::booleanType()
+const Type& TypeContext::booleanType()
 {
 	static const Type& t = Register(
 		new Type("bool", PtrVec<Type>(), *this));
@@ -118,25 +117,25 @@ const Type& FabContext::booleanType()
 	return t;
 }
 
-const Type& FabContext::listOf(const Type& elementTy, const SourceRange& src)
+const Type& TypeContext::listOf(const Type& elementTy, const SourceRange& src)
 {
 	PtrVec<Type> params(1, &elementTy);
 	return find(rawSequenceType_->name(), src, params);
 }
 
-const Type& FabContext::fileType()
+const Type& TypeContext::fileType()
 {
 	static const Type& f = Register(FileType::Create(*this));
 	return f;
 }
 
-const Type& FabContext::fileListType()
+const Type& TypeContext::fileListType()
 {
 	static const Type& f = listOf(fileType(), SourceRange::None());
 	return f;
 }
 
-const Type& FabContext::stringType()
+const Type& TypeContext::stringType()
 {
 	static const Type& t = Register(new StringType(*this));
 	return t;
@@ -144,13 +143,13 @@ const Type& FabContext::stringType()
 
 
 const FunctionType&
-FabContext::functionType(const Type& in, const Type& out)
+TypeContext::functionType(const Type& in, const Type& out)
 {
 	return functionType(PtrVec<Type>(1, &in), out);
 }
 
 const FunctionType&
-FabContext::functionType(const PtrVec<Type>& argTypes, const Type& retType)
+TypeContext::functionType(const PtrVec<Type>& argTypes, const Type& retType)
 {
 	FunctionType *t = FunctionType::Create(argTypes, retType);
 	//Register(t);
@@ -159,7 +158,7 @@ FabContext::functionType(const PtrVec<Type>& argTypes, const Type& retType)
 }
 
 const StructureType&
-FabContext::structureType(const std::vector<StructureType::Field>& fields)
+TypeContext::structureType(const std::vector<StructureType::Field>& fields)
 {
 	StructureType *t = StructureType::Create(fields, *this);
 	//Register(t);
@@ -168,7 +167,7 @@ FabContext::structureType(const std::vector<StructureType::Field>& fields)
 }
 
 const Type&
-FabContext::Register(Type *t)
+TypeContext::Register(Type *t)
 {
 	auto fullName(QualifiedName(t->name(), t->parameters_));
 	assert(types.find(fullName) == types.end());
@@ -178,8 +177,8 @@ FabContext::Register(Type *t)
 }
 
 
-FabContext::TypeName
-FabContext::QualifiedName(const string& name, const PtrVec<Type>& params)
+TypeContext::TypeName
+TypeContext::QualifiedName(const string& name, const PtrVec<Type>& params)
 {
 	return std::make_pair(name, params);
 }

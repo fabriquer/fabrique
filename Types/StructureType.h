@@ -44,7 +44,7 @@ class StructureType : public Type
 {
 public:
 	typedef std::pair<std::string,const Type&> Field;
-	static StructureType* Create(const std::vector<Field>&, FabContext&);
+	static StructureType* Create(const std::vector<Field>&, TypeContext&);
 		
 	virtual ~StructureType();
 	const std::vector<Field>& elements() const { return fields_; }
@@ -52,10 +52,10 @@ public:
 	virtual bool isSubtype(const Type&) const override;
 
 private:
-	StructureType(const std::vector<Field>&, const PtrVec<Type>&, FabContext&);
+	StructureType(const std::vector<Field>&, const PtrVec<Type>&, TypeContext&);
 	std::vector<Field> fields_;
 
-	friend class FabContext;
+	friend class TypeContext;
 };
 
 } // namespace fabrique

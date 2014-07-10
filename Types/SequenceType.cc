@@ -30,7 +30,7 @@
  */
 
 #include "Types/SequenceType.h"
-#include "FabContext.h"
+#include "Types/TypeContext.h"
 #include <cassert>
 using namespace fabrique;
 
@@ -86,7 +86,7 @@ const Type& SequenceType::onPrefixWith(const Type& t) const
 }
 
 
-RawSequenceType::RawSequenceType(FabContext& ctx)
+RawSequenceType::RawSequenceType(TypeContext& ctx)
 	: Type(Name, PtrVec<Type>(), ctx)
 {
 }

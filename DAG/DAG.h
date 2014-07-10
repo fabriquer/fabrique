@@ -42,7 +42,7 @@
 
 namespace fabrique {
 
-class FabContext;
+class TypeContext;
 
 namespace ast {
 	class Expression;
@@ -65,7 +65,7 @@ class Value;
 class DAG : public Printable
 {
 public:
-	static UniqPtr<DAG> Flatten(const ast::Scope&, FabContext&,
+	static UniqPtr<DAG> Flatten(const ast::Scope&, TypeContext&,
 	                            std::string srcroot, std::string buildroot);
 
 	virtual const std::string& buildroot() const = 0;

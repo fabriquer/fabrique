@@ -42,8 +42,8 @@
 
 namespace fabrique {
 
-class FabContext;
 class SourceRange;
+class TypeContext;
 
 
 /**
@@ -60,7 +60,7 @@ public:
 	Type(std::weak_ptr<Type> parent) = delete;
 	virtual ~Type() {}
 
-	FabContext& context() const { return parent_; }
+	TypeContext& context() const { return parent_; }
 
 	virtual const std::string name() const;
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
@@ -92,18 +92,18 @@ public:
 
 
 protected:
-	Type(const std::string&, const PtrVec<Type>& params, FabContext&);
+	Type(const std::string&, const PtrVec<Type>& params, TypeContext&);
 	virtual Type* Parameterise(const PtrVec<Type>&, const SourceRange&) const;
 
 private:
 	static Type* Create(const std::string&, const PtrVec<Type>& params,
-	                    FabContext&);
+	                    TypeContext&);
 
-	FabContext& parent_;
+	TypeContext& parent_;
 	const std::string typeName_;
 	const PtrVec<Type> parameters_;
 
-	friend class FabContext;
+	friend class TypeContext;
 };
 
 } // namespace fabrique

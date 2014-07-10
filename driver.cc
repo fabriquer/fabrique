@@ -47,7 +47,7 @@
 #include "Support/exceptions.h"
 #include "Support/os.h"
 
-#include "FabContext.h"
+#include "Types/TypeContext.h"
 
 #include <cassert>
 #include <cstdio>
@@ -61,7 +61,7 @@ using std::unique_ptr;
 
 
 static Bytestream& err();
-static unique_ptr<ast::Scope> Parse(const string& filename, FabContext&,
+static unique_ptr<ast::Scope> Parse(const string& filename, TypeContext&,
                                     string srcroot, string buildroot, bool printAST);
 
 int main(int argc, char *argv[]) {
@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
 	//
 	try
 	{
-		FabContext ctx;
+		TypeContext ctx;
 
 		const string srcroot = DirectoryOf(args->input, true);
 		const string buildroot = AbsoluteDirectory(args->output);
@@ -223,7 +223,7 @@ int main(int argc, char *argv[]) {
 }
 
 
-unique_ptr<ast::Scope> Parse(const string& filename, FabContext& ctx,
+unique_ptr<ast::Scope> Parse(const string& filename, TypeContext& ctx,
                              string srcroot, string buildroot, bool printAST)
 {
 

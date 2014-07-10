@@ -44,7 +44,7 @@ namespace fabrique { class Token; }
 
 namespace fabrique {
 
-class FabContext;
+class TypeContext;
 class Lexer;
 
 namespace ast {
@@ -56,7 +56,7 @@ namespace ast {
 class Parser
 {
 public:
-	Parser(FabContext&, std::string srcroot, std::string buildroot);
+	Parser(TypeContext&, std::string srcroot, std::string buildroot);
 
 	//! Parse Fabrique input (usually a file) into a @ref Scope.
 	std::unique_ptr<Scope> ParseFile(std::istream&, std::string name,
@@ -230,7 +230,7 @@ private:
 	const ErrorReport& ReportError(const std::string&, const SourceRange&);
 	const ErrorReport& ReportError(const std::string&, const HasSource&);
 
-	FabContext& ctx_;
+	TypeContext& ctx_;
 	Lexer& lexer_;
 
 	UniqPtrVec<ErrorReport> errs_;

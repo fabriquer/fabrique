@@ -55,10 +55,9 @@ cxx_srcs = {
 	'Types/': (
 		'BooleanType', 'FileType', 'FunctionType', 'IntegerType',
 		'OptionallyTyped', 'SequenceType', 'StringType', 'StructureType',
-		'Type', 'TypeError', 'Typed',
+		'Type', 'TypeContext', 'TypeError', 'Typed',
 	),
 	'': (
-		'FabContext',
 		'driver',
 	),
 }

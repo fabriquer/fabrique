@@ -36,7 +36,7 @@
 
 namespace fabrique {
 
-class FabContext;
+class TypeContext;
 
 
 /**
@@ -46,15 +46,15 @@ class IntegerType : public Type
 {
 public:
 	virtual ~IntegerType();
-	static const Type& get(FabContext&);
+	static const Type& get(TypeContext&);
 
 	virtual const Type& onAddTo(const Type&) const override;
 
 protected:
-	IntegerType(FabContext&);
+	IntegerType(TypeContext&);
 
 private:
-	friend class FabContext;
+	friend class TypeContext;
 };
 
 } // namespace fabrique

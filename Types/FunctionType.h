@@ -67,7 +67,7 @@ private:
 	const PtrVec<Type> paramTypes_;
 	const Type& retTy_;
 
-	friend class FabContext;
+	friend class TypeContext;
 };
 
 } // namespace fabrique

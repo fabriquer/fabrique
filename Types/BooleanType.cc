@@ -30,15 +30,15 @@
  */
 
 #include "Types/BooleanType.h"
+#include "Types/TypeContext.h"
 #include "Support/SourceLocation.h"
-#include "FabContext.h"
 using namespace fabrique;
 
 
 static const char *Name = "bool";
 
 
-BooleanType::BooleanType(FabContext& ctx)
+BooleanType::BooleanType(TypeContext& ctx)
 	: Type(Name, PtrVec<Type>(), ctx)
 {
 }
@@ -46,7 +46,7 @@ BooleanType::BooleanType(FabContext& ctx)
 BooleanType::~BooleanType() {}
 
 
-const Type& BooleanType::get(FabContext& ctx)
+const Type& BooleanType::get(TypeContext& ctx)
 {
 	const Type& existing = ctx.find(Name, SourceRange::None());
 	if (existing)

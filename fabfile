@@ -77,7 +77,7 @@ plugins = import('plugins/plugins.fab');
 #   }
 #
 cxx_srcs =
-	files(driver.cc FabContext.cc)
+	files(driver.cc)
 	+ ast.sources
 	+ backends.sources
 	+ dag.sources

@@ -1,4 +1,4 @@
-/** @file FabContext.h    Declaration of fabrique::FabContext. */
+/** @file TypeContext.h    Declaration of fabrique::TypeContext. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -29,8 +29,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef CONTEXT_H
-#define CONTEXT_H
+#ifndef TYPE_CONTEXT_H
+#define TYPE_CONTEXT_H
 
 #include "ADT/PtrVec.h"
 #include "Types/Type.h"
@@ -50,13 +50,10 @@ class Type;
 /**
  * A context object that holds state for a compilation (e.g., type objects).
  */
-class FabContext
+class TypeContext
 {
 public:
-	FabContext(std::string srcroot, std::string buildroot);
-
-	const std::string& srcroot() const { return srcroot_; }
-	const std::string& buildroot() const { return buildroot_; }
+	TypeContext();
 
 	//! Find an existing type (nil type if not found).
 	const Type& find(const std::string& name, const SourceRange& src,
@@ -99,10 +96,6 @@ private:
 	                              const PtrVec<Type>& params = PtrVec<Type>());
 
 	Type* rawSequenceType_;
-
-	const std::string srcroot_;
-	const std::string buildroot_;
-
 	std::map<TypeName,std::unique_ptr<Type>> types;
 };
 

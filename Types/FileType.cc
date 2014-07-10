@@ -31,9 +31,9 @@
 
 #include "Types/FileType.h"
 #include "Types/SequenceType.h"
+#include "Types/TypeContext.h"
 #include "Types/TypeError.h"
 #include "Support/exceptions.h"
-#include "FabContext.h"
 
 #include <cassert>
 
@@ -91,7 +91,7 @@ void FileType::CheckFileTags(const Type& t, SourceRange src)
 }
 
 
-FileType::FileType(Tag tag, const PtrVec<Type>& params, FabContext& ctx)
+FileType::FileType(Tag tag, const PtrVec<Type>& params, TypeContext& ctx)
 	: Type("file", params, ctx), tag_(tag)
 {
 }
@@ -156,7 +156,7 @@ const Type& FileType::onPrefixWith(const Type& t) const
 }
 
 
-FileType* FileType::Create(FabContext& ctx)
+FileType* FileType::Create(TypeContext& ctx)
 {
 	return new FileType(Tag::None, PtrVec<Type>(), ctx);
 }
