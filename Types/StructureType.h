@@ -45,7 +45,7 @@ class StructureType : public Type
 public:
 	typedef std::pair<std::string,const Type&> Field;
 	static StructureType* Create(const std::vector<Field>&, TypeContext&);
-		
+
 	virtual ~StructureType();
 	const std::vector<Field>& elements() const { return fields_; }
 
