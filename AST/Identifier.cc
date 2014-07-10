@@ -37,7 +37,14 @@
 using namespace fabrique::ast;
 
 
-static const char* ReservedNames[] = { "in", "out" };
+static const char* ReservedNames[] =
+{
+	"args",
+	"buildroot",
+	"in",
+	"out",
+	"srcroot",
+};
 
 
 Identifier::Identifier(const std::string& name, const Type *type,
