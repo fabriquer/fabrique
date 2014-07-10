@@ -888,6 +888,7 @@ void DAGBuilder::Leave(const ast::Value&)
 
 	ValuePtr val = std::move(currentValue.top());
 	currentValue.pop();
+	assert(val);
 
 	const string name = currentValueName.top();
 	currentValueName.pop();
@@ -912,6 +913,7 @@ void DAGBuilder::Leave(const ast::Value&)
 	if (currentValueName.empty())
 		topLevelTargets_.emplace_back(name, val);
 
+	assert(val);
 	currentScope.emplace(name, std::move(val));
 
 	for (auto& i : currentScope)
@@ -919,7 +921,8 @@ void DAGBuilder::Leave(const ast::Value&)
 
 	dbg << Bytestream::Reset << "\n";
 
-	currentValue.emplace(val);
+	assert(not val);
+	currentValue.emplace(nullptr);
 }
 
 
