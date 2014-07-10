@@ -1,0 +1,7 @@
+#
+# RUN: fab --parse-only --print-ast %s 2> %t || true
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: requires-args.fab:1:19: error: no such field
+err = import('Inputs/requires-args.fab');

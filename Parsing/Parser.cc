@@ -73,6 +73,17 @@ UniqPtr<Scope> Parser::ParseFile(std::istream& input, string name,
 	lexer_.PushFile(input, name);
 	EnterScope(name);
 
+	Scope& scope = EnterScope("args");
+	for (UniqPtr<Argument>& a : args)
+	{
+		assert(a->hasName());
+		scope.Register(a.get());
+	}
+
+	UniqPtr<Expression> argStruct(StructInstantiation(openedFrom));
+	UniqPtr<Identifier> id(new Identifier("args", nullptr, openedFrom));
+	DefineValue(id, argStruct);
+
 	int result = yyparse(this);
 
 	lexer_.PopFile();
@@ -450,10 +461,14 @@ Import* Parser::ImportModule(UniqPtr<StringLiteral>& name, UniqPtrVec<Argument>&
 
 	std::vector<StructureType::Field> fields;
 	for (const UniqPtr<Value>& value : module->values())
-		fields.emplace_back(value->name().name(), value->type());
+	{
+		const Identifier& id { value->name() };
+		if (not id.reservedName())
+			fields.emplace_back(id.name(), value->type());
+	}
+	const StructureType& ty { ctx_.structureType(fields) };
 
-	return new Import(name, args, directory, module,
-	                  ctx_.structureType(fields), src);
+	return new Import(name, args, directory, module, ty, src);
 }
 
 

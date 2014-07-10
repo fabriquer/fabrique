@@ -1,0 +1,10 @@
+#
+# RUN: fab --parse-only --print-ast %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: mandatory_args:struct[string] = import('Inputs/requires-args.fab', name = 'foo');
+mandatory_args = import('Inputs/requires-args.fab', name = 'foo');
+
+# CHECK: bar:string = mandatory_args.test_value;
+bar = mandatory_args.test_value;

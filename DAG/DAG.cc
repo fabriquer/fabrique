@@ -152,6 +152,7 @@ public:
 	VISIT(ast::Parameter)
 	VISIT(ast::Scope)
 	VISIT(ast::StringLiteral)
+	VISIT(ast::StructInstantiation)
 	VISIT(ast::SymbolReference)
 	VISIT(ast::UnaryOperation)
 	VISIT(ast::Value)
@@ -781,6 +782,18 @@ bool DAGBuilder::Enter(const ast::StringLiteral& s)
 }
 
 void DAGBuilder::Leave(const ast::StringLiteral&) {}
+
+
+bool DAGBuilder::Enter(const ast::StructInstantiation& s) {
+	vector<Structure::NamedValue> values;
+	for (auto& field : s.scope())
+		values.emplace_back(field.first, eval(*field.second));
+
+	currentValue.emplace(Structure::Create(values, s.type()));
+	return false;
+}
+
+void DAGBuilder::Leave(const ast::StructInstantiation&) {}
 
 
 bool DAGBuilder::Enter(const ast::SymbolReference& r)
