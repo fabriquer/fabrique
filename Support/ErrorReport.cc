@@ -82,7 +82,7 @@ void ErrorReport::PrettyPrint(Bytestream& out, size_t indent) const
 			string line;
 			getline(sourceFile, line);
 
-			if (i >= (caret_.line - contextLines_))
+			if ((caret_.line - i) <= contextLines_)
 				out
 					<< tabs
 					<< Bytestream::Line << i << "\t"
