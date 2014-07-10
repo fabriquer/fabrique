@@ -35,7 +35,6 @@
 // Include Matthias Benkmann's "Lean Mean C++ Option Parser".
 #include <optionparser.h>
 
-#include <ostream>
 #include <string>
 
 namespace fabrique {
