@@ -40,6 +40,8 @@
 
 namespace fabrique {
 
+class Bytestream;
+
 enum OutputFormat
 {
 	Fabrique,
@@ -56,6 +58,8 @@ class Arguments
 public:
 	static void PrintUsage(std::ostream&);
 	static Arguments* Parse(int argc, char *argv[]);
+
+	static void Print(const Arguments&, Bytestream&);
 
 	const bool help;
 

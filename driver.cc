@@ -80,6 +80,7 @@ int main(int argc, char *argv[]) {
 	//
 	Bytestream::SetDebugPattern(args->debugPattern);
 	Bytestream::SetDebugStream(err());
+	Arguments::Print(*args, Bytestream::Debug("cli.args"));
 
 	//
 	// Parse the file, build the DAG and pass it to the backed.

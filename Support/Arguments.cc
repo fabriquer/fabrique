@@ -30,6 +30,7 @@
  */
 
 #include "Support/Arguments.h"
+#include "Support/Bytestream.h"
 
 #include <iostream>
 #include <sstream>
@@ -195,6 +196,34 @@ Arguments* Arguments::Parse(int argc, char *argv[])
 		options[PrintOutput],
 		debugPattern
 	};
+}
+
+
+#define ARG(name) \
+	Bytestream::Definition << tab << #name \
+	<< Bytestream::Operator << " = " \
+	<< Bytestream::Literal << args.name << "\n"
+
+void Arguments::Print(const Arguments& args, Bytestream& out)
+{
+	const string tab(1, '\t');
+
+	out
+		<< Bytestream::Action << "Arguments\n"
+		<< Bytestream::Operator << "{\n"
+		<< ARG(help)
+		<< ARG(input)
+		<< ARG(output)
+		<< ARG(outputFileSpecified)
+		<< ARG(format)
+		<< ARG(parseOnly)
+		<< ARG(printAST)
+		<< ARG(printDAG)
+		<< ARG(printOutput)
+		<< ARG(debugPattern)
+		<< Bytestream::Operator << "}"
+		<< Bytestream::Reset
+		;
 }
 
 
