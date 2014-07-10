@@ -62,7 +62,7 @@ using std::unique_ptr;
 
 static Bytestream& err();
 static unique_ptr<ast::Scope> Parse(const string& filename, FabContext&,
-                                    bool printAST);
+                                    string srcroot, string buildroot, bool printAST);
 
 int main(int argc, char *argv[]) {
 	//
@@ -88,15 +88,16 @@ int main(int argc, char *argv[]) {
 	//
 	try
 	{
-		string srcroot = DirectoryOf(args->input, true);
-		string buildroot = AbsoluteDirectory(args->output);
-		FabContext ctx(srcroot, buildroot);
+		FabContext ctx;
+
+		const string srcroot = DirectoryOf(args->input, true);
+		const string buildroot = AbsoluteDirectory(args->output);
 
 		//
 		// Parse the file, optionally pretty-printing it.
 		//
 		unique_ptr<ast::Scope> ast(
-			Parse(args->input, ctx, args->printAST));
+			Parse(args->input, ctx, srcroot, buildroot, args->printAST));
 
 		if (not ast)
 			return -1;
@@ -109,7 +110,7 @@ int main(int argc, char *argv[]) {
 		// Convert the parsed AST into a DAG.
 		//
 		unique_ptr<dag::DAG> dag;
-		dag = dag::DAG::Flatten(*ast, ctx);
+		dag = dag::DAG::Flatten(*ast, ctx, srcroot, buildroot);
 
 		// DAG errors should be reported as exceptions.
 		assert(dag);
@@ -223,10 +224,11 @@ int main(int argc, char *argv[]) {
 
 
 unique_ptr<ast::Scope> Parse(const string& filename, FabContext& ctx,
-                             bool printAST)
+                             string srcroot, string buildroot, bool printAST)
 {
+
 	// Create the parser.
-	unique_ptr<ast::Parser> parser(new ast::Parser(ctx));
+	unique_ptr<ast::Parser> parser(new ast::Parser(ctx, srcroot, buildroot));
 
 	// Open and parse the given file.
 	std::ifstream infile(filename.c_str());

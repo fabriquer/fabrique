@@ -56,7 +56,7 @@ namespace ast {
 class Parser
 {
 public:
-	Parser(FabContext&);
+	Parser(FabContext&, std::string srcroot, std::string buildroot);
 
 	//! Parse Fabrique input (usually a file) into a @ref Scope.
 	std::unique_ptr<Scope> ParseFile(std::istream&, std::string name,
@@ -235,6 +235,12 @@ private:
 
 	UniqPtrVec<ErrorReport> errs_;
 	std::stack<std::unique_ptr<Scope>> scopes_;
+
+	//! Where we are outputting files.
+	std::string buildroot_;
+
+	//! The root of all source files (where the top-level Fabrique file lives).
+	std::string srcroot_;
 
 	//! The subdirectory that we are currently working from.
 	std::stack<std::string> currentSubdirectory_;

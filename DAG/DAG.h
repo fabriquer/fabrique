@@ -65,7 +65,8 @@ class Value;
 class DAG : public Printable
 {
 public:
-	static UniqPtr<DAG> Flatten(const ast::Scope&, FabContext&);
+	static UniqPtr<DAG> Flatten(const ast::Scope&, FabContext&,
+	                            std::string srcroot, std::string buildroot);
 
 	virtual const std::string& buildroot() const = 0;
 	virtual const std::string& srcroot() const = 0;

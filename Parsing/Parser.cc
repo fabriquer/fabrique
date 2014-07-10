@@ -60,8 +60,8 @@ using std::unique_ptr;
 int yyparse(ast::Parser*);
 
 
-Parser::Parser(FabContext& ctx)
-	: ctx_(ctx), lexer_(Lexer::instance())
+Parser::Parser(FabContext& ctx, string srcroot, string buildroot)
+	: ctx_(ctx), lexer_(Lexer::instance()), buildroot_(buildroot), srcroot_(srcroot)
 {
 	currentSubdirectory_.push("");
 }
@@ -115,8 +115,8 @@ Scope& Parser::EnterScope(const string& name)
 		//
 		// Define some magic builtins:
 		//
-		Builtin("srcroot", ctx_.srcroot());
-		Builtin("buildroot", ctx_.buildroot());
+		Builtin("srcroot", srcroot_);
+		Builtin("buildroot", buildroot_);
 		Builtin(ast::Subdirectory, "");
 	}
 	else
@@ -441,13 +441,13 @@ Import* Parser::ImportModule(UniqPtr<StringLiteral>& name, UniqPtrVec<Argument>&
 		return nullptr;
 
 	const string subdir(currentSubdirectory_.top());
-	const string filename = FindModule(ctx_.srcroot(), subdir, name->str());
+	const string filename = FindModule(srcroot_, subdir, name->str());
 	const string directory = DirectoryOf(filename);
 
 	currentSubdirectory_.push(directory);
 
 	const string absolute =
-		PathIsAbsolute(filename) ? filename : JoinPath(ctx_.srcroot(), filename);
+		PathIsAbsolute(filename) ? filename : JoinPath(srcroot_, filename);
 
 	std::ifstream input(absolute);
 	if (not input.good())

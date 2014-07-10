@@ -205,14 +205,14 @@ private:
 } // namespace fabrique
 
 
-UniqPtr<DAG> DAG::Flatten(const ast::Scope& root, FabContext& ctx)
+UniqPtr<DAG> DAG::Flatten(const ast::Scope& root, FabContext& ctx,
+                          string srcroot, string buildroot)
 {
 	DAGBuilder builder(ctx);
 	root.Accept(builder);
 
 	return UniqPtr<DAG>(new ImmutableDAG(
-		ctx.buildroot(), ctx.srcroot(),
-		builder.files_, builder.builds_, builder.rules_,
+		buildroot, srcroot, builder.files_, builder.builds_, builder.rules_,
 		builder.variables_, builder.targets_, builder.topLevelTargets_));
 }
 
