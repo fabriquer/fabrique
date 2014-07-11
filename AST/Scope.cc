@@ -140,6 +140,11 @@ void Scope::Take(UniqPtr<Value>& val)
 }
 
 
+UniqPtrVec<Value> Scope::TakeValues()
+{
+	return std::move(ownedValues_);
+}
+
 
 void Scope::PrettyPrint(Bytestream& out, size_t indent) const
 {
