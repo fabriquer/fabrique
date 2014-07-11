@@ -51,6 +51,8 @@ Scope::Scope(Scope&& other)
 	: parent_(other.parent_), symbols_(other.symbols_),
 	  ownedValues_(std::move(other.ownedValues_))
 {
+	other.symbols_.clear();
+	assert(other.ownedValues_.empty());
 }
 
 
