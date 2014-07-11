@@ -66,8 +66,8 @@ Parser::Parser(TypeContext& ctx, string srcroot)
 }
 
 
-UniqPtr<Scope> Parser::ParseFile(std::istream& input, string name,
-                                 UniqPtrVec<Argument>& args, StringMap<string> builtins,
+UniqPtr<Scope> Parser::ParseFile(std::istream& input, UniqPtr<Scope>& args,
+                                 string name, StringMap<string> builtins,
                                  SourceRange openedFrom)
 {
 	lexer_.PushFile(input, name);

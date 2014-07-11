@@ -60,8 +60,7 @@ public:
 
 	//! Parse Fabrique input (usually a file) into a @ref Scope.
 	std::unique_ptr<Scope> ParseFile(
-		std::istream&, std::string name,
-		UniqPtrVec<Argument>& arguments,
+		std::istream&, UniqPtr<Scope>& arguments, std::string name = "",
 		StringMap<std::string> builtins = StringMap<std::string>(),
 		SourceRange openedFrom = SourceRange::None());
 
