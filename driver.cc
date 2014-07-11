@@ -229,7 +229,7 @@ unique_ptr<ast::Scope> Parse(const string& filename, TypeContext& ctx,
 {
 
 	// Create the parser.
-	unique_ptr<ast::Parser> parser(new ast::Parser(ctx, srcroot, buildroot));
+	unique_ptr<ast::Parser> parser(new ast::Parser(ctx, srcroot));
 
 	// Open and parse the given file.
 	std::ifstream infile(filename.c_str());
@@ -238,7 +238,15 @@ unique_ptr<ast::Scope> Parse(const string& filename, TypeContext& ctx,
 
 	// TODO: parse command-line arguments
 	UniqPtrVec<ast::Argument> arguments;
-	unique_ptr<ast::Scope> ast(parser->ParseFile(infile, filename, arguments));
+	map<string,string> builtins {
+		std::make_pair("srcroot", srcroot),
+		std::make_pair("buildroot", buildroot),
+		std::make_pair(ast::Subdirectory, ""),
+	};
+
+	unique_ptr<ast::Scope> ast(
+		parser->ParseFile(infile, filename, arguments, builtins));
+
 	if (not ast)
 	{
 		for (auto& error : parser->errors())

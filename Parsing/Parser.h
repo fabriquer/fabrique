@@ -56,12 +56,14 @@ namespace ast {
 class Parser
 {
 public:
-	Parser(TypeContext&, std::string srcroot, std::string buildroot);
+	Parser(TypeContext&, std::string srcroot);
 
 	//! Parse Fabrique input (usually a file) into a @ref Scope.
-	std::unique_ptr<Scope> ParseFile(std::istream&, std::string name,
-	                                 UniqPtrVec<Argument>& arguments,
-	                                 SourceRange openedFrom = SourceRange::None());
+	std::unique_ptr<Scope> ParseFile(
+		std::istream&, std::string name,
+		UniqPtrVec<Argument>& arguments,
+		StringMap<std::string> builtins = StringMap<std::string>(),
+		SourceRange openedFrom = SourceRange::None());
 
 	//! Errors encountered during parsing.
 	const UniqPtrVec<ErrorReport>& errors() const { return errs_; }
@@ -235,9 +237,6 @@ private:
 
 	UniqPtrVec<ErrorReport> errs_;
 	std::stack<std::unique_ptr<Scope>> scopes_;
-
-	//! Where we are outputting files.
-	std::string buildroot_;
 
 	//! The root of all source files (where the top-level Fabrique file lives).
 	std::string srcroot_;

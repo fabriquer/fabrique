@@ -59,18 +59,22 @@ using std::unique_ptr;
 int yyparse(ast::Parser*);
 
 
-Parser::Parser(TypeContext& ctx, string srcroot, string buildroot)
-	: ctx_(ctx), lexer_(Lexer::instance()), buildroot_(buildroot), srcroot_(srcroot)
+Parser::Parser(TypeContext& ctx, string srcroot)
+	: ctx_(ctx), lexer_(Lexer::instance()), srcroot_(srcroot)
 {
 	currentSubdirectory_.push("");
 }
 
 
 UniqPtr<Scope> Parser::ParseFile(std::istream& input, string name,
-                                 UniqPtrVec<Argument>& args, SourceRange openedFrom)
+                                 UniqPtrVec<Argument>& args, StringMap<string> builtins,
+                                 SourceRange openedFrom)
 {
 	lexer_.PushFile(input, name);
 	EnterScope(name);
+
+	for (std::pair<string,string> i : builtins)
+		Builtin(i.first, i.second);
 
 	Scope& scope = EnterScope("args");
 	for (UniqPtr<Argument>& a : args)
@@ -108,20 +112,9 @@ Scope& Parser::EnterScope(const string& name)
 		;
 
 	if (scopes_.empty())
-	{
 		scopes_.emplace(new Scope(nullptr, name));
-
-		//
-		// Define some magic builtins:
-		//
-		Builtin("srcroot", srcroot_);
-		Builtin("buildroot", buildroot_);
-		Builtin(ast::Subdirectory, "");
-	}
 	else
-	{
 		scopes_.emplace(new Scope(&CurrentScope(), name));
-	}
 
 	return *scopes_.top();
 }
