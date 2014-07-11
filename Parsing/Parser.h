@@ -128,6 +128,12 @@ public:
 	FieldAccess* FieldAccess(UniqPtr<SymbolReference>& structure,
 	                         UniqPtr<Identifier>& field);
 
+	//! A test to see if a structure contains a field.
+	FieldQuery* FieldQuery(UniqPtr<SymbolReference>& structure,
+	                       UniqPtr<Identifier>& field,
+	                       UniqPtr<Expression>& defaultValue,
+	                       SourceRange);
+
 	//! A @ref Filename that is part of the build DAG.
 	Filename* File(UniqPtr<Expression>& name, const SourceRange& src,
 	               UniqPtr<UniqPtrVec<Argument>>&& arguments = nullptr);

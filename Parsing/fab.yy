@@ -129,6 +129,7 @@ expression:
 	| compoundExpr
 	| conditional
 	| '(' expression ')'	{ SetOrDie($$, $2.node); }
+	| fieldQuery
 	| file
 	| fileList
 	| foreach
@@ -280,6 +281,19 @@ fieldAccess:
 		auto field = TakeNode<Identifier>($3);
 
 		SetOrDie($$, p->FieldAccess(structure, field));
+	}
+	;
+
+fieldQuery:
+	reference '.' name '?' expression
+	{
+		auto structure = TakeNode<SymbolReference>($1);
+		auto field = TakeNode<Identifier>($3);
+		auto defaultValue = TakeNode<Expression>($5);
+
+		SourceRange src = SourceRange::Over(structure, defaultValue);
+
+		SetOrDie($$, p->FieldQuery(structure, field, defaultValue, src));
 	}
 	;
 

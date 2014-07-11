@@ -140,6 +140,7 @@ public:
 	VISIT(ast::CompoundExpression)
 	VISIT(ast::Conditional)
 	VISIT(ast::FieldAccess)
+	VISIT(ast::FieldQuery)
 	VISIT(ast::Filename)
 	VISIT(ast::FileList)
 	VISIT(ast::ForeachExpr)
@@ -532,6 +533,23 @@ void DAGBuilder::Leave(const ast::Conditional&) {}
 
 bool DAGBuilder::Enter(const ast::FieldAccess&) { return true; }
 void DAGBuilder::Leave(const ast::FieldAccess&) {}
+
+
+bool DAGBuilder::Enter(const ast::FieldQuery& q)
+{
+	const ast::Scope& scope =
+		dynamic_cast<const ast::HasScope&>(q.base().definition()).scope();
+
+	if (const ast::Expression *e = scope.Lookup(q.field()))
+		currentValue.emplace(eval(*e));
+
+	else
+		currentValue.emplace(eval(q.defaultValue()));
+
+	return false;
+}
+
+void DAGBuilder::Leave(const ast::FieldQuery&) {}
 
 
 bool DAGBuilder::Enter(const ast::Filename& f)

@@ -8,6 +8,7 @@ sources = files(
 	Conditional.cc
 	Expression.cc
 	FieldAccess.cc
+	FieldQuery.cc
 	Filename.cc
 	FileList.cc
 	Foreach.cc

@@ -375,6 +375,23 @@ FieldAccess* Parser::FieldAccess(UniqPtr<SymbolReference>& structure,
 }
 
 
+FieldQuery* Parser::FieldQuery(UniqPtr<SymbolReference>& structure,
+                               UniqPtr<Identifier>& field, UniqPtr<Expression>& def,
+                               SourceRange src)
+{
+	if (not structure or not field)
+		return nullptr;
+
+	const Type& t =
+		field->isTyped()
+			? Type::GetSupertype(field->type(), def->type())
+			: def->type()
+			;
+
+	return new class FieldQuery(structure, field, def, t, src);
+}
+
+
 Filename* Parser::File(UniqPtr<Expression>& name, const SourceRange& src,
                        UniqPtr<UniqPtrVec<Argument>>&& args)
 {

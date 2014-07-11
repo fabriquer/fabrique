@@ -149,7 +149,7 @@ xor			SetToken(yylval);		return XOR;
 "::"			SetToken(yylval);		return PREFIX;
 ".+"			SetToken(yylval);		return SCALAR_ADD;
 "{"|"}"|"("|")"|"["|"]"	SetToken(yylval);		return *yytext;
-":"|","|";"|"="|"."	SetToken(yylval);		return *yytext;
+":"|","|";"|"="|"."|"?"	SetToken(yylval);		return *yytext;
 {identifier}		SetToken(yylval);		return IDENTIFIER;
 {tab}			yycolumn += 7;			/* ignore */
 {newline}						/* ignore */

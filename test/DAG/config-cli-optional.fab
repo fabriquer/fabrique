@@ -1,0 +1,10 @@
+#
+# RUN: fab --format=null --print-dag -D foo=42 %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK-DAG: int foo = 42
+foo = args.foo;
+
+# CHECK-DAG: string bar = 'default bar'
+bar = args.bar ? 'default bar';

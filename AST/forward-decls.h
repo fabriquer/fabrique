@@ -42,6 +42,7 @@ class Call;
 class CompoundExpression;
 class Conditional;
 class FieldAccess;
+class FieldQuery;
 class Filename;
 class FileList;
 class ForeachExpr;

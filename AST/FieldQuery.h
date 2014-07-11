@@ -1,6 +1,6 @@
-/** @file AST/Visitor.h    Declaration of @ref fabrique::ast::Visitor. */
+/** @file AST/FieldQuery.h    Declaration of @ref fabrique::ast::FieldQuery. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,60 +29,40 @@
  * SUCH DAMAGE.
  */
 
-#ifndef VISITOR_H
-#define VISITOR_H
+#ifndef FIELD_QUERY_H
+#define FIELD_QUERY_H
 
-#include "AST/forward-decls.h"
+#include "ADT/UniqPtr.h"
+#include "AST/Expression.h"
 
 namespace fabrique {
 namespace ast {
 
-//! Define entry (which returns true to continue descent) and exit methods.
-#define VISIT(type) \
-	virtual bool Enter(const type&) { return true; } \
-	virtual void Leave(const type&) {}
+class Identifier;
+class SymbolReference;
 
 
 /**
- * Interface for visitors that walk the AST.
+ * An expression that imports a Fabrique module.
  */
-class Visitor
+class FieldQuery : public Expression
 {
 public:
-	virtual ~Visitor();
+	FieldQuery(UniqPtr<SymbolReference>& base, UniqPtr<Identifier>& field,
+	           UniqPtr<Expression>& defaultValue, const Type&, SourceRange);
 
-	VISIT(Action)
-	VISIT(Argument)
-	VISIT(BinaryOperation)
-	VISIT(BoolLiteral)
-	VISIT(Call)
-	VISIT(CompoundExpression)
-	VISIT(Conditional)
-	VISIT(FieldAccess)
-	VISIT(FieldQuery)
-	VISIT(Filename)
-	VISIT(FileList)
-	VISIT(ForeachExpr)
-	VISIT(Function)
-	VISIT(Identifier)
-	VISIT(Import)
-	VISIT(IntLiteral)
-	VISIT(List)
-	VISIT(Parameter)
-	VISIT(Scope)
-	VISIT(SomeValue)
-	VISIT(StringLiteral)
-	VISIT(StructInstantiation)
-	VISIT(SymbolReference)
-	VISIT(Type)
-	VISIT(UnaryOperation)
-	VISIT(Value)
+	const SymbolReference& base() const { return *base_; }
+	const Identifier& field() const { return *field_; }
+	const Expression& defaultValue() const { return *defaultValue_; }
+
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	virtual void Accept(Visitor&) const;
+
+private:
+	const UniqPtr<SymbolReference> base_;
+	const UniqPtr<Identifier> field_;
+	const UniqPtr<Expression> defaultValue_;
 };
-
-#undef VISIT
-#define VISIT(type) \
-	virtual bool Enter(const type&); \
-	virtual void Leave(const type&);
 
 } // namespace ast
 } // namespace fabrique

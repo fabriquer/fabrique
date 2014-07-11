@@ -1,0 +1,16 @@
+#
+# RUN: fab --format=null --print-dag %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+foo = struct
+{
+	hello = 'Hello, ';
+	world = 'world!';
+};
+
+# CHECK-DAG: string bar = 'Hello, '
+bar = foo.hello ? 'default value for bar';
+
+# CHECK-DAG: string baz = 'default value for wibble'
+baz = foo.wibble ? 'default value for wibble';

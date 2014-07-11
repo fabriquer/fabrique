@@ -40,6 +40,7 @@
 #include "CompoundExpr.h"
 #include "Conditional.h"
 #include "FieldAccess.h"
+#include "FieldQuery.h"
 #include "Filename.h"
 #include "FileList.h"
 #include "Foreach.h"

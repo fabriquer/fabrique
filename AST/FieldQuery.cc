@@ -1,6 +1,6 @@
-/** @file AST/Visitor.h    Declaration of @ref fabrique::ast::Visitor. */
+/** @file AST/FieldQuery.cc    Definition of @ref fabrique::ast::FieldQuery. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,62 +29,48 @@
  * SUCH DAMAGE.
  */
 
-#ifndef VISITOR_H
-#define VISITOR_H
+#include "AST/FieldQuery.h"
+#include "AST/Identifier.h"
+#include "AST/SymbolReference.h"
+#include "AST/Visitor.h"
+#include "Support/Bytestream.h"
 
-#include "AST/forward-decls.h"
+#include <cassert>
 
-namespace fabrique {
-namespace ast {
-
-//! Define entry (which returns true to continue descent) and exit methods.
-#define VISIT(type) \
-	virtual bool Enter(const type&) { return true; } \
-	virtual void Leave(const type&) {}
+using namespace fabrique::ast;
 
 
-/**
- * Interface for visitors that walk the AST.
- */
-class Visitor
+FieldQuery::FieldQuery(UniqPtr<SymbolReference>& base, UniqPtr<Identifier>& field,
+                       UniqPtr<Expression>& defaultValue, const Type& ty, SourceRange src)
+	: Expression(ty, src), base_(std::move(base)), field_(std::move(field)),
+	  defaultValue_(std::move(defaultValue))
 {
-public:
-	virtual ~Visitor();
+	assert(base_);
+	assert(field_);
+	assert(defaultValue_);
+}
 
-	VISIT(Action)
-	VISIT(Argument)
-	VISIT(BinaryOperation)
-	VISIT(BoolLiteral)
-	VISIT(Call)
-	VISIT(CompoundExpression)
-	VISIT(Conditional)
-	VISIT(FieldAccess)
-	VISIT(FieldQuery)
-	VISIT(Filename)
-	VISIT(FileList)
-	VISIT(ForeachExpr)
-	VISIT(Function)
-	VISIT(Identifier)
-	VISIT(Import)
-	VISIT(IntLiteral)
-	VISIT(List)
-	VISIT(Parameter)
-	VISIT(Scope)
-	VISIT(SomeValue)
-	VISIT(StringLiteral)
-	VISIT(StructInstantiation)
-	VISIT(SymbolReference)
-	VISIT(Type)
-	VISIT(UnaryOperation)
-	VISIT(Value)
-};
 
-#undef VISIT
-#define VISIT(type) \
-	virtual bool Enter(const type&); \
-	virtual void Leave(const type&);
+void FieldQuery::PrettyPrint(Bytestream& out, size_t indent) const
+{
+	out
+		<< *base_
+		<< Bytestream::Operator << "."
+		<< Bytestream::Reference << field_->name()
+		<< Bytestream::Operator << " ? "
+		;
 
-} // namespace ast
-} // namespace fabrique
+	defaultValue_->PrettyPrint(out, indent + 1);
+}
 
-#endif
+
+void FieldQuery::Accept(Visitor& v) const
+{
+	if (v.Enter(*this))
+	{
+		base_->Accept(v);
+		field_->Accept(v);
+	}
+
+	v.Leave(*this);
+}

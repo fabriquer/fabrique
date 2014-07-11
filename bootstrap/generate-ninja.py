@@ -28,7 +28,8 @@ cxx_srcs = {
 	'AST/': (
 		'Action', 'Argument', 'ASTDump', 'BinaryOperation', 'Call',
 		'CompoundExpr', 'Conditional', 'Expression',
-		'FieldAccess', 'Filename', 'FileList', 'Foreach', 'Function',
+		'FieldAccess', 'FieldQuery', 'Filename', 'FileList',
+		'Foreach', 'Function',
 		'HasParameters', 'HasScope', 'Identifier', 'Import', 'List',
 		'Mapping', 'Node', 'Parameter',
 		'Scope', 'SomeValue', 'StructInstantiation', 'SymbolReference',

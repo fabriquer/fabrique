@@ -1,0 +1,22 @@
+#
+# RUN: fab --parse-only --print-ast %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: foo:struct[string, string] =
+# CHECK: struct
+# CHECK: {
+# CHECK:   hello:string = 'Hello, ';
+# CHECK:   world:string = 'world!';
+# CHECK: }
+foo = struct
+{
+	hello = 'Hello, ';
+	world = 'world!';
+};
+
+# CHECK: bar:string = foo.hello ? 'default value for bar';
+bar = foo.hello ? 'default value for bar';
+
+# CHECK-DAG: baz:string = foo.wibble ? 'default value for wibble';
+baz = foo.wibble ? 'default value for wibble';
