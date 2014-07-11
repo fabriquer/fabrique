@@ -131,6 +131,25 @@ void Scope::Take(Value *v)
 }
 
 
+
+void Scope::PrettyPrint(Bytestream& out, size_t indent) const
+{
+	std::string tabs(indent + 1, '\t');
+
+	out << Bytestream::Operator << "{\n";
+
+	for (auto& symbol : symbols_)
+		out
+			<< tabs
+			<< Bytestream::Definition << symbol.first
+			<< Bytestream::Operator << ": "
+			<< *symbol.second
+			<< Bytestream::Reset << "\n"
+			;
+
+	out << Bytestream::Operator << "}";
+}
+
 void Scope::Accept(Visitor& v) const
 {
 	v.Enter(*this);

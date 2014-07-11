@@ -35,6 +35,7 @@
 #include "ADT/PtrVec.h"
 #include "ADT/StringMap.h"
 #include "AST/Value.h"
+#include "Support/Printable.h"
 #include "Support/Uncopyable.h"
 
 #include <map>
@@ -57,7 +58,7 @@ class Visitor;
  *
  * A scope can have a parent scope for recursive name lookups.
  */
-class Scope : public Uncopyable
+class Scope : public Printable, public Uncopyable
 {
 public:
 	Scope(const Scope *parent, const std::string& name);
@@ -82,6 +83,7 @@ public:
 
 	void Take(Value*);
 
+	virtual void PrettyPrint(Bytestream&, size_t indent) const override;
 	virtual void Accept(Visitor&) const;
 
 private:
