@@ -49,7 +49,8 @@ class Visitor;
 class Identifier : public Node, public OptionallyTyped
 {
 public:
-	Identifier(const std::string& name, const Type*, const SourceRange&);
+	Identifier(const std::string& name, const Type* = nullptr,
+	           const SourceRange& src = SourceRange::None());
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	const std::string& name() const { return name_; }
