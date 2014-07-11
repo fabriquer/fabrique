@@ -874,7 +874,8 @@ bool DAGBuilder::Enter(const ast::SymbolReference& r)
 		base = dynamic_pointer_cast<Structure>(value);
 		if (not base)
 			throw SemanticException(
-				name.substr(0, end) + " is not a structure",
+				name.substr(0, end)
+				+ " (" + typeid(*value).name() + ") is not a structure",
 				r.source());
 	}
 
