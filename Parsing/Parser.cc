@@ -119,6 +119,24 @@ Scope& Parser::EnterScope(const string& name)
 	return *scopes_.top();
 }
 
+Scope& Parser::EnterScope(Scope&& s)
+{
+	Bytestream::Debug("parser.scope")
+		<< string(scopes_.size(), ' ')
+		<< Bytestream::Operator << " >> "
+		<< Bytestream::Type << "scope"
+		<< Bytestream::Literal << " '" << s.name() << "'"
+		<< Bytestream::Reset << "\n"
+		;
+
+	if (scopes_.empty())
+		scopes_.emplace(new Scope(std::move(s)));
+	else
+		scopes_.emplace(new Scope(std::move(s)));
+
+	return *scopes_.top();
+}
+
 unique_ptr<Scope> Parser::ExitScope()
 {
 	unique_ptr<Scope> scope = std::move(scopes_.top());

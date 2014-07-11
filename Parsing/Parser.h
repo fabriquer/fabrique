@@ -79,6 +79,11 @@ public:
 	 */
 	Scope& EnterScope(const std::string& name);
 
+	/**
+	 * Take an AST @ref Scope and push it on the stack.
+	 */
+	Scope& EnterScope(Scope&& s);
+
 
 	//! Find or create a @ref Type.
 	const Type& getType(const std::string& name,
