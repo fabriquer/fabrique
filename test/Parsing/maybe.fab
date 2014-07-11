@@ -1,0 +1,13 @@
+#
+# RUN: fab --parse-only --print-ast %s > %t.out
+# RUN: FileCheck %s -input-file %t.out
+#
+
+# CHECK: foo:maybe[int] = some(42);
+foo = some(42);
+
+# CHECK: bar:bool = foo.exists;
+bar = foo.exists;
+
+# CHECK: baz:int = foo.value;
+baz = foo.value;

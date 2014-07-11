@@ -3,6 +3,7 @@ sources = files(
 	FileType.cc
 	FunctionType.cc
 	IntegerType.cc
+	MaybeType.cc
 	OptionallyTyped.cc
 	SequenceType.cc
 	StringType.cc

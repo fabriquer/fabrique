@@ -1,6 +1,6 @@
-/** @file AST/ast.h    Meta-include file for all AST node types. */
+/** @file AST/Some.h    Declaration of @ref fabrique::ast::Some. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,34 +29,34 @@
  * SUCH DAMAGE.
  */
 
-#ifndef AST_H
-#define AST_H
+#ifndef SOME_VALUE_H
+#define SOME_VALUE_H
 
-#include "Action.h"
-#include "Argument.h"
-#include "BinaryOperation.h"
-#include "Builtins.h"
-#include "Call.h"
-#include "CompoundExpr.h"
-#include "Conditional.h"
-#include "FieldAccess.h"
-#include "Filename.h"
-#include "FileList.h"
-#include "Foreach.h"
-#include "Function.h"
-#include "HasScope.h"
-#include "Identifier.h"
-#include "Import.h"
-#include "List.h"
-#include "Mapping.h"
-#include "Parameter.h"
-#include "Scope.h"
-#include "SomeValue.h"
-#include "StructInstantiation.h"
-#include "SymbolReference.h"
-#include "UnaryOperation.h"
-#include "Value.h"
+#include "ADT/UniqPtr.h"
+#include "AST/Expression.h"
+#include "AST/HasScope.h"
 
-#include "literals.h"
+namespace fabrique {
+namespace ast {
+
+/**
+ * A value boxed up in a maybe type.
+ */
+class SomeValue : public Expression, public HasScope
+{
+public:
+	SomeValue(UniqPtr<Scope>&, const Type&, const Expression&, SourceRange src);
+
+	const Expression& value() const;
+
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	virtual void Accept(Visitor&) const;
+
+private:
+	const Expression& value_;
+};
+
+} // namespace ast
+} // namespace fabrique
 
 #endif

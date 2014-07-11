@@ -31,8 +31,8 @@ cxx_srcs = {
 		'FieldAccess', 'Filename', 'FileList', 'Foreach', 'Function',
 		'HasParameters', 'HasScope', 'Identifier', 'Import', 'List',
 		'Mapping', 'Node', 'Parameter',
-		'Scope', 'StructInstantiation', 'SymbolReference', 'UnaryOperation',
-                'Value', 'Visitor',
+		'Scope', 'SomeValue', 'StructInstantiation', 'SymbolReference',
+		'UnaryOperation', 'Value', 'Visitor',
 		'literals',
 	),
 	'Backend/': (
@@ -53,7 +53,7 @@ cxx_srcs = {
 		'exceptions', 'os-posix',
 	),
 	'Types/': (
-		'BooleanType', 'FileType', 'FunctionType', 'IntegerType',
+		'BooleanType', 'FileType', 'FunctionType', 'IntegerType', 'MaybeType',
 		'OptionallyTyped', 'SequenceType', 'StringType', 'StructureType',
 		'Type', 'TypeContext', 'TypeError', 'Typed',
 	),

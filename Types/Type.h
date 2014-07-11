@@ -84,6 +84,7 @@ public:
 	virtual bool isFile() const { return false; }
 	virtual bool isFunction() const { return false; }
 	virtual bool isString() const { return false; }
+	virtual bool isOptional() const { return false; }
 	virtual bool isOrdered() const { return false; }
 	virtual bool canBeNegated() const { return false; }
 

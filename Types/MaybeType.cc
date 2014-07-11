@@ -1,6 +1,6 @@
-/** @file AST/ast.h    Meta-include file for all AST node types. */
+/** @file Types/MaybeType.cc    Definition of @ref fabrique::MaybeType. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,34 +29,51 @@
  * SUCH DAMAGE.
  */
 
-#ifndef AST_H
-#define AST_H
+#include "Types/MaybeType.h"
+#include "Types/TypeContext.h"
+#include <cassert>
+using namespace fabrique;
 
-#include "Action.h"
-#include "Argument.h"
-#include "BinaryOperation.h"
-#include "Builtins.h"
-#include "Call.h"
-#include "CompoundExpr.h"
-#include "Conditional.h"
-#include "FieldAccess.h"
-#include "Filename.h"
-#include "FileList.h"
-#include "Foreach.h"
-#include "Function.h"
-#include "HasScope.h"
-#include "Identifier.h"
-#include "Import.h"
-#include "List.h"
-#include "Mapping.h"
-#include "Parameter.h"
-#include "Scope.h"
-#include "SomeValue.h"
-#include "StructInstantiation.h"
-#include "SymbolReference.h"
-#include "UnaryOperation.h"
-#include "Value.h"
 
-#include "literals.h"
+static const char* Name = "maybe";
 
-#endif
+
+MaybeType::MaybeType(const Type& elementTy)
+	: Type(Name, PtrVec<Type>(1, &elementTy), elementTy.context()),
+	  elementType_(elementTy)
+{
+}
+
+
+MaybeType::~MaybeType()
+{
+}
+
+
+bool MaybeType::isSubtype(const Type& other) const
+{
+	if (not other.isOptional())
+		return false;
+
+	auto& t = dynamic_cast<const MaybeType&>(other);
+	assert(t.typeParamCount() == t.typeParamCount());
+
+	// Maybes are covariant: maybe[subtype] is a subtype of maybe[super].
+	if (elementType().isSubtype(t.elementType()))
+		return true;
+
+	return false;
+}
+
+
+RawMaybeType::RawMaybeType(TypeContext& ctx)
+	: Type(Name, PtrVec<Type>(), ctx)
+{
+}
+
+
+Type* RawMaybeType::Parameterise(const PtrVec<Type>& t, const SourceRange&) const
+{
+	assert(t.size() == 1);
+	return new MaybeType(*t.front());
+}

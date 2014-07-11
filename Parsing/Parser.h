@@ -186,6 +186,9 @@ public:
 	//! Define a mapping from a sequence to a name.
 	Mapping* Map(UniqPtr<Expression>& source, UniqPtr<Identifier>& target);
 
+	//! Create a @ref SomeValue (populated maybe object).
+	SomeValue* Some(UniqPtr<Expression>&, SourceRange);
+
 	//! Turn the current scope into a structure instantiation.
 	StructInstantiation* StructInstantiation(SourceRange);
 

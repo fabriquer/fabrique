@@ -69,6 +69,7 @@ public:
 	VISIT(List)
 	VISIT(Parameter)
 	VISIT(Scope)
+	VISIT(SomeValue)
 	VISIT(StringLiteral)
 	VISIT(StructInstantiation)
 	VISIT(SymbolReference)

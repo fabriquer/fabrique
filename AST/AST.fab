@@ -21,6 +21,7 @@ sources = files(
 	Node.cc
 	Parameter.cc
 	Scope.cc
+	SomeValue.cc
 	StructInstantiation.cc
 	SymbolReference.cc
 	UnaryOperation.cc

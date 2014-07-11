@@ -68,6 +68,9 @@ public:
 	//! The type of a list.
 	const Type& listOf(const Type&, const SourceRange&);
 
+	//! An optional ("maybe") type.
+	const Type& maybe(const Type&, const SourceRange&);
+
 	//! A file in a build.
 	const Type& fileType();
 
@@ -95,6 +98,7 @@ private:
 	static TypeName QualifiedName(const std::string& name,
 	                              const PtrVec<Type>& params = PtrVec<Type>());
 
+	Type* rawMaybeType_;
 	Type* rawSequenceType_;
 	std::map<TypeName,std::unique_ptr<Type>> types;
 };

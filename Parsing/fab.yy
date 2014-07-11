@@ -104,7 +104,7 @@ static UniqPtrVec<T>* NodeVec(YYSTYPE& yyunion)
 %token WHITESPACE
 %token IDENTIFIER FILENAME
 %token IF ELSE FOREACH AS
-%token ACTION FILE_TOKEN FILES FUNCTION IMPORT RETURN STRUCT
+%token ACTION FILE_TOKEN FILES FUNCTION IMPORT NIL RETURN SOME STRUCT
 %token OPERATOR
 %token INPUT PRODUCES
 %token TRUE FALSE
@@ -142,6 +142,7 @@ expression:
 		SetOrDie($$, p->ListOf(*elements, src));
 	}
 	| reference
+	| some
 	| structInstantiation
 	| unaryOperation
 	;
@@ -480,6 +481,18 @@ reference:
 	identifier
 	{
 		SetOrDie($$, p->Reference(TakeNode<Identifier>($1)));
+	}
+	;
+
+some:
+	SOME '(' expression ')'
+	{
+		SourceRange begin = Take($1.token)->source();
+		UniqPtr<Expression> value { TakeNode<Expression>($3) };
+		SourceRange end = Take($4.token)->source();
+		SourceRange src(begin, end);
+
+		SetOrDie($$, p->Some(value, src));
 	}
 	;
 

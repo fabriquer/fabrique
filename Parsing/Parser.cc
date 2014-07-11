@@ -606,6 +606,37 @@ Mapping* Parser::Map(UniqPtr<Expression>& source, UniqPtr<Identifier>& target)
 	return new Mapping(parameter, source, src);
 }
 
+SomeValue* Parser::Some(UniqPtr<Expression>& initializer, SourceRange src)
+{
+	if (not initializer)
+		return nullptr;
+
+	EnterScope("some()");
+
+	UniqPtr<Identifier> name;
+	UniqPtr<Expression> value;
+
+	name.reset(new Identifier(ast::MaybeExists));
+	value.reset(True());
+	if (not DefineValue(name, value))
+		return nullptr;
+
+	name.reset(new Identifier(ast::MaybeValue));
+	value.swap(initializer);
+	if (not DefineValue(name, value))
+		return nullptr;
+
+	UniqPtr<Scope> scope { ExitScope() };
+	assert(not scope->values().empty());
+
+	name.reset(new Identifier(ast::MaybeValue));
+
+	const Expression& init = *scope->Lookup(*name);
+	const Type& type = ctx_.maybe(init.type(), src);
+
+	return new SomeValue(scope, type, init, src);
+}
+
 StructInstantiation* Parser::StructInstantiation(SourceRange src)
 {
 	UniqPtr<Scope> scope(ExitScope());

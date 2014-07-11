@@ -1,6 +1,6 @@
-/** @file AST/ast.h    Meta-include file for all AST node types. */
+/** @file Types/MaybeType.h    Declaration of @ref fabrique::MaybeType. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,34 +29,51 @@
  * SUCH DAMAGE.
  */
 
-#ifndef AST_H
-#define AST_H
+#ifndef MAYBE_TYPE_H
+#define MAYBE_TYPE_H
 
-#include "Action.h"
-#include "Argument.h"
-#include "BinaryOperation.h"
-#include "Builtins.h"
-#include "Call.h"
-#include "CompoundExpr.h"
-#include "Conditional.h"
-#include "FieldAccess.h"
-#include "Filename.h"
-#include "FileList.h"
-#include "Foreach.h"
-#include "Function.h"
-#include "HasScope.h"
-#include "Identifier.h"
-#include "Import.h"
-#include "List.h"
-#include "Mapping.h"
-#include "Parameter.h"
-#include "Scope.h"
-#include "SomeValue.h"
-#include "StructInstantiation.h"
-#include "SymbolReference.h"
-#include "UnaryOperation.h"
-#include "Value.h"
+#include "Types/Type.h"
 
-#include "literals.h"
+namespace fabrique {
+
+
+/**
+ * A type that represents an ordered sequence.
+ */
+class MaybeType : public Type
+{
+public:
+	virtual ~MaybeType();
+	const Type& elementType() const { return elementType_; }
+
+	virtual bool isOptional() const override { return true; }
+	virtual bool isSubtype(const Type&) const override;
+
+protected:
+	MaybeType(const Type& elementTy);
+
+private:
+	const Type& elementType_;
+	friend class TypeContext;
+	friend class RawMaybeType;
+};
+
+
+/**
+ * An unparameterised sequence (e.g., `maybe`):
+ * used to generate parameterised sequences (e.g., `maybe[foo]`).
+ */
+class RawMaybeType : public Type
+{
+public:
+	virtual Type* Parameterise(
+		const PtrVec<Type>&, const SourceRange&) const override;
+
+protected:
+	RawMaybeType(TypeContext&);
+	friend class TypeContext;
+};
+
+} // namespace fabrique
 
 #endif
