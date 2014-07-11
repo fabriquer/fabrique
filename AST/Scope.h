@@ -82,6 +82,7 @@ public:
 	void Register(const Value&);
 
 	void Take(Value*);
+	void Take(UniqPtr<Value>&);
 
 	virtual void PrettyPrint(Bytestream&, size_t indent) const override;
 	virtual void Accept(Visitor&) const;

@@ -38,6 +38,7 @@
 
 #include <cassert>
 
+using namespace fabrique;
 using namespace fabrique::ast;
 
 
@@ -117,6 +118,12 @@ void Scope::Register(const Identifier& id, const Expression *e)
 void Scope::Take(Value *v)
 {
 	std::unique_ptr<Value> val(v);
+	Take(val);
+}
+
+
+void Scope::Take(UniqPtr<Value>& val)
+{
 	assert(val);
 
 	Register(*val);
