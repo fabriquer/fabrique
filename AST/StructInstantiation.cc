@@ -36,6 +36,7 @@
 #include "AST/StructInstantiation.h"
 #include "AST/Visitor.h"
 #include "Support/Bytestream.h"
+#include "Types/Type.h"
 
 using namespace fabrique::ast;
 
@@ -59,6 +60,8 @@ void StructInstantiation::PrettyPrint(Bytestream& out, size_t indent) const
 		out
 			<< tabs
 			<< Bytestream::Definition << i.first
+			<< Bytestream::Operator << ":"
+			<< i.second->type()
 			<< Bytestream::Operator << " = "
 			;
 

@@ -4,9 +4,9 @@
 #
 
 # CHECK: foo:struct[string, string] = struct
-# CHECK: {
-# CHECK-DAG:   foo = 'hi';
-# CHECK-DAG:   bar = 'world';
+# CHECK-NEXT: {
+# CHECK-DAG:   foo:string = 'hi';
+# CHECK-DAG:   bar:string = 'world';
 foo = struct { foo = 'hi'; bar = 'world'; };
 
 # CHECK: bar:string = foo.bar;
