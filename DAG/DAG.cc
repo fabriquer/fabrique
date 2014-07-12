@@ -540,9 +540,8 @@ bool DAGBuilder::Enter(const ast::FieldQuery& q)
 	const ast::Scope& scope =
 		dynamic_cast<const ast::HasScope&>(q.base().definition()).scope();
 
-	if (const ast::Expression *e = scope.Lookup(q.field()))
-		currentValue.emplace(eval(*e));
-
+	if (scope.contains(q.field()))
+		currentValue.emplace(eval(*scope.Lookup(q.field())));
 	else
 		currentValue.emplace(eval(q.defaultValue()));
 
