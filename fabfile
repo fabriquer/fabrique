@@ -3,9 +3,8 @@
 #
 
 
-# TODO: allow these to be set/overridden on the command line, config file...
-debug:bool = true;
-asserts:bool = true;
+debug = args.debug ? true;
+asserts = args.asserts ? true;
 debug_and_asserts = debug and asserts;
 
 
