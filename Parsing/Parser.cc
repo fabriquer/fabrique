@@ -113,7 +113,9 @@ UniqPtr<Scope> Parser::ParseFile(std::istream& input, UniqPtr<Scope>& args,
 		<< Bytestream::Operator << " '"
 		<< Bytestream::Literal << name
 		<< Bytestream::Operator << "'"
-		<< Bytestream::Reset << " with args: "
+		<< Bytestream::Reset << " with "
+		<< Bytestream::Definition << "args"
+		<< Bytestream::Operator << " = "
 		<< *args
 		<< Bytestream::Reset << "\n"
 		;
