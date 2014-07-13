@@ -1,11 +1,11 @@
-CXX = 'c++';
+compiler = args.compiler ? file('/usr/bin/c++');
 
 
 ### Compile one C++ source file into an object file.
 compile_one = action('${CXX} -c ${flags} -MMD -MF ${depfile} ${src} -o ${obj}',
              description = 'Compiling ${in}'
 	     <- src:file[in], obj:file[out], flags:list[string], depfile:file[out],
-	        otherDeps:list[file[in]] = []);
+	        otherDeps:list[file[in]] = [], CXX:file[in] = compiler);
 
 compile = function(srcs:list[file], flags:list[string],
                    deps:list[file[in]] = []): list[file]
@@ -20,4 +20,5 @@ compile = function(srcs:list[file], flags:list[string],
 
 link_executable = action('${CXX} -o ${executable} ${objects}',
                          description = 'Linking ${executable}'
-                         <- objects:list[file[in]], executable:file[out]);
+                         <- objects:list[file[in]], executable:file[out],
+                            CXX:file[in] = compiler);

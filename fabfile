@@ -7,16 +7,11 @@ debug = args.debug ? true;
 asserts = args.asserts ? true;
 debug_and_asserts = debug and asserts;
 
-
-# TODO: pass parameters to modules?
-CXX = 'c++';
 cxx = import('share/fabrique/cxx.fab');
-
-LEX = 'flex';
 lex = import('share/fabrique/lex.fab');
 
-YACC = 'byacc';
-yacc = import('share/fabrique/yacc.fab');
+# TODO: specify the exact yacc once we have a working 'which' plugin
+yacc = import('share/fabrique/yacc.fab', yacc = 'byacc');
 
 
 

@@ -1,10 +1,10 @@
-LEX = 'flex';
+lex = args.lex ? file('/usr/bin/flex');
 
 
 raw_lex = action('${LEX} ${flags} --header-file=${header} --outfile=${gen} ${src}',
                  description = 'Processing ${in}'
                  <- src:file[in], gen:file[out], header:file[out],
-                    flags:list[string] = []);
+                    flags:list[string] = [], LEX:file[in] = lex);
 
 process = function(src:file, gen:file, header_out:file, flags:list[string] = [])
 	: file

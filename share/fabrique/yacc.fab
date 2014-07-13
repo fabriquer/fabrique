@@ -1,11 +1,12 @@
-YACC = 'byacc';
+yacc = args.yacc ? file('/usr/bin/yacc');
 
 
 # Yacc's command-line arguments are confusing and don't expose information like
 # the name of the generated header file, so we wrap it in a function that does.
 raw_yacc = action('${YACC} -d -t -o ${gen} ${src}',
                   description = 'Processing ${in}'
-                  <- src:file[in], gen:file[out], header:file[out]);
+                  <- src:file[in], gen:file[out], header:file[out],
+                     YACC:file[in] = yacc);
 
 process = function(src:file, outname:string): file
 {
