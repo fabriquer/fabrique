@@ -1,0 +1,14 @@
+#
+# RUN: fab --format=ninja --output=%t %s
+# RUN: FileCheck %s -input-file %t/build.ninja
+#
+
+cc = import('Inputs/cc.fab', compiler = file('/usr/bin/cc'));
+
+# CHECK: build{{.*}} ${buildroot}/Inputs/foo.c.o{{.*}}: compile_one ${srcroot}/Inputs/foo.c
+# CHECK:   CC = /usr/bin/cc
+obj = cc.compile(files(Inputs/foo.c));
+
+# CHECK: build ${buildroot}/foo: link_executable ${buildroot}/Inputs/foo.c.o
+# CHECK:   CC = /usr/bin/cc
+bin = cc.link_executable(obj, executable = file('foo'));

@@ -1,0 +1,22 @@
+#
+# RUN: fab --format=ninja --output=%t %s
+# RUN: FileCheck %s -input-file %t/build.ninja
+#
+
+compiler = file('/usr/bin/cc');
+
+src = file('Inputs/foo.c');
+
+cc = action('${CC} -c ${src} -o ${obj}'
+            <- src:file[in], obj:file[out], CC:file[in] = compiler);
+
+link = action('${CC} ${objects} -o ${binary}'
+              <- objects:list[file[in]], binary:file[out], CC:file[in] = compiler);
+
+# CHECK-DAG: ${buildroot}/foo.o: cc ${srcroot}/Inputs/foo.c
+# CHECK-DAG: CC = /usr/bin/cc
+obj = cc(src, obj = file('foo.o'));
+
+# CHECK-DAG: ${buildroot}/foo: link ${buildroot}/foo.o
+# CHECK-DAG: CC = /usr/bin/cc
+bin = link([ obj ], file('foo'));

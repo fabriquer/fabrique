@@ -52,7 +52,10 @@ File* File::Create(string dir, string path, const Type& t, SourceRange src)
 {
 	const string filename(FilenameComponent(path));
 	const string subdir(DirectoryOf(path));
-	const string directory(JoinPath(dir, subdir));
+	const string directory(
+		PathIsAbsolute(path)
+			? subdir
+			: JoinPath(dir, subdir));
 
 	return new File(filename, directory, PathIsAbsolute(directory), t, src);
 }

@@ -1,0 +1,24 @@
+compiler = args.compiler ? file('/usr/bin/cc');
+
+
+### Compile one C++ source file into an object file.
+compile_one = action('${CC} -c ${flags} -MMD -MF ${depfile} ${src} -o ${obj}',
+             description = 'Compiling ${in}'
+	     <- src:file[in], obj:file[out], flags:list[string], depfile:file[out],
+	        otherDeps:list[file[in]] = [], CC:file[in] = compiler);
+
+compile = function(srcs:list[file], flags:list[string] = [],
+                   deps:list[file[in]] = []): list[file]
+{
+	foreach src <- srcs {
+		obj = src + '.o';
+		outs = compile_one(src, obj, flags, obj + '.d', deps);
+		obj
+	}
+};
+
+
+link_executable = action('${CC} -o ${executable} ${objects}',
+                         description = 'Linking ${executable}'
+                         <- objects:list[file[in]], executable:file[out],
+                            CC:file[in] = compiler);
