@@ -1,0 +1,9 @@
+#
+# RUN: fab --print-dag --format=null %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: (list[file])=>file cc = ${CC} -c $src -o $obj { '${CC} -c
+# CHECK:   src:file[in], obj:file[out], CC:file[in] = /usr/bin/cc
+cc = action('${CC} -c $src -o $obj'
+            <- src:file[in], obj:file[out], CC:file[in] = file('/usr/bin/cc'));

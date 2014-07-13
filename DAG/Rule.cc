@@ -30,6 +30,7 @@
  */
 
 #include "DAG/File.h"
+#include "DAG/Parameter.h"
 #include "DAG/Rule.h"
 #include "DAG/Visitor.h"
 #include "Support/Bytestream.h"
@@ -88,6 +89,13 @@ void Rule::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 			<< Bytestream::Operator << " = "
 			<< Bytestream::Literal << "'" << *i.second << "'"
 			;
+	}
+
+	if (not parameters().empty())
+	{
+		out << Bytestream::Operator << " <-";
+		for (auto& i : parameters())
+			out << " " << *i << Bytestream::Operator << ",";
 	}
 
 	out
