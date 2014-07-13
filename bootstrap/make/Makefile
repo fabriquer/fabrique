@@ -253,8 +253,6 @@ ${buildroot}/Support:
 	if [ ! -e "${buildroot}/Support" ]; then mkdir -p "${buildroot}/Support"; fi
 ${buildroot}/Types:
 	if [ ! -e "${buildroot}/Types" ]; then mkdir -p "${buildroot}/Types"; fi
-${buildroot}/Parsing:
-	if [ ! -e "${buildroot}/Parsing" ]; then mkdir -p "${buildroot}/Parsing"; fi
 raw_yacc_1 : ${buildroot}/Parsing/fab.yacc.cc ${buildroot}/Parsing/fab.yacc.h
 ${buildroot}/Parsing/fab.yacc.cc ${buildroot}/Parsing/fab.yacc.h : ${srcroot}/Parsing/fab.yy
 	echo "Processing ${srcroot}/Parsing/fab.yy"
