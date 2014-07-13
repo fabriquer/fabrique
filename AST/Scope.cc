@@ -35,6 +35,7 @@
 #include "AST/Value.h"
 #include "AST/Visitor.h"
 #include "Support/Bytestream.h"
+#include "Types/Type.h"
 
 #include <cassert>
 
@@ -156,7 +157,9 @@ void Scope::PrettyPrint(Bytestream& out, size_t indent) const
 		out
 			<< tabs
 			<< Bytestream::Definition << symbol.first
-			<< Bytestream::Operator << ": "
+			<< Bytestream::Operator << ":"
+			<< symbol.second->type()
+			<< Bytestream::Operator << " = "
 			<< *symbol.second
 			<< Bytestream::Reset << "\n"
 			;
