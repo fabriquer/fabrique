@@ -1,0 +1,16 @@
+cc = action('${CC} -c ${src} -o ${obj}' <- src:file[in], obj:file[out]);
+
+compile = function(src:file)
+{
+	cc(src, src + '.o')
+};
+
+compile_using_basename = function(basename:string, subdir_name:string)
+{
+	subdir = subdir_name;
+
+	src = file(basename + '.c');
+	obj = file(basename + '.o');
+
+	cc(src, obj)
+};

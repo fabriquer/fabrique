@@ -1,0 +1,2 @@
+foo = c.compile(file('foo.c'));
+bar = c.compile_using_basename('bar', subdir);
