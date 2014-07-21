@@ -116,7 +116,7 @@ public:
 	bool Builtin(const std::string& name, const std::string& value);
 
 	//! A call to an @ref Action or @ref Function.
-	Call* CreateCall(UniqPtr<SymbolReference>&, UniqPtr<UniqPtrVec<Argument>>&,
+	Call* CreateCall(UniqPtr<Expression>&, UniqPtr<UniqPtrVec<Argument>>&,
 	                 const SourceRange& end);
 
 	//! An expression that can (optionally) include intermediate values.

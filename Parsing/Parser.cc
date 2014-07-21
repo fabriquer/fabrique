@@ -299,15 +299,15 @@ bool Parser::Builtin(const string& name, const std::string& value)
 }
 
 
-Call* Parser::CreateCall(UniqPtr<SymbolReference>& ref,
+Call* Parser::CreateCall(UniqPtr<Expression>& targetExpr,
                          UniqPtr<UniqPtrVec<Argument>>& args,
                          const SourceRange& end)
 {
-	if (not ref or not args)
+	if (not targetExpr or not args)
 		return nullptr;
 
-	SourceRange src(ref->source(), end);
-	auto& fnType = dynamic_cast<const FunctionType&>(ref->type());
+	SourceRange src(targetExpr->source(), end);
+	auto& fnType = dynamic_cast<const FunctionType&>(targetExpr->type());
 
 	// Do some sanity checking on the arguments (the kind that doesn't
 	// require deep knowledge of the callee).
@@ -326,7 +326,7 @@ Call* Parser::CreateCall(UniqPtr<SymbolReference>& ref,
 		}
 	}
 
-	return new Call(ref, *args, fnType.returnType(), src);
+	return new Call(targetExpr, *args, fnType.returnType(), src);
 }
 
 

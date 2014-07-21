@@ -37,7 +37,6 @@
 
 #include "AST/Argument.h"
 #include "AST/Expression.h"
-#include "AST/SymbolReference.h"
 
 #include <memory>
 
@@ -51,10 +50,10 @@ namespace ast {
 class Call : public Expression
 {
 public:
-	Call(UniqPtr<SymbolReference>& target, UniqPtrVec<Argument>&,
+	Call(UniqPtr<Expression>& target, UniqPtrVec<Argument>&,
 	     const Type& resultType, const SourceRange&);
 
-	const SymbolReference& target() const { return *target_; }
+	const Expression& target() const { return *target_; }
 
 	const UniqPtrVec<Argument>& arguments() const { return args_; }
 
@@ -66,7 +65,7 @@ public:
 	virtual void Accept(Visitor&) const;
 
 private:
-	const UniqPtr<SymbolReference> target_;
+	const UniqPtr<Expression> target_;
 	const UniqPtrVec<Argument> args_;
 };
 

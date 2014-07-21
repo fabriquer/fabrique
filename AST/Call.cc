@@ -38,9 +38,9 @@
 using namespace fabrique::ast;
 
 
-Call::Call(UniqPtr<SymbolReference>& f, UniqPtrVec<Argument>& a,
+Call::Call(UniqPtr<Expression>& target, UniqPtrVec<Argument>& a,
            const Type& ty, const SourceRange& src)
-	: Expression(ty, src), target_(std::move(f)), args_(std::move(a))
+	: Expression(ty, src), target_(std::move(target)), args_(std::move(a))
 {
 }
 

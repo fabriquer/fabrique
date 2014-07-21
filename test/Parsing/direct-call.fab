@@ -1,0 +1,17 @@
+#
+# RUN: fab --parse-only --print-ast %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: foo:int = function(x:int): int
+# CHECK: {
+# CHECK:     x + 1
+# CHECK: }(1);
+foo = (function(x:int) { x + 1 })(1);
+
+src = file('foo.c');
+obj = file('foo.o');
+
+# CHECK: bar:file = action(
+# CHECK:     '${CC} -c ${src} -o ${obj}' <- src:file[in], obj:file[out])(src, obj);
+bar = action('${CC} -c ${src} -o ${obj}' <- src:file[in], obj:file[out])(src, obj);

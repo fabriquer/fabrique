@@ -232,9 +232,9 @@ binaryOperator:
 	;
 
 call:
-	reference '(' argumentList ')'
+	expression '(' argumentList ')'
 	{
-		auto target = TakeNode<SymbolReference>($1);
+		auto target = TakeNode<Expression>($1);
 		auto arguments = Take(NodeVec<Argument>($3));
 		auto end = Take($4.token);
 
