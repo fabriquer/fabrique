@@ -48,10 +48,10 @@ class SymbolReference;
 class FieldQuery : public Expression
 {
 public:
-	FieldQuery(UniqPtr<SymbolReference>& base, UniqPtr<Identifier>& field,
+	FieldQuery(UniqPtr<Expression>& base, UniqPtr<Identifier>& field,
 	           UniqPtr<Expression>& defaultValue, const Type&, SourceRange);
 
-	const SymbolReference& base() const { return *base_; }
+	const Expression& base() const { return *base_; }
 	const Identifier& field() const { return *field_; }
 	const Expression& defaultValue() const { return *defaultValue_; }
 
@@ -59,7 +59,7 @@ public:
 	virtual void Accept(Visitor&) const;
 
 private:
-	const UniqPtr<SymbolReference> base_;
+	const UniqPtr<Expression> base_;
 	const UniqPtr<Identifier> field_;
 	const UniqPtr<Expression> defaultValue_;
 };

@@ -125,11 +125,11 @@ public:
 	                                 SourceRange end = SourceRange::None());
 
 	//! An expression that indirects into a structure.
-	FieldAccess* FieldAccess(UniqPtr<SymbolReference>& structure,
+	FieldAccess* FieldAccess(UniqPtr<Expression>& structure,
 	                         UniqPtr<Identifier>& field);
 
 	//! A test to see if a structure contains a field.
-	FieldQuery* FieldQuery(UniqPtr<SymbolReference>& structure,
+	FieldQuery* FieldQuery(UniqPtr<Expression>& structure,
 	                       UniqPtr<Identifier>& field,
 	                       UniqPtr<Expression>& defaultValue,
 	                       SourceRange);

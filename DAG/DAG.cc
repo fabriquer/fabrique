@@ -531,7 +531,19 @@ bool DAGBuilder::Enter(const ast::Conditional& c)
 void DAGBuilder::Leave(const ast::Conditional&) {}
 
 
-bool DAGBuilder::Enter(const ast::FieldAccess&) { return true; }
+bool DAGBuilder::Enter(const ast::FieldAccess& f)
+{
+	shared_ptr<Structure> base(dynamic_pointer_cast<Structure>(eval(f.base())));
+	if (not base)
+		throw SemanticException("base of field access is not a structure",
+		                        f.base().source());
+
+	const string fieldName(f.field().name());
+	currentValue.emplace(base->field(fieldName));
+
+	return false;
+}
+
 void DAGBuilder::Leave(const ast::FieldAccess&) {}
 
 

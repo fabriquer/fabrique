@@ -16,5 +16,8 @@ bar:(file)=>file = submodule.bar;
 # CHECK: my_baz:(int)=>int = submodule.baz;
 my_baz = submodule.baz;
 
+# CHECK: bazzed:int = import('Inputs/submodule.fab').baz(1);
+bazzed = import('Inputs/submodule.fab').baz(1);
+
 # CHECK-DAG: wibbled:int = submodule.wibble(1);
 wibbled = submodule.wibble(1);

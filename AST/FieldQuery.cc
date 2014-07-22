@@ -31,7 +31,6 @@
 
 #include "AST/FieldQuery.h"
 #include "AST/Identifier.h"
-#include "AST/SymbolReference.h"
 #include "AST/Visitor.h"
 #include "Support/Bytestream.h"
 
@@ -40,7 +39,7 @@
 using namespace fabrique::ast;
 
 
-FieldQuery::FieldQuery(UniqPtr<SymbolReference>& base, UniqPtr<Identifier>& field,
+FieldQuery::FieldQuery(UniqPtr<Expression>& base, UniqPtr<Identifier>& field,
                        UniqPtr<Expression>& defaultValue, const Type& ty, SourceRange src)
 	: Expression(ty, src), base_(std::move(base)), field_(std::move(field)),
 	  defaultValue_(std::move(defaultValue))

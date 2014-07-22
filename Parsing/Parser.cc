@@ -348,7 +348,7 @@ CompoundExpression* Parser::CompoundExpr(UniqPtr<Expression>& result,
 
 
 
-FieldAccess* Parser::FieldAccess(UniqPtr<SymbolReference>& structure,
+FieldAccess* Parser::FieldAccess(UniqPtr<Expression>& structure,
                                  UniqPtr<Identifier>& field)
 {
 	if (not structure or not field)
@@ -377,7 +377,7 @@ FieldAccess* Parser::FieldAccess(UniqPtr<SymbolReference>& structure,
 }
 
 
-FieldQuery* Parser::FieldQuery(UniqPtr<SymbolReference>& structure,
+FieldQuery* Parser::FieldQuery(UniqPtr<Expression>& structure,
                                UniqPtr<Identifier>& field, UniqPtr<Expression>& def,
                                SourceRange src)
 {

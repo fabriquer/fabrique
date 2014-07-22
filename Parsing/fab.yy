@@ -129,6 +129,7 @@ expression:
 	| compoundExpr
 	| conditional
 	| '(' expression ')'	{ SetOrDie($$, $2.node); }
+	| fieldAccess
 	| fieldQuery
 	| file
 	| fileList
@@ -275,9 +276,9 @@ conditional:
 	;
 
 fieldAccess:
-	reference '.' name
+	expression '.' name
 	{
-		auto structure = TakeNode<SymbolReference>($1);
+		auto structure = TakeNode<Expression>($1);
 		auto field = TakeNode<Identifier>($3);
 
 		SetOrDie($$, p->FieldAccess(structure, field));
@@ -285,9 +286,9 @@ fieldAccess:
 	;
 
 fieldQuery:
-	reference '.' name '?' expression
+	expression '.' name '?' expression
 	{
-		auto structure = TakeNode<SymbolReference>($1);
+		auto structure = TakeNode<Expression>($1);
 		auto field = TakeNode<Identifier>($3);
 		auto defaultValue = TakeNode<Expression>($5);
 
@@ -487,11 +488,6 @@ parameterList:
 	;
 
 reference:
-	fieldAccess
-	{
-		SetOrDie($$, p->Reference(TakeNode<FieldAccess>($1)));
-	}
-	|
 	identifier
 	{
 		SetOrDie($$, p->Reference(TakeNode<Identifier>($1)));

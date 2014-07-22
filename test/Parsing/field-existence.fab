@@ -20,3 +20,10 @@ bar = foo.hello ? 'default value for bar';
 
 # CHECK-DAG: baz:string = foo.wibble ? 'default value for wibble';
 baz = foo.wibble ? 'default value for wibble';
+
+# CHECK: x:string = struct
+# CHECK-NEXT: {
+# CHECK-NEXT:   hello:string = 'world';
+# CHECK-NEXT: }
+# CHECK: .hello ? 'default value';
+x = (struct { hello = 'world'; }).hello ? 'default value';

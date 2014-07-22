@@ -19,6 +19,9 @@ bar = submodule.bar;
 # CHECK-DAG: (file)=>file another_bar = ${BAR} ${src} -o ${dest}
 another_bar = submodule.bar;
 
+# CHECK-DAG: int bazzed = 2
+bazzed = import('Inputs/submodule.fab').baz(1);
+
 # CHECK-DAG: wibbled = 2
 wibbled = submodule.wibble(1);
 
