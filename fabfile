@@ -52,16 +52,6 @@ generated_cxx_flags =
 	+ if debug [ '-D' 'YYDEBUG' ] else [];
 
 
-# TODO: allow import('AST/AST.fab').sources;
-ast = import('AST/AST.fab');
-backends = import('Backend/Backend.fab');
-dag = import('DAG/DAG.fab');
-parsing = import('Parsing/Parsing.fab');
-support = import('Support/Support.fab');
-types = import('Types/Types.fab');
-
-#plugins = import('plugins/plugins.fab');
-
 #
 # TODO: allow 'for module in [ ast backends dag ]
 # (or even better, foreach dir in [ 'AST' 'Backend' ... ]
@@ -72,12 +62,12 @@ types = import('Types/Types.fab');
 #
 cxx_srcs =
 	files(driver.cc)
-	+ ast.sources
-	+ backends.sources
-	+ dag.sources
-	+ parsing.sources
-	+ support.sources
-	+ types.sources
+	+ import('AST/AST.fab').sources
+	+ import('Backend/Backend.fab').sources
+	+ import('DAG/DAG.fab').sources
+	+ import('Parsing/Parsing.fab').sources
+	+ import('Support/Support.fab').sources
+	+ import('Types/Types.fab').sources
 	;
 
 
