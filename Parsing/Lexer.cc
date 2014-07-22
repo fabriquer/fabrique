@@ -190,6 +190,8 @@ void Lexer::AppendChar(char c)
 
 void Lexer::EndString(YYSTYPE* yyunion)
 {
+	assert(not buffer_.empty());
+
 	SourceRange src = range(buffer_.data(), buffer_.size(), stringStart_);
 
 	string s(buffer_.data(), 0, buffer_.size());
