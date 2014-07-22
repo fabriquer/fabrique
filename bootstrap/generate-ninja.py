@@ -97,8 +97,8 @@ warnings = [
 	'-isystem %s/vendor' % src_root
 ]
 
-if args.debug: cxxflags += [ '-g', '-ggdb' ]
-else: cxxflags += [ '-D NDEBUG' ]
+if args.debug: cxxflags += [ '-g', '-ggdb', '-O0' ]
+else: cxxflags += [ '-D NDEBUG', '-O2' ]
 
 gencxxflags = cxxflags + [ '-Wno-deprecated-register' ]
 if args.debug: gencxxflags += [ '-D YYDEBUG' ]
