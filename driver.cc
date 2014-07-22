@@ -201,17 +201,14 @@ int main(int argc, char *argv[]) {
 			<< Bytestream::ErrorMessage << e.description()
 			;
 	}
+	catch (const SemanticException& e)
+	{
+		err() << e;
+	}
 	catch (const SourceCodeException& e)
 	{
 		err()
 			<< Bytestream::Error << "Parse error: "
-			<< Bytestream::ErrorMessage << e
-			;
-	}
-	catch (const SemanticException& e)
-	{
-		err()
-			<< Bytestream::Error << "Semantic error: "
 			<< Bytestream::ErrorMessage << e
 			;
 	}
