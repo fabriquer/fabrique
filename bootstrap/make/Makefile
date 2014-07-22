@@ -16,7 +16,7 @@ cxxoptions=	-std=c++11
 dbgflags=	-D NDEBUG -O2
 debug=	false
 debug_and_asserts=	false
-fab=	${buildroot}/fab
+fab_executable=	${buildroot}/fab
 generated_cxx_flags=	-std=c++11 -D NDEBUG -O2 -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Wno-deprecated-register
 includes=	-I ${srcroot} -I ${buildroot}
 lex=	
@@ -30,7 +30,7 @@ vendor=	-isystem ${srcroot}/vendor
 warnings=	-Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded
 yacc=	
 
-fab : ${buildroot}/fab
+fab_executable : ${buildroot}/fab
 objects : ${buildroot}/Parsing/fab.lex.cc.o ${buildroot}/Parsing/fab.yacc.cc.o ${buildroot}/driver.cc.o ${buildroot}/AST/Action.cc.o ${buildroot}/AST/Argument.cc.o ${buildroot}/AST/ASTDump.cc.o ${buildroot}/AST/BinaryOperation.cc.o ${buildroot}/AST/Call.cc.o ${buildroot}/AST/CompoundExpr.cc.o ${buildroot}/AST/Conditional.cc.o ${buildroot}/AST/Expression.cc.o ${buildroot}/AST/FieldAccess.cc.o ${buildroot}/AST/FieldQuery.cc.o ${buildroot}/AST/Filename.cc.o ${buildroot}/AST/FileList.cc.o ${buildroot}/AST/Foreach.cc.o ${buildroot}/AST/Function.cc.o ${buildroot}/AST/HasParameters.cc.o ${buildroot}/AST/HasScope.cc.o ${buildroot}/AST/Identifier.cc.o ${buildroot}/AST/Import.cc.o ${buildroot}/AST/List.cc.o ${buildroot}/AST/Mapping.cc.o ${buildroot}/AST/Node.cc.o ${buildroot}/AST/Parameter.cc.o ${buildroot}/AST/Scope.cc.o ${buildroot}/AST/SomeValue.cc.o ${buildroot}/AST/StructInstantiation.cc.o ${buildroot}/AST/SymbolReference.cc.o ${buildroot}/AST/UnaryOperation.cc.o ${buildroot}/AST/Value.cc.o ${buildroot}/AST/Visitor.cc.o ${buildroot}/AST/literals.cc.o ${buildroot}/Backend/Backend.cc.o ${buildroot}/Backend/Dot.cc.o ${buildroot}/Backend/Make.cc.o ${buildroot}/Backend/Ninja.cc.o ${buildroot}/Backend/Null.cc.o ${buildroot}/DAG/Build.cc.o ${buildroot}/DAG/Callable.cc.o ${buildroot}/DAG/DAG.cc.o ${buildroot}/DAG/File.cc.o ${buildroot}/DAG/Formatter.cc.o ${buildroot}/DAG/Function.cc.o ${buildroot}/DAG/List.cc.o ${buildroot}/DAG/Parameter.cc.o ${buildroot}/DAG/Primitive.cc.o ${buildroot}/DAG/Rule.cc.o ${buildroot}/DAG/Structure.cc.o ${buildroot}/DAG/Target.cc.o ${buildroot}/DAG/UndefinedValueException.cc.o ${buildroot}/DAG/Value.cc.o ${buildroot}/DAG/Visitor.cc.o ${buildroot}/Parsing/Lexer.cc.o ${buildroot}/Parsing/Parser.cc.o ${buildroot}/Parsing/Token.cc.o ${buildroot}/Support/Arguments.cc.o ${buildroot}/Support/Bytestream.cc.o ${buildroot}/Support/ErrorReport.cc.o ${buildroot}/Support/Join.cc.o ${buildroot}/Support/Printable.cc.o ${buildroot}/Support/SourceLocation.cc.o ${buildroot}/Support/Visitable.cc.o ${buildroot}/Support/exceptions.cc.o ${buildroot}/Support/os-posix.cc.o ${buildroot}/Types/BooleanType.cc.o ${buildroot}/Types/FileType.cc.o ${buildroot}/Types/FunctionType.cc.o ${buildroot}/Types/IntegerType.cc.o ${buildroot}/Types/MaybeType.cc.o ${buildroot}/Types/OptionallyTyped.cc.o ${buildroot}/Types/SequenceType.cc.o ${buildroot}/Types/StringType.cc.o ${buildroot}/Types/StructureType.cc.o ${buildroot}/Types/Type.cc.o ${buildroot}/Types/TypeContext.cc.o ${buildroot}/Types/TypeError.cc.o ${buildroot}/Types/Typed.cc.o
 lexer_src : ${buildroot}/Parsing/fab.lex.cc
 parser_src : ${buildroot}/Parsing/fab.yacc.cc

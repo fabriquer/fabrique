@@ -83,4 +83,4 @@ objects =
 	+ cxx.compile(cxx_srcs, normal_cxx_flags)
 	;
 
-fab = cxx.link_executable(objects, executable = file('fab'));
+fab_executable = cxx.link_executable(objects, executable = file('fab'));
