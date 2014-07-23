@@ -1,0 +1,7 @@
+#
+# RUN: fab --parse-only --print-ast %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: empty_string:string = '';
+empty_string = '';
