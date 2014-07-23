@@ -62,7 +62,9 @@ public:
 	const SharedPtrVec<Parameter>& parameters() const;
 
 	bool hasParameterNamed(const std::string&) const;
-	void CheckArguments(const ValueMap& args, const SourceRange&) const;
+	void CheckArguments(const ValueMap& args,
+	                    const StringMap<SourceRange>& argLocations,
+	                    const SourceRange& callLocation) const;
 
 	/**
 	 * Name all of the arguments in @a v according to the rules for

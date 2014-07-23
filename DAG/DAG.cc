@@ -429,10 +429,14 @@ void DAGBuilder::Leave(const ast::Call& call)
 				"invalid parameter", a->source());
 
 	ValueMap args;
+	StringMap<SourceRange> argLocations;
 	for (auto& i : target->NameArguments(call.arguments()))
+	{
 		args[i.first] = std::move(eval(*i.second));
+		argLocations.emplace(i.first, i.second->source());
+	}
 
-	target->CheckArguments(args, call.source());
+	target->CheckArguments(args, argLocations, call.source());
 
 
 	//

@@ -72,7 +72,8 @@ bool Callable::hasParameterNamed(const std::string& name) const
 
 
 void Callable::CheckArguments(const ValueMap& args,
-                              const SourceRange& src) const
+                              const StringMap<SourceRange>& argLocations,
+                              const SourceRange& callLocation) const
 {
 	for (auto& p : parameters_)
 	{
@@ -87,14 +88,17 @@ void Callable::CheckArguments(const ValueMap& args,
 				continue;
 
 			throw SemanticException(
-				"missing argument to '" + name + "'", src);
+				"missing argument to '" + name + "'", callLocation);
 		}
 
 		const ValuePtr& arg = i->second;
 		assert(arg);
 
 		if (not arg->type().isSubtype(t))
-			throw WrongTypeException(t, arg->type(), arg->source());
+		{
+			const SourceRange& argSource(argLocations.find(name)->second);
+			throw WrongTypeException(t, arg->type(), argSource);
+		}
 	}
 }
 
