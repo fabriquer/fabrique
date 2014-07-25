@@ -31,6 +31,7 @@
 
 #include "Support/Arguments.h"
 #include "Support/Bytestream.h"
+#include "Support/os.h"
 
 #include <iostream>
 #include <sstream>
@@ -210,6 +211,38 @@ Arguments* Arguments::Parse(int argc, char *argv[])
 }
 
 
+std::vector<string> Arguments::ArgVector(const Arguments& args)
+{
+	std::vector<string> argv;
+
+	argv.push_back("--debug='" + args.debugPattern + "'");
+
+	if (args.help)
+		argv.push_back("--help");
+
+	if (args.parseOnly)
+		argv.push_back("--parse-only");
+	else
+		argv.push_back("--format=" + args.format);
+
+	if (args.printAST)
+		argv.push_back("--print-ast");
+
+	if (args.printDAG)
+		argv.push_back("--print-dag");
+
+	if (args.printOutput)
+		argv.push_back("--stdout");
+	else
+		argv.push_back("--output=" + AbsoluteDirectory(args.output));
+
+	for (const string& d : args.definitions)
+		argv.push_back("-D '" + d + "'");
+
+	return std::move(argv);
+}
+
+
 #define ARG(name) \
 	Bytestream::Definition << tab << #name \
 	<< Bytestream::Operator << " = " \
@@ -238,6 +271,16 @@ void Arguments::Print(const Arguments& args, Bytestream& out)
 		<< Bytestream::Operator << "}"
 		<< Bytestream::Reset
 		;
+}
+
+string Arguments::str(const Arguments& args)
+{
+	std::ostringstream oss;
+
+	for (const string& a : Arguments::ArgVector(args))
+		oss << " " << a;
+
+	return oss.str();
 }
 
 

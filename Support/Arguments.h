@@ -58,8 +58,10 @@ class Arguments
 public:
 	static void PrintUsage(std::ostream&);
 	static Arguments* Parse(int argc, char *argv[]);
+	static std::vector<std::string> ArgVector(const Arguments&);
 
 	static void Print(const Arguments&, Bytestream&);
+	static std::string str(const Arguments&);
 
 	const bool help;
 
