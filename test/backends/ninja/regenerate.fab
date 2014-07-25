@@ -1,0 +1,11 @@
+#
+# RUN: fab --format=ninja --output=%t %s
+# RUN: FileCheck %s -input-file %t/build.ninja
+#
+
+process = action('process ${src} -o ${gen}' <- src:file[in], gen:file[out]);
+
+# CHECK-DAG: build ${buildroot}/foo.out : process ${srcroot}/foo.in
+foo = process(file('foo.in'), file('foo.out'));
+
+# CHECK-DAG: build ${buildroot}/build.ninja : _fabrique_regenerate {{.*}}/regenerate.fab

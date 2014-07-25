@@ -56,6 +56,7 @@
 #include <memory>
 
 using namespace fabrique;
+using fabrique::ast::Parser;
 using std::map;
 using std::string;
 using std::unique_ptr;
@@ -63,7 +64,7 @@ using std::vector;
 
 
 static Bytestream& err();
-static unique_ptr<ast::Scope> Parse(const string& filename, TypeContext&,
+static unique_ptr<ast::Scope> Parse(UniqPtr<Parser>& parser, const string& filename,
                                     const vector<string>& definitions,
                                     string srcroot, string buildroot, bool printAST);
 
@@ -103,8 +104,9 @@ int main(int argc, char *argv[]) {
 		//
 		// Parse the file, optionally pretty-printing it.
 		//
+		unique_ptr<ast::Parser> parser(new ast::Parser(ctx, srcroot));
 		unique_ptr<ast::Scope> ast(
-			Parse(args->input, ctx, args->definitions,
+			Parse(parser, args->input, args->definitions,
 			      srcroot, buildroot, args->printAST));
 
 		if (not ast)
@@ -115,30 +117,7 @@ int main(int argc, char *argv[]) {
 
 
 		//
-		// Convert the parsed AST into a DAG.
-		//
-		unique_ptr<dag::DAG> dag;
-		dag = dag::DAG::Flatten(*ast, ctx, srcroot, buildroot);
-
-		// DAG errors should be reported as exceptions.
-		assert(dag);
-
-		if (args->printDAG)
-		{
-			Bytestream::Stdout()
-				<< Bytestream::Comment
-				<< "#\n"
-				<< "# DAG pretty-printed from '"
-				<< args->input << "'\n"
-				<< "#\n"
-				<< Bytestream::Reset
-				<< *dag
-				;
-		}
-
-
-		//
-		// What should we do with it now?
+		// Prepare a backend to receive the build graph.
 		//
 		unique_ptr<backend::Backend> backend;
 
@@ -164,7 +143,32 @@ int main(int argc, char *argv[]) {
 
 
 		//
-		// Where should output go?
+		// Convert the AST into a build graph.
+		//
+		unique_ptr<dag::DAG> dag;
+		dag = dag::DAG::Flatten(*ast, ctx, srcroot, buildroot,
+		                        parser->files(), backend->DefaultFilename(),
+		                        *args);
+
+		// DAG errors should be reported as exceptions.
+		assert(dag);
+
+		if (args->printDAG)
+		{
+			Bytestream::Stdout()
+				<< Bytestream::Comment
+				<< "#\n"
+				<< "# DAG pretty-printed from '"
+				<< args->input << "'\n"
+				<< "#\n"
+				<< Bytestream::Reset
+				<< *dag
+				;
+		}
+
+
+		//
+		// Finally, feed the build graph into the backend.
 		//
 		std::ofstream outfile;
 		unique_ptr<Bytestream> outfileStream;
@@ -228,13 +232,10 @@ int main(int argc, char *argv[]) {
 }
 
 
-unique_ptr<ast::Scope> Parse(const string& filename, TypeContext& ctx,
+unique_ptr<ast::Scope> Parse(UniqPtr<Parser>& parser, const string& filename,
                              const vector<string>& definitions,
                              string srcroot, string buildroot, bool printAST)
 {
-
-	// Create the parser.
-	unique_ptr<ast::Parser> parser(new ast::Parser(ctx, srcroot));
 
 	// Parse command-line arguments.
 	auto args = parser->ParseDefinitions(definitions);
@@ -250,7 +251,10 @@ unique_ptr<ast::Scope> Parse(const string& filename, TypeContext& ctx,
 		std::make_pair(ast::Subdirectory, ""),
 	};
 
-	unique_ptr<ast::Scope> ast(parser->ParseFile(infile, args, filename, builtins));
+	const string absolute =
+		PathIsAbsolute(filename) ? filename : AbsolutePath(filename);
+
+	unique_ptr<ast::Scope> ast(parser->ParseFile(infile, args, absolute, builtins));
 	if (not ast)
 	{
 		for (auto& error : parser->errors())

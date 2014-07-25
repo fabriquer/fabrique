@@ -42,6 +42,7 @@
 
 namespace fabrique {
 
+class Arguments;
 class TypeContext;
 
 namespace ast {
@@ -66,7 +67,9 @@ class DAG : public Printable
 {
 public:
 	static UniqPtr<DAG> Flatten(const ast::Scope&, TypeContext&,
-	                            std::string srcroot, std::string buildroot);
+	                            std::string srcroot, std::string buildroot,
+	                            const std::vector<std::string>& inputFiles,
+	                            std::string outputFile, const Arguments& args);
 
 	virtual const std::string& buildroot() const = 0;
 	virtual const std::string& srcroot() const = 0;

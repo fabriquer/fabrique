@@ -47,6 +47,7 @@
 #include "DAG/UndefinedValueException.h"
 #include "DAG/Value.h"
 
+#include "Support/Arguments.h"
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
 #include "Support/exceptions.h"
@@ -158,6 +159,10 @@ public:
 	VISIT(ast::UnaryOperation)
 	VISIT(ast::Value)
 
+	//! Add build steps to regenerate the output when Fabrique files change.
+	void AddRegeneration(const Arguments& regenArgs,
+                             const vector<string>& inputFiles, string outputFile);
+
 	// The values we're creating:
 	SharedPtrVec<File> files_;
 	SharedPtrVec<Build> builds_;
@@ -207,10 +212,19 @@ private:
 
 
 UniqPtr<DAG> DAG::Flatten(const ast::Scope& root, TypeContext& ctx,
-                          string srcroot, string buildroot)
+                          string srcroot, string buildroot,
+                          const vector<string>& inputFiles,
+                          string outputFile, const Arguments& regenArgs)
 {
 	DAGBuilder builder(ctx);
 	root.Accept(builder);
+
+	//
+	// If we're generating a real output file (not stdout), add build logic
+	// to re-generate when input Fabrique files change.
+	//
+	if (not outputFile.empty())
+		builder.AddRegeneration(regenArgs, inputFiles, outputFile);
 
 	return UniqPtr<DAG>(new ImmutableDAG(
 		buildroot, srcroot, builder.files_, builder.builds_, builder.rules_,
@@ -1136,6 +1150,66 @@ ValuePtr DAGBuilder::eval(const ast::Expression& e)
 	currentValue.pop();
 
 	return v;
+}
+
+
+void DAGBuilder::AddRegeneration(const Arguments& regenArgs,
+                                 const vector<string>& inputFiles, string outputFile)
+{
+	const string Name = "_fabrique_regenerate";
+	const string Command = "fab" + Arguments::str(regenArgs) + " ${rootInput}";
+
+	shared_ptr<Value> Nothing;
+	const SourceRange& Nowhere = SourceRange::None();
+
+	const Type& inputFileType = ctx_.inputFileType();
+	const Type& inputType = ctx_.listOf(inputFileType, Nowhere);
+	const Type& outputType = ctx_.outputFileType();
+	const Type& buildType = ctx_.functionType(inputType, outputType);
+
+	//
+	// First, construct the rule that regenerates output:file[out]
+	// given input:list[file[in]].
+	//
+	ValueMap ruleArgs;
+	ruleArgs["description"].reset(
+		new String("Regenerating ${output}", ctx_.stringType()));
+
+	SharedPtrVec<Parameter> params;
+	params.emplace_back(new Parameter("rootInput", inputFileType, Nothing));
+	params.emplace_back(new Parameter("otherInputs", inputType, Nothing));
+	params.emplace_back(new Parameter("output", outputType, Nothing));
+
+	shared_ptr<Rule> rule(Rule::Create(Name, Command, ruleArgs, params, buildType));
+	rules_[Name] = rule;
+
+
+	//
+	// Now, construct the build step that drives the rule above in order
+	// to actually generate the build file.
+	//
+	shared_ptr<File> rootInput;
+	SharedPtrVec<File> otherInputs;
+	for (const string& name : inputFiles)
+	{
+		shared_ptr<File> f(File::Create(name, inputFileType, Nowhere));
+
+		if (rootInput)
+			otherInputs.push_back(f);
+		else
+			rootInput = f;
+	}
+
+	ValueMap args;
+	args["rootInput"] = rootInput;
+	args["otherInputs"].reset(List::of(otherInputs, Nowhere, ctx_));
+	args["output"].reset(File::Create(outputFile, outputType, Nowhere));
+
+	ConstPtrMap<Type> paramTypes;
+	for (auto& p : params)
+		paramTypes[p->name()] = &p->type();
+
+	builds_.emplace_back(Build::Create(rule, args, paramTypes, Nowhere));
 }
 
 
