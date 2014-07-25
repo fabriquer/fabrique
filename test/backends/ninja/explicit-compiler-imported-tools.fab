@@ -9,6 +9,6 @@ cc = import('Inputs/cc.fab', compiler = file('/usr/bin/cc'));
 # CHECK:   CC = /usr/bin/cc
 obj = cc.compile(files(Inputs/foo.c));
 
-# CHECK: build ${buildroot}/foo: link_executable ${buildroot}/Inputs/foo.c.o
+# CHECK: build ${buildroot}/foo : link_executable ${buildroot}/Inputs/foo.c.o
 # CHECK:   CC = /usr/bin/cc
 bin = cc.link_executable(obj, executable = file('foo'));

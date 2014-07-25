@@ -39,10 +39,10 @@ bin = link(objs, file('foo'));
 # CHECK-DAG: build objs : phony ${buildroot}/foo.c.o ${buildroot}/bar.c.o
 # CHECK-DAG: build bin : phony ${buildroot}/foo
 #
-# CHECK-DAG: build ${buildroot}/foo.c: lex ${srcroot}/foo.yy
+# CHECK-DAG: build ${buildroot}/foo.c : lex ${srcroot}/foo.yy
 # CHECK-NEXT-TODO:  classname = FooClass
 #
-# CHECK-DAG: build ${buildroot}/foo.c.o: cc ${buildroot}/foo.c
-# CHECK-DAG: build ${buildroot}/bar.c.o: cc ${srcroot}/bar.c
+# CHECK-DAG: build ${buildroot}/foo.c.o : cc ${buildroot}/foo.c
+# CHECK-DAG: build ${buildroot}/bar.c.o : cc ${srcroot}/bar.c
 #
-# CHECK-DAG: build ${buildroot}/foo: link ${buildroot}/foo.c.o ${buildroot}/bar.c.o
+# CHECK-DAG: build ${buildroot}/foo : link ${buildroot}/foo.c.o ${buildroot}/bar.c.o

@@ -16,9 +16,9 @@ cxx = action('${CXX} -c ${flags} -MMD -MF ${depfile} ${src} -o ${obj}',
              description = 'Compiling ${in}'
              <- src:file[in], obj:file[out], depfile:file[out], flags:list[string]);
 
-# CHECK-DAG: build ${buildroot}/foo.{{[hc]}} ${buildroot}/foo.{{[hc]}}: lex ${srcroot}/foo.yy
+# CHECK-DAG: build ${buildroot}/foo.{{[hc]}} ${buildroot}/foo.{{[hc]}} : lex ${srcroot}/foo.yy
 gen = lex(file('foo.yy'), file('foo.c'), header = file('foo.h'));
 
-# CHECK-DAG: build ${buildroot}/foo.o.d ${buildroot}/foo.o: cxx ${srcroot}/foo.c
+# CHECK-DAG: build ${buildroot}/foo.o.d ${buildroot}/foo.o : cxx ${srcroot}/foo.c
 obj = cxx(src = file('foo.c'), obj = file('foo.o'), depfile = file('foo.o.d'),
           flags = [ '-Weverything' ]);

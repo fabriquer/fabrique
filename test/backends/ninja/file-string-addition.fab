@@ -11,8 +11,8 @@ bar = foo + '.gz';
 
 process = action('process ${src} -o ${gen}' <- src:file[in], gen:file[out]);
 
-# CHECK-DAG: build ${buildroot}/foo.txt.out: process ${srcroot}/foo.txt
+# CHECK-DAG: build ${buildroot}/foo.txt.out : process ${srcroot}/foo.txt
 foo_out = process(foo, foo + '.out');
 
-# CHECK-DAG: build ${buildroot}/foo.txt.gz.out: process ${srcroot}/foo.txt.gz
+# CHECK-DAG: build ${buildroot}/foo.txt.gz.out : process ${srcroot}/foo.txt.gz
 bar_out = process(bar, bar + '.out');

@@ -195,7 +195,7 @@ void NinjaBackend::Process(const dag::DAG& dag, Bytestream& out)
 			out << " " << formatter.Format(*f);
 
 		out
-			<< Bytestream::Operator << ": "
+			<< Bytestream::Operator << " : "
 			<< Bytestream::Action << build.buildRule().name()
 			<< Bytestream::Filename
 			;
