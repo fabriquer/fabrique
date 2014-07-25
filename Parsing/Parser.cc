@@ -120,6 +120,9 @@ UniqPtr<Scope> Parser::ParseFile(std::istream& input, UniqPtr<Scope>& args,
 		<< Bytestream::Reset << "\n"
 		;
 
+	if (not name.empty())
+		files_.push_back(name);
+
 	lexer_.PushFile(input, name);
 	EnterScope(name);
 

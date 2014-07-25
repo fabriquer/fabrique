@@ -70,6 +70,9 @@ public:
 	//! Errors encountered during parsing.
 	const UniqPtrVec<ErrorReport>& errors() const { return errs_; }
 
+	//! Input files encountered during parsing.
+	const std::vector<std::string>& files() const { return files_; }
+
 
 	/**
 	 * Enter an AST @ref Scope. Should be called before parsing anything
@@ -251,6 +254,8 @@ private:
 	TypeContext& ctx_;
 	Lexer& lexer_;
 
+	//! Input files, in order they were parsed.
+	std::vector<std::string> files_;
 	UniqPtrVec<ErrorReport> errs_;
 	std::stack<std::unique_ptr<Scope>> scopes_;
 
