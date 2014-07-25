@@ -116,7 +116,13 @@ string fabrique::AbsoluteDirectory(string name, bool createIfMissing)
 			throw PosixError("reading directory " + name);
 	}
 
-	char *absolutePath = realpath(cname, NULL);
+	return AbsolutePath(cname);
+}
+
+
+string fabrique::AbsolutePath(string name)
+{
+	char *absolutePath = realpath(name.c_str(), NULL);
 	if (not absolutePath)
 		throw PosixError("error in realpath('" + name + "')");
 

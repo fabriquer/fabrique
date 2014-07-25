@@ -43,6 +43,9 @@ bool PathIsAbsolute(const std::string&);
 //! Find the absolute version of a directory, optionally creating it.
 std::string AbsoluteDirectory(std::string name, bool createIfMissing = true);
 
+//! Find the absolute version of a path (file or directory).
+std::string AbsolutePath(std::string path);
+
 //! The command required to create a directory (if it doesn't already exist).
 std::string CreateDirCommand(std::string directory);
 
