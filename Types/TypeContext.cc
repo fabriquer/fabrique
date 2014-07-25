@@ -66,11 +66,10 @@ TypeContext::TypeContext()
 {
 	Register(new IntegerType(*this));
 
-	Register(Type::Create("in", PtrVec<Type>(), *this));
-	Register(Type::Create("out", PtrVec<Type>(), *this));
-
 	booleanType();
 	fileType();
+	inputFileType();
+	outputFileType();
 	stringType();
 
 	// Bare types required to build list[foo], maybe[foo], etc.
@@ -134,6 +133,24 @@ const Type& TypeContext::fileType()
 {
 	static const Type& f = Register(FileType::Create(*this));
 	return f;
+}
+
+const Type& TypeContext::inputFileType()
+{
+	static const Type& in = Register(Type::Create("in", PtrVec<Type>(), *this));
+	static const Type& ty =
+		find("file", SourceRange::None(), PtrVec<Type>(1, &in));
+
+	return ty;
+}
+
+const Type& TypeContext::outputFileType()
+{
+	static const Type& out = Register(Type::Create("out", PtrVec<Type>(), *this));
+	static const Type& ty =
+		find("file", SourceRange::None(), PtrVec<Type>(1, &out));
+
+	return ty;
 }
 
 const Type& TypeContext::fileListType()

@@ -73,6 +73,8 @@ public:
 
 	//! A file in a build.
 	const Type& fileType();
+	const Type& inputFileType();
+	const Type& outputFileType();
 
 	//! A list of files (a pretty fundamental type!).
 	const Type& fileListType();
