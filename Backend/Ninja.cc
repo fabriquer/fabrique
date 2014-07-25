@@ -162,6 +162,18 @@ void NinjaBackend::Process(const dag::DAG& dag, Bytestream& out)
 	}
 
 
+	//
+	// Build steps, starting with pseudo-targets:
+	//
+	out
+		<< Bytestream::Comment
+		<< "#\n"
+		<< "# Build steps:\n"
+		<< "#\n"
+		<< Bytestream::Reset
+		;
+
+
 	// Psuedo-targets:
 	for (auto& i : dag.targets())
 		out
@@ -177,15 +189,6 @@ void NinjaBackend::Process(const dag::DAG& dag, Bytestream& out)
 
 
 	// Build steps:
-	out
-		<< "\n"
-		<< Bytestream::Comment
-		<< "#\n"
-		<< "# Build steps:\n"
-		<< "#\n"
-		<< Bytestream::Reset
-		;
-
 	for (auto& i : dag.builds())
 	{
 		const dag::Build& build = *i;
