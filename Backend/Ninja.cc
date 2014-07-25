@@ -229,6 +229,7 @@ string NinjaFormatter::Format(const Boolean& b)
 string NinjaFormatter::Format(const Build&)
 {
 	assert(false && "called NinjaFormatter(const Build&)");
+	return "<ERROR: NinjaFormatter::Format(const Build&) should never be called>";
 }
 
 string NinjaFormatter::Format(const File& f)
