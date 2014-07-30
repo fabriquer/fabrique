@@ -1,0 +1,21 @@
+#
+# RUN: fab --format=null --print-dag %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+foo = struct
+{
+	bar = struct
+	{
+		baz = struct
+		{
+			wibble = 1;
+		};
+	};
+};
+
+# CHECK-DAG: int the_wibble = 1
+the_wibble = foo.bar.baz.wibble;
+
+# CHECK-DAG: string the_wobble = 'not there'
+the_wobble = foo.bar.wobble ? 'not there';

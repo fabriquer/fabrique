@@ -30,9 +30,15 @@
  */
 
 #include "AST/FieldAccess.h"
+#include "AST/HasScope.h"
 #include "AST/Identifier.h"
+#include "AST/Scope.h"
 #include "AST/Visitor.h"
 #include "Support/Bytestream.h"
+#include "Support/exceptions.h"
+
+#include <cassert>
+
 using namespace fabrique::ast;
 
 
@@ -40,6 +46,16 @@ FieldAccess::FieldAccess(UniqPtr<Expression>& base, UniqPtr<Identifier>& field)
 	: Expression(field->type(), SourceRange::Over(base, field)),
 	  base_(std::move(base)), field_(std::move(field))
 {
+}
+
+
+const Expression& FieldAccess::definition() const
+{
+	auto& scope = dynamic_cast<const HasScope&>(base().definition()).scope();
+	if (not scope.contains(field()))
+		throw SemanticException("no such field", this->source());
+
+	return *scope.Lookup(field());
 }
 
 
