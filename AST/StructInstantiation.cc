@@ -49,16 +49,18 @@ StructInstantiation::StructInstantiation(UniqPtr<Scope>& values, const Type& ty,
 
 void StructInstantiation::PrettyPrint(Bytestream& out, size_t indent) const
 {
+	const std::string outerTabs(indent, '\t');
+
 	out
 		<< Bytestream::Definition << "struct\n"
-		<< Bytestream::Operator << std::string(indent, '\t') << "{\n"
+		<< Bytestream::Operator << outerTabs << "{\n"
 		;
 
-	std::string tabs(indent + 1, '\t');
+	const std::string innerTabs(indent + 1, '\t');
 	for (auto& i : scope())
 	{
 		out
-			<< tabs
+			<< innerTabs
 			<< Bytestream::Definition << i.first
 			<< Bytestream::Operator << ":"
 			<< i.second->type()
@@ -74,7 +76,7 @@ void StructInstantiation::PrettyPrint(Bytestream& out, size_t indent) const
 	}
 
 	out
-		<< Bytestream::Operator << "}"
+		<< Bytestream::Operator << outerTabs << "}"
 		<< Bytestream::Reset
 		;
 }
