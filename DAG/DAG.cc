@@ -844,9 +844,16 @@ void DAGBuilder::Leave(const ast::StringLiteral&) {}
 
 
 bool DAGBuilder::Enter(const ast::StructInstantiation& s) {
-	vector<Structure::NamedValue> values;
+	ValueMap& currentScope = EnterScope("struct");
+
 	for (auto& field : s.scope())
-		values.emplace_back(field.first, eval(*field.second));
+		currentScope.emplace(field.first, eval(*field.second));
+
+	ValueMap structScope = ExitScope();
+
+	vector<Structure::NamedValue> values;
+	for (auto& i : structScope)
+		values.emplace_back(i.first, i.second);
 
 	currentValue.emplace(Structure::Create(values, s.type()));
 	return false;

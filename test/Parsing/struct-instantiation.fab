@@ -11,3 +11,14 @@ foo = struct { foo = 'hi'; bar = 'world'; };
 
 # CHECK: bar:string = foo.bar;
 bar = foo.bar;
+
+# CHECK: self_referential:struct[string, string] = struct
+# CHECK: {
+self_referential = struct
+{
+	# CHECK: def:string = 'Hello, world!';
+	def = 'Hello, world!';
+
+	# CHECK: ref:string = def;
+	ref = def;
+};
