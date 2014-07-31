@@ -57,22 +57,10 @@ void StructInstantiation::PrettyPrint(Bytestream& out, size_t indent) const
 		;
 
 	const std::string innerTabs(indent + 1, '\t');
-	for (auto& i : scope())
+	for (auto& i : scope().values())
 	{
-		out
-			<< innerTabs
-			<< Bytestream::Definition << i.first
-			<< Bytestream::Operator << ":"
-			<< i.second->type()
-			<< Bytestream::Operator << " = "
-			;
-
-		i.second->PrettyPrint(out, indent + 1);
-
-		out
-			<< Bytestream::Operator << ";"
-			<< "\n"
-			;
+		i->PrettyPrint(out, indent + 1);
+		out << "\n";
 	}
 
 	out
