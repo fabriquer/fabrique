@@ -66,10 +66,7 @@ public:
 	virtual ~Scope() {}
 
 	typedef StringMap<const Expression*> SymbolMap;
-	typedef SymbolMap::const_iterator iterator;
-
-	iterator begin() const { return symbols_.begin(); }
-	iterator end() const { return symbols_.end(); }
+	const SymbolMap& symbols() const { return symbols_; }
 
 	const std::string& name() const { return name_; }
 	const UniqPtrVec<Value>& values() const { return ownedValues_; }

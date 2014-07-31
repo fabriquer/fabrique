@@ -200,7 +200,7 @@ unique_ptr<Scope> Parser::ExitScope()
 		<< Bytestream::Operator << ":"
 		;
 
-	for (auto& v : *scope)
+	for (auto& v : scope->symbols())
 		dbg << " " << v.first;
 
 	dbg
@@ -652,7 +652,7 @@ StructInstantiation* Parser::StructInstantiation(SourceRange src)
 	UniqPtr<Scope> scope(ExitScope());
 
 	std::vector<StructureType::Field> fields;
-	for (auto& i : *scope)
+	for (auto& i : scope->symbols())
 		fields.emplace_back(i.first, i.second->type());
 
 	const StructureType& t = ctx_.structureType(fields);
