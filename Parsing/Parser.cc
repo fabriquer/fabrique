@@ -126,13 +126,14 @@ UniqPtr<Scope> Parser::ParseFile(std::istream& input, UniqPtr<Scope>& args,
 	lexer_.PushFile(input, name);
 	EnterScope(name);
 
+	// Define builtin strings like srcroot and builtroot.
 	for (std::pair<string,string> i : builtins)
-		Builtin(i.first, i.second);
+		Builtin(i.first, i.second, openedFrom);
 
+	// Define a structure containing import() or command-line arguments.
 	EnterScope(std::move(*args));
 	UniqPtr<Expression> argStruct(StructInstantiation(openedFrom));
-	UniqPtr<Identifier> id(new Identifier("args", nullptr, openedFrom));
-	DefineValue(id, argStruct);
+	Builtin("args", argStruct, openedFrom);
 
 	int result = yyparse(this);
 
@@ -274,31 +275,6 @@ BinaryOperation* Parser::BinaryOp(BinaryOperation::Operator op,
 		return nullptr;
 
 	return BinaryOperation::Create(std::move(lhs), op, std::move(rhs));
-}
-
-
-bool Parser::Builtin(const string& name, int value)
-{
-	SourceRange src = SourceRange::Span("(builtin)", 0, 0, 0);
-	UniqPtr<Token> token(new Token(name, src));
-
-	UniqPtr<Identifier> id(Id(std::move(token)));
-	UniqPtr<Expression> val(ParseInt(value));
-
-	return DefineValue(id, val);
-}
-
-
-bool Parser::Builtin(const string& name, const std::string& value)
-{
-	SourceRange src = SourceRange::Span("(builtin)", 0, 0, 0);
-	UniqPtr<Token> nameToken(new Token(name, src));
-	UniqPtr<Token> valueToken(new Token(value, src));
-
-	UniqPtr<Identifier> id(Id(std::move(nameToken)));
-	UniqPtr<Expression> val(ParseString(std::move(valueToken)));
-
-	return DefineValue(id, val);
 }
 
 
@@ -831,6 +807,41 @@ Scope& Parser::CurrentScope()
 	// We must always have at least a top-level scope on the stack.
 	assert(scopes_.size() > 0);
 	return *scopes_.top();
+}
+
+
+bool Parser::Builtin(string name, UniqPtr<Expression>& e, SourceRange src)
+{
+	UniqPtr<Token> token(new Token(name, src));
+	UniqPtr<Identifier> id(Id(std::move(token)));
+
+	return DefineValue(id, e);
+}
+
+
+bool Parser::Builtin(string name, int value, SourceRange src)
+{
+	UniqPtr<Expression> val(ParseInt(value));
+
+	return Builtin(name, val, src);
+}
+
+
+bool Parser::Builtin(string name, string value, SourceRange src)
+{
+	UniqPtr<Token> token(new Token(value, src));
+	UniqPtr<Expression> val(ParseString(std::move(token)));
+
+	return Builtin(name, val, src);
+}
+
+
+bool Parser::Builtin(string name, UniqPtr<Scope>& scope, SourceRange src)
+{
+	EnterScope(std::move(*scope));
+	UniqPtr<Expression> value(StructInstantiation(src));
+
+	return Builtin(name, value, src);
 }
 
 

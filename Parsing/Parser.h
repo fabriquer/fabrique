@@ -115,9 +115,6 @@ public:
 	BinaryOperation* BinaryOp(BinaryOperation::Operator,
 	                          UniqPtr<Expression>&, UniqPtr<Expression>&);
 
-	bool Builtin(const std::string& name, int value);
-	bool Builtin(const std::string& name, const std::string& value);
-
 	//! A call to an @ref Action or @ref Function.
 	Call* CreateCall(UniqPtr<Expression>&, UniqPtr<UniqPtrVec<Argument>>&,
 	                 const SourceRange& end);
@@ -244,6 +241,14 @@ private:
 	 * (and, transitively, everything it contains).
 	 */
 	std::unique_ptr<Scope> ExitScope();
+
+	//! Define a builtin value.
+	bool Builtin(std::string name, UniqPtr<Expression>& value, SourceRange);
+
+	//! Convenience method for the full @ref #Builtin().
+	bool Builtin(std::string name, int value, SourceRange);
+	bool Builtin(std::string name, std::string value, SourceRange);
+	bool Builtin(std::string name, UniqPtr<Scope>& scope, SourceRange);
 
 	//! Add an @ref Argument vector to the current scope.
 	void AddToScope(const PtrVec<Argument>&);
