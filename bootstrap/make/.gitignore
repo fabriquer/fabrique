@@ -3,3 +3,4 @@ fab
 *.o.d
 fab.lex.*
 fab.yacc.*
+lit-test-results

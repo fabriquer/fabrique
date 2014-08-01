@@ -9,6 +9,7 @@ debug_and_asserts = debug and asserts;
 
 cxx = import('share/fabrique/cxx.fab');
 lex = import('share/fabrique/lex.fab');
+lit = import('share/fabrique/llvm-lit.fab');
 
 # TODO: specify the exact yacc once we have a working 'which' plugin
 yacc = import('share/fabrique/yacc.fab', yacc = 'byacc');
@@ -84,3 +85,6 @@ objects =
 	;
 
 fab_executable = cxx.link_executable(objects, executable = file('fab'));
+
+test = lit.run(file('test'), file('lit-test-results'), 'report.txt',
+	dependencies = [ fab_executable ] + import('test/manifest.fab').all_files);
