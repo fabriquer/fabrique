@@ -609,7 +609,7 @@ bool DAGBuilder::Enter(const ast::Filename& f)
 
 	for (const UniqPtr<ast::Argument>& a : f.arguments())
 	{
-		if (a->getName().name() == "subdir")
+		if (a->getName().name() == ast::Subdirectory)
 			subdirectory = eval(a->getValue())->str();
 
 		else
