@@ -7,7 +7,9 @@ debug = args.debug ? true;
 asserts = args.asserts ? true;
 debug_and_asserts = debug and asserts;
 
-cxx = import('share/fabrique/cxx.fab');
+colour_output = args.colour_output ? true;
+
+cxx = import('share/fabrique/cxx.fab', colour_diagnostics = colour_output);
 lex = import('share/fabrique/lex.fab');
 lit = import('share/fabrique/llvm-lit.fab');
 

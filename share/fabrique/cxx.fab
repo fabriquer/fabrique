@@ -1,4 +1,7 @@
 compiler = args.compiler ? file('/usr/bin/c++');
+use_colour = args.colour_diagnostics;
+
+colour_flags = if use_colour [ '-fcolor-diagnostics' ] else [];
 
 
 ### Compile one C++ source file into an object file.
@@ -12,13 +15,14 @@ compile = function(srcs:list[file], flags:list[string],
 {
 	foreach src <- srcs {
 		obj = src + '.o';
-		outs = compile_one(src, obj, flags, obj + '.d', deps);
+		outs = compile_one(src, obj, flags + colour_flags, obj + '.d', deps);
 		obj
 	}
 };
 
 
-link_executable = action('${CXX} -o ${executable} ${objects}',
+link_executable = action('${CXX} -o ${executable} ${flags} ${objects}',
                          description = 'Linking ${executable}'
                          <- objects:list[file[in]], executable:file[out],
-                            CXX:file[in] = compiler);
+                            CXX:file[in] = compiler,
+                            flags:list[string] = colour_flags);
