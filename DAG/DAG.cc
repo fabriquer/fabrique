@@ -113,6 +113,25 @@ private:
 	const vector<BuildTarget> topLevelTargets_;
 };
 
+
+void DebugNewDefinition(const ValueMap& scope, string name)
+{
+	assert(not scope.empty());
+	assert(scope.find(name) != scope.end());
+
+	Bytestream& dbg = Bytestream::Debug("dag.scope");
+	dbg
+		<< Bytestream::Action << "defined "
+		<< Bytestream::Literal << "'" << name << "'"
+		<< Bytestream::Operator << " =>"
+		;
+
+	for (auto& i : scope)
+		dbg << Bytestream::Definition << " " << i.first;
+
+	dbg << Bytestream::Reset << "\n";
+}
+
 }
 
 
@@ -959,13 +978,6 @@ void DAGBuilder::Leave(const ast::Value&)
 
 	ValueMap& currentScope = CurrentScope();
 
-	Bytestream& dbg = Bytestream::Debug("dag.scope");
-	dbg
-		<< Bytestream::Action << "defining "
-		<< Bytestream::Literal << "'" << currentValueName.top() << "'"
-		<< Bytestream::Operator << ":"
-		;
-
 	ValuePtr val = std::move(currentValue.top());
 	currentValue.pop();
 	assert(val);
@@ -995,11 +1007,7 @@ void DAGBuilder::Leave(const ast::Value&)
 
 	assert(val);
 	currentScope.emplace(name, std::move(val));
-
-	for (auto& i : currentScope)
-		dbg << Bytestream::Definition << " " << i.first;
-
-	dbg << Bytestream::Reset << "\n";
+	DebugNewDefinition(currentScope, name);
 
 	assert(not val);
 	currentValue.emplace(nullptr);
