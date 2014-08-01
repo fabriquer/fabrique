@@ -1,5 +1,5 @@
 #
-# Generated at Wed 30 Jul 2014 13:34:01 NDT by regenerate-manifest.sh
+# Generated at Fri  1 Aug 2014 15:41:20 NDT by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -9,7 +9,9 @@
 all_files = files(
 ./DAG/Inputs/cc.fab
 ./DAG/Inputs/empty.fab
+./DAG/Inputs/fabfile
 ./DAG/Inputs/requires-args.fab
+./DAG/Inputs/some_files.fab
 ./DAG/Inputs/sources/src.fab
 ./DAG/Inputs/subdir-test.fab
 ./DAG/Inputs/submodule.fab
@@ -61,11 +63,14 @@ all_files = files(
 ./DAG/scopes.fab
 ./DAG/simple-build.fab
 ./DAG/string-list.fab
+./DAG/struct-instantiation.fab
 ./DAG/struct-nesting.fab
+./DAG/subdir-within-subdir.fab
 ./DAG/subdir.fab
 ./DAG/target-operations.fab
 ./DAG/tool-vs-src-directories.fab
 ./Parsing/Inputs/accepts-args.fab
+./Parsing/Inputs/fabfile
 ./Parsing/Inputs/requires-args.fab
 ./Parsing/Inputs/submodule-with-error.fab
 ./Parsing/Inputs/submodule.fab
@@ -142,4 +147,5 @@ all_files = files(
 ./backends/ninja/regenerate.fab
 ./backends/ninja/rules.fab
 ./backends/ninja/string-list.fab
+./lit.cfg
 );
