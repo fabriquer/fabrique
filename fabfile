@@ -24,8 +24,8 @@ yacc = import('share/fabrique/yacc.fab', yacc = 'byacc');
 cxxoptions = [ '-std=c++11' ];
 
 dbgflags =
-	if debug [ '-g' '-ggdb' '-O0' ]
-	else [ '-D NDEBUG' '-O2' ]
+	if debug [ '-g' '-ggdb' '-O0' ] else [ '-O2' ]
+	+ if asserts [ '' ] else [ '-D NDEBUG' ]
 	;
 
 includes = foreach dir <- [ srcroot buildroot ] '-I ' + dir;
