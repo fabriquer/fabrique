@@ -1,0 +1,23 @@
+#
+# RUN: fab --format=null --print-dag %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK-DAG: string foo = 'hi'
+# CHECK-DAG: string bar = 'world'
+container = struct { foo = 'hi'; bar = 'world'; };
+
+# CHECK-DAG: string value = 'world'
+value = container.bar;
+
+self_referential = struct
+{
+	# CHECK-DAG: string def = 'Hello, world!'
+	def = 'Hello, world!';
+
+	# CHECK-DAG: string ref = 'Hello, world!'
+	ref = def;
+};
+
+# CHECK-DAG: string value2 = 'Hello, world!'
+value2 = self_referential.ref;

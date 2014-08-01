@@ -735,15 +735,42 @@ bool DAGBuilder::Enter(const ast::Import& import)
 	const string name = currentValueName.top();
 	std::vector<Structure::NamedValue> values;
 
-	EnterScope("import(" + name + ")");
+	ValueMap& importScope = EnterScope("import(" + name + ")");
 	ValuePtr subdir(
 		new String(import.subdirectory(), ctx_.stringType()));
 	CurrentScope().emplace(ast::Subdirectory, subdir);
 
+	//
+	// Import expressions can take arguments, which are exposed as an 'args'
+	// struct in the imported module.  We can't initialize a structure with
+	// ast::Arguments, though (it requires Values), so we have to manually
+	// build the 'args' struct here.
+	//
+	vector<Structure::NamedValue> args;
+	vector<StructureType::Field> argTypes;
+
+	for (const UniqPtr<ast::Argument>& a : import.arguments())
+	{
+		if (not a->hasName())
+			throw SemanticException("import arguments must be named",
+			                        a->source());
+
+		const string argName { a->getName().name() };
+
+		argTypes.emplace_back(argName, a->type());
+		args.emplace_back(argName, eval(a->getValue()));
+	}
+
+	ValuePtr argStruct { Structure::Create(args, ctx_.structureType(argTypes)) };
+	importScope[ast::Arguments] = argStruct;
+	DebugNewDefinition(importScope, ast::Arguments);
+
 	EnterScope(name);
 
-	for (auto& v : import.scope().values())
-		eval(*v);
+	for (const UniqPtr<ast::Value>& v : import.scope().values())
+		// Ignore the AST-provided 'args'.
+		if (v->name().name() != ast::Arguments)
+			eval(*v);
 
 	const ValueMap& scope = ExitScope();
 	ExitScope();
@@ -863,10 +890,10 @@ void DAGBuilder::Leave(const ast::StringLiteral&) {}
 
 
 bool DAGBuilder::Enter(const ast::StructInstantiation& s) {
-	ValueMap& currentScope = EnterScope("struct");
+	EnterScope("struct");
 
-	for (auto& field : s.scope().symbols())
-		currentScope.emplace(field.first, eval(*field.second));
+	for (auto& field : s.scope().values())
+		eval(*field);
 
 	ValueMap structScope = ExitScope();
 
