@@ -1078,6 +1078,7 @@ ValueMap DAGBuilder::ExitScope()
 
 ValueMap& DAGBuilder::CurrentScope()
 {
+	assert(not scopes.empty());
 	return scopes.back();
 }
 
