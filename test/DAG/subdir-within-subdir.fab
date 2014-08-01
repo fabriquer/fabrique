@@ -1,0 +1,21 @@
+#
+# RUN: fab --format=null --print-dag %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+scope = struct {
+	subdir = 'foo';
+
+	# CHECK-DAG: file single_file = foo/a/single.c
+	single_file = file('a/single.c');
+
+	# CHECK-DAG: list[file] defined_here = [ foo/a/b.c foo/a/c.cc ]
+	defined_here = files(a/b.c a/c.cc);
+
+	# CHECK-DAG: list[file] also_defined_here = [ foo/bar/a/foo.c ]
+	also_defined_here = files(a/foo.c, subdir = 'bar');
+};
+
+# CHECK-DAG: list[file] some_files = [ Inputs/foo/bar.c ]
+# CHECK-DAG: list[file] some_more_files = [ Inputs/w/x/y/z.c ]
+submodule = import('Inputs/some_files.fab');

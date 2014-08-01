@@ -1,0 +1,2 @@
+some_files = files(foo/bar.c);
+some_more_files = files(x/y/z.c, subdir = 'w');

@@ -51,6 +51,7 @@
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
 #include "Support/exceptions.h"
+#include "Support/os.h"
 
 #include "Types/FileType.h"
 #include "Types/FunctionType.h"
@@ -629,16 +630,25 @@ void DAGBuilder::Leave(const ast::Filename&) {}
 
 bool DAGBuilder::Enter(const ast::FileList& l)
 {
-	SharedPtrVec<Value> files;
-
 	assert(getNamedValue(ast::Subdirectory));
-	string subdir = getNamedValue(ast::Subdirectory)->str();
+	const string subdir = getNamedValue(ast::Subdirectory)->str();
+
+	ValueMap& scope = EnterScope("files");
+	SharedPtrVec<Value> files;
 
 	for (ConstPtr<ast::Argument>& arg : l.arguments())
 	{
 		const string name = arg->getName().name();
 		if (name == ast::Subdirectory)
-			subdir = eval(arg->getValue())->str();
+		{
+			const string subsubdir = eval(arg->getValue())->str();
+			const string completeSubdir = JoinPath(subdir, subsubdir);
+
+			scope[name].reset(
+				new String(completeSubdir, ctx_.stringType(),
+				           arg->getValue().source())
+			);
+		}
 
 		else
 			throw SemanticException("unexpected argument",
@@ -646,15 +656,9 @@ bool DAGBuilder::Enter(const ast::FileList& l)
 	}
 
 	for (ConstPtr<ast::Filename>& file : l)
-	{
-		auto f = dynamic_pointer_cast<File>(eval(*file));
-		assert(f);
+		files.push_back(dynamic_pointer_cast<File>(eval(*file)));
 
-		if (not subdir.empty())
-			f->prependSubdirectory(subdir);
-
-		files.push_back(f);
-	}
+	ExitScope();
 
 	currentValue.emplace(List::of(files, l.source(), ctx_));
 
