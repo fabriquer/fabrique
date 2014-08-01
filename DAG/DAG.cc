@@ -651,7 +651,7 @@ bool DAGBuilder::Enter(const ast::FileList& l)
 		assert(f);
 
 		if (not subdir.empty())
-			f->setSubdirectory(subdir);
+			f->prependSubdirectory(subdir);
 
 		files.push_back(f);
 	}

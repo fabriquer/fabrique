@@ -65,7 +65,7 @@ public:
 	//! Absolute path to the directory this file is in.
 	std::string directory() const;
 	std::string subdirectory() const { return subdirectory_; }
-	void setSubdirectory(std::string subdir) { subdirectory_ = subdir; }
+	void appendSubdirectory(std::string subdir);
 
 	//! Name a file with my name + a suffix.
 	virtual ValuePtr Add(ValuePtr&) const override;
