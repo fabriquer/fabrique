@@ -35,6 +35,7 @@
 #include "AST/Value.h"
 #include "AST/Visitor.h"
 #include "Support/Bytestream.h"
+#include "Support/exceptions.h"
 #include "Types/Type.h"
 
 #include <cassert>
@@ -111,7 +112,10 @@ void Scope::Register(const Identifier& id, const Expression *e)
 		<< "\n"
 		;
 
-	assert(symbols_.find(id.name()) == symbols_.end());
+	if (symbols_.find(id.name()) != symbols_.end())
+		throw SyntaxError("name '" + id.name() + "'already defined",
+		                  id.source());
+
 	symbols_[id.name()] = e;
 }
 
