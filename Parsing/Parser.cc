@@ -81,7 +81,7 @@ UniqPtr<Scope> Parser::ParseDefinitions(const std::vector<string>& definitions)
 
 		for (UniqPtr<ast::Value>& value : definitionTree->TakeValues())
 		{
-			if (value->name().name() == "args")
+			if (value->name().name() == ast::Arguments)
 				continue;
 
 			Bytestream::Debug("parser.cli.defines")
@@ -133,7 +133,7 @@ UniqPtr<Scope> Parser::ParseFile(std::istream& input, UniqPtr<Scope>& args,
 	// Define a structure containing import() or command-line arguments.
 	EnterScope(std::move(*args));
 	UniqPtr<Expression> argStruct(StructInstantiation(openedFrom));
-	Builtin("args", argStruct, openedFrom);
+	Builtin(ast::Arguments, argStruct, openedFrom);
 
 	int result = yyparse(this);
 

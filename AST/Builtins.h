@@ -38,6 +38,7 @@
 namespace fabrique {
 namespace ast {
 
+static const char Arguments[] = "args";
 static const char MaybeExists[] = "exists";
 static const char MaybeValue[] = "value";
 static const char Subdirectory[] = "subdir";
