@@ -53,6 +53,8 @@ class File;
 class Rule : public Callable, public Value
 {
 public:
+	static const std::string& RegenerationRuleName();
+
 	static Rule* Create(std::string name, std::string command,
 	                    const ValueMap& arguments,
 	                    const SharedPtrVec<Parameter>& parameters,

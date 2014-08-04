@@ -1203,9 +1203,6 @@ ValuePtr DAGBuilder::eval(const ast::Expression& e)
 void DAGBuilder::AddRegeneration(const Arguments& regenArgs,
                                  const vector<string>& inputFiles, string outputFile)
 {
-	const string Name = "_fabrique_regenerate";
-	const string Command = "fab" + Arguments::str(regenArgs) + " ${rootInput}";
-
 	shared_ptr<Value> Nothing;
 	const SourceRange& Nowhere = SourceRange::None();
 
@@ -1226,6 +1223,9 @@ void DAGBuilder::AddRegeneration(const Arguments& regenArgs,
 	params.emplace_back(new Parameter("rootInput", inputFileType, Nothing));
 	params.emplace_back(new Parameter("otherInputs", inputType, Nothing));
 	params.emplace_back(new Parameter("output", outputType, Nothing));
+
+	const string& Name { Rule::RegenerationRuleName() };
+	const string Command { "fab" + Arguments::str(regenArgs) + " ${rootInput}" };
 
 	shared_ptr<Rule> rule(Rule::Create(Name, Command, ruleArgs, params, buildType));
 	rules_[Name] = rule;

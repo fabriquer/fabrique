@@ -40,6 +40,12 @@ using namespace fabrique::dag;
 using std::string;
 
 
+const string& Rule::RegenerationRuleName()
+{
+	const string& name = *new string("_fabrique_regenerate");
+	return name;
+}
+
 Rule* Rule::Create(string name, string command, const ValueMap& arguments,
                    const SharedPtrVec<Parameter>& parameters,
                    const Type& t, const SourceRange& location)
