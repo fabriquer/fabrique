@@ -1,5 +1,5 @@
 #
-# Generated at Fri  1 Aug 2014 16:21:55 NDT by regenerate-manifest.sh
+# Generated at Mon  4 Aug 2014 10:51:17 NDT by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -108,6 +108,7 @@ all_files = files(
 ./Parsing/maybe.fab
 ./Parsing/modules.fab
 ./Parsing/multiple-definition.fab
+./Parsing/not-a-struct.fab
 ./Parsing/operators.fab
 ./Parsing/positional-keyword-after-keyword.fab
 ./Parsing/scope-mismatch.fab

@@ -333,10 +333,20 @@ FieldAccess* Parser::FieldAccess(UniqPtr<Expression>& structure,
 	if (not structure or not field)
 		return nullptr;
 
-	const Scope& scope =
-		dynamic_cast<const HasScope&>(structure->definition()).scope();
+	const Expression& base = structure->definition();
+	const Expression *e;
 
-	const Expression *e = scope.Lookup(*field);
+	try
+	{
+		const Scope& scope = dynamic_cast<const HasScope&>(base).scope();
+		e = scope.Lookup(*field);
+	}
+	catch (std::bad_cast&)
+	{
+		throw SemanticException("not a structure", structure->source());
+	}
+
+
 	if (not e)
 		throw SemanticException("no such field", field->source());
 

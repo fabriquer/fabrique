@@ -1,0 +1,12 @@
+#
+# RUN: fab --parse-only --print-ast %s 2> %t || true
+# RUN: FileCheck %s -input-file %t
+#
+
+str:string = 'Hello, world!';
+
+# CHECK: {{.*}}/not-a-struct.fab:[[LINE:[0-9]+]]:7: error: not a structure
+# CHECK:      [[LINE]]
+# CHECK:      foo = str.some_field;
+# CHECK-NEXT:       ^~~
+foo = str.some_field;
