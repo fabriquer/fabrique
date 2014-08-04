@@ -149,6 +149,14 @@ void NinjaBackend::Process(const dag::DAG& dag, Bytestream& out)
 			<< Bytestream::Reset << "\n"
 			;
 
+		if (rule.name() == Rule::RegenerationRuleName())
+			out
+				<< Bytestream::Definition << "  generator"
+				<< Bytestream::Operator << " = "
+				<< Bytestream::Literal << "true"
+				<< Bytestream::Reset << "\n"
+				;
+
 		for (auto& a : rule.arguments())
 			out
 				<< Bytestream::Definition << "  " << a.first
