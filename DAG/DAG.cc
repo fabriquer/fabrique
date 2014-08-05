@@ -124,13 +124,10 @@ void DebugNewDefinition(const ValueMap& scope, string name)
 	dbg
 		<< Bytestream::Action << "defined "
 		<< Bytestream::Literal << "'" << name << "'"
-		<< Bytestream::Operator << " =>"
+		<< Bytestream::Operator << " = "
+		<< Bytestream::Reset << *scope.find(name)->second
+		<< Bytestream::Reset << "\n"
 		;
-
-	for (auto& i : scope)
-		dbg << Bytestream::Definition << " " << i.first;
-
-	dbg << Bytestream::Reset << "\n";
 }
 
 }
@@ -447,6 +444,7 @@ void DAGBuilder::Leave(const ast::BoolLiteral&) {}
 bool DAGBuilder::Enter(const ast::Call&) { return false; }
 void DAGBuilder::Leave(const ast::Call& call)
 {
+	static Bytestream& debug = Bytestream::Debug("dag.call");
 	ValuePtr value = eval(call.target());
 
 	auto target = dynamic_pointer_cast<Callable>(value);
@@ -462,16 +460,33 @@ void DAGBuilder::Leave(const ast::Call& call)
 			throw SemanticException(
 				"invalid parameter", a->source());
 
+	debug
+		<< Bytestream::Action << "calling "
+		<< Bytestream::Reset << call.target()
+		<< Bytestream::Reset << " with arguments:\n"
+		;
+
 	ValueMap args;
 	StringMap<SourceRange> argLocations;
 	for (auto& i : target->NameArguments(call.arguments()))
 	{
-		args[i.first] = std::move(eval(*i.second));
-		argLocations.emplace(i.first, i.second->source());
+		const string name = i.first;
+		const ast::Argument& arg = *i.second;
+		ValuePtr argValue { eval(arg) };
+
+		debug
+			<< Bytestream::Operator << " - "
+			<< Bytestream::Reset << arg
+			<< Bytestream::Operator << " = "
+			<< *argValue
+			<< Bytestream::Reset << "\n"
+			;
+
+		argLocations.emplace(name, arg.source());
+		args[name] = std::move(argValue);
 	}
 
 	target->CheckArguments(args, argLocations, call.source());
-
 
 	//
 	// The target must be an action or a function.
