@@ -286,6 +286,8 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out, ErrorReport::Rep
 		//
 		// Build the command to be run (substitute $variables).
 		//
+		string command = formatter.Format(rule);
+
 		std::function<string (const shared_ptr<File>&)> shortName =
 			[](const shared_ptr<File>& f) { return f->relativeName(); };
 
@@ -300,7 +302,6 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out, ErrorReport::Rep
 			  + " ]"
 			;
 
-		string command = formatter.Format(rule);
 		for (auto& j : build.arguments())
 		{
 			const string name = j.first;
