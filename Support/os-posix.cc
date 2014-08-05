@@ -66,6 +66,20 @@ private:
 	PosixError(const PosixError&) = delete;
 };
 
+
+bool FileExists(const string& filename, bool directory = false)
+{
+	struct stat s;
+	if (stat(filename.c_str(), &s) == 0)
+		return directory ? S_ISDIR(s.st_mode) : S_ISREG(s.st_mode);
+
+	if (errno == ENOENT)
+		return false;
+
+	throw PosixError("error examining " + filename);
+}
+
+
 #if defined(__DARWIN_UNIX03)
 /**
  * A Darwin-specific wrapper around dirname(3) that accepts a const char*
@@ -78,19 +92,6 @@ static const char* dirname(const char *filename)
 }
 #endif
 
-}
-
-
-bool fabrique::FileExists(const string& filename, bool directory)
-{
-	struct stat s;
-	if (stat(filename.c_str(), &s) == 0)
-		return directory ? S_ISDIR(s.st_mode) : S_ISREG(s.st_mode);
-
-	if (errno == ENOENT)
-		return false;
-
-	throw PosixError("error examining " + filename);
 }
 
 
@@ -219,4 +220,15 @@ string fabrique::JoinPath(const string& x, const string& y)
 string fabrique::JoinPath(const std::vector<string>& components)
 {
 	return join(components, "/");
+}
+
+
+bool fabrique::PathIsDirectory(string path)
+{
+	return FileExists(path, true);
+}
+
+bool fabrique::PathIsFile(string path)
+{
+	return FileExists(path, false);
 }

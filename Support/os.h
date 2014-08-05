@@ -37,7 +37,6 @@
 
 namespace fabrique {
 
-bool FileExists(const std::string& filename, bool directory = false);
 bool PathIsAbsolute(const std::string&);
 
 //! Find the absolute version of a directory, optionally creating it.
@@ -64,6 +63,12 @@ std::string JoinPath(const std::string&, const std::string&);
 
 //! Join an arbitrary number of path components (directories and maybe a filename).
 std::string JoinPath(const std::vector<std::string>&);
+
+//! Does the named path exist, and is it a directory?
+bool PathIsDirectory(std::string);
+
+//! Does the named path exist, and is it a regular file?
+bool PathIsFile(std::string);
 
 }
 
