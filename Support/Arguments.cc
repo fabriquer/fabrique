@@ -78,6 +78,8 @@ const static char* formatStrings[][2] = {
 	{ "fab", "Fabrique file (possibly modified/optimised)" },
 	{ "dot", "Graphviz .dot graph format" },
 	{ "make", "POSIX make (no BSD or GNU extensions)" },
+	{ "bmake", "BSD make" },
+	{ "gmake", "GNU make" },
 	{ "ninja", "the Ninja build system (http://martine.github.io/ninja)" },
 	{ "sh", "Bourne shell" },
 };

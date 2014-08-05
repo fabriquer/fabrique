@@ -134,7 +134,16 @@ int main(int argc, char *argv[]) {
 			backend.reset(new backend::NullBackend());
 
 		else if (args->format == "make")
-			backend.reset(backend::MakeBackend::Create());
+			backend.reset(backend::MakeBackend::Create(
+				backend::MakeBackend::Flavour::POSIX));
+
+		else if (args->format == "bmake")
+			backend.reset(backend::MakeBackend::Create(
+				backend::MakeBackend::Flavour::BSD));
+
+		else if (args->format == "gmake")
+			backend.reset(backend::MakeBackend::Create(
+				backend::MakeBackend::Flavour::GNU));
 
 		else if (args->format == "ninja")
 			backend.reset(backend::NinjaBackend::Create());

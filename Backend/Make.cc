@@ -84,15 +84,31 @@ public:
 
 
 
-MakeBackend* MakeBackend::Create()
+MakeBackend* MakeBackend::Create(Flavour flavour)
 {
-	return new MakeBackend;
+	return new MakeBackend(flavour);
 }
 
 
-MakeBackend::MakeBackend()
-	: indent_("\t")
+MakeBackend::MakeBackend(Flavour flavour)
+	: flavour_(flavour), indent_("\t")
 {
+}
+
+
+string MakeBackend::DefaultFilename() const
+{
+	switch (flavour_)
+	{
+		case Flavour::POSIX:
+			return "Makefile";
+
+		case Flavour::BSD:
+			return "BSDMakefile";
+
+		case Flavour::GNU:
+			return "GNUMakefile";
+	}
 }
 
 

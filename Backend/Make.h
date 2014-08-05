@@ -51,13 +51,24 @@ namespace backend {
 class MakeBackend : public Backend
 {
 public:
-	static MakeBackend* Create();
+	enum class Flavour
+	{
+		POSIX,
+		BSD,
+		GNU,
+	};
 
-	std::string DefaultFilename() const { return "Makefile"; }
+	static MakeBackend* Create(Flavour);
+
+	Flavour flavour() const { return flavour_; }
+
+	std::string DefaultFilename() const;
 	void Process(const dag::DAG&, Bytestream&);
 
 private:
-	MakeBackend();
+	MakeBackend(Flavour);
+
+	const Flavour flavour_;
 	const std::string indent_;
 };
 
