@@ -104,10 +104,10 @@ string MakeBackend::DefaultFilename() const
 			return "Makefile";
 
 		case Flavour::BSD:
-			return "BSDMakefile";
+			return "BSDmakefile";
 
 		case Flavour::GNU:
-			return "GNUMakefile";
+			return "GNUmakefile";
 	}
 }
 

@@ -8,9 +8,9 @@
 #
 args=	
 asserts=	false
-buildroot=	/Volumes/Dev/fabrique/bootstrap/make
+buildroot=	.
 colour_output=	true
-common_cxx_flags=	-std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor
+common_cxx_flags=	-std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor
 cxx=	
 cxx_srcs=	${srcroot}/driver.cc ${srcroot}/AST/Action.cc ${srcroot}/AST/Argument.cc ${srcroot}/AST/ASTDump.cc ${srcroot}/AST/BinaryOperation.cc ${srcroot}/AST/Call.cc ${srcroot}/AST/CompoundExpr.cc ${srcroot}/AST/Conditional.cc ${srcroot}/AST/Expression.cc ${srcroot}/AST/FieldAccess.cc ${srcroot}/AST/FieldQuery.cc ${srcroot}/AST/Filename.cc ${srcroot}/AST/FileList.cc ${srcroot}/AST/Foreach.cc ${srcroot}/AST/Function.cc ${srcroot}/AST/HasParameters.cc ${srcroot}/AST/HasScope.cc ${srcroot}/AST/Identifier.cc ${srcroot}/AST/Import.cc ${srcroot}/AST/List.cc ${srcroot}/AST/Mapping.cc ${srcroot}/AST/Node.cc ${srcroot}/AST/Parameter.cc ${srcroot}/AST/Scope.cc ${srcroot}/AST/SomeValue.cc ${srcroot}/AST/StructInstantiation.cc ${srcroot}/AST/SymbolReference.cc ${srcroot}/AST/UnaryOperation.cc ${srcroot}/AST/Value.cc ${srcroot}/AST/Visitor.cc ${srcroot}/AST/literals.cc ${srcroot}/Backend/Backend.cc ${srcroot}/Backend/Dot.cc ${srcroot}/Backend/Make.cc ${srcroot}/Backend/Ninja.cc ${srcroot}/Backend/Null.cc ${srcroot}/DAG/Build.cc ${srcroot}/DAG/Callable.cc ${srcroot}/DAG/DAG.cc ${srcroot}/DAG/File.cc ${srcroot}/DAG/Formatter.cc ${srcroot}/DAG/Function.cc ${srcroot}/DAG/List.cc ${srcroot}/DAG/Parameter.cc ${srcroot}/DAG/Primitive.cc ${srcroot}/DAG/Rule.cc ${srcroot}/DAG/Structure.cc ${srcroot}/DAG/Target.cc ${srcroot}/DAG/UndefinedValueException.cc ${srcroot}/DAG/Value.cc ${srcroot}/DAG/Visitor.cc ${srcroot}/Parsing/Lexer.cc ${srcroot}/Parsing/Parser.cc ${srcroot}/Parsing/Token.cc ${srcroot}/Support/Arguments.cc ${srcroot}/Support/Bytestream.cc ${srcroot}/Support/ErrorReport.cc ${srcroot}/Support/Join.cc ${srcroot}/Support/Printable.cc ${srcroot}/Support/SourceLocation.cc ${srcroot}/Support/Visitable.cc ${srcroot}/Support/exceptions.cc ${srcroot}/Support/os-posix.cc ${srcroot}/Types/BooleanType.cc ${srcroot}/Types/FileType.cc ${srcroot}/Types/FunctionType.cc ${srcroot}/Types/IntegerType.cc ${srcroot}/Types/MaybeType.cc ${srcroot}/Types/OptionallyTyped.cc ${srcroot}/Types/SequenceType.cc ${srcroot}/Types/StringType.cc ${srcroot}/Types/StructureType.cc ${srcroot}/Types/Type.cc ${srcroot}/Types/TypeContext.cc ${srcroot}/Types/TypeError.cc ${srcroot}/Types/Typed.cc
 cxxoptions=	-std=c++11
@@ -18,18 +18,18 @@ dbgflags=	-O2 -D NDEBUG
 debug=	false
 debug_and_asserts=	false
 fab_executable=	${buildroot}/fab
-generated_cxx_flags=	-std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Wno-deprecated-register
-includes=	-I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make
+generated_cxx_flags=	-std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Wno-deprecated-register
+includes=	-I ${srcroot} -I ${buildroot}
 lex=	
 lexer_src=	${buildroot}/Parsing/fab.lex.cc
 lit=	
-normal_cxx_flags=	-std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded
+normal_cxx_flags=	-std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded
 objects=	${buildroot}/Parsing/fab.lex.cc.o ${buildroot}/Parsing/fab.yacc.cc.o ${buildroot}/driver.cc.o ${buildroot}/AST/Action.cc.o ${buildroot}/AST/Argument.cc.o ${buildroot}/AST/ASTDump.cc.o ${buildroot}/AST/BinaryOperation.cc.o ${buildroot}/AST/Call.cc.o ${buildroot}/AST/CompoundExpr.cc.o ${buildroot}/AST/Conditional.cc.o ${buildroot}/AST/Expression.cc.o ${buildroot}/AST/FieldAccess.cc.o ${buildroot}/AST/FieldQuery.cc.o ${buildroot}/AST/Filename.cc.o ${buildroot}/AST/FileList.cc.o ${buildroot}/AST/Foreach.cc.o ${buildroot}/AST/Function.cc.o ${buildroot}/AST/HasParameters.cc.o ${buildroot}/AST/HasScope.cc.o ${buildroot}/AST/Identifier.cc.o ${buildroot}/AST/Import.cc.o ${buildroot}/AST/List.cc.o ${buildroot}/AST/Mapping.cc.o ${buildroot}/AST/Node.cc.o ${buildroot}/AST/Parameter.cc.o ${buildroot}/AST/Scope.cc.o ${buildroot}/AST/SomeValue.cc.o ${buildroot}/AST/StructInstantiation.cc.o ${buildroot}/AST/SymbolReference.cc.o ${buildroot}/AST/UnaryOperation.cc.o ${buildroot}/AST/Value.cc.o ${buildroot}/AST/Visitor.cc.o ${buildroot}/AST/literals.cc.o ${buildroot}/Backend/Backend.cc.o ${buildroot}/Backend/Dot.cc.o ${buildroot}/Backend/Make.cc.o ${buildroot}/Backend/Ninja.cc.o ${buildroot}/Backend/Null.cc.o ${buildroot}/DAG/Build.cc.o ${buildroot}/DAG/Callable.cc.o ${buildroot}/DAG/DAG.cc.o ${buildroot}/DAG/File.cc.o ${buildroot}/DAG/Formatter.cc.o ${buildroot}/DAG/Function.cc.o ${buildroot}/DAG/List.cc.o ${buildroot}/DAG/Parameter.cc.o ${buildroot}/DAG/Primitive.cc.o ${buildroot}/DAG/Rule.cc.o ${buildroot}/DAG/Structure.cc.o ${buildroot}/DAG/Target.cc.o ${buildroot}/DAG/UndefinedValueException.cc.o ${buildroot}/DAG/Value.cc.o ${buildroot}/DAG/Visitor.cc.o ${buildroot}/Parsing/Lexer.cc.o ${buildroot}/Parsing/Parser.cc.o ${buildroot}/Parsing/Token.cc.o ${buildroot}/Support/Arguments.cc.o ${buildroot}/Support/Bytestream.cc.o ${buildroot}/Support/ErrorReport.cc.o ${buildroot}/Support/Join.cc.o ${buildroot}/Support/Printable.cc.o ${buildroot}/Support/SourceLocation.cc.o ${buildroot}/Support/Visitable.cc.o ${buildroot}/Support/exceptions.cc.o ${buildroot}/Support/os-posix.cc.o ${buildroot}/Types/BooleanType.cc.o ${buildroot}/Types/FileType.cc.o ${buildroot}/Types/FunctionType.cc.o ${buildroot}/Types/IntegerType.cc.o ${buildroot}/Types/MaybeType.cc.o ${buildroot}/Types/OptionallyTyped.cc.o ${buildroot}/Types/SequenceType.cc.o ${buildroot}/Types/StringType.cc.o ${buildroot}/Types/StructureType.cc.o ${buildroot}/Types/Type.cc.o ${buildroot}/Types/TypeContext.cc.o ${buildroot}/Types/TypeError.cc.o ${buildroot}/Types/Typed.cc.o
 parser_src=	${buildroot}/Parsing/fab.yacc.cc
-srcroot=	/Volumes/Dev/fabrique
+srcroot=	../..
 subdir=	
 test=	${buildroot}/lit-test-results/report.txt
-vendor=	-isystem /Volumes/Dev/fabrique/vendor
+vendor=	-isystem ${srcroot}/vendor
 warnings=	-Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded
 yacc=	
 
@@ -39,12 +39,12 @@ objects : ${buildroot}/Parsing/fab.lex.cc.o ${buildroot}/Parsing/fab.yacc.cc.o $
 lexer_src : ${buildroot}/Parsing/fab.lex.cc
 parser_src : ${buildroot}/Parsing/fab.yacc.cc
 cxx_srcs : ${srcroot}/driver.cc ${srcroot}/AST/Action.cc ${srcroot}/AST/Argument.cc ${srcroot}/AST/ASTDump.cc ${srcroot}/AST/BinaryOperation.cc ${srcroot}/AST/Call.cc ${srcroot}/AST/CompoundExpr.cc ${srcroot}/AST/Conditional.cc ${srcroot}/AST/Expression.cc ${srcroot}/AST/FieldAccess.cc ${srcroot}/AST/FieldQuery.cc ${srcroot}/AST/Filename.cc ${srcroot}/AST/FileList.cc ${srcroot}/AST/Foreach.cc ${srcroot}/AST/Function.cc ${srcroot}/AST/HasParameters.cc ${srcroot}/AST/HasScope.cc ${srcroot}/AST/Identifier.cc ${srcroot}/AST/Import.cc ${srcroot}/AST/List.cc ${srcroot}/AST/Mapping.cc ${srcroot}/AST/Node.cc ${srcroot}/AST/Parameter.cc ${srcroot}/AST/Scope.cc ${srcroot}/AST/SomeValue.cc ${srcroot}/AST/StructInstantiation.cc ${srcroot}/AST/SymbolReference.cc ${srcroot}/AST/UnaryOperation.cc ${srcroot}/AST/Value.cc ${srcroot}/AST/Visitor.cc ${srcroot}/AST/literals.cc ${srcroot}/Backend/Backend.cc ${srcroot}/Backend/Dot.cc ${srcroot}/Backend/Make.cc ${srcroot}/Backend/Ninja.cc ${srcroot}/Backend/Null.cc ${srcroot}/DAG/Build.cc ${srcroot}/DAG/Callable.cc ${srcroot}/DAG/DAG.cc ${srcroot}/DAG/File.cc ${srcroot}/DAG/Formatter.cc ${srcroot}/DAG/Function.cc ${srcroot}/DAG/List.cc ${srcroot}/DAG/Parameter.cc ${srcroot}/DAG/Primitive.cc ${srcroot}/DAG/Rule.cc ${srcroot}/DAG/Structure.cc ${srcroot}/DAG/Target.cc ${srcroot}/DAG/UndefinedValueException.cc ${srcroot}/DAG/Value.cc ${srcroot}/DAG/Visitor.cc ${srcroot}/Parsing/Lexer.cc ${srcroot}/Parsing/Parser.cc ${srcroot}/Parsing/Token.cc ${srcroot}/Support/Arguments.cc ${srcroot}/Support/Bytestream.cc ${srcroot}/Support/ErrorReport.cc ${srcroot}/Support/Join.cc ${srcroot}/Support/Printable.cc ${srcroot}/Support/SourceLocation.cc ${srcroot}/Support/Visitable.cc ${srcroot}/Support/exceptions.cc ${srcroot}/Support/os-posix.cc ${srcroot}/Types/BooleanType.cc ${srcroot}/Types/FileType.cc ${srcroot}/Types/FunctionType.cc ${srcroot}/Types/IntegerType.cc ${srcroot}/Types/MaybeType.cc ${srcroot}/Types/OptionallyTyped.cc ${srcroot}/Types/SequenceType.cc ${srcroot}/Types/StringType.cc ${srcroot}/Types/StructureType.cc ${srcroot}/Types/Type.cc ${srcroot}/Types/TypeContext.cc ${srcroot}/Types/TypeError.cc ${srcroot}/Types/Typed.cc
-generated_cxx_flags : -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Wno-deprecated-register
-normal_cxx_flags : -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded
+generated_cxx_flags : -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Wno-deprecated-register
+normal_cxx_flags : -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded
 warnings : -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded
-common_cxx_flags : -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor
-vendor : -isystem /Volumes/Dev/fabrique/vendor
-includes : -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make
+common_cxx_flags : -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor
+vendor : -isystem ${srcroot}/vendor
+includes : -I ${srcroot} -I ${buildroot}
 dbgflags : -O2 -D NDEBUG
 cxxoptions : -std=c++11
 yacc : 
@@ -57,8 +57,8 @@ asserts : false
 debug : false
 args : 
 subdir : 
-srcroot : /Volumes/Dev/fabrique
-buildroot : /Volumes/Dev/fabrique/bootstrap/make
+srcroot : ${srcroot}
+buildroot : ${buildroot}
 
 clean :
 	echo "cleaning..."
@@ -185,392 +185,392 @@ ${buildroot}/Parsing/fab.lex.cc ${buildroot}/Parsing/fab.lex.h : ${srcroot}/Pars
 
 ${buildroot}/Parsing/fab.lex.cc.o : ${buildroot}/Parsing/fab.yacc.cc ${buildroot}/Parsing/fab.lex.cc
 	echo "Compiling ${buildroot}/Parsing/fab.lex.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Wno-deprecated-register -fcolor-diagnostics -MMD -MF ${buildroot}/Parsing/fab.lex.cc.o.d ${buildroot}/Parsing/fab.lex.cc -o ${buildroot}/Parsing/fab.lex.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Wno-deprecated-register -fcolor-diagnostics -MMD -MF ${buildroot}/Parsing/fab.lex.cc.o.d ${buildroot}/Parsing/fab.lex.cc -o ${buildroot}/Parsing/fab.lex.cc.o
 -include ${buildroot}/Parsing/fab.lex.cc.o.d
 
 ${buildroot}/Parsing/fab.yacc.cc.o : ${buildroot}/Parsing/fab.yacc.cc
 	echo "Compiling ${buildroot}/Parsing/fab.yacc.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Wno-deprecated-register -fcolor-diagnostics -MMD -MF ${buildroot}/Parsing/fab.yacc.cc.o.d ${buildroot}/Parsing/fab.yacc.cc -o ${buildroot}/Parsing/fab.yacc.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Wno-deprecated-register -fcolor-diagnostics -MMD -MF ${buildroot}/Parsing/fab.yacc.cc.o.d ${buildroot}/Parsing/fab.yacc.cc -o ${buildroot}/Parsing/fab.yacc.cc.o
 -include ${buildroot}/Parsing/fab.yacc.cc.o.d
 
 ${buildroot}/driver.cc.o : ${srcroot}/driver.cc
 	echo "Compiling ${buildroot}/driver.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/driver.cc.o.d ${srcroot}/driver.cc -o ${buildroot}/driver.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/driver.cc.o.d ${srcroot}/driver.cc -o ${buildroot}/driver.cc.o
 -include ${buildroot}/driver.cc.o.d
 
 ${buildroot}/AST/Action.cc.o : ${srcroot}/AST/Action.cc
 	echo "Compiling ${buildroot}/AST/Action.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Action.cc.o.d ${srcroot}/AST/Action.cc -o ${buildroot}/AST/Action.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Action.cc.o.d ${srcroot}/AST/Action.cc -o ${buildroot}/AST/Action.cc.o
 -include ${buildroot}/AST/Action.cc.o.d
 
 ${buildroot}/AST/Argument.cc.o : ${srcroot}/AST/Argument.cc
 	echo "Compiling ${buildroot}/AST/Argument.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Argument.cc.o.d ${srcroot}/AST/Argument.cc -o ${buildroot}/AST/Argument.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Argument.cc.o.d ${srcroot}/AST/Argument.cc -o ${buildroot}/AST/Argument.cc.o
 -include ${buildroot}/AST/Argument.cc.o.d
 
 ${buildroot}/AST/ASTDump.cc.o : ${srcroot}/AST/ASTDump.cc
 	echo "Compiling ${buildroot}/AST/ASTDump.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/ASTDump.cc.o.d ${srcroot}/AST/ASTDump.cc -o ${buildroot}/AST/ASTDump.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/ASTDump.cc.o.d ${srcroot}/AST/ASTDump.cc -o ${buildroot}/AST/ASTDump.cc.o
 -include ${buildroot}/AST/ASTDump.cc.o.d
 
 ${buildroot}/AST/BinaryOperation.cc.o : ${srcroot}/AST/BinaryOperation.cc
 	echo "Compiling ${buildroot}/AST/BinaryOperation.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/BinaryOperation.cc.o.d ${srcroot}/AST/BinaryOperation.cc -o ${buildroot}/AST/BinaryOperation.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/BinaryOperation.cc.o.d ${srcroot}/AST/BinaryOperation.cc -o ${buildroot}/AST/BinaryOperation.cc.o
 -include ${buildroot}/AST/BinaryOperation.cc.o.d
 
 ${buildroot}/AST/Call.cc.o : ${srcroot}/AST/Call.cc
 	echo "Compiling ${buildroot}/AST/Call.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Call.cc.o.d ${srcroot}/AST/Call.cc -o ${buildroot}/AST/Call.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Call.cc.o.d ${srcroot}/AST/Call.cc -o ${buildroot}/AST/Call.cc.o
 -include ${buildroot}/AST/Call.cc.o.d
 
 ${buildroot}/AST/CompoundExpr.cc.o : ${srcroot}/AST/CompoundExpr.cc
 	echo "Compiling ${buildroot}/AST/CompoundExpr.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/CompoundExpr.cc.o.d ${srcroot}/AST/CompoundExpr.cc -o ${buildroot}/AST/CompoundExpr.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/CompoundExpr.cc.o.d ${srcroot}/AST/CompoundExpr.cc -o ${buildroot}/AST/CompoundExpr.cc.o
 -include ${buildroot}/AST/CompoundExpr.cc.o.d
 
 ${buildroot}/AST/Conditional.cc.o : ${srcroot}/AST/Conditional.cc
 	echo "Compiling ${buildroot}/AST/Conditional.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Conditional.cc.o.d ${srcroot}/AST/Conditional.cc -o ${buildroot}/AST/Conditional.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Conditional.cc.o.d ${srcroot}/AST/Conditional.cc -o ${buildroot}/AST/Conditional.cc.o
 -include ${buildroot}/AST/Conditional.cc.o.d
 
 ${buildroot}/AST/Expression.cc.o : ${srcroot}/AST/Expression.cc
 	echo "Compiling ${buildroot}/AST/Expression.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Expression.cc.o.d ${srcroot}/AST/Expression.cc -o ${buildroot}/AST/Expression.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Expression.cc.o.d ${srcroot}/AST/Expression.cc -o ${buildroot}/AST/Expression.cc.o
 -include ${buildroot}/AST/Expression.cc.o.d
 
 ${buildroot}/AST/FieldAccess.cc.o : ${srcroot}/AST/FieldAccess.cc
 	echo "Compiling ${buildroot}/AST/FieldAccess.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/FieldAccess.cc.o.d ${srcroot}/AST/FieldAccess.cc -o ${buildroot}/AST/FieldAccess.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/FieldAccess.cc.o.d ${srcroot}/AST/FieldAccess.cc -o ${buildroot}/AST/FieldAccess.cc.o
 -include ${buildroot}/AST/FieldAccess.cc.o.d
 
 ${buildroot}/AST/FieldQuery.cc.o : ${srcroot}/AST/FieldQuery.cc
 	echo "Compiling ${buildroot}/AST/FieldQuery.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/FieldQuery.cc.o.d ${srcroot}/AST/FieldQuery.cc -o ${buildroot}/AST/FieldQuery.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/FieldQuery.cc.o.d ${srcroot}/AST/FieldQuery.cc -o ${buildroot}/AST/FieldQuery.cc.o
 -include ${buildroot}/AST/FieldQuery.cc.o.d
 
 ${buildroot}/AST/Filename.cc.o : ${srcroot}/AST/Filename.cc
 	echo "Compiling ${buildroot}/AST/Filename.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Filename.cc.o.d ${srcroot}/AST/Filename.cc -o ${buildroot}/AST/Filename.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Filename.cc.o.d ${srcroot}/AST/Filename.cc -o ${buildroot}/AST/Filename.cc.o
 -include ${buildroot}/AST/Filename.cc.o.d
 
 ${buildroot}/AST/FileList.cc.o : ${srcroot}/AST/FileList.cc
 	echo "Compiling ${buildroot}/AST/FileList.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/FileList.cc.o.d ${srcroot}/AST/FileList.cc -o ${buildroot}/AST/FileList.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/FileList.cc.o.d ${srcroot}/AST/FileList.cc -o ${buildroot}/AST/FileList.cc.o
 -include ${buildroot}/AST/FileList.cc.o.d
 
 ${buildroot}/AST/Foreach.cc.o : ${srcroot}/AST/Foreach.cc
 	echo "Compiling ${buildroot}/AST/Foreach.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Foreach.cc.o.d ${srcroot}/AST/Foreach.cc -o ${buildroot}/AST/Foreach.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Foreach.cc.o.d ${srcroot}/AST/Foreach.cc -o ${buildroot}/AST/Foreach.cc.o
 -include ${buildroot}/AST/Foreach.cc.o.d
 
 ${buildroot}/AST/Function.cc.o : ${srcroot}/AST/Function.cc
 	echo "Compiling ${buildroot}/AST/Function.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Function.cc.o.d ${srcroot}/AST/Function.cc -o ${buildroot}/AST/Function.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Function.cc.o.d ${srcroot}/AST/Function.cc -o ${buildroot}/AST/Function.cc.o
 -include ${buildroot}/AST/Function.cc.o.d
 
 ${buildroot}/AST/HasParameters.cc.o : ${srcroot}/AST/HasParameters.cc
 	echo "Compiling ${buildroot}/AST/HasParameters.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/HasParameters.cc.o.d ${srcroot}/AST/HasParameters.cc -o ${buildroot}/AST/HasParameters.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/HasParameters.cc.o.d ${srcroot}/AST/HasParameters.cc -o ${buildroot}/AST/HasParameters.cc.o
 -include ${buildroot}/AST/HasParameters.cc.o.d
 
 ${buildroot}/AST/HasScope.cc.o : ${srcroot}/AST/HasScope.cc
 	echo "Compiling ${buildroot}/AST/HasScope.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/HasScope.cc.o.d ${srcroot}/AST/HasScope.cc -o ${buildroot}/AST/HasScope.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/HasScope.cc.o.d ${srcroot}/AST/HasScope.cc -o ${buildroot}/AST/HasScope.cc.o
 -include ${buildroot}/AST/HasScope.cc.o.d
 
 ${buildroot}/AST/Identifier.cc.o : ${srcroot}/AST/Identifier.cc
 	echo "Compiling ${buildroot}/AST/Identifier.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Identifier.cc.o.d ${srcroot}/AST/Identifier.cc -o ${buildroot}/AST/Identifier.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Identifier.cc.o.d ${srcroot}/AST/Identifier.cc -o ${buildroot}/AST/Identifier.cc.o
 -include ${buildroot}/AST/Identifier.cc.o.d
 
 ${buildroot}/AST/Import.cc.o : ${srcroot}/AST/Import.cc
 	echo "Compiling ${buildroot}/AST/Import.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Import.cc.o.d ${srcroot}/AST/Import.cc -o ${buildroot}/AST/Import.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Import.cc.o.d ${srcroot}/AST/Import.cc -o ${buildroot}/AST/Import.cc.o
 -include ${buildroot}/AST/Import.cc.o.d
 
 ${buildroot}/AST/List.cc.o : ${srcroot}/AST/List.cc
 	echo "Compiling ${buildroot}/AST/List.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/List.cc.o.d ${srcroot}/AST/List.cc -o ${buildroot}/AST/List.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/List.cc.o.d ${srcroot}/AST/List.cc -o ${buildroot}/AST/List.cc.o
 -include ${buildroot}/AST/List.cc.o.d
 
 ${buildroot}/AST/Mapping.cc.o : ${srcroot}/AST/Mapping.cc
 	echo "Compiling ${buildroot}/AST/Mapping.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Mapping.cc.o.d ${srcroot}/AST/Mapping.cc -o ${buildroot}/AST/Mapping.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Mapping.cc.o.d ${srcroot}/AST/Mapping.cc -o ${buildroot}/AST/Mapping.cc.o
 -include ${buildroot}/AST/Mapping.cc.o.d
 
 ${buildroot}/AST/Node.cc.o : ${srcroot}/AST/Node.cc
 	echo "Compiling ${buildroot}/AST/Node.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Node.cc.o.d ${srcroot}/AST/Node.cc -o ${buildroot}/AST/Node.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Node.cc.o.d ${srcroot}/AST/Node.cc -o ${buildroot}/AST/Node.cc.o
 -include ${buildroot}/AST/Node.cc.o.d
 
 ${buildroot}/AST/Parameter.cc.o : ${srcroot}/AST/Parameter.cc
 	echo "Compiling ${buildroot}/AST/Parameter.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Parameter.cc.o.d ${srcroot}/AST/Parameter.cc -o ${buildroot}/AST/Parameter.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Parameter.cc.o.d ${srcroot}/AST/Parameter.cc -o ${buildroot}/AST/Parameter.cc.o
 -include ${buildroot}/AST/Parameter.cc.o.d
 
 ${buildroot}/AST/Scope.cc.o : ${srcroot}/AST/Scope.cc
 	echo "Compiling ${buildroot}/AST/Scope.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Scope.cc.o.d ${srcroot}/AST/Scope.cc -o ${buildroot}/AST/Scope.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Scope.cc.o.d ${srcroot}/AST/Scope.cc -o ${buildroot}/AST/Scope.cc.o
 -include ${buildroot}/AST/Scope.cc.o.d
 
 ${buildroot}/AST/SomeValue.cc.o : ${srcroot}/AST/SomeValue.cc
 	echo "Compiling ${buildroot}/AST/SomeValue.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/SomeValue.cc.o.d ${srcroot}/AST/SomeValue.cc -o ${buildroot}/AST/SomeValue.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/SomeValue.cc.o.d ${srcroot}/AST/SomeValue.cc -o ${buildroot}/AST/SomeValue.cc.o
 -include ${buildroot}/AST/SomeValue.cc.o.d
 
 ${buildroot}/AST/StructInstantiation.cc.o : ${srcroot}/AST/StructInstantiation.cc
 	echo "Compiling ${buildroot}/AST/StructInstantiation.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/StructInstantiation.cc.o.d ${srcroot}/AST/StructInstantiation.cc -o ${buildroot}/AST/StructInstantiation.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/StructInstantiation.cc.o.d ${srcroot}/AST/StructInstantiation.cc -o ${buildroot}/AST/StructInstantiation.cc.o
 -include ${buildroot}/AST/StructInstantiation.cc.o.d
 
 ${buildroot}/AST/SymbolReference.cc.o : ${srcroot}/AST/SymbolReference.cc
 	echo "Compiling ${buildroot}/AST/SymbolReference.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/SymbolReference.cc.o.d ${srcroot}/AST/SymbolReference.cc -o ${buildroot}/AST/SymbolReference.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/SymbolReference.cc.o.d ${srcroot}/AST/SymbolReference.cc -o ${buildroot}/AST/SymbolReference.cc.o
 -include ${buildroot}/AST/SymbolReference.cc.o.d
 
 ${buildroot}/AST/UnaryOperation.cc.o : ${srcroot}/AST/UnaryOperation.cc
 	echo "Compiling ${buildroot}/AST/UnaryOperation.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/UnaryOperation.cc.o.d ${srcroot}/AST/UnaryOperation.cc -o ${buildroot}/AST/UnaryOperation.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/UnaryOperation.cc.o.d ${srcroot}/AST/UnaryOperation.cc -o ${buildroot}/AST/UnaryOperation.cc.o
 -include ${buildroot}/AST/UnaryOperation.cc.o.d
 
 ${buildroot}/AST/Value.cc.o : ${srcroot}/AST/Value.cc
 	echo "Compiling ${buildroot}/AST/Value.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Value.cc.o.d ${srcroot}/AST/Value.cc -o ${buildroot}/AST/Value.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Value.cc.o.d ${srcroot}/AST/Value.cc -o ${buildroot}/AST/Value.cc.o
 -include ${buildroot}/AST/Value.cc.o.d
 
 ${buildroot}/AST/Visitor.cc.o : ${srcroot}/AST/Visitor.cc
 	echo "Compiling ${buildroot}/AST/Visitor.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Visitor.cc.o.d ${srcroot}/AST/Visitor.cc -o ${buildroot}/AST/Visitor.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Visitor.cc.o.d ${srcroot}/AST/Visitor.cc -o ${buildroot}/AST/Visitor.cc.o
 -include ${buildroot}/AST/Visitor.cc.o.d
 
 ${buildroot}/AST/literals.cc.o : ${srcroot}/AST/literals.cc
 	echo "Compiling ${buildroot}/AST/literals.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/literals.cc.o.d ${srcroot}/AST/literals.cc -o ${buildroot}/AST/literals.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/literals.cc.o.d ${srcroot}/AST/literals.cc -o ${buildroot}/AST/literals.cc.o
 -include ${buildroot}/AST/literals.cc.o.d
 
 ${buildroot}/Backend/Backend.cc.o : ${srcroot}/Backend/Backend.cc
 	echo "Compiling ${buildroot}/Backend/Backend.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Backend/Backend.cc.o.d ${srcroot}/Backend/Backend.cc -o ${buildroot}/Backend/Backend.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Backend/Backend.cc.o.d ${srcroot}/Backend/Backend.cc -o ${buildroot}/Backend/Backend.cc.o
 -include ${buildroot}/Backend/Backend.cc.o.d
 
 ${buildroot}/Backend/Dot.cc.o : ${srcroot}/Backend/Dot.cc
 	echo "Compiling ${buildroot}/Backend/Dot.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Backend/Dot.cc.o.d ${srcroot}/Backend/Dot.cc -o ${buildroot}/Backend/Dot.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Backend/Dot.cc.o.d ${srcroot}/Backend/Dot.cc -o ${buildroot}/Backend/Dot.cc.o
 -include ${buildroot}/Backend/Dot.cc.o.d
 
 ${buildroot}/Backend/Make.cc.o : ${srcroot}/Backend/Make.cc
 	echo "Compiling ${buildroot}/Backend/Make.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Backend/Make.cc.o.d ${srcroot}/Backend/Make.cc -o ${buildroot}/Backend/Make.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Backend/Make.cc.o.d ${srcroot}/Backend/Make.cc -o ${buildroot}/Backend/Make.cc.o
 -include ${buildroot}/Backend/Make.cc.o.d
 
 ${buildroot}/Backend/Ninja.cc.o : ${srcroot}/Backend/Ninja.cc
 	echo "Compiling ${buildroot}/Backend/Ninja.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Backend/Ninja.cc.o.d ${srcroot}/Backend/Ninja.cc -o ${buildroot}/Backend/Ninja.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Backend/Ninja.cc.o.d ${srcroot}/Backend/Ninja.cc -o ${buildroot}/Backend/Ninja.cc.o
 -include ${buildroot}/Backend/Ninja.cc.o.d
 
 ${buildroot}/Backend/Null.cc.o : ${srcroot}/Backend/Null.cc
 	echo "Compiling ${buildroot}/Backend/Null.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Backend/Null.cc.o.d ${srcroot}/Backend/Null.cc -o ${buildroot}/Backend/Null.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Backend/Null.cc.o.d ${srcroot}/Backend/Null.cc -o ${buildroot}/Backend/Null.cc.o
 -include ${buildroot}/Backend/Null.cc.o.d
 
 ${buildroot}/DAG/Build.cc.o : ${srcroot}/DAG/Build.cc
 	echo "Compiling ${buildroot}/DAG/Build.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Build.cc.o.d ${srcroot}/DAG/Build.cc -o ${buildroot}/DAG/Build.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Build.cc.o.d ${srcroot}/DAG/Build.cc -o ${buildroot}/DAG/Build.cc.o
 -include ${buildroot}/DAG/Build.cc.o.d
 
 ${buildroot}/DAG/Callable.cc.o : ${srcroot}/DAG/Callable.cc
 	echo "Compiling ${buildroot}/DAG/Callable.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Callable.cc.o.d ${srcroot}/DAG/Callable.cc -o ${buildroot}/DAG/Callable.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Callable.cc.o.d ${srcroot}/DAG/Callable.cc -o ${buildroot}/DAG/Callable.cc.o
 -include ${buildroot}/DAG/Callable.cc.o.d
 
 ${buildroot}/DAG/DAG.cc.o : ${srcroot}/DAG/DAG.cc
 	echo "Compiling ${buildroot}/DAG/DAG.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/DAG.cc.o.d ${srcroot}/DAG/DAG.cc -o ${buildroot}/DAG/DAG.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/DAG.cc.o.d ${srcroot}/DAG/DAG.cc -o ${buildroot}/DAG/DAG.cc.o
 -include ${buildroot}/DAG/DAG.cc.o.d
 
 ${buildroot}/DAG/File.cc.o : ${srcroot}/DAG/File.cc
 	echo "Compiling ${buildroot}/DAG/File.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/File.cc.o.d ${srcroot}/DAG/File.cc -o ${buildroot}/DAG/File.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/File.cc.o.d ${srcroot}/DAG/File.cc -o ${buildroot}/DAG/File.cc.o
 -include ${buildroot}/DAG/File.cc.o.d
 
 ${buildroot}/DAG/Formatter.cc.o : ${srcroot}/DAG/Formatter.cc
 	echo "Compiling ${buildroot}/DAG/Formatter.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Formatter.cc.o.d ${srcroot}/DAG/Formatter.cc -o ${buildroot}/DAG/Formatter.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Formatter.cc.o.d ${srcroot}/DAG/Formatter.cc -o ${buildroot}/DAG/Formatter.cc.o
 -include ${buildroot}/DAG/Formatter.cc.o.d
 
 ${buildroot}/DAG/Function.cc.o : ${srcroot}/DAG/Function.cc
 	echo "Compiling ${buildroot}/DAG/Function.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Function.cc.o.d ${srcroot}/DAG/Function.cc -o ${buildroot}/DAG/Function.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Function.cc.o.d ${srcroot}/DAG/Function.cc -o ${buildroot}/DAG/Function.cc.o
 -include ${buildroot}/DAG/Function.cc.o.d
 
 ${buildroot}/DAG/List.cc.o : ${srcroot}/DAG/List.cc
 	echo "Compiling ${buildroot}/DAG/List.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/List.cc.o.d ${srcroot}/DAG/List.cc -o ${buildroot}/DAG/List.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/List.cc.o.d ${srcroot}/DAG/List.cc -o ${buildroot}/DAG/List.cc.o
 -include ${buildroot}/DAG/List.cc.o.d
 
 ${buildroot}/DAG/Parameter.cc.o : ${srcroot}/DAG/Parameter.cc
 	echo "Compiling ${buildroot}/DAG/Parameter.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Parameter.cc.o.d ${srcroot}/DAG/Parameter.cc -o ${buildroot}/DAG/Parameter.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Parameter.cc.o.d ${srcroot}/DAG/Parameter.cc -o ${buildroot}/DAG/Parameter.cc.o
 -include ${buildroot}/DAG/Parameter.cc.o.d
 
 ${buildroot}/DAG/Primitive.cc.o : ${srcroot}/DAG/Primitive.cc
 	echo "Compiling ${buildroot}/DAG/Primitive.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Primitive.cc.o.d ${srcroot}/DAG/Primitive.cc -o ${buildroot}/DAG/Primitive.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Primitive.cc.o.d ${srcroot}/DAG/Primitive.cc -o ${buildroot}/DAG/Primitive.cc.o
 -include ${buildroot}/DAG/Primitive.cc.o.d
 
 ${buildroot}/DAG/Rule.cc.o : ${srcroot}/DAG/Rule.cc
 	echo "Compiling ${buildroot}/DAG/Rule.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Rule.cc.o.d ${srcroot}/DAG/Rule.cc -o ${buildroot}/DAG/Rule.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Rule.cc.o.d ${srcroot}/DAG/Rule.cc -o ${buildroot}/DAG/Rule.cc.o
 -include ${buildroot}/DAG/Rule.cc.o.d
 
 ${buildroot}/DAG/Structure.cc.o : ${srcroot}/DAG/Structure.cc
 	echo "Compiling ${buildroot}/DAG/Structure.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Structure.cc.o.d ${srcroot}/DAG/Structure.cc -o ${buildroot}/DAG/Structure.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Structure.cc.o.d ${srcroot}/DAG/Structure.cc -o ${buildroot}/DAG/Structure.cc.o
 -include ${buildroot}/DAG/Structure.cc.o.d
 
 ${buildroot}/DAG/Target.cc.o : ${srcroot}/DAG/Target.cc
 	echo "Compiling ${buildroot}/DAG/Target.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Target.cc.o.d ${srcroot}/DAG/Target.cc -o ${buildroot}/DAG/Target.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Target.cc.o.d ${srcroot}/DAG/Target.cc -o ${buildroot}/DAG/Target.cc.o
 -include ${buildroot}/DAG/Target.cc.o.d
 
 ${buildroot}/DAG/UndefinedValueException.cc.o : ${srcroot}/DAG/UndefinedValueException.cc
 	echo "Compiling ${buildroot}/DAG/UndefinedValueException.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/UndefinedValueException.cc.o.d ${srcroot}/DAG/UndefinedValueException.cc -o ${buildroot}/DAG/UndefinedValueException.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/UndefinedValueException.cc.o.d ${srcroot}/DAG/UndefinedValueException.cc -o ${buildroot}/DAG/UndefinedValueException.cc.o
 -include ${buildroot}/DAG/UndefinedValueException.cc.o.d
 
 ${buildroot}/DAG/Value.cc.o : ${srcroot}/DAG/Value.cc
 	echo "Compiling ${buildroot}/DAG/Value.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Value.cc.o.d ${srcroot}/DAG/Value.cc -o ${buildroot}/DAG/Value.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Value.cc.o.d ${srcroot}/DAG/Value.cc -o ${buildroot}/DAG/Value.cc.o
 -include ${buildroot}/DAG/Value.cc.o.d
 
 ${buildroot}/DAG/Visitor.cc.o : ${srcroot}/DAG/Visitor.cc
 	echo "Compiling ${buildroot}/DAG/Visitor.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Visitor.cc.o.d ${srcroot}/DAG/Visitor.cc -o ${buildroot}/DAG/Visitor.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Visitor.cc.o.d ${srcroot}/DAG/Visitor.cc -o ${buildroot}/DAG/Visitor.cc.o
 -include ${buildroot}/DAG/Visitor.cc.o.d
 
 ${buildroot}/Parsing/Lexer.cc.o : ${srcroot}/Parsing/Lexer.cc
 	echo "Compiling ${buildroot}/Parsing/Lexer.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Parsing/Lexer.cc.o.d ${srcroot}/Parsing/Lexer.cc -o ${buildroot}/Parsing/Lexer.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Parsing/Lexer.cc.o.d ${srcroot}/Parsing/Lexer.cc -o ${buildroot}/Parsing/Lexer.cc.o
 -include ${buildroot}/Parsing/Lexer.cc.o.d
 
 ${buildroot}/Parsing/Parser.cc.o : ${srcroot}/Parsing/Parser.cc
 	echo "Compiling ${buildroot}/Parsing/Parser.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Parsing/Parser.cc.o.d ${srcroot}/Parsing/Parser.cc -o ${buildroot}/Parsing/Parser.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Parsing/Parser.cc.o.d ${srcroot}/Parsing/Parser.cc -o ${buildroot}/Parsing/Parser.cc.o
 -include ${buildroot}/Parsing/Parser.cc.o.d
 
 ${buildroot}/Parsing/Token.cc.o : ${srcroot}/Parsing/Token.cc
 	echo "Compiling ${buildroot}/Parsing/Token.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Parsing/Token.cc.o.d ${srcroot}/Parsing/Token.cc -o ${buildroot}/Parsing/Token.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Parsing/Token.cc.o.d ${srcroot}/Parsing/Token.cc -o ${buildroot}/Parsing/Token.cc.o
 -include ${buildroot}/Parsing/Token.cc.o.d
 
 ${buildroot}/Support/Arguments.cc.o : ${srcroot}/Support/Arguments.cc
 	echo "Compiling ${buildroot}/Support/Arguments.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/Arguments.cc.o.d ${srcroot}/Support/Arguments.cc -o ${buildroot}/Support/Arguments.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/Arguments.cc.o.d ${srcroot}/Support/Arguments.cc -o ${buildroot}/Support/Arguments.cc.o
 -include ${buildroot}/Support/Arguments.cc.o.d
 
 ${buildroot}/Support/Bytestream.cc.o : ${srcroot}/Support/Bytestream.cc
 	echo "Compiling ${buildroot}/Support/Bytestream.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/Bytestream.cc.o.d ${srcroot}/Support/Bytestream.cc -o ${buildroot}/Support/Bytestream.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/Bytestream.cc.o.d ${srcroot}/Support/Bytestream.cc -o ${buildroot}/Support/Bytestream.cc.o
 -include ${buildroot}/Support/Bytestream.cc.o.d
 
 ${buildroot}/Support/ErrorReport.cc.o : ${srcroot}/Support/ErrorReport.cc
 	echo "Compiling ${buildroot}/Support/ErrorReport.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/ErrorReport.cc.o.d ${srcroot}/Support/ErrorReport.cc -o ${buildroot}/Support/ErrorReport.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/ErrorReport.cc.o.d ${srcroot}/Support/ErrorReport.cc -o ${buildroot}/Support/ErrorReport.cc.o
 -include ${buildroot}/Support/ErrorReport.cc.o.d
 
 ${buildroot}/Support/Join.cc.o : ${srcroot}/Support/Join.cc
 	echo "Compiling ${buildroot}/Support/Join.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/Join.cc.o.d ${srcroot}/Support/Join.cc -o ${buildroot}/Support/Join.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/Join.cc.o.d ${srcroot}/Support/Join.cc -o ${buildroot}/Support/Join.cc.o
 -include ${buildroot}/Support/Join.cc.o.d
 
 ${buildroot}/Support/Printable.cc.o : ${srcroot}/Support/Printable.cc
 	echo "Compiling ${buildroot}/Support/Printable.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/Printable.cc.o.d ${srcroot}/Support/Printable.cc -o ${buildroot}/Support/Printable.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/Printable.cc.o.d ${srcroot}/Support/Printable.cc -o ${buildroot}/Support/Printable.cc.o
 -include ${buildroot}/Support/Printable.cc.o.d
 
 ${buildroot}/Support/SourceLocation.cc.o : ${srcroot}/Support/SourceLocation.cc
 	echo "Compiling ${buildroot}/Support/SourceLocation.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/SourceLocation.cc.o.d ${srcroot}/Support/SourceLocation.cc -o ${buildroot}/Support/SourceLocation.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/SourceLocation.cc.o.d ${srcroot}/Support/SourceLocation.cc -o ${buildroot}/Support/SourceLocation.cc.o
 -include ${buildroot}/Support/SourceLocation.cc.o.d
 
 ${buildroot}/Support/Visitable.cc.o : ${srcroot}/Support/Visitable.cc
 	echo "Compiling ${buildroot}/Support/Visitable.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/Visitable.cc.o.d ${srcroot}/Support/Visitable.cc -o ${buildroot}/Support/Visitable.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/Visitable.cc.o.d ${srcroot}/Support/Visitable.cc -o ${buildroot}/Support/Visitable.cc.o
 -include ${buildroot}/Support/Visitable.cc.o.d
 
 ${buildroot}/Support/exceptions.cc.o : ${srcroot}/Support/exceptions.cc
 	echo "Compiling ${buildroot}/Support/exceptions.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/exceptions.cc.o.d ${srcroot}/Support/exceptions.cc -o ${buildroot}/Support/exceptions.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/exceptions.cc.o.d ${srcroot}/Support/exceptions.cc -o ${buildroot}/Support/exceptions.cc.o
 -include ${buildroot}/Support/exceptions.cc.o.d
 
 ${buildroot}/Support/os-posix.cc.o : ${srcroot}/Support/os-posix.cc
 	echo "Compiling ${buildroot}/Support/os-posix.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/os-posix.cc.o.d ${srcroot}/Support/os-posix.cc -o ${buildroot}/Support/os-posix.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/os-posix.cc.o.d ${srcroot}/Support/os-posix.cc -o ${buildroot}/Support/os-posix.cc.o
 -include ${buildroot}/Support/os-posix.cc.o.d
 
 ${buildroot}/Types/BooleanType.cc.o : ${srcroot}/Types/BooleanType.cc
 	echo "Compiling ${buildroot}/Types/BooleanType.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/BooleanType.cc.o.d ${srcroot}/Types/BooleanType.cc -o ${buildroot}/Types/BooleanType.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/BooleanType.cc.o.d ${srcroot}/Types/BooleanType.cc -o ${buildroot}/Types/BooleanType.cc.o
 -include ${buildroot}/Types/BooleanType.cc.o.d
 
 ${buildroot}/Types/FileType.cc.o : ${srcroot}/Types/FileType.cc
 	echo "Compiling ${buildroot}/Types/FileType.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/FileType.cc.o.d ${srcroot}/Types/FileType.cc -o ${buildroot}/Types/FileType.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/FileType.cc.o.d ${srcroot}/Types/FileType.cc -o ${buildroot}/Types/FileType.cc.o
 -include ${buildroot}/Types/FileType.cc.o.d
 
 ${buildroot}/Types/FunctionType.cc.o : ${srcroot}/Types/FunctionType.cc
 	echo "Compiling ${buildroot}/Types/FunctionType.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/FunctionType.cc.o.d ${srcroot}/Types/FunctionType.cc -o ${buildroot}/Types/FunctionType.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/FunctionType.cc.o.d ${srcroot}/Types/FunctionType.cc -o ${buildroot}/Types/FunctionType.cc.o
 -include ${buildroot}/Types/FunctionType.cc.o.d
 
 ${buildroot}/Types/IntegerType.cc.o : ${srcroot}/Types/IntegerType.cc
 	echo "Compiling ${buildroot}/Types/IntegerType.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/IntegerType.cc.o.d ${srcroot}/Types/IntegerType.cc -o ${buildroot}/Types/IntegerType.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/IntegerType.cc.o.d ${srcroot}/Types/IntegerType.cc -o ${buildroot}/Types/IntegerType.cc.o
 -include ${buildroot}/Types/IntegerType.cc.o.d
 
 ${buildroot}/Types/MaybeType.cc.o : ${srcroot}/Types/MaybeType.cc
 	echo "Compiling ${buildroot}/Types/MaybeType.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/MaybeType.cc.o.d ${srcroot}/Types/MaybeType.cc -o ${buildroot}/Types/MaybeType.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/MaybeType.cc.o.d ${srcroot}/Types/MaybeType.cc -o ${buildroot}/Types/MaybeType.cc.o
 -include ${buildroot}/Types/MaybeType.cc.o.d
 
 ${buildroot}/Types/OptionallyTyped.cc.o : ${srcroot}/Types/OptionallyTyped.cc
 	echo "Compiling ${buildroot}/Types/OptionallyTyped.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/OptionallyTyped.cc.o.d ${srcroot}/Types/OptionallyTyped.cc -o ${buildroot}/Types/OptionallyTyped.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/OptionallyTyped.cc.o.d ${srcroot}/Types/OptionallyTyped.cc -o ${buildroot}/Types/OptionallyTyped.cc.o
 -include ${buildroot}/Types/OptionallyTyped.cc.o.d
 
 ${buildroot}/Types/SequenceType.cc.o : ${srcroot}/Types/SequenceType.cc
 	echo "Compiling ${buildroot}/Types/SequenceType.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/SequenceType.cc.o.d ${srcroot}/Types/SequenceType.cc -o ${buildroot}/Types/SequenceType.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/SequenceType.cc.o.d ${srcroot}/Types/SequenceType.cc -o ${buildroot}/Types/SequenceType.cc.o
 -include ${buildroot}/Types/SequenceType.cc.o.d
 
 ${buildroot}/Types/StringType.cc.o : ${srcroot}/Types/StringType.cc
 	echo "Compiling ${buildroot}/Types/StringType.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/StringType.cc.o.d ${srcroot}/Types/StringType.cc -o ${buildroot}/Types/StringType.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/StringType.cc.o.d ${srcroot}/Types/StringType.cc -o ${buildroot}/Types/StringType.cc.o
 -include ${buildroot}/Types/StringType.cc.o.d
 
 ${buildroot}/Types/StructureType.cc.o : ${srcroot}/Types/StructureType.cc
 	echo "Compiling ${buildroot}/Types/StructureType.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/StructureType.cc.o.d ${srcroot}/Types/StructureType.cc -o ${buildroot}/Types/StructureType.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/StructureType.cc.o.d ${srcroot}/Types/StructureType.cc -o ${buildroot}/Types/StructureType.cc.o
 -include ${buildroot}/Types/StructureType.cc.o.d
 
 ${buildroot}/Types/Type.cc.o : ${srcroot}/Types/Type.cc
 	echo "Compiling ${buildroot}/Types/Type.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/Type.cc.o.d ${srcroot}/Types/Type.cc -o ${buildroot}/Types/Type.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/Type.cc.o.d ${srcroot}/Types/Type.cc -o ${buildroot}/Types/Type.cc.o
 -include ${buildroot}/Types/Type.cc.o.d
 
 ${buildroot}/Types/TypeContext.cc.o : ${srcroot}/Types/TypeContext.cc
 	echo "Compiling ${buildroot}/Types/TypeContext.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/TypeContext.cc.o.d ${srcroot}/Types/TypeContext.cc -o ${buildroot}/Types/TypeContext.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/TypeContext.cc.o.d ${srcroot}/Types/TypeContext.cc -o ${buildroot}/Types/TypeContext.cc.o
 -include ${buildroot}/Types/TypeContext.cc.o.d
 
 ${buildroot}/Types/TypeError.cc.o : ${srcroot}/Types/TypeError.cc
 	echo "Compiling ${buildroot}/Types/TypeError.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/TypeError.cc.o.d ${srcroot}/Types/TypeError.cc -o ${buildroot}/Types/TypeError.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/TypeError.cc.o.d ${srcroot}/Types/TypeError.cc -o ${buildroot}/Types/TypeError.cc.o
 -include ${buildroot}/Types/TypeError.cc.o.d
 
 ${buildroot}/Types/Typed.cc.o : ${srcroot}/Types/Typed.cc
 	echo "Compiling ${buildroot}/Types/Typed.cc.o"
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I /Volumes/Dev/fabrique -I /Volumes/Dev/fabrique/bootstrap/make -isystem /Volumes/Dev/fabrique/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/Typed.cc.o.d ${srcroot}/Types/Typed.cc -o ${buildroot}/Types/Typed.cc.o
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/Typed.cc.o.d ${srcroot}/Types/Typed.cc -o ${buildroot}/Types/Typed.cc.o
 -include ${buildroot}/Types/Typed.cc.o.d
 
 ${buildroot}/fab : ${buildroot}/Parsing/fab.lex.cc.o ${buildroot}/Parsing/fab.yacc.cc.o ${buildroot}/driver.cc.o ${buildroot}/AST/Action.cc.o ${buildroot}/AST/Argument.cc.o ${buildroot}/AST/ASTDump.cc.o ${buildroot}/AST/BinaryOperation.cc.o ${buildroot}/AST/Call.cc.o ${buildroot}/AST/CompoundExpr.cc.o ${buildroot}/AST/Conditional.cc.o ${buildroot}/AST/Expression.cc.o ${buildroot}/AST/FieldAccess.cc.o ${buildroot}/AST/FieldQuery.cc.o ${buildroot}/AST/Filename.cc.o ${buildroot}/AST/FileList.cc.o ${buildroot}/AST/Foreach.cc.o ${buildroot}/AST/Function.cc.o ${buildroot}/AST/HasParameters.cc.o ${buildroot}/AST/HasScope.cc.o ${buildroot}/AST/Identifier.cc.o ${buildroot}/AST/Import.cc.o ${buildroot}/AST/List.cc.o ${buildroot}/AST/Mapping.cc.o ${buildroot}/AST/Node.cc.o ${buildroot}/AST/Parameter.cc.o ${buildroot}/AST/Scope.cc.o ${buildroot}/AST/SomeValue.cc.o ${buildroot}/AST/StructInstantiation.cc.o ${buildroot}/AST/SymbolReference.cc.o ${buildroot}/AST/UnaryOperation.cc.o ${buildroot}/AST/Value.cc.o ${buildroot}/AST/Visitor.cc.o ${buildroot}/AST/literals.cc.o ${buildroot}/Backend/Backend.cc.o ${buildroot}/Backend/Dot.cc.o ${buildroot}/Backend/Make.cc.o ${buildroot}/Backend/Ninja.cc.o ${buildroot}/Backend/Null.cc.o ${buildroot}/DAG/Build.cc.o ${buildroot}/DAG/Callable.cc.o ${buildroot}/DAG/DAG.cc.o ${buildroot}/DAG/File.cc.o ${buildroot}/DAG/Formatter.cc.o ${buildroot}/DAG/Function.cc.o ${buildroot}/DAG/List.cc.o ${buildroot}/DAG/Parameter.cc.o ${buildroot}/DAG/Primitive.cc.o ${buildroot}/DAG/Rule.cc.o ${buildroot}/DAG/Structure.cc.o ${buildroot}/DAG/Target.cc.o ${buildroot}/DAG/UndefinedValueException.cc.o ${buildroot}/DAG/Value.cc.o ${buildroot}/DAG/Visitor.cc.o ${buildroot}/Parsing/Lexer.cc.o ${buildroot}/Parsing/Parser.cc.o ${buildroot}/Parsing/Token.cc.o ${buildroot}/Support/Arguments.cc.o ${buildroot}/Support/Bytestream.cc.o ${buildroot}/Support/ErrorReport.cc.o ${buildroot}/Support/Join.cc.o ${buildroot}/Support/Printable.cc.o ${buildroot}/Support/SourceLocation.cc.o ${buildroot}/Support/Visitable.cc.o ${buildroot}/Support/exceptions.cc.o ${buildroot}/Support/os-posix.cc.o ${buildroot}/Types/BooleanType.cc.o ${buildroot}/Types/FileType.cc.o ${buildroot}/Types/FunctionType.cc.o ${buildroot}/Types/IntegerType.cc.o ${buildroot}/Types/MaybeType.cc.o ${buildroot}/Types/OptionallyTyped.cc.o ${buildroot}/Types/SequenceType.cc.o ${buildroot}/Types/StringType.cc.o ${buildroot}/Types/StructureType.cc.o ${buildroot}/Types/Type.cc.o ${buildroot}/Types/TypeContext.cc.o ${buildroot}/Types/TypeError.cc.o ${buildroot}/Types/Typed.cc.o
@@ -581,7 +581,7 @@ ${buildroot}/lit-test-results/report.txt : ${buildroot}/fab ${srcroot}/test/./DA
 	echo "Running LLVM Integrated Tester on ${srcroot}/test"
 	llvm-lit --succinct --verbose --output=${buildroot}/lit-test-results/report.txt ${srcroot}/test
 
-${buildroot}/GNUMakefile : /Volumes/Dev/fabrique/share/fabrique/cxx.fab /Volumes/Dev/fabrique/share/fabrique/lex.fab /Volumes/Dev/fabrique/share/fabrique/llvm-lit.fab /Volumes/Dev/fabrique/share/fabrique/yacc.fab /Volumes/Dev/fabrique/AST/AST.fab /Volumes/Dev/fabrique/Backend/Backend.fab /Volumes/Dev/fabrique/DAG/DAG.fab /Volumes/Dev/fabrique/Parsing/Parsing.fab /Volumes/Dev/fabrique/Support/Support.fab /Volumes/Dev/fabrique/Types/Types.fab /Volumes/Dev/fabrique/test/manifest.fab /Volumes/Dev/fabrique/fabfile
-	echo "Regenerating ${buildroot}/GNUMakefile"
-	fab --debug='none' --format=gmake --output=/Volumes/Dev/fabrique/bootstrap/make -D 'debug=false' -D 'asserts=false' /Volumes/Dev/fabrique/fabfile
+${buildroot}/GNUmakefile : ${srcroot}/share/fabrique/cxx.fab ${srcroot}/share/fabrique/lex.fab ${srcroot}/share/fabrique/llvm-lit.fab ${srcroot}/share/fabrique/yacc.fab ${srcroot}/AST/AST.fab ${srcroot}/Backend/Backend.fab ${srcroot}/DAG/DAG.fab ${srcroot}/Parsing/Parsing.fab ${srcroot}/Support/Support.fab ${srcroot}/Types/Types.fab ${srcroot}/test/manifest.fab ${srcroot}/fabfile
+	echo "Regenerating ${buildroot}/GNUmakefile"
+	fab --debug='none' --format=gmake --output=${buildroot} -D 'debug=false' -D 'asserts=false' ${srcroot}/fabfile
 
