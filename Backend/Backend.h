@@ -34,6 +34,8 @@
 
 #include <string>
 
+#include "Support/ErrorReport.h"
+
 namespace fabrique {
 
 class Bytestream;
@@ -51,7 +53,7 @@ public:
 	virtual ~Backend();
 
 	virtual std::string DefaultFilename() const = 0;
-	virtual void Process(const dag::DAG&, Bytestream&) = 0;
+	virtual void Process(const dag::DAG&, Bytestream&, ErrorReport::Report) = 0;
 };
 
 } // namespace backend

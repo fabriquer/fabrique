@@ -85,7 +85,7 @@ NinjaBackend::NinjaBackend()
 }
 
 
-void NinjaBackend::Process(const dag::DAG& dag, Bytestream& out)
+void NinjaBackend::Process(const dag::DAG& dag, Bytestream& out, ErrorReport::Report)
 {
 	NinjaFormatter formatter;
 

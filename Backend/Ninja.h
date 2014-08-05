@@ -54,7 +54,7 @@ public:
 	static NinjaBackend* Create();
 
 	std::string DefaultFilename() const { return "build.ninja"; }
-	void Process(const dag::DAG&, Bytestream&);
+	void Process(const dag::DAG&, Bytestream&, ErrorReport::Report);
 
 private:
 	NinjaBackend();

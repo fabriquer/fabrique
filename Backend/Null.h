@@ -52,7 +52,7 @@ public:
 	virtual ~NullBackend();
 
 	std::string DefaultFilename() const { return ""; }
-	void Process(const dag::DAG&, Bytestream&) {}
+	void Process(const dag::DAG&, Bytestream&, ErrorReport::Report) {}
 };
 
 } // namespace backend

@@ -64,6 +64,7 @@ using std::vector;
 
 
 static Bytestream& err();
+static void reportError(string message, SourceRange, ErrorReport::Severity);
 static unique_ptr<ast::Scope> Parse(UniqPtr<Parser>& parser, const string& filename,
                                     const vector<string>& definitions,
                                     string srcroot, string buildroot, bool printAST);
@@ -204,7 +205,7 @@ int main(int argc, char *argv[]) {
 			? *outfileStream
 			: Bytestream::Stdout();
 
-		backend->Process(*dag, out);
+		backend->Process(*dag, out, reportError);
 
 		return 0;
 	}
@@ -309,4 +310,11 @@ static Bytestream& err()
 {
 	static Bytestream& err = Bytestream::Stderr();
 	return err;
+}
+
+
+static void reportError(string message, SourceRange src, ErrorReport::Severity severity)
+{
+	UniqPtr<ErrorReport> warning { ErrorReport::Create(message, src, severity) };
+	err() << *warning << Bytestream::Reset << "\n";
 }

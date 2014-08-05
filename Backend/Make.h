@@ -63,7 +63,7 @@ public:
 	Flavour flavour() const { return flavour_; }
 
 	std::string DefaultFilename() const;
-	void Process(const dag::DAG&, Bytestream&);
+	void Process(const dag::DAG&, Bytestream&, ErrorReport::Report);
 
 private:
 	MakeBackend(Flavour);

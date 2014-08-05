@@ -112,7 +112,7 @@ string MakeBackend::DefaultFilename() const
 }
 
 
-void MakeBackend::Process(const dag::DAG& dag, Bytestream& out)
+void MakeBackend::Process(const dag::DAG& dag, Bytestream& out, ErrorReport::Report)
 {
 	MakeFormatter formatter;
 

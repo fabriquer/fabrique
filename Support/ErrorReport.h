@@ -35,6 +35,7 @@
 #include "Support/Printable.h"
 #include "Support/SourceLocation.h"
 
+#include <functional>
 #include <ostream>
 #include <string>
 
@@ -49,6 +50,8 @@ public:
 		Warning,
 		Message,
 	};
+
+	typedef std::function<void (std::string, SourceRange, Severity)> Report;
 
 	static ErrorReport*
 	Create(const std::string& message,

@@ -84,7 +84,7 @@ DotBackend::DotBackend()
 }
 
 
-void DotBackend::Process(const DAG& dag, Bytestream& out)
+void DotBackend::Process(const DAG& dag, Bytestream& out, ErrorReport::Report)
 {
 	DotFormatter formatter;
 
