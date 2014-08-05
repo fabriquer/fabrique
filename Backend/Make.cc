@@ -112,7 +112,7 @@ string MakeBackend::DefaultFilename() const
 }
 
 
-void MakeBackend::Process(const dag::DAG& dag, Bytestream& out, ErrorReport::Report)
+void MakeBackend::Process(const dag::DAG& dag, Bytestream& out, ErrorReport::Report err)
 {
 	MakeFormatter formatter;
 
@@ -288,6 +288,11 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out, ErrorReport::Rep
 		//
 		string command = formatter.Format(rule);
 
+		string depfile;
+		auto dep = rule.arguments().find("depfile");
+		if (dep != rule.arguments().end())
+			depfile = formatter.Format(*dep->second);
+
 		std::function<string (const shared_ptr<File>&)> shortName =
 			[](const shared_ptr<File>& f) { return f->relativeName(); };
 
@@ -302,18 +307,24 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out, ErrorReport::Rep
 			  + " ]"
 			;
 
+		// TODO: once we start using C++14, clean up all of these duplicated
+		//       replaceAll() calls with a generic lambda
 		for (auto& j : build.arguments())
 		{
 			const string name = j.first;
 			const string str = formatter.Format(*j.second);
 
 			replaceAll(command, "${" + name + "}", str);
+			replaceAll(depfile, "${" + name + "}", str);
 			replaceAll(description, "${" + name + "}", str);
 		}
-		replaceAll(command, "${in}", build.inputs());
-		replaceAll(description, "${in}", build.inputs());
 
-		replaceAll(command, "${out}", build.outputs());
+		replaceAll(command, "${in}", build.inputs());
+		replaceAll(depfile, "${in}", build.outputs());
+		replaceAll(description, "${in}", build.outputs());
+
+		replaceAll(command, "${out}", build.inputs());
+		replaceAll(depfile, "${out}", build.outputs());
 		replaceAll(description, "${out}", build.outputs());
 
 		out
@@ -322,6 +333,30 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out, ErrorReport::Rep
 			<< "echo \"" << description << "\"\n"
 			<< indent_ << Bytestream::Action << command << "\n"
 			;
+
+		// TODO: figure out a depfile mechanism that's compatible with
+		//       BSD make
+		if (not depfile.empty())
+		{
+			switch (flavour_)
+			{
+				case Flavour::POSIX: // fall through
+				case Flavour::BSD:
+					err("dependency files currently only supported"
+					    " for GNU makefiles (--format=gmake)",
+					    build.source(),
+					    ErrorReport::Severity::Warning);
+					break;
+
+				case Flavour::GNU:
+					out
+						<< Bytestream::Action << "-include "
+						<< Bytestream::Literal << depfile
+						<< Bytestream::Reset << "\n"
+						;
+					break;
+			}
+		}
 
 		out << "\n";
 	}

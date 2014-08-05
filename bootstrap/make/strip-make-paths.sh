@@ -1,14 +1,18 @@
 #!/bin/sh
 
-cp Makefile Makefile.bak || exit 1
+FILENAME="$1"
+if [ "${FILENAME}" = "" ]; then
+	exit 1
+fi
+cp ${FILENAME} ${FILENAME}.bak || exit 1
 
 BUILDROOT="`pwd`"
 SRCROOT="`pwd | xargs dirname | xargs dirname`"
 
-sed -i.sedbackup "s#${BUILDROOT}#\${buildroot}#g" Makefile || exit 1
-sed -i.sedbackup "s#${SRCROOT}#\${srcroot}#g" Makefile || exit 1
-sed -i.sedbackup "s#^buildroot=	\${buildroot}#buildroot=	.#" Makefile || exit 1
-sed -i.sedbackup "s#^srcroot=	\${srcroot}#srcroot=	../..#" Makefile || exit 1
+sed -i.sedbackup "s#${BUILDROOT}#\${buildroot}#g" ${FILENAME} || exit 1
+sed -i.sedbackup "s#${SRCROOT}#\${srcroot}#g" ${FILENAME} || exit 1
+sed -i.sedbackup "s#^buildroot=	\${buildroot}#buildroot=	.#" ${FILENAME} || exit 1
+sed -i.sedbackup "s#^srcroot=	\${srcroot}#srcroot=	../..#" ${FILENAME} || exit 1
 
-wdiff Makefile.bak Makefile | grep '{+' | colordiff
-rm Makefile.bak Makefile.sedbackup
+wdiff ${FILENAME}.bak ${FILENAME} | grep '{+' | colordiff
+rm ${FILENAME}.bak ${FILENAME}.sedbackup

@@ -1,5 +1,5 @@
 #
-# Generated at Tue  5 Aug 2014 09:57:31 NDT by regenerate-manifest.sh
+# Generated at Tue  5 Aug 2014 14:47:10 NDT by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -124,8 +124,11 @@ all_files = files(
 ./backends/dot/complex-build.fab
 ./backends/dot/multiple-outputs.fab
 ./backends/make/Inputs/cc.fab
+./backends/make/Inputs/foo.c
+./backends/make/Inputs/foo.h
 ./backends/make/compile-arguments.fab
 ./backends/make/complex-build.fab
+./backends/make/depfiles.fab
 ./backends/make/directory-dependencies.fab
 ./backends/make/explicit-compiler-imported-tools.fab
 ./backends/make/explicit-compiler.fab
