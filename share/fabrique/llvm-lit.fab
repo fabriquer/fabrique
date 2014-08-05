@@ -16,8 +16,8 @@ run = function(test_tree:file[in], output_directory:file[out], report_filename:s
 	report = file(report_filename, subdir = output_directory);
 
 	flags = []
-		+ if quiet [ '--quiet' ] else [ '--succinct' ]
-		+ if verbose [ '--verbose' ] else []
+		+ (if quiet [ '--quiet' ] else [ '--succinct' ])
+		+ (if verbose [ '--verbose' ] else [])
 		;
 
 	run_lit(test_tree, report, flags, dependencies)
