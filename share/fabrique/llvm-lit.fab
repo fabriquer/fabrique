@@ -11,13 +11,14 @@ run_lit = action(
 
 
 run = function(test_tree:file[in], output_directory:file[out], report_filename:string,
-               dependencies:list[file[in]], quiet = true, verbose = false)
+               dependencies:list[file[in]],
+               suppress_success_output = false, show_failure_information = true)
 {
 	report = file(report_filename, subdir = output_directory);
 
 	flags = []
-		+ (if quiet [ '--quiet' ] else [ '--succinct' ])
-		+ (if verbose [ '--verbose' ] else [])
+		+ (if suppress_success_output [ '--quiet' ] else [ '--succinct' ])
+		+ (if show_failure_information [ '--verbose' ] else [])
 		;
 
 	run_lit(test_tree, report, flags, dependencies)
