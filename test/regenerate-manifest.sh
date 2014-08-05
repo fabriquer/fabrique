@@ -18,7 +18,10 @@ echo "all_files = files("
 # It would be nice to use llvm-lit --show-tests to do this, but that doesn't include
 # test dependencies within Inputs/ directories.
 #
-find . -type f | grep -v './manifest.fab' | grep -v 'regenerate-manifest.sh'
+find . -type f \
+	| grep -v './manifest.fab' \
+	| grep -v './regenerate-manifest.sh' \
+	| grep -v '.swp'
 
 #${llvm_lit} --show-tests ${test_suite} \
 #	| grep fab \
