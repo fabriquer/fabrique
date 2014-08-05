@@ -1,0 +1,9 @@
+#
+# When we pass fab a directory, we should look for a 'fabfile' within it.
+#
+# RUN: fab --parse-only --print-ast %S/Inputs > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: test_value:string = 'foo';
+test_value = 'foo';

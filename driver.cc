@@ -98,7 +98,16 @@ int main(int argc, char *argv[]) {
 	{
 		TypeContext ctx;
 
-		const string srcroot = DirectoryOf(args->input, true);
+		const string fabfile =
+			PathIsDirectory(args->input)
+			? JoinPath(args->input, "fabfile")
+			: args->input
+			;
+
+		if (not PathIsFile(fabfile))
+			throw UserError("no such file: '" + fabfile + "'");
+
+		const string srcroot = AbsoluteDirectory(DirectoryOf(fabfile));
 		const string buildroot = AbsoluteDirectory(args->output);
 
 		//
@@ -106,7 +115,7 @@ int main(int argc, char *argv[]) {
 		//
 		unique_ptr<ast::Parser> parser(new ast::Parser(ctx, srcroot));
 		unique_ptr<ast::Scope> ast(
-			Parse(parser, args->input, args->definitions,
+			Parse(parser, fabfile, args->definitions,
 			      srcroot, buildroot, args->printAST));
 
 		if (not ast)
@@ -159,7 +168,7 @@ int main(int argc, char *argv[]) {
 				<< Bytestream::Comment
 				<< "#\n"
 				<< "# DAG pretty-printed from '"
-				<< args->input << "'\n"
+				<< fabfile << "'\n"
 				<< "#\n"
 				<< Bytestream::Reset
 				<< *dag
@@ -242,8 +251,7 @@ unique_ptr<ast::Scope> Parse(UniqPtr<Parser>& parser, const string& filename,
 
 	// Open and parse the top-level build description.
 	std::ifstream infile(filename.c_str());
-	if (!infile)
-		throw UserError("no such file: '" + filename + "'");
+	assert(infile);
 
 	map<string,string> builtins {
 		std::make_pair("srcroot", srcroot),

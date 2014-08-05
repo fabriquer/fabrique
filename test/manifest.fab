@@ -1,5 +1,5 @@
 #
-# Generated at Mon  4 Aug 2014 10:51:17 NDT by regenerate-manifest.sh
+# Generated at Tue  5 Aug 2014 09:04:52 NDT by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -83,6 +83,7 @@ all_files = files(
 ./Parsing/config-cli.fab
 ./Parsing/default-parameters.fab
 ./Parsing/direct-call.fab
+./Parsing/directory.fab
 ./Parsing/empty-string.fab
 ./Parsing/empty.fab
 ./Parsing/equality.fab
