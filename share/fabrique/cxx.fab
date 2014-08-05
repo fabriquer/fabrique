@@ -5,17 +5,17 @@ colour_flags = if use_colour [ '-fcolor-diagnostics' ] else [];
 
 
 ### Compile one C++ source file into an object file.
-compile_one = action('${CXX} -c ${flags} -MMD -MF ${depfile} ${src} -o ${obj}',
-             description = 'Compiling ${in}'
-	     <- src:file[in], obj:file[out], flags:list[string], depfile:file[out],
-	        otherDeps:list[file[in]] = [], CXX:file[in] = compiler);
+compile_one = action('${CXX} -c ${flags} -MMD -MF ${obj}.d ${src} -o ${obj}',
+             description = 'Compiling ${in}', depfile = '${obj}.d'
+	     <- src:file[in], obj:file[out], flags:list[string],
+	        otherDeps:list[file[in]] = [], CXX:file[in] = compiler, deps = 'gcc');
 
 compile = function(srcs:list[file], flags:list[string],
                    deps:list[file[in]] = []): list[file]
 {
 	foreach src <- srcs {
 		obj = src + '.o';
-		outs = compile_one(src, obj, flags + colour_flags, obj + '.d', deps);
+		outs = compile_one(src, obj, flags + colour_flags, deps);
 		obj
 	}
 };

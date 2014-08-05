@@ -1,5 +1,5 @@
 #
-# Generated at Tue  5 Aug 2014 09:04:52 NDT by regenerate-manifest.sh
+# Generated at Tue  5 Aug 2014 09:57:31 NDT by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -135,10 +135,13 @@ all_files = files(
 ./backends/make/rules.fab
 ./backends/make/string-list.fab
 ./backends/ninja/Inputs/cc.fab
+./backends/ninja/Inputs/foo.c
+./backends/ninja/Inputs/foo.h
 ./backends/ninja/Inputs/tools.fab
 ./backends/ninja/action-default-param.fab
 ./backends/ninja/compile-arguments.fab
 ./backends/ninja/complex-build.fab
+./backends/ninja/depfiles.fab
 ./backends/ninja/explicit-compiler-imported-tools.fab
 ./backends/ninja/explicit-compiler.fab
 ./backends/ninja/file-string-addition.fab
