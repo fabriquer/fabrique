@@ -43,9 +43,17 @@ namespace fabrique {
 class ErrorReport : public HasSource, public Printable
 {
 public:
+	enum class Severity
+	{
+		Error,
+		Warning,
+		Message,
+	};
+
 	static ErrorReport*
 	Create(const std::string& message,
 	       const SourceRange& loc = SourceRange::None(),
+	       Severity severity = Severity::Error,
 	       size_t contextLines = 3);
 
 	virtual ~ErrorReport() {}
@@ -55,12 +63,13 @@ public:
 
 private:
 	ErrorReport(const std::string& message, const SourceRange& range,
-	            const SourceLocation& loc, size_t lines)
-		: HasSource(range), message_(message), caret_(loc),
-		  contextLines_(lines)
+	            const SourceLocation& loc, Severity severity, size_t lines)
+		: HasSource(range), severity_(severity), message_(message),
+		  caret_(loc), contextLines_(lines)
 	{
 	}
 
+	const Severity severity_;
 	const std::string message_;
 	const SourceLocation caret_;
 	const size_t contextLines_;

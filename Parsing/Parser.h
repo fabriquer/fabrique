@@ -253,8 +253,10 @@ private:
 	//! Add an @ref Argument vector to the current scope.
 	void AddToScope(const PtrVec<Argument>&);
 
-	const ErrorReport& ReportError(const std::string&, const SourceRange&);
-	const ErrorReport& ReportError(const std::string&, const HasSource&);
+	const ErrorReport& ReportError(const std::string&, const SourceRange&,
+		ErrorReport::Severity = ErrorReport::Severity::Error);
+	const ErrorReport& ReportError(const std::string&, const HasSource&,
+		ErrorReport::Severity = ErrorReport::Severity::Error);
 
 	TypeContext& ctx_;
 	Lexer& lexer_;

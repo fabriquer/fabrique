@@ -907,16 +907,18 @@ bool Parser::Set(YYSTYPE& yyunion, Node *e)
 }
 
 
-const ErrorReport& Parser::ReportError(const string& msg, const HasSource& s)
+const ErrorReport& Parser::ReportError(const string& msg, const HasSource& s,
+                                       ErrorReport::Severity severity)
 {
-	return ReportError(msg, s.source());
+	return ReportError(msg, s.source(), severity);
 }
 
 const ErrorReport& Parser::ReportError(const string& message,
-                                       const SourceRange& location)
+                                       const SourceRange& location,
+                                       ErrorReport::Severity severity)
 {
 	errs_.push_back(
-		unique_ptr<ErrorReport>(ErrorReport::Create(message, location))
+		unique_ptr<ErrorReport>(ErrorReport::Create(message, location, severity))
 	);
 
 	return *errs_.back();

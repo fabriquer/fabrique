@@ -42,9 +42,9 @@ using std::string;
 
 
 ErrorReport* ErrorReport::Create(const string& message, const SourceRange& loc,
-                                 size_t contextLines)
+                                 Severity severity, size_t contextLines)
 {
-	return new ErrorReport(message, loc, loc.begin, contextLines);
+	return new ErrorReport(message, loc, loc.begin, severity, contextLines);
 }
 
 
@@ -52,12 +52,26 @@ void ErrorReport::PrettyPrint(Bytestream& out, size_t indent) const
 {
 	string tabs(indent, '\t');
 
-	out << "\n" << tabs << caret_;
+	out << "\n" << tabs << caret_ << ": ";
+
+	switch (severity_)
+	{
+		case Severity::Error:
+			out << Bytestream::Error << "error";
+			break;
+
+		case Severity::Warning:
+			out << Bytestream::Warning << "warning";
+			break;
+
+		case Severity::Message:
+			out << Bytestream::Info << "info";
+			break;
+	}
 
 	out
-		<< ": "
-		<< Bytestream::Error << "error"
-		<< Bytestream::Reset << ": " << message_
+		<< Bytestream::Operator << ": "
+		<< Bytestream::ErrorMessage << message_
 		<< Bytestream::Reset << "\n"
 		;
 

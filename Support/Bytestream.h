@@ -58,6 +58,8 @@ public:
 
 		// Error reporting:
 		Error,
+		Warning,
+		Info,
 		ErrorLoc,
 		ErrorMessage,
 
