@@ -243,7 +243,12 @@ Bytestream& ANSIStream::operator << (enum Format f)
 		case Reference:         set(Cyan);              break;
 		case Type:              set(Blue);              break;
 
-		case Error:             set(Bold); set(Red);    break;
+		case Error:
+			set(Background(Red));
+			set(Bold);
+			set(White);
+			break;
+
 		case Warning:           set(Bold); set(Magenta);break;
 		case Info:              set(Bold); set(Yellow); break;
 		case ErrorLoc:          set(Green);             break;
