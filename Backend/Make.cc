@@ -409,6 +409,7 @@ string MakeFormatter::Format(const Boolean& b)
 string MakeFormatter::Format(const Build&)
 {
 	assert(false && "called MakeFormatter::Format(Build&)");
+	return "";
 }
 
 string MakeFormatter::Format(const File& f)
