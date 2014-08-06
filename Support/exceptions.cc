@@ -73,8 +73,8 @@ OSError::~OSError() {}
 void OSError::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
 	out
-		<< Bytestream::Error << "OS error: "
-		<< Bytestream::Reset << message_ << ": "
+		<< Bytestream::Error << "OS error"
+		<< Bytestream::Reset << ": " << message_ << ": "
 		<< Bytestream::ErrorMessage << description_
 		<< Bytestream::Reset
 		;

@@ -70,7 +70,7 @@ void ErrorReport::PrettyPrint(Bytestream& out, size_t indent) const
 	}
 
 	out
-		<< Bytestream::Operator << ": "
+		<< Bytestream::Reset << ": "
 		<< Bytestream::ErrorMessage << message_
 		<< Bytestream::Reset << "\n"
 		;

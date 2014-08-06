@@ -212,15 +212,15 @@ int main(int argc, char *argv[]) {
 	catch (const UserError& e)
 	{
 		err()
-			<< Bytestream::Error << "Error: "
-			<< Bytestream::Reset << e
+			<< Bytestream::Error << "Error"
+			<< Bytestream::Reset << ": " << e
 			;
 	}
 	catch (const OSError& e)
 	{
 		err()
 			<< Bytestream::Error << e.message()
-			<< Bytestream::Operator << ": "
+			<< Bytestream::Reset << ": "
 			<< Bytestream::ErrorMessage << e.description()
 			;
 	}
@@ -231,7 +231,8 @@ int main(int argc, char *argv[]) {
 	catch (const SourceCodeException& e)
 	{
 		err()
-			<< Bytestream::Error << "Parse error: "
+			<< Bytestream::Error << "Parse error"
+			<< Bytestream::Reset << ": "
 			<< Bytestream::ErrorMessage << e
 			;
 	}
@@ -240,7 +241,8 @@ int main(int argc, char *argv[]) {
 	catch (const std::exception& e)
 	{
 		err()
-			<< Bytestream::Error << "Uncaught exception: "
+			<< Bytestream::Error << "Uncaught exception"
+			<< Bytestream::Reset << ": "
 			<< Bytestream::ErrorMessage << e.what()
 			;
 	}
