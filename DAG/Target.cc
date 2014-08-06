@@ -87,8 +87,10 @@ Target* Target::Create(const string& name, const shared_ptr<List>& list)
 Target::Target(const string& name, const shared_ptr<List>& files, const Type& t)
 	: Value(t, files->source()), name_(name), files_(files)
 {
+#ifndef NDEBUG
 	for (auto& f : *files)
 		assert(dynamic_pointer_cast<File>(f));
+#endif
 }
 
 

@@ -104,11 +104,13 @@ Build::Build(shared_ptr<Rule>& rule,
 	: Value(t, location), rule_(rule), in_(inputs), out_(outputs),
 	  args_(arguments)
 {
+#ifndef NDEBUG
 	for (auto& f : in_)
 		assert(f);
 
 	for (auto& f : out_)
 		assert(f);
+#endif
 }
 
 
@@ -195,6 +197,8 @@ void Build::AppendFiles(const ValuePtr& in,
 	else throw WrongTypeException("file|list[file]",
 	                              in->type(), in->source());
 
+#ifndef NDEBUG
 	for (auto& f : out)
 		assert(f);
+#endif
 }

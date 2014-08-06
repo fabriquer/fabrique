@@ -66,13 +66,10 @@ List* List::of(const SharedPtrVec<Value>& values, const SourceRange& src,
 List::List(const SharedPtrVec<Value>& v, const Type& t, const SourceRange& src)
 	: Value(t, src), elements_(v), elementType_(t[0])
 {
-	if (v.size() > 0)
-	{
-		//assert(t.isListOf(v.front()->type()));
-	}
-
+#ifndef NDEBUG
 	for (auto& value : v)
 		assert(value);
+#endif
 }
 
 
