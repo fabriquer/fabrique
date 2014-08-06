@@ -69,6 +69,7 @@ public:
 
 	iterator begin() const;
 	iterator end() const;
+	const SharedPtrVec<Value>& elements() const { return elements_; }
 	size_t size() const;
 	const Value& operator [] (size_t) const;
 
