@@ -576,6 +576,8 @@ types:
 		$$.types = $1.types;
 		$$.types->push_back($3.type);
 	}
+	;
+
 
 unaryOperation:
 	NOT expression
