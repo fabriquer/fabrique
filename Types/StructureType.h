@@ -32,6 +32,7 @@
 #ifndef STRUCTURE_TYPE_H
 #define STRUCTURE_TYPE_H
 
+#include "ADT/StringMap.h"
 #include "Types/Type.h"
 #include <vector>
 
@@ -50,6 +51,7 @@ public:
 	const std::vector<Field>& elements() const { return fields_; }
 
 	virtual bool isSubtype(const Type&) const override;
+	virtual void PrettyPrint(Bytestream&, size_t indent) const override;
 
 private:
 	StructureType(const std::vector<Field>&, const PtrVec<Type>&, TypeContext&);

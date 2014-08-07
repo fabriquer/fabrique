@@ -103,6 +103,7 @@ public:
 	Bytestream& operator << (enum Format) { return *this; }
 	Bytestream& operator << (const Printable&) { return *this; }
 	Bytestream& operator << (const string&) { return *this; }
+	Bytestream& operator << (char) { return *this; }
 	Bytestream& operator << (int) { return *this; }
 	Bytestream& operator << (unsigned long) { return *this; }
 
@@ -215,6 +216,13 @@ Bytestream& Bytestream::operator << (const std::string& s)
 	out_ << s;
 	return *this;
 }
+
+Bytestream& Bytestream::operator << (char c)
+{
+	out_ << c;
+	return *this;
+}
+
 
 Bytestream& Bytestream::operator << (int x)
 {

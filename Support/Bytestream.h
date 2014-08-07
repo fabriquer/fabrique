@@ -110,6 +110,7 @@ public:
 	virtual Bytestream& operator << (enum Format) = 0;
 	virtual Bytestream& operator << (const Printable&);
 	virtual Bytestream& operator << (const std::string&);
+	virtual Bytestream& operator << (char);
 	virtual Bytestream& operator << (int);
 	virtual Bytestream& operator << (unsigned long);
 
