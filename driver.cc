@@ -280,12 +280,6 @@ unique_ptr<ast::Scope> Parse(UniqPtr<Parser>& parser, const string& filename,
 		for (auto& error : parser->errors())
 			err() << *error << "\n";
 
-		if (parser->errors().empty())
-			err()
-				<< Bytestream::Error << "unknown error"
-				<< Bytestream::Reset << "\n"
-				;
-
 		return ast;
 	}
 	assert(parser->errors().empty());
