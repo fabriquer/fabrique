@@ -246,6 +246,29 @@ const FunctionType& Parser::FnType(const PtrVec<Type>& inputs,
 }
 
 
+const StructureType* Parser::StructType(UniqPtr<UniqPtrVec<Identifier>>& f,
+                                        SourceRange /*src*/)
+{
+	if (not f)
+		return nullptr;
+
+	std::vector<StructureType::Field> fields;
+	for (UniqPtr<Identifier>& id : *f)
+	{
+		if (not id->isTyped())
+		{
+			ReportError("struct fields must have a name and a type",
+			            id->source());
+			return nullptr;
+		}
+
+		fields.emplace_back(id->name(), id->type());
+	}
+
+	return &ctx_.structureType(fields);
+}
+
+
 Action* Parser::DefineAction(UniqPtr<UniqPtrVec<Argument>>& args,
                              const SourceRange& src,
                              UniqPtr<UniqPtrVec<Parameter>>&& params)

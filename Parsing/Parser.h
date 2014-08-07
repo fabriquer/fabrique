@@ -101,6 +101,9 @@ public:
 	const FunctionType& FnType(const PtrVec<Type>& inputs,
 	                           const Type& output, SourceRange);
 
+	const StructureType* StructType(UniqPtr<UniqPtrVec<Identifier>>& fields,
+	                                SourceRange);
+
 
 	//! Define a build @ref Action.
 	Action* DefineAction(UniqPtr<UniqPtrVec<Argument>>& args,

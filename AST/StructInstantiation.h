@@ -39,6 +39,9 @@
 #include "AST/Value.h"
 
 namespace fabrique {
+
+class StructureType;
+
 namespace ast {
 
 /**
@@ -47,7 +50,8 @@ namespace ast {
 class StructInstantiation : public Expression, public HasScope
 {
 public:
-	StructInstantiation(UniqPtr<Scope>& values, const Type&, const SourceRange&);
+	StructInstantiation(UniqPtr<Scope>& values, const StructureType&,
+	                    const SourceRange&);
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;

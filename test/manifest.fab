@@ -1,5 +1,5 @@
 #
-# Generated at Tue  5 Aug 2014 14:47:10 NDT by regenerate-manifest.sh
+# Generated at Thu  7 Aug 2014 11:03:35 NDT by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -116,6 +116,7 @@ all_files = files(
 ./Parsing/simple-build.fab
 ./Parsing/struct-instantiation.fab
 ./Parsing/struct-nesting.fab
+./Parsing/struct-types.fab
 ./Parsing/submodule-error.fab
 ./Parsing/tokeniser.fab
 ./Parsing/type-conflict.fab

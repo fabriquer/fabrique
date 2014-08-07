@@ -36,12 +36,12 @@
 #include "AST/StructInstantiation.h"
 #include "AST/Visitor.h"
 #include "Support/Bytestream.h"
-#include "Types/Type.h"
+#include "Types/StructureType.h"
 
 using namespace fabrique::ast;
 
 
-StructInstantiation::StructInstantiation(UniqPtr<Scope>& values, const Type& ty,
+StructInstantiation::StructInstantiation(UniqPtr<Scope>& values, const StructureType& ty,
                                          const SourceRange& loc)
 	: Expression(ty, loc), HasScope(std::move(values))
 {

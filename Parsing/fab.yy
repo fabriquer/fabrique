@@ -10,6 +10,7 @@
 #include "Parsing/yacc.h"
 
 #include "Types/FunctionType.h"
+#include "Types/StructureType.h"
 
 #include <cassert>
 
@@ -548,6 +549,14 @@ type:
 
 		$$.type = &p->getType("file", begin, end, *$3.types);
 	}
+	| STRUCT '[' fieldTypes ']'
+	{
+		SourceRange begin = Take($1.token)->source();
+		auto fields = Take(NodeVec<Identifier>($3));
+		SourceRange end = Take($4.token)->source();
+
+		$$.type = p->StructType(fields, SourceRange(begin, end));
+	}
 	| '(' types ')' PRODUCES type
 	{
 		SourceRange begin = Take($1.token)->source();
@@ -575,6 +584,23 @@ types:
 	{
 		$$.types = $1.types;
 		$$.types->push_back($3.type);
+	}
+	;
+
+fieldTypes:
+	/* empty */
+	{
+		CreateNodeList($$);
+	}
+	| identifier
+	{
+		CreateNodeList($$);
+		Append($$, TakeNode<Identifier>($1));
+	}
+	| fieldTypes ',' identifier
+	{
+		$$.nodes = $1.nodes;
+		Append($$, TakeNode<Identifier>($3));
 	}
 	;
 
