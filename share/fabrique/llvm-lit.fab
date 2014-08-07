@@ -7,7 +7,7 @@ run_lit = action(
 	description = 'Running LLVM Integrated Tester on ${tree}', pool = 'console'
 	<- tree:file[in], report:file[out],
 	   flags:list[string] = [], dependencies:list[file[in]] = [],
-	   lit:string = 'llvm-lit');
+	   lit:string = 'llvm-lit');  # TODO: find precise llvm-lit with 'which' plugin
 
 
 run = function(test_tree:file[in], output_directory:file[out], report_filename:string,
