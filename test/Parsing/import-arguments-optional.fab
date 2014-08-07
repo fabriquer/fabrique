@@ -3,10 +3,10 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: no_args:struct[string] = import('Inputs/accepts-args.fab');
+# CHECK: no_args:struct[name:string] = import('Inputs/accepts-args.fab');
 no_args = import('Inputs/accepts-args.fab');
 
-# CHECK: optional_args:struct[string] = import('Inputs/accepts-args.fab');
+# CHECK: optional_args:struct[name:string] = import('Inputs/accepts-args.fab');
 optional_args = import('Inputs/accepts-args.fab');
 
 # CHECK: name:string = optional_args.name;

@@ -3,7 +3,7 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: foo:struct[string, string] =
+# CHECK: foo:struct[hello:string, world:string] =
 # CHECK: struct
 # CHECK: {
 # CHECK:   hello:string = 'Hello, ';

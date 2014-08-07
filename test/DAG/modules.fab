@@ -3,7 +3,7 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK-DAG: struct[string, (file)=>file, (int)=>int, (int)=>int, file] submodule = {
+# CHECK-DAG: struct[foo:string, bar:(file)=>file, baz:(int)=>int, wibble:(int)=>int, f:file] submodule = {
 # CHECK-DAG: file f = Inputs/f.txt
 submodule = import('Inputs/submodule.fab');
 

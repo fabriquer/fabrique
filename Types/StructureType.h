@@ -48,14 +48,25 @@ public:
 	static StructureType* Create(const std::vector<Field>&, TypeContext&);
 
 	virtual ~StructureType();
-	const std::vector<Field>& elements() const { return fields_; }
+	const StringMap<const Type&>& fields() const { return fieldTypes_; }
 
 	virtual bool isSubtype(const Type&) const override;
 	virtual void PrettyPrint(Bytestream&, size_t indent) const override;
 
 private:
-	StructureType(const std::vector<Field>&, const PtrVec<Type>&, TypeContext&);
-	std::vector<Field> fields_;
+	StructureType(const StringMap<const Type&>& fields,
+	              const std::vector<std::string>& fieldNames, TypeContext&);
+
+	//! The types of fields within the structure.
+	StringMap<const Type&> fieldTypes_;
+
+	/**
+	 * Ordered sequence of field names.
+	 *
+	 * This isn't semantically relevant, but it's nice to output field names
+	 * in the same order as their definition.
+	 */
+	std::vector<std::string> fieldNames_;
 
 	friend class TypeContext;
 };

@@ -662,8 +662,8 @@ StructInstantiation* Parser::StructInstantiation(SourceRange src)
 	UniqPtr<Scope> scope(ExitScope());
 
 	std::vector<StructureType::Field> fields;
-	for (auto& i : scope->symbols())
-		fields.emplace_back(i.first, i.second->type());
+	for (const UniqPtr<Value>& v : scope->values())
+		fields.emplace_back(v->name().name(), v->type());
 
 	const StructureType& t = ctx_.structureType(fields);
 
