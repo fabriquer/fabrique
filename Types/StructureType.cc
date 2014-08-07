@@ -80,16 +80,37 @@ bool StructureType::isSubtype(const Type& t) const
 	if (t.name() != name())
 		return false;
 
-	const PtrVec<Type>& params = typeParameters();
-	const PtrVec<Type>& tparams = t.typeParameters();
-
-	if (tparams.size() != params.size())
+	const StructureType *st = dynamic_cast<const StructureType*>(&t);
+	if (not st)
 		return false;
 
-	const size_t len = params.size();
-	for (size_t i = 0; i < len; i++)
-		if (not params[i]->isSubtype(*tparams[i]))
+	if (st->fields().size() != fieldTypes_.size())
+		return false;
+
+	size_t fieldsChecked = 0;
+	for (auto& theirField : st->fields())
+	{
+		const string& name = theirField.first;
+		const Type& theirType = theirField.second;
+
+		auto i = fieldTypes_.find(name);
+		if (i == fieldTypes_.end())
 			return false;
+
+		//
+		// Structures are covariant: you can assign
+		// struct[foo:special_int] to struct[foo:int]
+		// but not the other way around.
+		//
+		const Type& ourType = i->second;
+		if (not theirType.isSubtype(ourType))
+			return false;
+
+		++fieldsChecked;
+	}
+
+	if (fieldsChecked != fieldTypes_.size())
+		return false;
 
 	return true;
 }

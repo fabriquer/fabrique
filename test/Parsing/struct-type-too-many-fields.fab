@@ -1,0 +1,8 @@
+#
+# RUN: fab --parse-only --print-ast %s 2> %t || true
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: assigning struct[foo:string, bar:string]
+# CHECK: to identifier of type struct[foo:string, bar:string, baz:string]
+foo:struct[foo:string, bar:string, baz:string] = struct { foo = 'hi'; bar = 'world'; };
