@@ -32,8 +32,8 @@
 #ifndef FILE_H
 #define FILE_H
 
-#include "Argument.h"
-#include "Expression.h"
+#include "AST/Argument.h"
+#include "AST/Expression.h"
 
 namespace fabrique {
 namespace ast {
