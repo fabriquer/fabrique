@@ -646,7 +646,6 @@ bool DAGBuilder::Enter(const ast::Filename& f)
 	shared_ptr<File> file(
 		File::Create(subdirectory, filename, f.type(), f.source()));
 
-	files_.push_back(file);
 	currentValue.push(file);
 
 	return false;
