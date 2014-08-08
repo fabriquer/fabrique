@@ -1,5 +1,5 @@
 #
-# Generated at Thu  7 Aug 2014 11:28:51 NDT by regenerate-manifest.sh
+# Generated at Fri  8 Aug 2014 15:49:09 NDT by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -91,6 +91,7 @@ all_files = files(
 ./Parsing/err-files-lineno.fab
 ./Parsing/err-in-submodule.fab
 ./Parsing/field-existence.fab
+./Parsing/file-attributes.fab
 ./Parsing/file-string-addition.fab
 ./Parsing/files.fab
 ./Parsing/foreach.fab

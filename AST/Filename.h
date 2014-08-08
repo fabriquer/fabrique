@@ -33,6 +33,7 @@
 #define FILE_H
 
 #include "AST/Expression.h"
+#include "AST/HasNamedChildren.h"
 
 namespace fabrique {
 namespace ast {
@@ -42,7 +43,7 @@ class Argument;
 /**
  * A reference to a file on disk (source or target).
  */
-class Filename : public Expression
+class Filename : public Expression, public HasNamedChildren
 {
 public:
 	Filename(UniqPtr<Expression>& name, UniqPtrVec<Argument>& args,
@@ -50,6 +51,8 @@ public:
 
 	const Expression& name() const { return *unqualName_; }
 	const UniqPtrVec<Argument>& arguments() const { return args_; }
+
+	const Expression* Lookup(const Identifier&) const override;
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;

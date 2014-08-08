@@ -1,0 +1,28 @@
+#
+# RUN: fab --parse-only --print-ast %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: foo:file = file('foo.c');
+foo = file('foo.c');
+
+# CHECK: name:string = foo.name;
+name = foo.name;
+
+# CHECK: no_flags:list[string] = foo.cflags ? [ ];
+no_flags:list[string] = foo.cflags ? [];
+
+# TODO: implement foo.subdir, foo.generated and other information that
+#       don't have at parse time (but whose types we do know!)
+
+# CHECK: file_with_explicit_subdir:file = file('bar.c', subdir = subdir);
+file_with_explicit_subdir = file('bar.c', subdir = subdir);
+
+# CHECK: explicit_subdir:string = file_with_explicit_subdir.subdir;
+explicit_subdir = file_with_explicit_subdir.subdir;
+
+# CHECK: file_with_flags:file = file('baz.c', cflags = [ '-D SOMETHING_SPECIAL' ]);
+file_with_flags = file('baz.c', cflags = [ '-D SOMETHING_SPECIAL' ]);
+
+# CHECK: cflags:list[string] = file_with_flags.cflags;
+cflags = file_with_flags.cflags;

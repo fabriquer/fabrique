@@ -362,6 +362,9 @@ FieldAccess* Parser::FieldAccess(UniqPtr<Expression>& structure,
 	if (auto *hs = dynamic_cast<const HasScope*>(base))
 		e = hs->scope().Lookup(*field);
 
+	else if (auto *f = dynamic_cast<const Filename*>(base))
+		e = f->Lookup(*field);
+
 	else
 		throw SemanticException("value does not have fields",
 		                        structure->source());

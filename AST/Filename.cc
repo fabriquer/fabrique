@@ -49,6 +49,26 @@ Filename::Filename(UniqPtr<Expression>& name, UniqPtrVec<Argument>& args,
 }
 
 
+const Expression* Filename::Lookup(const Identifier& id) const
+{
+	const string& name = id.name();
+
+	if (name == "name")
+		return unqualName_.get();
+
+	/*
+	 * TODO: implement subdir, generated and other values whose types
+	 *       we understand at parse time but whose values we do not
+	 */
+
+	for (auto& arg : args_)
+		if (name == arg->getName().name())
+			return arg.get();
+
+	return nullptr;
+}
+
+
 void Filename::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
 	out
