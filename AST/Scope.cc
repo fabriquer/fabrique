@@ -68,7 +68,7 @@ const Expression* Scope::Lookup(const Identifier& name) const
 	if (parent_)
 		return parent_->Lookup(name);
 
-	return NULL;
+	return nullptr;
 }
 
 
