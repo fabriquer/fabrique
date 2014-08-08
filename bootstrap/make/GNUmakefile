@@ -63,22 +63,11 @@ buildroot : ${buildroot}
 
 clean :
 	echo "cleaning..."
-	rm -rf ${buildroot}/Parsing/fab.yacc.cc ${buildroot}/Parsing/fab.yacc.h ${buildroot}/Parsing/fab.yacc.cc ${buildroot}/Parsing/fab.yacc.h ${buildroot}/Parsing/fab.lex.cc ${buildroot}/Parsing/fab.lex.h ${buildroot}/Parsing/fab.lex.cc ${buildroot}/Parsing/fab.lex.h ${buildroot}/Parsing/fab.lex.cc.o ${buildroot}/Parsing/fab.yacc.cc.o ${buildroot}/driver.cc.o ${buildroot}/AST/Action.cc.o ${buildroot}/AST/Argument.cc.o ${buildroot}/AST/ASTDump.cc.o ${buildroot}/AST/BinaryOperation.cc.o ${buildroot}/AST/Call.cc.o ${buildroot}/AST/CompoundExpr.cc.o ${buildroot}/AST/Conditional.cc.o ${buildroot}/AST/Expression.cc.o ${buildroot}/AST/FieldAccess.cc.o ${buildroot}/AST/FieldQuery.cc.o ${buildroot}/AST/Filename.cc.o ${buildroot}/AST/FileList.cc.o ${buildroot}/AST/Foreach.cc.o ${buildroot}/AST/Function.cc.o ${buildroot}/AST/HasParameters.cc.o ${buildroot}/AST/HasScope.cc.o ${buildroot}/AST/Identifier.cc.o ${buildroot}/AST/Import.cc.o ${buildroot}/AST/List.cc.o ${buildroot}/AST/Mapping.cc.o ${buildroot}/AST/Node.cc.o ${buildroot}/AST/Parameter.cc.o ${buildroot}/AST/Scope.cc.o ${buildroot}/AST/SomeValue.cc.o ${buildroot}/AST/StructInstantiation.cc.o ${buildroot}/AST/SymbolReference.cc.o ${buildroot}/AST/UnaryOperation.cc.o ${buildroot}/AST/Value.cc.o ${buildroot}/AST/Visitor.cc.o ${buildroot}/AST/literals.cc.o ${buildroot}/Backend/Backend.cc.o ${buildroot}/Backend/Dot.cc.o ${buildroot}/Backend/Make.cc.o ${buildroot}/Backend/Ninja.cc.o ${buildroot}/Backend/Null.cc.o ${buildroot}/DAG/Build.cc.o ${buildroot}/DAG/Callable.cc.o ${buildroot}/DAG/DAG.cc.o ${buildroot}/DAG/File.cc.o ${buildroot}/DAG/Formatter.cc.o ${buildroot}/DAG/Function.cc.o ${buildroot}/DAG/List.cc.o ${buildroot}/DAG/Parameter.cc.o ${buildroot}/DAG/Primitive.cc.o ${buildroot}/DAG/Rule.cc.o ${buildroot}/DAG/Structure.cc.o ${buildroot}/DAG/Target.cc.o ${buildroot}/DAG/UndefinedValueException.cc.o ${buildroot}/DAG/Value.cc.o ${buildroot}/DAG/Visitor.cc.o ${buildroot}/Parsing/Lexer.cc.o ${buildroot}/Parsing/Parser.cc.o ${buildroot}/Parsing/Token.cc.o ${buildroot}/Support/Arguments.cc.o ${buildroot}/Support/Bytestream.cc.o ${buildroot}/Support/ErrorReport.cc.o ${buildroot}/Support/Join.cc.o ${buildroot}/Support/Printable.cc.o ${buildroot}/Support/SourceLocation.cc.o ${buildroot}/Support/Visitable.cc.o ${buildroot}/Support/exceptions.cc.o ${buildroot}/Support/os-posix.cc.o ${buildroot}/Types/BooleanType.cc.o ${buildroot}/Types/FileType.cc.o ${buildroot}/Types/FunctionType.cc.o ${buildroot}/Types/IntegerType.cc.o ${buildroot}/Types/MaybeType.cc.o ${buildroot}/Types/OptionallyTyped.cc.o ${buildroot}/Types/SequenceType.cc.o ${buildroot}/Types/StringType.cc.o ${buildroot}/Types/StructureType.cc.o ${buildroot}/Types/Type.cc.o ${buildroot}/Types/TypeContext.cc.o ${buildroot}/Types/TypeError.cc.o ${buildroot}/Types/Typed.cc.o ${buildroot}/fab ${buildroot}/lit-test-results/report.txt
+	rm -rf ${buildroot}/AST/ASTDump.cc.o ${buildroot}/AST/Action.cc.o ${buildroot}/AST/Argument.cc.o ${buildroot}/AST/BinaryOperation.cc.o ${buildroot}/AST/Call.cc.o ${buildroot}/AST/CompoundExpr.cc.o ${buildroot}/AST/Conditional.cc.o ${buildroot}/AST/Expression.cc.o ${buildroot}/AST/FieldAccess.cc.o ${buildroot}/AST/FieldQuery.cc.o ${buildroot}/AST/FileList.cc.o ${buildroot}/AST/Filename.cc.o ${buildroot}/AST/Foreach.cc.o ${buildroot}/AST/Function.cc.o ${buildroot}/AST/HasParameters.cc.o ${buildroot}/AST/HasScope.cc.o ${buildroot}/AST/Identifier.cc.o ${buildroot}/AST/Import.cc.o ${buildroot}/AST/List.cc.o ${buildroot}/AST/Mapping.cc.o ${buildroot}/AST/Node.cc.o ${buildroot}/AST/Parameter.cc.o ${buildroot}/AST/Scope.cc.o ${buildroot}/AST/SomeValue.cc.o ${buildroot}/AST/StructInstantiation.cc.o ${buildroot}/AST/SymbolReference.cc.o ${buildroot}/AST/UnaryOperation.cc.o ${buildroot}/AST/Value.cc.o ${buildroot}/AST/Visitor.cc.o ${buildroot}/AST/literals.cc.o ${buildroot}/Backend/Backend.cc.o ${buildroot}/Backend/Dot.cc.o ${buildroot}/Backend/Make.cc.o ${buildroot}/Backend/Ninja.cc.o ${buildroot}/Backend/Null.cc.o ${buildroot}/DAG/Build.cc.o ${buildroot}/DAG/Callable.cc.o ${buildroot}/DAG/DAG.cc.o ${buildroot}/DAG/File.cc.o ${buildroot}/DAG/Formatter.cc.o ${buildroot}/DAG/Function.cc.o ${buildroot}/DAG/List.cc.o ${buildroot}/DAG/Parameter.cc.o ${buildroot}/DAG/Primitive.cc.o ${buildroot}/DAG/Rule.cc.o ${buildroot}/DAG/Structure.cc.o ${buildroot}/DAG/Target.cc.o ${buildroot}/DAG/UndefinedValueException.cc.o ${buildroot}/DAG/Value.cc.o ${buildroot}/DAG/Visitor.cc.o ${buildroot}/Parsing/Lexer.cc.o ${buildroot}/Parsing/Parser.cc.o ${buildroot}/Parsing/Token.cc.o ${buildroot}/Parsing/fab.lex.cc ${buildroot}/Parsing/fab.lex.cc.o ${buildroot}/Parsing/fab.lex.h ${buildroot}/Parsing/fab.yacc.cc ${buildroot}/Parsing/fab.yacc.cc.o ${buildroot}/Parsing/fab.yacc.h ${buildroot}/Support/Arguments.cc.o ${buildroot}/Support/Bytestream.cc.o ${buildroot}/Support/ErrorReport.cc.o ${buildroot}/Support/Join.cc.o ${buildroot}/Support/Printable.cc.o ${buildroot}/Support/SourceLocation.cc.o ${buildroot}/Support/Visitable.cc.o ${buildroot}/Support/exceptions.cc.o ${buildroot}/Support/os-posix.cc.o ${buildroot}/Types/BooleanType.cc.o ${buildroot}/Types/FileType.cc.o ${buildroot}/Types/FunctionType.cc.o ${buildroot}/Types/IntegerType.cc.o ${buildroot}/Types/MaybeType.cc.o ${buildroot}/Types/OptionallyTyped.cc.o ${buildroot}/Types/SequenceType.cc.o ${buildroot}/Types/StringType.cc.o ${buildroot}/Types/StructureType.cc.o ${buildroot}/Types/Type.cc.o ${buildroot}/Types/TypeContext.cc.o ${buildroot}/Types/TypeError.cc.o ${buildroot}/Types/Typed.cc.o ${buildroot}/driver.cc.o ${buildroot}/fab ${buildroot}/lit-test-results/report.txt
 
-${buildroot}/Parsing/fab.yacc.cc : | ${buildroot}/Parsing
-${buildroot}/Parsing/fab.yacc.h : | ${buildroot}/Parsing
-${buildroot}/Parsing/fab.yacc.cc : | ${buildroot}/Parsing
-${buildroot}/Parsing/fab.yacc.h : | ${buildroot}/Parsing
-${buildroot}/Parsing/fab.lex.cc : | ${buildroot}/Parsing
-${buildroot}/Parsing/fab.lex.h : | ${buildroot}/Parsing
-${buildroot}/Parsing/fab.lex.cc : | ${buildroot}/Parsing
-${buildroot}/Parsing/fab.lex.h : | ${buildroot}/Parsing
-${buildroot}/Parsing/fab.lex.cc.o : | ${buildroot}/Parsing
-${buildroot}/Parsing/fab.yacc.cc.o : | ${buildroot}/Parsing
-${buildroot}/driver.cc.o : | ${buildroot}
+${buildroot}/AST/ASTDump.cc.o : | ${buildroot}/AST
 ${buildroot}/AST/Action.cc.o : | ${buildroot}/AST
 ${buildroot}/AST/Argument.cc.o : | ${buildroot}/AST
-${buildroot}/AST/ASTDump.cc.o : | ${buildroot}/AST
 ${buildroot}/AST/BinaryOperation.cc.o : | ${buildroot}/AST
 ${buildroot}/AST/Call.cc.o : | ${buildroot}/AST
 ${buildroot}/AST/CompoundExpr.cc.o : | ${buildroot}/AST
@@ -86,8 +75,8 @@ ${buildroot}/AST/Conditional.cc.o : | ${buildroot}/AST
 ${buildroot}/AST/Expression.cc.o : | ${buildroot}/AST
 ${buildroot}/AST/FieldAccess.cc.o : | ${buildroot}/AST
 ${buildroot}/AST/FieldQuery.cc.o : | ${buildroot}/AST
-${buildroot}/AST/Filename.cc.o : | ${buildroot}/AST
 ${buildroot}/AST/FileList.cc.o : | ${buildroot}/AST
+${buildroot}/AST/Filename.cc.o : | ${buildroot}/AST
 ${buildroot}/AST/Foreach.cc.o : | ${buildroot}/AST
 ${buildroot}/AST/Function.cc.o : | ${buildroot}/AST
 ${buildroot}/AST/HasParameters.cc.o : | ${buildroot}/AST
@@ -129,6 +118,12 @@ ${buildroot}/DAG/Visitor.cc.o : | ${buildroot}/DAG
 ${buildroot}/Parsing/Lexer.cc.o : | ${buildroot}/Parsing
 ${buildroot}/Parsing/Parser.cc.o : | ${buildroot}/Parsing
 ${buildroot}/Parsing/Token.cc.o : | ${buildroot}/Parsing
+${buildroot}/Parsing/fab.lex.cc : | ${buildroot}/Parsing
+${buildroot}/Parsing/fab.lex.cc.o : | ${buildroot}/Parsing
+${buildroot}/Parsing/fab.lex.h : | ${buildroot}/Parsing
+${buildroot}/Parsing/fab.yacc.cc : | ${buildroot}/Parsing
+${buildroot}/Parsing/fab.yacc.cc.o : | ${buildroot}/Parsing
+${buildroot}/Parsing/fab.yacc.h : | ${buildroot}/Parsing
 ${buildroot}/Support/Arguments.cc.o : | ${buildroot}/Support
 ${buildroot}/Support/Bytestream.cc.o : | ${buildroot}/Support
 ${buildroot}/Support/ErrorReport.cc.o : | ${buildroot}/Support
@@ -151,6 +146,7 @@ ${buildroot}/Types/Type.cc.o : | ${buildroot}/Types
 ${buildroot}/Types/TypeContext.cc.o : | ${buildroot}/Types
 ${buildroot}/Types/TypeError.cc.o : | ${buildroot}/Types
 ${buildroot}/Types/Typed.cc.o : | ${buildroot}/Types
+${buildroot}/driver.cc.o : | ${buildroot}
 ${buildroot}/fab : | ${buildroot}
 ${buildroot}/lit-test-results/report.txt : | ${buildroot}/lit-test-results
 #

@@ -509,6 +509,10 @@ void DAGBuilder::Leave(const ast::Call& call)
 			Build::Create(rule, args, paramTypes, call.source()));
 
 		builds_.push_back(build);
+
+		for (const shared_ptr<File>& f : build->inputs())
+			files_.push_back(f);
+
 		for (const shared_ptr<File>& f : build->outputs())
 			files_.push_back(f);
 
