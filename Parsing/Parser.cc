@@ -366,7 +366,8 @@ FieldAccess* Parser::FieldAccess(UniqPtr<Expression>& structure,
 	}
 	catch (std::bad_cast&)
 	{
-		throw SemanticException("not a structure", structure->source());
+		throw SemanticException("value does not have fields",
+		                        structure->source());
 	}
 
 

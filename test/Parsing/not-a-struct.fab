@@ -5,7 +5,7 @@
 
 str:string = 'Hello, world!';
 
-# CHECK: {{.*}}/not-a-struct.fab:[[LINE:[0-9]+]]:7: error: not a structure
+# CHECK: {{.*}}/not-a-struct.fab:[[LINE:[0-9]+]]:7: error: value does not have fields
 # CHECK:      [[LINE]]
 # CHECK:      foo = str.some_field;
 # CHECK-NEXT:       ^~~
