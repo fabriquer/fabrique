@@ -18,27 +18,27 @@ cxxoptions=	-std=c++11
 dbgflags=	-O2 -D NDEBUG
 debug=	false
 debug_and_asserts=	false
-fab_executable=	${buildroot}/fab
+fab_executable=	fab
 generated_cxx_flags=	-std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Wno-deprecated-register
 includes=	-I ${srcroot} -I ${buildroot}
 lex=	
-lexer_src=	${buildroot}/Parsing/fab.lex.cc
+lexer_src=	Parsing/fab.lex.cc
 lit=	
 normal_cxx_flags=	-std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded
-objects=	${buildroot}/Parsing/fab.lex.cc.o ${buildroot}/Parsing/fab.yacc.cc.o ${buildroot}/driver.cc.o ${buildroot}/AST/Action.cc.o ${buildroot}/AST/Argument.cc.o ${buildroot}/AST/ASTDump.cc.o ${buildroot}/AST/BinaryOperation.cc.o ${buildroot}/AST/Call.cc.o ${buildroot}/AST/CompoundExpr.cc.o ${buildroot}/AST/Conditional.cc.o ${buildroot}/AST/Expression.cc.o ${buildroot}/AST/FieldAccess.cc.o ${buildroot}/AST/FieldQuery.cc.o ${buildroot}/AST/Filename.cc.o ${buildroot}/AST/FileList.cc.o ${buildroot}/AST/Foreach.cc.o ${buildroot}/AST/Function.cc.o ${buildroot}/AST/HasParameters.cc.o ${buildroot}/AST/HasScope.cc.o ${buildroot}/AST/Identifier.cc.o ${buildroot}/AST/Import.cc.o ${buildroot}/AST/List.cc.o ${buildroot}/AST/Mapping.cc.o ${buildroot}/AST/Node.cc.o ${buildroot}/AST/Parameter.cc.o ${buildroot}/AST/Scope.cc.o ${buildroot}/AST/SomeValue.cc.o ${buildroot}/AST/StructInstantiation.cc.o ${buildroot}/AST/SymbolReference.cc.o ${buildroot}/AST/UnaryOperation.cc.o ${buildroot}/AST/Value.cc.o ${buildroot}/AST/Visitor.cc.o ${buildroot}/AST/literals.cc.o ${buildroot}/Backend/Backend.cc.o ${buildroot}/Backend/Dot.cc.o ${buildroot}/Backend/Make.cc.o ${buildroot}/Backend/Ninja.cc.o ${buildroot}/Backend/Null.cc.o ${buildroot}/DAG/Build.cc.o ${buildroot}/DAG/Callable.cc.o ${buildroot}/DAG/DAG.cc.o ${buildroot}/DAG/File.cc.o ${buildroot}/DAG/Formatter.cc.o ${buildroot}/DAG/Function.cc.o ${buildroot}/DAG/List.cc.o ${buildroot}/DAG/Parameter.cc.o ${buildroot}/DAG/Primitive.cc.o ${buildroot}/DAG/Rule.cc.o ${buildroot}/DAG/Structure.cc.o ${buildroot}/DAG/Target.cc.o ${buildroot}/DAG/UndefinedValueException.cc.o ${buildroot}/DAG/Value.cc.o ${buildroot}/DAG/Visitor.cc.o ${buildroot}/Parsing/Lexer.cc.o ${buildroot}/Parsing/Parser.cc.o ${buildroot}/Parsing/Token.cc.o ${buildroot}/Support/Arguments.cc.o ${buildroot}/Support/Bytestream.cc.o ${buildroot}/Support/ErrorReport.cc.o ${buildroot}/Support/Join.cc.o ${buildroot}/Support/Printable.cc.o ${buildroot}/Support/SourceLocation.cc.o ${buildroot}/Support/Visitable.cc.o ${buildroot}/Support/exceptions.cc.o ${buildroot}/Support/os-posix.cc.o ${buildroot}/Types/BooleanType.cc.o ${buildroot}/Types/FileType.cc.o ${buildroot}/Types/FunctionType.cc.o ${buildroot}/Types/IntegerType.cc.o ${buildroot}/Types/MaybeType.cc.o ${buildroot}/Types/OptionallyTyped.cc.o ${buildroot}/Types/SequenceType.cc.o ${buildroot}/Types/StringType.cc.o ${buildroot}/Types/StructureType.cc.o ${buildroot}/Types/Type.cc.o ${buildroot}/Types/TypeContext.cc.o ${buildroot}/Types/TypeError.cc.o ${buildroot}/Types/Typed.cc.o
-parser_src=	${buildroot}/Parsing/fab.yacc.cc
+objects=	Parsing/fab.lex.cc.o Parsing/fab.yacc.cc.o driver.cc.o AST/Action.cc.o AST/Argument.cc.o AST/ASTDump.cc.o AST/BinaryOperation.cc.o AST/Call.cc.o AST/CompoundExpr.cc.o AST/Conditional.cc.o AST/Expression.cc.o AST/FieldAccess.cc.o AST/FieldQuery.cc.o AST/Filename.cc.o AST/FileList.cc.o AST/Foreach.cc.o AST/Function.cc.o AST/HasParameters.cc.o AST/HasScope.cc.o AST/Identifier.cc.o AST/Import.cc.o AST/List.cc.o AST/Mapping.cc.o AST/Node.cc.o AST/Parameter.cc.o AST/Scope.cc.o AST/SomeValue.cc.o AST/StructInstantiation.cc.o AST/SymbolReference.cc.o AST/UnaryOperation.cc.o AST/Value.cc.o AST/Visitor.cc.o AST/literals.cc.o Backend/Backend.cc.o Backend/Dot.cc.o Backend/Make.cc.o Backend/Ninja.cc.o Backend/Null.cc.o DAG/Build.cc.o DAG/Callable.cc.o DAG/DAG.cc.o DAG/File.cc.o DAG/Formatter.cc.o DAG/Function.cc.o DAG/List.cc.o DAG/Parameter.cc.o DAG/Primitive.cc.o DAG/Rule.cc.o DAG/Structure.cc.o DAG/Target.cc.o DAG/UndefinedValueException.cc.o DAG/Value.cc.o DAG/Visitor.cc.o Parsing/Lexer.cc.o Parsing/Parser.cc.o Parsing/Token.cc.o Support/Arguments.cc.o Support/Bytestream.cc.o Support/ErrorReport.cc.o Support/Join.cc.o Support/Printable.cc.o Support/SourceLocation.cc.o Support/Visitable.cc.o Support/exceptions.cc.o Support/os-posix.cc.o Types/BooleanType.cc.o Types/FileType.cc.o Types/FunctionType.cc.o Types/IntegerType.cc.o Types/MaybeType.cc.o Types/OptionallyTyped.cc.o Types/SequenceType.cc.o Types/StringType.cc.o Types/StructureType.cc.o Types/Type.cc.o Types/TypeContext.cc.o Types/TypeError.cc.o Types/Typed.cc.o
+parser_src=	Parsing/fab.yacc.cc
 srcroot=	../..
 subdir=	
-test=	${buildroot}/lit-test-results/report.txt
+test=	lit-test-results/report.txt
 vendor=	-isystem ${srcroot}/vendor
 warnings=	-Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded
 yacc=	
 
-test : ${buildroot}/lit-test-results/report.txt
-fab_executable : ${buildroot}/fab
-objects : ${buildroot}/Parsing/fab.lex.cc.o ${buildroot}/Parsing/fab.yacc.cc.o ${buildroot}/driver.cc.o ${buildroot}/AST/Action.cc.o ${buildroot}/AST/Argument.cc.o ${buildroot}/AST/ASTDump.cc.o ${buildroot}/AST/BinaryOperation.cc.o ${buildroot}/AST/Call.cc.o ${buildroot}/AST/CompoundExpr.cc.o ${buildroot}/AST/Conditional.cc.o ${buildroot}/AST/Expression.cc.o ${buildroot}/AST/FieldAccess.cc.o ${buildroot}/AST/FieldQuery.cc.o ${buildroot}/AST/Filename.cc.o ${buildroot}/AST/FileList.cc.o ${buildroot}/AST/Foreach.cc.o ${buildroot}/AST/Function.cc.o ${buildroot}/AST/HasParameters.cc.o ${buildroot}/AST/HasScope.cc.o ${buildroot}/AST/Identifier.cc.o ${buildroot}/AST/Import.cc.o ${buildroot}/AST/List.cc.o ${buildroot}/AST/Mapping.cc.o ${buildroot}/AST/Node.cc.o ${buildroot}/AST/Parameter.cc.o ${buildroot}/AST/Scope.cc.o ${buildroot}/AST/SomeValue.cc.o ${buildroot}/AST/StructInstantiation.cc.o ${buildroot}/AST/SymbolReference.cc.o ${buildroot}/AST/UnaryOperation.cc.o ${buildroot}/AST/Value.cc.o ${buildroot}/AST/Visitor.cc.o ${buildroot}/AST/literals.cc.o ${buildroot}/Backend/Backend.cc.o ${buildroot}/Backend/Dot.cc.o ${buildroot}/Backend/Make.cc.o ${buildroot}/Backend/Ninja.cc.o ${buildroot}/Backend/Null.cc.o ${buildroot}/DAG/Build.cc.o ${buildroot}/DAG/Callable.cc.o ${buildroot}/DAG/DAG.cc.o ${buildroot}/DAG/File.cc.o ${buildroot}/DAG/Formatter.cc.o ${buildroot}/DAG/Function.cc.o ${buildroot}/DAG/List.cc.o ${buildroot}/DAG/Parameter.cc.o ${buildroot}/DAG/Primitive.cc.o ${buildroot}/DAG/Rule.cc.o ${buildroot}/DAG/Structure.cc.o ${buildroot}/DAG/Target.cc.o ${buildroot}/DAG/UndefinedValueException.cc.o ${buildroot}/DAG/Value.cc.o ${buildroot}/DAG/Visitor.cc.o ${buildroot}/Parsing/Lexer.cc.o ${buildroot}/Parsing/Parser.cc.o ${buildroot}/Parsing/Token.cc.o ${buildroot}/Support/Arguments.cc.o ${buildroot}/Support/Bytestream.cc.o ${buildroot}/Support/ErrorReport.cc.o ${buildroot}/Support/Join.cc.o ${buildroot}/Support/Printable.cc.o ${buildroot}/Support/SourceLocation.cc.o ${buildroot}/Support/Visitable.cc.o ${buildroot}/Support/exceptions.cc.o ${buildroot}/Support/os-posix.cc.o ${buildroot}/Types/BooleanType.cc.o ${buildroot}/Types/FileType.cc.o ${buildroot}/Types/FunctionType.cc.o ${buildroot}/Types/IntegerType.cc.o ${buildroot}/Types/MaybeType.cc.o ${buildroot}/Types/OptionallyTyped.cc.o ${buildroot}/Types/SequenceType.cc.o ${buildroot}/Types/StringType.cc.o ${buildroot}/Types/StructureType.cc.o ${buildroot}/Types/Type.cc.o ${buildroot}/Types/TypeContext.cc.o ${buildroot}/Types/TypeError.cc.o ${buildroot}/Types/Typed.cc.o
-lexer_src : ${buildroot}/Parsing/fab.lex.cc
-parser_src : ${buildroot}/Parsing/fab.yacc.cc
+test : lit-test-results/report.txt
+fab_executable : fab
+objects : Parsing/fab.lex.cc.o Parsing/fab.yacc.cc.o driver.cc.o AST/Action.cc.o AST/Argument.cc.o AST/ASTDump.cc.o AST/BinaryOperation.cc.o AST/Call.cc.o AST/CompoundExpr.cc.o AST/Conditional.cc.o AST/Expression.cc.o AST/FieldAccess.cc.o AST/FieldQuery.cc.o AST/Filename.cc.o AST/FileList.cc.o AST/Foreach.cc.o AST/Function.cc.o AST/HasParameters.cc.o AST/HasScope.cc.o AST/Identifier.cc.o AST/Import.cc.o AST/List.cc.o AST/Mapping.cc.o AST/Node.cc.o AST/Parameter.cc.o AST/Scope.cc.o AST/SomeValue.cc.o AST/StructInstantiation.cc.o AST/SymbolReference.cc.o AST/UnaryOperation.cc.o AST/Value.cc.o AST/Visitor.cc.o AST/literals.cc.o Backend/Backend.cc.o Backend/Dot.cc.o Backend/Make.cc.o Backend/Ninja.cc.o Backend/Null.cc.o DAG/Build.cc.o DAG/Callable.cc.o DAG/DAG.cc.o DAG/File.cc.o DAG/Formatter.cc.o DAG/Function.cc.o DAG/List.cc.o DAG/Parameter.cc.o DAG/Primitive.cc.o DAG/Rule.cc.o DAG/Structure.cc.o DAG/Target.cc.o DAG/UndefinedValueException.cc.o DAG/Value.cc.o DAG/Visitor.cc.o Parsing/Lexer.cc.o Parsing/Parser.cc.o Parsing/Token.cc.o Support/Arguments.cc.o Support/Bytestream.cc.o Support/ErrorReport.cc.o Support/Join.cc.o Support/Printable.cc.o Support/SourceLocation.cc.o Support/Visitable.cc.o Support/exceptions.cc.o Support/os-posix.cc.o Types/BooleanType.cc.o Types/FileType.cc.o Types/FunctionType.cc.o Types/IntegerType.cc.o Types/MaybeType.cc.o Types/OptionallyTyped.cc.o Types/SequenceType.cc.o Types/StringType.cc.o Types/StructureType.cc.o Types/Type.cc.o Types/TypeContext.cc.o Types/TypeError.cc.o Types/Typed.cc.o
+lexer_src : Parsing/fab.lex.cc
+parser_src : Parsing/fab.yacc.cc
 cxx_srcs : ${srcroot}/driver.cc ${srcroot}/AST/Action.cc ${srcroot}/AST/Argument.cc ${srcroot}/AST/ASTDump.cc ${srcroot}/AST/BinaryOperation.cc ${srcroot}/AST/Call.cc ${srcroot}/AST/CompoundExpr.cc ${srcroot}/AST/Conditional.cc ${srcroot}/AST/Expression.cc ${srcroot}/AST/FieldAccess.cc ${srcroot}/AST/FieldQuery.cc ${srcroot}/AST/Filename.cc ${srcroot}/AST/FileList.cc ${srcroot}/AST/Foreach.cc ${srcroot}/AST/Function.cc ${srcroot}/AST/HasParameters.cc ${srcroot}/AST/HasScope.cc ${srcroot}/AST/Identifier.cc ${srcroot}/AST/Import.cc ${srcroot}/AST/List.cc ${srcroot}/AST/Mapping.cc ${srcroot}/AST/Node.cc ${srcroot}/AST/Parameter.cc ${srcroot}/AST/Scope.cc ${srcroot}/AST/SomeValue.cc ${srcroot}/AST/StructInstantiation.cc ${srcroot}/AST/SymbolReference.cc ${srcroot}/AST/UnaryOperation.cc ${srcroot}/AST/Value.cc ${srcroot}/AST/Visitor.cc ${srcroot}/AST/literals.cc ${srcroot}/Backend/Backend.cc ${srcroot}/Backend/Dot.cc ${srcroot}/Backend/Make.cc ${srcroot}/Backend/Ninja.cc ${srcroot}/Backend/Null.cc ${srcroot}/DAG/Build.cc ${srcroot}/DAG/Callable.cc ${srcroot}/DAG/DAG.cc ${srcroot}/DAG/File.cc ${srcroot}/DAG/Formatter.cc ${srcroot}/DAG/Function.cc ${srcroot}/DAG/List.cc ${srcroot}/DAG/Parameter.cc ${srcroot}/DAG/Primitive.cc ${srcroot}/DAG/Rule.cc ${srcroot}/DAG/Structure.cc ${srcroot}/DAG/Target.cc ${srcroot}/DAG/UndefinedValueException.cc ${srcroot}/DAG/Value.cc ${srcroot}/DAG/Visitor.cc ${srcroot}/Parsing/Lexer.cc ${srcroot}/Parsing/Parser.cc ${srcroot}/Parsing/Token.cc ${srcroot}/Support/Arguments.cc ${srcroot}/Support/Bytestream.cc ${srcroot}/Support/ErrorReport.cc ${srcroot}/Support/Join.cc ${srcroot}/Support/Printable.cc ${srcroot}/Support/SourceLocation.cc ${srcroot}/Support/Visitable.cc ${srcroot}/Support/exceptions.cc ${srcroot}/Support/os-posix.cc ${srcroot}/Types/BooleanType.cc ${srcroot}/Types/FileType.cc ${srcroot}/Types/FunctionType.cc ${srcroot}/Types/IntegerType.cc ${srcroot}/Types/MaybeType.cc ${srcroot}/Types/OptionallyTyped.cc ${srcroot}/Types/SequenceType.cc ${srcroot}/Types/StringType.cc ${srcroot}/Types/StructureType.cc ${srcroot}/Types/Type.cc ${srcroot}/Types/TypeContext.cc ${srcroot}/Types/TypeError.cc ${srcroot}/Types/Typed.cc
 generated_cxx_flags : -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Wno-deprecated-register
 normal_cxx_flags : -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded
@@ -63,603 +63,599 @@ buildroot : ${buildroot}
 
 clean :
 	echo "cleaning..."
-	rm -rf ${buildroot}/AST/ASTDump.cc.o ${buildroot}/AST/Action.cc.o ${buildroot}/AST/Argument.cc.o ${buildroot}/AST/BinaryOperation.cc.o ${buildroot}/AST/Call.cc.o ${buildroot}/AST/CompoundExpr.cc.o ${buildroot}/AST/Conditional.cc.o ${buildroot}/AST/Expression.cc.o ${buildroot}/AST/FieldAccess.cc.o ${buildroot}/AST/FieldQuery.cc.o ${buildroot}/AST/FileList.cc.o ${buildroot}/AST/Filename.cc.o ${buildroot}/AST/Foreach.cc.o ${buildroot}/AST/Function.cc.o ${buildroot}/AST/HasParameters.cc.o ${buildroot}/AST/HasScope.cc.o ${buildroot}/AST/Identifier.cc.o ${buildroot}/AST/Import.cc.o ${buildroot}/AST/List.cc.o ${buildroot}/AST/Mapping.cc.o ${buildroot}/AST/Node.cc.o ${buildroot}/AST/Parameter.cc.o ${buildroot}/AST/Scope.cc.o ${buildroot}/AST/SomeValue.cc.o ${buildroot}/AST/StructInstantiation.cc.o ${buildroot}/AST/SymbolReference.cc.o ${buildroot}/AST/UnaryOperation.cc.o ${buildroot}/AST/Value.cc.o ${buildroot}/AST/Visitor.cc.o ${buildroot}/AST/literals.cc.o ${buildroot}/Backend/Backend.cc.o ${buildroot}/Backend/Dot.cc.o ${buildroot}/Backend/Make.cc.o ${buildroot}/Backend/Ninja.cc.o ${buildroot}/Backend/Null.cc.o ${buildroot}/DAG/Build.cc.o ${buildroot}/DAG/Callable.cc.o ${buildroot}/DAG/DAG.cc.o ${buildroot}/DAG/File.cc.o ${buildroot}/DAG/Formatter.cc.o ${buildroot}/DAG/Function.cc.o ${buildroot}/DAG/List.cc.o ${buildroot}/DAG/Parameter.cc.o ${buildroot}/DAG/Primitive.cc.o ${buildroot}/DAG/Rule.cc.o ${buildroot}/DAG/Structure.cc.o ${buildroot}/DAG/Target.cc.o ${buildroot}/DAG/UndefinedValueException.cc.o ${buildroot}/DAG/Value.cc.o ${buildroot}/DAG/Visitor.cc.o ${buildroot}/Parsing/Lexer.cc.o ${buildroot}/Parsing/Parser.cc.o ${buildroot}/Parsing/Token.cc.o ${buildroot}/Parsing/fab.lex.cc ${buildroot}/Parsing/fab.lex.cc.o ${buildroot}/Parsing/fab.lex.h ${buildroot}/Parsing/fab.yacc.cc ${buildroot}/Parsing/fab.yacc.cc.o ${buildroot}/Parsing/fab.yacc.h ${buildroot}/Support/Arguments.cc.o ${buildroot}/Support/Bytestream.cc.o ${buildroot}/Support/ErrorReport.cc.o ${buildroot}/Support/Join.cc.o ${buildroot}/Support/Printable.cc.o ${buildroot}/Support/SourceLocation.cc.o ${buildroot}/Support/Visitable.cc.o ${buildroot}/Support/exceptions.cc.o ${buildroot}/Support/os-posix.cc.o ${buildroot}/Types/BooleanType.cc.o ${buildroot}/Types/FileType.cc.o ${buildroot}/Types/FunctionType.cc.o ${buildroot}/Types/IntegerType.cc.o ${buildroot}/Types/MaybeType.cc.o ${buildroot}/Types/OptionallyTyped.cc.o ${buildroot}/Types/SequenceType.cc.o ${buildroot}/Types/StringType.cc.o ${buildroot}/Types/StructureType.cc.o ${buildroot}/Types/Type.cc.o ${buildroot}/Types/TypeContext.cc.o ${buildroot}/Types/TypeError.cc.o ${buildroot}/Types/Typed.cc.o ${buildroot}/driver.cc.o ${buildroot}/fab ${buildroot}/lit-test-results/report.txt
+	rm -rf AST/ASTDump.cc.o AST/Action.cc.o AST/Argument.cc.o AST/BinaryOperation.cc.o AST/Call.cc.o AST/CompoundExpr.cc.o AST/Conditional.cc.o AST/Expression.cc.o AST/FieldAccess.cc.o AST/FieldQuery.cc.o AST/FileList.cc.o AST/Filename.cc.o AST/Foreach.cc.o AST/Function.cc.o AST/HasParameters.cc.o AST/HasScope.cc.o AST/Identifier.cc.o AST/Import.cc.o AST/List.cc.o AST/Mapping.cc.o AST/Node.cc.o AST/Parameter.cc.o AST/Scope.cc.o AST/SomeValue.cc.o AST/StructInstantiation.cc.o AST/SymbolReference.cc.o AST/UnaryOperation.cc.o AST/Value.cc.o AST/Visitor.cc.o AST/literals.cc.o Backend/Backend.cc.o Backend/Dot.cc.o Backend/Make.cc.o Backend/Ninja.cc.o Backend/Null.cc.o DAG/Build.cc.o DAG/Callable.cc.o DAG/DAG.cc.o DAG/File.cc.o DAG/Formatter.cc.o DAG/Function.cc.o DAG/List.cc.o DAG/Parameter.cc.o DAG/Primitive.cc.o DAG/Rule.cc.o DAG/Structure.cc.o DAG/Target.cc.o DAG/UndefinedValueException.cc.o DAG/Value.cc.o DAG/Visitor.cc.o Parsing/Lexer.cc.o Parsing/Parser.cc.o Parsing/Token.cc.o Parsing/fab.lex.cc Parsing/fab.lex.cc.o Parsing/fab.lex.h Parsing/fab.yacc.cc Parsing/fab.yacc.cc.o Parsing/fab.yacc.h Support/Arguments.cc.o Support/Bytestream.cc.o Support/ErrorReport.cc.o Support/Join.cc.o Support/Printable.cc.o Support/SourceLocation.cc.o Support/Visitable.cc.o Support/exceptions.cc.o Support/os-posix.cc.o Types/BooleanType.cc.o Types/FileType.cc.o Types/FunctionType.cc.o Types/IntegerType.cc.o Types/MaybeType.cc.o Types/OptionallyTyped.cc.o Types/SequenceType.cc.o Types/StringType.cc.o Types/StructureType.cc.o Types/Type.cc.o Types/TypeContext.cc.o Types/TypeError.cc.o Types/Typed.cc.o driver.cc.o fab lit-test-results/report.txt
 
-${buildroot}/AST/ASTDump.cc.o : | ${buildroot}/AST
-${buildroot}/AST/Action.cc.o : | ${buildroot}/AST
-${buildroot}/AST/Argument.cc.o : | ${buildroot}/AST
-${buildroot}/AST/BinaryOperation.cc.o : | ${buildroot}/AST
-${buildroot}/AST/Call.cc.o : | ${buildroot}/AST
-${buildroot}/AST/CompoundExpr.cc.o : | ${buildroot}/AST
-${buildroot}/AST/Conditional.cc.o : | ${buildroot}/AST
-${buildroot}/AST/Expression.cc.o : | ${buildroot}/AST
-${buildroot}/AST/FieldAccess.cc.o : | ${buildroot}/AST
-${buildroot}/AST/FieldQuery.cc.o : | ${buildroot}/AST
-${buildroot}/AST/FileList.cc.o : | ${buildroot}/AST
-${buildroot}/AST/Filename.cc.o : | ${buildroot}/AST
-${buildroot}/AST/Foreach.cc.o : | ${buildroot}/AST
-${buildroot}/AST/Function.cc.o : | ${buildroot}/AST
-${buildroot}/AST/HasParameters.cc.o : | ${buildroot}/AST
-${buildroot}/AST/HasScope.cc.o : | ${buildroot}/AST
-${buildroot}/AST/Identifier.cc.o : | ${buildroot}/AST
-${buildroot}/AST/Import.cc.o : | ${buildroot}/AST
-${buildroot}/AST/List.cc.o : | ${buildroot}/AST
-${buildroot}/AST/Mapping.cc.o : | ${buildroot}/AST
-${buildroot}/AST/Node.cc.o : | ${buildroot}/AST
-${buildroot}/AST/Parameter.cc.o : | ${buildroot}/AST
-${buildroot}/AST/Scope.cc.o : | ${buildroot}/AST
-${buildroot}/AST/SomeValue.cc.o : | ${buildroot}/AST
-${buildroot}/AST/StructInstantiation.cc.o : | ${buildroot}/AST
-${buildroot}/AST/SymbolReference.cc.o : | ${buildroot}/AST
-${buildroot}/AST/UnaryOperation.cc.o : | ${buildroot}/AST
-${buildroot}/AST/Value.cc.o : | ${buildroot}/AST
-${buildroot}/AST/Visitor.cc.o : | ${buildroot}/AST
-${buildroot}/AST/literals.cc.o : | ${buildroot}/AST
-${buildroot}/Backend/Backend.cc.o : | ${buildroot}/Backend
-${buildroot}/Backend/Dot.cc.o : | ${buildroot}/Backend
-${buildroot}/Backend/Make.cc.o : | ${buildroot}/Backend
-${buildroot}/Backend/Ninja.cc.o : | ${buildroot}/Backend
-${buildroot}/Backend/Null.cc.o : | ${buildroot}/Backend
-${buildroot}/DAG/Build.cc.o : | ${buildroot}/DAG
-${buildroot}/DAG/Callable.cc.o : | ${buildroot}/DAG
-${buildroot}/DAG/DAG.cc.o : | ${buildroot}/DAG
-${buildroot}/DAG/File.cc.o : | ${buildroot}/DAG
-${buildroot}/DAG/Formatter.cc.o : | ${buildroot}/DAG
-${buildroot}/DAG/Function.cc.o : | ${buildroot}/DAG
-${buildroot}/DAG/List.cc.o : | ${buildroot}/DAG
-${buildroot}/DAG/Parameter.cc.o : | ${buildroot}/DAG
-${buildroot}/DAG/Primitive.cc.o : | ${buildroot}/DAG
-${buildroot}/DAG/Rule.cc.o : | ${buildroot}/DAG
-${buildroot}/DAG/Structure.cc.o : | ${buildroot}/DAG
-${buildroot}/DAG/Target.cc.o : | ${buildroot}/DAG
-${buildroot}/DAG/UndefinedValueException.cc.o : | ${buildroot}/DAG
-${buildroot}/DAG/Value.cc.o : | ${buildroot}/DAG
-${buildroot}/DAG/Visitor.cc.o : | ${buildroot}/DAG
-${buildroot}/Parsing/Lexer.cc.o : | ${buildroot}/Parsing
-${buildroot}/Parsing/Parser.cc.o : | ${buildroot}/Parsing
-${buildroot}/Parsing/Token.cc.o : | ${buildroot}/Parsing
-${buildroot}/Parsing/fab.lex.cc : | ${buildroot}/Parsing
-${buildroot}/Parsing/fab.lex.cc.o : | ${buildroot}/Parsing
-${buildroot}/Parsing/fab.lex.h : | ${buildroot}/Parsing
-${buildroot}/Parsing/fab.yacc.cc : | ${buildroot}/Parsing
-${buildroot}/Parsing/fab.yacc.cc.o : | ${buildroot}/Parsing
-${buildroot}/Parsing/fab.yacc.h : | ${buildroot}/Parsing
-${buildroot}/Support/Arguments.cc.o : | ${buildroot}/Support
-${buildroot}/Support/Bytestream.cc.o : | ${buildroot}/Support
-${buildroot}/Support/ErrorReport.cc.o : | ${buildroot}/Support
-${buildroot}/Support/Join.cc.o : | ${buildroot}/Support
-${buildroot}/Support/Printable.cc.o : | ${buildroot}/Support
-${buildroot}/Support/SourceLocation.cc.o : | ${buildroot}/Support
-${buildroot}/Support/Visitable.cc.o : | ${buildroot}/Support
-${buildroot}/Support/exceptions.cc.o : | ${buildroot}/Support
-${buildroot}/Support/os-posix.cc.o : | ${buildroot}/Support
-${buildroot}/Types/BooleanType.cc.o : | ${buildroot}/Types
-${buildroot}/Types/FileType.cc.o : | ${buildroot}/Types
-${buildroot}/Types/FunctionType.cc.o : | ${buildroot}/Types
-${buildroot}/Types/IntegerType.cc.o : | ${buildroot}/Types
-${buildroot}/Types/MaybeType.cc.o : | ${buildroot}/Types
-${buildroot}/Types/OptionallyTyped.cc.o : | ${buildroot}/Types
-${buildroot}/Types/SequenceType.cc.o : | ${buildroot}/Types
-${buildroot}/Types/StringType.cc.o : | ${buildroot}/Types
-${buildroot}/Types/StructureType.cc.o : | ${buildroot}/Types
-${buildroot}/Types/Type.cc.o : | ${buildroot}/Types
-${buildroot}/Types/TypeContext.cc.o : | ${buildroot}/Types
-${buildroot}/Types/TypeError.cc.o : | ${buildroot}/Types
-${buildroot}/Types/Typed.cc.o : | ${buildroot}/Types
-${buildroot}/driver.cc.o : | ${buildroot}
-${buildroot}/fab : | ${buildroot}
-${buildroot}/lit-test-results/report.txt : | ${buildroot}/lit-test-results
+AST/ASTDump.cc.o : | AST
+AST/Action.cc.o : | AST
+AST/Argument.cc.o : | AST
+AST/BinaryOperation.cc.o : | AST
+AST/Call.cc.o : | AST
+AST/CompoundExpr.cc.o : | AST
+AST/Conditional.cc.o : | AST
+AST/Expression.cc.o : | AST
+AST/FieldAccess.cc.o : | AST
+AST/FieldQuery.cc.o : | AST
+AST/FileList.cc.o : | AST
+AST/Filename.cc.o : | AST
+AST/Foreach.cc.o : | AST
+AST/Function.cc.o : | AST
+AST/HasParameters.cc.o : | AST
+AST/HasScope.cc.o : | AST
+AST/Identifier.cc.o : | AST
+AST/Import.cc.o : | AST
+AST/List.cc.o : | AST
+AST/Mapping.cc.o : | AST
+AST/Node.cc.o : | AST
+AST/Parameter.cc.o : | AST
+AST/Scope.cc.o : | AST
+AST/SomeValue.cc.o : | AST
+AST/StructInstantiation.cc.o : | AST
+AST/SymbolReference.cc.o : | AST
+AST/UnaryOperation.cc.o : | AST
+AST/Value.cc.o : | AST
+AST/Visitor.cc.o : | AST
+AST/literals.cc.o : | AST
+Backend/Backend.cc.o : | Backend
+Backend/Dot.cc.o : | Backend
+Backend/Make.cc.o : | Backend
+Backend/Ninja.cc.o : | Backend
+Backend/Null.cc.o : | Backend
+DAG/Build.cc.o : | DAG
+DAG/Callable.cc.o : | DAG
+DAG/DAG.cc.o : | DAG
+DAG/File.cc.o : | DAG
+DAG/Formatter.cc.o : | DAG
+DAG/Function.cc.o : | DAG
+DAG/List.cc.o : | DAG
+DAG/Parameter.cc.o : | DAG
+DAG/Primitive.cc.o : | DAG
+DAG/Rule.cc.o : | DAG
+DAG/Structure.cc.o : | DAG
+DAG/Target.cc.o : | DAG
+DAG/UndefinedValueException.cc.o : | DAG
+DAG/Value.cc.o : | DAG
+DAG/Visitor.cc.o : | DAG
+Parsing/Lexer.cc.o : | Parsing
+Parsing/Parser.cc.o : | Parsing
+Parsing/Token.cc.o : | Parsing
+Parsing/fab.lex.cc : | Parsing
+Parsing/fab.lex.cc.o : | Parsing
+Parsing/fab.lex.h : | Parsing
+Parsing/fab.yacc.cc : | Parsing
+Parsing/fab.yacc.cc.o : | Parsing
+Parsing/fab.yacc.h : | Parsing
+Support/Arguments.cc.o : | Support
+Support/Bytestream.cc.o : | Support
+Support/ErrorReport.cc.o : | Support
+Support/Join.cc.o : | Support
+Support/Printable.cc.o : | Support
+Support/SourceLocation.cc.o : | Support
+Support/Visitable.cc.o : | Support
+Support/exceptions.cc.o : | Support
+Support/os-posix.cc.o : | Support
+Types/BooleanType.cc.o : | Types
+Types/FileType.cc.o : | Types
+Types/FunctionType.cc.o : | Types
+Types/IntegerType.cc.o : | Types
+Types/MaybeType.cc.o : | Types
+Types/OptionallyTyped.cc.o : | Types
+Types/SequenceType.cc.o : | Types
+Types/StringType.cc.o : | Types
+Types/StructureType.cc.o : | Types
+Types/Type.cc.o : | Types
+Types/TypeContext.cc.o : | Types
+Types/TypeError.cc.o : | Types
+Types/Typed.cc.o : | Types
+lit-test-results/report.txt : | lit-test-results
 #
 # Build steps:
 #
-${buildroot}:
-	if [ ! -e "${buildroot}" ]; then mkdir -p "${buildroot}"; fi
-${buildroot}/AST:
-	if [ ! -e "${buildroot}/AST" ]; then mkdir -p "${buildroot}/AST"; fi
-${buildroot}/Backend:
-	if [ ! -e "${buildroot}/Backend" ]; then mkdir -p "${buildroot}/Backend"; fi
-${buildroot}/DAG:
-	if [ ! -e "${buildroot}/DAG" ]; then mkdir -p "${buildroot}/DAG"; fi
-${buildroot}/Parsing:
-	if [ ! -e "${buildroot}/Parsing" ]; then mkdir -p "${buildroot}/Parsing"; fi
-${buildroot}/Support:
-	if [ ! -e "${buildroot}/Support" ]; then mkdir -p "${buildroot}/Support"; fi
-${buildroot}/Types:
-	if [ ! -e "${buildroot}/Types" ]; then mkdir -p "${buildroot}/Types"; fi
-${buildroot}/lit-test-results:
-	if [ ! -e "${buildroot}/lit-test-results" ]; then mkdir -p "${buildroot}/lit-test-results"; fi
-raw_yacc_1 : ${buildroot}/Parsing/fab.yacc.cc ${buildroot}/Parsing/fab.yacc.h
-${buildroot}/Parsing/fab.yacc.cc ${buildroot}/Parsing/fab.yacc.h : ${srcroot}/Parsing/fab.yy
-	echo "Processing ${buildroot}/Parsing/fab.yacc.cc ${buildroot}/Parsing/fab.yacc.h"
-	echo "byacc -d -t -o ${buildroot}/Parsing/fab.yacc.cc ${srcroot}/Parsing/fab.yy" >> build.log
-	byacc -d -t -o ${buildroot}/Parsing/fab.yacc.cc ${srcroot}/Parsing/fab.yy
-
-raw_lex_2 : ${buildroot}/Parsing/fab.lex.cc ${buildroot}/Parsing/fab.lex.h
-${buildroot}/Parsing/fab.lex.cc ${buildroot}/Parsing/fab.lex.h : ${srcroot}/Parsing/fab.l
-	echo "Processing ${buildroot}/Parsing/fab.lex.cc ${buildroot}/Parsing/fab.lex.h"
-	echo "/usr/bin/flex -c++ --header-file=${buildroot}/Parsing/fab.lex.h --outfile=${buildroot}/Parsing/fab.lex.cc ${srcroot}/Parsing/fab.l" >> build.log
-	/usr/bin/flex -c++ --header-file=${buildroot}/Parsing/fab.lex.h --outfile=${buildroot}/Parsing/fab.lex.cc ${srcroot}/Parsing/fab.l
-
-${buildroot}/Parsing/fab.lex.cc.o : ${buildroot}/Parsing/fab.yacc.cc ${buildroot}/Parsing/fab.lex.cc
-	echo "Compiling ${buildroot}/Parsing/fab.lex.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Wno-deprecated-register -fcolor-diagnostics -MMD -MF ${buildroot}/Parsing/fab.lex.cc.o.d ${buildroot}/Parsing/fab.lex.cc -o ${buildroot}/Parsing/fab.lex.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Wno-deprecated-register -fcolor-diagnostics -MMD -MF ${buildroot}/Parsing/fab.lex.cc.o.d ${buildroot}/Parsing/fab.lex.cc -o ${buildroot}/Parsing/fab.lex.cc.o
--include ${buildroot}/Parsing/fab.lex.cc.o.d
-
-${buildroot}/Parsing/fab.yacc.cc.o : ${buildroot}/Parsing/fab.yacc.cc
-	echo "Compiling ${buildroot}/Parsing/fab.yacc.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Wno-deprecated-register -fcolor-diagnostics -MMD -MF ${buildroot}/Parsing/fab.yacc.cc.o.d ${buildroot}/Parsing/fab.yacc.cc -o ${buildroot}/Parsing/fab.yacc.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Wno-deprecated-register -fcolor-diagnostics -MMD -MF ${buildroot}/Parsing/fab.yacc.cc.o.d ${buildroot}/Parsing/fab.yacc.cc -o ${buildroot}/Parsing/fab.yacc.cc.o
--include ${buildroot}/Parsing/fab.yacc.cc.o.d
-
-${buildroot}/driver.cc.o : ${srcroot}/driver.cc
-	echo "Compiling ${buildroot}/driver.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/driver.cc.o.d ${srcroot}/driver.cc -o ${buildroot}/driver.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/driver.cc.o.d ${srcroot}/driver.cc -o ${buildroot}/driver.cc.o
--include ${buildroot}/driver.cc.o.d
-
-${buildroot}/AST/Action.cc.o : ${srcroot}/AST/Action.cc
-	echo "Compiling ${buildroot}/AST/Action.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Action.cc.o.d ${srcroot}/AST/Action.cc -o ${buildroot}/AST/Action.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Action.cc.o.d ${srcroot}/AST/Action.cc -o ${buildroot}/AST/Action.cc.o
--include ${buildroot}/AST/Action.cc.o.d
-
-${buildroot}/AST/Argument.cc.o : ${srcroot}/AST/Argument.cc
-	echo "Compiling ${buildroot}/AST/Argument.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Argument.cc.o.d ${srcroot}/AST/Argument.cc -o ${buildroot}/AST/Argument.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Argument.cc.o.d ${srcroot}/AST/Argument.cc -o ${buildroot}/AST/Argument.cc.o
--include ${buildroot}/AST/Argument.cc.o.d
-
-${buildroot}/AST/ASTDump.cc.o : ${srcroot}/AST/ASTDump.cc
-	echo "Compiling ${buildroot}/AST/ASTDump.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/ASTDump.cc.o.d ${srcroot}/AST/ASTDump.cc -o ${buildroot}/AST/ASTDump.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/ASTDump.cc.o.d ${srcroot}/AST/ASTDump.cc -o ${buildroot}/AST/ASTDump.cc.o
--include ${buildroot}/AST/ASTDump.cc.o.d
-
-${buildroot}/AST/BinaryOperation.cc.o : ${srcroot}/AST/BinaryOperation.cc
-	echo "Compiling ${buildroot}/AST/BinaryOperation.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/BinaryOperation.cc.o.d ${srcroot}/AST/BinaryOperation.cc -o ${buildroot}/AST/BinaryOperation.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/BinaryOperation.cc.o.d ${srcroot}/AST/BinaryOperation.cc -o ${buildroot}/AST/BinaryOperation.cc.o
--include ${buildroot}/AST/BinaryOperation.cc.o.d
-
-${buildroot}/AST/Call.cc.o : ${srcroot}/AST/Call.cc
-	echo "Compiling ${buildroot}/AST/Call.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Call.cc.o.d ${srcroot}/AST/Call.cc -o ${buildroot}/AST/Call.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Call.cc.o.d ${srcroot}/AST/Call.cc -o ${buildroot}/AST/Call.cc.o
--include ${buildroot}/AST/Call.cc.o.d
-
-${buildroot}/AST/CompoundExpr.cc.o : ${srcroot}/AST/CompoundExpr.cc
-	echo "Compiling ${buildroot}/AST/CompoundExpr.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/CompoundExpr.cc.o.d ${srcroot}/AST/CompoundExpr.cc -o ${buildroot}/AST/CompoundExpr.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/CompoundExpr.cc.o.d ${srcroot}/AST/CompoundExpr.cc -o ${buildroot}/AST/CompoundExpr.cc.o
--include ${buildroot}/AST/CompoundExpr.cc.o.d
-
-${buildroot}/AST/Conditional.cc.o : ${srcroot}/AST/Conditional.cc
-	echo "Compiling ${buildroot}/AST/Conditional.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Conditional.cc.o.d ${srcroot}/AST/Conditional.cc -o ${buildroot}/AST/Conditional.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Conditional.cc.o.d ${srcroot}/AST/Conditional.cc -o ${buildroot}/AST/Conditional.cc.o
--include ${buildroot}/AST/Conditional.cc.o.d
-
-${buildroot}/AST/Expression.cc.o : ${srcroot}/AST/Expression.cc
-	echo "Compiling ${buildroot}/AST/Expression.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Expression.cc.o.d ${srcroot}/AST/Expression.cc -o ${buildroot}/AST/Expression.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Expression.cc.o.d ${srcroot}/AST/Expression.cc -o ${buildroot}/AST/Expression.cc.o
--include ${buildroot}/AST/Expression.cc.o.d
-
-${buildroot}/AST/FieldAccess.cc.o : ${srcroot}/AST/FieldAccess.cc
-	echo "Compiling ${buildroot}/AST/FieldAccess.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/FieldAccess.cc.o.d ${srcroot}/AST/FieldAccess.cc -o ${buildroot}/AST/FieldAccess.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/FieldAccess.cc.o.d ${srcroot}/AST/FieldAccess.cc -o ${buildroot}/AST/FieldAccess.cc.o
--include ${buildroot}/AST/FieldAccess.cc.o.d
-
-${buildroot}/AST/FieldQuery.cc.o : ${srcroot}/AST/FieldQuery.cc
-	echo "Compiling ${buildroot}/AST/FieldQuery.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/FieldQuery.cc.o.d ${srcroot}/AST/FieldQuery.cc -o ${buildroot}/AST/FieldQuery.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/FieldQuery.cc.o.d ${srcroot}/AST/FieldQuery.cc -o ${buildroot}/AST/FieldQuery.cc.o
--include ${buildroot}/AST/FieldQuery.cc.o.d
-
-${buildroot}/AST/Filename.cc.o : ${srcroot}/AST/Filename.cc
-	echo "Compiling ${buildroot}/AST/Filename.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Filename.cc.o.d ${srcroot}/AST/Filename.cc -o ${buildroot}/AST/Filename.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Filename.cc.o.d ${srcroot}/AST/Filename.cc -o ${buildroot}/AST/Filename.cc.o
--include ${buildroot}/AST/Filename.cc.o.d
-
-${buildroot}/AST/FileList.cc.o : ${srcroot}/AST/FileList.cc
-	echo "Compiling ${buildroot}/AST/FileList.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/FileList.cc.o.d ${srcroot}/AST/FileList.cc -o ${buildroot}/AST/FileList.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/FileList.cc.o.d ${srcroot}/AST/FileList.cc -o ${buildroot}/AST/FileList.cc.o
--include ${buildroot}/AST/FileList.cc.o.d
-
-${buildroot}/AST/Foreach.cc.o : ${srcroot}/AST/Foreach.cc
-	echo "Compiling ${buildroot}/AST/Foreach.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Foreach.cc.o.d ${srcroot}/AST/Foreach.cc -o ${buildroot}/AST/Foreach.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Foreach.cc.o.d ${srcroot}/AST/Foreach.cc -o ${buildroot}/AST/Foreach.cc.o
--include ${buildroot}/AST/Foreach.cc.o.d
-
-${buildroot}/AST/Function.cc.o : ${srcroot}/AST/Function.cc
-	echo "Compiling ${buildroot}/AST/Function.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Function.cc.o.d ${srcroot}/AST/Function.cc -o ${buildroot}/AST/Function.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Function.cc.o.d ${srcroot}/AST/Function.cc -o ${buildroot}/AST/Function.cc.o
--include ${buildroot}/AST/Function.cc.o.d
-
-${buildroot}/AST/HasParameters.cc.o : ${srcroot}/AST/HasParameters.cc
-	echo "Compiling ${buildroot}/AST/HasParameters.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/HasParameters.cc.o.d ${srcroot}/AST/HasParameters.cc -o ${buildroot}/AST/HasParameters.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/HasParameters.cc.o.d ${srcroot}/AST/HasParameters.cc -o ${buildroot}/AST/HasParameters.cc.o
--include ${buildroot}/AST/HasParameters.cc.o.d
-
-${buildroot}/AST/HasScope.cc.o : ${srcroot}/AST/HasScope.cc
-	echo "Compiling ${buildroot}/AST/HasScope.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/HasScope.cc.o.d ${srcroot}/AST/HasScope.cc -o ${buildroot}/AST/HasScope.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/HasScope.cc.o.d ${srcroot}/AST/HasScope.cc -o ${buildroot}/AST/HasScope.cc.o
--include ${buildroot}/AST/HasScope.cc.o.d
-
-${buildroot}/AST/Identifier.cc.o : ${srcroot}/AST/Identifier.cc
-	echo "Compiling ${buildroot}/AST/Identifier.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Identifier.cc.o.d ${srcroot}/AST/Identifier.cc -o ${buildroot}/AST/Identifier.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Identifier.cc.o.d ${srcroot}/AST/Identifier.cc -o ${buildroot}/AST/Identifier.cc.o
--include ${buildroot}/AST/Identifier.cc.o.d
-
-${buildroot}/AST/Import.cc.o : ${srcroot}/AST/Import.cc
-	echo "Compiling ${buildroot}/AST/Import.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Import.cc.o.d ${srcroot}/AST/Import.cc -o ${buildroot}/AST/Import.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Import.cc.o.d ${srcroot}/AST/Import.cc -o ${buildroot}/AST/Import.cc.o
--include ${buildroot}/AST/Import.cc.o.d
-
-${buildroot}/AST/List.cc.o : ${srcroot}/AST/List.cc
-	echo "Compiling ${buildroot}/AST/List.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/List.cc.o.d ${srcroot}/AST/List.cc -o ${buildroot}/AST/List.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/List.cc.o.d ${srcroot}/AST/List.cc -o ${buildroot}/AST/List.cc.o
--include ${buildroot}/AST/List.cc.o.d
-
-${buildroot}/AST/Mapping.cc.o : ${srcroot}/AST/Mapping.cc
-	echo "Compiling ${buildroot}/AST/Mapping.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Mapping.cc.o.d ${srcroot}/AST/Mapping.cc -o ${buildroot}/AST/Mapping.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Mapping.cc.o.d ${srcroot}/AST/Mapping.cc -o ${buildroot}/AST/Mapping.cc.o
--include ${buildroot}/AST/Mapping.cc.o.d
-
-${buildroot}/AST/Node.cc.o : ${srcroot}/AST/Node.cc
-	echo "Compiling ${buildroot}/AST/Node.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Node.cc.o.d ${srcroot}/AST/Node.cc -o ${buildroot}/AST/Node.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Node.cc.o.d ${srcroot}/AST/Node.cc -o ${buildroot}/AST/Node.cc.o
--include ${buildroot}/AST/Node.cc.o.d
-
-${buildroot}/AST/Parameter.cc.o : ${srcroot}/AST/Parameter.cc
-	echo "Compiling ${buildroot}/AST/Parameter.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Parameter.cc.o.d ${srcroot}/AST/Parameter.cc -o ${buildroot}/AST/Parameter.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Parameter.cc.o.d ${srcroot}/AST/Parameter.cc -o ${buildroot}/AST/Parameter.cc.o
--include ${buildroot}/AST/Parameter.cc.o.d
-
-${buildroot}/AST/Scope.cc.o : ${srcroot}/AST/Scope.cc
-	echo "Compiling ${buildroot}/AST/Scope.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Scope.cc.o.d ${srcroot}/AST/Scope.cc -o ${buildroot}/AST/Scope.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Scope.cc.o.d ${srcroot}/AST/Scope.cc -o ${buildroot}/AST/Scope.cc.o
--include ${buildroot}/AST/Scope.cc.o.d
-
-${buildroot}/AST/SomeValue.cc.o : ${srcroot}/AST/SomeValue.cc
-	echo "Compiling ${buildroot}/AST/SomeValue.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/SomeValue.cc.o.d ${srcroot}/AST/SomeValue.cc -o ${buildroot}/AST/SomeValue.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/SomeValue.cc.o.d ${srcroot}/AST/SomeValue.cc -o ${buildroot}/AST/SomeValue.cc.o
--include ${buildroot}/AST/SomeValue.cc.o.d
-
-${buildroot}/AST/StructInstantiation.cc.o : ${srcroot}/AST/StructInstantiation.cc
-	echo "Compiling ${buildroot}/AST/StructInstantiation.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/StructInstantiation.cc.o.d ${srcroot}/AST/StructInstantiation.cc -o ${buildroot}/AST/StructInstantiation.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/StructInstantiation.cc.o.d ${srcroot}/AST/StructInstantiation.cc -o ${buildroot}/AST/StructInstantiation.cc.o
--include ${buildroot}/AST/StructInstantiation.cc.o.d
-
-${buildroot}/AST/SymbolReference.cc.o : ${srcroot}/AST/SymbolReference.cc
-	echo "Compiling ${buildroot}/AST/SymbolReference.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/SymbolReference.cc.o.d ${srcroot}/AST/SymbolReference.cc -o ${buildroot}/AST/SymbolReference.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/SymbolReference.cc.o.d ${srcroot}/AST/SymbolReference.cc -o ${buildroot}/AST/SymbolReference.cc.o
--include ${buildroot}/AST/SymbolReference.cc.o.d
-
-${buildroot}/AST/UnaryOperation.cc.o : ${srcroot}/AST/UnaryOperation.cc
-	echo "Compiling ${buildroot}/AST/UnaryOperation.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/UnaryOperation.cc.o.d ${srcroot}/AST/UnaryOperation.cc -o ${buildroot}/AST/UnaryOperation.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/UnaryOperation.cc.o.d ${srcroot}/AST/UnaryOperation.cc -o ${buildroot}/AST/UnaryOperation.cc.o
--include ${buildroot}/AST/UnaryOperation.cc.o.d
-
-${buildroot}/AST/Value.cc.o : ${srcroot}/AST/Value.cc
-	echo "Compiling ${buildroot}/AST/Value.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Value.cc.o.d ${srcroot}/AST/Value.cc -o ${buildroot}/AST/Value.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Value.cc.o.d ${srcroot}/AST/Value.cc -o ${buildroot}/AST/Value.cc.o
--include ${buildroot}/AST/Value.cc.o.d
-
-${buildroot}/AST/Visitor.cc.o : ${srcroot}/AST/Visitor.cc
-	echo "Compiling ${buildroot}/AST/Visitor.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Visitor.cc.o.d ${srcroot}/AST/Visitor.cc -o ${buildroot}/AST/Visitor.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/Visitor.cc.o.d ${srcroot}/AST/Visitor.cc -o ${buildroot}/AST/Visitor.cc.o
--include ${buildroot}/AST/Visitor.cc.o.d
-
-${buildroot}/AST/literals.cc.o : ${srcroot}/AST/literals.cc
-	echo "Compiling ${buildroot}/AST/literals.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/literals.cc.o.d ${srcroot}/AST/literals.cc -o ${buildroot}/AST/literals.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/AST/literals.cc.o.d ${srcroot}/AST/literals.cc -o ${buildroot}/AST/literals.cc.o
--include ${buildroot}/AST/literals.cc.o.d
-
-${buildroot}/Backend/Backend.cc.o : ${srcroot}/Backend/Backend.cc
-	echo "Compiling ${buildroot}/Backend/Backend.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Backend/Backend.cc.o.d ${srcroot}/Backend/Backend.cc -o ${buildroot}/Backend/Backend.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Backend/Backend.cc.o.d ${srcroot}/Backend/Backend.cc -o ${buildroot}/Backend/Backend.cc.o
--include ${buildroot}/Backend/Backend.cc.o.d
-
-${buildroot}/Backend/Dot.cc.o : ${srcroot}/Backend/Dot.cc
-	echo "Compiling ${buildroot}/Backend/Dot.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Backend/Dot.cc.o.d ${srcroot}/Backend/Dot.cc -o ${buildroot}/Backend/Dot.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Backend/Dot.cc.o.d ${srcroot}/Backend/Dot.cc -o ${buildroot}/Backend/Dot.cc.o
--include ${buildroot}/Backend/Dot.cc.o.d
-
-${buildroot}/Backend/Make.cc.o : ${srcroot}/Backend/Make.cc
-	echo "Compiling ${buildroot}/Backend/Make.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Backend/Make.cc.o.d ${srcroot}/Backend/Make.cc -o ${buildroot}/Backend/Make.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Backend/Make.cc.o.d ${srcroot}/Backend/Make.cc -o ${buildroot}/Backend/Make.cc.o
--include ${buildroot}/Backend/Make.cc.o.d
-
-${buildroot}/Backend/Ninja.cc.o : ${srcroot}/Backend/Ninja.cc
-	echo "Compiling ${buildroot}/Backend/Ninja.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Backend/Ninja.cc.o.d ${srcroot}/Backend/Ninja.cc -o ${buildroot}/Backend/Ninja.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Backend/Ninja.cc.o.d ${srcroot}/Backend/Ninja.cc -o ${buildroot}/Backend/Ninja.cc.o
--include ${buildroot}/Backend/Ninja.cc.o.d
-
-${buildroot}/Backend/Null.cc.o : ${srcroot}/Backend/Null.cc
-	echo "Compiling ${buildroot}/Backend/Null.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Backend/Null.cc.o.d ${srcroot}/Backend/Null.cc -o ${buildroot}/Backend/Null.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Backend/Null.cc.o.d ${srcroot}/Backend/Null.cc -o ${buildroot}/Backend/Null.cc.o
--include ${buildroot}/Backend/Null.cc.o.d
-
-${buildroot}/DAG/Build.cc.o : ${srcroot}/DAG/Build.cc
-	echo "Compiling ${buildroot}/DAG/Build.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Build.cc.o.d ${srcroot}/DAG/Build.cc -o ${buildroot}/DAG/Build.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Build.cc.o.d ${srcroot}/DAG/Build.cc -o ${buildroot}/DAG/Build.cc.o
--include ${buildroot}/DAG/Build.cc.o.d
-
-${buildroot}/DAG/Callable.cc.o : ${srcroot}/DAG/Callable.cc
-	echo "Compiling ${buildroot}/DAG/Callable.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Callable.cc.o.d ${srcroot}/DAG/Callable.cc -o ${buildroot}/DAG/Callable.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Callable.cc.o.d ${srcroot}/DAG/Callable.cc -o ${buildroot}/DAG/Callable.cc.o
--include ${buildroot}/DAG/Callable.cc.o.d
-
-${buildroot}/DAG/DAG.cc.o : ${srcroot}/DAG/DAG.cc
-	echo "Compiling ${buildroot}/DAG/DAG.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/DAG.cc.o.d ${srcroot}/DAG/DAG.cc -o ${buildroot}/DAG/DAG.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/DAG.cc.o.d ${srcroot}/DAG/DAG.cc -o ${buildroot}/DAG/DAG.cc.o
--include ${buildroot}/DAG/DAG.cc.o.d
-
-${buildroot}/DAG/File.cc.o : ${srcroot}/DAG/File.cc
-	echo "Compiling ${buildroot}/DAG/File.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/File.cc.o.d ${srcroot}/DAG/File.cc -o ${buildroot}/DAG/File.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/File.cc.o.d ${srcroot}/DAG/File.cc -o ${buildroot}/DAG/File.cc.o
--include ${buildroot}/DAG/File.cc.o.d
-
-${buildroot}/DAG/Formatter.cc.o : ${srcroot}/DAG/Formatter.cc
-	echo "Compiling ${buildroot}/DAG/Formatter.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Formatter.cc.o.d ${srcroot}/DAG/Formatter.cc -o ${buildroot}/DAG/Formatter.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Formatter.cc.o.d ${srcroot}/DAG/Formatter.cc -o ${buildroot}/DAG/Formatter.cc.o
--include ${buildroot}/DAG/Formatter.cc.o.d
-
-${buildroot}/DAG/Function.cc.o : ${srcroot}/DAG/Function.cc
-	echo "Compiling ${buildroot}/DAG/Function.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Function.cc.o.d ${srcroot}/DAG/Function.cc -o ${buildroot}/DAG/Function.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Function.cc.o.d ${srcroot}/DAG/Function.cc -o ${buildroot}/DAG/Function.cc.o
--include ${buildroot}/DAG/Function.cc.o.d
-
-${buildroot}/DAG/List.cc.o : ${srcroot}/DAG/List.cc
-	echo "Compiling ${buildroot}/DAG/List.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/List.cc.o.d ${srcroot}/DAG/List.cc -o ${buildroot}/DAG/List.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/List.cc.o.d ${srcroot}/DAG/List.cc -o ${buildroot}/DAG/List.cc.o
--include ${buildroot}/DAG/List.cc.o.d
-
-${buildroot}/DAG/Parameter.cc.o : ${srcroot}/DAG/Parameter.cc
-	echo "Compiling ${buildroot}/DAG/Parameter.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Parameter.cc.o.d ${srcroot}/DAG/Parameter.cc -o ${buildroot}/DAG/Parameter.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Parameter.cc.o.d ${srcroot}/DAG/Parameter.cc -o ${buildroot}/DAG/Parameter.cc.o
--include ${buildroot}/DAG/Parameter.cc.o.d
-
-${buildroot}/DAG/Primitive.cc.o : ${srcroot}/DAG/Primitive.cc
-	echo "Compiling ${buildroot}/DAG/Primitive.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Primitive.cc.o.d ${srcroot}/DAG/Primitive.cc -o ${buildroot}/DAG/Primitive.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Primitive.cc.o.d ${srcroot}/DAG/Primitive.cc -o ${buildroot}/DAG/Primitive.cc.o
--include ${buildroot}/DAG/Primitive.cc.o.d
-
-${buildroot}/DAG/Rule.cc.o : ${srcroot}/DAG/Rule.cc
-	echo "Compiling ${buildroot}/DAG/Rule.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Rule.cc.o.d ${srcroot}/DAG/Rule.cc -o ${buildroot}/DAG/Rule.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Rule.cc.o.d ${srcroot}/DAG/Rule.cc -o ${buildroot}/DAG/Rule.cc.o
--include ${buildroot}/DAG/Rule.cc.o.d
-
-${buildroot}/DAG/Structure.cc.o : ${srcroot}/DAG/Structure.cc
-	echo "Compiling ${buildroot}/DAG/Structure.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Structure.cc.o.d ${srcroot}/DAG/Structure.cc -o ${buildroot}/DAG/Structure.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Structure.cc.o.d ${srcroot}/DAG/Structure.cc -o ${buildroot}/DAG/Structure.cc.o
--include ${buildroot}/DAG/Structure.cc.o.d
-
-${buildroot}/DAG/Target.cc.o : ${srcroot}/DAG/Target.cc
-	echo "Compiling ${buildroot}/DAG/Target.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Target.cc.o.d ${srcroot}/DAG/Target.cc -o ${buildroot}/DAG/Target.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Target.cc.o.d ${srcroot}/DAG/Target.cc -o ${buildroot}/DAG/Target.cc.o
--include ${buildroot}/DAG/Target.cc.o.d
-
-${buildroot}/DAG/UndefinedValueException.cc.o : ${srcroot}/DAG/UndefinedValueException.cc
-	echo "Compiling ${buildroot}/DAG/UndefinedValueException.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/UndefinedValueException.cc.o.d ${srcroot}/DAG/UndefinedValueException.cc -o ${buildroot}/DAG/UndefinedValueException.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/UndefinedValueException.cc.o.d ${srcroot}/DAG/UndefinedValueException.cc -o ${buildroot}/DAG/UndefinedValueException.cc.o
--include ${buildroot}/DAG/UndefinedValueException.cc.o.d
-
-${buildroot}/DAG/Value.cc.o : ${srcroot}/DAG/Value.cc
-	echo "Compiling ${buildroot}/DAG/Value.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Value.cc.o.d ${srcroot}/DAG/Value.cc -o ${buildroot}/DAG/Value.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Value.cc.o.d ${srcroot}/DAG/Value.cc -o ${buildroot}/DAG/Value.cc.o
--include ${buildroot}/DAG/Value.cc.o.d
-
-${buildroot}/DAG/Visitor.cc.o : ${srcroot}/DAG/Visitor.cc
-	echo "Compiling ${buildroot}/DAG/Visitor.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Visitor.cc.o.d ${srcroot}/DAG/Visitor.cc -o ${buildroot}/DAG/Visitor.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/DAG/Visitor.cc.o.d ${srcroot}/DAG/Visitor.cc -o ${buildroot}/DAG/Visitor.cc.o
--include ${buildroot}/DAG/Visitor.cc.o.d
-
-${buildroot}/Parsing/Lexer.cc.o : ${srcroot}/Parsing/Lexer.cc
-	echo "Compiling ${buildroot}/Parsing/Lexer.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Parsing/Lexer.cc.o.d ${srcroot}/Parsing/Lexer.cc -o ${buildroot}/Parsing/Lexer.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Parsing/Lexer.cc.o.d ${srcroot}/Parsing/Lexer.cc -o ${buildroot}/Parsing/Lexer.cc.o
--include ${buildroot}/Parsing/Lexer.cc.o.d
-
-${buildroot}/Parsing/Parser.cc.o : ${srcroot}/Parsing/Parser.cc
-	echo "Compiling ${buildroot}/Parsing/Parser.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Parsing/Parser.cc.o.d ${srcroot}/Parsing/Parser.cc -o ${buildroot}/Parsing/Parser.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Parsing/Parser.cc.o.d ${srcroot}/Parsing/Parser.cc -o ${buildroot}/Parsing/Parser.cc.o
--include ${buildroot}/Parsing/Parser.cc.o.d
-
-${buildroot}/Parsing/Token.cc.o : ${srcroot}/Parsing/Token.cc
-	echo "Compiling ${buildroot}/Parsing/Token.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Parsing/Token.cc.o.d ${srcroot}/Parsing/Token.cc -o ${buildroot}/Parsing/Token.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Parsing/Token.cc.o.d ${srcroot}/Parsing/Token.cc -o ${buildroot}/Parsing/Token.cc.o
--include ${buildroot}/Parsing/Token.cc.o.d
-
-${buildroot}/Support/Arguments.cc.o : ${srcroot}/Support/Arguments.cc
-	echo "Compiling ${buildroot}/Support/Arguments.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/Arguments.cc.o.d ${srcroot}/Support/Arguments.cc -o ${buildroot}/Support/Arguments.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/Arguments.cc.o.d ${srcroot}/Support/Arguments.cc -o ${buildroot}/Support/Arguments.cc.o
--include ${buildroot}/Support/Arguments.cc.o.d
-
-${buildroot}/Support/Bytestream.cc.o : ${srcroot}/Support/Bytestream.cc
-	echo "Compiling ${buildroot}/Support/Bytestream.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/Bytestream.cc.o.d ${srcroot}/Support/Bytestream.cc -o ${buildroot}/Support/Bytestream.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/Bytestream.cc.o.d ${srcroot}/Support/Bytestream.cc -o ${buildroot}/Support/Bytestream.cc.o
--include ${buildroot}/Support/Bytestream.cc.o.d
-
-${buildroot}/Support/ErrorReport.cc.o : ${srcroot}/Support/ErrorReport.cc
-	echo "Compiling ${buildroot}/Support/ErrorReport.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/ErrorReport.cc.o.d ${srcroot}/Support/ErrorReport.cc -o ${buildroot}/Support/ErrorReport.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/ErrorReport.cc.o.d ${srcroot}/Support/ErrorReport.cc -o ${buildroot}/Support/ErrorReport.cc.o
--include ${buildroot}/Support/ErrorReport.cc.o.d
-
-${buildroot}/Support/Join.cc.o : ${srcroot}/Support/Join.cc
-	echo "Compiling ${buildroot}/Support/Join.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/Join.cc.o.d ${srcroot}/Support/Join.cc -o ${buildroot}/Support/Join.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/Join.cc.o.d ${srcroot}/Support/Join.cc -o ${buildroot}/Support/Join.cc.o
--include ${buildroot}/Support/Join.cc.o.d
-
-${buildroot}/Support/Printable.cc.o : ${srcroot}/Support/Printable.cc
-	echo "Compiling ${buildroot}/Support/Printable.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/Printable.cc.o.d ${srcroot}/Support/Printable.cc -o ${buildroot}/Support/Printable.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/Printable.cc.o.d ${srcroot}/Support/Printable.cc -o ${buildroot}/Support/Printable.cc.o
--include ${buildroot}/Support/Printable.cc.o.d
-
-${buildroot}/Support/SourceLocation.cc.o : ${srcroot}/Support/SourceLocation.cc
-	echo "Compiling ${buildroot}/Support/SourceLocation.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/SourceLocation.cc.o.d ${srcroot}/Support/SourceLocation.cc -o ${buildroot}/Support/SourceLocation.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/SourceLocation.cc.o.d ${srcroot}/Support/SourceLocation.cc -o ${buildroot}/Support/SourceLocation.cc.o
--include ${buildroot}/Support/SourceLocation.cc.o.d
-
-${buildroot}/Support/Visitable.cc.o : ${srcroot}/Support/Visitable.cc
-	echo "Compiling ${buildroot}/Support/Visitable.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/Visitable.cc.o.d ${srcroot}/Support/Visitable.cc -o ${buildroot}/Support/Visitable.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/Visitable.cc.o.d ${srcroot}/Support/Visitable.cc -o ${buildroot}/Support/Visitable.cc.o
--include ${buildroot}/Support/Visitable.cc.o.d
-
-${buildroot}/Support/exceptions.cc.o : ${srcroot}/Support/exceptions.cc
-	echo "Compiling ${buildroot}/Support/exceptions.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/exceptions.cc.o.d ${srcroot}/Support/exceptions.cc -o ${buildroot}/Support/exceptions.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/exceptions.cc.o.d ${srcroot}/Support/exceptions.cc -o ${buildroot}/Support/exceptions.cc.o
--include ${buildroot}/Support/exceptions.cc.o.d
-
-${buildroot}/Support/os-posix.cc.o : ${srcroot}/Support/os-posix.cc
-	echo "Compiling ${buildroot}/Support/os-posix.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/os-posix.cc.o.d ${srcroot}/Support/os-posix.cc -o ${buildroot}/Support/os-posix.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Support/os-posix.cc.o.d ${srcroot}/Support/os-posix.cc -o ${buildroot}/Support/os-posix.cc.o
--include ${buildroot}/Support/os-posix.cc.o.d
-
-${buildroot}/Types/BooleanType.cc.o : ${srcroot}/Types/BooleanType.cc
-	echo "Compiling ${buildroot}/Types/BooleanType.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/BooleanType.cc.o.d ${srcroot}/Types/BooleanType.cc -o ${buildroot}/Types/BooleanType.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/BooleanType.cc.o.d ${srcroot}/Types/BooleanType.cc -o ${buildroot}/Types/BooleanType.cc.o
--include ${buildroot}/Types/BooleanType.cc.o.d
-
-${buildroot}/Types/FileType.cc.o : ${srcroot}/Types/FileType.cc
-	echo "Compiling ${buildroot}/Types/FileType.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/FileType.cc.o.d ${srcroot}/Types/FileType.cc -o ${buildroot}/Types/FileType.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/FileType.cc.o.d ${srcroot}/Types/FileType.cc -o ${buildroot}/Types/FileType.cc.o
--include ${buildroot}/Types/FileType.cc.o.d
-
-${buildroot}/Types/FunctionType.cc.o : ${srcroot}/Types/FunctionType.cc
-	echo "Compiling ${buildroot}/Types/FunctionType.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/FunctionType.cc.o.d ${srcroot}/Types/FunctionType.cc -o ${buildroot}/Types/FunctionType.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/FunctionType.cc.o.d ${srcroot}/Types/FunctionType.cc -o ${buildroot}/Types/FunctionType.cc.o
--include ${buildroot}/Types/FunctionType.cc.o.d
-
-${buildroot}/Types/IntegerType.cc.o : ${srcroot}/Types/IntegerType.cc
-	echo "Compiling ${buildroot}/Types/IntegerType.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/IntegerType.cc.o.d ${srcroot}/Types/IntegerType.cc -o ${buildroot}/Types/IntegerType.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/IntegerType.cc.o.d ${srcroot}/Types/IntegerType.cc -o ${buildroot}/Types/IntegerType.cc.o
--include ${buildroot}/Types/IntegerType.cc.o.d
-
-${buildroot}/Types/MaybeType.cc.o : ${srcroot}/Types/MaybeType.cc
-	echo "Compiling ${buildroot}/Types/MaybeType.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/MaybeType.cc.o.d ${srcroot}/Types/MaybeType.cc -o ${buildroot}/Types/MaybeType.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/MaybeType.cc.o.d ${srcroot}/Types/MaybeType.cc -o ${buildroot}/Types/MaybeType.cc.o
--include ${buildroot}/Types/MaybeType.cc.o.d
-
-${buildroot}/Types/OptionallyTyped.cc.o : ${srcroot}/Types/OptionallyTyped.cc
-	echo "Compiling ${buildroot}/Types/OptionallyTyped.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/OptionallyTyped.cc.o.d ${srcroot}/Types/OptionallyTyped.cc -o ${buildroot}/Types/OptionallyTyped.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/OptionallyTyped.cc.o.d ${srcroot}/Types/OptionallyTyped.cc -o ${buildroot}/Types/OptionallyTyped.cc.o
--include ${buildroot}/Types/OptionallyTyped.cc.o.d
-
-${buildroot}/Types/SequenceType.cc.o : ${srcroot}/Types/SequenceType.cc
-	echo "Compiling ${buildroot}/Types/SequenceType.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/SequenceType.cc.o.d ${srcroot}/Types/SequenceType.cc -o ${buildroot}/Types/SequenceType.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/SequenceType.cc.o.d ${srcroot}/Types/SequenceType.cc -o ${buildroot}/Types/SequenceType.cc.o
--include ${buildroot}/Types/SequenceType.cc.o.d
-
-${buildroot}/Types/StringType.cc.o : ${srcroot}/Types/StringType.cc
-	echo "Compiling ${buildroot}/Types/StringType.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/StringType.cc.o.d ${srcroot}/Types/StringType.cc -o ${buildroot}/Types/StringType.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/StringType.cc.o.d ${srcroot}/Types/StringType.cc -o ${buildroot}/Types/StringType.cc.o
--include ${buildroot}/Types/StringType.cc.o.d
-
-${buildroot}/Types/StructureType.cc.o : ${srcroot}/Types/StructureType.cc
-	echo "Compiling ${buildroot}/Types/StructureType.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/StructureType.cc.o.d ${srcroot}/Types/StructureType.cc -o ${buildroot}/Types/StructureType.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/StructureType.cc.o.d ${srcroot}/Types/StructureType.cc -o ${buildroot}/Types/StructureType.cc.o
--include ${buildroot}/Types/StructureType.cc.o.d
-
-${buildroot}/Types/Type.cc.o : ${srcroot}/Types/Type.cc
-	echo "Compiling ${buildroot}/Types/Type.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/Type.cc.o.d ${srcroot}/Types/Type.cc -o ${buildroot}/Types/Type.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/Type.cc.o.d ${srcroot}/Types/Type.cc -o ${buildroot}/Types/Type.cc.o
--include ${buildroot}/Types/Type.cc.o.d
-
-${buildroot}/Types/TypeContext.cc.o : ${srcroot}/Types/TypeContext.cc
-	echo "Compiling ${buildroot}/Types/TypeContext.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/TypeContext.cc.o.d ${srcroot}/Types/TypeContext.cc -o ${buildroot}/Types/TypeContext.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/TypeContext.cc.o.d ${srcroot}/Types/TypeContext.cc -o ${buildroot}/Types/TypeContext.cc.o
--include ${buildroot}/Types/TypeContext.cc.o.d
-
-${buildroot}/Types/TypeError.cc.o : ${srcroot}/Types/TypeError.cc
-	echo "Compiling ${buildroot}/Types/TypeError.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/TypeError.cc.o.d ${srcroot}/Types/TypeError.cc -o ${buildroot}/Types/TypeError.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/TypeError.cc.o.d ${srcroot}/Types/TypeError.cc -o ${buildroot}/Types/TypeError.cc.o
--include ${buildroot}/Types/TypeError.cc.o.d
-
-${buildroot}/Types/Typed.cc.o : ${srcroot}/Types/Typed.cc
-	echo "Compiling ${buildroot}/Types/Typed.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/Typed.cc.o.d ${srcroot}/Types/Typed.cc -o ${buildroot}/Types/Typed.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF ${buildroot}/Types/Typed.cc.o.d ${srcroot}/Types/Typed.cc -o ${buildroot}/Types/Typed.cc.o
--include ${buildroot}/Types/Typed.cc.o.d
-
-${buildroot}/fab : ${buildroot}/Parsing/fab.lex.cc.o ${buildroot}/Parsing/fab.yacc.cc.o ${buildroot}/driver.cc.o ${buildroot}/AST/Action.cc.o ${buildroot}/AST/Argument.cc.o ${buildroot}/AST/ASTDump.cc.o ${buildroot}/AST/BinaryOperation.cc.o ${buildroot}/AST/Call.cc.o ${buildroot}/AST/CompoundExpr.cc.o ${buildroot}/AST/Conditional.cc.o ${buildroot}/AST/Expression.cc.o ${buildroot}/AST/FieldAccess.cc.o ${buildroot}/AST/FieldQuery.cc.o ${buildroot}/AST/Filename.cc.o ${buildroot}/AST/FileList.cc.o ${buildroot}/AST/Foreach.cc.o ${buildroot}/AST/Function.cc.o ${buildroot}/AST/HasParameters.cc.o ${buildroot}/AST/HasScope.cc.o ${buildroot}/AST/Identifier.cc.o ${buildroot}/AST/Import.cc.o ${buildroot}/AST/List.cc.o ${buildroot}/AST/Mapping.cc.o ${buildroot}/AST/Node.cc.o ${buildroot}/AST/Parameter.cc.o ${buildroot}/AST/Scope.cc.o ${buildroot}/AST/SomeValue.cc.o ${buildroot}/AST/StructInstantiation.cc.o ${buildroot}/AST/SymbolReference.cc.o ${buildroot}/AST/UnaryOperation.cc.o ${buildroot}/AST/Value.cc.o ${buildroot}/AST/Visitor.cc.o ${buildroot}/AST/literals.cc.o ${buildroot}/Backend/Backend.cc.o ${buildroot}/Backend/Dot.cc.o ${buildroot}/Backend/Make.cc.o ${buildroot}/Backend/Ninja.cc.o ${buildroot}/Backend/Null.cc.o ${buildroot}/DAG/Build.cc.o ${buildroot}/DAG/Callable.cc.o ${buildroot}/DAG/DAG.cc.o ${buildroot}/DAG/File.cc.o ${buildroot}/DAG/Formatter.cc.o ${buildroot}/DAG/Function.cc.o ${buildroot}/DAG/List.cc.o ${buildroot}/DAG/Parameter.cc.o ${buildroot}/DAG/Primitive.cc.o ${buildroot}/DAG/Rule.cc.o ${buildroot}/DAG/Structure.cc.o ${buildroot}/DAG/Target.cc.o ${buildroot}/DAG/UndefinedValueException.cc.o ${buildroot}/DAG/Value.cc.o ${buildroot}/DAG/Visitor.cc.o ${buildroot}/Parsing/Lexer.cc.o ${buildroot}/Parsing/Parser.cc.o ${buildroot}/Parsing/Token.cc.o ${buildroot}/Support/Arguments.cc.o ${buildroot}/Support/Bytestream.cc.o ${buildroot}/Support/ErrorReport.cc.o ${buildroot}/Support/Join.cc.o ${buildroot}/Support/Printable.cc.o ${buildroot}/Support/SourceLocation.cc.o ${buildroot}/Support/Visitable.cc.o ${buildroot}/Support/exceptions.cc.o ${buildroot}/Support/os-posix.cc.o ${buildroot}/Types/BooleanType.cc.o ${buildroot}/Types/FileType.cc.o ${buildroot}/Types/FunctionType.cc.o ${buildroot}/Types/IntegerType.cc.o ${buildroot}/Types/MaybeType.cc.o ${buildroot}/Types/OptionallyTyped.cc.o ${buildroot}/Types/SequenceType.cc.o ${buildroot}/Types/StringType.cc.o ${buildroot}/Types/StructureType.cc.o ${buildroot}/Types/Type.cc.o ${buildroot}/Types/TypeContext.cc.o ${buildroot}/Types/TypeError.cc.o ${buildroot}/Types/Typed.cc.o
-	echo "Linking ${buildroot}/fab"
-	echo "/usr/bin/c++ -o ${buildroot}/fab -fcolor-diagnostics ${buildroot}/Parsing/fab.lex.cc.o ${buildroot}/Parsing/fab.yacc.cc.o ${buildroot}/driver.cc.o ${buildroot}/AST/Action.cc.o ${buildroot}/AST/Argument.cc.o ${buildroot}/AST/ASTDump.cc.o ${buildroot}/AST/BinaryOperation.cc.o ${buildroot}/AST/Call.cc.o ${buildroot}/AST/CompoundExpr.cc.o ${buildroot}/AST/Conditional.cc.o ${buildroot}/AST/Expression.cc.o ${buildroot}/AST/FieldAccess.cc.o ${buildroot}/AST/FieldQuery.cc.o ${buildroot}/AST/Filename.cc.o ${buildroot}/AST/FileList.cc.o ${buildroot}/AST/Foreach.cc.o ${buildroot}/AST/Function.cc.o ${buildroot}/AST/HasParameters.cc.o ${buildroot}/AST/HasScope.cc.o ${buildroot}/AST/Identifier.cc.o ${buildroot}/AST/Import.cc.o ${buildroot}/AST/List.cc.o ${buildroot}/AST/Mapping.cc.o ${buildroot}/AST/Node.cc.o ${buildroot}/AST/Parameter.cc.o ${buildroot}/AST/Scope.cc.o ${buildroot}/AST/SomeValue.cc.o ${buildroot}/AST/StructInstantiation.cc.o ${buildroot}/AST/SymbolReference.cc.o ${buildroot}/AST/UnaryOperation.cc.o ${buildroot}/AST/Value.cc.o ${buildroot}/AST/Visitor.cc.o ${buildroot}/AST/literals.cc.o ${buildroot}/Backend/Backend.cc.o ${buildroot}/Backend/Dot.cc.o ${buildroot}/Backend/Make.cc.o ${buildroot}/Backend/Ninja.cc.o ${buildroot}/Backend/Null.cc.o ${buildroot}/DAG/Build.cc.o ${buildroot}/DAG/Callable.cc.o ${buildroot}/DAG/DAG.cc.o ${buildroot}/DAG/File.cc.o ${buildroot}/DAG/Formatter.cc.o ${buildroot}/DAG/Function.cc.o ${buildroot}/DAG/List.cc.o ${buildroot}/DAG/Parameter.cc.o ${buildroot}/DAG/Primitive.cc.o ${buildroot}/DAG/Rule.cc.o ${buildroot}/DAG/Structure.cc.o ${buildroot}/DAG/Target.cc.o ${buildroot}/DAG/UndefinedValueException.cc.o ${buildroot}/DAG/Value.cc.o ${buildroot}/DAG/Visitor.cc.o ${buildroot}/Parsing/Lexer.cc.o ${buildroot}/Parsing/Parser.cc.o ${buildroot}/Parsing/Token.cc.o ${buildroot}/Support/Arguments.cc.o ${buildroot}/Support/Bytestream.cc.o ${buildroot}/Support/ErrorReport.cc.o ${buildroot}/Support/Join.cc.o ${buildroot}/Support/Printable.cc.o ${buildroot}/Support/SourceLocation.cc.o ${buildroot}/Support/Visitable.cc.o ${buildroot}/Support/exceptions.cc.o ${buildroot}/Support/os-posix.cc.o ${buildroot}/Types/BooleanType.cc.o ${buildroot}/Types/FileType.cc.o ${buildroot}/Types/FunctionType.cc.o ${buildroot}/Types/IntegerType.cc.o ${buildroot}/Types/MaybeType.cc.o ${buildroot}/Types/OptionallyTyped.cc.o ${buildroot}/Types/SequenceType.cc.o ${buildroot}/Types/StringType.cc.o ${buildroot}/Types/StructureType.cc.o ${buildroot}/Types/Type.cc.o ${buildroot}/Types/TypeContext.cc.o ${buildroot}/Types/TypeError.cc.o ${buildroot}/Types/Typed.cc.o" >> build.log
-	/usr/bin/c++ -o ${buildroot}/fab -fcolor-diagnostics ${buildroot}/Parsing/fab.lex.cc.o ${buildroot}/Parsing/fab.yacc.cc.o ${buildroot}/driver.cc.o ${buildroot}/AST/Action.cc.o ${buildroot}/AST/Argument.cc.o ${buildroot}/AST/ASTDump.cc.o ${buildroot}/AST/BinaryOperation.cc.o ${buildroot}/AST/Call.cc.o ${buildroot}/AST/CompoundExpr.cc.o ${buildroot}/AST/Conditional.cc.o ${buildroot}/AST/Expression.cc.o ${buildroot}/AST/FieldAccess.cc.o ${buildroot}/AST/FieldQuery.cc.o ${buildroot}/AST/Filename.cc.o ${buildroot}/AST/FileList.cc.o ${buildroot}/AST/Foreach.cc.o ${buildroot}/AST/Function.cc.o ${buildroot}/AST/HasParameters.cc.o ${buildroot}/AST/HasScope.cc.o ${buildroot}/AST/Identifier.cc.o ${buildroot}/AST/Import.cc.o ${buildroot}/AST/List.cc.o ${buildroot}/AST/Mapping.cc.o ${buildroot}/AST/Node.cc.o ${buildroot}/AST/Parameter.cc.o ${buildroot}/AST/Scope.cc.o ${buildroot}/AST/SomeValue.cc.o ${buildroot}/AST/StructInstantiation.cc.o ${buildroot}/AST/SymbolReference.cc.o ${buildroot}/AST/UnaryOperation.cc.o ${buildroot}/AST/Value.cc.o ${buildroot}/AST/Visitor.cc.o ${buildroot}/AST/literals.cc.o ${buildroot}/Backend/Backend.cc.o ${buildroot}/Backend/Dot.cc.o ${buildroot}/Backend/Make.cc.o ${buildroot}/Backend/Ninja.cc.o ${buildroot}/Backend/Null.cc.o ${buildroot}/DAG/Build.cc.o ${buildroot}/DAG/Callable.cc.o ${buildroot}/DAG/DAG.cc.o ${buildroot}/DAG/File.cc.o ${buildroot}/DAG/Formatter.cc.o ${buildroot}/DAG/Function.cc.o ${buildroot}/DAG/List.cc.o ${buildroot}/DAG/Parameter.cc.o ${buildroot}/DAG/Primitive.cc.o ${buildroot}/DAG/Rule.cc.o ${buildroot}/DAG/Structure.cc.o ${buildroot}/DAG/Target.cc.o ${buildroot}/DAG/UndefinedValueException.cc.o ${buildroot}/DAG/Value.cc.o ${buildroot}/DAG/Visitor.cc.o ${buildroot}/Parsing/Lexer.cc.o ${buildroot}/Parsing/Parser.cc.o ${buildroot}/Parsing/Token.cc.o ${buildroot}/Support/Arguments.cc.o ${buildroot}/Support/Bytestream.cc.o ${buildroot}/Support/ErrorReport.cc.o ${buildroot}/Support/Join.cc.o ${buildroot}/Support/Printable.cc.o ${buildroot}/Support/SourceLocation.cc.o ${buildroot}/Support/Visitable.cc.o ${buildroot}/Support/exceptions.cc.o ${buildroot}/Support/os-posix.cc.o ${buildroot}/Types/BooleanType.cc.o ${buildroot}/Types/FileType.cc.o ${buildroot}/Types/FunctionType.cc.o ${buildroot}/Types/IntegerType.cc.o ${buildroot}/Types/MaybeType.cc.o ${buildroot}/Types/OptionallyTyped.cc.o ${buildroot}/Types/SequenceType.cc.o ${buildroot}/Types/StringType.cc.o ${buildroot}/Types/StructureType.cc.o ${buildroot}/Types/Type.cc.o ${buildroot}/Types/TypeContext.cc.o ${buildroot}/Types/TypeError.cc.o ${buildroot}/Types/Typed.cc.o
-
-${buildroot}/lit-test-results/report.txt : ${buildroot}/fab ${srcroot}/test/./DAG/Inputs/cc.fab ${srcroot}/test/./DAG/Inputs/empty.fab ${srcroot}/test/./DAG/Inputs/fabfile ${srcroot}/test/./DAG/Inputs/requires-args.fab ${srcroot}/test/./DAG/Inputs/some_files.fab ${srcroot}/test/./DAG/Inputs/sources/src.fab ${srcroot}/test/./DAG/Inputs/subdir-test.fab ${srcroot}/test/./DAG/Inputs/submodule.fab ${srcroot}/test/./DAG/Inputs/tools/c.fab ${srcroot}/test/./DAG/action-apply.fab ${srcroot}/test/./DAG/action-argument-types.fab ${srcroot}/test/./DAG/action-default-arguments.fab ${srcroot}/test/./DAG/action-missing-input.fab ${srcroot}/test/./DAG/action-missing-output.fab ${srcroot}/test/./DAG/action-param-types.fab ${srcroot}/test/./DAG/argument-type-error-location.fab ${srcroot}/test/./DAG/build-with-foreach.fab ${srcroot}/test/./DAG/builtins.fab ${srcroot}/test/./DAG/compile-arguments.fab ${srcroot}/test/./DAG/compile-object.fab ${srcroot}/test/./DAG/complex-build.fab ${srcroot}/test/./DAG/compound-expr.fab ${srcroot}/test/./DAG/conditionals.fab ${srcroot}/test/./DAG/config-cli-optional.fab ${srcroot}/test/./DAG/config-cli.fab ${srcroot}/test/./DAG/custom-subdir.fab ${srcroot}/test/./DAG/direct-call.fab ${srcroot}/test/./DAG/empty-string.fab ${srcroot}/test/./DAG/equality.fab ${srcroot}/test/./DAG/explicit-compiler-imported-tools.fab ${srcroot}/test/./DAG/explicit-compiler.fab ${srcroot}/test/./DAG/field-existence.fab ${srcroot}/test/./DAG/file-string-addition.fab ${srcroot}/test/./DAG/files.fab ${srcroot}/test/./DAG/foreach.fab ${srcroot}/test/./DAG/function-apply.fab ${srcroot}/test/./DAG/function-arg-type-mismatch.fab ${srcroot}/test/./DAG/function-named-args.fab ${srcroot}/test/./DAG/hello-world.fab ${srcroot}/test/./DAG/higher-order-functions.fab ${srcroot}/test/./DAG/import-arguments-mandatory.fab ${srcroot}/test/./DAG/import-directory.fab ${srcroot}/test/./DAG/import-empty.fab ${srcroot}/test/./DAG/lists.fab ${srcroot}/test/./DAG/literals.fab ${srcroot}/test/./DAG/logical-operators.fab ${srcroot}/test/./DAG/maybe.fab ${srcroot}/test/./DAG/missing-argument.fab ${srcroot}/test/./DAG/modules.fab ${srcroot}/test/./DAG/multiple-outputs.fab ${srcroot}/test/./DAG/operators.fab ${srcroot}/test/./DAG/param-default-values.fab ${srcroot}/test/./DAG/rules.fab ${srcroot}/test/./DAG/scopes.fab ${srcroot}/test/./DAG/simple-build.fab ${srcroot}/test/./DAG/string-list.fab ${srcroot}/test/./DAG/struct-instantiation.fab ${srcroot}/test/./DAG/struct-nesting.fab ${srcroot}/test/./DAG/subdir-within-subdir.fab ${srcroot}/test/./DAG/subdir.fab ${srcroot}/test/./DAG/target-operations.fab ${srcroot}/test/./DAG/tool-vs-src-directories.fab ${srcroot}/test/./Parsing/Inputs/accepts-args.fab ${srcroot}/test/./Parsing/Inputs/fabfile ${srcroot}/test/./Parsing/Inputs/requires-args.fab ${srcroot}/test/./Parsing/Inputs/submodule-with-error.fab ${srcroot}/test/./Parsing/Inputs/submodule.fab ${srcroot}/test/./Parsing/Inputs/subsubmodule.fab ${srcroot}/test/./Parsing/actions.fab ${srcroot}/test/./Parsing/builtins.fab ${srcroot}/test/./Parsing/compound-expr.fab ${srcroot}/test/./Parsing/conditionals.fab ${srcroot}/test/./Parsing/config-cli-optional.fab ${srcroot}/test/./Parsing/config-cli.fab ${srcroot}/test/./Parsing/default-parameters.fab ${srcroot}/test/./Parsing/direct-call.fab ${srcroot}/test/./Parsing/directory.fab ${srcroot}/test/./Parsing/empty-string.fab ${srcroot}/test/./Parsing/empty.fab ${srcroot}/test/./Parsing/equality.fab ${srcroot}/test/./Parsing/err-column-number.fab ${srcroot}/test/./Parsing/err-files-lineno.fab ${srcroot}/test/./Parsing/err-in-submodule.fab ${srcroot}/test/./Parsing/field-existence.fab ${srcroot}/test/./Parsing/file-string-addition.fab ${srcroot}/test/./Parsing/files.fab ${srcroot}/test/./Parsing/foreach.fab ${srcroot}/test/./Parsing/function-type-inference.fab ${srcroot}/test/./Parsing/functions.fab ${srcroot}/test/./Parsing/hello-world.fab ${srcroot}/test/./Parsing/higher-order-functions.fab ${srcroot}/test/./Parsing/import-arguments-mandatory.fab ${srcroot}/test/./Parsing/import-arguments-missing.fab ${srcroot}/test/./Parsing/import-arguments-optional.fab ${srcroot}/test/./Parsing/import-directory.fab ${srcroot}/test/./Parsing/list-type-mismatch.fab ${srcroot}/test/./Parsing/lists.fab ${srcroot}/test/./Parsing/literals.fab ${srcroot}/test/./Parsing/logical-operators.fab ${srcroot}/test/./Parsing/maybe.fab ${srcroot}/test/./Parsing/modules.fab ${srcroot}/test/./Parsing/multiple-definition.fab ${srcroot}/test/./Parsing/not-a-struct.fab ${srcroot}/test/./Parsing/operators.fab ${srcroot}/test/./Parsing/positional-keyword-after-keyword.fab ${srcroot}/test/./Parsing/scope-mismatch.fab ${srcroot}/test/./Parsing/simple-build.fab ${srcroot}/test/./Parsing/struct-instantiation.fab ${srcroot}/test/./Parsing/struct-nesting.fab ${srcroot}/test/./Parsing/struct-type-too-few-fields.fab ${srcroot}/test/./Parsing/struct-type-too-many-fields.fab ${srcroot}/test/./Parsing/struct-type-wrong-field-type.fab ${srcroot}/test/./Parsing/struct-types.fab ${srcroot}/test/./Parsing/submodule-error.fab ${srcroot}/test/./Parsing/tokeniser.fab ${srcroot}/test/./Parsing/type-conflict.fab ${srcroot}/test/./backends/dot/compile-arguments.fab ${srcroot}/test/./backends/dot/compile-graph.fab ${srcroot}/test/./backends/dot/complex-build.fab ${srcroot}/test/./backends/dot/multiple-outputs.fab ${srcroot}/test/./backends/make/Inputs/cc.fab ${srcroot}/test/./backends/make/Inputs/foo.c ${srcroot}/test/./backends/make/Inputs/foo.h ${srcroot}/test/./backends/make/compile-arguments.fab ${srcroot}/test/./backends/make/complex-build.fab ${srcroot}/test/./backends/make/depfiles.fab ${srcroot}/test/./backends/make/directory-dependencies.fab ${srcroot}/test/./backends/make/explicit-compiler-imported-tools.fab ${srcroot}/test/./backends/make/explicit-compiler.fab ${srcroot}/test/./backends/make/literals.fab ${srcroot}/test/./backends/make/multiple-outputs.fab ${srcroot}/test/./backends/make/pseudo-targets.fab ${srcroot}/test/./backends/make/rules.fab ${srcroot}/test/./backends/make/string-list.fab ${srcroot}/test/./backends/ninja/Inputs/cc.fab ${srcroot}/test/./backends/ninja/Inputs/foo.c ${srcroot}/test/./backends/ninja/Inputs/foo.h ${srcroot}/test/./backends/ninja/Inputs/tools.fab ${srcroot}/test/./backends/ninja/action-default-param.fab ${srcroot}/test/./backends/ninja/compile-arguments.fab ${srcroot}/test/./backends/ninja/complex-build.fab ${srcroot}/test/./backends/ninja/depfiles.fab ${srcroot}/test/./backends/ninja/explicit-compiler-imported-tools.fab ${srcroot}/test/./backends/ninja/explicit-compiler.fab ${srcroot}/test/./backends/ninja/file-string-addition.fab ${srcroot}/test/./backends/ninja/file-variables.fab ${srcroot}/test/./backends/ninja/literals.fab ${srcroot}/test/./backends/ninja/modules.fab ${srcroot}/test/./backends/ninja/multiple-outputs.fab ${srcroot}/test/./backends/ninja/pseudo-targets.fab ${srcroot}/test/./backends/ninja/regenerate.fab ${srcroot}/test/./backends/ninja/rules.fab ${srcroot}/test/./backends/ninja/string-list.fab ${srcroot}/test/lit.cfg ${srcroot}/test
+AST:
+	if [ ! -e "AST" ]; then mkdir -p "AST"; fi
+Backend:
+	if [ ! -e "Backend" ]; then mkdir -p "Backend"; fi
+DAG:
+	if [ ! -e "DAG" ]; then mkdir -p "DAG"; fi
+Parsing:
+	if [ ! -e "Parsing" ]; then mkdir -p "Parsing"; fi
+Support:
+	if [ ! -e "Support" ]; then mkdir -p "Support"; fi
+Types:
+	if [ ! -e "Types" ]; then mkdir -p "Types"; fi
+lit-test-results:
+	if [ ! -e "lit-test-results" ]; then mkdir -p "lit-test-results"; fi
+raw_yacc_1 : Parsing/fab.yacc.cc Parsing/fab.yacc.h
+Parsing/fab.yacc.cc Parsing/fab.yacc.h : ${srcroot}/Parsing/fab.yy
+	echo "Processing Parsing/fab.yacc.cc Parsing/fab.yacc.h"
+	echo "byacc -d -t -o Parsing/fab.yacc.cc ${srcroot}/Parsing/fab.yy" >> build.log
+	byacc -d -t -o Parsing/fab.yacc.cc ${srcroot}/Parsing/fab.yy
+
+raw_lex_2 : Parsing/fab.lex.cc Parsing/fab.lex.h
+Parsing/fab.lex.cc Parsing/fab.lex.h : ${srcroot}/Parsing/fab.l
+	echo "Processing Parsing/fab.lex.cc Parsing/fab.lex.h"
+	echo "/usr/bin/flex -c++ --header-file=Parsing/fab.lex.h --outfile=Parsing/fab.lex.cc ${srcroot}/Parsing/fab.l" >> build.log
+	/usr/bin/flex -c++ --header-file=Parsing/fab.lex.h --outfile=Parsing/fab.lex.cc ${srcroot}/Parsing/fab.l
+
+Parsing/fab.lex.cc.o : Parsing/fab.yacc.cc Parsing/fab.lex.cc
+	echo "Compiling Parsing/fab.lex.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Wno-deprecated-register -fcolor-diagnostics -MMD -MF Parsing/fab.lex.cc.o.d Parsing/fab.lex.cc -o Parsing/fab.lex.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Wno-deprecated-register -fcolor-diagnostics -MMD -MF Parsing/fab.lex.cc.o.d Parsing/fab.lex.cc -o Parsing/fab.lex.cc.o
+-include Parsing/fab.lex.cc.o.d
+
+Parsing/fab.yacc.cc.o : Parsing/fab.yacc.cc
+	echo "Compiling Parsing/fab.yacc.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Wno-deprecated-register -fcolor-diagnostics -MMD -MF Parsing/fab.yacc.cc.o.d Parsing/fab.yacc.cc -o Parsing/fab.yacc.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Wno-deprecated-register -fcolor-diagnostics -MMD -MF Parsing/fab.yacc.cc.o.d Parsing/fab.yacc.cc -o Parsing/fab.yacc.cc.o
+-include Parsing/fab.yacc.cc.o.d
+
+driver.cc.o : ${srcroot}/driver.cc
+	echo "Compiling driver.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF driver.cc.o.d ${srcroot}/driver.cc -o driver.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF driver.cc.o.d ${srcroot}/driver.cc -o driver.cc.o
+-include driver.cc.o.d
+
+AST/Action.cc.o : ${srcroot}/AST/Action.cc
+	echo "Compiling AST/Action.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Action.cc.o.d ${srcroot}/AST/Action.cc -o AST/Action.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Action.cc.o.d ${srcroot}/AST/Action.cc -o AST/Action.cc.o
+-include AST/Action.cc.o.d
+
+AST/Argument.cc.o : ${srcroot}/AST/Argument.cc
+	echo "Compiling AST/Argument.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Argument.cc.o.d ${srcroot}/AST/Argument.cc -o AST/Argument.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Argument.cc.o.d ${srcroot}/AST/Argument.cc -o AST/Argument.cc.o
+-include AST/Argument.cc.o.d
+
+AST/ASTDump.cc.o : ${srcroot}/AST/ASTDump.cc
+	echo "Compiling AST/ASTDump.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/ASTDump.cc.o.d ${srcroot}/AST/ASTDump.cc -o AST/ASTDump.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/ASTDump.cc.o.d ${srcroot}/AST/ASTDump.cc -o AST/ASTDump.cc.o
+-include AST/ASTDump.cc.o.d
+
+AST/BinaryOperation.cc.o : ${srcroot}/AST/BinaryOperation.cc
+	echo "Compiling AST/BinaryOperation.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/BinaryOperation.cc.o.d ${srcroot}/AST/BinaryOperation.cc -o AST/BinaryOperation.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/BinaryOperation.cc.o.d ${srcroot}/AST/BinaryOperation.cc -o AST/BinaryOperation.cc.o
+-include AST/BinaryOperation.cc.o.d
+
+AST/Call.cc.o : ${srcroot}/AST/Call.cc
+	echo "Compiling AST/Call.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Call.cc.o.d ${srcroot}/AST/Call.cc -o AST/Call.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Call.cc.o.d ${srcroot}/AST/Call.cc -o AST/Call.cc.o
+-include AST/Call.cc.o.d
+
+AST/CompoundExpr.cc.o : ${srcroot}/AST/CompoundExpr.cc
+	echo "Compiling AST/CompoundExpr.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/CompoundExpr.cc.o.d ${srcroot}/AST/CompoundExpr.cc -o AST/CompoundExpr.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/CompoundExpr.cc.o.d ${srcroot}/AST/CompoundExpr.cc -o AST/CompoundExpr.cc.o
+-include AST/CompoundExpr.cc.o.d
+
+AST/Conditional.cc.o : ${srcroot}/AST/Conditional.cc
+	echo "Compiling AST/Conditional.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Conditional.cc.o.d ${srcroot}/AST/Conditional.cc -o AST/Conditional.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Conditional.cc.o.d ${srcroot}/AST/Conditional.cc -o AST/Conditional.cc.o
+-include AST/Conditional.cc.o.d
+
+AST/Expression.cc.o : ${srcroot}/AST/Expression.cc
+	echo "Compiling AST/Expression.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Expression.cc.o.d ${srcroot}/AST/Expression.cc -o AST/Expression.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Expression.cc.o.d ${srcroot}/AST/Expression.cc -o AST/Expression.cc.o
+-include AST/Expression.cc.o.d
+
+AST/FieldAccess.cc.o : ${srcroot}/AST/FieldAccess.cc
+	echo "Compiling AST/FieldAccess.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/FieldAccess.cc.o.d ${srcroot}/AST/FieldAccess.cc -o AST/FieldAccess.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/FieldAccess.cc.o.d ${srcroot}/AST/FieldAccess.cc -o AST/FieldAccess.cc.o
+-include AST/FieldAccess.cc.o.d
+
+AST/FieldQuery.cc.o : ${srcroot}/AST/FieldQuery.cc
+	echo "Compiling AST/FieldQuery.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/FieldQuery.cc.o.d ${srcroot}/AST/FieldQuery.cc -o AST/FieldQuery.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/FieldQuery.cc.o.d ${srcroot}/AST/FieldQuery.cc -o AST/FieldQuery.cc.o
+-include AST/FieldQuery.cc.o.d
+
+AST/Filename.cc.o : ${srcroot}/AST/Filename.cc
+	echo "Compiling AST/Filename.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Filename.cc.o.d ${srcroot}/AST/Filename.cc -o AST/Filename.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Filename.cc.o.d ${srcroot}/AST/Filename.cc -o AST/Filename.cc.o
+-include AST/Filename.cc.o.d
+
+AST/FileList.cc.o : ${srcroot}/AST/FileList.cc
+	echo "Compiling AST/FileList.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/FileList.cc.o.d ${srcroot}/AST/FileList.cc -o AST/FileList.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/FileList.cc.o.d ${srcroot}/AST/FileList.cc -o AST/FileList.cc.o
+-include AST/FileList.cc.o.d
+
+AST/Foreach.cc.o : ${srcroot}/AST/Foreach.cc
+	echo "Compiling AST/Foreach.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Foreach.cc.o.d ${srcroot}/AST/Foreach.cc -o AST/Foreach.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Foreach.cc.o.d ${srcroot}/AST/Foreach.cc -o AST/Foreach.cc.o
+-include AST/Foreach.cc.o.d
+
+AST/Function.cc.o : ${srcroot}/AST/Function.cc
+	echo "Compiling AST/Function.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Function.cc.o.d ${srcroot}/AST/Function.cc -o AST/Function.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Function.cc.o.d ${srcroot}/AST/Function.cc -o AST/Function.cc.o
+-include AST/Function.cc.o.d
+
+AST/HasParameters.cc.o : ${srcroot}/AST/HasParameters.cc
+	echo "Compiling AST/HasParameters.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/HasParameters.cc.o.d ${srcroot}/AST/HasParameters.cc -o AST/HasParameters.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/HasParameters.cc.o.d ${srcroot}/AST/HasParameters.cc -o AST/HasParameters.cc.o
+-include AST/HasParameters.cc.o.d
+
+AST/HasScope.cc.o : ${srcroot}/AST/HasScope.cc
+	echo "Compiling AST/HasScope.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/HasScope.cc.o.d ${srcroot}/AST/HasScope.cc -o AST/HasScope.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/HasScope.cc.o.d ${srcroot}/AST/HasScope.cc -o AST/HasScope.cc.o
+-include AST/HasScope.cc.o.d
+
+AST/Identifier.cc.o : ${srcroot}/AST/Identifier.cc
+	echo "Compiling AST/Identifier.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Identifier.cc.o.d ${srcroot}/AST/Identifier.cc -o AST/Identifier.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Identifier.cc.o.d ${srcroot}/AST/Identifier.cc -o AST/Identifier.cc.o
+-include AST/Identifier.cc.o.d
+
+AST/Import.cc.o : ${srcroot}/AST/Import.cc
+	echo "Compiling AST/Import.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Import.cc.o.d ${srcroot}/AST/Import.cc -o AST/Import.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Import.cc.o.d ${srcroot}/AST/Import.cc -o AST/Import.cc.o
+-include AST/Import.cc.o.d
+
+AST/List.cc.o : ${srcroot}/AST/List.cc
+	echo "Compiling AST/List.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/List.cc.o.d ${srcroot}/AST/List.cc -o AST/List.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/List.cc.o.d ${srcroot}/AST/List.cc -o AST/List.cc.o
+-include AST/List.cc.o.d
+
+AST/Mapping.cc.o : ${srcroot}/AST/Mapping.cc
+	echo "Compiling AST/Mapping.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Mapping.cc.o.d ${srcroot}/AST/Mapping.cc -o AST/Mapping.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Mapping.cc.o.d ${srcroot}/AST/Mapping.cc -o AST/Mapping.cc.o
+-include AST/Mapping.cc.o.d
+
+AST/Node.cc.o : ${srcroot}/AST/Node.cc
+	echo "Compiling AST/Node.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Node.cc.o.d ${srcroot}/AST/Node.cc -o AST/Node.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Node.cc.o.d ${srcroot}/AST/Node.cc -o AST/Node.cc.o
+-include AST/Node.cc.o.d
+
+AST/Parameter.cc.o : ${srcroot}/AST/Parameter.cc
+	echo "Compiling AST/Parameter.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Parameter.cc.o.d ${srcroot}/AST/Parameter.cc -o AST/Parameter.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Parameter.cc.o.d ${srcroot}/AST/Parameter.cc -o AST/Parameter.cc.o
+-include AST/Parameter.cc.o.d
+
+AST/Scope.cc.o : ${srcroot}/AST/Scope.cc
+	echo "Compiling AST/Scope.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Scope.cc.o.d ${srcroot}/AST/Scope.cc -o AST/Scope.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Scope.cc.o.d ${srcroot}/AST/Scope.cc -o AST/Scope.cc.o
+-include AST/Scope.cc.o.d
+
+AST/SomeValue.cc.o : ${srcroot}/AST/SomeValue.cc
+	echo "Compiling AST/SomeValue.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/SomeValue.cc.o.d ${srcroot}/AST/SomeValue.cc -o AST/SomeValue.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/SomeValue.cc.o.d ${srcroot}/AST/SomeValue.cc -o AST/SomeValue.cc.o
+-include AST/SomeValue.cc.o.d
+
+AST/StructInstantiation.cc.o : ${srcroot}/AST/StructInstantiation.cc
+	echo "Compiling AST/StructInstantiation.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/StructInstantiation.cc.o.d ${srcroot}/AST/StructInstantiation.cc -o AST/StructInstantiation.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/StructInstantiation.cc.o.d ${srcroot}/AST/StructInstantiation.cc -o AST/StructInstantiation.cc.o
+-include AST/StructInstantiation.cc.o.d
+
+AST/SymbolReference.cc.o : ${srcroot}/AST/SymbolReference.cc
+	echo "Compiling AST/SymbolReference.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/SymbolReference.cc.o.d ${srcroot}/AST/SymbolReference.cc -o AST/SymbolReference.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/SymbolReference.cc.o.d ${srcroot}/AST/SymbolReference.cc -o AST/SymbolReference.cc.o
+-include AST/SymbolReference.cc.o.d
+
+AST/UnaryOperation.cc.o : ${srcroot}/AST/UnaryOperation.cc
+	echo "Compiling AST/UnaryOperation.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/UnaryOperation.cc.o.d ${srcroot}/AST/UnaryOperation.cc -o AST/UnaryOperation.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/UnaryOperation.cc.o.d ${srcroot}/AST/UnaryOperation.cc -o AST/UnaryOperation.cc.o
+-include AST/UnaryOperation.cc.o.d
+
+AST/Value.cc.o : ${srcroot}/AST/Value.cc
+	echo "Compiling AST/Value.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Value.cc.o.d ${srcroot}/AST/Value.cc -o AST/Value.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Value.cc.o.d ${srcroot}/AST/Value.cc -o AST/Value.cc.o
+-include AST/Value.cc.o.d
+
+AST/Visitor.cc.o : ${srcroot}/AST/Visitor.cc
+	echo "Compiling AST/Visitor.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Visitor.cc.o.d ${srcroot}/AST/Visitor.cc -o AST/Visitor.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/Visitor.cc.o.d ${srcroot}/AST/Visitor.cc -o AST/Visitor.cc.o
+-include AST/Visitor.cc.o.d
+
+AST/literals.cc.o : ${srcroot}/AST/literals.cc
+	echo "Compiling AST/literals.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/literals.cc.o.d ${srcroot}/AST/literals.cc -o AST/literals.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF AST/literals.cc.o.d ${srcroot}/AST/literals.cc -o AST/literals.cc.o
+-include AST/literals.cc.o.d
+
+Backend/Backend.cc.o : ${srcroot}/Backend/Backend.cc
+	echo "Compiling Backend/Backend.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Backend/Backend.cc.o.d ${srcroot}/Backend/Backend.cc -o Backend/Backend.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Backend/Backend.cc.o.d ${srcroot}/Backend/Backend.cc -o Backend/Backend.cc.o
+-include Backend/Backend.cc.o.d
+
+Backend/Dot.cc.o : ${srcroot}/Backend/Dot.cc
+	echo "Compiling Backend/Dot.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Backend/Dot.cc.o.d ${srcroot}/Backend/Dot.cc -o Backend/Dot.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Backend/Dot.cc.o.d ${srcroot}/Backend/Dot.cc -o Backend/Dot.cc.o
+-include Backend/Dot.cc.o.d
+
+Backend/Make.cc.o : ${srcroot}/Backend/Make.cc
+	echo "Compiling Backend/Make.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Backend/Make.cc.o.d ${srcroot}/Backend/Make.cc -o Backend/Make.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Backend/Make.cc.o.d ${srcroot}/Backend/Make.cc -o Backend/Make.cc.o
+-include Backend/Make.cc.o.d
+
+Backend/Ninja.cc.o : ${srcroot}/Backend/Ninja.cc
+	echo "Compiling Backend/Ninja.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Backend/Ninja.cc.o.d ${srcroot}/Backend/Ninja.cc -o Backend/Ninja.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Backend/Ninja.cc.o.d ${srcroot}/Backend/Ninja.cc -o Backend/Ninja.cc.o
+-include Backend/Ninja.cc.o.d
+
+Backend/Null.cc.o : ${srcroot}/Backend/Null.cc
+	echo "Compiling Backend/Null.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Backend/Null.cc.o.d ${srcroot}/Backend/Null.cc -o Backend/Null.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Backend/Null.cc.o.d ${srcroot}/Backend/Null.cc -o Backend/Null.cc.o
+-include Backend/Null.cc.o.d
+
+DAG/Build.cc.o : ${srcroot}/DAG/Build.cc
+	echo "Compiling DAG/Build.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF DAG/Build.cc.o.d ${srcroot}/DAG/Build.cc -o DAG/Build.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF DAG/Build.cc.o.d ${srcroot}/DAG/Build.cc -o DAG/Build.cc.o
+-include DAG/Build.cc.o.d
+
+DAG/Callable.cc.o : ${srcroot}/DAG/Callable.cc
+	echo "Compiling DAG/Callable.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF DAG/Callable.cc.o.d ${srcroot}/DAG/Callable.cc -o DAG/Callable.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF DAG/Callable.cc.o.d ${srcroot}/DAG/Callable.cc -o DAG/Callable.cc.o
+-include DAG/Callable.cc.o.d
+
+DAG/DAG.cc.o : ${srcroot}/DAG/DAG.cc
+	echo "Compiling DAG/DAG.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF DAG/DAG.cc.o.d ${srcroot}/DAG/DAG.cc -o DAG/DAG.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF DAG/DAG.cc.o.d ${srcroot}/DAG/DAG.cc -o DAG/DAG.cc.o
+-include DAG/DAG.cc.o.d
+
+DAG/File.cc.o : ${srcroot}/DAG/File.cc
+	echo "Compiling DAG/File.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF DAG/File.cc.o.d ${srcroot}/DAG/File.cc -o DAG/File.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF DAG/File.cc.o.d ${srcroot}/DAG/File.cc -o DAG/File.cc.o
+-include DAG/File.cc.o.d
+
+DAG/Formatter.cc.o : ${srcroot}/DAG/Formatter.cc
+	echo "Compiling DAG/Formatter.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF DAG/Formatter.cc.o.d ${srcroot}/DAG/Formatter.cc -o DAG/Formatter.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF DAG/Formatter.cc.o.d ${srcroot}/DAG/Formatter.cc -o DAG/Formatter.cc.o
+-include DAG/Formatter.cc.o.d
+
+DAG/Function.cc.o : ${srcroot}/DAG/Function.cc
+	echo "Compiling DAG/Function.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF DAG/Function.cc.o.d ${srcroot}/DAG/Function.cc -o DAG/Function.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF DAG/Function.cc.o.d ${srcroot}/DAG/Function.cc -o DAG/Function.cc.o
+-include DAG/Function.cc.o.d
+
+DAG/List.cc.o : ${srcroot}/DAG/List.cc
+	echo "Compiling DAG/List.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF DAG/List.cc.o.d ${srcroot}/DAG/List.cc -o DAG/List.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF DAG/List.cc.o.d ${srcroot}/DAG/List.cc -o DAG/List.cc.o
+-include DAG/List.cc.o.d
+
+DAG/Parameter.cc.o : ${srcroot}/DAG/Parameter.cc
+	echo "Compiling DAG/Parameter.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF DAG/Parameter.cc.o.d ${srcroot}/DAG/Parameter.cc -o DAG/Parameter.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF DAG/Parameter.cc.o.d ${srcroot}/DAG/Parameter.cc -o DAG/Parameter.cc.o
+-include DAG/Parameter.cc.o.d
+
+DAG/Primitive.cc.o : ${srcroot}/DAG/Primitive.cc
+	echo "Compiling DAG/Primitive.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF DAG/Primitive.cc.o.d ${srcroot}/DAG/Primitive.cc -o DAG/Primitive.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF DAG/Primitive.cc.o.d ${srcroot}/DAG/Primitive.cc -o DAG/Primitive.cc.o
+-include DAG/Primitive.cc.o.d
+
+DAG/Rule.cc.o : ${srcroot}/DAG/Rule.cc
+	echo "Compiling DAG/Rule.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF DAG/Rule.cc.o.d ${srcroot}/DAG/Rule.cc -o DAG/Rule.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF DAG/Rule.cc.o.d ${srcroot}/DAG/Rule.cc -o DAG/Rule.cc.o
+-include DAG/Rule.cc.o.d
+
+DAG/Structure.cc.o : ${srcroot}/DAG/Structure.cc
+	echo "Compiling DAG/Structure.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF DAG/Structure.cc.o.d ${srcroot}/DAG/Structure.cc -o DAG/Structure.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF DAG/Structure.cc.o.d ${srcroot}/DAG/Structure.cc -o DAG/Structure.cc.o
+-include DAG/Structure.cc.o.d
+
+DAG/Target.cc.o : ${srcroot}/DAG/Target.cc
+	echo "Compiling DAG/Target.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF DAG/Target.cc.o.d ${srcroot}/DAG/Target.cc -o DAG/Target.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF DAG/Target.cc.o.d ${srcroot}/DAG/Target.cc -o DAG/Target.cc.o
+-include DAG/Target.cc.o.d
+
+DAG/UndefinedValueException.cc.o : ${srcroot}/DAG/UndefinedValueException.cc
+	echo "Compiling DAG/UndefinedValueException.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF DAG/UndefinedValueException.cc.o.d ${srcroot}/DAG/UndefinedValueException.cc -o DAG/UndefinedValueException.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF DAG/UndefinedValueException.cc.o.d ${srcroot}/DAG/UndefinedValueException.cc -o DAG/UndefinedValueException.cc.o
+-include DAG/UndefinedValueException.cc.o.d
+
+DAG/Value.cc.o : ${srcroot}/DAG/Value.cc
+	echo "Compiling DAG/Value.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF DAG/Value.cc.o.d ${srcroot}/DAG/Value.cc -o DAG/Value.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF DAG/Value.cc.o.d ${srcroot}/DAG/Value.cc -o DAG/Value.cc.o
+-include DAG/Value.cc.o.d
+
+DAG/Visitor.cc.o : ${srcroot}/DAG/Visitor.cc
+	echo "Compiling DAG/Visitor.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF DAG/Visitor.cc.o.d ${srcroot}/DAG/Visitor.cc -o DAG/Visitor.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF DAG/Visitor.cc.o.d ${srcroot}/DAG/Visitor.cc -o DAG/Visitor.cc.o
+-include DAG/Visitor.cc.o.d
+
+Parsing/Lexer.cc.o : ${srcroot}/Parsing/Lexer.cc
+	echo "Compiling Parsing/Lexer.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Parsing/Lexer.cc.o.d ${srcroot}/Parsing/Lexer.cc -o Parsing/Lexer.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Parsing/Lexer.cc.o.d ${srcroot}/Parsing/Lexer.cc -o Parsing/Lexer.cc.o
+-include Parsing/Lexer.cc.o.d
+
+Parsing/Parser.cc.o : ${srcroot}/Parsing/Parser.cc
+	echo "Compiling Parsing/Parser.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Parsing/Parser.cc.o.d ${srcroot}/Parsing/Parser.cc -o Parsing/Parser.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Parsing/Parser.cc.o.d ${srcroot}/Parsing/Parser.cc -o Parsing/Parser.cc.o
+-include Parsing/Parser.cc.o.d
+
+Parsing/Token.cc.o : ${srcroot}/Parsing/Token.cc
+	echo "Compiling Parsing/Token.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Parsing/Token.cc.o.d ${srcroot}/Parsing/Token.cc -o Parsing/Token.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Parsing/Token.cc.o.d ${srcroot}/Parsing/Token.cc -o Parsing/Token.cc.o
+-include Parsing/Token.cc.o.d
+
+Support/Arguments.cc.o : ${srcroot}/Support/Arguments.cc
+	echo "Compiling Support/Arguments.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Support/Arguments.cc.o.d ${srcroot}/Support/Arguments.cc -o Support/Arguments.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Support/Arguments.cc.o.d ${srcroot}/Support/Arguments.cc -o Support/Arguments.cc.o
+-include Support/Arguments.cc.o.d
+
+Support/Bytestream.cc.o : ${srcroot}/Support/Bytestream.cc
+	echo "Compiling Support/Bytestream.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Support/Bytestream.cc.o.d ${srcroot}/Support/Bytestream.cc -o Support/Bytestream.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Support/Bytestream.cc.o.d ${srcroot}/Support/Bytestream.cc -o Support/Bytestream.cc.o
+-include Support/Bytestream.cc.o.d
+
+Support/ErrorReport.cc.o : ${srcroot}/Support/ErrorReport.cc
+	echo "Compiling Support/ErrorReport.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Support/ErrorReport.cc.o.d ${srcroot}/Support/ErrorReport.cc -o Support/ErrorReport.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Support/ErrorReport.cc.o.d ${srcroot}/Support/ErrorReport.cc -o Support/ErrorReport.cc.o
+-include Support/ErrorReport.cc.o.d
+
+Support/Join.cc.o : ${srcroot}/Support/Join.cc
+	echo "Compiling Support/Join.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Support/Join.cc.o.d ${srcroot}/Support/Join.cc -o Support/Join.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Support/Join.cc.o.d ${srcroot}/Support/Join.cc -o Support/Join.cc.o
+-include Support/Join.cc.o.d
+
+Support/Printable.cc.o : ${srcroot}/Support/Printable.cc
+	echo "Compiling Support/Printable.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Support/Printable.cc.o.d ${srcroot}/Support/Printable.cc -o Support/Printable.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Support/Printable.cc.o.d ${srcroot}/Support/Printable.cc -o Support/Printable.cc.o
+-include Support/Printable.cc.o.d
+
+Support/SourceLocation.cc.o : ${srcroot}/Support/SourceLocation.cc
+	echo "Compiling Support/SourceLocation.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Support/SourceLocation.cc.o.d ${srcroot}/Support/SourceLocation.cc -o Support/SourceLocation.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Support/SourceLocation.cc.o.d ${srcroot}/Support/SourceLocation.cc -o Support/SourceLocation.cc.o
+-include Support/SourceLocation.cc.o.d
+
+Support/Visitable.cc.o : ${srcroot}/Support/Visitable.cc
+	echo "Compiling Support/Visitable.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Support/Visitable.cc.o.d ${srcroot}/Support/Visitable.cc -o Support/Visitable.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Support/Visitable.cc.o.d ${srcroot}/Support/Visitable.cc -o Support/Visitable.cc.o
+-include Support/Visitable.cc.o.d
+
+Support/exceptions.cc.o : ${srcroot}/Support/exceptions.cc
+	echo "Compiling Support/exceptions.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Support/exceptions.cc.o.d ${srcroot}/Support/exceptions.cc -o Support/exceptions.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Support/exceptions.cc.o.d ${srcroot}/Support/exceptions.cc -o Support/exceptions.cc.o
+-include Support/exceptions.cc.o.d
+
+Support/os-posix.cc.o : ${srcroot}/Support/os-posix.cc
+	echo "Compiling Support/os-posix.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Support/os-posix.cc.o.d ${srcroot}/Support/os-posix.cc -o Support/os-posix.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Support/os-posix.cc.o.d ${srcroot}/Support/os-posix.cc -o Support/os-posix.cc.o
+-include Support/os-posix.cc.o.d
+
+Types/BooleanType.cc.o : ${srcroot}/Types/BooleanType.cc
+	echo "Compiling Types/BooleanType.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Types/BooleanType.cc.o.d ${srcroot}/Types/BooleanType.cc -o Types/BooleanType.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Types/BooleanType.cc.o.d ${srcroot}/Types/BooleanType.cc -o Types/BooleanType.cc.o
+-include Types/BooleanType.cc.o.d
+
+Types/FileType.cc.o : ${srcroot}/Types/FileType.cc
+	echo "Compiling Types/FileType.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Types/FileType.cc.o.d ${srcroot}/Types/FileType.cc -o Types/FileType.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Types/FileType.cc.o.d ${srcroot}/Types/FileType.cc -o Types/FileType.cc.o
+-include Types/FileType.cc.o.d
+
+Types/FunctionType.cc.o : ${srcroot}/Types/FunctionType.cc
+	echo "Compiling Types/FunctionType.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Types/FunctionType.cc.o.d ${srcroot}/Types/FunctionType.cc -o Types/FunctionType.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Types/FunctionType.cc.o.d ${srcroot}/Types/FunctionType.cc -o Types/FunctionType.cc.o
+-include Types/FunctionType.cc.o.d
+
+Types/IntegerType.cc.o : ${srcroot}/Types/IntegerType.cc
+	echo "Compiling Types/IntegerType.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Types/IntegerType.cc.o.d ${srcroot}/Types/IntegerType.cc -o Types/IntegerType.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Types/IntegerType.cc.o.d ${srcroot}/Types/IntegerType.cc -o Types/IntegerType.cc.o
+-include Types/IntegerType.cc.o.d
+
+Types/MaybeType.cc.o : ${srcroot}/Types/MaybeType.cc
+	echo "Compiling Types/MaybeType.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Types/MaybeType.cc.o.d ${srcroot}/Types/MaybeType.cc -o Types/MaybeType.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Types/MaybeType.cc.o.d ${srcroot}/Types/MaybeType.cc -o Types/MaybeType.cc.o
+-include Types/MaybeType.cc.o.d
+
+Types/OptionallyTyped.cc.o : ${srcroot}/Types/OptionallyTyped.cc
+	echo "Compiling Types/OptionallyTyped.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Types/OptionallyTyped.cc.o.d ${srcroot}/Types/OptionallyTyped.cc -o Types/OptionallyTyped.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Types/OptionallyTyped.cc.o.d ${srcroot}/Types/OptionallyTyped.cc -o Types/OptionallyTyped.cc.o
+-include Types/OptionallyTyped.cc.o.d
+
+Types/SequenceType.cc.o : ${srcroot}/Types/SequenceType.cc
+	echo "Compiling Types/SequenceType.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Types/SequenceType.cc.o.d ${srcroot}/Types/SequenceType.cc -o Types/SequenceType.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Types/SequenceType.cc.o.d ${srcroot}/Types/SequenceType.cc -o Types/SequenceType.cc.o
+-include Types/SequenceType.cc.o.d
+
+Types/StringType.cc.o : ${srcroot}/Types/StringType.cc
+	echo "Compiling Types/StringType.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Types/StringType.cc.o.d ${srcroot}/Types/StringType.cc -o Types/StringType.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Types/StringType.cc.o.d ${srcroot}/Types/StringType.cc -o Types/StringType.cc.o
+-include Types/StringType.cc.o.d
+
+Types/StructureType.cc.o : ${srcroot}/Types/StructureType.cc
+	echo "Compiling Types/StructureType.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Types/StructureType.cc.o.d ${srcroot}/Types/StructureType.cc -o Types/StructureType.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Types/StructureType.cc.o.d ${srcroot}/Types/StructureType.cc -o Types/StructureType.cc.o
+-include Types/StructureType.cc.o.d
+
+Types/Type.cc.o : ${srcroot}/Types/Type.cc
+	echo "Compiling Types/Type.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Types/Type.cc.o.d ${srcroot}/Types/Type.cc -o Types/Type.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Types/Type.cc.o.d ${srcroot}/Types/Type.cc -o Types/Type.cc.o
+-include Types/Type.cc.o.d
+
+Types/TypeContext.cc.o : ${srcroot}/Types/TypeContext.cc
+	echo "Compiling Types/TypeContext.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Types/TypeContext.cc.o.d ${srcroot}/Types/TypeContext.cc -o Types/TypeContext.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Types/TypeContext.cc.o.d ${srcroot}/Types/TypeContext.cc -o Types/TypeContext.cc.o
+-include Types/TypeContext.cc.o.d
+
+Types/TypeError.cc.o : ${srcroot}/Types/TypeError.cc
+	echo "Compiling Types/TypeError.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Types/TypeError.cc.o.d ${srcroot}/Types/TypeError.cc -o Types/TypeError.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Types/TypeError.cc.o.d ${srcroot}/Types/TypeError.cc -o Types/TypeError.cc.o
+-include Types/TypeError.cc.o.d
+
+Types/Typed.cc.o : ${srcroot}/Types/Typed.cc
+	echo "Compiling Types/Typed.cc.o"
+	echo "/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Types/Typed.cc.o.d ${srcroot}/Types/Typed.cc -o Types/Typed.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++11 -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -MMD -MF Types/Typed.cc.o.d ${srcroot}/Types/Typed.cc -o Types/Typed.cc.o
+-include Types/Typed.cc.o.d
+
+fab : Parsing/fab.lex.cc.o Parsing/fab.yacc.cc.o driver.cc.o AST/Action.cc.o AST/Argument.cc.o AST/ASTDump.cc.o AST/BinaryOperation.cc.o AST/Call.cc.o AST/CompoundExpr.cc.o AST/Conditional.cc.o AST/Expression.cc.o AST/FieldAccess.cc.o AST/FieldQuery.cc.o AST/Filename.cc.o AST/FileList.cc.o AST/Foreach.cc.o AST/Function.cc.o AST/HasParameters.cc.o AST/HasScope.cc.o AST/Identifier.cc.o AST/Import.cc.o AST/List.cc.o AST/Mapping.cc.o AST/Node.cc.o AST/Parameter.cc.o AST/Scope.cc.o AST/SomeValue.cc.o AST/StructInstantiation.cc.o AST/SymbolReference.cc.o AST/UnaryOperation.cc.o AST/Value.cc.o AST/Visitor.cc.o AST/literals.cc.o Backend/Backend.cc.o Backend/Dot.cc.o Backend/Make.cc.o Backend/Ninja.cc.o Backend/Null.cc.o DAG/Build.cc.o DAG/Callable.cc.o DAG/DAG.cc.o DAG/File.cc.o DAG/Formatter.cc.o DAG/Function.cc.o DAG/List.cc.o DAG/Parameter.cc.o DAG/Primitive.cc.o DAG/Rule.cc.o DAG/Structure.cc.o DAG/Target.cc.o DAG/UndefinedValueException.cc.o DAG/Value.cc.o DAG/Visitor.cc.o Parsing/Lexer.cc.o Parsing/Parser.cc.o Parsing/Token.cc.o Support/Arguments.cc.o Support/Bytestream.cc.o Support/ErrorReport.cc.o Support/Join.cc.o Support/Printable.cc.o Support/SourceLocation.cc.o Support/Visitable.cc.o Support/exceptions.cc.o Support/os-posix.cc.o Types/BooleanType.cc.o Types/FileType.cc.o Types/FunctionType.cc.o Types/IntegerType.cc.o Types/MaybeType.cc.o Types/OptionallyTyped.cc.o Types/SequenceType.cc.o Types/StringType.cc.o Types/StructureType.cc.o Types/Type.cc.o Types/TypeContext.cc.o Types/TypeError.cc.o Types/Typed.cc.o
+	echo "Linking fab"
+	echo "/usr/bin/c++ -o fab -fcolor-diagnostics Parsing/fab.lex.cc.o Parsing/fab.yacc.cc.o driver.cc.o AST/Action.cc.o AST/Argument.cc.o AST/ASTDump.cc.o AST/BinaryOperation.cc.o AST/Call.cc.o AST/CompoundExpr.cc.o AST/Conditional.cc.o AST/Expression.cc.o AST/FieldAccess.cc.o AST/FieldQuery.cc.o AST/Filename.cc.o AST/FileList.cc.o AST/Foreach.cc.o AST/Function.cc.o AST/HasParameters.cc.o AST/HasScope.cc.o AST/Identifier.cc.o AST/Import.cc.o AST/List.cc.o AST/Mapping.cc.o AST/Node.cc.o AST/Parameter.cc.o AST/Scope.cc.o AST/SomeValue.cc.o AST/StructInstantiation.cc.o AST/SymbolReference.cc.o AST/UnaryOperation.cc.o AST/Value.cc.o AST/Visitor.cc.o AST/literals.cc.o Backend/Backend.cc.o Backend/Dot.cc.o Backend/Make.cc.o Backend/Ninja.cc.o Backend/Null.cc.o DAG/Build.cc.o DAG/Callable.cc.o DAG/DAG.cc.o DAG/File.cc.o DAG/Formatter.cc.o DAG/Function.cc.o DAG/List.cc.o DAG/Parameter.cc.o DAG/Primitive.cc.o DAG/Rule.cc.o DAG/Structure.cc.o DAG/Target.cc.o DAG/UndefinedValueException.cc.o DAG/Value.cc.o DAG/Visitor.cc.o Parsing/Lexer.cc.o Parsing/Parser.cc.o Parsing/Token.cc.o Support/Arguments.cc.o Support/Bytestream.cc.o Support/ErrorReport.cc.o Support/Join.cc.o Support/Printable.cc.o Support/SourceLocation.cc.o Support/Visitable.cc.o Support/exceptions.cc.o Support/os-posix.cc.o Types/BooleanType.cc.o Types/FileType.cc.o Types/FunctionType.cc.o Types/IntegerType.cc.o Types/MaybeType.cc.o Types/OptionallyTyped.cc.o Types/SequenceType.cc.o Types/StringType.cc.o Types/StructureType.cc.o Types/Type.cc.o Types/TypeContext.cc.o Types/TypeError.cc.o Types/Typed.cc.o" >> build.log
+	/usr/bin/c++ -o fab -fcolor-diagnostics Parsing/fab.lex.cc.o Parsing/fab.yacc.cc.o driver.cc.o AST/Action.cc.o AST/Argument.cc.o AST/ASTDump.cc.o AST/BinaryOperation.cc.o AST/Call.cc.o AST/CompoundExpr.cc.o AST/Conditional.cc.o AST/Expression.cc.o AST/FieldAccess.cc.o AST/FieldQuery.cc.o AST/Filename.cc.o AST/FileList.cc.o AST/Foreach.cc.o AST/Function.cc.o AST/HasParameters.cc.o AST/HasScope.cc.o AST/Identifier.cc.o AST/Import.cc.o AST/List.cc.o AST/Mapping.cc.o AST/Node.cc.o AST/Parameter.cc.o AST/Scope.cc.o AST/SomeValue.cc.o AST/StructInstantiation.cc.o AST/SymbolReference.cc.o AST/UnaryOperation.cc.o AST/Value.cc.o AST/Visitor.cc.o AST/literals.cc.o Backend/Backend.cc.o Backend/Dot.cc.o Backend/Make.cc.o Backend/Ninja.cc.o Backend/Null.cc.o DAG/Build.cc.o DAG/Callable.cc.o DAG/DAG.cc.o DAG/File.cc.o DAG/Formatter.cc.o DAG/Function.cc.o DAG/List.cc.o DAG/Parameter.cc.o DAG/Primitive.cc.o DAG/Rule.cc.o DAG/Structure.cc.o DAG/Target.cc.o DAG/UndefinedValueException.cc.o DAG/Value.cc.o DAG/Visitor.cc.o Parsing/Lexer.cc.o Parsing/Parser.cc.o Parsing/Token.cc.o Support/Arguments.cc.o Support/Bytestream.cc.o Support/ErrorReport.cc.o Support/Join.cc.o Support/Printable.cc.o Support/SourceLocation.cc.o Support/Visitable.cc.o Support/exceptions.cc.o Support/os-posix.cc.o Types/BooleanType.cc.o Types/FileType.cc.o Types/FunctionType.cc.o Types/IntegerType.cc.o Types/MaybeType.cc.o Types/OptionallyTyped.cc.o Types/SequenceType.cc.o Types/StringType.cc.o Types/StructureType.cc.o Types/Type.cc.o Types/TypeContext.cc.o Types/TypeError.cc.o Types/Typed.cc.o
+
+lit-test-results/report.txt : fab ${srcroot}/test/./DAG/Inputs/cc.fab ${srcroot}/test/./DAG/Inputs/empty.fab ${srcroot}/test/./DAG/Inputs/fabfile ${srcroot}/test/./DAG/Inputs/requires-args.fab ${srcroot}/test/./DAG/Inputs/some_files.fab ${srcroot}/test/./DAG/Inputs/sources/src.fab ${srcroot}/test/./DAG/Inputs/subdir-test.fab ${srcroot}/test/./DAG/Inputs/submodule.fab ${srcroot}/test/./DAG/Inputs/tools/c.fab ${srcroot}/test/./DAG/action-apply.fab ${srcroot}/test/./DAG/action-argument-types.fab ${srcroot}/test/./DAG/action-default-arguments.fab ${srcroot}/test/./DAG/action-missing-input.fab ${srcroot}/test/./DAG/action-missing-output.fab ${srcroot}/test/./DAG/action-param-types.fab ${srcroot}/test/./DAG/argument-type-error-location.fab ${srcroot}/test/./DAG/build-with-foreach.fab ${srcroot}/test/./DAG/builtins.fab ${srcroot}/test/./DAG/compile-arguments.fab ${srcroot}/test/./DAG/compile-object.fab ${srcroot}/test/./DAG/complex-build.fab ${srcroot}/test/./DAG/compound-expr.fab ${srcroot}/test/./DAG/conditionals.fab ${srcroot}/test/./DAG/config-cli-optional.fab ${srcroot}/test/./DAG/config-cli.fab ${srcroot}/test/./DAG/custom-subdir.fab ${srcroot}/test/./DAG/direct-call.fab ${srcroot}/test/./DAG/empty-string.fab ${srcroot}/test/./DAG/equality.fab ${srcroot}/test/./DAG/explicit-compiler-imported-tools.fab ${srcroot}/test/./DAG/explicit-compiler.fab ${srcroot}/test/./DAG/field-existence.fab ${srcroot}/test/./DAG/file-string-addition.fab ${srcroot}/test/./DAG/files.fab ${srcroot}/test/./DAG/foreach.fab ${srcroot}/test/./DAG/function-apply.fab ${srcroot}/test/./DAG/function-arg-type-mismatch.fab ${srcroot}/test/./DAG/function-named-args.fab ${srcroot}/test/./DAG/hello-world.fab ${srcroot}/test/./DAG/higher-order-functions.fab ${srcroot}/test/./DAG/import-arguments-mandatory.fab ${srcroot}/test/./DAG/import-directory.fab ${srcroot}/test/./DAG/import-empty.fab ${srcroot}/test/./DAG/lists.fab ${srcroot}/test/./DAG/literals.fab ${srcroot}/test/./DAG/logical-operators.fab ${srcroot}/test/./DAG/maybe.fab ${srcroot}/test/./DAG/missing-argument.fab ${srcroot}/test/./DAG/modules.fab ${srcroot}/test/./DAG/multiple-outputs.fab ${srcroot}/test/./DAG/operators.fab ${srcroot}/test/./DAG/param-default-values.fab ${srcroot}/test/./DAG/rules.fab ${srcroot}/test/./DAG/scopes.fab ${srcroot}/test/./DAG/simple-build.fab ${srcroot}/test/./DAG/string-list.fab ${srcroot}/test/./DAG/struct-instantiation.fab ${srcroot}/test/./DAG/struct-nesting.fab ${srcroot}/test/./DAG/subdir-within-subdir.fab ${srcroot}/test/./DAG/subdir.fab ${srcroot}/test/./DAG/target-operations.fab ${srcroot}/test/./DAG/tool-vs-src-directories.fab ${srcroot}/test/./Parsing/Inputs/accepts-args.fab ${srcroot}/test/./Parsing/Inputs/fabfile ${srcroot}/test/./Parsing/Inputs/requires-args.fab ${srcroot}/test/./Parsing/Inputs/submodule-with-error.fab ${srcroot}/test/./Parsing/Inputs/submodule.fab ${srcroot}/test/./Parsing/Inputs/subsubmodule.fab ${srcroot}/test/./Parsing/actions.fab ${srcroot}/test/./Parsing/builtins.fab ${srcroot}/test/./Parsing/compound-expr.fab ${srcroot}/test/./Parsing/conditionals.fab ${srcroot}/test/./Parsing/config-cli-optional.fab ${srcroot}/test/./Parsing/config-cli.fab ${srcroot}/test/./Parsing/default-parameters.fab ${srcroot}/test/./Parsing/direct-call.fab ${srcroot}/test/./Parsing/directory.fab ${srcroot}/test/./Parsing/empty-string.fab ${srcroot}/test/./Parsing/empty.fab ${srcroot}/test/./Parsing/equality.fab ${srcroot}/test/./Parsing/err-column-number.fab ${srcroot}/test/./Parsing/err-files-lineno.fab ${srcroot}/test/./Parsing/err-in-submodule.fab ${srcroot}/test/./Parsing/field-existence.fab ${srcroot}/test/./Parsing/file-string-addition.fab ${srcroot}/test/./Parsing/files.fab ${srcroot}/test/./Parsing/foreach.fab ${srcroot}/test/./Parsing/function-type-inference.fab ${srcroot}/test/./Parsing/functions.fab ${srcroot}/test/./Parsing/hello-world.fab ${srcroot}/test/./Parsing/higher-order-functions.fab ${srcroot}/test/./Parsing/import-arguments-mandatory.fab ${srcroot}/test/./Parsing/import-arguments-missing.fab ${srcroot}/test/./Parsing/import-arguments-optional.fab ${srcroot}/test/./Parsing/import-directory.fab ${srcroot}/test/./Parsing/list-type-mismatch.fab ${srcroot}/test/./Parsing/lists.fab ${srcroot}/test/./Parsing/literals.fab ${srcroot}/test/./Parsing/logical-operators.fab ${srcroot}/test/./Parsing/maybe.fab ${srcroot}/test/./Parsing/modules.fab ${srcroot}/test/./Parsing/multiple-definition.fab ${srcroot}/test/./Parsing/not-a-struct.fab ${srcroot}/test/./Parsing/operators.fab ${srcroot}/test/./Parsing/positional-keyword-after-keyword.fab ${srcroot}/test/./Parsing/scope-mismatch.fab ${srcroot}/test/./Parsing/simple-build.fab ${srcroot}/test/./Parsing/struct-instantiation.fab ${srcroot}/test/./Parsing/struct-nesting.fab ${srcroot}/test/./Parsing/struct-type-too-few-fields.fab ${srcroot}/test/./Parsing/struct-type-too-many-fields.fab ${srcroot}/test/./Parsing/struct-type-wrong-field-type.fab ${srcroot}/test/./Parsing/struct-types.fab ${srcroot}/test/./Parsing/submodule-error.fab ${srcroot}/test/./Parsing/tokeniser.fab ${srcroot}/test/./Parsing/type-conflict.fab ${srcroot}/test/./backends/dot/compile-arguments.fab ${srcroot}/test/./backends/dot/compile-graph.fab ${srcroot}/test/./backends/dot/complex-build.fab ${srcroot}/test/./backends/dot/multiple-outputs.fab ${srcroot}/test/./backends/make/Inputs/cc.fab ${srcroot}/test/./backends/make/Inputs/foo.c ${srcroot}/test/./backends/make/Inputs/foo.h ${srcroot}/test/./backends/make/compile-arguments.fab ${srcroot}/test/./backends/make/complex-build.fab ${srcroot}/test/./backends/make/depfiles.fab ${srcroot}/test/./backends/make/directory-dependencies.fab ${srcroot}/test/./backends/make/explicit-compiler-imported-tools.fab ${srcroot}/test/./backends/make/explicit-compiler.fab ${srcroot}/test/./backends/make/literals.fab ${srcroot}/test/./backends/make/multiple-outputs.fab ${srcroot}/test/./backends/make/pseudo-targets.fab ${srcroot}/test/./backends/make/rules.fab ${srcroot}/test/./backends/make/string-list.fab ${srcroot}/test/./backends/ninja/Inputs/cc.fab ${srcroot}/test/./backends/ninja/Inputs/foo.c ${srcroot}/test/./backends/ninja/Inputs/foo.h ${srcroot}/test/./backends/ninja/Inputs/tools.fab ${srcroot}/test/./backends/ninja/action-default-param.fab ${srcroot}/test/./backends/ninja/compile-arguments.fab ${srcroot}/test/./backends/ninja/complex-build.fab ${srcroot}/test/./backends/ninja/depfiles.fab ${srcroot}/test/./backends/ninja/explicit-compiler-imported-tools.fab ${srcroot}/test/./backends/ninja/explicit-compiler.fab ${srcroot}/test/./backends/ninja/file-string-addition.fab ${srcroot}/test/./backends/ninja/file-variables.fab ${srcroot}/test/./backends/ninja/literals.fab ${srcroot}/test/./backends/ninja/modules.fab ${srcroot}/test/./backends/ninja/multiple-outputs.fab ${srcroot}/test/./backends/ninja/pseudo-targets.fab ${srcroot}/test/./backends/ninja/regenerate.fab ${srcroot}/test/./backends/ninja/rules.fab ${srcroot}/test/./backends/ninja/string-list.fab ${srcroot}/test/lit.cfg ${srcroot}/test
 	echo "Running LLVM Integrated Tester on ${srcroot}/test"
-	echo "llvm-lit --succinct --verbose --output=${buildroot}/lit-test-results/report.txt ${srcroot}/test" >> build.log
-	llvm-lit --succinct --verbose --output=${buildroot}/lit-test-results/report.txt ${srcroot}/test
+	echo "llvm-lit --succinct --verbose --output=lit-test-results/report.txt ${srcroot}/test" >> build.log
+	llvm-lit --succinct --verbose --output=lit-test-results/report.txt ${srcroot}/test
 
-${buildroot}/GNUmakefile : ${srcroot}/share/fabrique/cxx.fab ${srcroot}/share/fabrique/lex.fab ${srcroot}/share/fabrique/llvm-lit.fab ${srcroot}/share/fabrique/yacc.fab ${srcroot}/AST/AST.fab ${srcroot}/Backend/Backend.fab ${srcroot}/DAG/DAG.fab ${srcroot}/Parsing/Parsing.fab ${srcroot}/Support/Support.fab ${srcroot}/Types/Types.fab ${srcroot}/test/manifest.fab ${srcroot}/fabfile
-	echo "Regenerating ${buildroot}/GNUmakefile"
+GNUmakefile : ${srcroot}/share/fabrique/cxx.fab ${srcroot}/share/fabrique/lex.fab ${srcroot}/share/fabrique/llvm-lit.fab ${srcroot}/share/fabrique/yacc.fab ${srcroot}/AST/AST.fab ${srcroot}/Backend/Backend.fab ${srcroot}/DAG/DAG.fab ${srcroot}/Parsing/Parsing.fab ${srcroot}/Support/Support.fab ${srcroot}/Types/Types.fab ${srcroot}/test/manifest.fab ${srcroot}/fabfile
+	echo "Regenerating GNUmakefile"
 	echo "fab --debug='none' --format=gmake --output=${buildroot} -D 'debug=false' -D 'asserts=false' ${srcroot}/fabfile" >> build.log
 	fab --debug='none' --format=gmake --output=${buildroot} -D 'debug=false' -D 'asserts=false' ${srcroot}/fabfile
 

@@ -242,7 +242,10 @@ string NinjaFormatter::Format(const Build&)
 
 string NinjaFormatter::Format(const File& f)
 {
-	return f.fullName();
+	if (f.generated())
+		return f.relativeName();
+	else
+		return f.fullName();
 }
 
 string NinjaFormatter::Format(const Function&)

@@ -91,9 +91,12 @@ string File::filename() const
 }
 
 
-string File::directory() const
+string File::directory(bool relativeBuildDirectories) const
 {
 	if (absolute_)
+		return subdirectory_;
+
+	if (relativeBuildDirectories and generated())
 		return subdirectory_;
 
 	const string root = generated() ? "${buildroot}" : "${srcroot}";

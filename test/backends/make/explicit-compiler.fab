@@ -13,10 +13,10 @@ cc = action('${CC} -c ${src} -o ${obj}'
 link = action('${CC} ${objects} -o ${binary}'
               <- objects:list[file[in]], binary:file[out], CC:file[in] = compiler);
 
-# CHECK: ${buildroot}/foo.o : ${srcroot}/Inputs/foo.c
-# CHECK:   /usr/bin/cc -c ${srcroot}/Inputs/foo.c -o ${buildroot}/foo.o
+# CHECK: foo.o : ${srcroot}/Inputs/foo.c
+# CHECK:   /usr/bin/cc -c ${srcroot}/Inputs/foo.c -o foo.o
 obj = cc(src, obj = file('foo.o'));
 
-# CHECK: ${buildroot}/foo : ${buildroot}/foo.o
-# CHECK:   /usr/bin/cc ${buildroot}/foo.o -o ${buildroot}/foo
+# CHECK: foo : foo.o
+# CHECK:   /usr/bin/cc foo.o -o foo
 bin = link([ obj ], file('foo'));

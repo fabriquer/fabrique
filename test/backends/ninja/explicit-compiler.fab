@@ -13,10 +13,10 @@ cc = action('${CC} -c ${src} -o ${obj}'
 link = action('${CC} ${objects} -o ${binary}'
               <- objects:list[file[in]], binary:file[out], CC:file[in] = compiler);
 
-# CHECK-DAG: ${buildroot}/foo.o : cc ${srcroot}/Inputs/foo.c
+# CHECK-DAG: foo.o : cc ${srcroot}/Inputs/foo.c
 # CHECK-DAG: CC = /usr/bin/cc
 obj = cc(src, obj = file('foo.o'));
 
-# CHECK-DAG: ${buildroot}/foo : link ${buildroot}/foo.o
+# CHECK-DAG: foo : link foo.o
 # CHECK-DAG: CC = /usr/bin/cc
 bin = link([ obj ], file('foo'));

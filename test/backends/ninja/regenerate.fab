@@ -5,7 +5,7 @@
 
 process = action('process ${src} -o ${gen}' <- src:file[in], gen:file[out]);
 
-# CHECK-DAG: build ${buildroot}/foo.out : process ${srcroot}/foo.in
+# CHECK-DAG: build foo.out : process ${srcroot}/foo.in
 foo = process(file('foo.in'), file('foo.out'));
 
-# CHECK-DAG: build ${buildroot}/build.ninja : _fabrique_regenerate {{.*}}/regenerate.fab
+# CHECK-DAG: build build.ninja : _fabrique_regenerate {{.*}}/regenerate.fab

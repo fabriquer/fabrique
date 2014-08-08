@@ -24,7 +24,7 @@ objs = cc_all(srcs);
 bin = link(objs, file('foo'));
 
 
-# CHECK-DAG: build srcs : phony ${buildroot}/foo.c ${srcroot}/bar.c
+# CHECK-DAG: build srcs : phony foo.c ${srcroot}/bar.c
 #
 # CHECK-DAG: rule cc
 # CHECK-NEXT-TODO: command = cc -c ${in} -o ${out}
@@ -35,14 +35,14 @@ bin = link(objs, file('foo'));
 # CHECK-DAG: rule lex
 # CHECK-NEXT-TODO: comamand = ${LEX} -c++ --yyclass=${classname} --outfile=${out}
 #
-# CHECK-DAG: build gen : phony ${buildroot}/foo.c
-# CHECK-DAG: build objs : phony ${buildroot}/foo.c.o ${buildroot}/bar.c.o
-# CHECK-DAG: build bin : phony ${buildroot}/foo
+# CHECK-DAG: build gen : phony foo.c
+# CHECK-DAG: build objs : phony foo.c.o bar.c.o
+# CHECK-DAG: build bin : phony foo
 #
-# CHECK-DAG: build ${buildroot}/foo.c : lex ${srcroot}/foo.yy
+# CHECK-DAG: build foo.c : lex ${srcroot}/foo.yy
 # CHECK-NEXT-TODO:  classname = FooClass
 #
-# CHECK-DAG: build ${buildroot}/foo.c.o : cc ${buildroot}/foo.c
-# CHECK-DAG: build ${buildroot}/bar.c.o : cc ${srcroot}/bar.c
+# CHECK-DAG: build foo.c.o : cc foo.c
+# CHECK-DAG: build bar.c.o : cc ${srcroot}/bar.c
 #
-# CHECK-DAG: build ${buildroot}/foo : link ${buildroot}/foo.c.o ${buildroot}/bar.c.o
+# CHECK-DAG: build foo : link foo.c.o bar.c.o

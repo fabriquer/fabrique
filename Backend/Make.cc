@@ -57,12 +57,8 @@ using std::shared_ptr;
 using std::string;
 using std::vector;
 
-namespace fabrique
-{
-static int replaceAll(string& s, const string& pattern, const string&);
-static int replaceAll(string& s, const string& pattern, const Build::FileVec&);
-}
 
+namespace {
 
 class MakeFormatter : public Formatter
 {
@@ -79,8 +75,12 @@ public:
 	string Format(const String&);
 	string Format(const Structure&);
 	string Format(const Target&);
+
+	int replaceAll(string& s, const string& pattern, const string&);
+	int replaceAll(string& s, const string& pattern, const Build::FileVec&);
 };
 
+}
 
 
 
@@ -315,18 +315,18 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out, ErrorReport::Rep
 			const string name = j.first;
 			const string str = formatter.Format(*j.second);
 
-			replaceAll(command, "${" + name + "}", str);
-			replaceAll(depfile, "${" + name + "}", str);
-			replaceAll(description, "${" + name + "}", str);
+			formatter.replaceAll(command, "${" + name + "}", str);
+			formatter.replaceAll(depfile, "${" + name + "}", str);
+			formatter.replaceAll(description, "${" + name + "}", str);
 		}
 
-		replaceAll(command, "${in}", build.inputs());
-		replaceAll(depfile, "${in}", build.outputs());
-		replaceAll(description, "${in}", build.outputs());
+		formatter.replaceAll(command, "${in}", build.inputs());
+		formatter.replaceAll(depfile, "${in}", build.outputs());
+		formatter.replaceAll(description, "${in}", build.outputs());
 
-		replaceAll(command, "${out}", build.inputs());
-		replaceAll(depfile, "${out}", build.outputs());
-		replaceAll(description, "${out}", build.outputs());
+		formatter.replaceAll(command, "${out}", build.inputs());
+		formatter.replaceAll(depfile, "${out}", build.outputs());
+		formatter.replaceAll(description, "${out}", build.outputs());
 
 		out
 			<< "\n"
@@ -369,8 +369,8 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out, ErrorReport::Rep
 }
 
 
-static int fabrique::replaceAll(string& haystack, const string& needle,
-                                const string& replacement)
+int MakeFormatter::replaceAll(string& haystack, const string& needle,
+                              const string& replacement)
 {
 	int replaced = 0;
 
@@ -386,13 +386,13 @@ static int fabrique::replaceAll(string& haystack, const string& needle,
 	return replaced;
 }
 
-static int fabrique::replaceAll(string& haystack, const string& pattern,
-                                const Build::FileVec& files)
+int MakeFormatter::replaceAll(string& haystack, const string& pattern,
+                              const Build::FileVec& files)
 {
 	std::ostringstream oss;
 
 	for (const shared_ptr<File>& f : files)
-		oss << f->fullName() << " ";
+		oss << Format(*f) << " ";
 
 	string replacement = oss.str();
 	replacement = replacement.substr(0, replacement.length() - 1);
@@ -414,7 +414,10 @@ string MakeFormatter::Format(const Build&)
 
 string MakeFormatter::Format(const File& f)
 {
-	return f.fullName();
+	if (f.generated())
+		return f.relativeName();
+	else
+		return f.fullName();
 }
 
 string MakeFormatter::Format(const Function&)

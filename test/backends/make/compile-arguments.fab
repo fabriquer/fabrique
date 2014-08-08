@@ -6,7 +6,7 @@
 lex = action('${LEX} -c++ --yyclass=${classname} --outfile=${gen} ${src}'
               <- src:file[in], gen:file[out], classname:string);
 
-# CHECK: ${buildroot}/foo.c : ${srcroot}/foo.yy
+# CHECK: foo.c : ${srcroot}/foo.yy
 # CHECK-NEXT: echo "${LEX}
-# CHECK-NEXT: ${LEX} -c++ --yyclass=FooClass --outfile=${buildroot}/foo.c ${srcroot}/foo.yy
+# CHECK-NEXT: ${LEX} -c++ --yyclass=FooClass --outfile=foo.c ${srcroot}/foo.yy
 gen = lex(file('foo.yy'), file('foo.c'), classname = 'FooClass');

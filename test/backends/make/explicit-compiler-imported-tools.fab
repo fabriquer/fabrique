@@ -5,10 +5,10 @@
 
 cc = import('Inputs/cc.fab', compiler = file('/usr/bin/cc'));
 
-# CHECK: ${buildroot}/Inputs/foo.c.o : ${srcroot}/Inputs/foo.c
-# CHECK:   /usr/bin/cc -c -MMD -MF ${buildroot}/Inputs/foo.c.o.d ${srcroot}/Inputs/foo.c {{.*}}-o ${buildroot}/Inputs/foo.c.o
+# CHECK: Inputs/foo.c.o : ${srcroot}/Inputs/foo.c
+# CHECK:   /usr/bin/cc -c -MMD -MF Inputs/foo.c.o.d ${srcroot}/Inputs/foo.c {{.*}}-o Inputs/foo.c.o
 obj = cc.compile(files(Inputs/foo.c));
 
-# CHECK: ${buildroot}/foo : ${buildroot}/Inputs/foo.c.o
-# CHECK:   /usr/bin/cc -o ${buildroot}/foo ${buildroot}/Inputs/foo.c.o
+# CHECK: foo : Inputs/foo.c.o
+# CHECK:   /usr/bin/cc -o foo Inputs/foo.c.o
 bin = cc.link_executable(obj, executable = file('foo'));

@@ -26,21 +26,21 @@ bin = link(objs, file('foo'));
 
 # CHECK: srcs= ${srcroot}/foo.c ${srcroot}/bar.c ${srcroot}/baz.c
 #
-# CHECK-DAG: bin : ${buildroot}/foo
-# CHECK-DAG: gen : ${buildroot}/foo.c
-# CHECK-DAG: objs : ${buildroot}/foo.c.o ${buildroot}/bar.c.o ${buildroot}/baz.c.o
+# CHECK-DAG: bin : foo
+# CHECK-DAG: gen : foo.c
+# CHECK-DAG: objs : foo.c.o bar.c.o baz.c.o
 #
-# CHECK-DAG: ${buildroot}/foo.c : ${srcroot}/foo.yy
+# CHECK-DAG: foo.c : ${srcroot}/foo.yy
 # CHECK-NEXT-TODO:  ${LEX} -c++ --yyclass=FooClass --outfile=foo.c foo.yy
 #
-# CHECK-DAG: ${buildroot}/foo.c.o : ${srcroot}/foo.c
-# CHECK-NEXT-TODO:  cc -c ${srcroot}/bfoo.c -o ${buildroot}/foo.c.o
+# CHECK-DAG: foo.c.o : ${srcroot}/foo.c
+# CHECK-NEXT-TODO:  cc -c ${srcroot}/bfoo.c -o foo.c.o
 #
-# CHECK-DAG: ${buildroot}/bar.c.o : ${srcroot}/bar.c
-# CHECK-NEXT-TODO:  cc -c ${srcroot}/bbar.c -o ${buildroot}/bar.c.o
+# CHECK-DAG: bar.c.o : ${srcroot}/bar.c
+# CHECK-NEXT-TODO:  cc -c ${srcroot}/bbar.c -o bar.c.o
 #
-# CHECK-DAG: ${buildroot}/baz.c.o : ${srcroot}/baz.c
-# CHECK-NEXT-TODO:  cc -c ${srcroot}/bbaz.c -o ${buildroot}/baz.c.o
+# CHECK-DAG: baz.c.o : ${srcroot}/baz.c
+# CHECK-NEXT-TODO:  cc -c ${srcroot}/bbaz.c -o baz.c.o
 #
-# CHECK-DAG: ${buildroot}/foo : ${buildroot}/foo.c.o ${buildroot}/bar.c.o ${buildroot}/baz.c.o
-# CHECK-NEXT-TODO:  cc ${buildroot}/foo.c.o ${buildroot}/bar.c.o ${buildroot}/baz.c.o -o ${buildroot}/foo
+# CHECK-DAG: foo : foo.c.o bar.c.o baz.c.o
+# CHECK-NEXT-TODO:  cc foo.c.o bar.c.o baz.c.o -o foo
