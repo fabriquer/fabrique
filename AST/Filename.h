@@ -32,11 +32,12 @@
 #ifndef FILE_H
 #define FILE_H
 
-#include "AST/Argument.h"
 #include "AST/Expression.h"
 
 namespace fabrique {
 namespace ast {
+
+class Argument;
 
 /**
  * A reference to a file on disk (source or target).

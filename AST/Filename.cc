@@ -29,6 +29,7 @@
  * SUCH DAMAGE.
  */
 
+#include "AST/Argument.h"
 #include "AST/Filename.h"
 #include "AST/Visitor.h"
 #include "Support/Bytestream.h"
