@@ -1,6 +1,6 @@
-/** @file AST/Scope.h    Declaration of @ref fabrique::ast::Scope. */
+/** @file AST/HasNamedChildren.h   Declaration of @ref fabrique::ast::HasNamedChildren. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,71 +29,22 @@
  * SUCH DAMAGE.
  */
 
-#ifndef SCOPE_H
-#define SCOPE_H
-
-#include "ADT/PtrVec.h"
-#include "ADT/StringMap.h"
-#include "AST/HasNamedChildren.h"
-#include "AST/Value.h"
-#include "Support/Printable.h"
-#include "Support/Uncopyable.h"
-
-#include <map>
-#include <memory>
-#include <string>
+#ifndef HAS_NAMED_CHILDREN_H
+#define HAS_NAMED_CHILDREN_H
 
 namespace fabrique {
 namespace ast {
 
-class Argument;
 class Expression;
 class Identifier;
-class Parameter;
-class Value;
-class Visitor;
 
-
-/**
- * A scope is a container for name->value mappings.
- *
- * A scope can have a parent scope for recursive name lookups.
- */
-class Scope : public HasNamedChildren, public Printable, public Uncopyable
+/** An interface for things that have named children (e.g., fields). */
+class HasNamedChildren
 {
 public:
-	Scope(const Scope *parent, const std::string& name);
-	Scope(Scope&&);
-	virtual ~Scope() {}
+	virtual ~HasNamedChildren();
 
-	typedef StringMap<const Expression*> SymbolMap;
-	const SymbolMap& symbols() const { return symbols_; }
-
-	const std::string& name() const { return name_; }
-	const UniqPtrVec<Value>& values() const { return ownedValues_; }
-
-	bool contains(const Identifier&) const;
-	virtual const Expression* Lookup(const Identifier&) const override;
-
-	void Register(const Argument*);
-	void Register(const Parameter*);
-	void Register(const Value&);
-
-	void Take(Value*);
-	void Take(UniqPtr<Value>&);
-	UniqPtrVec<Value> TakeValues();
-
-	virtual void PrettyPrint(Bytestream&, size_t indent) const override;
-	virtual void Accept(Visitor&) const;
-
-private:
-	void Register(const Identifier&, const Expression*);
-
-	const Scope *parent_;
-	const std::string name_;
-
-	SymbolMap symbols_;
-	UniqPtrVec<Value> ownedValues_;
+	virtual const Expression* Lookup(const Identifier&) const = 0;
 };
 
 } // namespace ast
