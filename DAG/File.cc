@@ -60,6 +60,16 @@ File* File::Create(string dir, string path, const Type& t, SourceRange src)
 	return new File(filename, directory, PathIsAbsolute(directory), t, src);
 }
 
+bool File::Equals(const shared_ptr<File>& x, const shared_ptr<File>& y)
+{
+	return (x->fullName() == y->fullName());
+}
+
+bool File::LessThan(const shared_ptr<File>& x, const shared_ptr<File>& y)
+{
+	return (x->fullName() < y->fullName());
+}
+
 
 File::File(string filename, string subdirectory, bool absolute,
            const Type& t, SourceRange source)

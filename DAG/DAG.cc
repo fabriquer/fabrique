@@ -243,6 +243,13 @@ UniqPtr<DAG> DAG::Flatten(const ast::Scope& root, TypeContext& ctx,
 	if (not outputFile.empty())
 		builder.AddRegeneration(regenArgs, inputFiles, outputFile);
 
+	//
+	// Ensure all files are unique.
+	//
+	SharedPtrVec<File>& f = builder.files_;
+	std::sort(f.begin(), f.end(), File::LessThan);
+	f.erase(std::unique(f.begin(), f.end(), File::Equals), f.end());
+
 	return UniqPtr<DAG>(new ImmutableDAG(
 		buildroot, srcroot, builder.files_, builder.builds_, builder.rules_,
 		builder.variables_, builder.targets_, builder.topLevelTargets_));

@@ -49,6 +49,10 @@ public:
 	static File* Create(std::string fullPath, const Type&, SourceRange);
 	static File* Create(std::string directory, std::string filename,
 	                    const Type&, SourceRange);
+
+	static bool Equals(const std::shared_ptr<File>&, const std::shared_ptr<File>&);
+	static bool LessThan(const std::shared_ptr<File>&, const std::shared_ptr<File>&);
+
 	virtual ~File() {}
 
 	virtual std::string filename() const;
