@@ -356,19 +356,15 @@ FieldAccess* Parser::FieldAccess(UniqPtr<Expression>& structure,
 	if (not structure or not field)
 		return nullptr;
 
-	const Expression& base = structure->definition();
+	const Expression* base = &structure->definition();
 	const Expression *e;
 
-	try
-	{
-		const Scope& scope = dynamic_cast<const HasScope&>(base).scope();
-		e = scope.Lookup(*field);
-	}
-	catch (std::bad_cast&)
-	{
+	if (auto *hs = dynamic_cast<const HasScope*>(base))
+		e = hs->scope().Lookup(*field);
+
+	else
 		throw SemanticException("value does not have fields",
 		                        structure->source());
-	}
 
 
 	if (not e)
