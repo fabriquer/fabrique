@@ -776,7 +776,7 @@ bool DAGBuilder::Enter(const ast::Import& import)
 	// build the 'args' struct here.
 	//
 	vector<Structure::NamedValue> args;
-	vector<StructureType::Field> argTypes;
+	Type::NamedTypeVec argTypes;
 
 	for (const UniqPtr<ast::Argument>& a : import.arguments())
 	{

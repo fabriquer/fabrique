@@ -252,7 +252,7 @@ const StructureType* Parser::StructType(UniqPtr<UniqPtrVec<Identifier>>& f,
 	if (not f)
 		return nullptr;
 
-	std::vector<StructureType::Field> fields;
+	Type::NamedTypeVec fields;
 	for (UniqPtr<Identifier>& id : *f)
 	{
 		if (not id->isTyped())
@@ -421,7 +421,7 @@ Filename* Parser::File(UniqPtr<Expression>& name, const SourceRange& src,
 		return nullptr;
 	}
 
-	return new Filename(name, args ? *args : empty, ctx_.fileType(), src);
+	return Filename::Create(name, args ? *args : empty, ctx_.fileType(), src);
 }
 
 
@@ -559,7 +559,7 @@ Import* Parser::ImportModule(UniqPtr<StringLiteral>& name, UniqPtrVec<Argument>&
 
 	currentSubdirectory_.pop();
 
-	std::vector<StructureType::Field> fields;
+	Type::NamedTypeVec fields;
 	for (const UniqPtr<Value>& value : module->values())
 	{
 		const Identifier& id { value->name() };
@@ -684,7 +684,7 @@ StructInstantiation* Parser::StructInstantiation(SourceRange src)
 {
 	UniqPtr<Scope> scope(ExitScope());
 
-	std::vector<StructureType::Field> fields;
+	Type::NamedTypeVec fields;
 	for (const UniqPtr<Value>& v : scope->values())
 		fields.emplace_back(v->name().name(), v->type());
 

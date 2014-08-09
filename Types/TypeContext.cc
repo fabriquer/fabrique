@@ -182,7 +182,7 @@ TypeContext::functionType(const PtrVec<Type>& argTypes, const Type& retType)
 }
 
 const StructureType&
-TypeContext::structureType(const std::vector<StructureType::Field>& fields)
+TypeContext::structureType(const Type::NamedTypeVec& fields)
 {
 	StructureType *t = StructureType::Create(fields, *this);
 	//Register(t);

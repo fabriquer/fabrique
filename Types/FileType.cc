@@ -29,6 +29,7 @@
  * SUCH DAMAGE.
  */
 
+#include "AST/Builtins.h"
 #include "Types/FileType.h"
 #include "Types/SequenceType.h"
 #include "Types/TypeContext.h"
@@ -91,8 +92,34 @@ void FileType::CheckFileTags(const Type& t, SourceRange src)
 }
 
 
-FileType::FileType(Tag tag, const PtrVec<Type>& params, TypeContext& ctx)
-	: Type("file", params, ctx), tag_(tag)
+FileType::TypeMap FileType::fields() const
+{
+	TypeContext& ctx = context();
+
+	TypeMap map = {
+		{ ast::Generated,     ctx.booleanType() },
+		{ ast::Name,          ctx.stringType() },
+		{ ast::Subdirectory,  ctx.stringType() },
+	};
+
+	for (auto& i : arguments_)
+		map.emplace(i.first, i.second);
+
+	return map;
+}
+
+
+FileType& FileType::WithArguments(const TypeMap& args) const
+{
+	FileType *withArgs = new FileType(tag_, typeParameters(), args, context());
+	//context().Register(withArgs);
+
+	return *withArgs;
+}
+
+
+FileType::FileType(Tag tag, const PtrVec<Type>& params, TypeMap args, TypeContext& ctx)
+	: Type("file", params, ctx), tag_(tag), arguments_(std::move(args))
 {
 }
 
@@ -158,7 +185,7 @@ const Type& FileType::onPrefixWith(const Type& t) const
 
 FileType* FileType::Create(TypeContext& ctx)
 {
-	return new FileType(Tag::None, PtrVec<Type>(), ctx);
+	return new FileType(Tag::None, PtrVec<Type>(), TypeMap(), ctx);
 }
 
 
@@ -170,10 +197,10 @@ Type* FileType::Parameterise(const PtrVec<Type>& params, const SourceRange& src)
 	const std::string name = params[0]->name();
 
 	if (name == InTagName)
-		return new FileType(Tag::Input, params, context());
+		return new FileType(Tag::Input, params, arguments_, context());
 
 	else if (name == OutTagName)
-		return new FileType(Tag::Output, params, context());
+		return new FileType(Tag::Output, params, arguments_, context());
 
 	throw SemanticException("invalid file tag '" + name + "'", src);
 }

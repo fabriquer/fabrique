@@ -35,6 +35,7 @@
 #include <functional>
 
 #include "ADT/PtrVec.h"
+#include "ADT/StringMap.h"
 #include "Support/Printable.h"
 #include "Support/Uncopyable.h"
 
@@ -52,6 +53,9 @@ class TypeContext;
 class Type : public Printable, public Uncopyable
 {
 public:
+	typedef std::pair<std::string, const Type&> NamedType;
+	typedef std::vector<NamedType> NamedTypeVec;
+
 	static const Type& GetSupertype(const Type&, const Type&);
 	static const Type& ListOf(const Type&, const SourceRange&);
 
@@ -63,6 +67,18 @@ public:
 	TypeContext& context() const { return parent_; }
 
 	virtual const std::string name() const;
+
+	typedef StringMap<const Type&> TypeMap;
+
+	/**
+	 * The fields that objects of this type have.
+	 *
+	 * This can be empty even if @ref #hasFields() is true: objects like this
+	 * one might not happen to have fields while still being the kind of
+	 * objects that, in general, do (e.g., a struct like @b args with no members).
+	 */
+	virtual TypeMap fields() const { return TypeMap(); }
+
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 
 	bool operator == (const Type&) const;
@@ -81,6 +97,7 @@ public:
 	operator bool() const;
 
 	virtual bool valid() const { return true; }
+	virtual bool hasFields() const { return false; }
 	virtual bool isFile() const { return false; }
 	virtual bool isFunction() const { return false; }
 	virtual bool isString() const { return false; }

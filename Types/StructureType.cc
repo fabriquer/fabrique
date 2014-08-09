@@ -41,7 +41,7 @@ using std::vector;
 
 
 StructureType*
-StructureType::Create(const std::vector<Field>& fields, TypeContext& ctx)
+StructureType::Create(const NamedTypeVec& fields, TypeContext& ctx)
 {
 	StringMap<const Type&> types;
 	vector<string> names;

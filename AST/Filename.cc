@@ -33,12 +33,29 @@
 #include "AST/Filename.h"
 #include "AST/Visitor.h"
 #include "Support/Bytestream.h"
-#include "Types/Type.h"
+#include "Types/FileType.h"
 
 #include <set>
 
 using namespace fabrique::ast;
 using std::string;
+
+
+Filename* Filename::Create(UniqPtr<Expression>& name, UniqPtrVec<Argument>& args,
+                           const Type& t, const SourceRange& src)
+{
+	if (args.empty())
+		return new Filename(name, args, t, src);
+
+	Type::TypeMap argTypes;
+	for (const UniqPtr<Argument>& a : args)
+		argTypes.emplace(a->getName().name(), a->type());
+
+	const FileType& incomplete = dynamic_cast<const FileType&>(t);
+	const FileType& complete = incomplete.WithArguments(argTypes);
+
+	return new Filename(name, args, complete, src);
+}
 
 
 Filename::Filename(UniqPtr<Expression>& name, UniqPtrVec<Argument>& args,

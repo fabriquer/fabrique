@@ -44,12 +44,12 @@ namespace fabrique {
 class StructureType : public Type
 {
 public:
-	typedef std::pair<std::string,const Type&> Field;
-	static StructureType* Create(const std::vector<Field>&, TypeContext&);
+	static StructureType* Create(const NamedTypeVec&, TypeContext&);
 
 	virtual ~StructureType();
-	const StringMap<const Type&>& fields() const { return fieldTypes_; }
+	TypeMap fields() const override { return fieldTypes_; }
 
+	virtual bool hasFields() const override { return true; }
 	virtual bool isSubtype(const Type&) const override;
 	virtual void PrettyPrint(Bytestream&, size_t indent) const override;
 

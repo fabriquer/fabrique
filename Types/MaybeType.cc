@@ -29,6 +29,7 @@
  * SUCH DAMAGE.
  */
 
+#include "AST/Builtins.h"
 #include "Types/MaybeType.h"
 #include "Types/TypeContext.h"
 #include <cassert>
@@ -47,6 +48,17 @@ MaybeType::MaybeType(const Type& elementTy)
 
 MaybeType::~MaybeType()
 {
+}
+
+
+Type::TypeMap MaybeType::fields() const
+{
+	assert(typeParameters().size() == 1);
+
+	return TypeMap {
+		{ ast::MaybeExists,  context().booleanType() },
+		{ ast::MaybeValue,   *typeParameters()[0] },
+	};
 }
 
 

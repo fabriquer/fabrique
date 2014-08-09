@@ -87,8 +87,7 @@ public:
 	                                 const Type& returnType);
 
 	//! A structure type describes its fields' names and types.
-	const StructureType& structureType(
-		const std::vector<StructureType::Field>&);
+	const StructureType& structureType(const Type::NamedTypeVec&);
 
 	//! A string of characters.
 	const Type& stringType();

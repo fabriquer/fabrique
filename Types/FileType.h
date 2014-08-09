@@ -50,6 +50,10 @@ public:
 	static bool isFileOrFiles(const Type&);
 	static void CheckFileTags(const Type&, SourceRange);
 
+	virtual TypeMap fields() const override;
+	FileType& WithArguments(const TypeMap&) const;
+
+	virtual bool hasFields() const override { return true; }
 	virtual bool isSubtype(const Type&) const override;
 	virtual bool isFile() const override { return true; }
 
@@ -74,9 +78,11 @@ private:
 
 	static FileType* Create(TypeContext&);
 
-	FileType(Tag tag, const PtrVec<Type>&, TypeContext&);
+	FileType(Tag tag, const PtrVec<Type>&, TypeMap args, TypeContext&);
 
 	const Tag tag_;
+	const TypeMap arguments_;
+
 	friend class TypeContext;
 };
 

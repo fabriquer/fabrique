@@ -46,8 +46,8 @@ class Argument;
 class Filename : public Expression, public HasNamedChildren
 {
 public:
-	Filename(UniqPtr<Expression>& name, UniqPtrVec<Argument>& args,
-	         const Type& ty, const SourceRange& loc);
+	static Filename* Create(UniqPtr<Expression>& name, UniqPtrVec<Argument>& args,
+	                        const Type& ty, const SourceRange& loc);
 
 	const Expression& name() const { return *unqualName_; }
 	const UniqPtrVec<Argument>& arguments() const { return args_; }
@@ -58,6 +58,9 @@ public:
 	virtual void Accept(Visitor&) const;
 
 private:
+	Filename(UniqPtr<Expression>& name, UniqPtrVec<Argument>& args,
+	         const Type& ty, const SourceRange& loc);
+
 	//! A filename, without qualifiers like "in this subdirectory".
 	const UniqPtr<Expression> unqualName_;
 
