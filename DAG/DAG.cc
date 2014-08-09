@@ -855,9 +855,9 @@ bool DAGBuilder::Enter(const ast::Parameter&) { return false; }
 void DAGBuilder::Leave(const ast::Parameter&) {}
 
 
-bool DAGBuilder::Enter(const ast::Scope&)
+bool DAGBuilder::Enter(const ast::Scope& scope)
 {
-	EnterScope("AST scope");
+	EnterScope(scope.name());
 	return false;
 }
 
