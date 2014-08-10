@@ -47,17 +47,15 @@ class Node;
 class SymbolReference : public Expression
 {
 public:
-	SymbolReference(UniqPtr<Node>&& name, const Expression& definition);
+	SymbolReference(UniqPtr<Node>&& name, const Type&);
 
 	const Node& name() const { return *name_; }
-	const Expression& definition() const override;
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 
 private:
 	const std::unique_ptr<Node> name_;
-	const Expression& definition_;
 };
 
 } // namespace ast

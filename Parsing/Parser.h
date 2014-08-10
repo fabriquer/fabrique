@@ -59,11 +59,11 @@ public:
 	Parser(TypeContext&, std::string srcroot);
 
 	//! Parse Fabrique fragments defined at, e.g., the command line.
-	UniqPtr<Scope> ParseDefinitions(const std::vector<std::string>& fragments);
+	const Type& ParseDefinitions(const std::vector<std::string>& defs);
 
 	//! Parse Fabrique input (usually a file) into a @ref Scope.
 	std::unique_ptr<Scope> ParseFile(
-		std::istream&, UniqPtr<Scope>& arguments, std::string name = "",
+		std::istream& input, const Type& arguments, std::string name = "",
 		StringMap<std::string> builtins = StringMap<std::string>(),
 		SourceRange openedFrom = SourceRange::None());
 
@@ -82,6 +82,10 @@ public:
 	 *
 	 * @param  name    a name used to describe the scope (for debugging)
 	 */
+	Scope& EnterScope(const std::string& name, const Type& argumentsType,
+	                  SourceRange src = SourceRange::None());
+
+	//! A convenience wrapper around @ref #EnterScope with no 'args' type.
 	Scope& EnterScope(const std::string& name);
 
 	/**
@@ -263,6 +267,9 @@ private:
 
 	TypeContext& ctx_;
 	Lexer& lexer_;
+
+	//! Pre-defined values (e.g., from the command line).
+	UniqPtr<Scope> definitions_;
 
 	//! Input files, in order they were parsed.
 	std::vector<std::string> files_;

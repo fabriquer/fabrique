@@ -53,8 +53,6 @@ public:
 	const Expression& base() const { return *base_; }
 	const Identifier& field() const { return *field_; }
 
-	const Expression& definition() const override;
-
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 

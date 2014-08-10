@@ -39,25 +39,23 @@
 using namespace fabrique::ast;
 
 
-SomeValue::SomeValue(UniqPtr<Scope>& scope, const Type& type, const Expression& value,
-                     SourceRange src)
-	: Expression(type, src), HasScope(std::move(scope)), value_(value)
+SomeValue::SomeValue(const Type& type, UniqPtr<Expression>& init, SourceRange src)
+	: Expression(type, src), initializer_(std::move(init))
 {
-	assert(not this->scope().values().empty());
 }
 
 
 void SomeValue::PrettyPrint(Bytestream& out, size_t indent) const
 {
 	out << Bytestream::Operator << "some(";
-	value_.PrettyPrint(out, indent + 1);
+	initializer_->PrettyPrint(out, indent + 1);
 	out << Bytestream::Operator << ")";
 }
 
 void SomeValue::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
-		value_.Accept(v);
+		initializer_->Accept(v);
 
 	v.Leave(*this);
 }

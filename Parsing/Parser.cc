@@ -40,7 +40,6 @@
 #include "Types/IntegerType.h"
 #include "Types/StringType.h"
 #include "Types/StructureType.h"
-#include "Types/Type.h"
 #include "Types/TypeContext.h"
 #include "Types/TypeError.h"
 #include "Support/os.h"
@@ -67,21 +66,28 @@ Parser::Parser(TypeContext& ctx, string srcroot)
 }
 
 
-UniqPtr<Scope> Parser::ParseDefinitions(const std::vector<string>& definitions)
+const Type& Parser::ParseDefinitions(const std::vector<string>& definitions)
 {
-	UniqPtr<Scope> args { new Scope(nullptr, "definitions") };
-	UniqPtr<Scope> empty { new Scope(nullptr, "") };
+	if (definitions_)
+		throw UserError("arguments already defined");
+
+	Type::NamedTypeVec args;
+	const Type& nil = ctx_.nilType();
+
+	UniqPtr<Scope> scope { new Scope(nullptr, "definitions", nil, ctx_) };
 
 	for (const string& d : definitions)
 	{
 		std::istringstream input(d + ";");
-		UniqPtr<ast::Scope> definitionTree { ParseFile(input, empty) };
+		UniqPtr<ast::Scope> definitionTree { ParseFile(input, nil) };
 		if (not definitionTree)
 			throw UserError("invalid definition '" + d + "'");
 
 		for (UniqPtr<ast::Value>& value : definitionTree->TakeValues())
 		{
-			if (value->name().name() == ast::Arguments)
+			const string name = value->name().name();
+
+			if (name == ast::Arguments)
 				continue;
 
 			Bytestream::Debug("parser.cli.defines")
@@ -91,49 +97,59 @@ UniqPtr<Scope> Parser::ParseDefinitions(const std::vector<string>& definitions)
 				<< Bytestream::Reset << "\n"
 				;
 
-			args->Take(value);
+			args.emplace_back(name, value->type());
+			scope->Take(value);
 		}
 
 		definitionTree.reset();
 	}
 
-	return std::move(args);
+	definitions_.swap(scope);
+
+	return ctx_.structureType(args);
 }
 
 
-UniqPtr<Scope> Parser::ParseFile(std::istream& input, UniqPtr<Scope>& args,
+UniqPtr<Scope> Parser::ParseFile(std::istream& input, const Type& args,
                                  string name, StringMap<string> builtins,
                                  SourceRange openedFrom)
 {
-	assert(args);
-
-	Bytestream::Debug("parser.file")
+	Bytestream& dbg = Bytestream::Debug("parser.file");
+	dbg
 		<< Bytestream::Action << "Parsing"
 		<< Bytestream::Type << " file"
 		<< Bytestream::Operator << " '"
 		<< Bytestream::Literal << name
 		<< Bytestream::Operator << "'"
-		<< Bytestream::Reset << " with "
-		<< Bytestream::Definition << "args"
-		<< Bytestream::Operator << " = "
-		<< *args
-		<< Bytestream::Reset << "\n"
 		;
+
+	if (args.valid())
+	{
+		dbg
+			<< Bytestream::Reset << " with "
+			<< Bytestream::Definition << "args"
+			<< Bytestream::Operator << ": "
+			;
+
+		for (auto& i : args.fields())
+			dbg
+				<< Bytestream::Definition << i.first
+				<< Bytestream::Operator << ":"
+				<< i.second
+				;
+	}
+
+	dbg << Bytestream::Reset << "\n";
 
 	if (not name.empty())
 		files_.push_back(name);
 
 	lexer_.PushFile(input, name);
-	EnterScope(name);
+	EnterScope(name, args);
 
 	// Define builtin strings like srcroot and builtroot.
 	for (std::pair<string,string> i : builtins)
 		Builtin(i.first, i.second, openedFrom);
-
-	// Define a structure containing import() or command-line arguments.
-	EnterScope(std::move(*args));
-	UniqPtr<Expression> argStruct(StructInstantiation(openedFrom));
-	Builtin(ast::Arguments, argStruct, openedFrom);
 
 	int result = yyparse(this);
 
@@ -149,7 +165,7 @@ UniqPtr<Scope> Parser::ParseFile(std::istream& input, UniqPtr<Scope>& args,
 //
 // AST scopes:
 //
-Scope& Parser::EnterScope(const string& name)
+Scope& Parser::EnterScope(const string& name, const Type& args, SourceRange src)
 {
 	Bytestream::Debug("parser.scope")
 		<< string(scopes_.size(), ' ')
@@ -159,12 +175,23 @@ Scope& Parser::EnterScope(const string& name)
 		<< Bytestream::Reset << "\n"
 		;
 
-	if (scopes_.empty())
-		scopes_.emplace(new Scope(nullptr, name));
-	else
-		scopes_.emplace(new Scope(&CurrentScope(), name));
+	const bool FirstScope = scopes_.empty();
+
+	const ast::Scope *parent = FirstScope ? nullptr : &CurrentScope();
+	scopes_.emplace(new Scope(parent, name, args, ctx_));
+
+	if (definitions_)
+	{
+		Builtin(ast::Arguments, definitions_, src);
+		definitions_.release();
+	}
 
 	return *scopes_.top();
+}
+
+Scope& Parser::EnterScope(const string& name)
+{
+	return EnterScope(name, ctx_.nilType());
 }
 
 Scope& Parser::EnterScope(Scope&& s)
@@ -356,34 +383,25 @@ FieldAccess* Parser::FieldAccess(UniqPtr<Expression>& structure,
 	if (not structure or not field)
 		return nullptr;
 
-	const Expression* base = &structure->definition();
-	const Expression *e;
+	const string& name = field->name();
 
-	if (auto *hs = dynamic_cast<const HasScope*>(base))
-		e = hs->scope().Lookup(*field);
+	const Type& structType = structure->type();
+	if (not structType.hasFields())
+		throw SemanticException(
+			"value of type '" + structType.str() + "' does not have fields",
+			structure->source());
 
-	else if (auto *f = dynamic_cast<const Filename*>(base))
-		e = f->Lookup(*field);
-
-	else
-		throw SemanticException("value does not have fields",
-		                        structure->source());
-
-
-	if (not e)
+	Type::TypeMap fieldTypes { structType.fields() };
+	auto i = fieldTypes.find(name);
+	if (i == fieldTypes.end())
 		throw SemanticException("no such field", field->source());
 
-	if (field->isTyped())
-	{
-		if (field->type() != e->type())
-			throw WrongTypeException(e->type(), field->type(),
-			                         field->source());
-	}
+	const Type& fieldType = i->second;
+
+	if (field->isTyped() and field->type() != fieldType)
+		throw WrongTypeException(fieldType, field->type(), field->source());
 	else
-	{
-		assert(e);
-		field.reset(Id(std::move(field), &e->type()));
-	}
+		field.reset(Id(std::move(field), &fieldType));
 
 	return new class FieldAccess(structure, field);
 }
@@ -548,12 +566,13 @@ Import* Parser::ImportModule(UniqPtr<StringLiteral>& name, UniqPtrVec<Argument>&
 	if (not input.good())
 		throw UserError("Can't open '" + filename + "'");
 
-	EnterScope("import arguments");
+	Type::NamedTypeVec argTypes;
 	for (UniqPtr<Argument>& a : args)
-		CurrentScope().Register(a.get());
-	UniqPtr<Scope> argScope = ExitScope();
+		argTypes.emplace_back(a->getName().name(), a->type());
 
-	UniqPtr<Scope> module = ParseFile(input, argScope, absolute);
+	const StructureType& argsType = ctx_.structureType(argTypes);
+
+	UniqPtr<Scope> module = ParseFile(input, argsType, absolute);
 	if (not module)
 		return nullptr;
 
@@ -654,30 +673,8 @@ SomeValue* Parser::Some(UniqPtr<Expression>& initializer, SourceRange src)
 	if (not initializer)
 		return nullptr;
 
-	EnterScope("some()");
-
-	UniqPtr<Identifier> name;
-	UniqPtr<Expression> value;
-
-	name.reset(new Identifier(ast::MaybeExists));
-	value.reset(True());
-	if (not DefineValue(name, value))
-		return nullptr;
-
-	name.reset(new Identifier(ast::MaybeValue));
-	value.swap(initializer);
-	if (not DefineValue(name, value))
-		return nullptr;
-
-	UniqPtr<Scope> scope { ExitScope() };
-	assert(not scope->values().empty());
-
-	name.reset(new Identifier(ast::MaybeValue));
-
-	const Expression& init = *scope->Lookup(*name);
-	const Type& type = ctx_.maybe(init.type(), src);
-
-	return new SomeValue(scope, type, init, src);
+	const Type& type = ctx_.maybe(initializer->type(), src);
+	return new SomeValue(type, initializer, src);
 }
 
 StructInstantiation* Parser::StructInstantiation(SourceRange src)
@@ -757,20 +754,14 @@ SymbolReference* Parser::Reference(UniqPtr<Identifier>&& name)
 	if (not name)
 		return nullptr;
 
-	const Expression *e = CurrentScope().Lookup(*name);
-	if (e == nullptr)
+	const Type& t = CurrentScope().Lookup(*name);
+	if (not t.valid())
 	{
 		ReportError("reference to undefined value", *name);
 		return nullptr;
 	}
 
-	if (not e->type())
-	{
-		ReportError("reference to value with unknown type", *name);
-		return nullptr;
-	}
-
-	return new SymbolReference(std::move(name), *e);
+	return new SymbolReference(std::move(name), t);
 }
 
 
@@ -779,17 +770,8 @@ SymbolReference* Parser::Reference(UniqPtr<class FieldAccess>&& access)
 	if (not access)
 		return nullptr;
 
-	auto& base = dynamic_cast<const HasScope&>(access->base().definition());
-	assert(&base);
-
-	const Expression *e = base.scope().Lookup(access->field());
-	if (not e)
-	{
-		ReportError("struct does not contain value", access->field());
-		return nullptr;
-	}
-
-	return new SymbolReference(std::move(access), *e);
+	const Type& fieldType = access->type();
+	return new SymbolReference(std::move(access), fieldType);
 }
 
 

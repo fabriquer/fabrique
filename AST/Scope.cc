@@ -30,13 +30,14 @@
  */
 
 #include "AST/Argument.h"
+#include "AST/Builtins.h"
 #include "AST/Parameter.h"
 #include "AST/Scope.h"
 #include "AST/Value.h"
 #include "AST/Visitor.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
-#include "Types/Type.h"
+#include "Types/TypeContext.h"
 
 #include <cassert>
 
@@ -44,14 +45,17 @@ using namespace fabrique;
 using namespace fabrique::ast;
 
 
-Scope::Scope(const Scope *parent, const std::string& name)
-	: parent_(parent), name_(name)
+Scope::Scope(const Scope *parent, const std::string& name,
+             const Type& argumentsType, TypeContext& ctx)
+	: parent_(parent), name_(name), nil_(ctx.nilType()),
+	  arguments_(argumentsType)
 {
 }
 
 
 Scope::Scope(Scope&& other)
-	: parent_(other.parent_), symbols_(other.symbols_),
+	: parent_(other.parent_), name_(other.name_), nil_(other.nil_),
+	  arguments_(other.arguments_), symbols_(other.symbols_),
 	  ownedValues_(std::move(other.ownedValues_))
 {
 	other.symbols_.clear();
@@ -59,16 +63,29 @@ Scope::Scope(Scope&& other)
 }
 
 
-const Expression* Scope::Lookup(const Identifier& name) const
+const Type& Scope::Lookup(const Identifier& id) const
 {
-	auto i = symbols_.find(name.name());
+	const std::string& name = id.name();
+
+	// Special case: 'args' is a reserved name derived from external arguments
+	//               (command-line or via an import() expression).
+	if ((name == ast::Arguments) and arguments_.valid())
+		return arguments_;
+
+	auto i = symbols_.find(name);
 	if (i != symbols_.end())
-		return i->second;
+		return i->second->type();
 
 	if (parent_)
-		return parent_->Lookup(name);
+		return parent_->Lookup(id);
 
-	return nullptr;
+	return nil_;
+}
+
+
+bool Scope::hasArguments() const
+{
+	return arguments_.valid();
 }
 
 

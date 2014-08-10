@@ -38,18 +38,12 @@
 using namespace fabrique::ast;
 
 
-SymbolReference::SymbolReference(UniqPtr<Node>&& name,
-                                 const Expression& definition)
-	: Expression(definition.type(), name->source()),
-	  name_(std::move(name)), definition_(definition)
+SymbolReference::SymbolReference(UniqPtr<Node>&& name, const Type& t)
+	: Expression(t, name->source()),
+	  name_(std::move(name))
 {
 }
 
-
-const Expression& SymbolReference::definition() const
-{
-	return definition_.definition();
-}
 
 void SymbolReference::PrettyPrint(Bytestream& out, size_t indent) const
 {

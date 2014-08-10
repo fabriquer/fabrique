@@ -46,7 +46,6 @@ class Expression : public Node, public Typed
 {
 public:
 	virtual ~Expression();
-	virtual const Expression& definition() const { return *this; }
 
 protected:
 	Expression(const Type& t, const SourceRange& src)

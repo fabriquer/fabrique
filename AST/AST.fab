@@ -13,7 +13,6 @@ sources = files(
 	FileList.cc
 	Foreach.cc
 	Function.cc
-	HasNamedChildren.cc
 	HasParameters.cc
 	HasScope.cc
 	Identifier.cc

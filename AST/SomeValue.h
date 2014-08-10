@@ -42,18 +42,18 @@ namespace ast {
 /**
  * A value boxed up in a maybe type.
  */
-class SomeValue : public Expression, public HasScope
+class SomeValue : public Expression
 {
 public:
-	SomeValue(UniqPtr<Scope>&, const Type&, const Expression&, SourceRange src);
+	SomeValue(const Type&, UniqPtr<Expression>& init, SourceRange src);
 
-	const Expression& value() const;
+	const Expression& initializer() const { return *initializer_; }
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 
 private:
-	const Expression& value_;
+	const UniqPtr<Expression> initializer_;
 };
 
 } // namespace ast

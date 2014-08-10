@@ -49,16 +49,6 @@ FieldAccess::FieldAccess(UniqPtr<Expression>& base, UniqPtr<Identifier>& field)
 }
 
 
-const Expression& FieldAccess::definition() const
-{
-	auto& scope = dynamic_cast<const HasScope&>(base().definition()).scope();
-	if (not scope.contains(field()))
-		throw SemanticException("no such field", this->source());
-
-	return *scope.Lookup(field());
-}
-
-
 void FieldAccess::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
 	out

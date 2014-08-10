@@ -34,16 +34,19 @@
 
 #include "ADT/PtrVec.h"
 #include "ADT/StringMap.h"
-#include "AST/HasNamedChildren.h"
 #include "AST/Value.h"
 #include "Support/Printable.h"
 #include "Support/Uncopyable.h"
+#include "Types/Type.h"
 
 #include <map>
 #include <memory>
 #include <string>
 
 namespace fabrique {
+
+class TypeContext;
+
 namespace ast {
 
 class Argument;
@@ -59,10 +62,11 @@ class Visitor;
  *
  * A scope can have a parent scope for recursive name lookups.
  */
-class Scope : public HasNamedChildren, public Printable, public Uncopyable
+class Scope : public Printable, public Uncopyable
 {
 public:
-	Scope(const Scope *parent, const std::string& name);
+	Scope(const Scope *parent, const std::string& name,
+	      const Type& argumentsType, TypeContext&);
 	Scope(Scope&&);
 	virtual ~Scope() {}
 
@@ -70,10 +74,12 @@ public:
 	const SymbolMap& symbols() const { return symbols_; }
 
 	const std::string& name() const { return name_; }
+	bool hasArguments() const;
+	const Type& arguments() const { return arguments_; }
 	const UniqPtrVec<Value>& values() const { return ownedValues_; }
 
 	bool contains(const Identifier&) const;
-	virtual const Expression* Lookup(const Identifier&) const override;
+	virtual const Type& Lookup(const Identifier&) const;
 
 	void Register(const Argument*);
 	void Register(const Parameter*);
@@ -91,7 +97,9 @@ private:
 
 	const Scope *parent_;
 	const std::string name_;
+	const Type& nil_;
 
+	const Type& arguments_;
 	SymbolMap symbols_;
 	UniqPtrVec<Value> ownedValues_;
 };

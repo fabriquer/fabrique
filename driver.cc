@@ -259,7 +259,7 @@ unique_ptr<ast::Scope> Parse(UniqPtr<Parser>& parser, const string& filename,
 {
 
 	// Parse command-line arguments.
-	auto args = parser->ParseDefinitions(definitions);
+	const Type& args = parser->ParseDefinitions(definitions);
 
 	// Open and parse the top-level build description.
 	std::ifstream infile(filename.c_str());

@@ -613,13 +613,23 @@ void DAGBuilder::Leave(const ast::FieldAccess&) {}
 
 bool DAGBuilder::Enter(const ast::FieldQuery& q)
 {
-	const ast::Scope& scope =
-		dynamic_cast<const ast::HasScope&>(q.base().definition()).scope();
+	const Type::TypeMap fields = q.base().type().fields();
+	const string fieldName(q.field().name());
 
-	if (scope.contains(q.field()))
-		currentValue.emplace(eval(*scope.Lookup(q.field())));
-	else
+	auto i = fields.find(fieldName);
+	if (i == fields.end())
+	{
+		// The field doesn't exist, use the default value.
 		currentValue.emplace(eval(q.defaultValue()));
+	}
+	else
+	{
+		shared_ptr<Structure> base =
+			dynamic_pointer_cast<Structure>(eval(q.base()));
+		assert(base);
+
+		currentValue.emplace(base->field(fieldName));
+	}
 
 	return false;
 }
@@ -762,50 +772,37 @@ void DAGBuilder::Leave(const ast::Identifier&) {}
 bool DAGBuilder::Enter(const ast::Import& import)
 {
 	const string name = currentValueName.top();
-	std::vector<Structure::NamedValue> values;
 
-	ValueMap& importScope = EnterScope("import(" + name + ")");
+	ValueMap& scope = EnterScope("import(" + name + ")");
 	ValuePtr subdir(
 		new String(import.subdirectory(), ctx_.stringType()));
-	CurrentScope().emplace(ast::Subdirectory, subdir);
+	scope.emplace(ast::Subdirectory, subdir);
 
-	//
-	// Import expressions can take arguments, which are exposed as an 'args'
-	// struct in the imported module.  We can't initialize a structure with
-	// ast::Arguments, though (it requires Values), so we have to manually
-	// build the 'args' struct here.
-	//
+	// Gather arguments into an 'args' structure.
 	vector<Structure::NamedValue> args;
-	Type::NamedTypeVec argTypes;
-
 	for (const UniqPtr<ast::Argument>& a : import.arguments())
 	{
-		if (not a->hasName())
-			throw SemanticException("import arguments must be named",
-			                        a->source());
+		assert(a->hasName());
 
-		const string argName { a->getName().name() };
+		const string& argName = a->getName().name();
+		ValuePtr value = eval(*a);
 
-		argTypes.emplace_back(argName, a->type());
-		args.emplace_back(argName, eval(a->getValue()));
+		args.emplace_back(argName, value);
 	}
 
-	ValuePtr argStruct { Structure::Create(args, ctx_.structureType(argTypes)) };
-	importScope[ast::Arguments] = argStruct;
-	DebugNewDefinition(importScope, ast::Arguments);
-
-	EnterScope(name);
+	ValuePtr argStruct { Structure::Create(args, import.scope().arguments()) };
+	scope.emplace(ast::Arguments, argStruct);
 
 	for (const UniqPtr<ast::Value>& v : import.scope().values())
-		// Ignore the AST-provided 'args'.
-		if (v->name().name() != ast::Arguments)
-			eval(*v);
+		eval(*v);
 
-	const ValueMap& scope = ExitScope();
-	ExitScope();
-
-	for (auto& i : scope)
+	vector<Structure::NamedValue> values;
+	Type::NamedTypeVec types;
+	for (auto& i : ExitScope())
+	{
 		values.emplace_back(i.first, i.second);
+		types.emplace_back(i.first, i.second->type());
+	}
 
 	currentValue.emplace(Structure::Create(values, import.type()));
 
@@ -899,9 +896,13 @@ void DAGBuilder::Leave(const ast::Scope&)
 
 bool DAGBuilder::Enter(const ast::SomeValue& s)
 {
-	vector<Structure::NamedValue> values;
-	for (auto& v : s.scope().values())
-		values.emplace_back(v->name().str(), eval(v->value()));
+	vector<Structure::NamedValue> values {
+		{
+			ast::MaybeExists,
+			ValuePtr(new Boolean(true, ctx_.booleanType(), s.source()))
+		},
+		{ ast::MaybeValue, eval(s.initializer()) },
+	};
 
 	currentValue.emplace(Structure::Create(values, s.type()));
 	return false;
