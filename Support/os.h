@@ -45,11 +45,17 @@ std::string AbsoluteDirectory(std::string name, bool createIfMissing = true);
 //! Find the absolute version of a path (file or directory).
 std::string AbsolutePath(std::string path);
 
+//! Get the basename of a path: 'foo/bar.c' -> 'bar'.
+std::string BaseName(std::string path);
+
 //! The command required to create a directory (if it doesn't already exist).
 std::string CreateDirCommand(std::string directory);
 
 //! Find the directory containing a file, optionally returning an absolute path.
 std::string DirectoryOf(std::string filename, bool absolute = false);
+
+//! Get the extension of a path: 'foo/bar.c' -> 'c'.
+std::string FileExtension(std::string path);
 
 //! Find the non-directory component of a path.
 std::string FilenameComponent(std::string pathIncludingDirectory);

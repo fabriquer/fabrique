@@ -9,6 +9,12 @@ foo = file('foo.c');
 # CHECK-DAG: string name = 'foo.c'
 name = foo.name;
 
+# CHECK-DAG: string base = 'foo'
+base = foo.basename;
+
+# CHECK-DAG: string ext = 'c'
+ext = foo.extension;
+
 # CHECK-DAG: list[nil] no_flags = [ ]
 no_flags:list[string] = foo.cflags ? [];
 

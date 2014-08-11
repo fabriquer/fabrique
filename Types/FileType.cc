@@ -97,6 +97,8 @@ FileType::TypeMap FileType::fields() const
 	TypeContext& ctx = context();
 
 	TypeMap map = {
+		{ ast::Basename,      ctx.stringType() },
+		{ ast::Extension,     ctx.stringType() },
 		{ ast::Generated,     ctx.booleanType() },
 		{ ast::Name,          ctx.stringType() },
 		{ ast::Subdirectory,  ctx.stringType() },

@@ -147,7 +147,14 @@ ValuePtr File::field(const string& name) const
 	TypeContext& ctx = type().context();
 	ValuePtr val;
 
-	if (name == ast::Generated)
+	if (name == ast::Basename)
+		val.reset(new String(BaseName(filename_), ctx.stringType(), source()));
+
+	else if (name == ast::Extension)
+		val.reset(new String(FileExtension(filename_), ctx.stringType(),
+		                     source()));
+
+	else if (name == ast::Generated)
 		val.reset(new Boolean(generated_, ctx.booleanType(), source()));
 
 	else if (name == ast::Name)

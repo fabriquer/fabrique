@@ -137,6 +137,13 @@ string fabrique::AbsolutePath(string name)
 }
 
 
+string fabrique::BaseName(string path)
+{
+	const string filename = FilenameComponent(path);
+	return filename.substr(0, filename.rfind('.'));
+}
+
+
 string fabrique::CreateDirCommand(string dir)
 {
 	return "if [ ! -e \"" + dir + "\" ]; then mkdir -p \"" + dir + "\"; fi";
@@ -164,6 +171,19 @@ string fabrique::DirectoryOf(string filename, bool absolute)
 		throw PosixError(filename + " is not a directory");
 
 	return absoluteDir;
+}
+
+
+string fabrique::FileExtension(string path)
+{
+	const string filename = FilenameComponent(path);
+
+	size_t i = filename.rfind('.');
+	if (i == string::npos)
+		return "";
+
+	else
+		return filename.substr(i + 1);
 }
 
 
