@@ -652,17 +652,25 @@ bool DAGBuilder::Enter(const ast::Filename& f)
 	assert(getNamedValue(ast::Subdirectory));
 	string subdirectory = getNamedValue(ast::Subdirectory)->str();
 
+	ValueMap attributes;
 	for (const UniqPtr<ast::Argument>& a : f.arguments())
 	{
-		if (a->getName().name() == ast::Subdirectory)
-			subdirectory = eval(a->getValue())->str();
+		if (not a->hasName())
+			throw SemanticException("file arguments must have names",
+			                        a->source());
+
+		const string& name = a->getName().name();
+		ValuePtr value = eval(a->getValue());
+
+		if (name == ast::Subdirectory)
+			subdirectory = value->str();
 
 		else
-			throw SemanticException("unknown argument", a->source());
+			attributes[name] = value;
 	}
 
 	shared_ptr<File> file(
-		File::Create(subdirectory, filename, f.type(), f.source()));
+		File::Create(subdirectory, filename, attributes, f.type(), f.source()));
 
 	currentValue.push(file);
 
@@ -1273,7 +1281,8 @@ void DAGBuilder::AddRegeneration(const Arguments& regenArgs,
 	SharedPtrVec<File> otherInputs;
 	for (const string& name : inputFiles)
 	{
-		shared_ptr<File> f(File::Create(name, inputFileType, Nowhere));
+		shared_ptr<File> f(
+			File::Create(name, ValueMap(), inputFileType, Nowhere));
 
 		if (rootInput)
 			otherInputs.push_back(f);
@@ -1284,7 +1293,7 @@ void DAGBuilder::AddRegeneration(const Arguments& regenArgs,
 	ValueMap args;
 	args["rootInput"] = rootInput;
 	args["otherInputs"].reset(List::of(otherInputs, Nowhere, ctx_));
-	args["output"].reset(File::Create(outputFile, outputType, Nowhere));
+	args["output"].reset(File::Create(outputFile, ValueMap(), outputType, Nowhere));
 
 	ConstPtrMap<Type> paramTypes;
 	for (auto& p : params)

@@ -43,15 +43,16 @@ using std::shared_ptr;
 using std::string;
 
 
-File* File::Create(string fullPath, const Type& t, SourceRange src)
+File* File::Create(string fullPath, ValueMap attrs, const Type& t, SourceRange src)
 {
 	const string filename(FilenameComponent(fullPath));
 	const string subdir(DirectoryOf(fullPath));
 
-	return Create(subdir, filename, t, src);
+	return Create(subdir, filename, attrs, t, src);
 }
 
-File* File::Create(string dir, string path, const Type& t, SourceRange src)
+File* File::Create(string dir, string path, ValueMap attrs,
+                   const Type& t, SourceRange src)
 {
 	const string filename(FilenameComponent(path));
 	const string subdir(DirectoryOf(path));
@@ -60,7 +61,7 @@ File* File::Create(string dir, string path, const Type& t, SourceRange src)
 			? subdir
 			: JoinPath(dir, subdir));
 
-	return new File(filename, directory, PathIsAbsolute(directory), t, src);
+	return new File(filename, directory, PathIsAbsolute(directory), attrs, t, src);
 }
 
 bool File::Equals(const shared_ptr<File>& x, const shared_ptr<File>& y)
@@ -75,9 +76,9 @@ bool File::LessThan(const shared_ptr<File>& x, const shared_ptr<File>& y)
 
 
 File::File(string filename, string subdirectory, bool absolute,
-           const Type& t, SourceRange source)
+           const ValueMap& attributes, const Type& t, SourceRange source)
 	: Value(t, source), filename_(filename), subdirectory_(subdirectory),
-	  absolute_(absolute), generated_(false)
+	  absolute_(absolute), generated_(false), attributes_(attributes)
 {
 }
 
@@ -155,6 +156,13 @@ ValuePtr File::field(const string& name) const
 	else if (name == ast::Subdirectory)
 		val.reset(new String(subdirectory(), ctx.stringType(), source()));
 
+	else
+	{
+		auto i = attributes_.find(name);
+		if (i != attributes_.end())
+			val = i->second;
+	}
+
 	return val;
 }
 
@@ -163,7 +171,7 @@ ValuePtr File::Add(ValuePtr& suffix) const
 {
 	shared_ptr<File> f(
 		new File(filename_ + suffix->str(), subdirectory_, absolute_,
-		         type(), SourceRange::Over(this, suffix)));
+		         attributes_, type(), SourceRange::Over(this, suffix)));
 
 	return f;
 }
@@ -173,7 +181,7 @@ ValuePtr File::PrefixWith(ValuePtr& prefix) const
 {
 	shared_ptr<File> f(
 		new File(prefix->str() + filename_, subdirectory_, absolute_,
-		         type(), SourceRange::Over(prefix, this)));
+		         attributes_, type(), SourceRange::Over(prefix, this)));
 
 	return f;
 }

@@ -46,9 +46,10 @@ namespace dag {
 class File : public Value
 {
 public:
-	static File* Create(std::string fullPath, const Type&, SourceRange);
+	static File* Create(std::string fullPath,
+	                    ValueMap attributes, const Type&, SourceRange);
 	static File* Create(std::string directory, std::string filename,
-	                    const Type&, SourceRange);
+	                    ValueMap attributes, const Type&, SourceRange);
 
 	static bool Equals(const std::shared_ptr<File>&, const std::shared_ptr<File>&);
 	static bool LessThan(const std::shared_ptr<File>&, const std::shared_ptr<File>&);
@@ -85,12 +86,13 @@ public:
 
 private:
 	File(std::string name, std::string subdirectory, bool absolute,
-	     const Type&, SourceRange);
+	     const ValueMap& attributes, const Type&, SourceRange);
 
 	const std::string filename_;
 	std::string subdirectory_;
 	const bool absolute_;
 	bool generated_;
+	ValueMap attributes_;
 };
 
 } // namespace dag
