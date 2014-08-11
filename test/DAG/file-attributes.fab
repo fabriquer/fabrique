@@ -1,0 +1,31 @@
+#
+# RUN: fab --format=null --print-dag %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK-DAG: file foo = foo.c
+foo = file('foo.c');
+
+# CHECK-DAG: string name = 'foo.c'
+name = foo.name;
+
+# CHECK-DAG: list[nil] no_flags = [ ]
+no_flags:list[string] = foo.cflags ? [];
+
+# CHECK-DAG: string sub = ''
+sub = foo.subdir;
+
+# CHECK-DAG: bool gen = false
+gen = foo.generated;
+
+# CHECK-DAG: file file_with_explicit_subdir = foo/bar.c
+file_with_explicit_subdir = file('bar.c', subdir = 'foo');
+
+# CHECK-DAG: string explicit_subdir = 'foo'
+explicit_subdir = file_with_explicit_subdir.subdir;
+
+# CHECK-DAG: file file_with_flags = baz.c
+file_with_flags = file('baz.c', cflags = [ '-D SOMETHING_SPECIAL' ]);
+
+# CHECK-DAG: list[string] cflags = [ '-D SOMETHING_SPECIAL' ]
+cflags = file_with_flags.cflags;

@@ -29,11 +29,14 @@
  * SUCH DAMAGE.
  */
 
+#include "AST/Builtins.h"
 #include "DAG/File.h"
+#include "DAG/Primitive.h"
 #include "DAG/Visitor.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 #include "Support/os.h"
+#include "Types/TypeContext.h"
 
 using namespace fabrique::dag;
 using std::shared_ptr;
@@ -136,6 +139,24 @@ void File::setGenerated(bool gen)
 	generated_ = gen;
 }
 
+
+
+ValuePtr File::field(const string& name) const
+{
+	TypeContext& ctx = type().context();
+	ValuePtr val;
+
+	if (name == ast::Generated)
+		val.reset(new Boolean(generated_, ctx.booleanType(), source()));
+
+	else if (name == ast::Name)
+		val.reset(new String(relativeName(), ctx.stringType(), source()));
+
+	else if (name == ast::Subdirectory)
+		val.reset(new String(subdirectory(), ctx.stringType(), source()));
+
+	return val;
+}
 
 
 ValuePtr File::Add(ValuePtr& suffix) const

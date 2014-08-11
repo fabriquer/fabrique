@@ -71,6 +71,9 @@ public:
 	std::string subdirectory() const { return subdirectory_; }
 	void appendSubdirectory(std::string subdir);
 
+	virtual bool hasFields() const override { return true; }
+	virtual ValuePtr field(const std::string& name) const override;
+
 	//! Name a file with my name + a suffix.
 	virtual ValuePtr Add(ValuePtr&) const override;
 

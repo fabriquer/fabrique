@@ -12,8 +12,11 @@ name = foo.name;
 # CHECK: no_flags:list[string] = foo.cflags ? [ ];
 no_flags:list[string] = foo.cflags ? [];
 
-# TODO: implement foo.subdir, foo.generated and other information that
-#       don't have at parse time (but whose types we do know!)
+# CHECK: sub:string = foo.subdir;
+sub = foo.subdir;
+
+# CHECK: gen:bool = foo.generated;
+gen = foo.generated;
 
 # CHECK: file_with_explicit_subdir:file = file('bar.c', subdir = subdir);
 file_with_explicit_subdir = file('bar.c', subdir = subdir);

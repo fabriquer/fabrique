@@ -59,6 +59,9 @@ class Value : public HasSource, public Printable, public Typed,
               public Uncopyable
 {
 public:
+	virtual bool hasFields() const { return false; }
+	virtual ValuePtr field(const std::string& /*name*/) const { return ValuePtr(); }
+
 	//! Unary 'not' operator.
 	virtual ValuePtr Negate(const SourceRange& loc) const;
 

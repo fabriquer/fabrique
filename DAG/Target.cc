@@ -94,6 +94,34 @@ Target::Target(const string& name, const shared_ptr<List>& files, const Type& t)
 }
 
 
+bool Target::hasFields() const
+{
+	// If this is a single-file target, pass through to the file.
+	if (type().isFile())
+	{
+		assert(files_->size() == 1);
+		const ValuePtr& file = *files_->begin();
+		return file->hasFields();
+	}
+
+	// Otherwise, pass through to the list.
+	return files_->hasFields();
+}
+
+
+ValuePtr Target::field(const std::string& name) const
+{
+	if (type().isFile())
+	{
+		assert(files_->size() == 1);
+		const ValuePtr& file = *files_->begin();
+		return file->field(name);
+	}
+
+	return files_->field(name);
+}
+
+
 // Just pass operations through to the underlying List.
 ValuePtr Target::Add(ValuePtr& rhs) const
 {

@@ -62,6 +62,9 @@ public:
 	const std::string& name() const { return name_; }
 	const std::shared_ptr<List>& files() const { return files_; }
 
+	bool hasFields() const override;
+	ValuePtr field(const std::string&) const override;
+
 	virtual ValuePtr Add(ValuePtr&) const override;
 	virtual ValuePtr PrefixWith(ValuePtr&) const override;
 	virtual ValuePtr ScalarAdd(ValuePtr&) const override;

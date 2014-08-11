@@ -597,13 +597,21 @@ void DAGBuilder::Leave(const ast::Conditional&) {}
 
 bool DAGBuilder::Enter(const ast::FieldAccess& f)
 {
-	shared_ptr<Structure> base(dynamic_pointer_cast<Structure>(eval(f.base())));
-	if (not base)
-		throw SemanticException("base of field access is not a structure",
-		                        f.base().source());
+	ValuePtr base = eval(f.base());
+	if (not base->hasFields())
+		throw AssertionFailure("base->hasFields()",
+			base->type().str() + " (" + typeid(*base).name()
+			+ ") should have fields");
 
 	const string fieldName(f.field().name());
-	currentValue.emplace(base->field(fieldName));
+	ValuePtr field = base->field(fieldName);
+
+	if (not field)
+		throw AssertionFailure("field",
+			base->type().str() + " (" + typeid(*base).name()
+			+ ") should have field '" + fieldName + "'");
+
+	currentValue.emplace(field);
 
 	return false;
 }

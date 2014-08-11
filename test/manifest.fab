@@ -1,5 +1,5 @@
 #
-# Generated at Sun 10 Aug 2014 14:08:43 NDT by regenerate-manifest.sh
+# Generated at Sun 10 Aug 2014 22:15:35 NDT by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -39,6 +39,7 @@ all_files = files(
 ./DAG/explicit-compiler-imported-tools.fab
 ./DAG/explicit-compiler.fab
 ./DAG/field-existence.fab
+./DAG/file-attributes.fab
 ./DAG/file-string-addition.fab
 ./DAG/files.fab
 ./DAG/foreach.fab

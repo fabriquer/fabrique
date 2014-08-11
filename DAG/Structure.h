@@ -53,7 +53,8 @@ public:
 	static Structure* Create(std::vector<NamedValue>&, const Type&);
 	virtual ~Structure();
 
-	ValuePtr field(const std::string& name) const;
+	virtual bool hasFields() const override { return true; }
+	virtual ValuePtr field(const std::string& name) const override;
 	ValuePtr operator[] (const std::string& name) const
 	{
 		return field(name);
