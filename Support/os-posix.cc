@@ -228,10 +228,10 @@ std::string fabrique::FindModule(string srcroot, string subdir, string name)
 
 string fabrique::JoinPath(const string& x, const string& y)
 {
-	if (x.empty())
+	if (x.empty() or x == ".")
 		return y;
 
-	if (y.empty())
+	if (y.empty() or y == ".")
 		return x;
 
 	return x + "/" + y;
