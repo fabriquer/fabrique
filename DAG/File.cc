@@ -159,7 +159,7 @@ ValuePtr File::field(const string& name) const
 		val.reset(new Boolean(generated_, ctx.booleanType(), source()));
 
 	else if (name == ast::Name)
-		val.reset(new String(relativeName(), ctx.stringType(), source()));
+		val.reset(new String(fullName(), ctx.stringType(), source()));
 
 	else if (name == ast::Subdirectory)
 		val.reset(File::Create(subdirectory(), ValueMap(), ctx.fileType(),

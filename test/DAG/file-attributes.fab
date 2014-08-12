@@ -6,7 +6,7 @@
 # CHECK-DAG: file foo = foo.c
 foo = file('foo.c');
 
-# CHECK-DAG: string name = 'foo.c'
+# CHECK-DAG: string name = '${srcroot}/foo.c'
 name = foo.name;
 
 # CHECK-DAG: string base = 'foo'
