@@ -268,13 +268,14 @@ unique_ptr<ast::Scope> Parse(UniqPtr<Parser>& parser, const string& filename,
 	map<string,string> builtins {
 		std::make_pair("srcroot", srcroot),
 		std::make_pair("buildroot", buildroot),
-		std::make_pair(ast::Subdirectory, ""),
 	};
 
 	const string absolute =
 		PathIsAbsolute(filename) ? filename : AbsolutePath(filename);
 
-	unique_ptr<ast::Scope> ast(parser->ParseFile(infile, args, absolute, builtins));
+	unique_ptr<ast::Scope> ast(
+		parser->ParseFile(infile, args, absolute, builtins));
+
 	if (not ast)
 	{
 		for (auto& error : parser->errors())

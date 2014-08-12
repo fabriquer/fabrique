@@ -37,6 +37,7 @@
 #include "AST/Visitor.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
+#include "Types/FileType.h"
 #include "Types/TypeContext.h"
 
 #include <cassert>
@@ -71,6 +72,10 @@ const Type& Scope::Lookup(const Identifier& id) const
 	//               (command-line or via an import() expression).
 	if ((name == ast::Arguments) and arguments_.valid())
 		return arguments_;
+
+	// Another special case: 'subdir' is a file.
+	if (name == ast::Subdirectory)
+		return arguments_.context().fileType();
 
 	auto i = symbols_.find(name);
 	if (i != symbols_.end())

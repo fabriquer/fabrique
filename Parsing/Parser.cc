@@ -811,8 +811,14 @@ bool Parser::DefineValue(UniqPtr<Identifier>& id, UniqPtr<Expression>& e)
 	}
 
 	const Type& t = id->isTyped() ? id->type() : e->type();
-	scope.Take(new Value(id, e, t));
+	if ((id->name() == ast::Subdirectory) and not t.isFile())
+	{
+		ReportError(string(ast::Subdirectory) + " must be a file (not '"
+		             + t.str() + "')", range);
+		return false;
+	}
 
+	scope.Take(new Value(id, e, t));
 	return true;
 }
 

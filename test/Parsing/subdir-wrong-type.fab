@@ -1,0 +1,11 @@
+#
+# RUN: fab --parse-only --print-ast %s 2> %t || true
+# RUN: FileCheck %s -input-file %t
+#
+
+foo = struct
+{
+	# CHECK: {{.*}}/subdir-wrong-type.fab:10:{{[0-9]+}}: error: subdir must be a file
+	# CHECK:   (not 'string')
+	subdir = 'hello.txt';
+};

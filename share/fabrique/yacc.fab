@@ -8,7 +8,7 @@ raw_yacc = action('${YACC} -d -t -o ${gen} ${src}',
                   <- src:file[in], gen:file[out], header:file[out],
                      YACC:file[in] = yacc);
 
-process = function(src:file, subdir:string, outname:string): file
+process = function(src:file, subdir:file, outname:string): file
 {
 	parser = file(outname + '.cc');
 	header = file(outname + '.h');

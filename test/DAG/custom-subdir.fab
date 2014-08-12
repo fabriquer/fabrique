@@ -14,6 +14,6 @@ baz = files(baz1.c baz2.c, subdir = 'custom2');
 
 # CHECK-DAG: file wibble = custom3/wibble.c
 wibble = {
-	subdir = 'custom3';
+	subdir = file('custom3');
 	file('wibble.c')
 };

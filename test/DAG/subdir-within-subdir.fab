@@ -4,7 +4,7 @@
 #
 
 scope = struct {
-	subdir = 'foo';
+	subdir = file('foo');
 
 	# CHECK-DAG: file single_file = foo/a/single.c
 	single_file = file('a/single.c');

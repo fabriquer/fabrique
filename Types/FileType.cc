@@ -101,7 +101,7 @@ FileType::TypeMap FileType::fields() const
 		{ ast::Extension,     ctx.stringType() },
 		{ ast::Generated,     ctx.booleanType() },
 		{ ast::Name,          ctx.stringType() },
-		{ ast::Subdirectory,  ctx.stringType() },
+		{ ast::Subdirectory,  ctx.fileType() },
 	};
 
 	for (auto& i : arguments_)

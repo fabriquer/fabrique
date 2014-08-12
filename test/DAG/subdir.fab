@@ -6,8 +6,8 @@
 # CHECK-DAG: file with_replacement_subdir = replacement/with_replacement_subdir.c
 with_replacement_subdir = file('with_replacement_subdir.c', subdir = 'replacement');
 
-# CHECK-DAG: struct[x:string] submodule = {
+# CHECK-DAG: struct[x:file] submodule = {
 submodule = import('Inputs/subdir-test.fab');
 
-# CHECK-DAG: string foo = 'Inputs'
+# CHECK-DAG: file foo = Inputs
 foo = submodule.x;

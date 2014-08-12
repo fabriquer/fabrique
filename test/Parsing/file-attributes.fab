@@ -12,7 +12,7 @@ name = foo.name;
 # CHECK: no_flags:list[string] = foo.cflags ? [ ];
 no_flags:list[string] = foo.cflags ? [];
 
-# CHECK: sub:string = foo.subdir;
+# CHECK: sub:file = foo.subdir;
 sub = foo.subdir;
 
 # CHECK: gen:bool = foo.generated;
@@ -21,7 +21,7 @@ gen = foo.generated;
 # CHECK: file_with_explicit_subdir:file = file('bar.c', subdir = subdir);
 file_with_explicit_subdir = file('bar.c', subdir = subdir);
 
-# CHECK: explicit_subdir:string = file_with_explicit_subdir.subdir;
+# CHECK: explicit_subdir:file = file_with_explicit_subdir.subdir;
 explicit_subdir = file_with_explicit_subdir.subdir;
 
 # CHECK: file_with_flags:file = file('baz.c', cflags = [ '-D SOMETHING_SPECIAL' ]);

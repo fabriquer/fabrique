@@ -1,0 +1,24 @@
+#
+# RUN: fab --parse-only --print-ast %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: foo:file = subdir;
+foo = subdir;
+
+bar = struct
+{
+	# CHECK: subdir:file = file('hello.txt');
+	subdir = file('hello.txt');
+
+	# CHECK: baz:file = file('world.txt');
+	baz = file('world.txt');
+
+	# CHECK: wibble:file = file('wibble.txt', subdir = subdir + 'lalala');
+	wibble = file('wibble.txt', subdir = subdir + 'lalala');
+};
+
+# CHECK: wobble:file = subdir.subdir.subdir.subdir.subdir;
+#
+# NOTE: this directory might not exist, but we don't know that at parse time!
+wobble = subdir.subdir.subdir.subdir.subdir;

@@ -1,5 +1,5 @@
 #
-# Generated at Sun 10 Aug 2014 22:15:35 NDT by regenerate-manifest.sh
+# Generated at Tue 12 Aug 2014 09:32:06 NDT by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -123,6 +123,8 @@ all_files = files(
 ./Parsing/struct-type-too-many-fields.fab
 ./Parsing/struct-type-wrong-field-type.fab
 ./Parsing/struct-types.fab
+./Parsing/subdir-wrong-type.fab
+./Parsing/subdir.fab
 ./Parsing/submodule-error.fab
 ./Parsing/tokeniser.fab
 ./Parsing/type-conflict.fab

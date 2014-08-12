@@ -18,7 +18,7 @@ ext = foo.extension;
 # CHECK-DAG: list[nil] no_flags = [ ]
 no_flags:list[string] = foo.cflags ? [];
 
-# CHECK-DAG: string sub = ''
+# CHECK-DAG: file sub = .
 sub = foo.subdir;
 
 # CHECK-DAG: bool gen = false
@@ -27,7 +27,7 @@ gen = foo.generated;
 # CHECK-DAG: file file_with_explicit_subdir = foo/bar.c
 file_with_explicit_subdir = file('bar.c', subdir = 'foo');
 
-# CHECK-DAG: string explicit_subdir = 'foo'
+# CHECK-DAG: file explicit_subdir = foo
 explicit_subdir = file_with_explicit_subdir.subdir;
 
 # CHECK-DAG: file file_with_flags = baz.c

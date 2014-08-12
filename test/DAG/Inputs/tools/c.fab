@@ -5,7 +5,7 @@ compile = function(src:file)
 	cc(src, src + '.o')
 };
 
-compile_using_basename = function(basename:string, subdir_name:string)
+compile_using_basename = function(basename:string, subdir_name:file)
 {
 	subdir = subdir_name;
 

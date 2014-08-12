@@ -790,8 +790,8 @@ bool DAGBuilder::Enter(const ast::Import& import)
 	const string name = currentValueName.top();
 
 	ValueMap& scope = EnterScope("import(" + name + ")");
-	ValuePtr subdir(
-		new String(import.subdirectory(), ctx_.stringType()));
+	ValuePtr subdir(File::Create(import.subdirectory(), ValueMap(),
+	                             ctx_.fileType(), import.source()));
 	scope.emplace(ast::Subdirectory, subdir);
 
 	// Gather arguments into an 'args' structure.
@@ -1225,6 +1225,17 @@ ValuePtr DAGBuilder::getNamedValue(const string& name)
 			dbg << " " << Bytestream::Definition << j.first;
 
 		dbg << Bytestream::Reset << "\n";
+	}
+
+	// If we are looking for 'subdir' and haven't found it defined anywhere,
+	// provide the top-level source subdirectory ('').
+	if (name == ast::Subdirectory)
+	{
+		ValuePtr subdir {
+			File::Create("", ValueMap(), ctx_.fileType(),
+			             SourceRange::None())
+		};
+		return subdir;
 	}
 
 	return NULL;
