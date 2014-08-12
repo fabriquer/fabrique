@@ -59,7 +59,6 @@ public:
 	virtual std::string filename() const;
 	virtual std::string relativeName() const;
 	virtual std::string fullName() const;
-	virtual std::string str() const { return filename_; }
 
 	//! This file refers to an absolute path.
 	bool absolute() const { return absolute_; }
