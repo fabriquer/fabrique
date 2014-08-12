@@ -129,26 +129,27 @@ const Type& TypeContext::maybe(const Type& elementTy, const SourceRange& src)
 	return find(rawMaybeType_->name(), src, params);
 }
 
-const Type& TypeContext::fileType()
+const FileType& TypeContext::fileType()
 {
-	static const Type& f = Register(FileType::Create(*this));
+	static const FileType& f =
+		dynamic_cast<const FileType&>(Register(FileType::Create(*this)));
 	return f;
 }
 
-const Type& TypeContext::inputFileType()
+const FileType& TypeContext::inputFileType()
 {
 	static const Type& in = Register(Type::Create("in", PtrVec<Type>(), *this));
-	static const Type& ty =
-		find("file", SourceRange::None(), PtrVec<Type>(1, &in));
+	static const FileType& ty = dynamic_cast<const FileType&>(
+		find("file", SourceRange::None(), PtrVec<Type>(1, &in)));
 
 	return ty;
 }
 
-const Type& TypeContext::outputFileType()
+const FileType& TypeContext::outputFileType()
 {
 	static const Type& out = Register(Type::Create("out", PtrVec<Type>(), *this));
-	static const Type& ty =
-		find("file", SourceRange::None(), PtrVec<Type>(1, &out));
+	static const FileType& ty = dynamic_cast<const FileType&>(
+		find("file", SourceRange::None(), PtrVec<Type>(1, &out)));
 
 	return ty;
 }

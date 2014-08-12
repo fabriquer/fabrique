@@ -33,6 +33,7 @@
 #define DAG_FILE_H
 
 #include "DAG/Value.h"
+#include "Types/FileType.h"
 
 #include <string>
 
@@ -47,9 +48,9 @@ class File : public Value
 {
 public:
 	static File* Create(std::string fullPath,
-	                    ValueMap attributes, const Type&, SourceRange);
+	                    ValueMap attributes, const FileType&, SourceRange);
 	static File* Create(std::string directory, std::string filename,
-	                    ValueMap attributes, const Type&, SourceRange);
+	                    ValueMap attributes, const FileType&, SourceRange);
 
 	static bool Equals(const std::shared_ptr<File>&, const std::shared_ptr<File>&);
 	static bool LessThan(const std::shared_ptr<File>&, const std::shared_ptr<File>&);
@@ -80,12 +81,15 @@ public:
 	//! Name a file with a prefix + my name.
 	virtual ValuePtr PrefixWith(ValuePtr&) const override;
 
+	//! Our type is always a @ref FileType.
+	const FileType& type() const override;
+
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	void Accept(Visitor&) const override;
 
 private:
 	File(std::string name, std::string subdirectory, bool absolute,
-	     const ValueMap& attributes, const Type&, SourceRange);
+	     const ValueMap& attributes, const FileType&, SourceRange);
 
 	const std::string filename_;
 	std::string subdirectory_;

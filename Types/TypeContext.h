@@ -42,6 +42,7 @@
 
 namespace fabrique {
 
+class FileType;
 class FunctionType;
 class SourceRange;
 class Type;
@@ -72,9 +73,9 @@ public:
 	const Type& maybe(const Type&, const SourceRange&);
 
 	//! A file in a build.
-	const Type& fileType();
-	const Type& inputFileType();
-	const Type& outputFileType();
+	const FileType& fileType();
+	const FileType& inputFileType();
+	const FileType& outputFileType();
 
 	//! A list of files (a pretty fundamental type!).
 	const Type& fileListType();

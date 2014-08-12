@@ -42,7 +42,7 @@ using std::string;
 
 
 Filename* Filename::Create(UniqPtr<Expression>& name, UniqPtrVec<Argument>& args,
-                           const Type& t, const SourceRange& src)
+                           const FileType& t, const SourceRange& src)
 {
 	if (args.empty())
 		return new Filename(name, args, t, src);
@@ -59,10 +59,16 @@ Filename* Filename::Create(UniqPtr<Expression>& name, UniqPtrVec<Argument>& args
 
 
 Filename::Filename(UniqPtr<Expression>& name, UniqPtrVec<Argument>& args,
-                   const Type& t, const SourceRange& src)
+                   const FileType& t, const SourceRange& src)
 	: Expression(t, src), unqualName_(std::move(name)),
 	  args_(std::move(args))
 {
+}
+
+
+const fabrique::FileType& Filename::type() const
+{
+	return dynamic_cast<const FileType&>(Expression::type());
 }
 
 

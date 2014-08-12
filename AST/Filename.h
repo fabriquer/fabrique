@@ -33,6 +33,7 @@
 #define FILE_H
 
 #include "AST/Expression.h"
+#include "Types/FileType.h"
 
 namespace fabrique {
 namespace ast {
@@ -46,17 +47,19 @@ class Filename : public Expression
 {
 public:
 	static Filename* Create(UniqPtr<Expression>& name, UniqPtrVec<Argument>& args,
-	                        const Type& ty, const SourceRange& loc);
+	                        const FileType& ty, const SourceRange& loc);
 
 	const Expression& name() const { return *unqualName_; }
 	const UniqPtrVec<Argument>& arguments() const { return args_; }
+
+	const FileType& type() const override;
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 
 private:
 	Filename(UniqPtr<Expression>& name, UniqPtrVec<Argument>& args,
-	         const Type& ty, const SourceRange& loc);
+	         const FileType& ty, const SourceRange& loc);
 
 	//! A filename, without qualifiers like "in this subdirectory".
 	const UniqPtr<Expression> unqualName_;

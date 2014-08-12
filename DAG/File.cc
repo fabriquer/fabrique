@@ -36,6 +36,7 @@
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 #include "Support/os.h"
+#include "Types/FileType.h"
 #include "Types/TypeContext.h"
 
 using namespace fabrique::dag;
@@ -43,7 +44,7 @@ using std::shared_ptr;
 using std::string;
 
 
-File* File::Create(string fullPath, ValueMap attrs, const Type& t, SourceRange src)
+File* File::Create(string fullPath, ValueMap attrs, const FileType& t, SourceRange src)
 {
 	const string filename(FilenameComponent(fullPath));
 	const string subdir(DirectoryOf(fullPath));
@@ -52,7 +53,7 @@ File* File::Create(string fullPath, ValueMap attrs, const Type& t, SourceRange s
 }
 
 File* File::Create(string dir, string path, ValueMap attrs,
-                   const Type& t, SourceRange src)
+                   const FileType& t, SourceRange src)
 {
 	const string filename(FilenameComponent(path));
 	const string subdir(DirectoryOf(path));
@@ -76,7 +77,7 @@ bool File::LessThan(const shared_ptr<File>& x, const shared_ptr<File>& y)
 
 
 File::File(string filename, string subdirectory, bool absolute,
-           const ValueMap& attributes, const Type& t, SourceRange source)
+           const ValueMap& attributes, const FileType& t, SourceRange source)
 	: Value(t, source), filename_(filename), subdirectory_(subdirectory),
 	  absolute_(absolute), generated_(false), attributes_(attributes)
 {
@@ -161,7 +162,8 @@ ValuePtr File::field(const string& name) const
 		val.reset(new String(relativeName(), ctx.stringType(), source()));
 
 	else if (name == ast::Subdirectory)
-		val.reset(new String(subdirectory(), ctx.stringType(), source()));
+		val.reset(File::Create(subdirectory(), ValueMap(), ctx.fileType(),
+		                       source()));
 
 	else
 	{
@@ -191,6 +193,12 @@ ValuePtr File::PrefixWith(ValuePtr& prefix) const
 		         attributes_, type(), SourceRange::Over(prefix, this)));
 
 	return f;
+}
+
+
+const fabrique::FileType& File::type() const
+{
+	return dynamic_cast<const FileType&>(Value::type());
 }
 
 

@@ -1248,9 +1248,9 @@ void DAGBuilder::AddRegeneration(const Arguments& regenArgs,
 	shared_ptr<Value> Nothing;
 	const SourceRange& Nowhere = SourceRange::None();
 
-	const Type& inputFileType = ctx_.inputFileType();
+	const FileType& inputFileType = ctx_.inputFileType();
 	const Type& inputType = ctx_.listOf(inputFileType, Nowhere);
-	const Type& outputType = ctx_.outputFileType();
+	const FileType& outputType = ctx_.outputFileType();
 	const Type& buildType = ctx_.functionType(inputType, outputType);
 
 	//
