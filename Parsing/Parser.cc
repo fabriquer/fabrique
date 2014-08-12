@@ -788,10 +788,16 @@ UnaryOperation* Parser::UnaryOp(UnaryOperation::Operator op,
 
 
 
-bool Parser::DefineValue(UniqPtr<Identifier>& id, UniqPtr<Expression>& e)
+bool Parser::DefineValue(UniqPtr<Identifier>& id, UniqPtr<Expression>& e, bool builtin)
 {
 	if (not id or not e)
 		return false;
+
+	if (not builtin and id->reservedName())
+	{
+		ReportError("defining value with reserved name", *id);
+		return false;
+	}
 
 	auto& scope(CurrentScope());
 
@@ -837,7 +843,7 @@ bool Parser::Builtin(string name, UniqPtr<Expression>& e, SourceRange src)
 	UniqPtr<Token> token(new Token(name, src));
 	UniqPtr<Identifier> id(Id(std::move(token)));
 
-	return DefineValue(id, e);
+	return DefineValue(id, e, true);
 }
 
 

@@ -230,7 +230,8 @@ public:
 
 
 	//! Define a @ref Value in the current scope.
-	bool DefineValue(UniqPtr<Identifier>&, UniqPtr<Expression>&);
+	bool DefineValue(UniqPtr<Identifier>&, UniqPtr<Expression>&,
+	                 bool builtin = false);
 
 
 	//
