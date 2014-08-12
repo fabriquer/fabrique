@@ -1045,7 +1045,7 @@ bool DAGBuilder::Enter(const ast::Value& v)
 	return true;
 }
 
-void DAGBuilder::Leave(const ast::Value&)
+void DAGBuilder::Leave(const ast::Value& v)
 {
 	assert(not currentValue.empty());
 
@@ -1053,7 +1053,7 @@ void DAGBuilder::Leave(const ast::Value&)
 
 	ValuePtr val = std::move(currentValue.top());
 	currentValue.pop();
-	assert(val);
+	assert(val and (val->type().isSubtype(v.type())));
 
 	const string name = currentValueName.top();
 	currentValueName.pop();
