@@ -149,7 +149,8 @@ UniqPtr<Scope> Parser::ParseFile(std::istream& input, const Type& args,
 
 	// Define builtin strings like srcroot and builtroot.
 	for (std::pair<string,string> i : builtins)
-		Builtin(i.first, i.second, openedFrom);
+		if (not Builtin(i.first, i.second, openedFrom))
+			return UniqPtr<Scope>();
 
 	int result = yyparse(this);
 
