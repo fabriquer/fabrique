@@ -1,5 +1,5 @@
 #
-# Generated at Tue 12 Aug 2014 09:32:06 NDT by regenerate-manifest.sh
+# Generated at Tue 12 Aug 2014 12:41:09 NDT by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -7,6 +7,7 @@
 # TODO: make llvm-lit accept -MMD -MMF flags so we can remove this hack
 #
 all_files = files(
+./DAG/Inputs/another_subdir/fabfile
 ./DAG/Inputs/cc.fab
 ./DAG/Inputs/empty.fab
 ./DAG/Inputs/fabfile

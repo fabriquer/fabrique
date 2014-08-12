@@ -11,3 +11,23 @@ submodule = import('Inputs/subdir-test.fab');
 
 # CHECK-DAG: file foo = Inputs
 foo = submodule.x;
+
+# CHECK-DAG: file bar = .
+bar = foo.subdir;
+
+another_module = import('Inputs/another_subdir');
+
+# CHECK-DAG: file the_insider = Inputs/another_subdir
+the_insider = another_module.from_inside;
+
+# CHECK-DAG: file above_insider = Inputs
+above_insider = the_insider.subdir;
+
+# CHECK-DAG: file above_above_insider = .
+above_above_insider = above_insider.subdir;
+
+# CHECK-DAG: file foo_within = Inputs/another_subdir/foo.c
+foo_within = another_module.foo_within;
+
+# CHECK-DAG: file bar_within = Inputs/bar.c
+bar_within = another_module.bar_within;
