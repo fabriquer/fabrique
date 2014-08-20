@@ -105,6 +105,8 @@ public:
 	bool operator == (const SourceRange&) const;
 	bool operator != (const SourceRange&) const;
 
+	bool isInside(const SourceRange&) const;
+
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 
 	SourceLocation begin;

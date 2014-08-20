@@ -172,6 +172,12 @@ bool SourceRange::operator != (const SourceRange& other) const
 }
 
 
+bool SourceRange::isInside(const SourceRange& other) const
+{
+	return begin >= other.begin and end <= other.end;
+}
+
+
 void SourceRange::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
 	out
