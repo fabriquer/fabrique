@@ -240,6 +240,8 @@ Bytestream& Bytestream::operator << (unsigned long x)
 
 Bytestream& ANSIStream::operator << (enum Format f)
 {
+	set(ResetAll);
+
 	switch (f)
 	{
 		case Action:            set(Red);               break;
@@ -260,7 +262,7 @@ Bytestream& ANSIStream::operator << (enum Format f)
 		case Warning:           set(Bold); set(Magenta);break;
 		case Info:              set(Bold); set(Yellow); break;
 		case ErrorLoc:          set(Green);             break;
-		case ErrorMessage:      set(ResetAll); set(Bold); break;
+		case ErrorMessage:      set(Bold);              break;
 
 		case Line:              set(Bold); set(Cyan);   break;
 		case Column:            set(Blue);              break;
