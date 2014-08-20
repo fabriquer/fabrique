@@ -41,11 +41,9 @@ using std::string;
 using std::vector;
 
 
-Structure* Structure::Create(vector<NamedValue>& values, const Type& t)
+Structure* Structure::Create(vector<NamedValue>& values, const Type& t, SourceRange src)
 {
-	SourceRange src(SourceRange::None());
-
-	if (not values.empty())
+	if (not src and not values.empty())
 	{
 		SourceRange begin = values.front().second->source();
 		SourceRange end = (--values.end())->second->source();

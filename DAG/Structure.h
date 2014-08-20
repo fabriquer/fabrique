@@ -50,7 +50,7 @@ public:
 	// TODO: don't promise anything about ordering in the layout
 	typedef std::pair<std::string,ValuePtr> NamedValue;
 
-	static Structure* Create(std::vector<NamedValue>&, const Type&);
+	static Structure* Create(std::vector<NamedValue>&, const Type&, SourceRange);
 	virtual ~Structure();
 
 	virtual bool hasFields() const override { return true; }

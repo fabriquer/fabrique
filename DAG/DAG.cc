@@ -806,7 +806,11 @@ bool DAGBuilder::Enter(const ast::Import& import)
 		args.emplace_back(argName, value);
 	}
 
-	ValuePtr argStruct { Structure::Create(args, import.scope().arguments()) };
+	ValuePtr argStruct
+	{
+		Structure::Create(args, import.scope().arguments(), import.source())
+	};
+
 	scope.emplace(ast::Arguments, argStruct);
 
 	for (const UniqPtr<ast::Value>& v : import.scope().values())
@@ -820,7 +824,7 @@ bool DAGBuilder::Enter(const ast::Import& import)
 		types.emplace_back(i.first, i.second->type());
 	}
 
-	currentValue.emplace(Structure::Create(values, import.type()));
+	currentValue.emplace(Structure::Create(values, import.type(), import.source()));
 
 	return false;
 }
@@ -920,7 +924,7 @@ bool DAGBuilder::Enter(const ast::SomeValue& s)
 		{ ast::MaybeValue, eval(s.initializer()) },
 	};
 
-	currentValue.emplace(Structure::Create(values, s.type()));
+	currentValue.emplace(Structure::Create(values, s.type(), s.source()));
 	return false;
 }
 
@@ -947,7 +951,7 @@ bool DAGBuilder::Enter(const ast::StructInstantiation& s) {
 	for (auto& i : structScope)
 		values.emplace_back(i.first, i.second);
 
-	currentValue.emplace(Structure::Create(values, s.type()));
+	currentValue.emplace(Structure::Create(values, s.type(), s.source()));
 	return false;
 }
 
