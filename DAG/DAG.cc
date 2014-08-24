@@ -1242,7 +1242,7 @@ ValuePtr DAGBuilder::getNamedValue(const string& name)
 		return subdir;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 ValuePtr DAGBuilder::eval(const ast::Expression& e)

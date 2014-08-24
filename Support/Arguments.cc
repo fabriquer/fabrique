@@ -171,7 +171,7 @@ Arguments* Arguments::Parse(int argc, char *argv[])
 	                    options.data(), buffer.data());
 
 	if (opts.nonOptionsCount() > 1)
-		return NULL;
+		return nullptr;
 
 	const bool help = options[Help];
 
@@ -288,7 +288,7 @@ string Arguments::str(const Arguments& args)
 
 static ArgStatus Required(const Option& o, bool printErr)
 {
-	if (o.arg != NULL)
+	if (o.arg)
 		return ARG_OK;
 
 	if (printErr)

@@ -123,7 +123,7 @@ string fabrique::AbsoluteDirectory(string name, bool createIfMissing)
 
 string fabrique::AbsolutePath(string name)
 {
-	char *absolutePath = realpath(name.c_str(), NULL);
+	char *absolutePath = realpath(name.c_str(), nullptr);
 	if (not absolutePath)
 		throw PosixError("error in realpath('" + name + "')");
 
