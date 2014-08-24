@@ -353,7 +353,8 @@ bool DAGBuilder::Enter(const ast::Action& a)
 
 	shared_ptr<Rule> rule(Rule::Create(currentValueName.top(),
 	                                   command, arguments, parameters,
-	                                   a.type()));
+	                                   a.type(), a.source()));
+	assert(rule->source());
 	currentValue.emplace(rule);
 	rules_[rule->name()] = rule;
 
