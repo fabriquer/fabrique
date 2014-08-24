@@ -1063,6 +1063,9 @@ void DAGBuilder::Leave(const ast::Value& v)
 	const string name = currentValueName.top();
 	currentValueName.pop();
 
+	if (currentScope.find(name) != currentScope.end())
+		throw SemanticException("redefining '" + name + "'", v.source());
+
 
 	//
 	// If the right-hand side is a build, file or list of files,
@@ -1084,6 +1087,7 @@ void DAGBuilder::Leave(const ast::Value& v)
 		topLevelTargets_.emplace_back(name, val);
 
 	assert(val);
+	assert(currentScope.find(name) == currentScope.end());
 	currentScope.emplace(name, std::move(val));
 	DebugNewDefinition(currentScope, name);
 

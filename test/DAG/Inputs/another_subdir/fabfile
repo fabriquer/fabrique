@@ -1,6 +1,10 @@
 from_inside = subdir;
 
-subdir = subdir.subdir;
-
 foo_within = file('foo.c');
 bar_within = file('bar.c', subdir = subdir.subdir);
+
+baz_within =
+{
+	subdir = subdir.subdir;
+	file('baz.c')
+};

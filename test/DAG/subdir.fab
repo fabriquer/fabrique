@@ -31,3 +31,6 @@ foo_within = another_module.foo_within;
 
 # CHECK-DAG: file bar_within = Inputs/bar.c
 bar_within = another_module.bar_within;
+
+# CHECK-DAG: file baz_within = Inputs/baz.c
+baz_within = another_module.baz_within;
