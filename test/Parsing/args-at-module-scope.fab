@@ -1,0 +1,16 @@
+#
+# RUN: fab -D 'foo=42' --parse-only --print-ast %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: foo:int = args.foo;
+foo = args.foo;
+
+a_nested_scope = struct
+{
+	another_scope = struct
+	{
+		# CHECK: another_foo_reference:int = args.foo;
+		another_foo_reference = args.foo;
+	};
+};
