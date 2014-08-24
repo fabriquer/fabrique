@@ -187,7 +187,7 @@ void SourceRange::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 
 	// The end column is the first character in the next token; don't
 	// report this when printing out the current location.
-	size_t endcol = end.column - 1;
+	size_t endcol = end.column ? end.column - 1 : 0;
 
 	if (begin.line == end.line)
 	{
