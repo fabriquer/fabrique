@@ -14,8 +14,8 @@ cxx = import('share/fabrique/cxx.fab', colour_diagnostics = colour_output);
 lex = import('share/fabrique/lex.fab');
 lit = import('share/fabrique/llvm-lit.fab', show_failure_details = verbose_tests);
 
-# TODO: specify the exact yacc once we have a working 'which' plugin
-yacc = import('share/fabrique/yacc.fab', yacc = 'byacc');
+# TODO: find the right yacc once we have a working 'which' plugin
+yacc = import('share/fabrique/yacc.fab', yacc = file('/usr/local/bin/byacc'));
 
 
 

@@ -1,4 +1,4 @@
-yacc = args.yacc ? file('/usr/bin/yacc');
+yacc:file = args.yacc;
 
 
 # Yacc's command-line arguments are confusing and don't expose information like
