@@ -560,14 +560,22 @@ Import* Parser::ImportModule(UniqPtr<StringLiteral>& name, UniqPtrVec<Argument>&
 	if (not name)
 		return nullptr;
 
-	Bytestream::Debug("parser.import")
-		<< Bytestream::Action << "searching for"
+	Bytestream& dbg = Bytestream::Debug("parser.import");
+	dbg
+		<< Bytestream::Action << "importing"
 		<< Bytestream::Type << " module"
 		<< Bytestream::Operator << " '"
 		<< Bytestream::Literal << name->str()
 		<< Bytestream::Operator << "'"
-		<< Bytestream::Reset << " with"
-		<< Bytestream::Reference << " srcroot "
+		<< Bytestream::Reset << " with args"
+		;
+
+	for (const UniqPtr<Argument>& a : args)
+		dbg << " " << *a;
+
+	dbg
+		<< Bytestream::Reset << " and "
+		<< Bytestream::Reference << "srcroot "
 		<< Bytestream::Filename << srcroot_
 		<< Bytestream::Reset << "\n"
 		;
