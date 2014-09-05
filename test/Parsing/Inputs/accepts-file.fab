@@ -1,0 +1,1 @@
+some_file = args.some_file ? file('/usr/bin/cc');

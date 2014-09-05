@@ -415,10 +415,28 @@ FieldQuery* Parser::FieldQuery(UniqPtr<Expression>& structure,
 	if (not structure or not field)
 		return nullptr;
 
+	const Type& structType = structure->type();
+	if (not structType.hasFields())
+		throw SemanticException(
+			"value of type '" + structType.str() + "' does not have fields",
+			structure->source());
+
+	Type::TypeMap structFields = structType.fields();
+	auto i = structFields.find(field->name());
+	if (i != structFields.end())
+	{
+		const Type& fieldType = i->second;
+		const Type& initializerType = def->type();
+
+		if (not fieldType.isSubtype(initializerType)
+		and not initializerType.isSubtype(fieldType))
+			throw WrongTypeException(initializerType, fieldType, src);
+	}
+
 	const Type& t =
-		field->isTyped()
-			? Type::GetSupertype(field->type(), def->type())
-			: def->type()
+		i == structFields.end()
+			? def->type()
+			: Type::GetSupertype(def->type(), i->second)
 			;
 
 	return new class FieldQuery(structure, field, def, t, src);

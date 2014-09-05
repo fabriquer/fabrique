@@ -1,5 +1,5 @@
 #
-# Generated at Sun 24 Aug 2014 19:54:51 NDT by regenerate-manifest.sh
+# Generated at Fri  5 Sep 2014 22:38:27 NDT by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -72,6 +72,7 @@ all_files = files(
 ./DAG/target-operations.fab
 ./DAG/tool-vs-src-directories.fab
 ./Parsing/Inputs/accepts-args.fab
+./Parsing/Inputs/accepts-file.fab
 ./Parsing/Inputs/fabfile
 ./Parsing/Inputs/requires-args.fab
 ./Parsing/Inputs/submodule-with-error.fab
@@ -105,6 +106,7 @@ all_files = files(
 ./Parsing/import-arguments-mandatory.fab
 ./Parsing/import-arguments-missing.fab
 ./Parsing/import-arguments-optional.fab
+./Parsing/import-arguments-type-mismatch.fab
 ./Parsing/import-directory.fab
 ./Parsing/list-type-mismatch.fab
 ./Parsing/lists.fab
