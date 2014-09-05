@@ -1,0 +1,9 @@
+#
+# RUN: fab --format=null --print-dag %s 2> %t || true
+# RUN: FileCheck %s -input-file %t
+#
+
+foo = 42;
+
+# CHECK: {{.*}}/value-redefinition.fab:[[LINE:[0-9]+]]:1: error: redefining value
+foo = 43;

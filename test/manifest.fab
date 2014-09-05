@@ -71,6 +71,7 @@ all_files = files(
 ./DAG/subdir.fab
 ./DAG/target-operations.fab
 ./DAG/tool-vs-src-directories.fab
+./DAG/value-redefinition.fab
 ./Parsing/Inputs/accepts-args.fab
 ./Parsing/Inputs/accepts-file.fab
 ./Parsing/Inputs/fabfile
