@@ -1058,7 +1058,10 @@ void DAGBuilder::Leave(const ast::Value& v)
 
 	ValuePtr val = std::move(currentValue.top());
 	currentValue.pop();
-	assert(val and (val->type().isSubtype(v.type())));
+	assert(val);
+
+	if (not val->type().isSubtype(v.type()))
+		throw WrongTypeException(v.type(), val->type(), v.source());
 
 	const string name = currentValueName.top();
 	currentValueName.pop();
