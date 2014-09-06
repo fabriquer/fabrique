@@ -68,10 +68,10 @@ bool SequenceType::isSubtype(const Type& other) const
 
 const Type& SequenceType::onAddTo(const Type& t) const
 {
-	if (isSubtype(t))
+	if (isSupertype(t))
 		return *this;
 
-	if (t.isSubtype(*this))
+	if (t.isSupertype(*this))
 		return t;
 
 	return context().nilType();

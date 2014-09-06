@@ -80,6 +80,7 @@ all_files = files(
 ./Parsing/Inputs/submodule.fab
 ./Parsing/Inputs/subsubmodule.fab
 ./Parsing/actions.fab
+./Parsing/add-to-nil-list.fab
 ./Parsing/args-at-module-scope.fab
 ./Parsing/builtins.fab
 ./Parsing/compound-expr.fab

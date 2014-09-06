@@ -1,0 +1,13 @@
+#
+# RUN: fab --parse-only --print-ast %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+debug = args.debug ? false;
+asserts = args.asserts ? false;
+
+# CHECK: cflags:list[string] =
+cflags = []
+	+ (if debug [ '-g' ] else [])
+	+ (if asserts [] else [ '-D NDEBUG' ])
+	;
