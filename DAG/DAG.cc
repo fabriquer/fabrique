@@ -1261,9 +1261,6 @@ ValuePtr DAGBuilder::eval(const ast::Expression& e)
 	ValuePtr v(currentValue.top());
 	currentValue.pop();
 
-	if (v)
-		assert(v->source());
-
 	return v;
 }
 
