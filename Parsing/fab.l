@@ -99,14 +99,20 @@ files			{
 	return '(';
 }
 
+<SAW_FILES>{comment}	{}
+<SAW_FILES>{tab}	{ yycolumn += 7; }
+<SAW_FILES>\n		{}
+<SAW_FILES>{whitespace}	{}
+
 <IN_FILES>{filename}	{
 	SetToken(yylval);
 	return FILENAME;
 }
 
-<IN_FILES>\n		{
-	/* Treat newlines inside of 'files()' like other newlines: ignore. */
-}
+<IN_FILES>{comment}	{}
+<IN_FILES>{tab}		{ yycolumn += 7; }
+<IN_FILES>\n		{}
+<IN_FILES>{whitespace}	{}
 
 <IN_FILES>\)		{
 	/* Closing parenthesis puts us back in normal mode. */
