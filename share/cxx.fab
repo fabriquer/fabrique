@@ -10,12 +10,13 @@ compile_one = action('${CXX} -c ${flags} -MMD -MF ${obj}.d ${src} -o ${obj}',
 	     <- src:file[in], obj:file[out], flags:list[string],
 	        otherDeps:list[file[in]] = [], CXX:file[in] = compiler, deps = 'gcc');
 
-compile = function(srcs:list[file], flags:list[string],
+compile = function(srcs:list[file], common_flags:list[string],
                    deps:list[file[in]] = []): list[file]
 {
 	foreach src <- srcs {
 		obj = src + '.o';
-		outs = compile_one(src, obj, flags + colour_flags, deps);
+		flags = (src.cxxflags ? common_flags) + colour_flags;
+		outs = compile_one(src, obj, flags, deps);
 		obj
 	}
 };
