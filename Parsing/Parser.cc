@@ -856,6 +856,22 @@ bool Parser::DefineValue(UniqPtr<Identifier>& id, UniqPtr<Expression>& e, bool b
 }
 
 
+bool Parser::DefineValue(UniqPtr<Expression>& value)
+{
+	if (not value)
+		return false;
+
+	auto& scope(CurrentScope());
+
+	const size_t symbols = scope.symbols().size();
+	UniqPtr<Identifier> id(new Identifier(ast::Unnamed + std::to_string(symbols)));
+
+	scope.Take(new Value(id, value, value->type()));
+
+	return true;
+}
+
+
 Scope& Parser::CurrentScope()
 {
 	// We must always have at least a top-level scope on the stack.

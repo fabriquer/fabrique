@@ -629,5 +629,11 @@ value:
 		if (not p->DefineValue(name, initialiser))
 			return -1;
 	}
+	| expression ';'	{
+		auto value = TakeNode<Expression>($1);
+
+		if (not p->DefineValue(value))
+			return -1;
+	}
 	;
 %%

@@ -46,6 +46,7 @@ static const char MaybeExists[] = "exists";
 static const char MaybeValue[] = "value";
 static const char Name[] = "name";
 static const char Subdirectory[] = "subdir";
+static const char Unnamed[] = "__unnamed";
 
 } // namespace ast
 } // namespace fabrique

@@ -233,6 +233,9 @@ public:
 	bool DefineValue(UniqPtr<Identifier>&, UniqPtr<Expression>&,
 	                 bool builtin = false);
 
+	//! Define an unnamed @ref Value in the current scope.
+	bool DefineValue(UniqPtr<Expression>&);
+
 
 	//
 	// Low-level but type-safe getters and setters for the YYSTYPE union:

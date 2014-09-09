@@ -1,0 +1,16 @@
+#
+# RUN: fab --format=null --print-dag %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK-DAG: string foo = 'Hello, world!'
+foo = 'Hello, world!';
+
+# CHECK-DAG: int bar = 42
+bar = 42;
+
+# CHECK-DAG: string __unnamed{{[0-9]+}} = 'Hello, world!'
+foo;
+
+# CHECK-DAG: int __unnamed{{[0-9]+}} = 42
+bar;
