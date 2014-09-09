@@ -16,7 +16,8 @@ compile = function(srcs:list[file], common_flags:list[string],
 	foreach src <- srcs {
 		obj = src + '.o';
 		flags = (src.cxxflags ? common_flags) + colour_flags;
-		outs = compile_one(src, obj, flags, deps);
+
+		compile_one(src, obj, flags, deps);
 		obj
 	}
 };

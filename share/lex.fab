@@ -9,6 +9,6 @@ raw_lex = action('${LEX} ${flags} --header-file=${header} --outfile=${gen} ${src
 process = function(src:file, gen:file, header_out:file, flags:list[string] = [])
 	: file
 {
-	lex = raw_lex(src, gen, header_out, flags);
+	raw_lex(src, gen, header_out, flags);
 	gen
 };

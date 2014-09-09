@@ -12,7 +12,8 @@ process = function(src:file, subdir:file, outname:string): file
 {
 	parser = file(outname + '.cc');
 	header = file(outname + '.h');
-	gen = raw_yacc(src, gen = parser, header = header);
+
+	raw_yacc(src, gen = parser, header = header);
 
 	parser
 };
