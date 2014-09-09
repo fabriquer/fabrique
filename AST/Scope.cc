@@ -135,7 +135,7 @@ void Scope::Register(const Identifier& id, const Expression *e)
 		;
 
 	if (symbols_.find(id.name()) != symbols_.end())
-		throw SyntaxError("name '" + id.name() + "'already defined",
+		throw SyntaxError("name '" + id.name() + "' already defined",
 		                  id.source());
 
 	symbols_[id.name()] = e;
