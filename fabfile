@@ -39,13 +39,17 @@ yacc = import('share/yacc.fab', yacc = which.executable('byacc'));
 #
 cxxoptions = [ '-std=c++11' ];
 
+pegmatite_debug_flags = [ '-D' 'DEBUG_AST_CONSTRUCTION' '-D' 'DEBUG_PARSING' ];
+
 dbgflags =
-	if debug [ '-g' '-ggdb' '-O0' ] else [ '-O2' ]
+	if debug [ '-g' '-ggdb' '-O0' ] + pegmatite_debug_flags else [ '-O2' ]
 	+ if asserts [ '' ] else [ '-D NDEBUG' ]
 	;
 
 defines =
-	(if platform.posix [ '-D OS_POSIX' ] else [])
+	[ '-D' 'USE_RTTI' ]
+
+	+ (if platform.posix [ '-D OS_POSIX' ] else [])
 	+ (if platform.darwin [ '-D OS_DARWIN' ] else [])
 	+ (if platform.windows [ '-D OS_WINDOWS' ] else [])
 	;
@@ -53,9 +57,9 @@ defines =
 includes = foreach dir <- [ srcroot buildroot ] '-I ' + dir;
 
 # Treat vendor headers as system headers (disable warnings).
-vendor = [ '-isystem ' + srcroot + '/vendor' ];
+vendor_flags = [ '-isystem ' + srcroot + '/vendor' ];
 
-common_cxx_flags = cxxoptions + defines + dbgflags + includes + vendor;
+common_cxx_flags = cxxoptions + defines + dbgflags + includes + vendor_flags;
 
 warnings = [
 	# Use lots and lots of warnings.
@@ -75,6 +79,7 @@ cxx_flags = common_cxx_flags + warnings;
 generated_cxx_flags =
 	common_cxx_flags + [ '-Wno-deprecated-register' ]
 	+ if debug [ '-D' 'YYDEBUG' ] else [];
+vendor_cxx_flags = common_cxx_flags;
 
 
 #
@@ -94,6 +99,7 @@ cxx_srcs =
 	+ import('Plugin').sources
 	+ import('Support').sources
 	+ import('Types').sources
+	+ import('vendor', cxxflags = vendor_cxx_flags).sources
 	;
 
 

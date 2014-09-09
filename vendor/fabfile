@@ -1,0 +1,11 @@
+vendor_cxx_flags:list[string] = args.cxxflags;
+
+sources:list[file] = {
+	subdir = file('Pegmatite');
+
+	# TODO: support arbitrary arguments to files() as well as file()
+	[
+		file('ast.cc', cxxflags = vendor_cxx_flags)
+		file('parser.cc', cxxflags = vendor_cxx_flags)
+	]
+};
