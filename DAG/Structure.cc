@@ -32,6 +32,7 @@
 #include "DAG/Structure.h"
 #include "DAG/Visitor.h"
 #include "Support/Bytestream.h"
+#include "Types/StructureType.h"
 #include "Types/Type.h"
 
 #include <cassert>
@@ -41,7 +42,8 @@ using std::string;
 using std::vector;
 
 
-Structure* Structure::Create(vector<NamedValue>& values, const Type& t, SourceRange src)
+Structure* Structure::Create(const vector<NamedValue>& values,
+                             const Type& t, SourceRange src)
 {
 	if (not src and not values.empty())
 	{
@@ -55,7 +57,31 @@ Structure* Structure::Create(vector<NamedValue>& values, const Type& t, SourceRa
 }
 
 
-Structure::Structure(vector<NamedValue>& values, const Type& t, SourceRange src)
+Structure* Structure::Create(const vector<NamedValue>& values, SourceRange src)
+{
+	assert(not values.empty());
+
+	if (not src)
+	{
+		SourceRange begin = values.front().second->source();
+		SourceRange end = (--values.end())->second->source();
+
+		src = SourceRange(begin, end);
+	}
+
+	StructureType::NamedTypeVec types;
+	for (auto& v : values)
+		types.emplace_back(v.first, v.second->type());
+
+	TypeContext& ctx = values.front().second->type().context();
+	const Type& type = *StructureType::Create(types, ctx);
+
+	return Create(values, type, src);
+}
+
+
+Structure::Structure(const vector<NamedValue>& values,
+                     const Type& t, SourceRange src)
 	: Value(t, src), values_(values)
 {
 }

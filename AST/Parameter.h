@@ -32,18 +32,27 @@
 #ifndef PARAMETER_H
 #define PARAMETER_H
 
-#include "Expression.h"
-#include "Identifier.h"
+#include "AST/Identifier.h"
+#include "Types/Typed.h"
 
 #include <memory>
 
 namespace fabrique {
+
+namespace dag
+{
+	class EvalContext;
+	class Parameter;
+}
+
 namespace ast {
+
+class Expression;
 
 /**
  * A formal parameter in a @ref fabrique::ast::Function.
  */
-class Parameter : public Expression
+class Parameter : public Node, public Typed
 {
 public:
 	Parameter(UniqPtr<Identifier>& id, const Type& resultTy,
@@ -57,6 +66,8 @@ public:
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
+
+	virtual std::shared_ptr<dag::Parameter> evaluate(dag::EvalContext&) const;
 
 private:
 	const UniqPtr<Identifier> name_;

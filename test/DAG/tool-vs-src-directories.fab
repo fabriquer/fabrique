@@ -6,6 +6,6 @@
 # CHECK-DAG: (file)=>file cc = ${CC} -c
 c = import('Inputs/tools/c.fab');
 
-# CHECK-DAG: build: cc { Inputs/sources/foo.c => Inputs/sources/foo.c.o }
-# CHECK-DAG: build: cc { Inputs/sources/bar.c => Inputs/sources/bar.o }
+# CHECK-DAG: build: c.cc { Inputs/sources/foo.c => Inputs/sources/foo.c.o }
+# CHECK-DAG: build: c.cc { Inputs/sources/bar.c => Inputs/sources/bar.o }
 src = import('Inputs/sources/src.fab');

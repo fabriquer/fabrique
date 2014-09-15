@@ -38,6 +38,7 @@
 #include "Backend/Null.h"
 
 #include "DAG/DAG.h"
+#include "DAG/EvalContext.h"
 
 #include "Parsing/Lexer.h"
 #include "Parsing/Parser.h"
@@ -164,10 +165,12 @@ int main(int argc, char *argv[]) {
 		//
 		// Convert the AST into a build graph.
 		//
-		unique_ptr<dag::DAG> dag;
-		dag = dag::DAG::Flatten(*ast, ctx, srcroot, buildroot,
-		                        parser->files(), backend->DefaultFilename(),
-		                        *args);
+		unique_ptr<dag::EvalContext> evalCtx;
+		unique_ptr<dag::DAG> dag =
+			dag::EvalContext::Evaluate(*ast, ctx, srcroot, buildroot,
+		                                   parser->files(),
+			                           backend->DefaultFilename(),
+		                                   *args);
 
 		// DAG errors should be reported as exceptions.
 		assert(dag);

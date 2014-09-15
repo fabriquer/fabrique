@@ -31,8 +31,14 @@
 
 #include "AST/List.h"
 #include "AST/Visitor.h"
+#include "DAG/List.h"
 #include "Support/Bytestream.h"
+#include "Types/Type.h"
+#include "Types/TypeError.h"
 
+#include <cassert>
+
+using namespace fabrique;
 using namespace fabrique::ast;
 
 
@@ -56,4 +62,30 @@ void List::Accept(Visitor& v) const
 	}
 
 	v.Leave(*this);
+}
+
+
+dag::ValuePtr List::evaluate(dag::EvalContext& ctx) const
+{
+	assert(type().isOrdered());
+	assert(type().typeParamCount() == 1);
+
+	const Type& subtype = type()[0];
+
+	SharedPtrVec<dag::Value> values;
+
+	for (auto& e : elements_)
+	{
+		if (not e->type().isSubtype(subtype))
+			throw WrongTypeException(subtype,
+			                         e->type(), e->source());
+
+		// TODO: tmp
+		if (not e->evaluate(ctx))
+			return nullptr;
+
+		values.push_back(e->evaluate(ctx));
+	}
+
+	return dag::ValuePtr(new dag::List(values, type(), source()));
 }

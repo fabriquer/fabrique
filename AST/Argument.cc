@@ -35,6 +35,7 @@
 
 #include <cassert>
 
+using namespace fabrique;
 using namespace fabrique::ast;
 
 
@@ -70,4 +71,9 @@ void Argument::Accept(Visitor& v) const
 	}
 
 	v.Leave(*this);
+}
+
+dag::ValuePtr Argument::evaluate(dag::EvalContext& ctx) const
+{
+	return value_->evaluate(ctx);
 }

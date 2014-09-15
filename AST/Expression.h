@@ -34,9 +34,13 @@
 
 #include "ADT/PtrVec.h"
 #include "AST/Node.h"
+#include "DAG/Value.h"
 #include "Types/Typed.h"
 
 namespace fabrique {
+
+namespace dag { class EvalContext; }
+
 namespace ast {
 
 /**
@@ -46,6 +50,8 @@ class Expression : public Node, public Typed
 {
 public:
 	virtual ~Expression();
+
+	virtual dag::ValuePtr evaluate(dag::EvalContext&) const  = 0;
 
 protected:
 	Expression(const Type& t, const SourceRange& src)

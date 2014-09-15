@@ -30,13 +30,21 @@
  */
 
 #include "AST/Argument.h"
+#include "AST/Builtins.h"
 #include "AST/Import.h"
 #include "AST/Scope.h"
 #include "AST/Value.h"
 #include "AST/Visitor.h"
+#include "DAG/EvalContext.h"
+#include "DAG/File.h"
+#include "DAG/Structure.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
+#include "Types/TypeContext.h"
 
+#include <cassert>
+
+using namespace fabrique;
 using namespace fabrique::ast;
 
 
@@ -80,4 +88,44 @@ void Import::Accept(Visitor& v) const
 	}
 
 	v.Leave(*this);
+}
+
+dag::ValuePtr Import::evaluate(dag::EvalContext& ctx) const
+{
+	auto scope(ctx.EnterScope("import()"));
+
+	dag::ValuePtr subdir(ctx.File(subdirectory(), dag::ValueMap(),
+		                      type().context().fileType(), source()));
+
+	scope.set(ast::Subdirectory, subdir);
+
+	// Gather arguments into an 'args' structure.
+	std::vector<dag::Structure::NamedValue> args;
+	for (const UniqPtr<ast::Argument>& a : arguments())
+	{
+		assert(a->hasName());
+
+		const std::string& argName = a->getName().name();
+		dag::ValuePtr value = a->evaluate(ctx);
+
+		args.emplace_back(argName, value);
+	}
+
+	dag::ValuePtr argStruct(
+		ctx.Struct(args, this->scope().arguments(), source()));
+
+	scope.set(ast::Arguments, argStruct);
+
+	for (const UniqPtr<ast::Value>& v : this->scope().values())
+		v->evaluate(ctx);
+
+	std::vector<dag::Structure::NamedValue> values;
+	Type::NamedTypeVec types;
+	for (auto& i : scope.leave())
+	{
+		values.emplace_back(i.first, i.second);
+		types.emplace_back(i.first, i.second->type());
+	}
+
+	return ctx.Struct(values, type(), source());
 }

@@ -117,8 +117,8 @@ Build::Build(shared_ptr<Rule>& rule,
 void Build::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
 	out
-		<< Bytestream::Reference << rule_->name() << " "
-		<< Bytestream::Operator << "{"
+		<< Bytestream::Definition << rule_->name()
+		<< Bytestream::Operator << " {"
 		;
 
 	for (const shared_ptr<File>& f : in_)

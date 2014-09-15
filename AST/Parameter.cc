@@ -31,15 +31,19 @@
 
 #include "AST/Parameter.h"
 #include "AST/Visitor.h"
+#include "DAG/Parameter.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 
+#include <memory>
+
+using namespace fabrique;
 using namespace fabrique::ast;
 
 
 Parameter::Parameter(UniqPtr<Identifier>& name, const Type& resultTy,
                      UniqPtr<Expression>&& defaultValue)
-	: Expression(resultTy, SourceRange::Over(name, defaultValue)),
+	: Node(SourceRange::Over(name, defaultValue)), Typed(resultTy),
 	  name_(std::move(name)), defaultValue_(std::move(defaultValue))
 {
 	if (name_->reservedName())
@@ -69,4 +73,15 @@ void Parameter::Accept(Visitor& v) const
 	}
 
 	v.Leave(*this);
+}
+
+std::shared_ptr<dag::Parameter> Parameter::evaluate(dag::EvalContext& ctx) const
+{
+	dag::ValuePtr defaultValue;
+	if (defaultValue_)
+		defaultValue = defaultValue_->evaluate(ctx);
+
+	return std::shared_ptr<dag::Parameter>(
+		new dag::Parameter(name_->name(), type(), defaultValue, source())
+	);
 }

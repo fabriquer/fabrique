@@ -31,13 +31,21 @@
 
 #include "AST/Value.h"
 #include "AST/Visitor.h"
+#include "DAG/Build.h"
+#include "DAG/EvalContext.h"
+#include "DAG/File.h"
+#include "DAG/List.h"
+#include "DAG/Target.h"
 #include "Support/Bytestream.h"
 #include "Types/Type.h"
+#include "Types/TypeError.h"
 
 #include <cassert>
 #include <iomanip>
 
+using namespace fabrique;
 using namespace fabrique::ast;
+using std::string;
 
 
 Value::Value(UniqPtr<Identifier>& id, UniqPtr<Expression>& value, const Type& t)
@@ -54,7 +62,7 @@ Value::Value(UniqPtr<Identifier>& id, UniqPtr<Expression>& value, const Type& t)
 
 void Value::PrettyPrint(Bytestream& out, size_t indent) const
 {
-	std::string tabs(indent, '\t');
+	string tabs(indent, '\t');
 
 	out
 		<< tabs
@@ -77,4 +85,58 @@ void Value::Accept(Visitor& v) const
 	}
 
 	v.Leave(*this);
+}
+
+
+dag::ValuePtr Value::evaluate(dag::EvalContext& ctx) const
+{
+	const string name(name_->name());
+	Bytestream& dbg = Bytestream::Debug("eval.value");
+	dbg
+		<< Bytestream::Action << "Evaluating "
+		<< *name_
+		<< Bytestream::Operator << "..."
+		<< "\n"
+		;
+
+	auto valueName(ctx.evaluating(name));
+	dag::ValuePtr val(value_->evaluate(ctx));
+	assert(val);
+
+	dbg
+		<< *name_
+		<< Bytestream::Operator << " == "
+		<< *val
+		<< "\n"
+		;
+
+	if (not val->type().isSubtype(type()))
+		throw WrongTypeException(type(), val->type(), source());
+
+	//
+	// If the right-hand side is a build, file or list of files,
+	// convert to a named target (files and builds are already in the DAG).
+	//
+	if (auto build = std::dynamic_pointer_cast<dag::Build>(val))
+		val = ctx.Target(build);
+
+	else if (auto file = std::dynamic_pointer_cast<dag::File>(val))
+		val = ctx.Target(file);
+
+	else if (auto list = std::dynamic_pointer_cast<dag::List>(val))
+	{
+		if (list->type().elementType().isFile())
+			val = ctx.Target(list);
+	}
+	else if (auto target = std::dynamic_pointer_cast<dag::Target>(val))
+	{
+		const Type& t = target->type();
+		if (t.isFile() or (t.isOrdered() and t[0].isFile()))
+			ctx.Alias(target);
+	}
+
+	assert(val);
+	ctx.Define(valueName, val);
+
+	return val;
 }

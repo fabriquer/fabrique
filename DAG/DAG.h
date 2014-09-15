@@ -32,8 +32,6 @@
 #ifndef DAG_H
 #define DAG_H
 
-#include "ADT/StringMap.h"
-#include "ADT/UniqPtr.h"
 #include "DAG/Value.h"
 #include "Support/Printable.h"
 
@@ -41,23 +39,12 @@
 
 
 namespace fabrique {
-
-class Arguments;
-class TypeContext;
-
-namespace ast {
-	class Expression;
-	class Identifier;
-	class Scope;
-}
-
 namespace dag {
 
 class Build;
 class File;
 class Rule;
 class Target;
-class Value;
 
 
 /**
@@ -66,11 +53,6 @@ class Value;
 class DAG : public Printable
 {
 public:
-	static UniqPtr<DAG> Flatten(const ast::Scope&, TypeContext&,
-	                            std::string srcroot, std::string buildroot,
-	                            const std::vector<std::string>& inputFiles,
-	                            std::string outputFile, const Arguments& args);
-
 	virtual const std::string& buildroot() const = 0;
 	virtual const std::string& srcroot() const = 0;
 

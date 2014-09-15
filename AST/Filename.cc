@@ -30,13 +30,19 @@
  */
 
 #include "AST/Argument.h"
+#include "AST/Builtins.h"
 #include "AST/Filename.h"
 #include "AST/Visitor.h"
+#include "DAG/EvalContext.h"
+#include "DAG/File.h"
 #include "Support/Bytestream.h"
+#include "Support/exceptions.h"
 #include "Types/FileType.h"
 
+#include <cassert>
 #include <set>
 
+using namespace fabrique;
 using namespace fabrique::ast;
 using std::string;
 
@@ -101,4 +107,31 @@ void Filename::Accept(Visitor& v) const
 	}
 
 	v.Leave(*this);
+}
+
+dag::ValuePtr Filename::evaluate(dag::EvalContext& ctx) const
+{
+	const string filename = name().evaluate(ctx)->str();
+
+	assert(ctx.Lookup(ast::Subdirectory));
+	string subdirectory = ctx.Lookup(ast::Subdirectory)->str();
+
+	dag::ValueMap attributes;
+	for (const UniqPtr<ast::Argument>& a : args_)
+	{
+		if (not a->hasName())
+			throw SemanticException("file arguments must have names",
+			                        a->source());
+
+		const string& name = a->getName().name();
+		dag::ValuePtr value = a->getValue().evaluate(ctx);
+
+		if (name == ast::Subdirectory)
+			subdirectory = value->str();
+
+		else
+			attributes[name] = value;
+	}
+
+	return ctx.File(subdirectory, filename, attributes, type(), source());
 }

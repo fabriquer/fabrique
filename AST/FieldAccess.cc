@@ -39,6 +39,7 @@
 
 #include <cassert>
 
+using namespace fabrique;
 using namespace fabrique::ast;
 
 
@@ -68,4 +69,24 @@ void FieldAccess::Accept(Visitor& v) const
 	}
 
 	v.Leave(*this);
+}
+
+
+dag::ValuePtr FieldAccess::evaluate(dag::EvalContext& ctx) const
+{
+	dag::ValuePtr base = base_->evaluate(ctx);
+	if (not base->hasFields())
+		throw AssertionFailure("base->hasFields()",
+			base->type().str() + " (" + typeid(*base).name()
+			+ ") should have fields");
+
+	const std::string fieldName(field_->name());
+	dag::ValuePtr field = base->field(fieldName);
+
+	if (not field)
+		throw AssertionFailure("field",
+			base->type().str() + " (" + typeid(*base).name()
+			+ ") should have field '" + fieldName + "'");
+
+	return field;
 }

@@ -34,10 +34,17 @@
 #include "AST/Parameter.h"
 #include "AST/Value.h"
 #include "AST/Visitor.h"
+#include "DAG/EvalContext.h"
+#include "DAG/Function.h"
+#include "DAG/Parameter.h"
 #include "Support/Bytestream.h"
 #include "Types/FunctionType.h"
 
+#include <cassert>
+
+using namespace fabrique;
 using namespace fabrique::ast;
+using std::dynamic_pointer_cast;
 
 
 Function::Function(UniqPtrVec<Parameter>& params, const FunctionType& ty,
@@ -92,4 +99,14 @@ void Function::Accept(Visitor& v) const
 	}
 
 	v.Leave(*this);
+}
+
+
+dag::ValuePtr Function::evaluate(dag::EvalContext& ctx) const
+{
+	SharedPtrVec<dag::Parameter> parameters;
+	for (auto& p : this->parameters())
+		parameters.emplace_back(p->evaluate(ctx));
+
+	return ctx.Function(*this, parameters);
 }

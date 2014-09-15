@@ -32,10 +32,16 @@
 #include "AST/Node.h"
 #include "AST/SymbolReference.h"
 #include "AST/Visitor.h"
-
+#include "DAG/EvalContext.h"
+#include "DAG/Structure.h"
+#include "DAG/UndefinedValueException.h"
 #include "Support/Bytestream.h"
+#include "Support/exceptions.h"
+#include "Types/Type.h"
 
+using namespace fabrique;
 using namespace fabrique::ast;
+using std::string;
 
 
 SymbolReference::SymbolReference(UniqPtr<Node>&& name, const Type& t)
@@ -57,4 +63,63 @@ void SymbolReference::Accept(Visitor& v) const
 		name_->Accept(v);
 
 	v.Leave(*this);
+}
+
+dag::ValuePtr SymbolReference::evaluate(dag::EvalContext& ctx) const
+{
+	static Bytestream& debug = Bytestream::Debug("eval.lookup");
+	const string& name = Type::UntypedPart(name_->str());
+
+	std::shared_ptr<dag::Structure> base;
+	dag::ValuePtr value;
+
+	//
+	// A symbol reference can have multiple dot-separated components:
+	//
+	// foo = bar.baz.wibble;
+	//
+	// In this case, 'bar' and 'bar.baz' must both be structures
+	// (things that can contain named things), but 'wibble' can
+	// be any kind of Value.
+	//
+	// Iterate over each name component.
+	//
+	for (size_t begin = 0, end; begin < name.length(); begin = end + 1)
+	{
+		end = name.find('.', begin + 1);
+		const string component = name.substr(begin, end - begin);
+
+		debug
+			<< Bytestream::Action << "lookup component "
+			<< Bytestream::Operator << "'"
+			<< Bytestream::Literal << component
+			<< Bytestream::Operator << "'"
+			<< Bytestream::Reset << "\n"
+			;
+
+		value = base
+			? base->field(component)
+			: ctx.Lookup(component);
+
+		if (not value)
+			throw dag::UndefinedValueException(
+				name.substr(0, end), source());
+
+		// Is this the last component?
+		if (end == string::npos)
+			break;
+
+		// Not the last component: must be a structure!
+		base = std::dynamic_pointer_cast<dag::Structure>(value);
+		if (not base)
+			throw SemanticException(
+				name.substr(0, end)
+				+ " (" + typeid(*value).name() + ") is not a structure",
+				source());
+	}
+
+	if (not value)
+		throw dag::UndefinedValueException(name, source());
+
+	return value;
 }

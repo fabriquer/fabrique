@@ -47,6 +47,8 @@ using std::vector;
 Callable::Callable(const SharedPtrVec<Parameter>& p)
 	: parameters_(p)
 {
+	for (auto& param : parameters_)
+		assert(param);
 }
 
 Callable::~Callable()
@@ -116,12 +118,15 @@ Callable::NameArguments(const vector<string>& args, SourceRange src) const
 
 	dbg << "\n to parameters:\n ";
 	for (auto& p : parameters_)
+	{
+		assert(p);
 		dbg << " "
 			<< Bytestream::Definition << p->name()
 			<< Bytestream::Operator << ":"
 			<< p->type()
 			<< Bytestream::Reset
 			;
+	}
 
 	dbg << "\n";
 

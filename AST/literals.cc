@@ -31,8 +31,10 @@
 
 #include "AST/literals.h"
 #include "AST/Visitor.h"
+#include "DAG/Primitive.h"
 #include "Support/Bytestream.h"
 
+using namespace fabrique;
 using namespace fabrique::ast;
 
 
@@ -50,6 +52,11 @@ void BoolLiteral::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 
 void BoolLiteral::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }
 
+dag::ValuePtr BoolLiteral::evaluate(dag::EvalContext&) const
+{
+	return dag::ValuePtr(new dag::Boolean(value(), type(), source()));
+}
+
 
 std::string IntLiteral::str() const
 {
@@ -62,6 +69,11 @@ void IntLiteral::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 }
 
 void IntLiteral::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }
+
+dag::ValuePtr IntLiteral::evaluate(dag::EvalContext&) const
+{
+	return dag::ValuePtr(new dag::Integer(value(), type(), source()));
+}
 
 
 std::string StringLiteral::str() const { return value(); }
@@ -105,3 +117,8 @@ void StringLiteral::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 }
 
 void StringLiteral::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }
+
+dag::ValuePtr StringLiteral::evaluate(dag::EvalContext&) const
+{
+	return dag::ValuePtr(new dag::String(value(), type(), source()));
+}

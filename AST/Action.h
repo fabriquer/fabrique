@@ -71,6 +71,8 @@ public:
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 
+	virtual dag::ValuePtr evaluate(dag::EvalContext&) const override;
+
 private:
 	Action(UniqPtrVec<Argument>&, UniqPtrVec<Parameter>&,
 	       const FunctionType&, const SourceRange&);

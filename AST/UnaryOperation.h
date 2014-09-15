@@ -66,6 +66,8 @@ public:
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 
+	virtual dag::ValuePtr evaluate(dag::EvalContext&) const override;
+
 private:
 	UnaryOperation(UniqPtr<Expression>& e, enum Operator op,
 	               const Type& ty, const SourceRange& loc);

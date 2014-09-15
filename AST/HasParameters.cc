@@ -39,9 +39,8 @@
 #include "Types/Type.h"
 #include "Types/TypeError.h"
 
+using namespace fabrique;
 using namespace fabrique::ast;
-using fabrique::UniqPtrVec;
-using fabrique::StringMap;
 using std::string;
 using std::vector;
 

@@ -24,10 +24,9 @@ objs = cc_all(srcs);
 bin = link(objs, file('foo'));
 
 
-# CHECK: srcs= ${srcroot}/foo.c ${srcroot}/bar.c ${srcroot}/baz.c
-#
 # CHECK-DAG: bin : foo
 # CHECK-DAG: gen : foo.c
+# CHECK-DAG: srcs : ${srcroot}/foo.c ${srcroot}/bar.c ${srcroot}/baz.c
 # CHECK-DAG: objs : foo.c.o bar.c.o baz.c.o
 #
 # CHECK-DAG: foo.c : ${srcroot}/foo.yy

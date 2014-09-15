@@ -7,8 +7,8 @@
 # CHECK-DAG: link_executable = ${CC} -o ${executable}{{.*}}<-{{.*}} CC:file[in] = /usr/bin/cc
 cc = import('Inputs/cc.fab', compiler = file('/usr/bin/cc'));
 
-# CHECK-DAG: build: compile_one { Inputs/foo.c =>{{.*}} Inputs/foo.c.o
+# CHECK-DAG: build: cc.compile_one { Inputs/foo.c =>{{.*}} Inputs/foo.c.o
 obj = cc.compile(files(Inputs/foo.c));
 
-# CHECK-DAG: build: link_executable { Inputs/foo.c.o => foo }
+# CHECK-DAG: build: cc.link_executable { Inputs/foo.c.o => foo }
 bin = cc.link_executable(obj, executable = file('foo'));

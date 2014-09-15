@@ -32,10 +32,13 @@
 #include "AST/FieldQuery.h"
 #include "AST/Identifier.h"
 #include "AST/Visitor.h"
+#include "DAG/Structure.h"
 #include "Support/Bytestream.h"
+#include "Types/Type.h"
 
 #include <cassert>
 
+using namespace fabrique;
 using namespace fabrique::ast;
 
 
@@ -72,4 +75,24 @@ void FieldQuery::Accept(Visitor& v) const
 	}
 
 	v.Leave(*this);
+}
+
+
+dag::ValuePtr FieldQuery::evaluate(dag::EvalContext& ctx) const
+{
+	const Type::TypeMap fields = base_->type().fields();
+	const std::string fieldName(field_->name());
+
+	auto i = fields.find(fieldName);
+	if (i == fields.end())
+	{
+		// The field doesn't exist, use the default value.
+		return defaultValue().evaluate(ctx);
+	}
+
+	std::shared_ptr<dag::Structure> base =
+		std::dynamic_pointer_cast<dag::Structure>(base_->evaluate(ctx));
+	assert(base);
+
+	return base->field(fieldName);
 }

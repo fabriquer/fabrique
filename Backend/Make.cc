@@ -138,6 +138,9 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out, ErrorReport::Rep
 
 	for (auto& i : dag.variables())
 	{
+		if (dynamic_pointer_cast<Rule>(i.second))
+			continue;
+
 		out
 			<< Bytestream::Definition << i.first
 			<< Bytestream::Operator << "=" << indent_

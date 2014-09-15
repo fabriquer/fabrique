@@ -38,6 +38,7 @@
 
 #include <cassert>
 
+using namespace fabrique;
 using namespace fabrique::ast;
 using std::function;
 using std::shared_ptr;
@@ -128,6 +129,41 @@ void BinaryOperation::Accept(Visitor& v) const
 	}
 
 	v.Leave(*this);
+}
+
+
+dag::ValuePtr BinaryOperation::evaluate(fabrique::dag::EvalContext& ctx) const
+{
+	dag::ValuePtr lhs = lhs_->evaluate(ctx);
+	dag::ValuePtr rhs = rhs_->evaluate(ctx);
+	assert(lhs and rhs);
+
+	switch (op_)
+	{
+		case Add:       return lhs->Add(rhs);
+		case Prefix:    return rhs->PrefixWith(lhs);
+		case And:       return lhs->And(rhs);
+		case Or:        return lhs->Or(rhs);
+		case Xor:       return lhs->Xor(rhs);
+		case Equal:     return lhs->Equals(rhs);
+		case NotEqual:  return lhs->Equals(rhs)->Negate(source());
+
+		case ScalarAdd:
+			if (lhs->canScalarAdd(*rhs))
+				return lhs->ScalarAdd(rhs);
+
+			else if (rhs->canScalarAdd(*lhs))
+				return rhs->ScalarAdd(lhs);
+
+			else
+				throw SemanticException(
+					"invalid types for addition", source());
+
+		case Invalid:
+			throw SemanticException("invalid operation", source());
+	}
+
+	assert(false && "unreachable");
 }
 
 

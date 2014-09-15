@@ -79,7 +79,7 @@ const Type& Scope::Lookup(const Identifier& id) const
 
 	auto i = symbols_.find(name);
 	if (i != symbols_.end())
-		return i->second->type();
+		return i->second;
 
 	if (parent_)
 		return parent_->Lookup(id);
@@ -104,33 +104,31 @@ void Scope::Register(const Argument *a)
 {
 	assert(a);
 	assert(a->hasName());
-	Register(a->getName(), &a->getValue());
+	Register(a->getName(), a->getValue().type());
 }
 
 
 void Scope::Register(const Parameter *p)
 {
 	assert(p);
-	Register(p->getName(), p);
+	Register(p->getName(), p->type());
 }
 
 
 void Scope::Register(const Value& v)
 {
-	Register(v.name(), &v.value());
+	Register(v.name(), v.value().type());
 }
 
 
-void Scope::Register(const Identifier& id, const Expression *e)
+void Scope::Register(const Identifier& id, const Type& t)
 {
-	assert(e);
-
 	Bytestream::Debug("ast.scope")
 		<< Bytestream::Action << "scope"
 		<< Bytestream::Operator << " <- "
 		<< Bytestream::Type << "symbol"
-		<< Bytestream::Operator << ": " << id
-		<< Bytestream::Operator << " = " << *e
+		<< Bytestream::Operator << " = " << id
+		<< Bytestream::Operator << ": " << t
 		<< "\n"
 		;
 
@@ -138,7 +136,7 @@ void Scope::Register(const Identifier& id, const Expression *e)
 		throw SyntaxError("name '" + id.name() + "' already defined",
 		                  id.source());
 
-	symbols_[id.name()] = e;
+	symbols_.emplace(id.name(), t);
 }
 
 
@@ -184,9 +182,7 @@ void Scope::PrettyPrint(Bytestream& out, size_t indent) const
 			<< tabs
 			<< Bytestream::Definition << symbol.first
 			<< Bytestream::Operator << ":"
-			<< symbol.second->type()
-			<< Bytestream::Operator << " = "
-			<< *symbol.second
+			<< symbol.second
 			<< Bytestream::Reset << "\n"
 			;
 

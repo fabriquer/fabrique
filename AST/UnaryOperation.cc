@@ -38,6 +38,7 @@
 
 #include <cassert>
 
+using namespace fabrique;
 using namespace fabrique::ast;
 
 
@@ -99,6 +100,24 @@ void UnaryOperation::Accept(Visitor& v) const
 		subexpr_->Accept(v);
 
 	v.Leave(*this);
+}
+
+
+dag::ValuePtr UnaryOperation::evaluate(dag::EvalContext& ctx) const
+{
+	dag::ValuePtr subexpr = subexpr_->evaluate(ctx);
+	assert(subexpr);
+
+	switch (op_)
+	{
+		case ast::UnaryOperation::Negate:
+			return subexpr->Negate(source());
+
+		case ast::UnaryOperation::Invalid:
+			throw SemanticException("Invalid operation", source());
+	}
+
+	assert(false && "unreachable");
 }
 
 

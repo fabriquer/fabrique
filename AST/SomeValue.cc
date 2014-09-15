@@ -29,13 +29,18 @@
  * SUCH DAMAGE.
  */
 
+#include "AST/Builtins.h"
 #include "AST/Scope.h"
 #include "AST/SomeValue.h"
 #include "AST/Visitor.h"
+#include "DAG/EvalContext.h"
+#include "DAG/Primitive.h"
 #include "Support/Bytestream.h"
+#include "Types/TypeContext.h"
 
 #include <cassert>
 
+using namespace fabrique;
 using namespace fabrique::ast;
 
 
@@ -58,4 +63,26 @@ void SomeValue::Accept(Visitor& v) const
 		initializer_->Accept(v);
 
 	v.Leave(*this);
+}
+
+dag::ValuePtr SomeValue::evaluate(dag::EvalContext& ctx) const
+{
+	const Type& t = type();
+
+	dag::ValuePtr exists(
+		new dag::Boolean(true, t.context().booleanType(), source())
+	);
+
+	std::vector<dag::Structure::NamedValue> values {
+		{
+			ast::MaybeExists,
+			exists
+		},
+		{
+			ast::MaybeValue,
+			initializer_->evaluate(ctx)
+		},
+	};
+
+	return ctx.Struct(values, t, source());
 }

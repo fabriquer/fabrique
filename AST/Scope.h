@@ -70,7 +70,7 @@ public:
 	Scope(Scope&&);
 	virtual ~Scope() {}
 
-	typedef StringMap<const Expression*> SymbolMap;
+	typedef StringMap<const Type&> SymbolMap;
 	const SymbolMap& symbols() const { return symbols_; }
 
 	const std::string& name() const { return name_; }
@@ -93,7 +93,7 @@ public:
 	virtual void Accept(Visitor&) const;
 
 private:
-	void Register(const Identifier&, const Expression*);
+	void Register(const Identifier&, const Type&);
 
 	const Scope *parent_;
 	const std::string name_;

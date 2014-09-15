@@ -30,12 +30,25 @@
  */
 
 #include "AST/Call.h"
+#include "AST/Function.h"
 #include "AST/Visitor.h"
+#include "DAG/Build.h"
+#include "DAG/Callable.h"
+#include "DAG/EvalContext.h"
+#include "DAG/Function.h"
+#include "DAG/Parameter.h"
+#include "DAG/Rule.h"
 #include "Support/Bytestream.h"
 #include "Support/SourceLocation.h"
+#include "Support/exceptions.h"
 #include "Types/FunctionType.h"
 
+#include <cassert>
+
+using namespace fabrique;
 using namespace fabrique::ast;
+using std::dynamic_pointer_cast;
+using std::shared_ptr;
 
 
 Call::Call(UniqPtr<Expression>& target, UniqPtrVec<Argument>& a,
@@ -77,4 +90,81 @@ void Call::Accept(Visitor& v) const
 	}
 
 	v.Leave(*this);
+}
+
+dag::ValuePtr Call::evaluate(dag::EvalContext& ctx) const
+{
+	Bytestream& dbg = Bytestream::Debug("eval.call");
+
+	dag::ValuePtr value = target_->evaluate(ctx);
+	dbg << Bytestream::Action << "calling " << *target_ << "\n";
+
+	auto target = dynamic_pointer_cast<dag::Callable>(value);
+	assert(target);
+
+	//
+	// Check argument legality.
+	//
+	for (auto& a : args_)
+		if (a->hasName()
+		    and not target->hasParameterNamed(a->getName().name()))
+			// TODO: argument, not parameter!
+			throw SemanticException("invalid parameter", a->source());
+
+	dag::ValueMap args;
+	StringMap<SourceRange> argLocations;
+	for (auto& i : target->NameArguments(args_))
+	{
+		const std::string name = i.first;
+		const ast::Argument& arg = *i.second;
+
+		argLocations.emplace(name, arg.source());
+		args[name] = arg.evaluate(ctx);
+	}
+
+	target->CheckArguments(args, argLocations, source());
+
+	//
+	// The target must be an action or a function.
+	//
+	if (auto rule = dynamic_pointer_cast<dag::Rule>(target))
+	{
+		// Builds need the parameter types, not just the argument types.
+		ConstPtrMap<Type> paramTypes;
+		for (auto& p : target->parameters())
+			paramTypes[p->name()] = &p->type();
+
+		return ctx.Build(rule, args, paramTypes, source());
+	}
+	else if (auto fn = dynamic_pointer_cast<dag::Function>(target))
+	{
+		//
+		// When executing a function, we don't use symbols in scope
+		// at the call site, only those in scope at the function
+		// definition site.
+		//
+		// We will return to the original stack when the
+		// `fnScope` object goes out of scope.
+		//
+		auto fnScope(ctx.ChangeScopeStack(fn->scope()));
+
+		//
+		// We evaluate the function with the given arguments by
+		// putting default paramters and arguments into the local scope
+		// and then evalating the function's CompoundExpr.
+		//
+		auto scope(ctx.EnterScope("function call evaluation"));
+
+		for (auto& p : fn->function().parameters())
+			if (const UniqPtr<ast::Expression>& v = p->defaultValue())
+				scope.set(p->getName().name(),
+				          v->evaluate(ctx));
+
+		for (auto& i : args)
+			scope.set(i.first, i.second);
+
+		return fn->function().body().evaluate(ctx);
+	}
+
+	assert(false && "unreachable");
 }

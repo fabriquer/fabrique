@@ -33,9 +33,14 @@
 #include "AST/Parameter.h"
 #include "AST/Value.h"
 #include "AST/Visitor.h"
+#include "DAG/EvalContext.h"
+#include "DAG/List.h"
 #include "Support/Bytestream.h"
 #include "Types/Type.h"
 
+#include <cassert>
+
+using namespace fabrique;
 using namespace fabrique::ast;
 
 
@@ -70,4 +75,35 @@ void ForeachExpr::Accept(Visitor& v) const
 	}
 
 	v.Leave(*this);
+}
+
+
+dag::ValuePtr ForeachExpr::evaluate(dag::EvalContext& ctx) const
+{
+	SharedPtrVec<dag::Value> values;
+
+	auto target = sourceSequence().evaluate(ctx);
+	assert(target->type().isOrdered());
+	assert(target->asList());
+
+	//
+	// For each input element, put its value in scope as the loop parameter
+	// and then evaluate the CompoundExpression.
+	//
+	const ast::Parameter& loopParam = loopParameter();
+	for (const dag::ValuePtr& element : *target->asList())
+	{
+		assert(element->type().isSubtype(loopParameter().type()));
+
+		auto scope(ctx.EnterScope("foreach body"));
+		scope.set(loopParam.getName().name(), element);
+
+		dag::ValuePtr result = body_->evaluate(ctx);
+		assert(result);
+		assert(result->type().isSubtype(body_->type()));
+
+		values.push_back(std::move(result));
+	}
+
+	return dag::ValuePtr(dag::List::of(values, source(), type().context()));
 }

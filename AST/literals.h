@@ -70,6 +70,7 @@ public:
 
 	std::string str() const;
 
+	virtual dag::ValuePtr evaluate(dag::EvalContext&) const override;
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 };
@@ -84,6 +85,7 @@ public:
 
 	std::string str() const;
 
+	virtual dag::ValuePtr evaluate(dag::EvalContext&) const override;
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 };
@@ -100,6 +102,7 @@ public:
 
 	std::string str() const;
 
+	virtual dag::ValuePtr evaluate(dag::EvalContext&) const override;
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 };

@@ -33,8 +33,11 @@
 #include "AST/Conditional.h"
 #include "AST/Value.h"
 #include "AST/Visitor.h"
+#include "DAG/Primitive.h"
 #include "Support/Bytestream.h"
+#include "Types/TypeError.h"
 
+using namespace fabrique;
 using namespace fabrique::ast;
 
 
@@ -74,4 +77,17 @@ void Conditional::Accept(Visitor& v) const
 	}
 
 	v.Leave(*this);
+}
+
+
+dag::ValuePtr Conditional::evaluate(dag::EvalContext& ctx) const
+{
+	std::shared_ptr<dag::Boolean> cond =
+		std::dynamic_pointer_cast<dag::Boolean>(condition_->evaluate(ctx));
+
+	if (not cond)
+		throw WrongTypeException("bool", type(), source());
+
+	// Evaluate either the "then" or the "else" clause.
+	return (cond->value() ? thenClause_ : elseClause_)->evaluate(ctx);
 }

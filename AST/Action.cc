@@ -32,6 +32,9 @@
 #include "ADT/UniqPtr.h"
 #include "AST/Action.h"
 #include "AST/Visitor.h"
+#include "DAG/EvalContext.h"
+#include "DAG/Parameter.h"
+#include "DAG/Primitive.h"
 #include "Support/Bytestream.h"
 #include "Types/FileType.h"
 #include "Types/FunctionType.h"
@@ -41,13 +44,8 @@
 
 #include <cassert>
 
+using namespace fabrique;
 using namespace fabrique::ast;
-using fabrique::FileType;
-using fabrique::SequenceType;
-using fabrique::StringMap;
-using fabrique::Type;
-using fabrique::UniqPtrMap;
-using fabrique::UniqPtrVec;
 using std::string;
 
 
@@ -170,4 +168,51 @@ void Action::Accept(Visitor& v) const
 	}
 
 	v.Leave(*this);
+}
+
+dag::ValuePtr Action::evaluate(dag::EvalContext& ctx) const
+{
+	string command;
+	dag::ValueMap arguments;
+
+	if (args_.size() < 1)
+		throw SemanticException("Missing action arguments", source());
+
+	for (const UniqPtr<Argument>& arg : args_)
+	{
+		// Evaluate the argument as a string.
+		dag::ValuePtr value = arg->getValue().evaluate(ctx);
+
+		// The only keyword-less argument to action() is its command.
+		if (not arg->hasName() or arg->getName().name() == "command")
+		{
+			if (not command.empty())
+				throw SemanticException(
+					"Duplicate command", arg->source());
+
+			command = value->str();
+			continue;
+		}
+
+		dag::ValuePtr v(
+			new dag::String(value->str(), type().context().stringType(),
+			                arg->source())
+		);
+		arguments.emplace(arg->getName().name(), v);
+	}
+
+	SharedPtrVec<dag::Parameter> parameters;
+	for (const UniqPtr<Parameter>& p : this->parameters())
+	{
+		// Ensure that files are properly tagged as input or output.
+		FileType::CheckFileTags(p->type(), p->source());
+
+		std::shared_ptr<dag::Parameter> param =
+			std::dynamic_pointer_cast<dag::Parameter>(p->evaluate(ctx));
+
+		assert(param);
+		parameters.emplace_back(param);
+	}
+
+	return ctx.Rule(command, arguments, parameters, type(), source());
 }

@@ -35,9 +35,11 @@
 #include "AST/Scope.h"
 #include "AST/StructInstantiation.h"
 #include "AST/Visitor.h"
+#include "DAG/EvalContext.h"
 #include "Support/Bytestream.h"
 #include "Types/StructureType.h"
 
+using namespace fabrique;
 using namespace fabrique::ast;
 
 
@@ -75,4 +77,18 @@ void StructInstantiation::Accept(Visitor& v) const
 		scope().Accept(v);
 
 	v.Leave(*this);
+}
+
+dag::ValuePtr StructInstantiation::evaluate(dag::EvalContext& ctx) const
+{
+	auto instantiationScope(ctx.EnterScope("struct instantiation"));
+
+	std::vector<dag::Structure::NamedValue> values;
+
+	for (auto& field : scope().values())
+		values.emplace_back(
+			field->name().name(),
+			field->evaluate(ctx));
+
+	return ctx.Struct(values, type(), source());
 }

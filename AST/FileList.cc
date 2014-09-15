@@ -29,11 +29,23 @@
  * SUCH DAMAGE.
  */
 
+#include "AST/Builtins.h"
 #include "AST/FileList.h"
 #include "AST/Visitor.h"
+#include "DAG/EvalContext.h"
+#include "DAG/File.h"
+#include "DAG/List.h"
+#include "DAG/Primitive.h"
 #include "Support/Bytestream.h"
+#include "Support/exceptions.h"
+#include "Support/os.h"
+#include "Types/TypeContext.h"
 
+#include <cassert>
+
+using namespace fabrique;
 using namespace fabrique::ast;
+using std::string;
 
 
 void FileList::PrettyPrint(Bytestream& out, size_t /*indent*/) const
@@ -62,4 +74,41 @@ void FileList::Accept(Visitor& v) const
 	}
 
 	v.Leave(*this);
+}
+
+dag::ValuePtr FileList::evaluate(dag::EvalContext& ctx) const
+{
+	assert(ctx.Lookup(ast::Subdirectory));
+	const string subdir = ctx.Lookup(ast::Subdirectory)->str();
+
+	auto scope(ctx.EnterScope("files"));
+	SharedPtrVec<dag::Value> files;
+
+	for (const UniqPtr<Argument>& arg : arguments())
+	{
+		const string name = arg->getName().name();
+		if (name == ast::Subdirectory)
+		{
+			const string subsubdir =
+				arg->getValue().evaluate(ctx)->str();
+
+			const string completeSubdir = JoinPath(subdir, subsubdir);
+			const SourceRange& src = arg->getValue().source();
+
+			scope.set(name, ctx.String(completeSubdir, src));
+		}
+
+		else
+			throw SemanticException("unexpected argument",
+			                        arg->source());
+	}
+
+	for (const UniqPtr<Filename>& file : files_)
+		files.push_back(
+			std::dynamic_pointer_cast<dag::File>(
+				file->evaluate(ctx)));
+
+	scope.leave();
+
+	return dag::ValuePtr(dag::List::of(files, source(), type().context()));
 }
