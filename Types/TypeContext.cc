@@ -117,6 +117,14 @@ const Type& TypeContext::booleanType()
 	return t;
 }
 
+const Type& TypeContext::integerType()
+{
+	static const Type& t = Register(
+		new Type("int", PtrVec<Type>(), *this));
+
+	return t;
+}
+
 const Type& TypeContext::listOf(const Type& elementTy, const SourceRange& src)
 {
 	PtrVec<Type> params(1, &elementTy);

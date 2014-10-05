@@ -66,6 +66,9 @@ public:
 	//! The type of a boolean expression.
 	const Type& booleanType();
 
+	//! The type of an integer number.
+	const Type& integerType();
+
 	//! The type of a list.
 	const Type& listOf(const Type&, const SourceRange&);
 
