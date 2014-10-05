@@ -59,7 +59,7 @@ void yyerror(const char *str)
 
 int yylex(void *yaccUnion)
 {
-	return Lexer::instance().yylex((YYSTYPE*) yaccUnion);
+	return Lexer::instance().yylex(static_cast<YYSTYPE*>(yaccUnion));
 }
 
 

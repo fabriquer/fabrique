@@ -78,7 +78,10 @@ public:
 	Bytestream& operator << (enum Format);
 
 private:
-	enum Colour Background(enum Colour c) { return (enum Colour) (c + 10); }
+	enum Colour Background(enum Colour c)
+	{
+		return static_cast<enum Colour>(c + 10);
+	}
 
 	void set(enum Colour);
 	void set(enum Modifier);
@@ -279,7 +282,7 @@ void ANSIStream::set(enum Colour c)
 	assert((c >= Black and c < EndOfColours)
 	       or (c >= Background(Black) and c < Background(EndOfColours)));
 
-	out_ << "\x1b[" << (30 + (int) c) << "m";
+	out_ << "\x1b[" << (30 + c) << "m";
 }
 
 void ANSIStream::set(enum Modifier m)
@@ -289,5 +292,5 @@ void ANSIStream::set(enum Modifier m)
 	if (m == ResetAll)
 		out_ << "\x1b[0m";
 	else
-		out_ << "\x1b[" << ((int) m) << "m";
+		out_ << "\x1b[" << static_cast<int>(m) << "m";
 }

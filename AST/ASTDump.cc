@@ -78,7 +78,7 @@ void ASTDump::Write(const string& s, const void *ptr)
 
 	out_
 		<< indent_ << s
-		<< " @ " << (unsigned long) ptr
+		<< " @ " << reinterpret_cast<unsigned long>(ptr)
 		<< "\n"
 		;
 }

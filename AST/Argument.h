@@ -50,7 +50,7 @@ class Argument : public Expression
 public:
 	Argument(UniqPtr<Identifier>& name, UniqPtr<Expression>& value);
 
-	bool hasName() const { return (bool) name_; }
+	bool hasName() const { return static_cast<bool>(name_); }
 	const Identifier& getName() const { return *name_; }
 	const Expression& getValue() const { return *value_; }
 
