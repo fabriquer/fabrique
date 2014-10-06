@@ -18,7 +18,7 @@ ext = foo.extension;
 # CHECK-DAG: list[nil] no_flags = [ ]
 no_flags:list[string] = foo.cflags ? [];
 
-# CHECK-DAG: file sub = .
+# CHECK-DAG: file sub =
 sub = foo.subdir;
 
 # CHECK-DAG: bool gen = false

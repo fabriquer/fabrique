@@ -189,6 +189,9 @@ string fabrique::FileExtension(string path)
 
 string fabrique::FilenameComponent(string pathIncludingDirectory)
 {
+	if (pathIncludingDirectory.empty())
+		return "";
+
 	const char *cname = pathIncludingDirectory.c_str();
 	return basename(const_cast<char*>(cname));
 }
