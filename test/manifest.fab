@@ -1,5 +1,5 @@
 #
-# Generated at Tue  9 Sep 2014 12:49:48 NDT by regenerate-manifest.sh
+# Generated at Sun  5 Oct 2014 22:36:25 NDT by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -46,6 +46,7 @@ all_files = files(
 ./DAG/foreach.fab
 ./DAG/function-apply.fab
 ./DAG/function-arg-type-mismatch.fab
+./DAG/function-default-parameters.fab
 ./DAG/function-named-args.fab
 ./DAG/hello-world.fab
 ./DAG/higher-order-functions.fab
