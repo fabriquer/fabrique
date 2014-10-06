@@ -105,7 +105,7 @@ static UniqPtrVec<T>* NodeVec(YYSTYPE& yyunion)
 %token WHITESPACE
 %token IDENTIFIER FILENAME
 %token IF ELSE FOREACH AS
-%token ACTION FILE_TOKEN FILES FUNCTION IMPORT NIL RETURN SOME STRUCT
+%token ACTION FILE_TOKEN FILES FUNCTION IMPORT NIL RETURN SOME STRUCT TRACE
 %token OPERATOR
 %token INPUT PRODUCES
 %token TRUE FALSE
@@ -147,6 +147,7 @@ expression:
 	| reference
 	| some
 	| structInstantiation
+	| trace
 	| unaryOperation
 	;
 
@@ -520,6 +521,16 @@ structInstantiation:
 structBegin:
 	STRUCT	{ p->EnterScope("struct"); }
 	;
+
+trace:
+	TRACE '(' expression ')'
+	{
+		SourceRange begin = Take(Parser::ParseToken($1))->source();
+		UniqPtr<Expression> expr { TakeNode<Expression>($3) };
+		SourceRange end = Take(Parser::ParseToken($4))->source();
+
+		SetOrDie($$, p->Trace(expr, SourceRange(begin, end)));
+	};
 
 /*
  * 'file' and 'file[in]' are valid types, so we need to do provide

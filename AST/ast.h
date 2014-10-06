@@ -55,6 +55,7 @@
 #include "SomeValue.h"
 #include "StructInstantiation.h"
 #include "SymbolReference.h"
+#include "TracePoint.h"
 #include "UnaryOperation.h"
 #include "Value.h"
 

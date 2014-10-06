@@ -802,6 +802,12 @@ SymbolReference* Parser::Reference(UniqPtr<class FieldAccess>&& access)
 }
 
 
+TracePoint* Parser::Trace(UniqPtr<Expression>& e, SourceRange src)
+{
+	return new TracePoint(e, src);
+}
+
+
 UnaryOperation* Parser::UnaryOp(UnaryOperation::Operator op,
                                 const SourceRange& opSrc,
                                 UniqPtr<Expression>& e)

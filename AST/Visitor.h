@@ -74,6 +74,7 @@ public:
 	VISIT(StringLiteral)
 	VISIT(StructInstantiation)
 	VISIT(SymbolReference)
+	VISIT(TracePoint)
 	VISIT(Type)
 	VISIT(UnaryOperation)
 	VISIT(Value)

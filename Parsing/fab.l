@@ -143,6 +143,7 @@ nil			SetToken(yylval);		return NIL;
 return			SetToken(yylval);		return RETURN;
 some			SetToken(yylval);		return SOME;
 struct			SetToken(yylval);		return STRUCT;
+trace			SetToken(yylval);		return TRACE;
 not			SetToken(yylval);		return NOT;
 and			SetToken(yylval);		return AND;
 or			SetToken(yylval);		return OR;

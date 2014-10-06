@@ -223,6 +223,10 @@ public:
 	SymbolReference* Reference(UniqPtr<class FieldAccess>&&);
 
 
+	//! Create a @ref TracePoint.
+	TracePoint* Trace(UniqPtr<Expression>&, SourceRange);
+
+
 	//! Create a @ref UnaryOperation (currently just 'not').
 	UnaryOperation* UnaryOp(UnaryOperation::Operator,
 	                        const SourceRange& operatorLocation,

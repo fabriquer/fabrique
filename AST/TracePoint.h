@@ -1,6 +1,6 @@
-/** @file AST/ast.h    Meta-include file for all AST node types. */
+/** @file AST/TracePoint.h    Declaration of @ref fabrique::ast::TracePoint. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,40 +29,37 @@
  * SUCH DAMAGE.
  */
 
-#ifndef AST_FORWARD_DECLS_H
-#define AST_FORWARD_DECLS_H
+#ifndef TRACE_POINT_H
+#define TRACE_POINT_H
+
+#include "ADT/UniqPtr.h"
+#include "AST/Expression.h"
+
 
 namespace fabrique {
 namespace ast {
 
-class Action;
-class Argument;
-class BinaryOperation;
-class Call;
-class CompoundExpression;
-class Conditional;
-class FieldAccess;
-class FieldQuery;
-class Filename;
-class FileList;
-class ForeachExpr;
-class Function;
-class Identifier;
-class Import;
-class List;
-class Parameter;
-class Scope;
-class SomeValue;
-class StructInstantiation;
-class SymbolReference;
-class TracePoint;
-class UnaryOperation;
-class Value;
+/**
+ * An operation with two operands.
+ */
+class TracePoint : public Expression
+{
+public:
+	TracePoint(UniqPtr<Expression>&, SourceRange);
+
+	const Expression& expression() const { return *expr_; }
+
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	virtual void Accept(Visitor&) const;
+
+	virtual dag::ValuePtr evaluate(dag::EvalContext&) const override;
+
+private:
+
+	const UniqPtr<Expression> expr_;
+};
 
 } // namespace ast
 } // namespace fabrique
-
-// our use of typedefs means we can't actually forward-declare literals.
-#include "AST/literals.h"
 
 #endif

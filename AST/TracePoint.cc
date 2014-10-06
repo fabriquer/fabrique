@@ -1,6 +1,6 @@
-/** @file AST/ast.h    Meta-include file for all AST node types. */
+/** @file AST/TracePoint.h    Definition of @ref fabrique::ast::TracePoint. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,40 +29,56 @@
  * SUCH DAMAGE.
  */
 
-#ifndef AST_FORWARD_DECLS_H
-#define AST_FORWARD_DECLS_H
+#include "AST/TracePoint.h"
+#include "AST/Visitor.h"
+#include "Support/Bytestream.h"
+#include "Support/ErrorReport.h"
 
-namespace fabrique {
-namespace ast {
+using namespace fabrique::ast;
 
-class Action;
-class Argument;
-class BinaryOperation;
-class Call;
-class CompoundExpression;
-class Conditional;
-class FieldAccess;
-class FieldQuery;
-class Filename;
-class FileList;
-class ForeachExpr;
-class Function;
-class Identifier;
-class Import;
-class List;
-class Parameter;
-class Scope;
-class SomeValue;
-class StructInstantiation;
-class SymbolReference;
-class TracePoint;
-class UnaryOperation;
-class Value;
+TracePoint::TracePoint(UniqPtr<Expression>& e, SourceRange src)
+	: Expression(e->type(), src), expr_(std::move(e))
+{
+}
 
-} // namespace ast
-} // namespace fabrique
 
-// our use of typedefs means we can't actually forward-declare literals.
-#include "AST/literals.h"
+void TracePoint::PrettyPrint(Bytestream& out, size_t indent) const
+{
+	out
+		<< Bytestream::Action << "trace"
+		<< Bytestream::Operator << "("
+		;
 
-#endif
+	expr_->PrettyPrint(out, indent);
+
+	out
+		<< Bytestream::Operator << ")"
+		;
+}
+
+
+void TracePoint::Accept(Visitor& v) const
+{
+	if (v.Enter(*this))
+		expr_->Accept(v);
+
+	v.Leave(*this);
+}
+
+
+fabrique::dag::ValuePtr TracePoint::evaluate(fabrique::dag::EvalContext& ctx) const
+{
+	fabrique::dag::ValuePtr value = expr_->evaluate(ctx);
+
+	UniqPtr<ErrorReport> report(
+		ErrorReport::Create("trace point", source(),
+		                    ErrorReport::Severity::Message, 1)
+	);
+
+	Bytestream::Debug("trace")
+		<< *report
+		<< "value: " << *value
+		<< "\n";
+
+	return value;
+}
