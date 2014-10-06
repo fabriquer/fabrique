@@ -1,4 +1,4 @@
-/** @file Support/ErrorReport.h    Declaration of @ref fabrique::ErrorReport. */
+/** @file Support/ErrorReport.cc    Definition of @ref fabrique::ErrorReport. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
