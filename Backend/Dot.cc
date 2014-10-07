@@ -213,7 +213,7 @@ string DotFormatter::Format(const Build& build)
 
 string DotFormatter::Format(const File& f)
 {
-	return f.filename();
+	return f.relativeName();
 }
 
 string DotFormatter::Format(const Function&)
