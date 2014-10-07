@@ -5,6 +5,7 @@ sources = files(
 	Join.cc
 	Printable.cc
 	SourceLocation.cc
+	String.cc
 	Visitable.cc
 	exceptions.cc
 	os-posix.cc
