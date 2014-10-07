@@ -1,4 +1,7 @@
-/** @file AST/TracePoint.h    Declaration of @ref fabrique::ast::TracePoint. */
+/**
+ * @file AST/DebugTracePoint.h
+ * Declaration of @ref fabrique::ast::DebugTracePoint.
+ */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -42,10 +45,10 @@ namespace ast {
 /**
  * An operation with two operands.
  */
-class TracePoint : public Expression
+class DebugTracePoint : public Expression
 {
 public:
-	TracePoint(UniqPtr<Expression>&, SourceRange);
+	DebugTracePoint(UniqPtr<Expression>&, SourceRange);
 
 	const Expression& expression() const { return *expr_; }
 

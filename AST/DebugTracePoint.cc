@@ -1,4 +1,7 @@
-/** @file AST/TracePoint.h    Definition of @ref fabrique::ast::TracePoint. */
+/**
+ * @file AST/DebugTracePoint.h
+ * Definition of @ref fabrique::ast::DebugTracePoint.
+ */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -29,20 +32,21 @@
  * SUCH DAMAGE.
  */
 
-#include "AST/TracePoint.h"
+#include "AST/DebugTracePoint.h"
 #include "AST/Visitor.h"
 #include "Support/Bytestream.h"
 #include "Support/ErrorReport.h"
 
 using namespace fabrique::ast;
+using namespace fabrique;
 
-TracePoint::TracePoint(UniqPtr<Expression>& e, SourceRange src)
+DebugTracePoint::DebugTracePoint(UniqPtr<Expression>& e, SourceRange src)
 	: Expression(e->type(), src), expr_(std::move(e))
 {
 }
 
 
-void TracePoint::PrettyPrint(Bytestream& out, size_t indent) const
+void DebugTracePoint::PrettyPrint(Bytestream& out, size_t indent) const
 {
 	out
 		<< Bytestream::Action << "trace"
@@ -57,7 +61,7 @@ void TracePoint::PrettyPrint(Bytestream& out, size_t indent) const
 }
 
 
-void TracePoint::Accept(Visitor& v) const
+void DebugTracePoint::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
 		expr_->Accept(v);
@@ -66,7 +70,7 @@ void TracePoint::Accept(Visitor& v) const
 }
 
 
-fabrique::dag::ValuePtr TracePoint::evaluate(fabrique::dag::EvalContext& ctx) const
+dag::ValuePtr DebugTracePoint::evaluate(dag::EvalContext& ctx) const
 {
 	fabrique::dag::ValuePtr value = expr_->evaluate(ctx);
 
