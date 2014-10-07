@@ -809,9 +809,9 @@ SymbolReference* Parser::Reference(UniqPtr<class FieldAccess>&& access)
 }
 
 
-TracePoint* Parser::Trace(UniqPtr<Expression>& e, SourceRange src)
+DebugTracePoint* Parser::TracePoint(UniqPtr<Expression>& e, SourceRange src)
 {
-	return new TracePoint(e, src);
+	return new DebugTracePoint(e, src);
 }
 
 

@@ -39,6 +39,7 @@
 #include "Call.h"
 #include "CompoundExpr.h"
 #include "Conditional.h"
+#include "DebugTracePoint.h"
 #include "FieldAccess.h"
 #include "FieldQuery.h"
 #include "Filename.h"
@@ -55,7 +56,6 @@
 #include "SomeValue.h"
 #include "StructInstantiation.h"
 #include "SymbolReference.h"
-#include "TracePoint.h"
 #include "UnaryOperation.h"
 #include "Value.h"
 

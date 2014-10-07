@@ -3,10 +3,10 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: [[DIR:.*]]/trace.fab:8:5: info: trace point
+# CHECK: [[DIR:.*]]/trace.fab:8:5: info: debug trace point
 # CHECK: value: 42
-x = trace(42);
+x = print(42);
 
-# CHECK: [[DIR:.*]]/trace.fab:12:15: info: trace point
+# CHECK: [[DIR:.*]]/trace.fab:12:15: info: debug trace point
 # CHECK: value: [ 3 4 5 6 ]
-y = [ 1 2 ] + trace([ 3 4 ] + [ 5 6 ]);
+y = [ 1 2 ] + print([ 3 4 ] + [ 5 6 ]);

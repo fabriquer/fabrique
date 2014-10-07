@@ -71,7 +71,7 @@ fabrique::dag::ValuePtr TracePoint::evaluate(fabrique::dag::EvalContext& ctx) co
 	fabrique::dag::ValuePtr value = expr_->evaluate(ctx);
 
 	UniqPtr<ErrorReport> report(
-		ErrorReport::Create("trace point", source(),
+		ErrorReport::Create("debug trace point", source(),
 		                    ErrorReport::Severity::Message, 1)
 	);
 

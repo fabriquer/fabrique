@@ -223,8 +223,8 @@ public:
 	SymbolReference* Reference(UniqPtr<class FieldAccess>&&);
 
 
-	//! Create a @ref TracePoint.
-	TracePoint* Trace(UniqPtr<Expression>&, SourceRange);
+	//! Create a @ref DebugTracePoint.
+	DebugTracePoint* TracePoint(UniqPtr<Expression>&, SourceRange);
 
 
 	//! Create a @ref UnaryOperation (currently just 'not').

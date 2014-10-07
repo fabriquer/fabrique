@@ -41,6 +41,7 @@ class BinaryOperation;
 class Call;
 class CompoundExpression;
 class Conditional;
+class DebugTracePoint;
 class FieldAccess;
 class FieldQuery;
 class Filename;
@@ -55,7 +56,6 @@ class Scope;
 class SomeValue;
 class StructInstantiation;
 class SymbolReference;
-class TracePoint;
 class UnaryOperation;
 class Value;
 

@@ -27,7 +27,7 @@ hi def link	fabBuiltin	Function
 syn keyword	fabInOut	in out
 hi def link	fabInOut	Label
 
-syn keyword	fabKeyword	return some trace
+syn keyword	fabKeyword	print return some
 hi def link	fabKeyword	Keyword
 
 syn keyword	fabConditional	if else

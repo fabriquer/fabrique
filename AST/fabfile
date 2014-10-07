@@ -6,6 +6,7 @@ sources = files(
 	Call.cc
 	CompoundExpr.cc
 	Conditional.cc
+	DebugTracePoint.cc
 	Expression.cc
 	FieldAccess.cc
 	FieldQuery.cc
@@ -25,7 +26,6 @@ sources = files(
 	SomeValue.cc
 	StructInstantiation.cc
 	SymbolReference.cc
-	TracePoint.cc
 	UnaryOperation.cc
 	Value.cc
 	Visitor.cc
