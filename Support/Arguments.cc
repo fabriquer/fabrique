@@ -68,10 +68,8 @@ enum optionKind
 	OtherOpt,  //!< Do something else (e.g., usage description.)
 };
 
-// Option validation functions:
+// Extra argument validation:
 static ArgStatus Required(const option::Option&, bool);
-static ArgStatus NonEmpty(const option::Option&, bool);
-static ArgStatus IsOutputFormat(const option::Option&, bool);
 
 //! Possible output file formats (name, tool description).
 const static char* formatStrings[][2] = {
@@ -301,38 +299,6 @@ static ArgStatus Required(const Option& o, bool printErr)
 
 	if (printErr)
 		err << "Option '" << o << "' requires an argument\n";
-
-	return ARG_ILLEGAL;
-}
-
-
-static ArgStatus NonEmpty(const option::Option& o, bool printErr)
-{
-	ArgStatus req = Required(o, printErr);
-	if (req != ARG_OK)
-		return req;
-
-	if (o.arg[0] != '\0')
-		return ARG_OK;
-
-	if (printErr)
-		err << "Missing argument for option '" << o << "'\n";
-
-	return ARG_ILLEGAL;
-}
-
-
-static ArgStatus IsOutputFormat(const Option& opt, bool printErr)
-{
-	ArgStatus basic = NonEmpty(opt, printErr);
-	if (basic != ARG_OK)
-		return basic;
-
-	const string arg(opt.arg);
-
-	for (const char** const& format : formatStrings)
-		if (arg == format[0])
-			return ARG_OK;
 
 	return ARG_ILLEGAL;
 }
