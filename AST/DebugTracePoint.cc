@@ -80,7 +80,14 @@ dag::ValuePtr DebugTracePoint::evaluate(dag::EvalContext& ctx) const
 	);
 
 	Bytestream::Debug("trace") << *report << "value: ";
-	Bytestream::Stdout() << *value << "\n";
+	Bytestream& out = Bytestream::Stdout();
+
+	// Special case: output string literals just as they are.
+	if (auto s = dynamic_cast<const StringLiteral*>(expr_.get()))
+		out << s->str() << "\n";
+
+	else
+		out << *value << "\n";
 
 	return value;
 }
