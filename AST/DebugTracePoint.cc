@@ -79,10 +79,8 @@ dag::ValuePtr DebugTracePoint::evaluate(dag::EvalContext& ctx) const
 		                    ErrorReport::Severity::Message, 1)
 	);
 
-	Bytestream::Debug("trace")
-		<< *report
-		<< "value: " << *value
-		<< "\n";
+	Bytestream::Debug("trace") << *report << "value: ";
+	Bytestream::Stdout() << *value << "\n";
 
 	return value;
 }

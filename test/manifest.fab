@@ -1,5 +1,5 @@
 #
-# Generated at Sun  5 Oct 2014 23:04:04 NDT by regenerate-manifest.sh
+# Generated at Tue  7 Oct 2014 12:53:52 NDT by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -72,6 +72,7 @@ all_files = files(
 ./DAG/subdir.fab
 ./DAG/target-operations.fab
 ./DAG/tool-vs-src-directories.fab
+./DAG/trace-simple.fab
 ./DAG/trace.fab
 ./DAG/unnamed-values.fab
 ./DAG/value-redefinition.fab
