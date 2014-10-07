@@ -50,6 +50,9 @@ namespace backend {
 class Backend
 {
 public:
+	//! Create a new backend using a registered short name.
+	static std::unique_ptr<Backend> Create(const std::string& name);
+
 	virtual ~Backend();
 
 	virtual std::string DefaultFilename() const = 0;

@@ -32,10 +32,6 @@
 #include "AST/ASTDump.h"
 
 #include "Backend/Backend.h"
-#include "Backend/Dot.h"
-#include "Backend/Make.h"
-#include "Backend/Ninja.h"
-#include "Backend/Null.h"
 
 #include "DAG/DAG.h"
 #include "DAG/EvalContext.h"
@@ -58,6 +54,7 @@
 
 using namespace fabrique;
 using fabrique::ast::Parser;
+using fabrique::backend::Backend;
 using std::map;
 using std::string;
 using std::unique_ptr;
@@ -130,58 +127,11 @@ int main(int argc, char *argv[]) {
 		//
 		// Prepare backends to receive the build graph.
 		//
-		using Make = backend::MakeBackend;
-		StringMap<std::function<backend::Backend* ()>> backendFactories =
-		{
-			//
-			// Non-build backends:
-			//
-			{
-				"null",
-				[]() { return new backend::NullBackend(); }
-			},
-			{
-				"dot",
-				backend::DotBackend::Create
-			},
-
-			//
-			// Modern build backends:
-			//
-			{
-				"ninja",
-				backend::NinjaBackend::Create
-			},
-
-			//
-			// Various flavours of Make:
-			//
-			{
-				"make",
-				[]() { return Make::Create(Make::Flavour::POSIX); }
-			},
-			{
-				"bmake",
-				[]() { return Make::Create(Make::Flavour::BSD); }
-			},
-			{
-				"gmake",
-				[]() { return Make::Create(Make::Flavour::GNU); }
-			},
-		};
-
-		UniqPtrVec<backend::Backend> backends;
+		UniqPtrVec<Backend> backends;
 		vector<string> outputFiles;
 		for (const string& format : args->outputFormats)
 		{
-			auto factory = backendFactories.find(format);
-			if (factory == backendFactories.end())
-			{
-				err() << "unknown format '" << format << "'\n";
-				return 1;
-			}
-
-			backends.emplace_back(backendFactories[format]());
+			backends.emplace_back(Backend::Create(format));
 
 			const string filename = backends.back()->DefaultFilename();
 			if (not filename.empty())
@@ -218,7 +168,7 @@ int main(int argc, char *argv[]) {
 		//
 		// Finally, feed the build graph into the backend(s).
 		//
-		for (UniqPtr<backend::Backend>& backend : backends)
+		for (UniqPtr<Backend>& backend : backends)
 		{
 			std::ofstream outfile;
 			unique_ptr<Bytestream> outfileStream;

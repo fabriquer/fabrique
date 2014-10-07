@@ -30,5 +30,49 @@
  */
 
 #include "Backend/Backend.h"
+#include "Backend/Dot.h"
+#include "Backend/Make.h"
+#include "Backend/Ninja.h"
+#include "Backend/Null.h"
+#include "Support/exceptions.h"
+using namespace fabrique::backend;
+using std::unique_ptr;
 
-fabrique::backend::Backend::~Backend() {}
+
+Backend::~Backend() {}
+
+
+//! @todo Create a static backend registration thingy.
+unique_ptr<Backend> Backend::Create(const std::string& name)
+{
+	//
+	// Non-build backends:
+	//
+	if (name == "null")
+		return unique_ptr<Backend>(new backend::NullBackend());
+
+	if (name == "dot")
+		return unique_ptr<Backend>(DotBackend::Create());
+
+	//
+	// Modern build backends:
+	//
+	if (name == "ninja")
+		return unique_ptr<Backend>(backend::NinjaBackend::Create());
+
+	//
+	// Various flavours of Make:
+	//
+	using Make = MakeBackend;
+	if (name == "make")
+		return unique_ptr<Backend>(Make::Create(Make::Flavour::POSIX));
+
+	if (name == "bmake")
+		return unique_ptr<Backend>(Make::Create(Make::Flavour::BSD));
+
+	if (name == "gmake")
+		return unique_ptr<Backend>(Make::Create(Make::Flavour::GNU));
+
+
+	throw UserError("Unknown Fabrique backend '" + name + "'");
+}
