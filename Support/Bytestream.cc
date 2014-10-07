@@ -34,6 +34,7 @@
 
 #include <cassert>
 #include <fstream>
+#include <iostream>
 #include <vector>
 
 #include <fnmatch.h>   // filename-style pattern matching

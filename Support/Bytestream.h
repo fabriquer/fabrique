@@ -32,7 +32,7 @@
 #ifndef BYTESTREAM_H
 #define BYTESTREAM_H
 
-#include <iostream>
+#include <ostream>
 
 
 namespace fabrique {
