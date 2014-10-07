@@ -142,7 +142,14 @@ UniqPtr<Scope> Parser::ParseFile(std::istream& input, const Type& args,
 	dbg << Bytestream::Reset << "\n";
 
 	if (not name.empty())
-		files_.push_back(name);
+	{
+		const string relativeName =
+			(name.find(srcroot_) == 0)
+			? name.substr(srcroot_.length() + 1)
+			: name;
+
+		files_.push_back(relativeName);
+	}
 
 	lexer_.PushFile(input, name);
 	EnterScope(name, args);
