@@ -82,7 +82,7 @@ int main(int argc, char *argv[]) {
 	// Set up debug streams.
 	//
 	Bytestream::SetDebugPattern(args->debugPattern);
-	Bytestream::SetDebugStream(err());
+	Bytestream::SetDebugStream(Bytestream::Stdout());
 
 	Bytestream& argDebug = Bytestream::Debug("cli.args");
 	Arguments::Print(*args, argDebug);

@@ -1,4 +1,4 @@
-# RUN: fab --debug='lex.*' --parse-only %s 2> %t
+# RUN: fab --debug='lex.*' --parse-only %s > %t
 # RUN: FileCheck %s -input-file %t
 
 #

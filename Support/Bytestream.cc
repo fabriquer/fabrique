@@ -127,7 +127,7 @@ private:
 class DebugState
 {
 public:
-	Bytestream *out = &Bytestream::Stderr();
+	Bytestream *out = &Bytestream::Stdout();
 	Bytestream *null = &Bytestream::None();
 	string pattern;
 
