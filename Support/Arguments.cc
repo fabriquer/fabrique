@@ -129,7 +129,7 @@ const option::Descriptor usage[] =
 		"  -D,--define      A value to expose to Fabrique description."
 	},
 	{
-		Format, SetOpt, "f", "format", IsOutputFormat,
+		Format, SetOpt, "f", "format", option::Arg::Optional,
 		formatString.c_str()
 	},
 	{
