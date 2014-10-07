@@ -65,7 +65,7 @@ public:
 	static UniqPtr<DAG> Evaluate(const ast::Scope&, TypeContext&,
 	                             std::string srcroot, std::string buildroot,
 	                             const std::vector<std::string>& inputFiles,
-	                             std::string outputFile,
+	                             const std::vector<std::string>& outputFiles,
 	                             const Arguments& regenerateArguments);
 
 	EvalContext(TypeContext& ctx) : ctx_(ctx)

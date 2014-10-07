@@ -128,13 +128,14 @@ private:
 static ValuePtr AddRegeneration(EvalContext&, TypeContext&,
                                 const Arguments& regenArgs,
                                 const vector<string>& inputFiles,
-                                string outputFile);
+                                const vector<string>& outputFiles);
 
 
 UniqPtr<DAG> EvalContext::Evaluate(const ast::Scope& root, TypeContext& ctx,
                                  string srcroot, string buildroot,
                                  const vector<string>& inputFiles,
-                                 string outputFile, const Arguments& regenArgs)
+                                 const vector<string>& outputFiles,
+                                 const Arguments& regenArgs)
 {
 	EvalContext builder(ctx);
 	auto scope(builder.EnterScope("top level scope"));
@@ -148,8 +149,8 @@ UniqPtr<DAG> EvalContext::Evaluate(const ast::Scope& root, TypeContext& ctx,
 	// If we're generating a real output file (not stdout), add build logic
 	// to re-generate when input Fabrique files change.
 	//
-	if (not outputFile.empty())
-		AddRegeneration(builder, ctx, regenArgs, inputFiles, outputFile);
+	if (not outputFiles.empty())
+		AddRegeneration(builder, ctx, regenArgs, inputFiles, outputFiles);
 
 	//
 	// Ensure all files are unique.
@@ -579,7 +580,7 @@ void EvalContext::Alias(const shared_ptr<class Target>& t)
 static ValuePtr AddRegeneration(EvalContext& stack, TypeContext& ctx,
                                 const Arguments& regenArgs,
                                 const vector<string>& inputFiles,
-                                string outputFile)
+                                const vector<string>& outputFiles)
 {
 	shared_ptr<Value> Nothing;
 	const SourceRange& Nowhere = SourceRange::None();
@@ -599,7 +600,8 @@ static ValuePtr AddRegeneration(EvalContext& stack, TypeContext& ctx,
 	SharedPtrVec<Parameter> params;
 	params.emplace_back(new Parameter("rootInput", inputFileType, Nothing));
 	params.emplace_back(new Parameter("otherInputs", inputType, Nothing));
-	params.emplace_back(new Parameter("output", outputType, Nothing));
+	params.emplace_back(
+		new Parameter("output", ctx.listOf(outputType, Nowhere), Nothing));
 
 	shared_ptr<dag::Rule> rule;
 	{
@@ -632,10 +634,15 @@ static ValuePtr AddRegeneration(EvalContext& stack, TypeContext& ctx,
 			rootInput = file;
 	}
 
+	SharedPtrVec<Value> outputs;
+	for (const string& output : outputFiles)
+		outputs.push_back(stack.File(output, ValueMap(), outputType));
+
 	ValueMap args;
 	args["rootInput"] = rootInput;
 	args["otherInputs"].reset(List::of(otherInputs, Nowhere, ctx));
-	args["output"] = stack.File(outputFile, ValueMap(), outputType, Nowhere);
+
+	args["output"].reset(List::of(outputs, Nowhere, ctx));
 
 	ConstPtrMap<Type> paramTypes;
 	for (auto& p : params)

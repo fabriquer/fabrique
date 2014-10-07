@@ -70,7 +70,7 @@ public:
 	const bool outputFileSpecified;
 
 	const std::vector<std::string> definitions;
-	const std::string format;
+	const std::vector<std::string> outputFormats;
 	const bool parseOnly;
 	const bool printAST;
 	const bool printDAG;

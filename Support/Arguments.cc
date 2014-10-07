@@ -31,6 +31,7 @@
 
 #include "Support/Arguments.h"
 #include "Support/Bytestream.h"
+#include "Support/String.h"
 #include "Support/os.h"
 
 #include <iostream>
@@ -189,9 +190,15 @@ Arguments* Arguments::Parse(int argc, char *argv[])
 	for (Option *o = options[Define]; o; o = o->next())
 		definitions.emplace_back(o->arg);
 
-	const string format = options[Format]
-	                       ? options[Format].arg
-	                       : "ninja";
+	std::vector<string> formats;
+	for (Option *o = options[Format]; o; o = o->next())
+	{
+		std::vector<string> csv = Split(o->arg);
+		formats.insert(formats.end(), csv.begin(), csv.end());
+	}
+
+	if (formats.empty())
+		formats.emplace_back("ninja");
 
 	const string debugPattern = options[DebugPattern]
 	                             ? options[DebugPattern].arg
@@ -203,7 +210,7 @@ Arguments* Arguments::Parse(int argc, char *argv[])
 		output,
 		outputSpecified,
 		definitions,
-		format,
+		formats,
 		options[ParseOnly],
 		options[PrettyPrintAST],
 		options[PrettyPrintDAG],
@@ -225,7 +232,8 @@ std::vector<string> Arguments::ArgVector(const Arguments& args)
 	if (args.parseOnly)
 		argv.push_back("--parse-only");
 	else
-		argv.push_back("--format=" + args.format);
+		for (const string& format : args.outputFormats)
+			argv.push_back("--format=" + format);
 
 	if (args.printAST)
 		argv.push_back("--print-ast");
@@ -263,7 +271,7 @@ void Arguments::Print(const Arguments& args, Bytestream& out)
 		<< ARG(input)
 		<< ARG(output)
 		<< ARG(outputFileSpecified)
-		<< ARG(format)
+		<< ARG(outputFormats)
 		<< ARG(definitions)
 		<< ARG(parseOnly)
 		<< ARG(printAST)

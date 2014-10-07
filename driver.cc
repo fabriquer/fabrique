@@ -128,38 +128,65 @@ int main(int argc, char *argv[]) {
 
 
 		//
-		// Prepare a backend to receive the build graph.
+		// Prepare backends to receive the build graph.
 		//
-		unique_ptr<backend::Backend> backend;
-
-		if (args->format == "null")
-			backend.reset(new backend::NullBackend());
-
-		else if (args->format == "make")
-			backend.reset(backend::MakeBackend::Create(
-				backend::MakeBackend::Flavour::POSIX));
-
-		else if (args->format == "bmake")
-			backend.reset(backend::MakeBackend::Create(
-				backend::MakeBackend::Flavour::BSD));
-
-		else if (args->format == "gmake")
-			backend.reset(backend::MakeBackend::Create(
-				backend::MakeBackend::Flavour::GNU));
-
-		else if (args->format == "ninja")
-			backend.reset(backend::NinjaBackend::Create());
-
-		else if (args->format == "dot")
-			backend.reset(backend::DotBackend::Create());
-
-		else
+		using Make = backend::MakeBackend;
+		StringMap<std::function<backend::Backend* ()>> backendFactories =
 		{
-			err() << "unknown format '" << args->format << "'\n";
-			return 1;
-		}
+			//
+			// Non-build backends:
+			//
+			{
+				"null",
+				[]() { return new backend::NullBackend(); }
+			},
+			{
+				"dot",
+				backend::DotBackend::Create
+			},
 
-		assert(backend);
+			//
+			// Modern build backends:
+			//
+			{
+				"ninja",
+				backend::NinjaBackend::Create
+			},
+
+			//
+			// Various flavours of Make:
+			//
+			{
+				"make",
+				[]() { return Make::Create(Make::Flavour::POSIX); }
+			},
+			{
+				"bmake",
+				[]() { return Make::Create(Make::Flavour::BSD); }
+			},
+			{
+				"gmake",
+				[]() { return Make::Create(Make::Flavour::GNU); }
+			},
+		};
+
+		UniqPtrVec<backend::Backend> backends;
+		vector<string> outputFiles;
+		for (const string& format : args->outputFormats)
+		{
+			auto factory = backendFactories.find(format);
+			if (factory == backendFactories.end())
+			{
+				err() << "unknown format '" << format << "'\n";
+				return 1;
+			}
+
+			backends.emplace_back(backendFactories[format]());
+
+			const string filename = backends.back()->DefaultFilename();
+			if (not filename.empty())
+				outputFiles.push_back(filename);
+		}
 
 
 		//
@@ -168,8 +195,7 @@ int main(int argc, char *argv[]) {
 		unique_ptr<dag::EvalContext> evalCtx;
 		unique_ptr<dag::DAG> dag =
 			dag::EvalContext::Evaluate(*ast, ctx, srcroot, buildroot,
-		                                   parser->files(),
-			                           backend->DefaultFilename(),
+		                                   parser->files(), outputFiles,
 		                                   *args);
 
 		// DAG errors should be reported as exceptions.
@@ -190,25 +216,31 @@ int main(int argc, char *argv[]) {
 
 
 		//
-		// Finally, feed the build graph into the backend.
+		// Finally, feed the build graph into the backend(s).
 		//
-		std::ofstream outfile;
-		unique_ptr<Bytestream> outfileStream;
-
-		const string filename =
-			JoinPath(buildroot, backend->DefaultFilename());
-
-		if (not args->printOutput and args->format != "null")
+		for (UniqPtr<backend::Backend>& backend : backends)
 		{
-			outfile.open(filename.c_str());
-			outfileStream.reset(Bytestream::Plain(outfile));
+			std::ofstream outfile;
+			unique_ptr<Bytestream> outfileStream;
+
+			const string filename =
+				JoinPath(buildroot, backend->DefaultFilename());
+
+			if (not args->printOutput and filename != buildroot)
+			{
+				outfile.open(filename.c_str());
+				outfileStream.reset(Bytestream::Plain(outfile));
+			}
+
+			Bytestream& out = outfileStream
+				? *outfileStream
+				: Bytestream::Stdout();
+
+			backend->Process(*dag, out, reportError);
+
+			outfile.flush();
+			outfile.close();
 		}
-
-		Bytestream& out = outfileStream
-			? *outfileStream
-			: Bytestream::Stdout();
-
-		backend->Process(*dag, out, reportError);
 
 		return 0;
 	}
