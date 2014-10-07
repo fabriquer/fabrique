@@ -66,12 +66,12 @@ generated_cxx_flags =
 #
 cxx_srcs =
 	files(driver.cc)
-	+ import('AST/AST.fab').sources
-	+ import('Backend/Backend.fab').sources
-	+ import('DAG/DAG.fab').sources
-	+ import('Parsing/Parsing.fab').sources
-	+ import('Support/Support.fab').sources
-	+ import('Types/Types.fab').sources
+	+ import('AST').sources
+	+ import('Backend').sources
+	+ import('DAG').sources
+	+ import('Parsing').sources
+	+ import('Support').sources
+	+ import('Types').sources
 	;
 
 
