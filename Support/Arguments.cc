@@ -198,9 +198,10 @@ Arguments* Arguments::Parse(int argc, char *argv[])
 	if (formats.empty())
 		formats.emplace_back("ninja");
 
-	const string debugPattern = options[DebugPattern]
-	                             ? options[DebugPattern].arg
-	                             : "none";
+	const string debugPattern =
+		options[DebugPattern]
+		? (options[DebugPattern].arg ? options[DebugPattern].arg : "*")
+		: "none";
 
 	return new Arguments {
 		help,
