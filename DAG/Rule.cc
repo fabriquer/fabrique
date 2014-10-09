@@ -90,7 +90,7 @@ ValuePtr Rule::Call(const ValueMap& args, EvalContext& ctx, SourceRange loc) con
 	std::shared_ptr<Rule> rule = self_.lock();
 	assert(rule);
 
-	return ctx.Build(rule, args, loc);
+	return ctx.builder().Build(rule, args, loc);
 }
 
 

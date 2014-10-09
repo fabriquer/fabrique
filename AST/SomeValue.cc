@@ -84,5 +84,5 @@ dag::ValuePtr SomeValue::evaluate(dag::EvalContext& ctx) const
 		},
 	};
 
-	return ctx.Struct(values, t, source());
+	return ctx.builder().Struct(values, t, source());
 }

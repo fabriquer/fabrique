@@ -118,15 +118,15 @@ dag::ValuePtr Value::evaluate(dag::EvalContext& ctx) const
 	// convert to a named target (files and builds are already in the DAG).
 	//
 	if (auto build = std::dynamic_pointer_cast<dag::Build>(val))
-		val = ctx.Target(build);
+		val = ctx.builder().Target(build);
 
 	else if (auto file = std::dynamic_pointer_cast<dag::File>(val))
-		val = ctx.Target(file);
+		val = ctx.builder().Target(file);
 
 	else if (auto list = std::dynamic_pointer_cast<dag::List>(val))
 	{
 		if (list->type().elementType().isFile())
-			val = ctx.Target(list);
+			val = ctx.builder().Target(list);
 	}
 	else if (auto target = std::dynamic_pointer_cast<dag::Target>(val))
 	{

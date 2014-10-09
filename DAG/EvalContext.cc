@@ -75,93 +75,16 @@ class Value;
 }
 
 
-namespace {
-
-class ImmutableDAG : public DAG
+std::vector<DAG::BuildTarget> EvalContext::Evaluate(const ast::Scope& root)
 {
-public:
-	ImmutableDAG(string buildroot, string srcroot,
-	             const SharedPtrVec<File>& files,
-	             const SharedPtrVec<Build>& builds,
-	             const SharedPtrMap<Rule>& rules,
-	             const SharedPtrMap<Value>& variables,
-	             const SharedPtrMap<Target>& targets,
-	             vector<BuildTarget>& topLevelTargets)
-		: buildroot_(buildroot), srcroot_(srcroot),
-		  files_(files), builds_(builds), rules_(rules), vars_(variables),
-		  targets_(targets), topLevelTargets_(topLevelTargets)
-	{
-	}
-
-	const string& buildroot() const override { return buildroot_; }
-	const string& srcroot() const override { return srcroot_; }
-
-	const SharedPtrVec<File>& files() const override { return files_; }
-	const SharedPtrVec<Build>& builds() const override { return builds_; }
-	const SharedPtrMap<Rule>& rules() const override { return rules_; }
-	const SharedPtrMap<Value>& variables() const override { return vars_; }
-	const SharedPtrMap<Target>& targets() const override
-	{
-		return targets_;
-	}
-
-	const vector<BuildTarget>& topLevelTargets() const override
-	{
-		return topLevelTargets_;
-	}
-
-private:
-	const string buildroot_;
-	const string srcroot_;
-
-	const SharedPtrVec<File> files_;
-	const SharedPtrVec<Build> builds_;
-	const SharedPtrMap<Rule> rules_;
-	const SharedPtrMap<Value> vars_;
-	const SharedPtrMap<Target> targets_;
-	const vector<BuildTarget> topLevelTargets_;
-};
-
-}
-
-
-static ValuePtr AddRegeneration(EvalContext&, TypeContext&,
-                                const Arguments& regenArgs,
-                                const vector<string>& inputFiles,
-                                const vector<string>& outputFiles);
-
-
-UniqPtr<DAG> EvalContext::Evaluate(const ast::Scope& root, TypeContext& ctx,
-                                 string srcroot, string buildroot,
-                                 const vector<string>& inputFiles,
-                                 const vector<string>& outputFiles,
-                                 const Arguments& regenArgs)
-{
-	EvalContext builder(ctx);
-	auto scope(builder.EnterScope("top level scope"));
+	auto scope(EnterScope("top level scope"));
 	vector<DAG::BuildTarget> topLevelTargets;
 
 	for (const UniqPtr<ast::Value>& v : root.values())
 		topLevelTargets.emplace_back(
-			v->name().name(), v->evaluate(builder));
+			v->name().name(), v->evaluate(*this));
 
-	//
-	// If we're generating a real output file (not stdout), add build logic
-	// to re-generate when input Fabrique files change.
-	//
-	if (not outputFiles.empty())
-		AddRegeneration(builder, ctx, regenArgs, inputFiles, outputFiles);
-
-	//
-	// Ensure all files are unique.
-	//
-	SharedPtrVec<class File> f = builder.files_;
-	std::sort(f.begin(), f.end(), File::LessThan);
-	f.erase(std::unique(f.begin(), f.end(), File::Equals), f.end());
-
-	return UniqPtr<DAG>(new ImmutableDAG(
-		buildroot, srcroot, f, builder.builds_, builder.rules_,
-		builder.variables_, builder.targets_, topLevelTargets));
+	return topLevelTargets;
 }
 
 
@@ -372,7 +295,7 @@ void EvalContext::Define(ScopedValueName& name, ValuePtr v)
 		                        v->source());
 
 	currentScope.emplace(name.name_, v);
-	variables_.emplace(fullyQualifiedName(), v);
+	builder_.Define(fullyQualifiedName(), v);
 }
 
 
@@ -419,11 +342,16 @@ ValuePtr EvalContext::Lookup(const string& name)
 	// If we are looking for 'subdir' and haven't found it defined anywhere,
 	// provide the top-level source subdirectory ('').
 	if (name == ast::Subdirectory)
-		return File("", ValueMap(), ctx_.fileType(), SourceRange::None());
+		return builder_.File("", ValueMap(), ctx_.fileType());
 
 	return nullptr;
 }
 
+
+string EvalContext::currentValueName() const
+{
+	return fullyQualifiedName();
+}
 
 string EvalContext::fullyQualifiedName() const
 {
@@ -451,199 +379,15 @@ string EvalContext::PopValueName()
 }
 
 
-ValuePtr EvalContext::Bool(bool b, SourceRange src)
-{
-	return ValuePtr(new class Boolean(b, ctx_.booleanType(), src));
-}
-
-
-shared_ptr<class Build>
-EvalContext::Build(shared_ptr<class Rule>& rule, ValueMap arguments,
-                   SourceRange src)
-{
-	shared_ptr<class Build> b(Build::Create(rule, arguments, src));
-	builds_.push_back(b);
-
-	for (const shared_ptr<class File>& f : b->inputs())
-		files_.push_back(f);
-
-	for (const shared_ptr<class File>& f : b->outputs())
-		files_.push_back(f);
-
-	return b;
-}
-
-
-ValuePtr EvalContext::File(string fullPath, const ValueMap& attributes,
-                         const FileType& t, const SourceRange& src)
-{
-	files_.emplace_back(File::Create(fullPath, attributes, t, src));
-	return files_.back();
-}
-
-ValuePtr EvalContext::File(string subdir, string name, const ValueMap& attributes,
-                         const FileType& t, const SourceRange& src)
-{
-	files_.emplace_back(File::Create(subdir, name, attributes, t, src));
-	return files_.back();
-}
-
-
 ValuePtr EvalContext::Function(const Function::Evaluator fn,
                                const SharedPtrVec<Parameter>& params,
                                const FunctionType& type, SourceRange source)
 {
-	return ValuePtr(
-		Function::Create(fn, CopyCurrentScope(), params, type, source));
+	return builder_.Function(fn, CopyCurrentScope(), params, type, source);
 }
 
-
-ValuePtr EvalContext::Integer(int i, SourceRange src)
-{
-	return ValuePtr(new class Integer(i, ctx_.integerType(), src));
-}
-
-
-
-ValuePtr EvalContext::Rule(string command, const ValueMap& arguments,
-                         const SharedPtrVec<Parameter>& parameters,
-                         const Type& type, const SourceRange& source)
-{
-	const string name = fullyQualifiedName();
-
-	shared_ptr<class Rule> r(
-		Rule::Create(name, command, arguments, parameters,
-		             type, source)
-	);
-	r->setSelf(r);
-
-	rules_[name] = r;
-
-	return r;
-}
-
-
-ValuePtr EvalContext::String(const string& s, SourceRange src)
-{
-	return ValuePtr(new class String(s, ctx_.stringType(), src));
-}
-
-
-ValuePtr EvalContext::Struct(const vector<Structure::NamedValue>& values,
-                           const Type& t, SourceRange source)
-{
-	return ValuePtr(Structure::Create(values, t, source));
-}
-
-
-ValuePtr EvalContext::Target(const shared_ptr<class Build>& b)
-{
-	assert(not currentValueName_.empty());
-
-	const string fullName = fullyQualifiedName();
-
-	shared_ptr<class Target> t(Target::Create(fullName, b));
-	targets_[fullName] = t;
-
-	return t;
-}
-
-ValuePtr EvalContext::Target(const shared_ptr<class File>& f)
-{
-	assert(not currentValueName_.empty());
-
-	const string fullName = fullyQualifiedName();
-
-	shared_ptr<class Target> t(Target::Create(fullName, f));
-	targets_[fullName] = t;
-
-	return t;
-}
-
-ValuePtr EvalContext::Target(const shared_ptr<class List>& l)
-{
-	assert(not currentValueName_.empty());
-
-	const string fullName = fullyQualifiedName();
-
-	shared_ptr<class Target> t(Target::Create(fullName, l));
-	targets_[fullName] = t;
-
-	return t;
-}
 
 void EvalContext::Alias(const shared_ptr<class Target>& t)
 {
 	targets_[fullyQualifiedName()] = t;
-}
-
-
-static ValuePtr AddRegeneration(EvalContext& stack, TypeContext& ctx,
-                                const Arguments& regenArgs,
-                                const vector<string>& inputFiles,
-                                const vector<string>& outputFiles)
-{
-	shared_ptr<Value> Nothing;
-	const SourceRange& Nowhere = SourceRange::None();
-
-	const FileType& inputFileType = ctx.inputFileType();
-	const Type& inputType = ctx.listOf(inputFileType, Nowhere);
-	const FileType& outputType = ctx.outputFileType();
-	const Type& buildType = ctx.functionType(inputType, outputType);
-
-	//
-	// First, construct the rule that regenerates output:file[out]
-	// given input:list[file[in]].
-	//
-	ValueMap ruleArgs;
-	ruleArgs["description"] = stack.String("Regenerating ${output}");
-
-	SharedPtrVec<Parameter> params;
-	params.emplace_back(new Parameter("rootInput", inputFileType, Nothing));
-	params.emplace_back(new Parameter("otherInputs", inputType, Nothing));
-	params.emplace_back(
-		new Parameter("output", ctx.listOf(outputType, Nowhere), Nothing));
-
-	shared_ptr<dag::Rule> rule;
-	{
-		auto ruleName(stack.evaluating(Rule::RegenerationRuleName()));
-		const string Command =
-			"fab" + Arguments::str(regenArgs) + " ${rootInput}";
-
-		ValuePtr r = stack.Rule(Command, ruleArgs, params, buildType);
-		rule = dynamic_pointer_cast<class Rule>(r);
-	}
-	assert(rule);
-
-
-	//
-	// Now, construct the build step that drives the rule above in order
-	// to actually generate the build file.
-	//
-	shared_ptr<dag::File> rootInput;
-	SharedPtrVec<dag::File> otherInputs;
-	for (const string& name : inputFiles)
-	{
-		shared_ptr<dag::File> file = dynamic_pointer_cast<class File>(
-			stack.File(name, ValueMap(), inputFileType, Nowhere));
-
-		assert(file);
-
-		if (rootInput)
-			otherInputs.push_back(file);
-		else
-			rootInput = file;
-	}
-
-	SharedPtrVec<Value> outputs;
-	for (const string& output : outputFiles)
-		outputs.push_back(stack.File(output, ValueMap(), outputType));
-
-	ValueMap args;
-	args["rootInput"] = rootInput;
-	args["otherInputs"].reset(List::of(otherInputs, Nowhere, ctx));
-
-	args["output"].reset(List::of(outputs, Nowhere, ctx));
-
-	return stack.Build(rule, args, Nowhere);
 }

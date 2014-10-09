@@ -95,7 +95,7 @@ dag::ValuePtr FileList::evaluate(dag::EvalContext& ctx) const
 			const string completeSubdir = JoinPath(subdir, subsubdir);
 			const SourceRange& src = arg->getValue().source();
 
-			scope.set(name, ctx.String(completeSubdir, src));
+			scope.set(name, ctx.builder().String(completeSubdir, src));
 		}
 
 		else

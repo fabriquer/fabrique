@@ -90,5 +90,5 @@ dag::ValuePtr StructInstantiation::evaluate(dag::EvalContext& ctx) const
 			field->name().name(),
 			field->evaluate(ctx));
 
-	return ctx.Struct(values, type(), source());
+	return ctx.builder().Struct(values, type(), source());
 }

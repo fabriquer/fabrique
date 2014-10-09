@@ -133,5 +133,6 @@ dag::ValuePtr Filename::evaluate(dag::EvalContext& ctx) const
 			attributes[name] = value;
 	}
 
-	return ctx.File(subdirectory, filename, attributes, type(), source());
+	return ctx.builder().File(
+		subdirectory, filename, attributes, type(), source());
 }

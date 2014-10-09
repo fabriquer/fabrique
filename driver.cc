@@ -53,12 +53,9 @@
 #include <memory>
 
 using namespace fabrique;
+using namespace std;
 using fabrique::ast::Parser;
 using fabrique::backend::Backend;
-using std::map;
-using std::string;
-using std::unique_ptr;
-using std::vector;
 
 
 static Bytestream& err();
@@ -74,7 +71,7 @@ int main(int argc, char *argv[]) {
 	unique_ptr<Arguments> args(Arguments::Parse(argc, argv));
 	if (not args or args->help)
 	{
-		Arguments::PrintUsage(std::cerr);
+		Arguments::PrintUsage(cerr);
 		return (args ? 0 : 1);
 	}
 
@@ -95,7 +92,7 @@ int main(int argc, char *argv[]) {
 	//
 	try
 	{
-		TypeContext ctx;
+		TypeContext types;
 
 		const string fabfile =
 			PathIsDirectory(args->input)
@@ -112,7 +109,7 @@ int main(int argc, char *argv[]) {
 		//
 		// Parse the file, optionally pretty-printing it.
 		//
-		unique_ptr<ast::Parser> parser(new ast::Parser(ctx, srcroot));
+		unique_ptr<ast::Parser> parser(new ast::Parser(types, srcroot));
 		unique_ptr<ast::Scope> ast(
 			Parse(parser, fabfile, args->definitions,
 			      srcroot, buildroot, args->printAST));
@@ -142,13 +139,23 @@ int main(int argc, char *argv[]) {
 		//
 		// Convert the AST into a build graph.
 		//
-		unique_ptr<dag::EvalContext> evalCtx;
-		unique_ptr<dag::DAG> dag =
-			dag::EvalContext::Evaluate(*ast, ctx, srcroot, buildroot,
-		                                   parser->files(), outputFiles,
-		                                   *args);
+		dag::EvalContext ctx(types, buildroot, srcroot);
+		auto topScope(ctx.Evaluate(*ast));
 
-		// DAG errors should be reported as exceptions.
+		// Get the names of the top-level targets:
+		vector<string> targets;
+		transform(topScope.begin(), topScope.end(), back_inserter(targets),
+			[](const pair<string,dag::ValuePtr>& i)
+			{
+				return i.first;
+			});
+
+		// Add regeneration (if Fabrique files change):
+		if (not outputFiles.empty())
+			ctx.builder().AddRegeneration(
+				*args, parser->files(), outputFiles);
+
+		unique_ptr<dag::DAG> dag = ctx.builder().dag(targets);
 		assert(dag);
 
 		if (args->printDAG)

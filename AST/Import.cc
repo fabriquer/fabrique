@@ -94,8 +94,9 @@ dag::ValuePtr Import::evaluate(dag::EvalContext& ctx) const
 {
 	auto scope(ctx.EnterScope("import()"));
 
-	dag::ValuePtr subdir(ctx.File(subdirectory(), dag::ValueMap(),
-		                      type().context().fileType(), source()));
+	dag::ValuePtr subdir(
+		ctx.builder().File(subdirectory(), dag::ValueMap(),
+	                           type().context().fileType(), source()));
 
 	scope.set(ast::Subdirectory, subdir);
 
@@ -111,8 +112,9 @@ dag::ValuePtr Import::evaluate(dag::EvalContext& ctx) const
 		args.emplace_back(argName, value);
 	}
 
+	dag::DAGBuilder builder(ctx.builder());
 	dag::ValuePtr argStruct(
-		ctx.Struct(args, this->scope().arguments(), source()));
+		builder.Struct(args, this->scope().arguments(), source()));
 
 	scope.set(ast::Arguments, argStruct);
 
@@ -127,5 +129,5 @@ dag::ValuePtr Import::evaluate(dag::EvalContext& ctx) const
 		types.emplace_back(i.first, i.second->type());
 	}
 
-	return ctx.Struct(values, type(), source());
+	return builder.Struct(values, type(), source());
 }

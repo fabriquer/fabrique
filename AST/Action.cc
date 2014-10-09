@@ -214,5 +214,5 @@ dag::ValuePtr Action::evaluate(dag::EvalContext& ctx) const
 		parameters.emplace_back(param);
 	}
 
-	return ctx.Rule(command, arguments, parameters, type(), source());
+	return ctx.builder().Rule(command, arguments, parameters, type(), source());
 }

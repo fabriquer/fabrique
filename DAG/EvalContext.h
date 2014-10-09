@@ -36,7 +36,8 @@
 #include <stack>
 #include <string>
 
-#include "DAG/Function.h"
+#include "DAG/DAG.h"
+#include "DAG/DAGBuilder.h"
 #include "DAG/Structure.h"
 #include "DAG/Value.h"
 
@@ -55,26 +56,24 @@ class Scope;
 namespace dag {
 
 class Build;
-class DAG;
 class File;
 class Parameter;
 class Rule;
 class Target;
 
-class EvalContext
+class EvalContext : public dag::DAGBuilder::Context
 {
 public:
-	static UniqPtr<DAG> Evaluate(const ast::Scope&, TypeContext&,
-	                             std::string srcroot, std::string buildroot,
-	                             const std::vector<std::string>& inputFiles,
-	                             const std::vector<std::string>& outputFiles,
-	                             const Arguments& regenerateArguments);
-
-	EvalContext(TypeContext& ctx) : ctx_(ctx)
+	EvalContext(TypeContext& ctx, std::string buildroot, std::string srcroot)
+		: ctx_(ctx), builder_(*this),
+		  buildroot_(buildroot), srcroot_(srcroot)
 	{
 	}
 
 	~EvalContext() {}
+
+	std::vector<DAG::BuildTarget> Evaluate(const ast::Scope&);
+
 
 	/**
 	 * An object to represent descending in a call stack. Will push and
@@ -156,6 +155,14 @@ public:
 	ScopedValueName evaluating(const std::string& name);
 
 
+	DAGBuilder& builder() { return builder_; }
+
+	virtual std::string buildroot() const { return buildroot_; }
+	virtual std::string srcroot() const { return srcroot_; }
+
+	virtual std::string currentValueName() const override;
+	virtual TypeContext& types() const override { return ctx_; }
+
 
 	//! Define a named @ref dag::Value in the current scope.
 	void Define(ScopedValueName& name, ValuePtr value);
@@ -164,46 +171,10 @@ public:
 	ValuePtr Lookup(const std::string& name);
 
 
-	//! Create a @ref dag::Boolean.
-	ValuePtr Bool(bool, SourceRange);
-
-	//! Construct a @ref dag::Build from a @ref dag::Rule and parameters.
-	std::shared_ptr<class Build>
-	Build(std::shared_ptr<class Rule>&, ValueMap, SourceRange);
-
-	//! Create a @ref dag::File from a path.
-	ValuePtr File(std::string fullPath,
-	              const ValueMap& attributes, const FileType&,
-	              const SourceRange& src = SourceRange::None());
-
-	//! Create a @ref dag::File from a subdirectory and a filename.
-	ValuePtr File(std::string subdir, std::string filename,
-	              const ValueMap& attributes, const FileType&,
-	              const SourceRange& src = SourceRange::None());
-
 	//! Define a @ref dag::Function.
 	ValuePtr Function(Function::Evaluator, const SharedPtrVec<Parameter>&,
 	                  const FunctionType&, SourceRange = SourceRange::None());
 
-	//! Create a @ref dag::Integer.
-	ValuePtr Integer(int, SourceRange);
-
-	//! Create a @ref dag::Rule in the current scope.
-	ValuePtr Rule(std::string command, const ValueMap& arguments,
-	              const SharedPtrVec<Parameter>& parameters, const Type&,
-	              const SourceRange& from = SourceRange::None());
-
-	//! Create a @ref dag::String.
-	ValuePtr String(const std::string&, SourceRange = SourceRange::None());
-
-	//! Create a @ref dag::Structure.
-	ValuePtr Struct(const std::vector<Structure::NamedValue>&,
-	                const Type&, SourceRange);
-
-	//! Create a @ref dag::Target using the current value name.
-	ValuePtr Target(const std::shared_ptr<class Build>&);
-	ValuePtr Target(const std::shared_ptr<class File>&);
-	ValuePtr Target(const std::shared_ptr<class List>&);
 
 	//! Create a new alias for an existing @ref dag::Target.
 	void Alias(const std::shared_ptr<class Target>&);
@@ -243,6 +214,11 @@ protected:
 private:
 	/** The name of the value we are currently processing. */
 	std::deque<std::string> currentValueName_;
+
+	DAGBuilder builder_;
+
+	const std::string buildroot_;
+	const std::string srcroot_;
 };
 
 } // namespace dag

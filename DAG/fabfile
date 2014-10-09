@@ -2,6 +2,7 @@ sources = files(
 	Build.cc
 	Callable.cc
 	DAG.cc
+	DAGBuilder.cc
 	EvalContext.cc
 	File.cc
 	Formatter.cc
