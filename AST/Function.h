@@ -34,6 +34,7 @@
 
 #include "AST/Expression.h"
 #include "AST/HasParameters.h"
+#include "Types/FunctionType.h"
 
 namespace fabrique {
 
@@ -56,6 +57,7 @@ public:
 	         UniqPtr<Expression>& body, const SourceRange& loc);
 
 	const Expression& body() const { return *body_; }
+	virtual const FunctionType& type() const override;
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;

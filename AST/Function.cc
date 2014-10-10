@@ -54,6 +54,14 @@ Function::Function(UniqPtrVec<Parameter>& params, const FunctionType& ty,
 }
 
 
+const FunctionType& Function::type() const
+{
+	// We know that our type is a FunctionType because that's what we
+	// passed to Expression() in the constructor.
+	return dynamic_cast<const FunctionType&>(Expression::type());
+}
+
+
 void Function::PrettyPrint(Bytestream& out, size_t indent) const
 {
 	std::string tabs(indent, '\t');
