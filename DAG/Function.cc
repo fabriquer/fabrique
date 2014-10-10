@@ -29,22 +29,28 @@
  * SUCH DAMAGE.
  */
 
-#include "AST/Function.h"
 #include "DAG/Function.h"
 #include "DAG/Visitor.h"
 #include "Support/Bytestream.h"
+#include "Types/FunctionType.h"
 using namespace fabrique::dag;
 
 
-Function::Function(const ast::Function& fn,
+Function::Function(Evaluator evaluator, ValueMap&& scope,
                    const SharedPtrVec<Parameter>& parameters,
-                   ValueMap&& scope)
-	: Callable(parameters), Value(fn.type(), fn.source()), function_(fn),
+                   const FunctionType& type, SourceRange source)
+	: Callable(parameters), Value(type, source), evaluator_(evaluator),
 	  containingScope_(std::move(scope))
 {
 }
 
 Function::~Function() {}
+
+
+ValuePtr Function::Call(const ValueMap& arguments) const
+{
+	return evaluator_(containingScope_, arguments);
+}
 
 void Function::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {

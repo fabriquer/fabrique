@@ -36,30 +36,32 @@
 #include "DAG/Callable.h"
 #include "DAG/Value.h"
 
+#include <functional>
+
 
 namespace fabrique {
-namespace ast
-{
-	class Function;
-}
+
+class FunctionType;
 
 namespace dag {
 
+class EvalContext;
+
 /**
- * A reference to an user-defined function.
- *
- * Currently, we just keep a reference to the AST function around.
- * This is ok only because the AST outlives the DAG, but it's not a great
- * approach and we should consider how to fix it in the future.
+ * A reference to a user- or plugin-defined function.
  */
 class Function : public Callable, public Value
 {
 public:
-	Function(const ast::Function&, const SharedPtrVec<Parameter>&,
-	         ValueMap&& scope);
+	typedef std::function<ValuePtr (const ValueMap&, const ValueMap&)>
+		Evaluator;
+
+	Function(Evaluator, ValueMap&& scope, const SharedPtrVec<Parameter>&,
+	         const FunctionType&, SourceRange source = SourceRange::None());
 	virtual ~Function();
 
-	const ast::Function& function() const { return function_; }
+	//! Call this function with (named) arguments.
+	virtual ValuePtr Call(const ValueMap& arguments) const;
 
 	//! A copy of the scope containing the function (at definition).
 	const ValueMap& scope() const { return containingScope_; }
@@ -68,7 +70,7 @@ public:
 	void Accept(Visitor&) const override;
 
 private:
-	const ast::Function& function_;
+	const Evaluator evaluator_;
 	const ValueMap containingScope_;
 };
 

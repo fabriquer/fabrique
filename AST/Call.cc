@@ -138,32 +138,7 @@ dag::ValuePtr Call::evaluate(dag::EvalContext& ctx) const
 	}
 	else if (auto fn = dynamic_pointer_cast<dag::Function>(target))
 	{
-		//
-		// When executing a function, we don't use symbols in scope
-		// at the call site, only those in scope at the function
-		// definition site.
-		//
-		// We will return to the original stack when the
-		// `fnScope` object goes out of scope.
-		//
-		auto fnScope(ctx.ChangeScopeStack(fn->scope()));
-
-		//
-		// We evaluate the function with the given arguments by
-		// putting default paramters and arguments into the local scope
-		// and then evalating the function's CompoundExpr.
-		//
-		auto scope(ctx.EnterScope("function call evaluation"));
-
-		for (auto& p : fn->function().parameters())
-			if (const UniqPtr<ast::Expression>& v = p->defaultValue())
-				scope.set(p->getName().name(),
-				          v->evaluate(ctx));
-
-		for (auto& i : args)
-			scope.set(i.first, i.second);
-
-		return fn->function().body().evaluate(ctx);
+		return fn->Call(args);
 	}
 
 	assert(false && "unreachable");

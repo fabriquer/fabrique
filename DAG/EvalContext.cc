@@ -491,10 +491,12 @@ ValuePtr EvalContext::File(string subdir, string name, const ValueMap& attribute
 }
 
 
-ValuePtr EvalContext::Function(const ast::Function& fn,
-                             const SharedPtrVec<Parameter>& params)
+ValuePtr EvalContext::Function(const Function::Evaluator fn,
+                               const SharedPtrVec<Parameter>& params,
+                               const FunctionType& type, SourceRange source)
 {
-	return ValuePtr(new class Function(fn, params, CopyCurrentScope()));
+	return ValuePtr(
+		new class Function(fn, CopyCurrentScope(), params, type, source));
 }
 
 

@@ -116,5 +116,34 @@ dag::ValuePtr Function::evaluate(dag::EvalContext& ctx) const
 	for (auto& p : this->parameters())
 		parameters.emplace_back(p->evaluate(ctx));
 
-	return ctx.Function(*this, parameters);
+	auto eval = [=,&ctx](const dag::ValueMap& scope, const dag::ValueMap args)
+	{
+		//
+		// When executing a function, we don't use symbols in scope
+		// at the call site, only those in scope at the function
+		// definition site.
+		//
+		// We will return to the original stack when the
+		// `fnScope` object goes out of scope.
+		//
+		auto fnScope(ctx.ChangeScopeStack(scope));
+
+		//
+		// We evaluate the function with the given arguments by
+		// putting default paramters and arguments into the local scope
+		// and then evalating the function's CompoundExpr.
+		//
+		auto evalScope(ctx.EnterScope("function call evaluation"));
+
+		for (auto& p : parameters)
+			if (dag::ValuePtr v = p->defaultValue())
+				evalScope.set(p->name(), v);
+
+		for (auto& i : args)
+			evalScope.set(i.first, i.second);
+
+		return body().evaluate(ctx);
+	};
+
+	return ctx.Function(eval, parameters, type(), source());
 }

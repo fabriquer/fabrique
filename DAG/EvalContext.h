@@ -36,6 +36,7 @@
 #include <stack>
 #include <string>
 
+#include "DAG/Function.h"
 #include "DAG/Structure.h"
 #include "DAG/Value.h"
 
@@ -46,9 +47,6 @@ class Arguments;
 class FileType;
 class FunctionType;
 class TypeContext;
-
-// TODO: fix layering violation with a callback mechanism for function evaluation
-namespace ast { class Function; }
 
 namespace dag {
 
@@ -181,7 +179,8 @@ public:
 	              const SourceRange& src = SourceRange::None());
 
 	//! Define a @ref dag::Function.
-	ValuePtr Function(const ast::Function&, const SharedPtrVec<Parameter>&);
+	ValuePtr Function(Function::Evaluator, const SharedPtrVec<Parameter>&,
+	                  const FunctionType&, SourceRange = SourceRange::None());
 
 	//! Create a @ref dag::Integer.
 	ValuePtr Integer(int, SourceRange);
