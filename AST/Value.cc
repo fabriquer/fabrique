@@ -29,10 +29,10 @@
  * SUCH DAMAGE.
  */
 
+#include "AST/EvalContext.h"
 #include "AST/Value.h"
 #include "AST/Visitor.h"
 #include "DAG/Build.h"
-#include "DAG/EvalContext.h"
 #include "DAG/File.h"
 #include "DAG/List.h"
 #include "DAG/Target.h"
@@ -88,7 +88,7 @@ void Value::Accept(Visitor& v) const
 }
 
 
-dag::ValuePtr Value::evaluate(dag::EvalContext& ctx) const
+dag::ValuePtr Value::evaluate(EvalContext& ctx) const
 {
 	const string name(name_->name());
 	Bytestream& dbg = Bytestream::Debug("eval.value");

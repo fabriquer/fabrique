@@ -30,9 +30,9 @@
  */
 
 #include "AST/CompoundExpr.h"
+#include "AST/EvalContext.h"
 #include "AST/Value.h"
 #include "AST/Visitor.h"
-#include "DAG/EvalContext.h"
 #include "Support/Bytestream.h"
 
 #include <cassert>
@@ -85,7 +85,7 @@ void CompoundExpression::Accept(Visitor& v) const
 	v.Leave(*this);
 }
 
-dag::ValuePtr CompoundExpression::evaluate(dag::EvalContext& ctx) const
+dag::ValuePtr CompoundExpression::evaluate(EvalContext& ctx) const
 {
 	auto scope(ctx.EnterScope("CompoundExpression"));
 

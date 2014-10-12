@@ -31,9 +31,9 @@
 
 #include "AST/Argument.h"
 #include "AST/Builtins.h"
+#include "AST/EvalContext.h"
 #include "AST/Filename.h"
 #include "AST/Visitor.h"
-#include "DAG/EvalContext.h"
 #include "DAG/File.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
@@ -109,7 +109,7 @@ void Filename::Accept(Visitor& v) const
 	v.Leave(*this);
 }
 
-dag::ValuePtr Filename::evaluate(dag::EvalContext& ctx) const
+dag::ValuePtr Filename::evaluate(EvalContext& ctx) const
 {
 	const string filename = name().evaluate(ctx)->str();
 

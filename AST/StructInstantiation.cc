@@ -32,10 +32,10 @@
  * SUCH DAMAGE.
  */
 
+#include "AST/EvalContext.h"
 #include "AST/Scope.h"
 #include "AST/StructInstantiation.h"
 #include "AST/Visitor.h"
-#include "DAG/EvalContext.h"
 #include "Support/Bytestream.h"
 #include "Types/StructureType.h"
 
@@ -79,7 +79,7 @@ void StructInstantiation::Accept(Visitor& v) const
 	v.Leave(*this);
 }
 
-dag::ValuePtr StructInstantiation::evaluate(dag::EvalContext& ctx) const
+dag::ValuePtr StructInstantiation::evaluate(EvalContext& ctx) const
 {
 	auto instantiationScope(ctx.EnterScope("struct instantiation"));
 

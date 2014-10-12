@@ -39,14 +39,13 @@
 
 namespace fabrique {
 
-namespace dag
-{
-	class EvalContext;
-	class Parameter;
+namespace dag {
+class Parameter;
 }
 
 namespace ast {
 
+class EvalContext;
 class Expression;
 
 /**
@@ -67,7 +66,7 @@ public:
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const;
 
-	virtual std::shared_ptr<dag::Parameter> evaluate(dag::EvalContext&) const;
+	virtual std::shared_ptr<dag::Parameter> evaluate(EvalContext&) const;
 
 private:
 	const UniqPtr<Identifier> name_;

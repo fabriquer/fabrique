@@ -75,7 +75,7 @@ void Parameter::Accept(Visitor& v) const
 	v.Leave(*this);
 }
 
-std::shared_ptr<dag::Parameter> Parameter::evaluate(dag::EvalContext& ctx) const
+std::shared_ptr<dag::Parameter> Parameter::evaluate(EvalContext& ctx) const
 {
 	dag::ValuePtr defaultValue;
 	if (defaultValue_)

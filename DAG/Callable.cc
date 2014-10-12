@@ -56,10 +56,10 @@ Callable::~Callable()
 }
 
 
-ValuePtr Callable::Call(const ValueMap& arguments, EvalContext& ctx,
+ValuePtr Callable::Call(const ValueMap& arguments, DAGBuilder& builder,
                         SourceRange src) const
 {
-	return evaluator_(arguments, ctx, src);
+	return evaluator_(arguments, builder, src);
 }
 
 

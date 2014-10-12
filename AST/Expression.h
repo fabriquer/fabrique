@@ -39,9 +39,9 @@
 
 namespace fabrique {
 
-namespace dag { class EvalContext; }
-
 namespace ast {
+
+class EvalContext;
 
 /**
  * Base class for expressions that can be evaluated.
@@ -51,7 +51,7 @@ class Expression : public Node, public Typed
 public:
 	virtual ~Expression();
 
-	virtual dag::ValuePtr evaluate(dag::EvalContext&) const  = 0;
+	virtual dag::ValuePtr evaluate(EvalContext&) const  = 0;
 
 protected:
 	Expression(const Type& t, const SourceRange& src)

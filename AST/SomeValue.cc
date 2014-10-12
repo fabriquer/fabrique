@@ -30,10 +30,10 @@
  */
 
 #include "AST/Builtins.h"
+#include "AST/EvalContext.h"
 #include "AST/Scope.h"
 #include "AST/SomeValue.h"
 #include "AST/Visitor.h"
-#include "DAG/EvalContext.h"
 #include "DAG/Primitive.h"
 #include "Support/Bytestream.h"
 #include "Types/TypeContext.h"
@@ -65,7 +65,7 @@ void SomeValue::Accept(Visitor& v) const
 	v.Leave(*this);
 }
 
-dag::ValuePtr SomeValue::evaluate(dag::EvalContext& ctx) const
+dag::ValuePtr SomeValue::evaluate(EvalContext& ctx) const
 {
 	const Type& t = type();
 

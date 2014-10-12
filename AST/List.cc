@@ -65,7 +65,7 @@ void List::Accept(Visitor& v) const
 }
 
 
-dag::ValuePtr List::evaluate(dag::EvalContext& ctx) const
+dag::ValuePtr List::evaluate(EvalContext& ctx) const
 {
 	assert(type().isOrdered());
 	assert(type().typeParamCount() == 1);

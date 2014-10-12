@@ -31,11 +31,11 @@
 
 #include "AST/Argument.h"
 #include "AST/Builtins.h"
+#include "AST/EvalContext.h"
 #include "AST/Import.h"
 #include "AST/Scope.h"
 #include "AST/Value.h"
 #include "AST/Visitor.h"
-#include "DAG/EvalContext.h"
 #include "DAG/File.h"
 #include "DAG/Structure.h"
 #include "Support/Bytestream.h"
@@ -90,7 +90,7 @@ void Import::Accept(Visitor& v) const
 	v.Leave(*this);
 }
 
-dag::ValuePtr Import::evaluate(dag::EvalContext& ctx) const
+dag::ValuePtr Import::evaluate(EvalContext& ctx) const
 {
 	auto scope(ctx.EnterScope("import()"));
 

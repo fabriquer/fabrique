@@ -47,7 +47,7 @@ class Type;
 namespace dag {
 
 class Argument;
-class EvalContext;
+class DAGBuilder;
 class Parameter;
 
 
@@ -60,7 +60,7 @@ public:
 	virtual ~Callable();
 
 	//! Call this function with (named) arguments.
-	virtual ValuePtr Call(const ValueMap& arguments, EvalContext&,
+	virtual ValuePtr Call(const ValueMap& arguments, DAGBuilder&,
 	                      SourceRange = SourceRange::None()) const;
 
 	const SharedPtrVec<Parameter>& parameters() const;
@@ -105,7 +105,7 @@ public:
 
 protected:
 	typedef std::function<
-		ValuePtr (const ValueMap&, EvalContext&, SourceRange)>
+		ValuePtr (const ValueMap&, DAGBuilder&, SourceRange)>
 		Evaluator;
 	Callable(const SharedPtrVec<Parameter>&, Evaluator);
 

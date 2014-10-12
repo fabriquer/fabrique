@@ -1,4 +1,4 @@
-/** @file DAG/EvalContext.cc    Definition of @ref fabrique::dag::EvalContext. */
+/** @file DAG/EvalContext.cc    Definition of @ref fabrique::ast::EvalContext. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -30,12 +30,12 @@
  */
 
 #include "AST/Builtins.h"
+#include "AST/EvalContext.h"
 #include "AST/Scope.h"
 #include "AST/Value.h"
 
 #include "DAG/Build.h"
 #include "DAG/DAG.h"
-#include "DAG/EvalContext.h"
 #include "DAG/File.h"
 #include "DAG/Function.h"
 #include "DAG/List.h"
@@ -59,20 +59,15 @@
 #include <cassert>
 
 using namespace fabrique;
-using namespace fabrique::dag;
+using namespace fabrique::ast;
+using fabrique::dag::DAG;
+using fabrique::dag::ValueMap;
+using fabrique::dag::ValuePtr;
 
 using std::dynamic_pointer_cast;
 using std::shared_ptr;
 using std::string;
 using std::vector;
-
-namespace fabrique {
-namespace ast {
-
-class Value;
-
-}
-}
 
 
 std::vector<DAG::BuildTarget> EvalContext::Evaluate(const ast::Scope& root)
@@ -379,15 +374,15 @@ string EvalContext::PopValueName()
 }
 
 
-ValuePtr EvalContext::Function(const Function::Evaluator fn,
-                               const SharedPtrVec<Parameter>& params,
+ValuePtr EvalContext::Function(const dag::Function::Evaluator fn,
+                               const SharedPtrVec<dag::Parameter>& params,
                                const FunctionType& type, SourceRange source)
 {
 	return builder_.Function(fn, CopyCurrentScope(), params, type, source);
 }
 
 
-void EvalContext::Alias(const shared_ptr<class Target>& t)
+void EvalContext::Alias(const shared_ptr<dag::Target>& t)
 {
 	targets_[fullyQualifiedName()] = t;
 }

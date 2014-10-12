@@ -72,7 +72,7 @@ void FieldAccess::Accept(Visitor& v) const
 }
 
 
-dag::ValuePtr FieldAccess::evaluate(dag::EvalContext& ctx) const
+dag::ValuePtr FieldAccess::evaluate(EvalContext& ctx) const
 {
 	dag::ValuePtr base = base_->evaluate(ctx);
 	if (not base->hasFields())

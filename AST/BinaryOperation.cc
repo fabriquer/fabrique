@@ -132,7 +132,7 @@ void BinaryOperation::Accept(Visitor& v) const
 }
 
 
-dag::ValuePtr BinaryOperation::evaluate(fabrique::dag::EvalContext& ctx) const
+dag::ValuePtr BinaryOperation::evaluate(EvalContext& ctx) const
 {
 	dag::ValuePtr lhs = lhs_->evaluate(ctx);
 	dag::ValuePtr rhs = rhs_->evaluate(ctx);

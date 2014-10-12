@@ -52,7 +52,7 @@ void BoolLiteral::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 
 void BoolLiteral::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }
 
-dag::ValuePtr BoolLiteral::evaluate(dag::EvalContext&) const
+dag::ValuePtr BoolLiteral::evaluate(EvalContext&) const
 {
 	return dag::ValuePtr(new dag::Boolean(value(), type(), source()));
 }
@@ -70,7 +70,7 @@ void IntLiteral::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 
 void IntLiteral::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }
 
-dag::ValuePtr IntLiteral::evaluate(dag::EvalContext&) const
+dag::ValuePtr IntLiteral::evaluate(EvalContext&) const
 {
 	return dag::ValuePtr(new dag::Integer(value(), type(), source()));
 }
@@ -118,7 +118,7 @@ void StringLiteral::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 
 void StringLiteral::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }
 
-dag::ValuePtr StringLiteral::evaluate(dag::EvalContext&) const
+dag::ValuePtr StringLiteral::evaluate(EvalContext&) const
 {
 	return dag::ValuePtr(new dag::String(value(), type(), source()));
 }

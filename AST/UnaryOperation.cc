@@ -103,7 +103,7 @@ void UnaryOperation::Accept(Visitor& v) const
 }
 
 
-dag::ValuePtr UnaryOperation::evaluate(dag::EvalContext& ctx) const
+dag::ValuePtr UnaryOperation::evaluate(EvalContext& ctx) const
 {
 	dag::ValuePtr subexpr = subexpr_->evaluate(ctx);
 	assert(subexpr);

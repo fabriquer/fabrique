@@ -30,11 +30,11 @@
  */
 
 #include "AST/CompoundExpr.h"
+#include "AST/EvalContext.h"
 #include "AST/Function.h"
 #include "AST/Parameter.h"
 #include "AST/Value.h"
 #include "AST/Visitor.h"
-#include "DAG/EvalContext.h"
 #include "DAG/Function.h"
 #include "DAG/Parameter.h"
 #include "Support/Bytestream.h"
@@ -110,15 +110,15 @@ void Function::Accept(Visitor& v) const
 }
 
 
-dag::ValuePtr Function::evaluate(dag::EvalContext& ctx) const
+dag::ValuePtr Function::evaluate(EvalContext& ctx) const
 {
 	SharedPtrVec<dag::Parameter> parameters;
 	for (auto& p : this->parameters())
 		parameters.emplace_back(p->evaluate(ctx));
 
 	dag::Function::Evaluator eval =
-		[=](const dag::ValueMap& scope, const dag::ValueMap args,
-	            dag::EvalContext& callCtx, SourceRange)
+		[=,&ctx](const dag::ValueMap& scope, const dag::ValueMap args,
+	                 dag::DAGBuilder& /*builder*/, SourceRange)
 	{
 		//
 		// When executing a function, we don't use symbols in scope
@@ -128,14 +128,14 @@ dag::ValuePtr Function::evaluate(dag::EvalContext& ctx) const
 		// We will return to the original stack when the
 		// `fnScope` object goes out of scope.
 		//
-		auto fnScope(callCtx.ChangeScopeStack(scope));
+		auto fnScope(ctx.ChangeScopeStack(scope));
 
 		//
 		// We evaluate the function with the given arguments by
 		// putting default paramters and arguments into the local scope
 		// and then evalating the function's CompoundExpr.
 		//
-		auto evalScope(callCtx.EnterScope("function call evaluation"));
+		auto evalScope(ctx.EnterScope("function call evaluation"));
 
 		for (auto& p : parameters)
 			if (dag::ValuePtr v = p->defaultValue())
@@ -144,7 +144,7 @@ dag::ValuePtr Function::evaluate(dag::EvalContext& ctx) const
 		for (auto& i : args)
 			evalScope.set(i.first, i.second);
 
-		return body().evaluate(callCtx);
+		return body().evaluate(ctx);
 	};
 
 	return ctx.Function(eval, parameters, type(), source());

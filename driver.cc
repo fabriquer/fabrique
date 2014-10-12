@@ -30,11 +30,11 @@
  */
 
 #include "AST/ASTDump.h"
+#include "AST/EvalContext.h"
 
 #include "Backend/Backend.h"
 
 #include "DAG/DAG.h"
-#include "DAG/EvalContext.h"
 
 #include "Parsing/Lexer.h"
 #include "Parsing/Parser.h"
@@ -139,7 +139,7 @@ int main(int argc, char *argv[]) {
 		//
 		// Convert the AST into a build graph.
 		//
-		dag::EvalContext ctx(types, buildroot, srcroot);
+		ast::EvalContext ctx(types, buildroot, srcroot);
 		auto topScope(ctx.Evaluate(*ast));
 
 		// Get the names of the top-level targets:

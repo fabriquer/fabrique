@@ -70,7 +70,7 @@ void DebugTracePoint::Accept(Visitor& v) const
 }
 
 
-dag::ValuePtr DebugTracePoint::evaluate(dag::EvalContext& ctx) const
+dag::ValuePtr DebugTracePoint::evaluate(EvalContext& ctx) const
 {
 	fabrique::dag::ValuePtr value = expr_->evaluate(ctx);
 

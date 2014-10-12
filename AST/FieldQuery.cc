@@ -78,7 +78,7 @@ void FieldQuery::Accept(Visitor& v) const
 }
 
 
-dag::ValuePtr FieldQuery::evaluate(dag::EvalContext& ctx) const
+dag::ValuePtr FieldQuery::evaluate(EvalContext& ctx) const
 {
 	const Type::TypeMap fields = base_->type().fields();
 	const std::string fieldName(field_->name());

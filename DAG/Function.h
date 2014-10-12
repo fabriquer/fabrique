@@ -45,8 +45,6 @@ class FunctionType;
 
 namespace dag {
 
-class EvalContext;
-
 /**
  * A reference to a user- or plugin-defined function.
  */
@@ -54,7 +52,7 @@ class Function : public Callable, public Value
 {
 public:
 	typedef std::function<
-		ValuePtr (const ValueMap&, const ValueMap&, EvalContext&,
+		ValuePtr (const ValueMap&, const ValueMap&, DAGBuilder&,
 		          SourceRange)>
 		Evaluator;
 

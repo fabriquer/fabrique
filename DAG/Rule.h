@@ -63,7 +63,7 @@ public:
 
 	virtual ~Rule() {}
 
-	ValuePtr Call(const ValueMap&, EvalContext&, SourceRange) const override;
+	ValuePtr Call(const ValueMap&, DAGBuilder&, SourceRange) const override;
 
 	const std::string& name() const { return ruleName_; }
 	const std::string& command() const { return command_; }

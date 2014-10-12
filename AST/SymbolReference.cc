@@ -29,10 +29,10 @@
  * SUCH DAMAGE.
  */
 
+#include "AST/EvalContext.h"
 #include "AST/Node.h"
 #include "AST/SymbolReference.h"
 #include "AST/Visitor.h"
-#include "DAG/EvalContext.h"
 #include "DAG/Structure.h"
 #include "DAG/UndefinedValueException.h"
 #include "Support/Bytestream.h"
@@ -65,7 +65,7 @@ void SymbolReference::Accept(Visitor& v) const
 	v.Leave(*this);
 }
 
-dag::ValuePtr SymbolReference::evaluate(dag::EvalContext& ctx) const
+dag::ValuePtr SymbolReference::evaluate(EvalContext& ctx) const
 {
 	static Bytestream& debug = Bytestream::Debug("eval.lookup");
 	const string& name = Type::UntypedPart(name_->str());

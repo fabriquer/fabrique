@@ -31,8 +31,8 @@
 
 #include "ADT/UniqPtr.h"
 #include "AST/Action.h"
+#include "AST/EvalContext.h"
 #include "AST/Visitor.h"
-#include "DAG/EvalContext.h"
 #include "DAG/Parameter.h"
 #include "DAG/Primitive.h"
 #include "Support/Bytestream.h"
@@ -170,7 +170,7 @@ void Action::Accept(Visitor& v) const
 	v.Leave(*this);
 }
 
-dag::ValuePtr Action::evaluate(dag::EvalContext& ctx) const
+dag::ValuePtr Action::evaluate(EvalContext& ctx) const
 {
 	string command;
 	dag::ValueMap arguments;
@@ -195,7 +195,8 @@ dag::ValuePtr Action::evaluate(dag::EvalContext& ctx) const
 		}
 
 		dag::ValuePtr v(
-			new dag::String(value->str(), type().context().stringType(),
+			new dag::String(value->str(),
+			                type().context().stringType(),
 			                arg->source())
 		);
 		arguments.emplace(arg->getName().name(), v);
@@ -208,7 +209,8 @@ dag::ValuePtr Action::evaluate(dag::EvalContext& ctx) const
 		FileType::CheckFileTags(p->type(), p->source());
 
 		std::shared_ptr<dag::Parameter> param =
-			std::dynamic_pointer_cast<dag::Parameter>(p->evaluate(ctx));
+			std::dynamic_pointer_cast<dag::Parameter>(
+				p->evaluate(ctx));
 
 		assert(param);
 		parameters.emplace_back(param);

@@ -1,4 +1,4 @@
-/** @file DAG/EvalContext.h    Declaration of @ref fabrique::dag::EvalContext. */
+/** @file AST/EvalContext.h    Declaration of @ref fabrique::ast::EvalContext. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -49,17 +49,16 @@ class FileType;
 class FunctionType;
 class TypeContext;
 
-namespace ast {
-class Scope;
-}
-
 namespace dag {
-
 class Build;
 class File;
 class Parameter;
 class Rule;
 class Target;
+}
+
+namespace ast {
+class Scope;
 
 class EvalContext : public dag::DAGBuilder::Context
 {
@@ -72,7 +71,7 @@ public:
 
 	~EvalContext() {}
 
-	std::vector<DAG::BuildTarget> Evaluate(const ast::Scope&);
+	std::vector<dag::DAG::BuildTarget> Evaluate(const ast::Scope&);
 
 
 	/**
@@ -87,16 +86,16 @@ public:
 		~Scope();
 
 		bool contains(const std::string& name);
-		void set(std::string name, ValuePtr);
+		void set(std::string name, dag::ValuePtr);
 
-		ValueMap leave();
+		dag::ValueMap leave();
 
 		private:
-		Scope(EvalContext& stack, std::string name, ValueMap&);
+		Scope(EvalContext& stack, std::string name, dag::ValueMap&);
 
 		EvalContext& stack_;
 		std::string name_;
-		ValueMap& symbols_;
+		dag::ValueMap& symbols_;
 
 		friend class EvalContext;
 	};
@@ -118,15 +117,15 @@ public:
 		~AlternateScoping();
 
 		private:
-		AlternateScoping(EvalContext&, std::deque<ValueMap>&&);
+		AlternateScoping(EvalContext&, std::deque<dag::ValueMap>&&);
 
 		EvalContext& stack_;
-		std::deque<ValueMap> originalScopes_;
+		std::deque<dag::ValueMap> originalScopes_;
 
 		friend class EvalContext;
 	};
 
-	AlternateScoping ChangeScopeStack(const ValueMap& alternativeScope);
+	AlternateScoping ChangeScopeStack(const dag::ValueMap& alternativeScope);
 
 
 	/**
@@ -155,7 +154,7 @@ public:
 	ScopedValueName evaluating(const std::string& name);
 
 
-	DAGBuilder& builder() { return builder_; }
+	dag::DAGBuilder& builder() { return builder_; }
 
 	virtual std::string buildroot() const { return buildroot_; }
 	virtual std::string srcroot() const { return srcroot_; }
@@ -165,26 +164,28 @@ public:
 
 
 	//! Define a named @ref dag::Value in the current scope.
-	void Define(ScopedValueName& name, ValuePtr value);
+	void Define(ScopedValueName& name, dag::ValuePtr value);
 
 	//! Look up a named value from the current scope or a parent scope.
-	ValuePtr Lookup(const std::string& name);
+	dag::ValuePtr Lookup(const std::string& name);
 
 
 	//! Define a @ref dag::Function.
-	ValuePtr Function(Function::Evaluator, const SharedPtrVec<Parameter>&,
-	                  const FunctionType&, SourceRange = SourceRange::None());
+	dag::ValuePtr Function(dag::Function::Evaluator,
+	                       const SharedPtrVec<dag::Parameter>&,
+	                       const FunctionType&,
+	                       SourceRange = SourceRange::None());
 
 
 	//! Create a new alias for an existing @ref dag::Target.
-	void Alias(const std::shared_ptr<class Target>&);
+	void Alias(const std::shared_ptr<dag::Target>&);
 
 protected:
-	ValueMap& CurrentScope();
-	ValueMap PopScope();
+	dag::ValueMap& CurrentScope();
+	dag::ValueMap PopScope();
 
 	//! Make a deep copy of the current scope and all of its parents.
-	ValueMap CopyCurrentScope();
+	dag::ValueMap CopyCurrentScope();
 
 	void DumpScope();
 
@@ -202,20 +203,20 @@ protected:
 	std::deque<std::string> scopeName_;
 
 	//! Symbols defined in this scope (or the one up from it, or up...).
-	std::deque<ValueMap> scopes_;
+	std::deque<dag::ValueMap> scopes_;
 
 	// Values we've created:
-	SharedPtrVec<class File> files_;
-	SharedPtrVec<class Build> builds_;
-	SharedPtrMap<class Rule> rules_;
-	SharedPtrMap<class Value> variables_;
-	SharedPtrMap<class Target> targets_;
+	SharedPtrVec<dag::File> files_;
+	SharedPtrVec<dag::Build> builds_;
+	SharedPtrMap<dag::Rule> rules_;
+	SharedPtrMap<dag::Value> variables_;
+	SharedPtrMap<dag::Target> targets_;
 
 private:
 	/** The name of the value we are currently processing. */
 	std::deque<std::string> currentValueName_;
 
-	DAGBuilder builder_;
+	dag::DAGBuilder builder_;
 
 	const std::string buildroot_;
 	const std::string srcroot_;

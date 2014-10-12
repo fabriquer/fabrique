@@ -29,11 +29,11 @@
  * SUCH DAMAGE.
  */
 
+#include "AST/EvalContext.h"
 #include "AST/Foreach.h"
 #include "AST/Parameter.h"
 #include "AST/Value.h"
 #include "AST/Visitor.h"
-#include "DAG/EvalContext.h"
 #include "DAG/List.h"
 #include "Support/Bytestream.h"
 #include "Types/Type.h"
@@ -78,7 +78,7 @@ void ForeachExpr::Accept(Visitor& v) const
 }
 
 
-dag::ValuePtr ForeachExpr::evaluate(dag::EvalContext& ctx) const
+dag::ValuePtr ForeachExpr::evaluate(EvalContext& ctx) const
 {
 	SharedPtrVec<dag::Value> values;
 

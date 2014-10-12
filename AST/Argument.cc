@@ -73,7 +73,7 @@ void Argument::Accept(Visitor& v) const
 	v.Leave(*this);
 }
 
-dag::ValuePtr Argument::evaluate(dag::EvalContext& ctx) const
+dag::ValuePtr Argument::evaluate(EvalContext& ctx) const
 {
 	return value_->evaluate(ctx);
 }

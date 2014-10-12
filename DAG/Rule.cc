@@ -30,7 +30,7 @@
  */
 
 #include "DAG/Build.h"
-#include "DAG/EvalContext.h"
+#include "DAG/DAGBuilder.h"
 #include "DAG/File.h"
 #include "DAG/Parameter.h"
 #include "DAG/Rule.h"
@@ -85,12 +85,12 @@ Rule::Rule(const string& name, const string& command, const string& description,
 }
 
 
-ValuePtr Rule::Call(const ValueMap& args, EvalContext& ctx, SourceRange loc) const
+ValuePtr Rule::Call(const ValueMap& args, DAGBuilder& build, SourceRange loc) const
 {
 	std::shared_ptr<Rule> rule = self_.lock();
 	assert(rule);
 
-	return ctx.builder().Build(rule, args, loc);
+	return build.Build(rule, args, loc);
 }
 
 

@@ -30,9 +30,9 @@
  */
 
 #include "AST/Builtins.h"
+#include "AST/EvalContext.h"
 #include "AST/FileList.h"
 #include "AST/Visitor.h"
-#include "DAG/EvalContext.h"
 #include "DAG/File.h"
 #include "DAG/List.h"
 #include "DAG/Primitive.h"
@@ -76,7 +76,7 @@ void FileList::Accept(Visitor& v) const
 	v.Leave(*this);
 }
 
-dag::ValuePtr FileList::evaluate(dag::EvalContext& ctx) const
+dag::ValuePtr FileList::evaluate(EvalContext& ctx) const
 {
 	assert(ctx.Lookup(ast::Subdirectory));
 	const string subdir = ctx.Lookup(ast::Subdirectory)->str();

@@ -80,7 +80,7 @@ void Conditional::Accept(Visitor& v) const
 }
 
 
-dag::ValuePtr Conditional::evaluate(dag::EvalContext& ctx) const
+dag::ValuePtr Conditional::evaluate(EvalContext& ctx) const
 {
 	std::shared_ptr<dag::Boolean> cond =
 		std::dynamic_pointer_cast<dag::Boolean>(condition_->evaluate(ctx));

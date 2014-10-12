@@ -30,11 +30,11 @@
  */
 
 #include "AST/Call.h"
+#include "AST/EvalContext.h"
 #include "AST/Function.h"
 #include "AST/Visitor.h"
 #include "DAG/Build.h"
 #include "DAG/Callable.h"
-#include "DAG/EvalContext.h"
 #include "DAG/Function.h"
 #include "DAG/Parameter.h"
 #include "DAG/Rule.h"
@@ -92,7 +92,7 @@ void Call::Accept(Visitor& v) const
 	v.Leave(*this);
 }
 
-dag::ValuePtr Call::evaluate(dag::EvalContext& ctx) const
+dag::ValuePtr Call::evaluate(EvalContext& ctx) const
 {
 	Bytestream& dbg = Bytestream::Debug("eval.call");
 
@@ -123,5 +123,5 @@ dag::ValuePtr Call::evaluate(dag::EvalContext& ctx) const
 	}
 
 	target->CheckArguments(args, argLocations, source());
-	return target->Call(args, ctx, source());
+	return target->Call(args, ctx.builder(), source());
 }
