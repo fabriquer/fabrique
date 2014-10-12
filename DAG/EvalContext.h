@@ -48,6 +48,10 @@ class FileType;
 class FunctionType;
 class TypeContext;
 
+namespace ast {
+class Scope;
+}
+
 namespace dag {
 
 class Build;
@@ -165,8 +169,7 @@ public:
 
 	//! Construct a @ref dag::Build from a @ref dag::Rule and parameters.
 	std::shared_ptr<class Build>
-	Build(std::shared_ptr<class Rule>, ValueMap, ConstPtrMap<Type>& paramTypes,
-	      SourceRange);
+	Build(std::shared_ptr<class Rule>&, ValueMap, SourceRange);
 
 	//! Create a @ref dag::File from a path.
 	ValuePtr File(std::string fullPath,

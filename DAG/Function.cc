@@ -34,23 +34,26 @@
 #include "Support/Bytestream.h"
 #include "Types/FunctionType.h"
 using namespace fabrique::dag;
+using namespace std::placeholders;
 
 
-Function::Function(Evaluator evaluator, ValueMap&& scope,
+Function* Function::Create(Evaluator fnEval, ValueMap&& scope,
+                           const SharedPtrVec<Parameter>& params,
+                           const FunctionType& type, SourceRange source)
+{
+	Callable::Evaluator eval = std::bind(fnEval, scope, _1, _2, _3);
+	return new Function(eval, params, type, source);
+}
+
+Function::Function(Callable::Evaluator evaluator,
                    const SharedPtrVec<Parameter>& parameters,
                    const FunctionType& type, SourceRange source)
-	: Callable(parameters), Value(type, source), evaluator_(evaluator),
-	  containingScope_(std::move(scope))
+	: Callable(parameters, evaluator), Value(type, source)
 {
 }
 
 Function::~Function() {}
 
-
-ValuePtr Function::Call(const ValueMap& arguments) const
-{
-	return evaluator_(containingScope_, arguments);
-}
 
 void Function::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {

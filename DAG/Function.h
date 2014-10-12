@@ -53,25 +53,26 @@ class EvalContext;
 class Function : public Callable, public Value
 {
 public:
-	typedef std::function<ValuePtr (const ValueMap&, const ValueMap&)>
+	typedef std::function<
+		ValuePtr (const ValueMap&, const ValueMap&, EvalContext&,
+		          SourceRange)>
 		Evaluator;
 
-	Function(Evaluator, ValueMap&& scope, const SharedPtrVec<Parameter>&,
-	         const FunctionType&, SourceRange source = SourceRange::None());
+	static Function* Create(Evaluator, ValueMap&& scope,
+	                        const SharedPtrVec<Parameter>&,
+	                        const FunctionType&,
+	                        SourceRange source = SourceRange::None());
+
 	virtual ~Function();
-
-	//! Call this function with (named) arguments.
-	virtual ValuePtr Call(const ValueMap& arguments) const;
-
-	//! A copy of the scope containing the function (at definition).
-	const ValueMap& scope() const { return containingScope_; }
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	void Accept(Visitor&) const override;
 
 private:
+	Function(Callable::Evaluator, const SharedPtrVec<Parameter>&,
+	         const FunctionType&, SourceRange source);
+
 	const Evaluator evaluator_;
-	const ValueMap containingScope_;
 };
 
 } // namespace dag

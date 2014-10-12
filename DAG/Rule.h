@@ -63,6 +63,8 @@ public:
 
 	virtual ~Rule() {}
 
+	ValuePtr Call(const ValueMap&, EvalContext&, SourceRange) const override;
+
 	const std::string& name() const { return ruleName_; }
 	const std::string& command() const { return command_; }
 
@@ -73,6 +75,8 @@ public:
 	const ValueMap& arguments() const { return arguments_; }
 
 	std::string str() const { return command_; }
+
+	void setSelf(std::weak_ptr<Rule>);
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	void Accept(Visitor& v) const override;
@@ -87,6 +91,9 @@ private:
 	const std::string command_;
 	const std::string description_;
 	const ValueMap arguments_;
+
+	//! We need something to pass to @ref Build constructors.
+	std::weak_ptr<Rule> self_;
 };
 
 } // namespace dag

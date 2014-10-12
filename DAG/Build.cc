@@ -54,8 +54,14 @@ using std::vector;
 
 
 Build* Build::Create(shared_ptr<Rule>& rule, SharedPtrMap<Value>& arguments,
-                     ConstPtrMap<Type>& paramTypes, const SourceRange& src)
+                     const SourceRange& src)
 {
+	// Builds need the parameter types, not just the argument types.
+	ConstPtrMap<Type> paramTypes;
+	for (auto& p : rule->parameters())
+		paramTypes[p->name()] = &p->type();
+
+
 	SharedPtrVec<File> inputs, outputs;
 
 	for (auto& i : arguments)

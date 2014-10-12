@@ -458,12 +458,10 @@ ValuePtr EvalContext::Bool(bool b, SourceRange src)
 
 
 shared_ptr<class Build>
-EvalContext::Build(shared_ptr<class Rule> rule, ValueMap arguments,
-                 ConstPtrMap<Type>& paramTypes, SourceRange src)
+EvalContext::Build(shared_ptr<class Rule>& rule, ValueMap arguments,
+                   SourceRange src)
 {
-	shared_ptr<class Build> b(
-		Build::Create(rule, arguments, paramTypes, src));
-
+	shared_ptr<class Build> b(Build::Create(rule, arguments, src));
 	builds_.push_back(b);
 
 	for (const shared_ptr<class File>& f : b->inputs())
@@ -496,7 +494,7 @@ ValuePtr EvalContext::Function(const Function::Evaluator fn,
                                const FunctionType& type, SourceRange source)
 {
 	return ValuePtr(
-		new class Function(fn, CopyCurrentScope(), params, type, source));
+		Function::Create(fn, CopyCurrentScope(), params, type, source));
 }
 
 
@@ -517,6 +515,7 @@ ValuePtr EvalContext::Rule(string command, const ValueMap& arguments,
 		Rule::Create(name, command, arguments, parameters,
 		             type, source)
 	);
+	r->setSelf(r);
 
 	rules_[name] = r;
 
@@ -646,9 +645,5 @@ static ValuePtr AddRegeneration(EvalContext& stack, TypeContext& ctx,
 
 	args["output"].reset(List::of(outputs, Nowhere, ctx));
 
-	ConstPtrMap<Type> paramTypes;
-	for (auto& p : params)
-		paramTypes[p->name()] = &p->type();
-
-	return stack.Build(rule, args, paramTypes, Nowhere);
+	return stack.Build(rule, args, Nowhere);
 }

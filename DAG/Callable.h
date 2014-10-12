@@ -37,8 +37,7 @@
 #include "DAG/Value.h"
 #include "Support/SourceLocation.h"
 
-#include <memory>
-#include <set>
+#include <functional>
 #include <string>
 
 namespace fabrique {
@@ -48,6 +47,7 @@ class Type;
 namespace dag {
 
 class Argument;
+class EvalContext;
 class Parameter;
 
 
@@ -58,6 +58,10 @@ class Callable
 {
 public:
 	virtual ~Callable();
+
+	//! Call this function with (named) arguments.
+	virtual ValuePtr Call(const ValueMap& arguments, EvalContext&,
+	                      SourceRange = SourceRange::None()) const;
 
 	const SharedPtrVec<Parameter>& parameters() const;
 
@@ -100,13 +104,17 @@ public:
 	}
 
 protected:
-	Callable(const SharedPtrVec<Parameter>&);
+	typedef std::function<
+		ValuePtr (const ValueMap&, EvalContext&, SourceRange)>
+		Evaluator;
+	Callable(const SharedPtrVec<Parameter>&, Evaluator);
 
 private:
 	std::vector<std::string>
 	NameArguments(const std::vector<std::string>&, SourceRange src) const;
 
 	const SharedPtrVec<Parameter> parameters_;
+	const Evaluator evaluator_;
 };
 
 } // namespace ast

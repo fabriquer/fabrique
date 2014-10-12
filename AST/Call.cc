@@ -123,23 +123,5 @@ dag::ValuePtr Call::evaluate(dag::EvalContext& ctx) const
 	}
 
 	target->CheckArguments(args, argLocations, source());
-
-	//
-	// The target must be an action or a function.
-	//
-	if (auto rule = dynamic_pointer_cast<dag::Rule>(target))
-	{
-		// Builds need the parameter types, not just the argument types.
-		ConstPtrMap<Type> paramTypes;
-		for (auto& p : target->parameters())
-			paramTypes[p->name()] = &p->type();
-
-		return ctx.Build(rule, args, paramTypes, source());
-	}
-	else if (auto fn = dynamic_pointer_cast<dag::Function>(target))
-	{
-		return fn->Call(args);
-	}
-
-	assert(false && "unreachable");
+	return target->Call(args, ctx, source());
 }

@@ -44,8 +44,8 @@ using std::string;
 using std::vector;
 
 
-Callable::Callable(const SharedPtrVec<Parameter>& p)
-	: parameters_(p)
+Callable::Callable(const SharedPtrVec<Parameter>& p, Evaluator e)
+	: parameters_(p), evaluator_(e)
 {
 	for (auto& param : parameters_)
 		assert(param);
@@ -54,6 +54,14 @@ Callable::Callable(const SharedPtrVec<Parameter>& p)
 Callable::~Callable()
 {
 }
+
+
+ValuePtr Callable::Call(const ValueMap& arguments, EvalContext& ctx,
+                        SourceRange src) const
+{
+	return evaluator_(arguments, ctx, src);
+}
+
 
 const SharedPtrVec<Parameter>& Callable::parameters() const
 {

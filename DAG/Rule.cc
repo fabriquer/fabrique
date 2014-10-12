@@ -29,6 +29,8 @@
  * SUCH DAMAGE.
  */
 
+#include "DAG/Build.h"
+#include "DAG/EvalContext.h"
 #include "DAG/File.h"
 #include "DAG/Parameter.h"
 #include "DAG/Rule.h"
@@ -36,7 +38,10 @@
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 
+#include <cassert>
+
 using namespace fabrique::dag;
+using namespace std::placeholders;
 using std::string;
 
 
@@ -66,18 +71,35 @@ Rule* Rule::Create(string name, string command, const ValueMap& arguments,
 		description = command;
 	}
 
-	return new Rule(name, command, description, args, parameters,
-	                t, location);
+	return new Rule(name, command, description, args, parameters, t, location);
 }
 
 
 Rule::Rule(const string& name, const string& command, const string& description,
 	   const ValueMap& args, const SharedPtrVec<Parameter>& parameters,
 	   const Type& t, SourceRange location)
-	: Callable(parameters), Value(t, location), ruleName_(name),
+	: Callable(parameters, std::bind(&Rule::Call, this, _1, _2, _3)),
+	  Value(t, location), ruleName_(name),
 	  command_(command), description_(description), arguments_(args)
 {
 }
+
+
+ValuePtr Rule::Call(const ValueMap& args, EvalContext& ctx, SourceRange loc) const
+{
+	std::shared_ptr<Rule> rule = self_.lock();
+	assert(rule);
+
+	return ctx.Build(rule, args, loc);
+}
+
+
+void Rule::setSelf(std::weak_ptr<Rule> r)
+{
+	assert(r.lock().get() == this);
+	self_ = r;
+}
+
 
 void Rule::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {

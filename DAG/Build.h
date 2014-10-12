@@ -55,7 +55,7 @@ public:
 	typedef std::vector<std::shared_ptr<File>> FileVec;
 
 	static Build* Create(std::shared_ptr<Rule>&, SharedPtrMap<Value>& args,
-	                     ConstPtrMap<Type>& paramTypes, const SourceRange&);
+	                     const SourceRange&);
 
 	virtual ~Build() {}
 
