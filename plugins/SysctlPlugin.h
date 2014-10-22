@@ -1,4 +1,4 @@
-/** @file Plugin/Plugin.h    Declaration of @ref fabrique::plugin::Plugin. */
+/** @file plugins/SysctlPlugin.h   Declaration of @ref fabrique::plugins::SysctlPlugin. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -29,41 +29,31 @@
  * SUCH DAMAGE.
  */
 
-#ifndef PLUGIN_H
-#define PLUGIN_H
+#ifndef SYSCTL_PLUGIN_H
+#define SYSCTL_PLUGIN_H
 
-#include "DAG/Structure.h"
+#include "Plugin/Plugin.h"
 
 
 namespace fabrique {
-
-namespace dag {
-class DAGBuilder;
-}
-
-namespace plugin {
+namespace plugins {
 
 /**
- * A plugin that provides extra functionality to Fabrique build descriptions.
+ * Provides access to the sysctl(3) set of C library functions.
  *
- * Plugins are written in C++ to provide functionality that simple shell commands
- * don't express well. For instance, instead of parsing the output of sysctl(8)
- * (turning a typed value into a string and back into a value according to expected type),
- * a sysctl plugin can represent the underlying types correctly. The difference is:
- * if a Fabrique description expects the wrong type, it can receive a type error rather
- * than a syntactically-legal but logically-incorrect reinterpretation (e.g. "0").
+ * Many useful properties of the system are represented (or controlled) with sysctl(3)
+ * entries. For instance, Fabrique build descriptions might like to inspect the values
+ * of kern.ostype, kern.osrelease, etc.
  */
-class Plugin
+class SysctlPlugin : public plugin::Plugin
 {
 public:
-	virtual ~Plugin();
+	std::string name() const override { return "sysctl"; }
 
-	virtual std::string name() const = 0;
-
-	virtual std::shared_ptr<dag::Structure> Create(dag::DAGBuilder&) const = 0;
+	virtual std::shared_ptr<dag::Structure> Create(dag::DAGBuilder&) const override;
 };
 
-} // namespace plugin
+} // namespace plugins
 } // namespace fabrique
 
 #endif

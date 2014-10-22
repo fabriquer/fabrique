@@ -1,0 +1,9 @@
+#
+# RUN: fab --format=null --print-dag %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+sysctl = import('sysctl');
+
+# CHECK-DAG: string ostype = 'Darwin'
+ostype = sysctl.string('kern.ostype');

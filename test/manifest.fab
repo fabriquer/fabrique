@@ -1,5 +1,5 @@
 #
-# Generated at Tue  7 Oct 2014 12:53:52 NDT by regenerate-manifest.sh
+# Generated at Wed 15 Oct 2014 17:45:29 NDT by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -70,6 +70,7 @@ all_files = files(
 ./DAG/struct-nesting.fab
 ./DAG/subdir-within-subdir.fab
 ./DAG/subdir.fab
+./DAG/sysctl-plugin.fab
 ./DAG/target-operations.fab
 ./DAG/tool-vs-src-directories.fab
 ./DAG/trace-simple.fab

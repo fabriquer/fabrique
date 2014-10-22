@@ -70,8 +70,10 @@ cxx_srcs =
 	+ import('Backend').sources
 	+ import('DAG').sources
 	+ import('Parsing').sources
+	+ import('Plugin').sources
 	+ import('Support').sources
 	+ import('Types').sources
+	+ import('plugins').sources
 	;
 
 

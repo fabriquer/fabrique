@@ -1,4 +1,4 @@
-/** @file Plugin/Plugin.h    Declaration of @ref fabrique::plugin::Plugin. */
+/** @file Plugin/Plugin.cc    Definition of @ref fabrique::plugin::Plugin. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -29,41 +29,10 @@
  * SUCH DAMAGE.
  */
 
-#ifndef PLUGIN_H
-#define PLUGIN_H
-
-#include "DAG/Structure.h"
+#include "Plugin/Plugin.h"
+using namespace fabrique::plugin;
 
 
-namespace fabrique {
-
-namespace dag {
-class DAGBuilder;
-}
-
-namespace plugin {
-
-/**
- * A plugin that provides extra functionality to Fabrique build descriptions.
- *
- * Plugins are written in C++ to provide functionality that simple shell commands
- * don't express well. For instance, instead of parsing the output of sysctl(8)
- * (turning a typed value into a string and back into a value according to expected type),
- * a sysctl plugin can represent the underlying types correctly. The difference is:
- * if a Fabrique description expects the wrong type, it can receive a type error rather
- * than a syntactically-legal but logically-incorrect reinterpretation (e.g. "0").
- */
-class Plugin
+Plugin::~Plugin()
 {
-public:
-	virtual ~Plugin();
-
-	virtual std::string name() const = 0;
-
-	virtual std::shared_ptr<dag::Structure> Create(dag::DAGBuilder&) const = 0;
-};
-
-} // namespace plugin
-} // namespace fabrique
-
-#endif
+}
