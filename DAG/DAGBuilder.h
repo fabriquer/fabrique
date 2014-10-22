@@ -79,6 +79,9 @@ public:
 	//! Construct a @ref DAG from the current @ref DAGBuilder state.
 	UniqPtr<DAG> dag(const std::vector<std::string>& topLevelTargets) const;
 
+	TypeContext& typeContext() { return ctx_.types(); }
+
+
 	//! Define a variable with a name and a value.
 	void Define(std::string name, ValuePtr);
 
