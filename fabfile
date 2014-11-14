@@ -77,7 +77,7 @@ cxx_srcs =
 
 parser_src = yacc.process(file('Parsing/fab.yy'), subdir, 'Parsing/fab.yacc');
 lexer_src = lex.process(
-	src = file('Parsing/fab.l'), gen = file('Parsing/fab.lex.cc'),
+	src = file('Parsing/fab.lxx'), gen = file('Parsing/fab.lex.cc'),
 	flags = [ '-c++'], header_out = file('Parsing/fab.lex.h')
 );
 
