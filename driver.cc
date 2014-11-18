@@ -86,7 +86,7 @@ int main(int argc, char *argv[]) {
 	argDebug << Bytestream::Reset << "\n";
 
 	//
-	// Parse the file, build the DAG and pass it to the backed.
+	// Parse the file, build the DAG and pass it to the backend.
 	// These operations can report errors with exceptions, so put them in
 	// a `try` block.
 	//
