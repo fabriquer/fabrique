@@ -157,7 +157,8 @@ UniqPtr<Scope> Parser::ParseFile(std::istream& input, const Type& args,
 	// Define builtin strings like srcroot and builtroot.
 	for (std::pair<string,string> i : builtins)
 		if (not Builtin(i.first, i.second, openedFrom))
-			return UniqPtr<Scope>();
+			throw AssertionFailure("Builtin('" + i.first + "')",
+			                       "failed to create builtin");
 
 	int result = yyparse(this);
 
