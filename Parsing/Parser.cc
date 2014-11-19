@@ -592,7 +592,19 @@ Import* Parser::ImportModule(UniqPtr<StringLiteral>& name, UniqPtrVec<Argument>&
 		;
 
 	if (auto plugin = pluginRegistry_.lookup(name->str()).Instantiate(ctx_))
+	{
+		dbg
+			<< Bytestream::Action << "found"
+			<< Bytestream::Type << " plugin "
+			<< Bytestream::Definition << plugin->descriptor().name()
+			<< Bytestream::Reset << " with type "
+			<< plugin->type()
+			<< "\n"
+			;
+
 		return new Import(name, args, plugin, src);
+	}
+
 	const string subdir(currentSubdirectory_.top());
 	const string filename = FindModule(srcroot_, subdir, name->str());
 	const string directory = DirectoryOf(filename);
@@ -601,6 +613,19 @@ Import* Parser::ImportModule(UniqPtr<StringLiteral>& name, UniqPtrVec<Argument>&
 
 	const string absolute =
 		PathIsAbsolute(filename) ? filename : JoinPath(srcroot_, filename);
+
+	dbg
+		<< Bytestream::Action << "found"
+		<< Bytestream::Type << " module "
+		<< Bytestream::Operator << "'"
+		<< Bytestream::Literal << filename
+		<< Bytestream::Operator << "'"
+		<< Bytestream::Reset << " at "
+		<< Bytestream::Operator << "'"
+		<< Bytestream::Literal << absolute
+		<< Bytestream::Operator << "'"
+		<< "\n"
+		;
 
 	std::ifstream input(absolute);
 	if (not input.good())
