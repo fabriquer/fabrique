@@ -47,6 +47,7 @@ using namespace fabrique;
 using namespace fabrique::dag;
 using fabrique::plugin::Plugin;
 using std::shared_ptr;
+using std::string;
 
 
 namespace {
@@ -61,12 +62,12 @@ namespace {
 class SysctlPlugin : public plugin::Plugin
 {
 	public:
-	virtual std::shared_ptr<dag::Structure> Create(dag::DAGBuilder&) const override;
+	virtual shared_ptr<dag::Structure> Create(dag::DAGBuilder&) const override;
 
 	class Factory : public Plugin::Descriptor
 	{
 		public:
-		virtual std::string name() const override { return "sysctl"; }
+		virtual string name() const override { return "sysctl"; }
 		virtual UniqPtr<Plugin> Instantiate(TypeContext&) const override;
 
 	};
