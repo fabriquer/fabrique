@@ -75,37 +75,74 @@ class SysctlPlugin : public plugin::Plugin
 	private:
 	SysctlPlugin(const Factory& factory, const StructureType& type,
 	             const Type& stringType,
-	             const FunctionType& stringSysctlType)
+	             const FunctionType& stringSysctlType,
+		     const FunctionType& intSysctlType)
 		: Plugin(type, factory), stringType_(stringType),
-		  stringSysctlType_(stringSysctlType)
+		  stringSysctlType_(stringSysctlType), intSysctlType_(intSysctlType)
 	{
 	}
 
 	const Type& stringType_;
 
 	const FunctionType& stringSysctlType_;
+	const FunctionType& intSysctlType_;
 };
 
 } // anonymous namespace
 
 
+static string SysctlName(const ValueMap& args);
+static ValuePtr StringSysctl(const ValueMap& /*scope*/, const ValueMap& args,
+                             DAGBuilder& builder, SourceRange src);
+static ValuePtr IntegerSysctl(const ValueMap& /*scope*/, const ValueMap& args,
+                              DAGBuilder& builder, SourceRange src);
+
+
 UniqPtr<Plugin> SysctlPlugin::Factory::Instantiate(TypeContext& ctx) const
 {
 	const Type& stringType = ctx.stringType();
-	//const Type& intType = ctx.integerType();
+	const Type& intType = ctx.integerType();
 
 	const FunctionType& string = ctx.functionType(stringType, stringType);
+	const FunctionType& integer = ctx.functionType(stringType, intType);
 
 	const StructureType& type = ctx.structureType({
-		{ "string", string }
+		{ "string", string },
+		{ "int", integer },
 	});
 
-	return UniqPtr<Plugin>(new SysctlPlugin(*this, type, stringType, string));
+	return UniqPtr<Plugin>(
+		new SysctlPlugin(*this, type, stringType, string, integer));
 }
 
 
-static ValuePtr StringSysctl(const ValueMap& /*scope*/, const ValueMap& args,
-                             DAGBuilder& builder, SourceRange src)
+shared_ptr<Structure> SysctlPlugin::Create(DAGBuilder& builder) const
+{
+	const ValueMap scope;
+	const SharedPtrVec<Parameter> params = {
+		std::make_shared<Parameter>("name", stringType_, ValuePtr()),
+	};
+
+	std::vector<Structure::NamedValue> fields = {
+		{
+			"string",
+			builder.Function(StringSysctl, scope, params, stringSysctlType_)
+		},
+		{
+			"int",
+			builder.Function(IntegerSysctl, scope, params, intSysctlType_)
+		},
+	};
+
+	auto result = std::dynamic_pointer_cast<Structure>(
+		builder.Struct(fields, type(), SourceRange::None()));
+
+	assert(result);
+	return result;
+}
+
+
+static string SysctlName(const ValueMap& args)
 {
 	// If the user didn't pass a 'name' argument of type string,
 	// dag::Callable ought to have caught it.
@@ -113,38 +150,45 @@ static ValuePtr StringSysctl(const ValueMap& /*scope*/, const ValueMap& args,
 	assert(args.find("name") != args.end());
 
 	ValuePtr name = args.find("name")->second;
-	assert(name->type().isSubtype(builder.typeContext().stringType()));
-	const char *rawName = name->str().c_str();
+	assert(name);
+
+	return name->str();
+}
+
+
+static ValuePtr StringSysctl(const ValueMap& /*scope*/, const ValueMap& args,
+                             DAGBuilder& builder, SourceRange src)
+{
+	const string name = SysctlName(args);
+	const char *rawName = name.c_str();
 
 	size_t len;
 	if (sysctlbyname(rawName, NULL, &len, NULL, 0))
 		throw PosixError(
-			"error querying size of '" + name->str() + "' sysctl");
+			"error querying size of '" + name + "' sysctl");
 
 	UniqPtr<char> buffer(new char[len]);
 	if (sysctlbyname(rawName, buffer.get(), &len, NULL, 0))
 		throw PosixError(
-			"error retrieving '" + name->str() + "' via sysctlbyname()");
+			"error retrieving '" + name + "' via sysctlbyname()");
 
 	return builder.String(buffer.get(), src);
 }
 
 
-shared_ptr<Structure> SysctlPlugin::Create(DAGBuilder& builder) const
+static ValuePtr IntegerSysctl(const ValueMap& /*scope*/, const ValueMap& args,
+                              DAGBuilder& builder, SourceRange src)
 {
-	std::vector<Structure::NamedValue> fields;
+	const string name = SysctlName(args);
+	const char *rawName = name.c_str();
 
-	SharedPtrVec<Parameter> params;
-	params.emplace_back(new Parameter("name", stringType_, ValuePtr()));
+	int value;
+	size_t len;
+	if (sysctlbyname(rawName, &value, &len, NULL, 0))
+		throw PosixError(
+			"error retrieving '" + name + "' via sysctlbyname()");
 
-	fields.emplace_back("string",
-		std::shared_ptr<Function>(Function::Create(StringSysctl, ValueMap(), params, stringSysctlType_)));
-
-	auto result = std::dynamic_pointer_cast<Structure>(
-		builder.Struct(fields, type(), SourceRange::None()));
-
-	assert(result);
-	return result;
+	return builder.Integer(value, src);
 }
 
 
