@@ -118,7 +118,7 @@ bool StructureType::isSubtype(const Type& t) const
 
 void StructureType::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
-	out << Bytestream::Type << "struct";
+	out << Bytestream::Type << "struct" << Bytestream::Reset;
 
 	if (fieldNames_.empty())
 		return;
@@ -145,5 +145,5 @@ void StructureType::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 			;
 	}
 
-	out << Bytestream::Operator << ']';
+	out << Bytestream::Operator << ']' << Bytestream::Reset;
 }
