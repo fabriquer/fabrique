@@ -53,6 +53,8 @@ Structure* Structure::Create(const vector<NamedValue>& values,
 		const string name = value.first;
 		if (name != ast::Arguments and name != ast::Subdirectory)
 			assert(typeFields.find(name) != typeFields.end());
+
+		assert(value.second);
 	}
 
 	if (not src and not values.empty())
