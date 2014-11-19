@@ -52,7 +52,7 @@ class Parameter : public HasSource, public Printable, public Typed,
 {
 public:
 	Parameter(const std::string& name, const Type& type,
-	          std::shared_ptr<Value>& defaultValue,
+	          std::shared_ptr<Value> defaultValue,
 	          const SourceRange& = SourceRange::None());
 
 	virtual ~Parameter();
