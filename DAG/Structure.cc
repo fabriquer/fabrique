@@ -29,6 +29,7 @@
  * SUCH DAMAGE.
  */
 
+#include "AST/Builtins.h"
 #include "DAG/Structure.h"
 #include "DAG/Visitor.h"
 #include "Support/Bytestream.h"
@@ -45,6 +46,15 @@ using std::vector;
 Structure* Structure::Create(const vector<NamedValue>& values,
                              const Type& t, SourceRange src)
 {
+	assert(values.size() >= t.fields().size());
+	const StructureType::TypeMap typeFields = t.fields();
+	for (const NamedValue& value : values)
+	{
+		const string name = value.first;
+		if (name != ast::Arguments and name != ast::Subdirectory)
+			assert(typeFields.find(name) != typeFields.end());
+	}
+
 	if (not src and not values.empty())
 	{
 		SourceRange begin = values.front().second->source();
