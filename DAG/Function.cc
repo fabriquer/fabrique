@@ -37,7 +37,7 @@ using namespace fabrique::dag;
 using namespace std::placeholders;
 
 
-Function* Function::Create(Evaluator fnEval, ValueMap&& scope,
+Function* Function::Create(Evaluator fnEval, const ValueMap& scope,
                            const SharedPtrVec<Parameter>& params,
                            const FunctionType& type, SourceRange source)
 {

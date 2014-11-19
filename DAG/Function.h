@@ -56,7 +56,7 @@ public:
 		          SourceRange)>
 		Evaluator;
 
-	static Function* Create(Evaluator, ValueMap&& scope,
+	static Function* Create(Evaluator, const ValueMap& scope,
 	                        const SharedPtrVec<Parameter>&,
 	                        const FunctionType&,
 	                        SourceRange source = SourceRange::None());
