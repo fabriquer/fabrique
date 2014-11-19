@@ -1,1 +1,4 @@
-sources = files(Plugin.cc);
+sources = files(
+	Plugin.cc
+	Registry.cc
+);
