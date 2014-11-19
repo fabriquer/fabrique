@@ -31,6 +31,7 @@
 
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
+#include "Support/PosixError.h"
 #include "Support/exceptions.h"
 #include "Support/os.h"
 
@@ -46,27 +47,6 @@ using std::string;
 
 namespace {
 
-//! An OS error that has an errno or equivalent output.
-class PosixError : public fabrique::OSError
-{
-public:
-	explicit PosixError(string message)
-		: OSError(message, strerror(errno))
-	{
-	}
-
-	PosixError(PosixError&& e)
-		: OSError(e)
-	{
-	}
-
-	virtual ~PosixError() {}
-
-private:
-	PosixError(const PosixError&) = delete;
-};
-
-
 bool FileExists(const string& filename, bool directory = false)
 {
 	struct stat s;
@@ -76,7 +56,7 @@ bool FileExists(const string& filename, bool directory = false)
 	if (errno == ENOENT)
 		return false;
 
-	throw PosixError("error examining " + filename);
+	throw fabrique::PosixError("error examining " + filename);
 }
 
 

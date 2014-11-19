@@ -3,6 +3,7 @@ sources = files(
 	Bytestream.cc
 	ErrorReport.cc
 	Join.cc
+	PosixError.cc
 	Printable.cc
 	SourceLocation.cc
 	String.cc
