@@ -64,11 +64,10 @@ namespace
 
 TypeContext::TypeContext()
 {
-	Register(new IntegerType(*this));
-
 	booleanType();
 	fileType();
 	inputFileType();
+	integerType();
 	outputFileType();
 	stringType();
 
@@ -119,9 +118,7 @@ const Type& TypeContext::booleanType()
 
 const Type& TypeContext::integerType()
 {
-	static const Type& t = Register(
-		new Type("int", PtrVec<Type>(), *this));
-
+	static const Type& t = Register(new IntegerType(*this));
 	return t;
 }
 
