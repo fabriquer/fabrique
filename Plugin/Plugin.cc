@@ -35,6 +35,21 @@ using namespace fabrique;
 using namespace fabrique::plugin;
 
 
+namespace {
+
+class NullPlugin : public Plugin::Descriptor
+{
+	public:
+	std::string name() const override { return "null"; }
+	virtual UniqPtr<Plugin> Instantiate(TypeContext&) const override
+	{
+		return UniqPtr<Plugin>();
+	}
+};
+
+} // anonymous namespace
+
+
 Plugin::~Plugin()
 {
 }

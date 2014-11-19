@@ -75,6 +75,8 @@ class Plugin : public Typed
 		virtual UniqPtr<Plugin> Instantiate(TypeContext&) const = 0;
 	};
 
+	static Plugin::Descriptor& nullPlugin();
+
 	const Descriptor& descriptor() const { return descriptor_; }
 
 	virtual std::shared_ptr<dag::Structure> Create(dag::DAGBuilder&) const = 0;
