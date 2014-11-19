@@ -39,6 +39,8 @@
 #include "Parsing/Lexer.h"
 #include "Parsing/Parser.h"
 
+#include "Plugin/Registry.h"
+
 #include "Support/Arguments.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
@@ -106,10 +108,14 @@ int main(int argc, char *argv[]) {
 		const string srcroot = AbsoluteDirectory(DirectoryOf(fabfile));
 		const string buildroot = AbsoluteDirectory(args->output);
 
+		plugin::Registry& plugins = plugin::Registry::Default();
+
 		//
 		// Parse the file, optionally pretty-printing it.
 		//
-		unique_ptr<ast::Parser> parser(new ast::Parser(types, srcroot));
+		unique_ptr<ast::Parser> parser(
+			new ast::Parser(types, plugins, srcroot));
+
 		unique_ptr<ast::Scope> ast(
 			Parse(parser, fabfile, args->definitions,
 			      srcroot, buildroot, args->printAST));

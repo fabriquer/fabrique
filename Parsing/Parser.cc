@@ -33,6 +33,8 @@
 #include "Parsing/Lexer.h"
 #include "Parsing/Parser.h"
 #include "Parsing/Token.h"
+#include "Plugin/Plugin.h"
+#include "Plugin/Registry.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 #include "Types/BooleanType.h"
@@ -59,8 +61,9 @@ using std::unique_ptr;
 int yyparse(ast::Parser*);
 
 
-Parser::Parser(TypeContext& ctx, string srcroot)
-	: ctx_(ctx), lexer_(Lexer::instance()), srcroot_(srcroot)
+Parser::Parser(TypeContext& ctx, plugin::Registry& plugins, string srcroot)
+	: ctx_(ctx), lexer_(Lexer::instance()), pluginRegistry_(plugins),
+	  srcroot_(srcroot)
 {
 	currentSubdirectory_.push("");
 }
@@ -588,6 +591,8 @@ Import* Parser::ImportModule(UniqPtr<StringLiteral>& name, UniqPtrVec<Argument>&
 		<< Bytestream::Reset << "\n"
 		;
 
+	if (auto plugin = pluginRegistry_.lookup(name->str()).Instantiate(ctx_))
+		return new Import(name, args, plugin, src);
 	const string subdir(currentSubdirectory_.top());
 	const string filename = FindModule(srcroot_, subdir, name->str());
 	const string directory = DirectoryOf(filename);

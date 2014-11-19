@@ -35,10 +35,14 @@
 #include "ADT/UniqPtr.h"
 #include "AST/Expression.h"
 #include "AST/HasScope.h"
+#include "Plugin/Plugin.h"
 
 #include <string>
 
 namespace fabrique {
+
+class TypeContext;
+
 namespace ast {
 
 class Argument;
@@ -56,6 +60,9 @@ public:
 	       const std::string& subdirectory, UniqPtr<Scope>&, const Type&,
 	       SourceRange);
 
+	Import(UniqPtr<StringLiteral>& name, UniqPtrVec<Argument>& arguments,
+	       UniqPtr<plugin::Plugin>&, SourceRange);
+
 	const StringLiteral& name() const { return *name_; }
 	const UniqPtrVec<Argument>& arguments() const { return arguments_; }
 	const std::string& subdirectory() const { return subdirectory_; }
@@ -68,6 +75,7 @@ public:
 private:
 	const UniqPtr<StringLiteral> name_;
 	const UniqPtrVec<Argument> arguments_;
+	const UniqPtr<plugin::Plugin> plugin_;
 	const std::string subdirectory_;
 };
 

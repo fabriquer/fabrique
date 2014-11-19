@@ -38,6 +38,7 @@
 #include "AST/Visitor.h"
 #include "DAG/File.h"
 #include "DAG/Structure.h"
+#include "Plugin/Plugin.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 #include "Types/TypeContext.h"
@@ -46,6 +47,7 @@
 
 using namespace fabrique;
 using namespace fabrique::ast;
+using fabrique::plugin::Plugin;
 
 
 Import::Import(UniqPtr<StringLiteral>& name, UniqPtrVec<Argument>& arguments,
@@ -53,6 +55,15 @@ Import::Import(UniqPtr<StringLiteral>& name, UniqPtrVec<Argument>& arguments,
                SourceRange src)
 	: Expression(ty, src), HasScope(std::move(scope)),
 	  name_(std::move(name)), arguments_(std::move(arguments)), subdirectory_(subdir)
+{
+}
+
+
+Import::Import(UniqPtr<StringLiteral>& name, UniqPtrVec<Argument>& arguments,
+               UniqPtr<Plugin>& plugin, SourceRange src)
+	: Expression(plugin->type(), src), HasScope(nullptr),
+	  name_(std::move(name)), arguments_(std::move(arguments)),
+	  plugin_(std::move(plugin))
 {
 }
 
@@ -113,6 +124,9 @@ dag::ValuePtr Import::evaluate(EvalContext& ctx) const
 	}
 
 	dag::DAGBuilder builder(ctx.builder());
+	if (plugin_)
+		return plugin_->Create(builder);
+
 	dag::ValuePtr argStruct(
 		builder.Struct(args, this->scope().arguments(), source()));
 
