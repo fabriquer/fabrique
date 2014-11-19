@@ -33,13 +33,11 @@
 #define PLUGIN_REGISTRY_H
 
 #include "ADT/UniqPtr.h"
+#include "Plugin/Plugin.h"
 
 
 namespace fabrique {
 namespace plugin {
-
-class Plugin;
-
 
 //! A registry for naming Fabrique @ref Plugin objects.
 class Registry
@@ -47,9 +45,12 @@ class Registry
 	public:
 	static Registry& Default();
 
-	const UniqPtr<Plugin> 
+	Registry& Register(Plugin::Descriptor&);
+
+	const Plugin::Descriptor& lookup(std::string) const;
 
 	private:
+	StringMap<Plugin::Descriptor&> plugins_;
 };
 
 } // namespace plugin

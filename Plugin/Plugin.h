@@ -32,10 +32,14 @@
 #ifndef PLUGIN_H
 #define PLUGIN_H
 
+#include "ADT/UniqPtr.h"
 #include "DAG/Structure.h"
+#include "Types/Typed.h"
 
 
 namespace fabrique {
+
+class TypeContext;
 
 namespace dag {
 class DAGBuilder;
@@ -53,14 +57,35 @@ namespace plugin {
  * if a Fabrique description expects the wrong type, it can receive a type error rather
  * than a syntactically-legal but logically-incorrect reinterpretation (e.g. "0").
  */
-class Plugin
+class Plugin : public Typed
 {
-public:
+	public:
 	virtual ~Plugin();
 
-	virtual std::string name() const = 0;
+
+	/**
+	 * Static information about a plugin.
+	 */
+	class Descriptor
+	{
+		public:
+		virtual ~Descriptor();
+
+		virtual std::string name() const = 0;
+		virtual UniqPtr<Plugin> Instantiate(TypeContext&) const = 0;
+	};
+
+	const Descriptor& descriptor() const { return descriptor_; }
 
 	virtual std::shared_ptr<dag::Structure> Create(dag::DAGBuilder&) const = 0;
+
+
+	protected:
+	Plugin(const Type&, const Descriptor& descriptor);
+
+
+	private:
+	const Descriptor& descriptor_;
 };
 
 } // namespace plugin

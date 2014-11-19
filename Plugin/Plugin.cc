@@ -30,9 +30,29 @@
  */
 
 #include "Plugin/Plugin.h"
+#include "Types/TypeContext.h"
+using namespace fabrique;
 using namespace fabrique::plugin;
 
 
 Plugin::~Plugin()
 {
+}
+
+
+Plugin::Descriptor::~Descriptor()
+{
+}
+
+
+Plugin::Plugin(const Type& t, const Descriptor& descriptor)
+	: Typed(t), descriptor_(descriptor)
+{
+}
+
+
+Plugin::Descriptor& Plugin::nullPlugin()
+{
+	static Descriptor& nullPlugin = *new NullPlugin();
+	return nullPlugin;
 }
