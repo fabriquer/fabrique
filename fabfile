@@ -50,10 +50,14 @@ warnings = [
 	'-Wno-padded'
 ];
 
-normal_cxx_flags = common_cxx_flags + warnings;
+cxx_flags = common_cxx_flags + warnings;
 generated_cxx_flags =
 	common_cxx_flags + [ '-Wno-deprecated-register' ]
 	+ if debug [ '-D' 'YYDEBUG' ] else [];
+
+# Global constructors are a necessary evil for registering plugins. For now.
+plugin_cxx_flags = cxx_flags + [ '-Wno-global-constructors' ];
+
 
 
 #
@@ -73,7 +77,6 @@ cxx_srcs =
 	+ import('Plugin').sources
 	+ import('Support').sources
 	+ import('Types').sources
-	+ import('plugins').sources
 	;
 
 
@@ -86,7 +89,8 @@ lexer_src = lex.process(
 objects =
 	cxx.compile([ lexer_src ], generated_cxx_flags, deps = [ parser_src ])
 	+ cxx.compile([ parser_src ], generated_cxx_flags)
-	+ cxx.compile(cxx_srcs, normal_cxx_flags)
+	+ cxx.compile(cxx_srcs, cxx_flags)
+	+ cxx.compile(import('plugins').sources, plugin_cxx_flags)
 	;
 
 fab_executable = cxx.link_executable(objects, executable = file('fab'));
