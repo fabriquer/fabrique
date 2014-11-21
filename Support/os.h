@@ -55,6 +55,20 @@ bool PathIsFile(std::string);
 
 
 //
+// Other file- and path-related functions that might be used as arguments:
+//
+
+typedef std::function<std::string (std::string, const std::vector<std::string>&)>
+	MissingFileReporter;
+
+//! Create a @ref std::function that returns a default filename.
+MissingFileReporter DefaultFilename(std::string name = "");
+
+//! Throw a @ref UserError to report a missing file.
+std::string FileNotFound(std::string name, const std::vector<std::string>& searchPaths);
+
+
+//
 // Filename and path manipulation:
 //
 
@@ -84,9 +98,11 @@ std::string FilenameComponent(std::string pathIncludingDirectory);
  *
  * @param   test      A test to invoke on each file (e.g., PathIsFile, FileIsExecutable)
  *                    in order to confirm the applicability of a file.
+ * @param   report    A function to call if the file is not found.
  */
 std::string FindFile(std::string filename, const std::vector<std::string>& directories,
-                     std::function<bool (const std::string&)> test = PathIsFile);
+                     std::function<bool (const std::string&)> test = PathIsFile,
+                     MissingFileReporter report = FileNotFound);
 
 //! Join two path components (a directory and a filename).
 std::string JoinPath(const std::string&, const std::string&);

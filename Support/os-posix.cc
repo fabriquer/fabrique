@@ -131,6 +131,12 @@ string fabrique::CreateDirCommand(string dir)
 }
 
 
+fabrique::MissingFileReporter fabrique::DefaultFilename(std::string name)
+{
+	return [name](string, const vector<string>&) { return name; };
+}
+
+
 string fabrique::DirectoryOf(string filename, bool absolute)
 {
 	const char *dir = dirname(filename.c_str());
@@ -191,8 +197,23 @@ string fabrique::FilenameComponent(string pathIncludingDirectory)
 }
 
 
+string fabrique::FileNotFound(string name, const vector<string>& searchPaths)
+{
+	std::ostringstream oss;
+	oss << "no file '" << name << "' in directories [";
+
+	for (const string& directory : searchPaths)
+		oss << " '" << directory << "'";
+
+	oss << " ]";
+
+	throw UserError(oss.str());
+}
+
+
 string fabrique::FindFile(string filename, const vector<string>& directories,
-                          std::function<bool (const string&)> test)
+                          std::function<bool (const string&)> test,
+                          MissingFileReporter fileNotFound)
 {
 	for (const string& directory : directories)
 	{
@@ -201,15 +222,7 @@ string fabrique::FindFile(string filename, const vector<string>& directories,
 			return absolute;
 	}
 
-	std::ostringstream oss;
-	oss << "no file '" << filename << "' in directories [";
-
-	for (const string& directory : directories)
-		oss << " '" << directory << "'";
-
-	oss << " ]";
-
-	throw UserError(oss.str());
+	return fileNotFound(filename, directories);
 }
 
 
