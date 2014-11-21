@@ -10,6 +10,9 @@ debug_and_asserts = debug and asserts;
 colour_output = args.colour_output ? true;
 verbose_tests = args.verbose_tests ? false;
 
+# TODO: platform tests
+posix = true;
+
 cxx = import('share/cxx.fab', colour_diagnostics = colour_output);
 lex = import('share/lex.fab');
 lit = import('share/llvm-lit.fab', show_failure_details = verbose_tests);
@@ -29,12 +32,17 @@ dbgflags =
 	+ if asserts [ '' ] else [ '-D NDEBUG' ]
 	;
 
+defines =
+	if posix [ '-D OS_POSIX' ]
+	else []
+	;
+
 includes = foreach dir <- [ srcroot buildroot ] '-I ' + dir;
 
 # Treat vendor headers as system headers (disable warnings).
 vendor = [ '-isystem ' + srcroot + '/vendor' ];
 
-common_cxx_flags = cxxoptions + dbgflags + includes + vendor;
+common_cxx_flags = cxxoptions + defines + dbgflags + includes + vendor;
 
 warnings = [
 	# Use lots and lots of warnings.
