@@ -193,9 +193,19 @@ string fabrique::FilenameComponent(string pathIncludingDirectory)
 string fabrique::FindModule(string srcroot, string subdir, string name)
 {
 	const string relativeName = JoinPath(subdir, name);
+
+	//
+	// Have we been passed an absolute module path?
+	//
 	if (PathIsAbsolute(relativeName) and FileExists(relativeName))
 		return relativeName;
 
+	//
+	// If we can find the module relative to the srcroot, we don't want to
+	// return an absolute path: it will go into 'subdir' and try to generate
+	// files by absolute name. That is not allowed: files must be generated
+	// relative to the buildroot.
+	//
 	if (FileExists(JoinPath(srcroot, relativeName)))
 		return relativeName;
 
@@ -210,6 +220,9 @@ string fabrique::FindModule(string srcroot, string subdir, string name)
 			return fullPath;
 	}
 
+	//
+	// If we were passed a directory, look for 'fabfile' within it.
+	//
 	const string dirname = JoinPath(srcroot, relativeName);
 	if (FileExists(dirname, true))
 	{
