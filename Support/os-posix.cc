@@ -190,7 +190,7 @@ string fabrique::FilenameComponent(string pathIncludingDirectory)
 }
 
 
-std::string fabrique::FindModule(string srcroot, string subdir, string name)
+string fabrique::FindModule(string srcroot, string subdir, string name)
 {
 	const string relativeName = JoinPath(subdir, name);
 	if (PathIsAbsolute(relativeName) and FileExists(relativeName))
