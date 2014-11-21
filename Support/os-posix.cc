@@ -191,6 +191,28 @@ string fabrique::FilenameComponent(string pathIncludingDirectory)
 }
 
 
+string fabrique::FindFile(string filename, const vector<string>& directories,
+                          std::function<bool (const string&)> test)
+{
+	for (const string& directory : directories)
+	{
+		const string absolute = JoinPath(directory, filename);
+		if (PathIsFile(absolute) and test(absolute))
+			return absolute;
+	}
+
+	std::ostringstream oss;
+	oss << "no file '" << filename << "' in directories [";
+
+	for (const string& directory : directories)
+		oss << " '" << directory << "'";
+
+	oss << " ]";
+
+	throw UserError(oss.str());
+}
+
+
 string fabrique::FindModule(string srcroot, string subdir, string name)
 {
 	const string relativeName = JoinPath(subdir, name);

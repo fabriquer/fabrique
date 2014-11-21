@@ -79,6 +79,14 @@ std::string FileExtension(std::string path);
 //! Find the non-directory component of a path.
 std::string FilenameComponent(std::string pathIncludingDirectory);
 
+/**
+ * Find a file named @a filename within a set of @a directories.
+ *
+ * @param   test      A test to invoke on each file (e.g., PathIsFile, FileIsExecutable)
+ *                    in order to confirm the applicability of a file.
+ */
+std::string FindFile(std::string filename, const std::vector<std::string>& directories,
+                     std::function<bool (const std::string&)> test = PathIsFile);
 
 //! Join two path components (a directory and a filename).
 std::string JoinPath(const std::string&, const std::string&);
