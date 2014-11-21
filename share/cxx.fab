@@ -28,3 +28,17 @@ link_executable = action('${CXX} -o ${executable} ${flags} ${objects}',
                          <- objects:list[file[in]], executable:file[out],
                             CXX:file[in] = compiler,
                             flags:list[string] = colour_flags);
+
+link_lib = action('${CXX} -shared -o ${library} ${flags} ${objects}',
+                  description = 'Linking ${library}'
+                  <- objects:list[file[in]], library:file[out],
+                     CXX:file[in] = compiler,
+                     flags:list[string]);
+
+library = function(objects:list[file], libname:string, subdir:file): file
+{
+	flags = [ '-Wl,-undefined' '-Wl,dynamic_lookup' ];
+
+	# TODO: write platform files for naming libraries, etc.
+	link_lib(objects, file('lib' + libname + '.so'), flags = flags)
+};
