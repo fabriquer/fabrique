@@ -43,6 +43,7 @@
 #include <stdlib.h>
 
 using std::string;
+using std::vector;
 
 
 namespace {
@@ -246,7 +247,7 @@ string fabrique::JoinPath(const string& x, const string& y)
 	return x + "/" + y;
 }
 
-string fabrique::JoinPath(const std::vector<string>& components)
+string fabrique::JoinPath(const vector<string>& components)
 {
 	return join(components, "/");
 }
