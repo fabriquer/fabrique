@@ -37,7 +37,22 @@
 
 namespace fabrique {
 
+//
+// File- and path-related predicates:
+//
+
 bool PathIsAbsolute(const std::string&);
+
+//! Does the named path exist, and is it a directory?
+bool PathIsDirectory(std::string);
+
+//! Does the named path exist, and is it a regular file?
+bool PathIsFile(std::string);
+
+
+//
+// Filename and path manipulation:
+//
 
 //! Find the absolute version of a directory, optionally creating it.
 std::string AbsoluteDirectory(std::string name, bool createIfMissing = true);
@@ -60,9 +75,6 @@ std::string FileExtension(std::string path);
 //! Find the non-directory component of a path.
 std::string FilenameComponent(std::string pathIncludingDirectory);
 
-//! Find the name of a Fabrique module within the current search paths.
-std::string FindModule(std::string srcroot, std::string subdir,
-                       std::string filename);
 
 //! Join two path components (a directory and a filename).
 std::string JoinPath(const std::string&, const std::string&);
@@ -70,11 +82,14 @@ std::string JoinPath(const std::string&, const std::string&);
 //! Join an arbitrary number of path components (directories and maybe a filename).
 std::string JoinPath(const std::vector<std::string>&);
 
-//! Does the named path exist, and is it a directory?
-bool PathIsDirectory(std::string);
 
-//! Does the named path exist, and is it a regular file?
-bool PathIsFile(std::string);
+//
+// Fabrique modules:
+//
+
+//! Find the name of a Fabrique module within the @a srcroot and platform search paths.
+std::string FindModule(std::string srcroot, std::string subdir,
+                       std::string filename);
 
 }
 
