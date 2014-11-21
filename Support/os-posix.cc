@@ -245,16 +245,17 @@ string fabrique::FindModule(string srcroot, string subdir, string name)
 	if (FileExists(JoinPath(srcroot, relativeName)))
 		return relativeName;
 
-	const string searchPaths[] = {
+	//
+	// Look for the file within platform-specific search paths.
+	//
+	const vector<string> searchPaths = {
 		"/usr/local/share/fabrique",
 	};
 
-	for (const string& path : searchPaths)
-	{
-		const string fullPath = JoinPath(path, relativeName);
-		if (FileExists(fullPath))
-			return fullPath;
-	}
+	const string found = FindFile(relativeName, searchPaths,
+	                              PathIsFile, DefaultFilename(""));
+	if (not found.empty())
+		return found;
 
 	//
 	// If we were passed a directory, look for 'fabfile' within it.
