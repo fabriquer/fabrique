@@ -44,6 +44,7 @@ namespace fabrique {
 //! Check whether a file is executable on this platform.
 bool FileIsExecutable(std::string path);
 
+//! The named path is absolute, whether or not the file actually exists.
 bool PathIsAbsolute(const std::string&);
 
 //! Does the named path exist, and is it a directory?
