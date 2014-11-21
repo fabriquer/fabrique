@@ -1,1 +1,4 @@
-sources = files(SysctlPlugin.cc);
+sources = files(
+	SysctlPlugin.cc
+	Which.cc
+);

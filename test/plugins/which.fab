@@ -1,0 +1,29 @@
+#
+# RUN: fab --format=null --print-dag %s > %t.out
+# RUN: FileCheck %s -input-file %t.out
+#
+
+which = import('which');
+
+# CHECK-DAG: file sh = /bin/sh
+sh = which.executable('sh');
+
+#
+# List all of the include paths known to man rather than do the kind of
+# platform-testing wizardry we'd want to do in an actual build
+# (we don't want this test to implicitly depend on that platform stuff).
+#
+# If, on your platform, stdlib.h is found somewhere else, please
+# add that location to this list.
+#
+include_paths = files(
+	/usr/include
+	/usr/local/include
+	/opt/include
+	/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/usr/include
+	/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/include
+	/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/include
+);
+
+# CHECK-DAG: stdlib_h = {{.*}}/stdlib.h
+stdlib_h = which.generic('stdlib.h', include_paths);

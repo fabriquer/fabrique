@@ -1,5 +1,5 @@
 #
-# Generated at Fri 21 Nov 2014 10:12:47 NST by regenerate-manifest.sh
+# Generated at Fri 21 Nov 2014 11:21:32 NST by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -177,4 +177,6 @@ all_files = files(
 ./backends/ninja/string-list.fab
 ./lit.cfg
 ./plugins/sysctl.fab
+./plugins/which-file-not-found.fab
+./plugins/which.fab
 );
