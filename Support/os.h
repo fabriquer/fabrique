@@ -41,6 +41,9 @@ namespace fabrique {
 // File- and path-related predicates:
 //
 
+//! Check whether a file is executable on this platform.
+bool FileIsExecutable(std::string path);
+
 bool PathIsAbsolute(const std::string&);
 
 //! Does the named path exist, and is it a directory?

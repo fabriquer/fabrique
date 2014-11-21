@@ -167,6 +167,19 @@ string fabrique::FileExtension(string path)
 }
 
 
+bool fabrique::FileIsExecutable(string path)
+{
+	struct stat s;
+	if (stat(path.c_str(), &s) != 0)
+		throw PosixError("error querying '" + path + "'");
+
+	if (not S_ISREG(s.st_mode))
+		return false;
+
+	return (s.st_mode & S_IXUSR);
+}
+
+
 string fabrique::FilenameComponent(string pathIncludingDirectory)
 {
 	if (pathIncludingDirectory.empty())
