@@ -45,6 +45,9 @@ namespace fabrique {
 //! Check whether a file is executable on this platform.
 bool FileIsExecutable(std::string path);
 
+//! Test whether this platform can load a file as a shared library.
+bool FileIsSharedLibrary(std::string path);
+
 //! The named path is absolute, whether or not the file actually exists.
 bool PathIsAbsolute(const std::string&);
 
