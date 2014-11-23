@@ -32,6 +32,7 @@
 #ifndef POSIX_H
 #define POSIX_H
 
+#include <functional>
 #include <string>
 #include <vector>
 
