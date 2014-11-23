@@ -32,6 +32,7 @@
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
 #include "Support/PosixError.h"
+#include "Support/String.h"
 #include "Support/exceptions.h"
 #include "Support/os.h"
 
@@ -72,6 +73,8 @@ static const char* dirname(const char *filename)
 	return ::dirname(const_cast<char*>(filename));
 }
 #endif
+
+static const char PathDelimiter = ':';
 
 }
 
@@ -208,6 +211,16 @@ string fabrique::FileNotFound(string name, const vector<string>& searchPaths)
 	oss << " ]";
 
 	throw UserError(oss.str());
+}
+
+
+string fabrique::FindExecutable(string name, MissingFileReporter report)
+{
+	const char *path = getenv("PATH");
+	if (not path)
+		throw PosixError("error in getenv('PATH')");
+
+	return FindFile(name, Split(path, PathDelimiter), FileIsExecutable, report);
 }
 
 

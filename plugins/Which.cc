@@ -106,13 +106,6 @@ static const char GenericFnName[] = "generic";
 } // anonymous namespace
 
 
-#if defined(OS_POSIX)
-static const char PathDelimiter = ':';
-#else
-#error PathDelimiter not defined on this platform
-#endif
-
-
 UniqPtr<Plugin> Which::Factory::Instantiate(TypeContext& ctx) const
 {
 	const SourceRange nowhere = SourceRange::None();
@@ -195,16 +188,9 @@ ValuePtr Which::FindFile(const ValueMap& /*scope*/, const ValueMap& args,
 ValuePtr Which::FindExecutable(const ValueMap& /*scope*/, const ValueMap& args,
                                DAGBuilder& builder, SourceRange src) const
 {
-	const char *path = getenv("PATH");
-	if (not path)
-		throw PosixError("error in getenv('PATH')");
-
 	const string filename = args.find(FileName)->second->str();
 
-	const string fullName =
-		::FindFile(filename, Split(path, PathDelimiter), FileIsExecutable);
-
-	return builder.File(fullName, ValueMap(), file_, src);
+	return builder.File(fabrique::FindExecutable(filename), ValueMap(), file_, src);
 }
 
 
