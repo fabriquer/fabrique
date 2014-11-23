@@ -172,6 +172,12 @@ Arguments* Arguments::Parse(int argc, char *argv[])
 	if (opts.nonOptionsCount() > 1)
 		return nullptr;
 
+	const string executable =
+		PathIsFile(argv[0])
+		? AbsolutePath(argv[0])
+		: FindExecutable(argv[0])
+		;
+
 	const bool help = options[Help];
 
 	const string input = opts.nonOptionsCount() == 1
@@ -204,6 +210,7 @@ Arguments* Arguments::Parse(int argc, char *argv[])
 		: "none";
 
 	return new Arguments {
+		executable,
 		help,
 		input,
 		output,

@@ -63,6 +63,9 @@ public:
 	static void Print(const Arguments&, Bytestream&);
 	static std::string str(const Arguments&);
 
+	//! The currently-running binary.
+	const std::string executable;
+
 	const bool help;
 
 	const std::string input;
