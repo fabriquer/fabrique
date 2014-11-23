@@ -190,7 +190,10 @@ ValuePtr DAGBuilder::AddRegeneration(const Arguments& commandLineArgs,
 	{
 		const string Name = Rule::RegenerationRuleName();
 		const string Command =
-			"fab" + Arguments::str(commandLineArgs) + " ${rootInput}";
+			commandLineArgs.executable
+			+ Arguments::str(commandLineArgs)
+			+ " ${rootInput}"
+			;
 
 		ValuePtr r = Rule(Name, Command, ruleArgs, params, buildType);
 		rule = dynamic_pointer_cast<class Rule>(r);
