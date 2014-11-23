@@ -117,6 +117,9 @@ std::string JoinPath(const std::string&, const std::string&);
 //! Join an arbitrary number of path components (directories and maybe a filename).
 std::string JoinPath(const std::vector<std::string>&);
 
+//! Convert a library name (e.g., "foo") into a filename (e.g., "libfoo.so").
+std::string LibraryFilename(std::string name);
+
 
 //
 // Fabrique modules:

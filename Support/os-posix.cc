@@ -319,6 +319,20 @@ string fabrique::JoinPath(const vector<string>& components)
 }
 
 
+string fabrique::LibraryFilename(string name)
+{
+	static constexpr char Extension[] =
+#if defined(OS_MAC)
+		"dylib"
+#else
+		"so"
+#endif
+		;
+
+	return "lib" + name + "." + Extension;
+}
+
+
 bool fabrique::PathIsDirectory(string path)
 {
 	return FileExists(path, true);
