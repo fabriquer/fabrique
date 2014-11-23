@@ -68,6 +68,7 @@ private:
 class OSError : public std::exception, public Printable
 {
 public:
+	OSError(const std::string& message, const std::string& description);
 	OSError(const OSError&);
 	virtual ~OSError();
 
@@ -76,9 +77,6 @@ public:
 
 	const char* what() const noexcept { return completeMessage_.c_str(); }
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const;
-
-protected:
-	OSError(const std::string& message, const std::string& description);
 
 private:
 	const std::string message_;
