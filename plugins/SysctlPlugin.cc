@@ -192,4 +192,4 @@ static ValuePtr IntegerSysctl(const ValueMap& /*scope*/, const ValueMap& args,
 }
 
 
-static auto& registry = plugin::Registry::Default().Register(*new SysctlPlugin::Factory());
+static auto& registry = plugin::Registry::get().Register(*new SysctlPlugin::Factory());

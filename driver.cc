@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) {
 		const string srcroot = AbsoluteDirectory(DirectoryOf(fabfile));
 		const string buildroot = AbsoluteDirectory(args->output);
 
-		plugin::Registry& plugins = plugin::Registry::Default();
+		plugin::Registry& plugins = plugin::Registry::get();
 
 		//
 		// Parse the file, optionally pretty-printing it.

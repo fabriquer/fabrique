@@ -43,13 +43,15 @@ namespace plugin {
 class Registry
 {
 	public:
-	static Registry& Default();
+	static Registry& get();
 
 	Registry& Register(Plugin::Descriptor&);
 
 	const Plugin::Descriptor& lookup(std::string) const;
 
 	private:
+	Registry() {}
+
 	StringMap<Plugin::Descriptor&> plugins_;
 };
 

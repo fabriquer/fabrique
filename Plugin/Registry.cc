@@ -38,10 +38,10 @@ using namespace fabrique;
 using namespace fabrique::plugin;
 
 
-Registry& Registry::Default()
+Registry& Registry::get()
 {
-	static Registry& reg = *new Registry();
-	return reg;
+	static Registry& instance = *new Registry();
+	return instance;
 }
 
 
