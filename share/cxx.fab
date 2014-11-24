@@ -38,7 +38,6 @@ link_lib = action('${CXX} -shared -o ${library} ${flags} ${objects}',
 library = function(objects:list[file], libname:string, subdir:file): file
 {
 	flags = [ '-Wl,-undefined' '-Wl,dynamic_lookup' ];
-
-	# TODO: write platform files for naming libraries, etc.
-	link_lib(objects, file('lib' + libname + '.so'), flags = flags)
+	filename:string = platform.library_name(libname);
+	link_lib(objects, file(filename), flags = flags)
 };
