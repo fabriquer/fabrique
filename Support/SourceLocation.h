@@ -70,6 +70,8 @@ public:
 
 class HasSource;
 
+
+//! A range of characters in source code.
 class SourceRange : public Printable
 {
 public:

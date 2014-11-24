@@ -60,6 +60,12 @@ class Target;
 namespace ast {
 class Scope;
 
+
+/**
+ * A context for evaluating AST @ref Expression objects.
+ *
+ * This class adds AST scoping logic to @ref dag::DAGBuilder::Context.
+ */
 class EvalContext : public dag::DAGBuilder::Context
 {
 public:

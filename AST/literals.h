@@ -60,6 +60,7 @@ private:
 };
 
 
+//! A literal 'true' or 'false' value in code.
 class BoolLiteral : public Literal<bool>
 {
 public:
@@ -75,6 +76,8 @@ public:
 	virtual void Accept(Visitor&) const;
 };
 
+
+//! An integer value in code.
 class IntLiteral : public Literal<int>
 {
 public:
@@ -91,6 +94,7 @@ public:
 };
 
 
+//! A string value enclosed by single or double quotes.
 class StringLiteral : public Literal<std::string>
 {
 public:

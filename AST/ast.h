@@ -32,6 +32,14 @@
 #ifndef AST_H
 #define AST_H
 
+namespace fabrique
+{
+
+//! Representation of the Abstract Syntax Tree for Fabrique source code.
+namespace ast {}
+
+}
+
 #include "Action.h"
 #include "Argument.h"
 #include "BinaryOperation.h"

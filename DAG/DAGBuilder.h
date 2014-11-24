@@ -56,6 +56,7 @@ class Rule;
 class Target;
 
 
+//! A object that builds @ref DAG nodes in a @ref DAGBuilder::Context.
 class DAGBuilder
 {
 public:

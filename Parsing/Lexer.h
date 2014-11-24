@@ -48,6 +48,7 @@ namespace fabrique {
 class Token;
 
 /**
+ * Tokenizes Fabrique source code.
  */
 class Lexer : public yyFlexLexer
 {

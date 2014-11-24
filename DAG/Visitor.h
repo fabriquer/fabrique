@@ -46,6 +46,8 @@ class String;
 class Structure;
 class Target;
 
+
+//! Interfact for objects that visit @ref DAG nodes and add functionality.
 class Visitor
 {
 public:

@@ -45,6 +45,7 @@ namespace dag {
 class DAGBuilder;
 }
 
+//! Code to support loading and using Fabrique plugins.
 namespace plugin {
 
 /**

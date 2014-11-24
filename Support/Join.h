@@ -49,6 +49,7 @@ namespace fabrique {
 class Bytestream;
 
 
+//! Joins printable objects into a string, e.g., "a, b, c" or "a b c".
 template<class T>
 class Join : public Printable
 {

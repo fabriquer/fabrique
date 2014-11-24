@@ -41,6 +41,7 @@ namespace fabrique {
 class Bytestream;
 namespace dag { class DAG; }
 
+//! Backends generate low level build descriptions, e.g., Graphviz Dot or Ninja.
 namespace backend {
 
 /**

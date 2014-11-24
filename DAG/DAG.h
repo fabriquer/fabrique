@@ -39,6 +39,8 @@
 
 
 namespace fabrique {
+
+//! Representations of nodes (files, build rules, etc.) in the build graph.
 namespace dag {
 
 class Build;

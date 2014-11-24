@@ -67,7 +67,7 @@ protected:
 };
 
 
-
+//! A boolean (true/false) value.
 class Boolean : public Primitive<bool>
 {
 public:
@@ -83,6 +83,8 @@ public:
 	void Accept(Visitor& v) const override;
 };
 
+
+//! An integer (of unspecified precision).
 class Integer : public Primitive<int>
 {
 public:
@@ -95,6 +97,8 @@ public:
 	void Accept(Visitor& v) const override;
 };
 
+
+//! An ASCII string (for now, we should make this Unicode soon).
 class String : public Primitive<std::string>
 {
 public:

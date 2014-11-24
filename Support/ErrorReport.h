@@ -41,6 +41,7 @@
 
 namespace fabrique {
 
+//! A non-exceptional representation of a problem in source code.
 class ErrorReport : public HasSource, public Printable
 {
 public:

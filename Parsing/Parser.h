@@ -56,7 +56,7 @@ namespace ast {
 
 
 /**
- * Parses
+ * Parses Fabrique files as driven by flex/byacc.
  */
 class Parser
 {
