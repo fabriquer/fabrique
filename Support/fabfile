@@ -4,6 +4,7 @@ platform_agnostic_sources = files(
 	ErrorReport.cc
 	Join.cc
 	Printable.cc
+	SharedLibrary.cc
 	SourceLocation.cc
 	String.cc
 	Visitable.cc
@@ -14,7 +15,12 @@ platform_agnostic_sources = files(
 posix = true;
 
 platform_specific_sources =
-	(if posix files(PosixError.cc os-posix.cc) else [])
+	if posix files(
+		PosixError.cc
+		PosixSharedLibrary.cc
+		os-posix.cc
+	)
+	else []
 	;
 
 
