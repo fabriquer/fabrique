@@ -44,6 +44,12 @@ cxx = import('share/cxx.fab', colour_diagnostics = colour_output);
 lex = import('share/lex.fab');
 lit = import('share/llvm-lit.fab', show_failure_details = verbose_tests);
 
+# TODO: let modules "pass through" values from other modules
+shell =
+	if platform.posix import('share/shell-posix.fab')
+	else import('share/shell-unimplemented.fab')
+	;
+
 # TODO: find the right yacc once we have a working 'which' plugin
 yacc = import('share/yacc.fab', yacc = file('/usr/local/bin/byacc'));
 
@@ -101,10 +107,6 @@ generated_cxx_flags =
 	common_cxx_flags + [ '-Wno-deprecated-register' ]
 	+ if debug [ '-D' 'YYDEBUG' ] else [];
 
-# Global constructors are a necessary evil for registering plugins. For now.
-plugin_cxx_flags = cxx_flags + [ '-Wno-global-constructors' ];
-
-
 
 #
 # TODO: allow 'for module in [ ast backends dag ]
@@ -136,10 +138,15 @@ objects =
 	cxx.compile([ lexer_src ], generated_cxx_flags, deps = [ parser_src ])
 	+ cxx.compile([ parser_src ], generated_cxx_flags)
 	+ cxx.compile(cxx_srcs, cxx_flags)
-	+ cxx.compile(import('plugins').sources, plugin_cxx_flags)
 	;
 
-fab_executable = cxx.link_executable(objects, executable = file('fab'));
+plugins = foreach lib <- import('plugins').libs
+	shell.copy(lib, file('lib/fabrique') + '/' + lib.filename)
+	;
+
+fab = cxx.link_executable(objects, executable = file('fab', subdir = 'bin'));
+
+products = [ fab ] + plugins + import('test/manifest.fab').all_files;
 
 test = lit.run(file('test'), file('lit-test-results'), 'report.txt',
-	dependencies = [ fab_executable ] + import('test/manifest.fab').all_files);
+               dependencies = products);

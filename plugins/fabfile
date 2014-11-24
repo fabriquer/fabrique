@@ -1,4 +1,25 @@
-sources = files(
-	SysctlPlugin.cc
-	Which.cc
-);
+# TODO: get this from a Fabrique file
+fabrique = struct
+{
+	headers = srcroot;
+};
+
+defines =
+	if platform.posix [ '-D OS_POSIX' ]
+	else []
+	;
+
+plugins = [
+	struct { name = 'sysctl'; sources = files(SysctlPlugin.cc); }
+	struct { name = 'which'; sources = files(Which.cc); }
+];
+
+cxxflags = [
+	'-std=c++11'
+	'-I' srcroot
+	'-Wall'
+] + defines;
+
+libs = foreach plugin <- plugins
+	cxx.library(cxx.compile(plugin.sources, cxxflags), plugin.name, subdir)
+	;
