@@ -1,5 +1,5 @@
 #
-# RUN: fab --format=null --print-dag %s > %t.out
+# RUN: %fab --format=null --print-dag %s > %t.out
 # RUN: FileCheck %s -input-file %t.out
 #
 

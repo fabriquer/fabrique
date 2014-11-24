@@ -2,7 +2,7 @@
 # Without `--debug='trace'` we should still see minimal printed messages,
 # but no filename information, etc.
 #
-# RUN: fab --format=null %s > %t
+# RUN: %fab --format=null %s > %t
 # RUN: FileCheck %s -input-file %t
 #
 

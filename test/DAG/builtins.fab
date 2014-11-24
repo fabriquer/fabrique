@@ -1,5 +1,5 @@
 #
-# RUN: fab --format=null --print-dag --output=%t %s > %t.output
+# RUN: %fab --format=null --print-dag --output=%t %s > %t.output
 #
 # llvm-lit substitutes %[sStT] for source/target files/directories in RUN
 # lines but not CHECK lines, so we have to do some substitution in the

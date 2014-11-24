@@ -1,5 +1,5 @@
 #
-# RUN: fab --format=null %s 2> %t.err || true
+# RUN: %fab --format=null %s 2> %t.err || true
 # RUN: FileCheck %s -input-file %t.err
 #
 

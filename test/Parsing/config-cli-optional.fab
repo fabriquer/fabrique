@@ -1,5 +1,5 @@
 #
-# RUN: fab --parse-only --print-ast -D foo=42 %s > %t
+# RUN: %fab --parse-only --print-ast -D foo=42 %s > %t
 # RUN: FileCheck %s -input-file %t
 #
 

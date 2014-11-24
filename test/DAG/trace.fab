@@ -1,5 +1,5 @@
 #
-# RUN: fab --debug='trace' --format=null %s > %t
+# RUN: %fab --debug='trace' --format=null %s > %t
 # RUN: FileCheck %s -input-file %t
 #
 

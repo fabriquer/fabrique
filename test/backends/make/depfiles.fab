@@ -1,5 +1,5 @@
 #
-# RUN: fab --format=gmake --output=%t %s
+# RUN: %fab --format=gmake --output=%t %s
 # RUN: FileCheck %s -input-file %t/GNUmakefile
 #
 

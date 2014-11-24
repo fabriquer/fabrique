@@ -1,5 +1,5 @@
 #
-# RUN: fab --print-dag --format=ninja --output=%t %s
+# RUN: %fab --print-dag --format=ninja --output=%t %s
 # RUN: FileCheck %s -input-file %t/build.ninja
 #
 

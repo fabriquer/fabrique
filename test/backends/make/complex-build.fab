@@ -1,5 +1,5 @@
 #
-# RUN: fab --print-dag --format=make --output=%t %s
+# RUN: %fab --print-dag --format=make --output=%t %s
 # RUN: FileCheck %s -input-file %t/Makefile
 #
 
