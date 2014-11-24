@@ -53,6 +53,7 @@ using std::dynamic_pointer_cast;
 using std::shared_ptr;
 using std::string;
 
+namespace {
 
 class DotFormatter : public Formatter
 {
@@ -70,6 +71,8 @@ public:
 	string Format(const Structure&);
 	string Format(const Target&);
 };
+
+} // anonymous namespace
 
 
 DotBackend* DotBackend::Create()

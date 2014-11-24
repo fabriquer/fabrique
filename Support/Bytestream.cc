@@ -121,8 +121,6 @@ private:
 	std::ofstream out_;
 };
 
-} // namespace fabrique
-
 
 class DebugState
 {
@@ -147,6 +145,9 @@ public:
 		return match(name) ? *out : *null;
 	}
 };
+
+} // anonymous namespace
+
 
 static DebugState& debugState()
 {

@@ -54,6 +54,7 @@ using std::shared_ptr;
 using std::string;
 using std::vector;
 
+namespace {
 
 class NinjaFormatter : public Formatter
 {
@@ -71,6 +72,8 @@ public:
 	string Format(const Structure&);
 	string Format(const Target&);
 };
+
+} // anonymous namespace
 
 
 NinjaBackend* NinjaBackend::Create()
