@@ -11,7 +11,34 @@ colour_output = args.colour_output ? true;
 verbose_tests = args.verbose_tests ? false;
 
 # TODO: platform tests
-posix = true;
+platform = struct
+{
+	freebsd = false;
+	netbsd = false;
+	openbsd = false;
+	bsd = freebsd or netbsd or openbsd;
+
+	ios = false;
+	mac = true;
+	darwin = ios or mac;
+
+	linux = false;
+	posix = bsd or darwin or linux;
+
+	windows = false;
+
+	library_name = function(name:string): string
+	{
+		if darwin
+			'lib' + name + '.dylib'
+
+		else if posix
+			'lib' + name + '.so'
+
+		else
+			name + '.dll'
+	};
+};
 
 cxx = import('share/cxx.fab', colour_diagnostics = colour_output);
 lex = import('share/lex.fab');
@@ -33,8 +60,19 @@ dbgflags =
 	;
 
 defines =
-	if posix [ '-D OS_POSIX' ]
-	else []
+	(if platform.freebsd [ '-D OS_FREEBSD' ] else [])
+	+ (if platform.netbsd [ '-D OS_NETBSD' ] else [])
+	+ (if platform.openbsd [ '-D OS_OPENBSD' ] else [])
+	+ (if platform.bsd [ '-D OS_BSD' ] else [])
+
+	+ (if platform.ios [ '-D OS_IOS' ] else [])
+	+ (if platform.mac [ '-D OS_MAC' ] else [])
+	+ (if platform.darwin [ '-D OS_DARWIN' ] else [])
+
+	+ (if platform.linux [ '-D OS_LINUX' ] else [])
+	+ (if platform.posix [ '-D OS_POSIX' ] else [])
+
+	+ (if platform.windows [ '-D OS_WINDOWS' ] else [])
 	;
 
 includes = foreach dir <- [ srcroot buildroot ] '-I ' + dir;
