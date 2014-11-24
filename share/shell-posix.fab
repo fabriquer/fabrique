@@ -1,0 +1,1 @@
+copy = action('cp ${source} ${destination}' <- source:file[in], destination:file[out]);
