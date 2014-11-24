@@ -39,6 +39,7 @@
 #include "Parsing/Lexer.h"
 #include "Parsing/Parser.h"
 
+#include "Plugin/Loader.h"
 #include "Plugin/Registry.h"
 
 #include "Support/Arguments.h"
@@ -108,13 +109,14 @@ int main(int argc, char *argv[]) {
 		const string srcroot = AbsoluteDirectory(DirectoryOf(fabfile));
 		const string buildroot = AbsoluteDirectory(args->output);
 
-		plugin::Registry& plugins = plugin::Registry::get();
+		plugin::Registry& pluginRegistry = plugin::Registry::get();
+		plugin::Loader pluginLoader(PluginSearchPaths(args->executable));
 
 		//
 		// Parse the file, optionally pretty-printing it.
 		//
 		unique_ptr<ast::Parser> parser(
-			new ast::Parser(types, plugins, srcroot));
+			new ast::Parser(types, pluginRegistry, pluginLoader, srcroot));
 
 		unique_ptr<ast::Scope> ast(
 			Parse(parser, fabfile, args->definitions,

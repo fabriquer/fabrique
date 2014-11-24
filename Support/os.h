@@ -120,6 +120,13 @@ std::string JoinPath(const std::vector<std::string>&);
 //! Convert a library name (e.g., "foo") into a filename (e.g., "libfoo.so").
 std::string LibraryFilename(std::string name);
 
+/**
+ * Where are plugins kept on this platform?
+ *
+ * @param   executablePath     absolute path to Fabrique executable file
+ */
+std::vector<std::string> PluginSearchPaths(std::string executablePath);
+
 
 //
 // Fabrique modules:

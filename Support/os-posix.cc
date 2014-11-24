@@ -42,6 +42,7 @@
 
 #include <libgen.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 using std::string;
 using std::vector;
@@ -330,6 +331,17 @@ string fabrique::LibraryFilename(string name)
 		;
 
 	return "lib" + name + "." + Extension;
+}
+
+
+vector<string> fabrique::PluginSearchPaths(string binary)
+{
+	const string prefix = DirectoryOf(DirectoryOf(binary));
+	return {
+		prefix + "/lib/fabrique",
+		"/usr/lib/fabrique",
+		"/usr/local/lib/fabrique",
+	};
 }
 
 

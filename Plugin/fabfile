@@ -1,4 +1,5 @@
 sources = files(
+	Loader.cc
 	Plugin.cc
 	Registry.cc
 );

@@ -33,6 +33,7 @@
 #include "Parsing/Lexer.h"
 #include "Parsing/Parser.h"
 #include "Parsing/Token.h"
+#include "Plugin/Loader.h"
 #include "Plugin/Plugin.h"
 #include "Plugin/Registry.h"
 #include "Support/Bytestream.h"
@@ -61,8 +62,10 @@ using std::unique_ptr;
 int yyparse(ast::Parser*);
 
 
-Parser::Parser(TypeContext& ctx, plugin::Registry& plugins, string srcroot)
-	: ctx_(ctx), lexer_(Lexer::instance()), pluginRegistry_(plugins),
+Parser::Parser(TypeContext& ctx, plugin::Registry& pluginRegistry,
+               plugin::Loader& pluginLoader, string srcroot)
+	: ctx_(ctx), lexer_(Lexer::instance()),
+	  pluginRegistry_(pluginRegistry), pluginLoader_(pluginLoader),
 	  srcroot_(srcroot)
 {
 	currentSubdirectory_.push("");
@@ -598,6 +601,20 @@ Import* Parser::ImportModule(UniqPtr<StringLiteral>& name, UniqPtrVec<Argument>&
 	{
 		dbg
 			<< Bytestream::Action << "found"
+			<< Bytestream::Type << " plugin "
+			<< Bytestream::Definition << plugin->descriptor().name()
+			<< Bytestream::Reset << " with type "
+			<< plugin->type()
+			<< "\n"
+			;
+
+		return new Import(name, args, plugin, src);
+	}
+
+	if (auto plugin = pluginLoader_.Load(name->str()).Instantiate(ctx_))
+	{
+		dbg
+			<< Bytestream::Action << "loaded"
 			<< Bytestream::Type << " plugin "
 			<< Bytestream::Definition << plugin->descriptor().name()
 			<< Bytestream::Reset << " with type "

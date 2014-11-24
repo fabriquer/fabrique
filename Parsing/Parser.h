@@ -48,6 +48,7 @@ class TypeContext;
 class Lexer;
 
 namespace plugin {
+class Loader;
 class Registry;
 }
 
@@ -60,7 +61,7 @@ namespace ast {
 class Parser
 {
 public:
-	Parser(TypeContext&, plugin::Registry&, std::string srcroot);
+	Parser(TypeContext&, plugin::Registry&, plugin::Loader&, std::string srcroot);
 
 	//! Parse Fabrique fragments defined at, e.g., the command line.
 	const Type& ParseDefinitions(const std::vector<std::string>& defs);
@@ -281,6 +282,7 @@ private:
 	Lexer& lexer_;
 
 	plugin::Registry& pluginRegistry_;
+	plugin::Loader& pluginLoader_;
 
 	//! Pre-defined values (e.g., from the command line).
 	UniqPtr<Scope> definitions_;
