@@ -155,6 +155,10 @@ ValuePtr File::field(const string& name) const
 		val.reset(new String(FileExtension(filename_), ctx.stringType(),
 		                     source()));
 
+	else if (name == ast::FileName)
+		val.reset(new String(FilenameComponent(filename_), ctx.stringType(),
+		                     source()));
+
 	else if (name == ast::Generated)
 		val.reset(new Boolean(generated_, ctx.booleanType(), source()));
 
