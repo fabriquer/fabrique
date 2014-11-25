@@ -158,6 +158,10 @@ static string SysctlName(const ValueMap& args)
 static ValuePtr StringSysctl(const ValueMap& /*scope*/, const ValueMap& args,
                              DAGBuilder& builder, SourceRange src)
 {
+#if !defined (OS_POSIX)
+	throw UserError(name() + " functions are only useful on POSIX platforms");
+#endif
+
 	const string name = SysctlName(args);
 	const char *rawName = name.c_str();
 
@@ -178,6 +182,10 @@ static ValuePtr StringSysctl(const ValueMap& /*scope*/, const ValueMap& args,
 static ValuePtr IntegerSysctl(const ValueMap& /*scope*/, const ValueMap& args,
                               DAGBuilder& builder, SourceRange src)
 {
+#if !defined (OS_POSIX)
+	throw UserError(name() + " functions are only useful on POSIX platforms");
+#endif
+
 	const string name = SysctlName(args);
 	const char *rawName = name.c_str();
 
