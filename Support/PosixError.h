@@ -1,4 +1,4 @@
-/** @file Support/PosixError.h    Declaration of @ref PosixError. */
+/** @file Support/PosixError.h    Declaration of @ref fabrique::PosixError. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

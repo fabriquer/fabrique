@@ -73,7 +73,7 @@ public:
 	/**
 	 * The fields that objects of this type have.
 	 *
-	 * This can be empty even if @ref #hasFields() is true: objects like this
+	 * This can be empty even if @b hasFields() is true: objects like this
 	 * one might not happen to have fields while still being the kind of
 	 * objects that, in general, do (e.g., a struct like @b args with no members).
 	 */

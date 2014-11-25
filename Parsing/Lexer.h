@@ -1,4 +1,4 @@
-/** @file Parsing/Lexer.h    Declaration of @ref Lexer. */
+/** @file Parsing/Lexer.h    Declaration of @ref fabrique::Lexer. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.

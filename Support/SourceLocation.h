@@ -1,6 +1,8 @@
 /**
  * @file Support/SourceLocation.h
- * Declaration of @ref fabrique::HasSource, @ref SourceLocation and @ref SourceRange.
+ *
+ * Declaration of @ref fabrique::HasSource, @ref fabrique::SourceLocation and
+ * @ref fabrique::SourceRange.
  */
 /*
  * Copyright (c) 2013 Jonathan Anderson

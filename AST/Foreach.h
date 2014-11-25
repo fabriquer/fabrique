@@ -1,4 +1,4 @@
-/** @file AST/Foreach.h    Declaration of @ref fabrique::ast::Foreach. */
+/** @file AST/ForeachExpr.h    Declaration of @ref fabrique::ast::ForeachExpr. */
 /*
  * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.

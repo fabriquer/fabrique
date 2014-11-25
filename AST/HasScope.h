@@ -39,7 +39,7 @@ namespace ast {
 
 class Scope;
 
-/** A mixin type for something that has a @ref fabrique::fabrique::Type. */
+/** A mixin type for something that has a @ref Scope. */
 class HasScope
 {
 public:

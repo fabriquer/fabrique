@@ -37,7 +37,7 @@ namespace fabrique {
 class Type;
 
 
-/** A mixin type for something that may have a @ref fabrique::fabrique::Type. */
+/** A mixin type for something that may have a @ref Type. */
 class OptionallyTyped
 {
 public:

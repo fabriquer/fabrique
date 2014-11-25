@@ -1,4 +1,4 @@
-/** @file Support/PosixError.cc    Definition of @ref PosixError. */
+/** @file Support/PosixError.cc    Definition of @ref fabrique::PosixError. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

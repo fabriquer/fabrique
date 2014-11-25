@@ -1,4 +1,4 @@
-/** @file ADT/UniqPtr.h    Declaration of @ref fabrique::UniqPtr and @ref Take. */
+/** @file ADT/UniqPtr.h  Declaration of @ref fabrique::UniqPtr and @ref fabrique::Take. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

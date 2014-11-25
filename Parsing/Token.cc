@@ -1,4 +1,4 @@
-/** @file Parsing/Token.cc    Definition of @ref Token. */
+/** @file Parsing/Token.cc    Definition of @ref fabrique::Token. */
 /*
  * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.

@@ -1,4 +1,4 @@
-/** @file Parsing/Parser.h    Declaration of @ref Parser. */
+/** @file Parsing/Parser.h    Declaration of @ref fabrique::ast::Parser. */
 /*
  * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
@@ -83,9 +83,13 @@ public:
 	 * Enter an AST @ref Scope. Should be called before parsing anything
 	 * that belongs in the scope, e.g. parameters:
 	 *
-	 * <<EnterScope>> function (x:int <<Parameter>>) { ... } <<ExitScope>>
+	 * [EnterScope] function (x:int [Parameter]) { ... } [ExitScope]
 	 *
-	 * @param  name    a name used to describe the scope (for debugging)
+	 * @param  name            a name used to describe the scope (for debugging)
+	 * @param  argumentsType   the type of the arguments (if any) being passed
+	 *                         into the scope: either a @ref StructureType or
+	 *                         else @ref TypeContext::nilType()
+	 * @param  src             the entire extent of the scope in source
 	 */
 	Scope& EnterScope(const std::string& name, const Type& argumentsType,
 	                  SourceRange src = SourceRange::None());
@@ -158,7 +162,6 @@ public:
 	/**
 	 * An expression for mapping list elements into another list:
 	 *   foreach x in some_list: x + 1
-	 * .
 	 */
 	ForeachExpr* Foreach(UniqPtr<Mapping>&, UniqPtr<Expression>& body,
 	                     const SourceRange& start);
@@ -170,10 +173,10 @@ public:
 	                         const Type *ty = nullptr);
 
 
-	//! An untyped @ref Identifier: just a name.
+	//! An untyped @ref ast::Identifier: just a name.
 	Identifier* Id(UniqPtr<Token>&&);
 
-	//! A typed @ref Identifier.
+	//! A typed @ref ast::Identifier.
 	Identifier* Id(UniqPtr<Identifier>&& untyped, const Type*);
 
 	//! An expression that imports a Fabrique module.

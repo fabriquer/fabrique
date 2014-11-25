@@ -1,4 +1,4 @@
-/** @file Parsing/Token.h    Declaration of @ref Token. */
+/** @file Parsing/Token.h    Declaration of @ref fabrique::Token. */
 /*
  * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.

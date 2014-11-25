@@ -1,4 +1,4 @@
-/** @file AST/CompoundExpr.h    Declaration of @ref fabrique::ast::CompoundExpr. */
+/** @file AST/CompoundExpr.h    Declaration of @ref fabrique::ast::CompoundExpression. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.

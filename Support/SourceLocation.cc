@@ -1,6 +1,8 @@
 /**
  * @file Support/SourceLocation.cc
- * Definition of @ref fabrique::SourceLocation and @ref SourceRange.
+ *
+ * Definition of @ref fabrique::HasSource, @ref fabrique::SourceLocation and
+ * @ref fabrique::SourceRange.
  */
 /*
  * Copyright (c) 2013 Jonathan Anderson
