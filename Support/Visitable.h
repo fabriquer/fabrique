@@ -1,4 +1,4 @@
-/** @file Support/Printable.h    Declaration of the @ref fabrique::Printable interface. */
+/** @file Support/Visitable.h    Declaration of the @ref fabrique::Visitable interface. */
 /*
  * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
