@@ -1,6 +1,6 @@
 /** @file Support/Printable.h    Declaration of the @ref fabrique::Printable interface. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -33,22 +33,16 @@
 #define VISITABLE_H
 
 namespace fabrique {
-namespace ast {
 
-class Visitor;
-
-
-/**
- * A thing that can be visited by a @ref fabrique::Visitor.
- */
+//! An object that can be visited by a vistor.
+template<typename Visitor>
 class Visitable
 {
 public:
-	virtual ~Visitable();
+	virtual ~Visitable() {}
 	virtual void Accept(Visitor&) const = 0;
 };
 
-} // namespace ast
 } // namespace fabrique
 
 #endif

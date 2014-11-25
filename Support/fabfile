@@ -7,7 +7,6 @@ platform_agnostic_sources = files(
 	SharedLibrary.cc
 	SourceLocation.cc
 	String.cc
-	Visitable.cc
 	exceptions.cc
 );
 

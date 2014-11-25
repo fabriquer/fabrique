@@ -40,10 +40,12 @@
 namespace fabrique {
 namespace ast {
 
+class Visitor;
+
 /**
  * Base class for expressions that can be evaluated.
  */
-class Node : public HasSource, public Printable, public Visitable,
+class Node : public HasSource, public Printable, public Visitable<Visitor>,
              private Uncopyable
 {
 public:
