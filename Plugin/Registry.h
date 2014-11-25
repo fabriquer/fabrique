@@ -43,6 +43,20 @@ namespace plugin {
 class Registry
 {
 	public:
+	/**
+	 * A RAII type for owning @ref Plugin::Descriptor objects
+	 * and registering them in the @ref Plugin::Registry.
+	 */
+	class Initializer
+	{
+		public:
+		Initializer(Plugin::Descriptor *descriptor);
+		~Initializer();
+
+		private:
+		std::unique_ptr<Plugin::Descriptor> plugin_;
+	};
+
 	static Registry& get();
 
 	Registry& Register(Plugin::Descriptor&);

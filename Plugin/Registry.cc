@@ -38,6 +38,23 @@ using namespace fabrique;
 using namespace fabrique::plugin;
 
 
+Registry::Initializer::Initializer(Plugin::Descriptor *descriptor)
+	: plugin_(descriptor)
+{
+	assert(plugin_);
+	Registry::get().Register(*plugin_);
+}
+
+
+Registry::Initializer::~Initializer()
+{
+	//
+	// Don't do anything for now.
+	// In the future, we might deregister plugins when we're done with them.
+	//
+}
+
+
 Registry& Registry::get()
 {
 	static Registry& instance = *new Registry();

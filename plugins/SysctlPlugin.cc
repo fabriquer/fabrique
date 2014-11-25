@@ -199,7 +199,7 @@ static ValuePtr IntegerSysctl(const ValueMap& /*scope*/, const ValueMap& args,
 }
 
 
-static auto& registry = plugin::Registry::get().Register(*new SysctlPlugin::Factory());
+plugin::Registry::Initializer init(new SysctlPlugin::Factory());
 
 } // namespace plugins
 } // namespace fabrique

@@ -192,7 +192,7 @@ ValuePtr Which::FindExecutable(const ValueMap& /*scope*/, const ValueMap& args,
 }
 
 
-static auto& registry = plugin::Registry::get().Register(*new Which::Factory());
+plugin::Registry::Initializer init(new Which::Factory());
 
 } // plugins namespace
 } // fabrique namespace
