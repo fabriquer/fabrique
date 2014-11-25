@@ -57,7 +57,8 @@ using std::string;
 using std::vector;
 
 
-namespace {
+namespace fabrique {
+namespace plugins {
 
 /**
  * Finds files (executables or any other kind of files) in the
@@ -102,8 +103,6 @@ static const char Directories[] = "directories";
 static const char ExecutableFnName[] = "executable";
 static const char FileName[] = "filename";
 static const char GenericFnName[] = "generic";
-
-} // anonymous namespace
 
 
 UniqPtr<Plugin> Which::Factory::Instantiate(TypeContext& ctx) const
@@ -194,3 +193,6 @@ ValuePtr Which::FindExecutable(const ValueMap& /*scope*/, const ValueMap& args,
 
 
 static auto& registry = plugin::Registry::get().Register(*new Which::Factory());
+
+} // plugins namespace
+} // fabrique namespace

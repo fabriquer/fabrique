@@ -50,7 +50,8 @@ using std::shared_ptr;
 using std::string;
 
 
-namespace {
+namespace fabrique {
+namespace plugins {
 
 /**
  * Provides access to the sysctl(3) set of C library functions.
@@ -87,8 +88,6 @@ class SysctlPlugin : public plugin::Plugin
 	const FunctionType& stringSysctlType_;
 	const FunctionType& intSysctlType_;
 };
-
-} // anonymous namespace
 
 
 static string SysctlName(const ValueMap& args);
@@ -193,3 +192,6 @@ static ValuePtr IntegerSysctl(const ValueMap& /*scope*/, const ValueMap& args,
 
 
 static auto& registry = plugin::Registry::get().Register(*new SysctlPlugin::Factory());
+
+} // namespace plugins
+} // namespace fabrique
