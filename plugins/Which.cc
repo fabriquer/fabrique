@@ -161,7 +161,6 @@ shared_ptr<Structure> Which::Create(DAGBuilder& builder) const
 }
 
 
-#include <iostream>
 ValuePtr Which::FindFile(const ValueMap& /*scope*/, const ValueMap& args,
                          DAGBuilder& builder, SourceRange src) const
 {
