@@ -597,32 +597,36 @@ Import* Parser::ImportModule(UniqPtr<StringLiteral>& name, UniqPtrVec<Argument>&
 		<< Bytestream::Reset << "\n"
 		;
 
-	if (auto plugin = pluginRegistry_.lookup(name->str()).Instantiate(ctx_))
+	if (auto plugin = pluginRegistry_.lookup(name->str()).lock())
 	{
+		UniqPtr<plugin::Plugin> instance(plugin->Instantiate(ctx_));
+
 		dbg
 			<< Bytestream::Action << "found"
 			<< Bytestream::Type << " plugin "
-			<< Bytestream::Definition << plugin->descriptor().name()
+			<< Bytestream::Definition << plugin->name()
 			<< Bytestream::Reset << " with type "
-			<< plugin->type()
+			<< instance->type()
 			<< "\n"
 			;
 
-		return new Import(name, args, plugin, src);
+		return new Import(name, args, instance, src);
 	}
 
-	if (auto plugin = pluginLoader_.Load(name->str()).Instantiate(ctx_))
+	if (auto plugin = pluginLoader_.Load(name->str()).lock())
 	{
+		UniqPtr<plugin::Plugin> instance(plugin->Instantiate(ctx_));
+
 		dbg
 			<< Bytestream::Action << "loaded"
 			<< Bytestream::Type << " plugin "
-			<< Bytestream::Definition << plugin->descriptor().name()
+			<< Bytestream::Definition << plugin->name()
 			<< Bytestream::Reset << " with type "
-			<< plugin->type()
+			<< instance->type()
 			<< "\n"
 			;
 
-		return new Import(name, args, plugin, src);
+		return new Import(name, args, instance, src);
 	}
 
 	const string subdir(currentSubdirectory_.top());

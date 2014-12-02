@@ -54,19 +54,21 @@ class Registry
 		~Initializer();
 
 		private:
-		std::unique_ptr<Plugin::Descriptor> plugin_;
+		Registry& registry_;
+		std::shared_ptr<Plugin::Descriptor> plugin_;
 	};
 
 	static Registry& get();
 
-	Registry& Register(Plugin::Descriptor&);
+	Registry& Register(std::weak_ptr<Plugin::Descriptor>);
+	void Deregister(std::string pluginName);
 
-	const Plugin::Descriptor& lookup(std::string) const;
+	std::weak_ptr<Plugin::Descriptor> lookup(std::string) const;
 
 	private:
 	Registry() {}
 
-	StringMap<Plugin::Descriptor&> plugins_;
+	StringMap<std::weak_ptr<Plugin::Descriptor>> plugins_;
 };
 
 } // namespace plugin

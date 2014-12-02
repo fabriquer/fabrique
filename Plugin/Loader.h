@@ -59,7 +59,7 @@ class Loader
 	 * @param   name     the library's name, cross-platform and excluding filename
 	 *                   details (e.g., "foo" rather than "libfoo.so")
 	 */
-	const Plugin::Descriptor& Load(std::string name);
+	std::weak_ptr<Plugin::Descriptor> Load(std::string name);
 
 	private:
 	std::vector<std::string> paths_;

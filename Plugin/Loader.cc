@@ -46,12 +46,12 @@ Loader::Loader(const vector<string>& paths)
 }
 
 
-const Plugin::Descriptor& Loader::Load(string libname)
+std::weak_ptr<Plugin::Descriptor> Loader::Load(string libname)
 {
 	const string filename = FindFile(LibraryFilename(libname), paths_,
 	                                 FileIsSharedLibrary, DefaultFilename(""));
 	if (filename.empty())
-		return Plugin::nullPlugin();
+		return std::weak_ptr<Plugin::Descriptor>();
 
 	libraries_.emplace_back(SharedLibrary::Load(filename));
 	return Registry::get().lookup(libname);

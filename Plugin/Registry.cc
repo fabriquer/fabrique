@@ -39,19 +39,16 @@ using namespace fabrique::plugin;
 
 
 Registry::Initializer::Initializer(Plugin::Descriptor *descriptor)
-	: plugin_(descriptor)
+	: registry_(Registry::get()), plugin_(descriptor)
 {
 	assert(plugin_);
-	Registry::get().Register(*plugin_);
+	registry_.Register(plugin_);
 }
 
 
 Registry::Initializer::~Initializer()
 {
-	//
-	// Don't do anything for now.
-	// In the future, we might deregister plugins when we're done with them.
-	//
+	registry_.Deregister(plugin_->name());
 }
 
 
@@ -62,20 +59,28 @@ Registry& Registry::get()
 }
 
 
-Registry& Registry::Register(Plugin::Descriptor& plugin)
+Registry& Registry::Register(std::weak_ptr<Plugin::Descriptor> plugin)
 {
-	assert(plugins_.find(plugin.name()) == plugins_.end());
+	const std::string name = plugin.lock()->name();
+	assert(plugins_.find(name) == plugins_.end());
 
-	plugins_.emplace(plugin.name(), plugin);
+	plugins_.emplace(name, plugin);
 	return *this;
 }
 
 
-const Plugin::Descriptor& Registry::lookup(std::string name) const
+void Registry::Deregister(std::string name)
+{
+	assert(plugins_.find(name) != plugins_.end());
+	plugins_.erase(name);
+}
+
+
+std::weak_ptr<Plugin::Descriptor> Registry::lookup(std::string name) const
 {
 	auto i = plugins_.find(name);
 	if (i == plugins_.end())
-		return Plugin::nullPlugin();
+		return std::weak_ptr<Plugin::Descriptor>();
 
 	return i->second;
 }
