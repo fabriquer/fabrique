@@ -581,17 +581,19 @@ Import* Parser::ImportModule(UniqPtr<StringLiteral>& name, UniqPtrVec<Argument>&
 		<< Bytestream::Operator << " '"
 		<< Bytestream::Literal << name->str()
 		<< Bytestream::Operator << "'"
+		<< Bytestream::Reset << " with "
 		;
 
 	if (not args.empty())
 	{
-		dbg << Bytestream::Reset << " with args";
+		dbg << "args ";
 		for (const UniqPtr<Argument>& a : args)
 			dbg << " " << *a;
+
+		dbg << Bytestream::Reset << " and ";
 	}
 
 	dbg
-		<< Bytestream::Reset << " and "
 		<< Bytestream::Reference << "srcroot "
 		<< Bytestream::Filename << srcroot_
 		<< Bytestream::Reset << "\n"
