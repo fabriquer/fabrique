@@ -31,6 +31,8 @@
 
 #include "Plugin/Loader.h"
 #include "Plugin/Registry.h"
+#include "Support/Bytestream.h"
+#include "Support/Join.h"
 #include "Support/SharedLibrary.h"
 #include "Support/os.h"
 
@@ -48,8 +50,32 @@ Loader::Loader(const vector<string>& paths)
 
 std::weak_ptr<Plugin::Descriptor> Loader::Load(string libname)
 {
+	Bytestream& dbg = Bytestream::Debug("plugin.loader");
+	dbg
+		<< Bytestream::Action << "searching"
+		<< Bytestream::Reset << " for "
+		<< Bytestream::Type << "plugin "
+		<< Bytestream::Operator << "'"
+		<< Bytestream::Literal << libname
+		<< Bytestream::Operator << "'"
+		<< Bytestream::Reset << " in paths "
+		<< Bytestream::Operator << "["
+		<< Bytestream::Reset << " "
+		<< Bytestream::Literal << join(paths_, " ")
+		<< Bytestream::Operator << " ]"
+		<< Bytestream::Reset << "\n"
+		;
+
 	const string filename = FindFile(LibraryFilename(libname), paths_,
 	                                 FileIsSharedLibrary, DefaultFilename(""));
+
+	dbg
+		<< Bytestream::Reset << "found "
+		<< Bytestream::Operator << "'"
+		<< Bytestream::Literal << filename
+		<< Bytestream::Operator << "'"
+		<< Bytestream::Reset << "\n"
+		;
 	if (filename.empty())
 		return std::weak_ptr<Plugin::Descriptor>();
 
