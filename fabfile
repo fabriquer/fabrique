@@ -66,18 +66,8 @@ dbgflags =
 	;
 
 defines =
-	(if platform.freebsd [ '-D OS_FREEBSD' ] else [])
-	+ (if platform.netbsd [ '-D OS_NETBSD' ] else [])
-	+ (if platform.openbsd [ '-D OS_OPENBSD' ] else [])
-	+ (if platform.bsd [ '-D OS_BSD' ] else [])
-
-	+ (if platform.ios [ '-D OS_IOS' ] else [])
-	+ (if platform.mac [ '-D OS_MAC' ] else [])
+	(if platform.posix [ '-D OS_POSIX' ] else [])
 	+ (if platform.darwin [ '-D OS_DARWIN' ] else [])
-
-	+ (if platform.linux [ '-D OS_LINUX' ] else [])
-	+ (if platform.posix [ '-D OS_POSIX' ] else [])
-
 	+ (if platform.windows [ '-D OS_WINDOWS' ] else [])
 	;
 

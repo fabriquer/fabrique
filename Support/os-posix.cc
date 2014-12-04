@@ -323,7 +323,7 @@ string fabrique::JoinPath(const vector<string>& components)
 string fabrique::LibraryFilename(string name)
 {
 	static constexpr char Extension[] =
-#if defined(OS_MAC)
+#if defined(OS_DARWIN)
 		"dylib"
 #else
 		"so"
