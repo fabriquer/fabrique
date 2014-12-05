@@ -97,6 +97,8 @@ generated_cxx_flags =
 	common_cxx_flags + [ '-Wno-deprecated-register' ]
 	+ if debug [ '-D' 'YYDEBUG' ] else [];
 
+linker_flags = dbgflags;
+
 
 #
 # TODO: allow 'for module in [ ast backends dag ]
@@ -134,7 +136,8 @@ plugins = foreach lib <- import('plugins').libs
 	shell.copy(lib, file('lib/fabrique') + '/' + lib.filename)
 	;
 
-fab = cxx.link_executable(objects, executable = file('fab', subdir = 'bin'));
+fab = cxx.link_executable(objects, executable = file('fab', subdir = 'bin'),
+                          flags = linker_flags);
 
 products = [ fab ] + plugins + import('test/manifest.fab').all_files;
 
