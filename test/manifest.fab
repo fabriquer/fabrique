@@ -1,5 +1,5 @@
 #
-# Generated at Fri 21 Nov 2014 11:21:32 NST by regenerate-manifest.sh
+# Generated at Sat  6 Dec 2014 20:20:05 NST by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -87,6 +87,7 @@ all_files = files(
 ./Parsing/add-to-nil-list.fab
 ./Parsing/args-at-module-scope.fab
 ./Parsing/builtins.fab
+./Parsing/calling-the-uncallable.fab
 ./Parsing/compound-expr.fab
 ./Parsing/conditionals.fab
 ./Parsing/config-cli-optional.fab

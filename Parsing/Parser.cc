@@ -351,6 +351,13 @@ Call* Parser::CreateCall(UniqPtr<Expression>& targetExpr,
 		return nullptr;
 
 	SourceRange src(targetExpr->source(), end);
+
+	if (not targetExpr->type().isFunction())
+	{
+		ReportError("calling an uncallable expression", src);
+		return nullptr;
+	}
+
 	auto& fnType = dynamic_cast<const FunctionType&>(targetExpr->type());
 
 	// Do some sanity checking on the arguments (the kind that doesn't
