@@ -254,7 +254,7 @@ for src in cxx_srcs:
 	obj = '%s.o' % src
 	src = os.path.join(src_root, '%s.cc' % src)
 
-	if 'Lex' in src or 'driver' in src:
+	if 'Lex' in src or 'Parser' in src or 'driver' in src:
 		src += ' | Parsing/fab.yacc.h'
 
 	out.write('build %s: cxx %s\n' % (obj, src))
