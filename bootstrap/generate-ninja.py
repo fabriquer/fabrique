@@ -2,6 +2,7 @@
 
 import argparse
 import itertools
+import pipes
 import platform
 import os
 import sys
@@ -227,14 +228,14 @@ for (name, variables) in rules.items():
 #
 
 # Rebuild the Ninja file:
-bootstrap_args = [ builddir ]
+bootstrap_args = [ pipes.quote(builddir) ]
 if args.cxxflags: bootstrap_args += [ '--cxxflags="%s"' % args.cxxflags ]
 if args.debug: bootstrap_args.append('--debug')
 
 out.write('''build build.ninja: rebuild %s
   args = %s
 
-''' % (bootstrap, ' '.join(bootstrap_args)))
+''' % (pipes.quote(bootstrap), ' '.join(bootstrap_args)))
 
 # Unit tests:
 out.write('build test: phony run-tests\n')
