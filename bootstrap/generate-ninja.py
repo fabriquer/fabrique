@@ -12,7 +12,7 @@ args.add_argument('--cxxflags', default = '')
 args.add_argument('--debug', action = 'store_true')
 args = args.parse_args()
 
-bootstrap = sys.argv[0]
+bootstrap = os.path.realpath(sys.argv[0])
 
 builddir = os.path.realpath(args.builddir)
 
@@ -77,7 +77,7 @@ cxx_srcs = list(itertools.chain(*[
 lex = { 'Parsing/fab.lxx': 'Parsing/fab.lex' }
 yacc = { 'Parsing/fab.yy': 'Parsing/fab.yacc' }
 
-src_root = os.path.dirname(os.path.realpath('.'))
+src_root = os.path.dirname(os.path.dirname(bootstrap))
 
 defines = []
 system = platform.system()
@@ -227,13 +227,14 @@ for (name, variables) in rules.items():
 #
 
 # Rebuild the Ninja file:
+bootstrap_args = [ builddir ]
+if args.cxxflags: bootstrap_args += [ '--cxxflags="%s"' % args.cxxflags ]
+if args.debug: bootstrap_args.append('--debug')
+
 out.write('''build build.ninja: rebuild %s
   args = %s
 
-''' % (
-	bootstrap,
-	' '.join([ "'%s'" % a for a in sys.argv[1:] ]),
-))
+''' % (bootstrap, ' '.join(bootstrap_args)))
 
 # Unit tests:
 out.write('build test: phony run-tests\n')
