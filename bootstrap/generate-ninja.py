@@ -2,6 +2,7 @@
 
 import argparse
 import itertools
+import platform
 import os
 import sys
 
@@ -27,7 +28,8 @@ if not os.path.isdir(builddir):
 cxx_srcs = {
 	'AST/': (
 		'Action', 'Argument', 'ASTDump', 'BinaryOperation', 'Call',
-		'CompoundExpr', 'Conditional', 'Expression',
+		'CompoundExpr', 'Conditional', 'DebugTracePoint',
+		'EvalContext', 'Expression',
 		'FieldAccess', 'FieldQuery', 'Filename', 'FileList',
 		'Foreach', 'Function',
 		'HasParameters', 'HasScope', 'Identifier', 'Import', 'List',
@@ -40,7 +42,8 @@ cxx_srcs = {
 		'Backend', 'Dot', 'Make', 'Ninja', 'Null',
 	),
 	'DAG/': (
-		'Build', 'Callable', 'DAG', 'File', 'Formatter', 'Function',
+		'Build', 'Callable', 'DAG', 'DAGBuilder',
+		'File', 'Formatter', 'Function',
 		'List', 'Parameter', 'Primitive',
 		'Rule', 'Structure', 'Target', 'UndefinedValueException',
 		'Value', 'Visitor',
@@ -48,9 +51,12 @@ cxx_srcs = {
 	'Parsing/': (
 		'Lexer', 'Parser', 'Token',
 	),
+	'Plugin/': (
+		'Loader', 'Plugin', 'Registry',
+	),
 	'Support/': (
-		'Arguments', 'Bytestream', 'ErrorReport', 'Join',
-		'Printable', 'SourceLocation', 'Visitable',
+		'Arguments', 'Bytestream', 'ErrorReport', 'Join', 'Printable',
+		'SharedLibrary', 'SourceLocation', 'String',
 		'exceptions', 'os-posix',
 	),
 	'Types/': (
@@ -68,12 +74,29 @@ cxx_srcs = list(itertools.chain(*[
 		for (subdir,srcs) in cxx_srcs.items()
 ]))
 
-lex = { 'Parsing/fab.l': 'Parsing/fab.lex' }
+lex = { 'Parsing/fab.lxx': 'Parsing/fab.lex' }
 yacc = { 'Parsing/fab.yy': 'Parsing/fab.yacc' }
 
 src_root = os.path.dirname(os.path.realpath('.'))
 
-cxxflags = [
+defines = []
+system = platform.system()
+
+if system in [ 'Darwin', 'FreeBSD', 'Linux' ]:
+	defines.append('OS_POSIX')
+	cxx_srcs += [ 'Support/PosixError', 'Support/PosixSharedLibrary' ]
+
+elif system == 'Windows':
+	defines.append('OS_WINDOWS')
+
+else:
+	raise ValueError('Unknown platform: %s' % system)
+
+if system == 'Darwin':
+	defines.append('OS_DARWIN')
+
+defines = list(itertools.chain.from_iterable(itertools.izip([ '-D' ], defines)))
+cxxflags = defines + [
 	'-I', src_root, '-I', builddir,
 
 	# Require C++11.
