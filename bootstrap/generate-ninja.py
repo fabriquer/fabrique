@@ -127,6 +127,9 @@ cxxflags = defines + [
 
 	# Require C++11.
 	'-std=c++11',
+
+	# Use position-independent code.
+	'-fPIC',
 ] + args.cxxflags.split()
 
 warnings = [
