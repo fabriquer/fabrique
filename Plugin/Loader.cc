@@ -48,16 +48,19 @@ Loader::Loader(const vector<string>& paths)
 }
 
 
-std::weak_ptr<Plugin::Descriptor> Loader::Load(string libname)
+std::weak_ptr<Plugin::Descriptor> Loader::Load(string name)
 {
+	const string libname = LibraryFilename(name);
+
 	Bytestream& dbg = Bytestream::Debug("plugin.loader");
 	dbg
 		<< Bytestream::Action << "searching"
 		<< Bytestream::Reset << " for "
 		<< Bytestream::Type << "plugin "
-		<< Bytestream::Operator << "'"
+		<< Bytestream::Literal << name
+		<< Bytestream::Operator << " ("
 		<< Bytestream::Literal << libname
-		<< Bytestream::Operator << "'"
+		<< Bytestream::Operator << ")"
 		<< Bytestream::Reset << " in paths "
 		<< Bytestream::Operator << "["
 		<< Bytestream::Reset << " "
@@ -66,7 +69,7 @@ std::weak_ptr<Plugin::Descriptor> Loader::Load(string libname)
 		<< Bytestream::Reset << "\n"
 		;
 
-	const string filename = FindFile(LibraryFilename(libname), paths_,
+	const string filename = FindFile(libname, paths_,
 	                                 FileIsSharedLibrary, DefaultFilename(""));
 
 	dbg
@@ -80,5 +83,5 @@ std::weak_ptr<Plugin::Descriptor> Loader::Load(string libname)
 		return std::weak_ptr<Plugin::Descriptor>();
 
 	libraries_.emplace_back(SharedLibrary::Load(filename));
-	return Registry::get().lookup(libname);
+	return Registry::get().lookup(name);
 }
