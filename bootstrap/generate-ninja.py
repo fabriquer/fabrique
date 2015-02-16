@@ -70,6 +70,11 @@ cxx_srcs = {
 	),
 }
 
+plugins = {
+	'sysctl': [ 'SysctlPlugin' ],
+	'which': [ 'Which' ],
+}
+
 cxx_srcs = list(itertools.chain(*[
 	[ '%s%s' % (subdir,base) for base in srcs ]
 		for (subdir,srcs) in cxx_srcs.items()
@@ -141,6 +146,11 @@ warnings = [
 	'-isystem %s/vendor' % src_root
 ]
 
+plugin_warnings = [
+	'-Wno-global-constructors',
+	'-Wno-exit-time-destructors',
+]
+
 if args.debug:
     cxxflags += [ '-g', '-ggdb', '-O0' ]
     ldflags += [ '-g', '-ggdb' ]
@@ -152,6 +162,15 @@ gencxxflags = cxxflags + [ '-Wno-deprecated-register' ]
 if args.debug: gencxxflags += [ '-D YYDEBUG' ]
 
 cxxflags = cxxflags + warnings
+
+plugin_files = dict([
+	(
+		('%s%s%s%s' % (libdir, libprefix, name, libsuffix)),
+		[ 'plugins/%s.cc' % s for s in sources ]
+	)
+	for (name, sources) in plugins.items()
+])
+
 
 def which(name):
 	for p in os.environ.get('PATH', '').split(os.pathsep):
@@ -278,6 +297,20 @@ objs = [ '%s.o' % o for o in cxx_srcs + lex.values() + yacc.values() ]
 out.write('build %sfab: bin %s\n\n' % (bindir, ' '.join(objs)))
 out.write('build fab: phony %sfab\n\n' % bindir)
 out.write('default fab\n\n')
+
+
+# Plugins:
+for (plugin, srcs) in plugin_files.items():
+	flags = ' '.join(cxxflags + plugin_warnings)
+	objs = [ '%s.o' % o for o in srcs ]
+
+	out.write('build %s: lib %s\n\n' % (plugin, ' '.join(objs)))
+	out.write('default %s\n\n' % plugin)
+
+	for (src, obj) in itertools.izip(srcs, objs):
+		src = os.path.join(src_root, src)
+		out.write('build %s: cxx %s\n' % (obj, src))
+		out.write('    cxxflags = %s\n' % flags)
 
 
 # C++ -> object files:
