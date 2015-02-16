@@ -81,6 +81,7 @@ yacc = { 'Parsing/fab.yy': 'Parsing/fab.yacc' }
 src_root = os.path.dirname(os.path.dirname(bootstrap))
 
 defines = []
+ldflags = []
 system = platform.system()
 
 if system in [ 'Darwin', 'FreeBSD', 'Linux' ]:
@@ -88,13 +89,23 @@ if system in [ 'Darwin', 'FreeBSD', 'Linux' ]:
 
 	bindir = 'bin/'
 	libdir = 'lib/fabrique/'
+	libprefix = 'lib'
 	cxx_srcs += [ 'Support/PosixError', 'Support/PosixSharedLibrary' ]
+
+	if system == 'Darwin':
+		ldflags += [ '-undefined', 'dynamic_lookup' ]
+		libsuffix = '.dylib'
+	else:
+		libsuffix = '.so'
 
 elif system == 'Windows':
 	defines.append('OS_WINDOWS')
 
 	bindir = ''
 	libdir = ''
+	libprefix = ''
+	libsuffix = '.dll'
+
 else:
 	raise ValueError('Unknown platform: %s' % system)
 
@@ -130,8 +141,12 @@ warnings = [
 	'-isystem %s/vendor' % src_root
 ]
 
-if args.debug: cxxflags += [ '-g', '-ggdb', '-O0' ]
-else: cxxflags += [ '-D NDEBUG', '-O2' ]
+if args.debug:
+    cxxflags += [ '-g', '-ggdb', '-O0' ]
+    ldflags += [ '-g', '-ggdb' ]
+
+else:
+    cxxflags += [ '-D NDEBUG', '-O2' ]
 
 gencxxflags = cxxflags + [ '-Wno-deprecated-register' ]
 if args.debug: gencxxflags += [ '-D YYDEBUG' ]
@@ -161,6 +176,7 @@ variables = {
 
 	# flags
 	'cxxflags': ' '.join(cxxflags),
+	'ldflags': ' '.join(ldflags),
 	'yaccflags': '-d -g -t -v',
 }
 
@@ -206,6 +222,11 @@ rules = {
 	'lex': {
 		'command': '$lex -c++ --header-file=$header --outfile=$main_out $in',
 		'description': 'Processing $in',
+	},
+
+	'lib': {
+		'command': '$cxx -shared -o $out $ldflags $in',
+		'description': 'Linking library $out',
 	},
 
 	'lit': {
