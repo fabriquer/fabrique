@@ -77,7 +77,7 @@ std::string FileNotFound(std::string name, const std::vector<std::string>& searc
 //
 
 //! Find the absolute version of a directory, optionally creating it.
-std::string AbsoluteDirectory(std::string name, bool createIfMissing = true);
+std::string AbsoluteDirectory(std::string name, bool createIfMissing = false);
 
 //! Find the absolute version of a path (file or directory).
 std::string AbsolutePath(std::string path);
