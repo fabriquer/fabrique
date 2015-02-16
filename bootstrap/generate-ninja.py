@@ -85,11 +85,16 @@ system = platform.system()
 
 if system in [ 'Darwin', 'FreeBSD', 'Linux' ]:
 	defines.append('OS_POSIX')
+
+	bindir = 'bin/'
+	libdir = 'lib/fabrique/'
 	cxx_srcs += [ 'Support/PosixError', 'Support/PosixSharedLibrary' ]
 
 elif system == 'Windows':
 	defines.append('OS_WINDOWS')
 
+	bindir = ''
+	libdir = ''
 else:
 	raise ValueError('Unknown platform: %s' % system)
 
@@ -243,13 +248,14 @@ out.write('''build build.ninja: rebuild %s
 
 # Unit tests:
 out.write('build test: phony run-tests\n')
-out.write('build run-tests: lit %s/test | fab\n' % src_root)
+out.write('build run-tests: lit %s/test | %sfab\n' % (src_root, bindir))
 
 
 # Main executable
 objs = [ '%s.o' % o for o in cxx_srcs + lex.values() + yacc.values() ]
 
-out.write('build fab: bin %s\n\n' % ' '.join(objs))
+out.write('build %sfab: bin %s\n\n' % (bindir, ' '.join(objs)))
+out.write('build fab: phony %sfab\n\n' % bindir)
 out.write('default fab\n\n')
 
 
