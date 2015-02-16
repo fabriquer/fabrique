@@ -29,6 +29,9 @@
  * SUCH DAMAGE.
  */
 
+#include <sys/types.h>
+#include <sys/sysctl.h>
+
 #include "DAG/DAGBuilder.h"
 #include "DAG/Parameter.h"
 #include "Plugin/Registry.h"
@@ -40,7 +43,6 @@
 
 #include <cassert>
 
-#include <sys/sysctl.h>
 #include <errno.h>
 
 using namespace fabrique;
