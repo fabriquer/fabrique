@@ -6,23 +6,21 @@
 lit = args.lit ? import('which').executable('llvm-lit');
 
 run_lit = action(
-	'${lit} ${flags} --output=${report} ${tree}',
+	'${lit} ${flags} --xunit-xml-output=${results} ${tree}',
 	description = 'Running LLVM Integrated Tester on ${tree}', pool = 'console'
-	<- tree:file[in], report:file[out],
+	<- tree:file[in], results:file[out],
 	   flags:list[string] = [], dependencies:list[file[in]] = [],
 	   lit:file[in] = lit);  # TODO: find precise llvm-lit with 'which' plugin
 
 
-run = function(test_tree:file[in], output_directory:file[out], report_filename:string,
-               dependencies:list[file[in]],
+run = function(test_tree:file[in], results_file:file[out],
+               dependencies:list[file[in]] = [],
                suppress_success_output = false, show_failure_details = true)
 {
-	report = file(report_filename, subdir = output_directory);
-
 	flags = []
 		+ (if suppress_success_output [ '--quiet' ] else [ '--succinct' ])
 		+ (if show_failure_details [ '--verbose' ] else [])
 		;
 
-	run_lit(test_tree, report, flags, dependencies)
+	run_lit(test_tree, results_file, flags, dependencies)
 };

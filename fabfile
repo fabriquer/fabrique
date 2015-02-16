@@ -141,5 +141,4 @@ fab = cxx.link_executable(objects, executable = file('fab', subdir = 'bin'),
 
 products = [ fab ] + plugins + import('test/manifest.fab').all_files;
 
-test = lit.run(file('test'), file('lit-test-results'), 'report.txt',
-               dependencies = products);
+test = lit.run(file('test'), file('junit.xml'), dependencies = products);
