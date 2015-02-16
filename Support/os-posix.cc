@@ -96,10 +96,10 @@ string fabrique::AbsoluteDirectory(string name, bool createIfMissing)
 		if (errno == ENOENT and createIfMissing)
 		{
 			if (mkdir(cname, 0777) != 0)
-				throw PosixError("creating directory " + name);
+				throw PosixError("creating directory '" + name + "'");
 		}
 		else
-			throw PosixError("reading directory " + name);
+			throw PosixError("reading directory '" + name + "'");
 	}
 
 	return AbsolutePath(cname);
