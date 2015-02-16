@@ -106,7 +106,7 @@ int main(int argc, char *argv[]) {
 		if (not PathIsFile(fabfile))
 			throw UserError("no such file: '" + fabfile + "'");
 
-		const string srcroot = AbsoluteDirectory(DirectoryOf(fabfile));
+		const string srcroot = DirectoryOf(AbsolutePath(fabfile));
 		const string buildroot = AbsoluteDirectory(args->output);
 
 		plugin::Registry& pluginRegistry = plugin::Registry::get();
