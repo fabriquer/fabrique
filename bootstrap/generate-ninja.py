@@ -96,7 +96,11 @@ else:
 if system == 'Darwin':
 	defines.append('OS_DARWIN')
 
-defines = list(itertools.chain.from_iterable(itertools.izip([ '-D' ], defines)))
+defines = list(
+	itertools.chain.from_iterable(
+		itertools.izip(itertools.repeat('-D'), defines)
+	)
+)
 cxxflags = defines + [
 	'-I', src_root, '-I', builddir,
 
