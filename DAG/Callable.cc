@@ -47,8 +47,6 @@ using std::vector;
 Callable::Callable(const SharedPtrVec<Parameter>& p, Evaluator e)
 	: parameters_(p), evaluator_(e)
 {
-	for (auto& param : parameters_)
-		assert(param);
 }
 
 Callable::~Callable()
