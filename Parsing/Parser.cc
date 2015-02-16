@@ -639,7 +639,14 @@ Import* Parser::ImportModule(UniqPtr<StringLiteral>& name, UniqPtrVec<Argument>&
 	}
 
 	const string subdir(currentSubdirectory_.top());
-	const string filename = FindModule(srcroot_, subdir, name->str());
+	string filename;
+	try { filename = FindModule(srcroot_, subdir, name->str()); }
+	catch (const UserError& e)
+	{
+		ReportError(e.message(), src);
+		return nullptr;
+	}
+
 	const string directory = DirectoryOf(filename);
 
 	currentSubdirectory_.push(directory);
