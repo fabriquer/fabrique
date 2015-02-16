@@ -101,6 +101,7 @@ if system in [ 'Darwin', 'FreeBSD', 'Linux' ]:
 		ldflags += [ '-undefined', 'dynamic_lookup' ]
 		libsuffix = '.dylib'
 	else:
+		ldflags += [ '-rdynamic' ]
 		libsuffix = '.so'
 
 elif system == 'Windows':
@@ -225,7 +226,7 @@ lit_config = '-sv --param=output-dir=%s --output=%s' % (
 # Build rules: how we actually build things.
 rules = {
 	'bin': {
-		'command': 'c++ -o $out $in',
+		'command': 'c++ $ldflags -o $out $in',
 		'description': 'Linking $out',
 	},
 
