@@ -5,7 +5,7 @@
 
 sysctl = import('sysctl');
 
-# CHECK-DAG: string ostype = 'Darwin'
+# CHECK-DAG: string ostype =
 ostype = sysctl.string('kern.ostype');
 
 # CHECK-DAG: int osrevision =
