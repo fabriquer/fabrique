@@ -9,10 +9,8 @@ default_flags = struct {
 
 	binary = colour
 		+
-		(if pic [ '-pie' ] else [])
-		+
 		if platform.darwin []
-		else if platform.posix [ '-rdynamic' ]
+		else if platform.posix [ '-pie' '-rdynamic' ]
 		else []
 		;
 
