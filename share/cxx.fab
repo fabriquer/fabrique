@@ -1,4 +1,5 @@
 compiler = args.compiler ? file('/usr/bin/c++');
+pic = args.position_independent ? true;
 platform = args.platform;
 use_colour = args.colour_diagnostics;
 
@@ -6,15 +7,23 @@ use_colour = args.colour_diagnostics;
 default_flags = struct {
 	colour = if use_colour [ '-fcolor-diagnostics' ] else [];
 
-	binary = colour +
+	binary = colour
+		+
+		(if pic [ '-pie' ] else [])
+		+
 		if platform.darwin []
 		else if platform.posix [ '-rdynamic' ]
 		else []
 		;
 
-	object = colour;
+	object = colour +
+		if pic [ '-fPIC' ]
+		else [];
 
-	library = colour +
+	library = colour
+		+
+		(if pic [ '-fPIC' ] else [])
+		+
 		if platform.darwin [ '-Wl,-undefined' '-Wl,dynamic_lookup' ]
 		else if platform.posix [ '-rdynamic' ]
 		else []
