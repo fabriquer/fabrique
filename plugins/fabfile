@@ -22,6 +22,5 @@ cxxflags = [
 ] + defines;
 
 libs = foreach plugin <- plugins
-	cxx.library(cxx.compile(plugin.sources, cxxflags), plugin.name, subdir,
-	            flags = linker_flags + platform.library_flags)
+	cxx.library(cxx.compile(plugin.sources, cxxflags), plugin.name, subdir)
 	;

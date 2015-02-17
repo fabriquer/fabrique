@@ -1,7 +1,37 @@
 compiler = args.compiler ? file('/usr/bin/c++');
+platform = args.platform;
 use_colour = args.colour_diagnostics;
 
-colour_flags = if use_colour [ '-fcolor-diagnostics' ] else [];
+
+default_flags = struct {
+	colour = if use_colour [ '-fcolor-diagnostics' ] else [];
+
+	binary = colour +
+		if platform.darwin []
+		else if platform.posix [ '-rdynamic' ]
+		else []
+		;
+
+	object = colour;
+
+	library = colour +
+		if platform.darwin [ '-Wl,-undefined' '-Wl,dynamic_lookup' ]
+		else if platform.posix [ '-rdynamic' ]
+		else []
+		;
+};
+
+library_name = function(name:string): string
+{
+	if platform.darwin
+		'lib' + name + '.dylib'
+
+	else if platform.posix
+		'lib' + name + '.so'
+
+	else
+		name + '.dll'
+};
 
 
 ### Compile one C++ source file into an object file.
@@ -15,7 +45,7 @@ compile = function(srcs:list[file], common_flags:list[string] = [],
 {
 	foreach src <- srcs {
 		obj = src + '.o';
-		flags = (src.cxxflags ? common_flags) + colour_flags;
+		flags = (src.cxxflags ? common_flags) + default_flags.object;
 
 		compile_one(src, obj, flags, deps);
 		obj
@@ -27,7 +57,7 @@ link_executable = action('${CXX} -o ${executable} ${flags} ${objects}',
                          description = 'Linking ${executable}'
                          <- objects:list[file[in]], executable:file[out],
                             CXX:file[in] = compiler,
-                            flags:list[string] = colour_flags);
+                            flags:list[string] = default_flags.binary);
 
 link_lib = action('${CXX} -shared -o ${library} ${flags} ${objects}',
                   description = 'Linking ${library}'
@@ -38,6 +68,6 @@ link_lib = action('${CXX} -shared -o ${library} ${flags} ${objects}',
 library = function(objects:list[file], libname:string, subdir:file,
                    flags:list[string] = []): file
 {
-	filename:string = platform.library_name(libname);
-	link_lib(objects, file(filename), flags = flags)
+	filename:string = library_name(libname);
+	link_lib(objects, file(filename), flags = flags + default_flags.library)
 };

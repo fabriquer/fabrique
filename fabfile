@@ -10,50 +10,9 @@ debug_and_asserts = debug and asserts;
 colour_output = args.colour_output ? true;
 verbose_tests = args.verbose_tests ? false;
 
-# TODO: platform tests
-platform = struct
-{
-	freebsd = false;
-	netbsd = false;
-	openbsd = false;
-	bsd = freebsd or netbsd or openbsd;
+platform = import('share/platform.fab');
 
-	ios = false;
-	mac = true;
-	darwin = ios or mac;
-
-	linux = false;
-	posix = bsd or darwin or linux;
-
-	windows = false;
-
-	library_name = function(name:string): string
-	{
-		if darwin
-			'lib' + name + '.dylib'
-
-		else if posix
-			'lib' + name + '.so'
-
-		else
-			name + '.dll'
-	};
-
-	# TODO: put these in the description of the compiler
-	binary_flags =
-		if darwin []
-		else if posix [ '-rdynamic' ]
-		else []
-		;
-
-	library_flags =
-		if darwin [ '-Wl,-undefined' '-Wl,dynamic_lookup' ]
-		else if posix [ '-rdynamic' ]
-		else []
-		;
-};
-
-cxx = import('share/cxx.fab', colour_diagnostics = colour_output);
+cxx = import('share/cxx.fab', colour_diagnostics = colour_output, platform = platform);
 lex = import('share/lex.fab');
 lit = import('share/llvm-lit.fab', show_failure_details = verbose_tests);
 
@@ -110,8 +69,6 @@ generated_cxx_flags =
 	common_cxx_flags + [ '-Wno-deprecated-register' ]
 	+ if debug [ '-D' 'YYDEBUG' ] else [];
 
-linker_flags = dbgflags;
-
 
 #
 # TODO: allow 'for module in [ ast backends dag ]
@@ -149,8 +106,7 @@ plugins = foreach lib <- import('plugins').libs
 	shell.copy(lib, file('lib/fabrique') + '/' + lib.filename)
 	;
 
-fab = cxx.link_executable(objects, executable = file('fab', subdir = 'bin'),
-                          flags = linker_flags);
+fab = cxx.link_executable(objects, executable = file('fab', subdir = 'bin'));
 
 products = [ fab ] + plugins + import('test/manifest.fab').all_files;
 
