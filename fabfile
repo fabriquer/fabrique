@@ -38,6 +38,19 @@ platform = struct
 		else
 			name + '.dll'
 	};
+
+	# TODO: put these in the description of the compiler
+	binary_flags =
+		if darwin []
+		else if posix [ '-rdynamic' ]
+		else []
+		;
+
+	library_flags =
+		if darwin [ '-Wl,-undefined' '-Wl,dynamic_lookup' ]
+		else if posix [ '-rdynamic' ]
+		else []
+		;
 };
 
 cxx = import('share/cxx.fab', colour_diagnostics = colour_output);

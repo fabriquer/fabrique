@@ -35,9 +35,9 @@ link_lib = action('${CXX} -shared -o ${library} ${flags} ${objects}',
                      CXX:file[in] = compiler,
                      flags:list[string]);
 
-library = function(objects:list[file], libname:string, subdir:file): file
+library = function(objects:list[file], libname:string, subdir:file,
+                   flags:list[string] = []): file
 {
-	flags = [ '-Wl,-undefined' '-Wl,dynamic_lookup' ];
 	filename:string = platform.library_name(libname);
 	link_lib(objects, file(filename), flags = flags)
 };
