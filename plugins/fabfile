@@ -10,6 +10,7 @@ defines =
 	;
 
 plugins = [
+	struct { name = 'platform-tests'; sources = files(PlatformTests.cc); }
 	struct { name = 'sysctl'; sources = files(SysctlPlugin.cc); }
 	struct { name = 'which'; sources = files(Which.cc); }
 ];
