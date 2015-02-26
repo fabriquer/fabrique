@@ -1,6 +1,3 @@
-sources = files(foo.c bar.c);
-
-#
-# Note: we haven't imported any 'c' module!
-#
-objects = c.compile(sources);
+sources = [
+	undefined
+];

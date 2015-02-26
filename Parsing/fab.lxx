@@ -34,12 +34,13 @@ size_t		yycolumn = 1;
 	if (yylineno > previousLine) \
 	{ \
 		yycolumn = 1; \
-		previousLine = yylineno; \
 	} \
 	else \
 	{ \
 		yycolumn += yyleng; \
 	} \
+	\
+	previousLine = yylineno; \
 }
 
 %}
