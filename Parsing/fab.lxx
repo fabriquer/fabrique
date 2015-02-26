@@ -22,13 +22,6 @@ size_t		yycolumn = 1;
  * location in the source code.
  */
 #define YY_USER_ACTION { \
-	/*
-	const SourceRange& src = currentToken.source(); \
-	if (src.end.line > 1 or src.end.column > 1) \
-		Bytestream::Debug("lex.prelex") \
-			<< Bytestream::Action << "lexed: " \
-			<< currentToken << "\n"; \
-	*/ \
 	currentToken_ = NextToken(); \
 	\
 	if (yylineno > previousLine) \
