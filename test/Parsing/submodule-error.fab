@@ -1,7 +1,0 @@
-#
-# RUN: %fab --parse-only --print-ast %s > %t.out 2> %t.err || true
-# RUN: FileCheck %s -input-file %t.err
-#
-
-# CHECK: submodule-with-error.fab:6:11: error: reference to undefined value
-submodule = import('Inputs/submodule-with-error.fab');
