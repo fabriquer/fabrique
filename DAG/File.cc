@@ -86,12 +86,6 @@ File::File(string filename, string subdirectory, bool absolute,
 
 string File::filename() const
 {
-	if (absolute_)
-		return filename_;
-
-	if (subdirectory_.empty())
-		return filename_;
-
 	return JoinPath(subdirectory_, filename_);
 }
 
