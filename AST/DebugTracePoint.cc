@@ -34,6 +34,7 @@
 
 #include "AST/DebugTracePoint.h"
 #include "AST/Visitor.h"
+#include "DAG/Primitive.h"
 #include "Support/Bytestream.h"
 #include "Support/ErrorReport.h"
 
@@ -82,8 +83,8 @@ dag::ValuePtr DebugTracePoint::evaluate(EvalContext& ctx) const
 	Bytestream::Debug("trace") << *report << "value: ";
 	Bytestream& out = Bytestream::Stdout();
 
-	// Special case: output string literals just as they are.
-	if (auto s = dynamic_cast<const StringLiteral*>(expr_.get()))
+	// Special case: output string primitives just as they are.
+	if (auto s = std::dynamic_pointer_cast<const dag::String>(value))
 		out << s->str() << "\n";
 
 	else
