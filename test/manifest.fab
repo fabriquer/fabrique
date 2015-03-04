@@ -1,5 +1,5 @@
 #
-# Generated at Tue 24 Feb 2015 17:13:14 NST by regenerate-manifest.sh
+# Generated at Wed  4 Mar 2015 17:24:18 NST by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -13,6 +13,7 @@ all_files = files(
 ./DAG/Inputs/fabfile
 ./DAG/Inputs/requires-args.fab
 ./DAG/Inputs/some_files.fab
+./DAG/Inputs/sources/import-another-subdir.fab
 ./DAG/Inputs/sources/src.fab
 ./DAG/Inputs/subdir-test.fab
 ./DAG/Inputs/submodule.fab
@@ -50,6 +51,7 @@ all_files = files(
 ./DAG/function-named-args.fab
 ./DAG/hello-world.fab
 ./DAG/higher-order-functions.fab
+./DAG/import-another-subdir.fab
 ./DAG/import-arguments-mandatory.fab
 ./DAG/import-directory.fab
 ./DAG/import-empty.fab

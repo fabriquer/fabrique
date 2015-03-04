@@ -1,0 +1,9 @@
+#
+# RUN: %fab --format=null --print-dag %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+c = import('Inputs/tools/c.fab');
+
+# CHECK: a.c
+import('Inputs/sources/import-another-subdir.fab');
