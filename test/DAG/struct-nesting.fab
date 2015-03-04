@@ -14,8 +14,8 @@ foo = struct
 	};
 };
 
-# CHECK-DAG: int the_wibble = 1
+# CHECK-DAG: the_wibble:int = 1
 the_wibble = foo.bar.baz.wibble;
 
-# CHECK-DAG: string the_wobble = 'not there'
+# CHECK-DAG: the_wobble:string = 'not there'
 the_wobble = foo.bar.wobble ? 'not there';

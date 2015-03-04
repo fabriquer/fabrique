@@ -3,27 +3,27 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK-DAG: struct[foo:string, bar:(file)=>file, baz:(int)=>int, wibble:(int)=>int, f:file] submodule = {
-# CHECK-DAG: file f = Inputs/f.txt
+# CHECK-DAG: submodule:struct[foo:string, bar:(file)=>file, baz:(int)=>int, wibble:(int)=>int, f:file] = {
+# CHECK-DAG: f:file = Inputs/f.txt
 submodule = import('Inputs/submodule.fab');
 
-# CHECK-DAG: foo = 'Hello, world!'
+# CHECK-DAG: foo:string = 'Hello, world!'
 foo = submodule.foo;
 
-# CHECK-DAG: foo2 = 'Hello, world!'
+# CHECK-DAG: foo2:string = 'Hello, world!'
 foo2 = foo;
 
-# CHECK-DAG: (file)=>file bar = ${BAR} ${src} -o ${dest}
+# CHECK-DAG: bar:(file)=>file = ${BAR} ${src} -o ${dest}
 bar = submodule.bar;
 
-# CHECK-DAG: (file)=>file another_bar = ${BAR} ${src} -o ${dest}
+# CHECK-DAG: another_bar:(file)=>file = ${BAR} ${src} -o ${dest}
 another_bar = submodule.bar;
 
-# CHECK-DAG: int bazzed = 2
+# CHECK-DAG: bazzed:int = 2
 bazzed = import('Inputs/submodule.fab').baz(1);
 
-# CHECK-DAG: wibbled = 2
+# CHECK-DAG: wibbled:int = 2
 wibbled = submodule.wibble(1);
 
-# CHECK-DAG: file local_copy_of_f = Inputs/f.txt
+# CHECK-DAG: local_copy_of_f:file = Inputs/f.txt
 local_copy_of_f = submodule.f;

@@ -3,34 +3,34 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK-DAG: file with_replacement_subdir = replacement/with_replacement_subdir.c
+# CHECK-DAG: with_replacement_subdir:file = replacement/with_replacement_subdir.c
 with_replacement_subdir = file('with_replacement_subdir.c', subdir = 'replacement');
 
-# CHECK-DAG: struct[x:file] submodule = {
+# CHECK-DAG: submodule:struct[x:file] = {
 submodule = import('Inputs/subdir-test.fab');
 
-# CHECK-DAG: file foo = Inputs
+# CHECK-DAG: foo:file = Inputs
 foo = submodule.x;
 
-# CHECK-DAG: file bar =
+# CHECK-DAG: bar:file =
 bar = foo.subdir;
 
 another_module = import('Inputs/another_subdir');
 
-# CHECK-DAG: file the_insider = Inputs/another_subdir
+# CHECK-DAG: the_insider:file = Inputs/another_subdir
 the_insider = another_module.from_inside;
 
-# CHECK-DAG: file above_insider = Inputs
+# CHECK-DAG: above_insider:file = Inputs
 above_insider = the_insider.subdir;
 
-# CHECK-DAG: file above_above_insider =
+# CHECK-DAG: above_above_insider:file =
 above_above_insider = above_insider.subdir;
 
-# CHECK-DAG: file foo_within = Inputs/another_subdir/foo.c
+# CHECK-DAG: foo_within:file = Inputs/another_subdir/foo.c
 foo_within = another_module.foo_within;
 
-# CHECK-DAG: file bar_within = Inputs/bar.c
+# CHECK-DAG: bar_within:file = Inputs/bar.c
 bar_within = another_module.bar_within;
 
-# CHECK-DAG: file baz_within = Inputs/baz.c
+# CHECK-DAG: baz_within:file = Inputs/baz.c
 baz_within = another_module.baz_within;

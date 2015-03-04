@@ -3,10 +3,10 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK-DAG: (file)=>file lex = $LEX -c++ --yyclass=$classname --outfile=$gen $src
+# CHECK-DAG: lex:(file)=>file = $LEX -c++ --yyclass=$classname --outfile=$gen $src
 lex = action('$LEX -c++ --yyclass=$classname --outfile=$gen $src'
              <- src:file[in], gen:file[out], classname:string);
 
 # CHECK-DAG: build: lex { foo.yy => foo.c }( classname = 'FooClass' )
-# CHECK-DAG: file gen = foo.c
+# CHECK-DAG: gen:file = foo.c
 gen = lex(file('foo.yy'), file('foo.c'), classname = 'FooClass');

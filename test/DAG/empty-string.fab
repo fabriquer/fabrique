@@ -3,5 +3,5 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: string empty_string = ''
+# CHECK: empty_string:string = ''
 empty_string = '';

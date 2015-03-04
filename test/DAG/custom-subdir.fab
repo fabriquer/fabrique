@@ -3,16 +3,16 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK-DAG: file foo = foo.c
+# CHECK-DAG: foo:file = foo.c
 foo = file('foo.c');
 
-# CHECK-DAG: file bar = custom-subdir/bar.c
+# CHECK-DAG: bar:file = custom-subdir/bar.c
 bar = file('bar.c', subdir = 'custom-subdir');
 
-# CHECK-DAG: list[file] baz = [ custom2/baz1.c custom2/baz2.c ]
+# CHECK-DAG: baz:list[file] = [ custom2/baz1.c custom2/baz2.c ]
 baz = files(baz1.c baz2.c, subdir = 'custom2');
 
-# CHECK-DAG: file wibble = custom3/wibble.c
+# CHECK-DAG: wibble:file = custom3/wibble.c
 wibble = {
 	subdir = file('custom3');
 	file('wibble.c')

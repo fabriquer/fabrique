@@ -3,16 +3,16 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK-DAG: list[file] srcs = [ foo.c bar.c baz.c ]
+# CHECK-DAG: srcs:list[file] = [ foo.c bar.c baz.c ]
 srcs = files(foo.c bar.c baz.c);
 
-# CHECK-DAG: (file)=>file cc = cc -c $src -o $obj
+# CHECK-DAG: cc:(file)=>file = cc -c $src -o $obj
 cc = action('cc -c $src -o $obj' <- src:file[in], obj:file[out]);
 
-# CHECK-DAG: (list[file])=>file link = cc $objects -o $bin
+# CHECK-DAG: link:(list[file])=>file = cc $objects -o $bin
 link = action('cc $objects -o $bin' <- objects:list[file[in]], bin:file[out]);
 
-# CHECK-DAG: list[file] objs = [ foo.c.o bar.c.o baz.c.o ]
+# CHECK-DAG: objs:list[file] = [ foo.c.o bar.c.o baz.c.o ]
 # CHECK-DAG: build: cc { foo.c => foo.c.o }
 # CHECK-DAG: build: cc { bar.c => bar.c.o }
 # CHECK-DAG: build: cc { baz.c => baz.c.o }
@@ -24,5 +24,5 @@ objs = foreach src <- srcs
 };
 
 # CHECK-DAG: build: link { foo.c.o bar.c.o baz.c.o => foo }
-# CHECK-DAG: file bin = foo
+# CHECK-DAG: bin:file = foo
 bin = link(objs, file('foo'));

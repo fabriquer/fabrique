@@ -9,11 +9,11 @@ foo = struct
 	world = 'world!';
 };
 
-# CHECK-DAG: string bar = 'Hello, '
+# CHECK-DAG: bar:string = 'Hello, '
 bar = foo.hello ? 'default value for bar';
 
-# CHECK-DAG: string baz = 'default value for wibble'
+# CHECK-DAG: baz:string = 'default value for wibble'
 baz = foo.wibble ? 'default value for wibble';
 
-# CHECK-DAG: string x = 'world'
+# CHECK-DAG: x:string = 'world'
 x = (struct { hello = 'world'; }).hello ? 'default value';

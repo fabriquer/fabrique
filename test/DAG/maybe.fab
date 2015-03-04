@@ -3,13 +3,13 @@
 # RUN: FileCheck %s -input-file %t.out
 #
 
-# CHECK-DAG: maybe[int] foo = {
-# CHECK-DAG:   bool exists = true
-# CHECK-DAG:   int value = 42
+# CHECK-DAG: foo:maybe[int] = {
+# CHECK-DAG:   exists:bool = true
+# CHECK-DAG:   value:int = 42
 foo = some(42);
 
-# CHECK-DAG: bool bar = true
+# CHECK-DAG: bar:bool = true
 bar = foo.exists;
 
-# CHECK-DAG: int baz = 42
+# CHECK-DAG: baz:int = 42
 baz = foo.value;

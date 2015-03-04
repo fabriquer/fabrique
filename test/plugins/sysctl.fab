@@ -5,8 +5,8 @@
 
 sysctl = import('sysctl');
 
-# CHECK-DAG: string ostype =
+# CHECK-DAG: ostype:string =
 ostype = sysctl.string('kern.ostype');
 
-# CHECK-DAG: int osrevision =
+# CHECK-DAG: osrevision:int =
 osrevision = sysctl.int('kern.osrevision');

@@ -3,8 +3,8 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK-DAG: file foo = foo.txt
+# CHECK-DAG: foo:file = foo.txt
 foo = file('foo.txt');
 
-# CHECK-DAG: file bar = foo.txt.gz
+# CHECK-DAG: bar:file = foo.txt.gz
 bar = foo + '.gz';

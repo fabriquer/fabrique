@@ -6,12 +6,12 @@
 increment = function(x:int): int x + 1;
 incr_copy = increment;
 
-# CHECK-DAG: ((int)=>int,int)=>int apply =
+# CHECK-DAG: apply:((int)=>int,int)=>int =
 apply = function(fn:(int)=>int,x:int): int
 	fn(x);
 
-# CHECK-DAG: foo = 2
+# CHECK-DAG: foo:int = 2
 foo = apply(increment, 1);
 
-# CHECK-DAG: bar = 42
+# CHECK-DAG: bar:int = 42
 bar = apply(incr_copy, 41);

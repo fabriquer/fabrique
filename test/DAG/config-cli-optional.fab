@@ -3,8 +3,8 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK-DAG: int foo = 42
+# CHECK-DAG: foo:int = 42
 foo = args.foo;
 
-# CHECK-DAG: string bar = 'default bar'
+# CHECK-DAG: bar:string = 'default bar'
 bar = args.bar ? 'default bar';

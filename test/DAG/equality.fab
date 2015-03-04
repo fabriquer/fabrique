@@ -6,36 +6,36 @@
 x = false;
 y = false;
 
-# CHECK-DAG: bool equal = true
+# CHECK-DAG: equal:bool = true
 equal = (x == y);
 
-# CHECK-DAG: bool nequal = false
+# CHECK-DAG: nequal:bool = false
 nequal = (x != y);
 
-# CHECK-DAG: bool notequal = false
+# CHECK-DAG: notequal:bool = false
 notequal = not x == y;
 
 hello = 'Hello';
 world = 'World';
 
-# CHECK-DAG: bool strequal = false
+# CHECK-DAG: strequal:bool = false
 strequal = (hello == world);
 
-# CHECK-DAG: bool strnequal = true
+# CHECK-DAG: strnequal:bool = true
 strnequal = (hello != world);
 
-# CHECK-DAG: bool strnotequal = true
+# CHECK-DAG: strnotequal:bool = true
 strnotequal = not hello == world;
 
 
 m = 42;
 n = 42;
 
-# CHECK-DAG: bool iequal = true
+# CHECK-DAG: iequal:bool = true
 iequal = m == n;
 
-# CHECK-DAG: bool inequal = false
+# CHECK-DAG: inequal:bool = false
 inequal = m != n;
 
-# CHECK-DAG: bool inotequal = false
+# CHECK-DAG: inotequal:bool = false
 inotequal = not m == n;

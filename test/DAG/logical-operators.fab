@@ -3,17 +3,17 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK-DAG: bool foo = true
+# CHECK-DAG: foo:bool = true
 foo = true;
 
-# CHECK-DAG: bool bar = false
+# CHECK-DAG: bar:bool = false
 bar = not foo;
 
-# CHECK-DAG: bool baz = true
+# CHECK-DAG: baz:bool = true
 baz = foo or bar;
 
-# CHECK-DAG: bool wibble = false
+# CHECK-DAG: wibble:bool = false
 wibble = foo and bar;
 
-# CHECK-DAG: bool wobble = true
+# CHECK-DAG: wobble:bool = true
 wobble = foo xor bar;

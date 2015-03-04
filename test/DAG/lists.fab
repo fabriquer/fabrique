@@ -3,17 +3,17 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK-DAG: list[nil] empty = [ ]
+# CHECK-DAG: empty:list[nil] = [ ]
 empty = [];
 
-# CHECK-DAG: list[int] integers = [ 1 2 3 ]
+# CHECK-DAG: integers:list[int] = [ 1 2 3 ]
 integers = [ 1 2 3 ];
 
-# CHECK-DAG: list[string] strings = [ 'hello' 'world' ]
+# CHECK-DAG: strings:list[string] = [ 'hello' 'world' ]
 strings = [ 'hello' 'world' ];
 
-# CHECK-DAG: list[file] fileseq = [ a.c b.c ]
+# CHECK-DAG: fileseq:list[file] = [ a.c b.c ]
 fileseq = [ file('a.c') file('b.c') ];
 
-# CHECK-DAG: list[file] morefiles = [ a.c b.c ]
+# CHECK-DAG: morefiles:list[file] = [ a.c b.c ]
 morefiles = files(a.c b.c);

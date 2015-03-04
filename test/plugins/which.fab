@@ -5,7 +5,7 @@
 
 which = import('which');
 
-# CHECK-DAG: file sh = /bin/sh
+# CHECK-DAG: sh:file = /bin/sh
 sh = which.executable('sh');
 
 #
@@ -25,5 +25,5 @@ include_paths = files(
 	/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/include
 );
 
-# CHECK-DAG: stdlib_h = {{.*}}/stdlib.h
+# CHECK-DAG: stdlib_h:file = {{.*}}/stdlib.h
 stdlib_h = which.generic('stdlib.h', include_paths);

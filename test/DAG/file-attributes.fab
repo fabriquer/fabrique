@@ -3,35 +3,35 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK-DAG: file foo = foo.c
+# CHECK-DAG: foo:file = foo.c
 foo = file('foo.c');
 
-# CHECK-DAG: string name = '${srcroot}/foo.c'
+# CHECK-DAG: name:string = '${srcroot}/foo.c'
 name = foo.name;
 
-# CHECK-DAG: string base = 'foo'
+# CHECK-DAG: base:string = 'foo'
 base = foo.basename;
 
-# CHECK-DAG: string ext = 'c'
+# CHECK-DAG: ext:string = 'c'
 ext = foo.extension;
 
-# CHECK-DAG: list[nil] no_flags = [ ]
+# CHECK-DAG: no_flags:list[nil] = [ ]
 no_flags:list[string] = foo.cflags ? [];
 
-# CHECK-DAG: file sub =
+# CHECK-DAG: sub:file =
 sub = foo.subdir;
 
-# CHECK-DAG: bool gen = false
+# CHECK-DAG: gen:bool = false
 gen = foo.generated;
 
-# CHECK-DAG: file file_with_explicit_subdir = foo/bar.c
+# CHECK-DAG: file_with_explicit_subdir:file = foo/bar.c
 file_with_explicit_subdir = file('bar.c', subdir = 'foo');
 
-# CHECK-DAG: file explicit_subdir = foo
+# CHECK-DAG: explicit_subdir:file = foo
 explicit_subdir = file_with_explicit_subdir.subdir;
 
-# CHECK-DAG: file file_with_flags = baz.c
+# CHECK-DAG: file_with_flags:file = baz.c
 file_with_flags = file('baz.c', cflags = [ '-D SOMETHING_SPECIAL' ]);
 
-# CHECK-DAG: list[string] cflags = [ '-D SOMETHING_SPECIAL' ]
+# CHECK-DAG: cflags:list[string] = [ '-D SOMETHING_SPECIAL' ]
 cflags = file_with_flags.cflags;

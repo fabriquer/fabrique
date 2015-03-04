@@ -5,5 +5,5 @@
 
 mandatory_args = import('Inputs/requires-args.fab', name = 'foo');
 
-# CHECK: string bar = 'foo'
+# CHECK: bar:string = 'foo'
 bar = mandatory_args.test_value;

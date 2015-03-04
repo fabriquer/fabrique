@@ -3,7 +3,7 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: int foo = 3
+# CHECK: foo:int = 3
 foo = {
 	x = 1;
 	y = x + 1;

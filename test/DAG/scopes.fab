@@ -3,10 +3,10 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK-DAG: int foo = 1
+# CHECK-DAG: foo:int = 1
 foo = 1;
 
-# CHECK-DAG: list[string] bar = [ 'hello!' 'world!' ]
+# CHECK-DAG: bar:list[string] = [ 'hello!' 'world!' ]
 bar = foreach foo <- [ 'hello' 'world' ]
 {
 	foo + '!'

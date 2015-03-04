@@ -3,13 +3,13 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK-DAG: int foo = 2
+# CHECK-DAG: foo:int = 2
 foo = (function(x:int) { x + 1 })(1);
 
-# CHECK-DAG: file src = foo.c
+# CHECK-DAG: src:file = foo.c
 src = file('foo.c');
 
-# CHECK-DAG: file obj = foo.o
+# CHECK-DAG: obj:file = foo.o
 obj = file('foo.o');
 
 # CHECK-DAG: build: bar { foo.c => foo.o }

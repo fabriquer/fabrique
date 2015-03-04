@@ -3,8 +3,8 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK-DAG: struct[test_value:string] submodule = {
+# CHECK-DAG: submodule:struct[test_value:string] = {
 submodule = import('Inputs');
 
-# CHECK-DAG: string foo = 'foo'
+# CHECK-DAG: foo:string = 'foo'
 foo = submodule.test_value;

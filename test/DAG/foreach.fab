@@ -3,9 +3,9 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK-DAG: list[int] small = [ 0 1 2 ]
+# CHECK-DAG: small:list[int] = [ 0 1 2 ]
 small = [ 0 1 2 ];
 
-# CHECK-DAG: list[int] large = [ 1 2 3 ]
+# CHECK-DAG: large:list[int] = [ 1 2 3 ]
 large = foreach x <- small
 	x + 1;

@@ -126,8 +126,9 @@ void Structure::PrettyPrint(Bytestream& out, size_t indent) const
 	{
 		out
 			<< innerTab
-			<< i.second->type() << " "
 			<< Bytestream::Definition << i.first
+			<< Bytestream::Operator << ":"
+			<< Bytestream::Reset << i.second->type()
 			<< Bytestream::Operator << " = "
 			;
 

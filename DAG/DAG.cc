@@ -62,8 +62,9 @@ void DAG::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 		assert(v);
 
 		out
+			<< Bytestream::Definition << name
+			<< Bytestream::Operator << ":"
 			<< Bytestream::Type << v->type()
-			<< Bytestream::Definition << " " << name
 			<< Bytestream::Operator << " = "
 			<< *v
 			<< Bytestream::Reset << "\n"

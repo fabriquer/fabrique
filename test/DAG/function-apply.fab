@@ -6,7 +6,7 @@
 increment = function(x:int): int
 	x + 1;
 
-# CHECK-DAG: int incremented = 1
+# CHECK-DAG: incremented:int = 1
 incremented = increment(0);
 
 
@@ -21,7 +21,7 @@ makeClosure = function(x:int): (int)=>int
 
 foo = makeClosure(4);
 
-# CHECK-DAG: int bar = 5
+# CHECK-DAG: bar:int = 5
 bar = foo(1);
 
 #
@@ -31,5 +31,5 @@ baz = function(x:int = 1)
 	increment(x)
 	;
 
-# CHECK-DAG: int wibble = 2
+# CHECK-DAG: wibble:int = 2
 wibble = baz();

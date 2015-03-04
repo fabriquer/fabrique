@@ -3,11 +3,11 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK-DAG: bool foo = true
+# CHECK-DAG: foo:bool = true
 foo = true;
 
-# CHECK-DAG: int bar = 42
+# CHECK-DAG: bar:int = 42
 bar = if foo 42 else 314;
 
-# CHECK-DAG: string baz = 'world'
+# CHECK-DAG: baz:string = 'world'
 baz = if not foo "hello" else "world";

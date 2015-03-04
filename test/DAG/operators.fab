@@ -3,14 +3,14 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK-DAG: int addition = 4
+# CHECK-DAG: addition:int = 4
 addition = 2 + 2;
 
-# CHECK-DAG: list[int] scalar_add = [ 2 3 ]
+# CHECK-DAG: scalar_add:list[int] = [ 2 3 ]
 scalar_add = [ 1 2 ] .+ 1;
 
-# CHECK-DAG: list[int] integers = [ 1 2 3 4 5 ]
+# CHECK-DAG: integers:list[int] = [ 1 2 3 4 5 ]
 integers = 1 :: [ 2 3 ] + [ 2 3 ] .+ 2;
 
-# CHECK-DAG: list[string] strings = [ 'hello' 'world' '!' ]
+# CHECK-DAG: strings:list[string] = [ 'hello' 'world' '!' ]
 strings = 'hello' :: [ 'world' ] + [ '!' ];

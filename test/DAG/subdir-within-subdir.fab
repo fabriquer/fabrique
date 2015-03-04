@@ -6,16 +6,16 @@
 scope = struct {
 	subdir = file('foo');
 
-	# CHECK-DAG: file single_file = foo/a/single.c
+	# CHECK-DAG: single_file:file = foo/a/single.c
 	single_file = file('a/single.c');
 
-	# CHECK-DAG: list[file] defined_here = [ foo/a/b.c foo/a/c.cc ]
+	# CHECK-DAG: defined_here:list[file] = [ foo/a/b.c foo/a/c.cc ]
 	defined_here = files(a/b.c a/c.cc);
 
-	# CHECK-DAG: list[file] also_defined_here = [ foo/bar/a/foo.c ]
+	# CHECK-DAG: also_defined_here:list[file] = [ foo/bar/a/foo.c ]
 	also_defined_here = files(a/foo.c, subdir = 'bar');
 };
 
-# CHECK-DAG: list[file] some_files = [ Inputs/foo/bar.c ]
-# CHECK-DAG: list[file] some_more_files = [ Inputs/w/x/y/z.c ]
+# CHECK-DAG: some_files:list[file] = [ Inputs/foo/bar.c ]
+# CHECK-DAG: some_more_files:list[file] = [ Inputs/w/x/y/z.c ]
 submodule = import('Inputs/some_files.fab');

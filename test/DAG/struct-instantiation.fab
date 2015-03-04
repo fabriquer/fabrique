@@ -3,21 +3,21 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK-DAG: string foo = 'hi'
-# CHECK-DAG: string bar = 'world'
+# CHECK-DAG: foo:string = 'hi'
+# CHECK-DAG: bar:string = 'world'
 container = struct { foo = 'hi'; bar = 'world'; };
 
-# CHECK-DAG: string value = 'world'
+# CHECK-DAG: value:string = 'world'
 value = container.bar;
 
 self_referential = struct
 {
-	# CHECK-DAG: string def = 'Hello, world!'
+	# CHECK-DAG: def:string = 'Hello, world!'
 	def = 'Hello, world!';
 
-	# CHECK-DAG: string ref = 'Hello, world!'
+	# CHECK-DAG: ref:string = 'Hello, world!'
 	ref = def;
 };
 
-# CHECK-DAG: string value2 = 'Hello, world!'
+# CHECK-DAG: value2:string = 'Hello, world!'
 value2 = self_referential.ref;
