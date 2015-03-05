@@ -673,7 +673,16 @@ Import* Parser::ImportModule(UniqPtr<StringLiteral>& name, UniqPtrVec<Argument>&
 
 	Type::NamedTypeVec argTypes;
 	for (UniqPtr<Argument>& a : args)
+	{
+		if (not a->hasName())
+		{
+			ReportError("import argument must be named",
+			            a->source());
+			return nullptr;
+		}
+
 		argTypes.emplace_back(a->getName().name(), a->type());
+	}
 
 	const StructureType& argsType = ctx_.structureType(argTypes);
 

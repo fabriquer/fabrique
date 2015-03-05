@@ -1,0 +1,7 @@
+#
+# RUN: %fab --parse-only --print-ast %s 2> %t || true
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: {{.*}}arguments-unnamed.fab:7:47: error: import argument must be named
+submodule = import('Inputs/accepts-file.fab', file('.'));

@@ -1,5 +1,5 @@
 #
-# Generated at Thu  5 Mar 2015 15:28:53 NST by regenerate-manifest.sh
+# Generated at Thu  5 Mar 2015 15:50:15 NST by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -117,6 +117,7 @@ all_files = files(
 ./Parsing/import-arguments-missing.fab
 ./Parsing/import-arguments-optional.fab
 ./Parsing/import-arguments-type-mismatch.fab
+./Parsing/import-arguments-unnamed.fab
 ./Parsing/import-directory.fab
 ./Parsing/list-type-mismatch.fab
 ./Parsing/lists.fab
