@@ -63,15 +63,9 @@ static const char Win64[]	= "win64";
  * that is done in Fabrique files rather than compiled C++ files.
  */
 static const char *Name =
-// Apple:
+// Apple currently means Mac:
 #if defined(__APPLE__)
-	#if defined(TARGET_OS_IPHONE)
-		iOS
-	#elif defined(TARGET_OS_MAC)
-		MacOS
-	#else
-		#error Unsupported Apple platform
-	#endif
+	MacOSX
 
 // BSD:
 #elif defined(__FreeBSD__)
