@@ -139,7 +139,10 @@ void Structure::PrettyPrint(Bytestream& out, size_t indent) const
 			;
 	}
 
-	out << Bytestream::Operator << tab << "}";
+	out
+		<< Bytestream::Operator << tab << "}"
+		<< Bytestream::Reset
+		;
 }
 
 
