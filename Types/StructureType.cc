@@ -32,6 +32,7 @@
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
 #include "Types/StructureType.h"
+#include "Types/TypeContext.h"
 
 #include <cassert>
 
@@ -84,9 +85,6 @@ bool StructureType::isSubtype(const Type& t) const
 	if (not st)
 		return false;
 
-	if (st->fields().size() != fieldTypes_.size())
-		return false;
-
 	size_t fieldsChecked = 0;
 	for (auto& theirField : st->fields())
 	{
@@ -109,12 +107,48 @@ bool StructureType::isSubtype(const Type& t) const
 		++fieldsChecked;
 	}
 
-	if (fieldsChecked != fieldTypes_.size())
-		return false;
-
 	return true;
 }
 
+
+const Type& StructureType::supertype(const Type& t) const
+{
+	if (this->isSupertype(t))
+		return *this;
+
+	if (t.isSupertype(*this))
+		return t;
+
+	TypeContext& ctx = context();
+
+	if (t.name() != name())
+		return ctx.nilType();
+
+	const StructureType *st = dynamic_cast<const StructureType*>(&t);
+	if (not st)
+		return ctx.nilType();
+
+	NamedTypeVec commonFields;
+
+	for (auto& field : fields())
+	{
+		const string& name = field.first;
+		const Type& fieldType = field.second;
+
+		auto i = st->fieldTypes_.find(name);
+		if (i == st->fieldTypes_.end())
+			continue;
+
+		assert(i->first == name);
+		assert(i->second);
+
+		const Type& supertype = fieldType.supertype(i->second);
+		if (supertype)
+			commonFields.emplace_back(name, supertype);
+	}
+
+	return ctx.structureType(commonFields);
+}
 
 void StructureType::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {

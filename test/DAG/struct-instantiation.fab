@@ -21,3 +21,12 @@ self_referential = struct
 
 # CHECK-DAG: value2:string = 'Hello, world!'
 value2 = self_referential.ref;
+
+# CHECK-DAG: subset:struct[foo:int, bar:int] =
+# CHECK-DAG:       foo:int = 42
+# CHECK-DAG:       bar:int = 99
+subset:struct[foo:int] = struct
+{
+	foo = 42;
+	bar = 99;
+};

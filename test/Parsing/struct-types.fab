@@ -22,3 +22,11 @@ self_referential:struct[def:string, ref:string] = struct
 	# CHECK: ref:string = def;
 	ref = def;
 };
+
+# CHECK: lowest_common_denominator:struct[
+# CHECK-NOT: baz
+# CHECK: ] =
+lowest_common_denominator =
+	if true struct { foo = 1; bar = 'hi'; baz = 42; }
+	else struct { foo = 2; bar = 'world'; baz = 'what!?'; }
+	;

@@ -51,6 +51,8 @@ public:
 
 	virtual bool hasFields() const override { return true; }
 	virtual bool isSubtype(const Type&) const override;
+	virtual const Type& supertype(const Type&) const override;
+
 	virtual void PrettyPrint(Bytestream&, size_t indent) const override;
 
 private:

@@ -1,5 +1,5 @@
 #
-# Generated at Wed  4 Mar 2015 17:24:18 NST by regenerate-manifest.sh
+# Generated at Thu  5 Mar 2015 15:28:53 NST by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -64,6 +64,7 @@ all_files = files(
 ./DAG/multiple-outputs.fab
 ./DAG/operators.fab
 ./DAG/param-default-values.fab
+./DAG/print-inside-struct.fab
 ./DAG/rules.fab
 ./DAG/scopes.fab
 ./DAG/simple-build.fab
@@ -131,7 +132,6 @@ all_files = files(
 ./Parsing/simple-build.fab
 ./Parsing/struct-instantiation.fab
 ./Parsing/struct-nesting.fab
-./Parsing/struct-type-too-few-fields.fab
 ./Parsing/struct-type-too-many-fields.fab
 ./Parsing/struct-type-wrong-field-type.fab
 ./Parsing/struct-types.fab
