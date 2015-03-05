@@ -180,6 +180,11 @@ ValuePtr DAGBuilder::AddRegeneration(const Arguments& commandLineArgs,
 	ValueMap ruleArgs;
 	ruleArgs["description"] = String("Regenerating ${output}");
 
+	// For backends that support it (Ninja), put regeneration into the
+	// 'console' pool (this gives Fabrique direct console access, allowing
+	// pretty-printing, etc.).
+	ruleArgs["pool"] = String("console");
+
 	SharedPtrVec<Parameter> params;
 	params.emplace_back(new Parameter("rootInput", inputFileType, Nothing));
 	params.emplace_back(new Parameter("otherInputs", inputType, Nothing));
