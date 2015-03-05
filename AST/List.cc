@@ -80,10 +80,6 @@ dag::ValuePtr List::evaluate(EvalContext& ctx) const
 			throw WrongTypeException(subtype,
 			                         e->type(), e->source());
 
-		// TODO: tmp
-		if (not e->evaluate(ctx))
-			return nullptr;
-
 		values.push_back(e->evaluate(ctx));
 	}
 
