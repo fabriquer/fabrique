@@ -56,7 +56,6 @@ public:
 	typedef std::pair<std::string, const Type&> NamedType;
 	typedef std::vector<NamedType> NamedTypeVec;
 
-	static const Type& GetSupertype(const Type&, const Type&);
 	static const Type& ListOf(const Type&, const SourceRange&);
 
 	static std::string UntypedPart(std::string typedName);
@@ -93,6 +92,18 @@ public:
 
 	virtual bool isSubtype(const Type&) const;
 	virtual bool isSupertype(const Type&) const;
+
+	/**
+	 * Find a common supertype for @b this type and @b other.
+	 *
+	 * The default implementation checks to see if A is a supertype of B or
+	 * vice versa. Subtypes could override this method with logic for constructing
+	 * lowest-common-denominator supertypes, e.g., including the fields that
+	 * are common to two structure types.
+	 *
+	 * @returns   the common supertype, or @b nil if none is found
+	 */
+	virtual const Type& supertype(const Type& other) const;
 
 	operator bool() const;
 

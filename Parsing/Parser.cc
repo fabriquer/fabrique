@@ -457,7 +457,7 @@ FieldQuery* Parser::FieldQuery(UniqPtr<Expression>& structure,
 	const Type& t =
 		i == structFields.end()
 			? def->type()
-			: Type::GetSupertype(def->type(), i->second)
+			: def->type().supertype(i->second)
 			;
 
 	return new class FieldQuery(structure, field, def, t, src);
@@ -704,17 +704,17 @@ Conditional* Parser::IfElse(const SourceRange& ifLocation,
 	if (not condition or not thenResult or not elseResult)
 		return nullptr;
 
-	const Type &tt(thenResult->type()), &et(elseResult->type());
-	if (!tt.isSupertype(et) and !et.isSupertype(tt))
+	const Type& type = thenResult->type().supertype(elseResult->type());
+	if (not type)
 	{
 		ReportError("incompatible types for conditional clauses: "
-		            + tt.str() + " vs " + et.str(),
+		            + thenResult->type().str()
+			    + " vs " + elseResult->type().str(),
 		            SourceRange::Over(thenResult, elseResult));
 		return nullptr;
 	}
 
-	return new Conditional(ifLocation, condition, thenResult, elseResult,
-	                       Type::GetSupertype(tt, et));
+	return new Conditional(ifLocation, condition, thenResult, elseResult, type);
 }
 
 

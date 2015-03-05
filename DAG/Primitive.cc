@@ -64,7 +64,7 @@ ValuePtr Boolean::And(ValuePtr& v) const
 
 	return ValuePtr(
 		new Boolean(value_ and other->value_,
-			Type::GetSupertype(type(), other->type()),
+			type().supertype(other->type()),
 			SourceRange(*this, *other))
 	);
 }
@@ -76,7 +76,7 @@ ValuePtr Boolean::Or(ValuePtr& v) const
 
 	return ValuePtr(
 		new Boolean(value_ or other->value_,
-			Type::GetSupertype(type(), other->type()),
+			type().supertype(other->type()),
 			SourceRange(*this, *other))
 	);
 }
@@ -88,7 +88,7 @@ ValuePtr Boolean::Xor(ValuePtr& v) const
 
 	return ValuePtr(
 		new Boolean(value_ xor other->value_,
-			Type::GetSupertype(type(), other->type()),
+			type().supertype(other->type()),
 			SourceRange(*this, *other))
 	);
 }
@@ -100,7 +100,7 @@ ValuePtr Boolean::Equals(ValuePtr& v) const
 
 	return ValuePtr(
 		new Boolean(value_ == other->value_,
-			Type::GetSupertype(type(), other->type()),
+			type().supertype(other->type()),
 			SourceRange(*this, *other))
 	);
 }

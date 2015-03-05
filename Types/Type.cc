@@ -76,15 +76,15 @@ Type::operator bool() const
 }
 
 
-const Type& Type::GetSupertype(const Type& x, const Type& y)
+const Type& Type::supertype(const Type& other) const
 {
-	if (x.isSupertype(y))
-		return x;
+	if (this->isSupertype(other))
+		return *this;
 
-	if (y.isSupertype(x))
-		return y;
+	if (other.isSupertype(*this))
+		return other;
 
-	return x.parent_.nilType();
+	return parent_.nilType();
 }
 
 
