@@ -161,7 +161,7 @@ Bytestream& Bytestream::Stdout()
 	static ANSIStream& ANSIOut = *new ANSIStream(std::cout);
 	static PlainStream& PlainOut = *new PlainStream(std::cout);
 
-	if (isatty(fileno(stdin)))
+	if (isatty(fileno(stdout)))
 	    return ANSIOut;
 
 	return PlainOut;
@@ -172,7 +172,7 @@ Bytestream& Bytestream::Stderr()
 	static ANSIStream& ANSIErr = *new ANSIStream(std::cerr);
 	static PlainStream& PlainErr = *new PlainStream(std::cerr);
 
-	if (isatty(fileno(stdin)))
+	if (isatty(fileno(stderr)))
 		return ANSIErr;
 
 	return PlainErr;
