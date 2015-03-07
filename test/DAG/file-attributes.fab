@@ -6,8 +6,11 @@
 # CHECK-DAG: foo:file = foo.c
 foo = file('foo.c');
 
-# CHECK-DAG: name:string = '${srcroot}/foo.c'
+# CHECK-DAG: name:string = 'foo.c'
 name = foo.name;
+
+# CHECK-DAG: fullname:string = '${srcroot}/foo.c'
+fullname = foo.fullname;
 
 # CHECK-DAG: base:string = 'foo'
 base = foo.basename;

@@ -42,6 +42,7 @@ static const char Arguments[] = "args";
 static const char Basename[] = "basename";
 static const char Extension[] = "extension";
 static const char FileName[] = "filename";
+static const char FullName[] = "fullname";
 static const char Generated[] = "generated";
 static const char MaybeExists[] = "exists";
 static const char MaybeValue[] = "value";
