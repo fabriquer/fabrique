@@ -122,15 +122,17 @@ const ErrorReport& Lexer::Err(const char *message)
 
 Token Lexer::NextToken() const
 {
-	return Token(yytext, yyleng, CurrentTokenRange());
+	size_t len = static_cast<size_t>(yyleng);
+	return Token(yytext, len, CurrentTokenRange());
 }
 
 SourceRange Lexer::CurrentTokenRange() const
 {
 	size_t line = static_cast<size_t>(yylineno);
+	size_t len = static_cast<size_t>(yyleng);
 
 	SourceLocation begin(currentFilename(), line, yycolumn);
-	return range(yytext, yyleng, begin);
+	return range(yytext, len, begin);
 }
 
 
