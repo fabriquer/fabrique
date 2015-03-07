@@ -730,11 +730,7 @@ Conditional* Parser::IfElse(const SourceRange& ifLocation,
 List* Parser::ListOf(UniqPtrVec<Expression>& elements,
                      const SourceRange& src)
 {
-	const Type& elementType =
-		elements.empty()
-			? ctx_.nilType()
-			: elements.front()->type();
-
+	const Type& elementType = ctx_.supertype(elements.begin(), elements.end());
 	const Type& ty = ctx_.listOf(elementType, src);
 	return new List(elements, ty, src);
 }

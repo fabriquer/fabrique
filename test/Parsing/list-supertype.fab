@@ -1,0 +1,16 @@
+#
+# RUN: %fab --parse-only --print-ast %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+# The type of a list should reflect the common supertype of its elements.
+#
+
+# CHECK: foo:list[nil] = [ ];
+foo = [];
+
+# CHECK: bar:list[struct[x:int]] =
+bar =
+[
+	struct { x = 42; y = 0; }
+	struct { x = 9; y = 'hi'; }
+];

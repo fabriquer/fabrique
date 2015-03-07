@@ -96,6 +96,20 @@ public:
 	//! A string of characters.
 	const Type& stringType();
 
+
+	/**
+	 * Find the supertype of a range of elements (or nil).
+	 */
+	template<class Iterator>
+	const Type& supertype(Iterator begin, Iterator end)
+	{
+		if (begin == end)
+			return nilType();
+
+		const Type& current = (*begin)->type();
+		return current.supertype(supertype(begin + 1, end));
+	}
+
 private:
 	typedef std::pair<std::string,PtrVec<Type> > TypeName;
 
