@@ -8,7 +8,7 @@
 #
 
 # CHECK-NOT: cc
-cc = action('cc $in -o $out', description = 'Compiling $in');
+cc = action('cc $src -o $obj' <- src:file[in], obj:file[out]);
 
 # CHECK-NOT: c++
-cxx = action(command = 'c++ $in -o $out', bar = 'b', foo = 'f');
+cxx = action(command = 'c++ $src -o $obj' <- src:file[in], obj:file[out]);

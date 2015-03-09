@@ -3,7 +3,7 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-cc = action('$CC -c $in -o $out');
+cc = action('$CC -c $src -o $obj' <- src:file[in], obj:file[out]);
 
 # CHECK: error: positional argument after keyword argument
-obj = cc(in = file('foo.c'), file('foo.o'));
+obj = cc(src = file('foo.c'), file('foo.o'));

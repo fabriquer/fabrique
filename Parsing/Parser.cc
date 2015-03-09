@@ -318,7 +318,31 @@ Action* Parser::DefineAction(UniqPtr<UniqPtrVec<Argument>>& args,
 	if (not args)
 		return nullptr;
 
+	if (not params)
+	{
+		ReportError("action has no parameters", src);
+		return nullptr;
+	}
+
 	ExitScope();
+
+	bool hasOutput = false;
+	for (const auto& p : *params)
+	{
+		const Type& t = p->type();
+		if (t.isFile() and dynamic_cast<const FileType&>(t).isOutputFile())
+		{
+			hasOutput = true;
+			break;
+		}
+	}
+
+	if (not hasOutput)
+	{
+		ReportError("action does not produce any output files", src);
+		return nullptr;
+	}
+
 	return Action::Create(*args, params, src, ctx_);
 }
 

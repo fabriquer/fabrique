@@ -3,5 +3,5 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK-DAG: cxx:(list[file])=>list[file] = c++ $cxxflags
-cxx = action(command = 'c++ $cxxflags');
+# CHECK-DAG: cxx:(file)=>file = c++ -c $src -o $obj
+cxx = action(command = 'c++ -c $src -o $obj' <- src:file[in], obj:file[out]);

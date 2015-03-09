@@ -1,5 +1,5 @@
 #
-# Generated at Sat  7 Mar 2015 00:42:13 NST by regenerate-manifest.sh
+# Generated at Mon Mar  9 14:47:25 NDT 2015 by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -23,6 +23,7 @@ all_files = files(
 ./DAG/action-default-arguments.fab
 ./DAG/action-missing-input.fab
 ./DAG/action-missing-output.fab
+./DAG/action-no-output.fab
 ./DAG/action-param-types.fab
 ./DAG/argument-type-error-location.fab
 ./DAG/build-with-foreach.fab
