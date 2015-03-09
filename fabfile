@@ -22,8 +22,7 @@ shell =
 	else import('share/shell-unimplemented.fab')
 	;
 
-# TODO: find the right yacc once we have a working 'which' plugin
-yacc = import('share/yacc.fab', yacc = file('/usr/local/bin/byacc'));
+yacc = import('share/yacc.fab', yacc = import('which').executable('byacc'));
 
 
 
