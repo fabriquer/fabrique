@@ -2,17 +2,24 @@
 # Fabrique build description for Fabrique.
 #
 
+which = import('which');
 
 debug = args.debug ? true;
 asserts = args.asserts ? true;
 debug_and_asserts = debug and asserts;
+
+compiler = args.compiler ? 'c++';
 
 colour_output = args.colour_output ? true;
 verbose_tests = args.verbose_tests ? false;
 
 platform = import('share/platform.fab');
 
-cxx = import('share/cxx.fab', colour_diagnostics = colour_output, platform = platform);
+cxx = import('share/cxx.fab',
+	compiler = which.executable(compiler),
+	colour_diagnostics = colour_output,
+	platform = platform);
+
 lex = import('share/lex.fab');
 lit = import('share/llvm-lit.fab', show_failure_details = verbose_tests);
 
@@ -22,7 +29,7 @@ shell =
 	else import('share/shell-unimplemented.fab')
 	;
 
-yacc = import('share/yacc.fab', yacc = import('which').executable('byacc'));
+yacc = import('share/yacc.fab', yacc = which.executable('byacc'));
 
 
 
