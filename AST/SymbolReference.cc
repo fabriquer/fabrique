@@ -114,7 +114,8 @@ dag::ValuePtr SymbolReference::evaluate(EvalContext& ctx) const
 		if (not base)
 			throw SemanticException(
 				name.substr(0, end)
-				+ " (" + typeid(*value).name() + ") is not a structure",
+				+ " (" + value->type().str()
+				+ ") is not a structure",
 				source());
 	}
 
