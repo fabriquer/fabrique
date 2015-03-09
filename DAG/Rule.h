@@ -74,7 +74,7 @@ public:
 	//! Arguments define the action (e.g., command = 'cc').
 	const ValueMap& arguments() const { return arguments_; }
 
-	std::string str() const { return command_; }
+	std::string str() const override { return command_; }
 
 	void setSelf(std::weak_ptr<Rule>);
 

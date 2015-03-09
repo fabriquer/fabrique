@@ -60,7 +60,7 @@ public:
 	bool operator == (const Identifier&) const;
 	bool operator < (const Identifier&) const;
 
-	virtual void Accept(Visitor&) const;
+	virtual void Accept(Visitor&) const override;
 
 private:
 	const std::string name_;

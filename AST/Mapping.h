@@ -56,7 +56,7 @@ public:
 	const Expression& source() const { return *source_; }
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
-	virtual void Accept(Visitor&) const;
+	virtual void Accept(Visitor&) const override;
 
 private:
 	const UniqPtr<Parameter> target_;

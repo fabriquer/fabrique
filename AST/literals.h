@@ -47,7 +47,7 @@ class Literal : public Expression
 {
 public:
 	const T& value() const { return value_; }
-	virtual std::string str() const = 0;
+	virtual std::string str() const override = 0;
 
 protected:
 	Literal(const T& value, const Type& ty, const SourceRange& loc)
@@ -69,11 +69,11 @@ public:
 	{
 	}
 
-	std::string str() const;
+	std::string str() const override;
 
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
-	virtual void Accept(Visitor&) const;
+	virtual void Accept(Visitor&) const override;
 };
 
 
@@ -86,11 +86,11 @@ public:
 	{
 	}
 
-	std::string str() const;
+	std::string str() const override;
 
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
-	virtual void Accept(Visitor&) const;
+	virtual void Accept(Visitor&) const override;
 };
 
 
@@ -104,11 +104,11 @@ public:
 	{
 	}
 
-	std::string str() const;
+	std::string str() const override;
 
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
-	virtual void Accept(Visitor&) const;
+	virtual void Accept(Visitor&) const override;
 };
 
 } // namespace ast

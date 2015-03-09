@@ -162,8 +162,8 @@ public:
 
 	dag::DAGBuilder& builder() { return builder_; }
 
-	virtual std::string buildroot() const { return buildroot_; }
-	virtual std::string srcroot() const { return srcroot_; }
+	virtual std::string buildroot() const override { return buildroot_; }
+	virtual std::string srcroot() const override { return srcroot_; }
 
 	virtual std::string currentValueName() const override;
 	virtual TypeContext& types() const override { return ctx_; }

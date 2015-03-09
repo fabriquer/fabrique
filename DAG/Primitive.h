@@ -48,7 +48,7 @@ template<class T>
 class Primitive : public Value
 {
 public:
-	virtual std::string str() const = 0;
+	virtual std::string str() const override = 0;
 	virtual T value() const { return value_; }
 
 	virtual void
@@ -72,7 +72,7 @@ class Boolean : public Primitive<bool>
 {
 public:
 	Boolean(bool, const Type&, SourceRange src = SourceRange::None());
-	std::string str() const;
+	std::string str() const override;
 
 	virtual ValuePtr Negate(const SourceRange& src) const override;
 	virtual ValuePtr And(ValuePtr&) const override;
@@ -89,7 +89,7 @@ class Integer : public Primitive<int>
 {
 public:
 	Integer(int, const Type&, SourceRange src = SourceRange::None());
-	std::string str() const;
+	std::string str() const override;
 
 	virtual ValuePtr Add(ValuePtr&) const override;
 	virtual ValuePtr Equals(ValuePtr&) const override;
@@ -103,7 +103,7 @@ class String : public Primitive<std::string>
 {
 public:
 	String(std::string, const Type&, SourceRange src = SourceRange::None());
-	std::string str() const;
+	std::string str() const override;
 
 	virtual ValuePtr Add(ValuePtr&) const override;
 	virtual ValuePtr Equals(ValuePtr&) const override;

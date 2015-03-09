@@ -95,7 +95,7 @@ public:
 	virtual ~UserError();
 
 	virtual const std::string& message() const { return message_; }
-	const char* what() const noexcept { return message_.c_str(); }
+	const char* what() const noexcept override { return message_.c_str(); }
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 
@@ -115,7 +115,7 @@ public:
 	virtual ~SourceCodeException();
 
 	const std::string& message() const;
-	virtual const char* what() const noexcept;
+	virtual const char* what() const noexcept override;
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 
