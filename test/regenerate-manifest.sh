@@ -21,7 +21,8 @@ echo "all_files = files("
 find . -type f \
 	| grep -v './manifest.fab' \
 	| grep -v './regenerate-manifest.sh' \
-	| grep -v '.swp'
+	| grep -v '.swp' \
+	| sort
 
 #${llvm_lit} --show-tests ${test_suite} \
 #	| grep fab \
