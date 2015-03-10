@@ -62,7 +62,7 @@ RecordType::Create(const NamedTypeVec& fields, TypeContext& ctx)
 
 RecordType::RecordType(const StringMap<const Type&>& fieldTypes,
                              const vector<string>& fieldNames, TypeContext& ctx)
-	: Type("struct", PtrVec<Type>(), ctx),
+	: Type("record", PtrVec<Type>(), ctx),
 	  fieldTypes_(fieldTypes), fieldNames_(fieldNames)
 {
 #ifndef NDEBUG
@@ -97,7 +97,7 @@ bool RecordType::isSubtype(const Type& t) const
 
 		//
 		// Records are covariant: you can assign
-		// struct[foo:special_int] to struct[foo:int]
+		// record[foo:special_int] to record[foo:int]
 		// but not the other way around.
 		//
 		const Type& ourType = i->second;
@@ -152,7 +152,7 @@ const Type& RecordType::supertype(const Type& t) const
 
 void RecordType::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
-	out << Bytestream::Type << "struct" << Bytestream::Reset;
+	out << Bytestream::Type << "record" << Bytestream::Reset;
 
 	if (fieldNames_.empty())
 		return;

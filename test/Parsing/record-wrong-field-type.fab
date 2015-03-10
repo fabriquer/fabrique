@@ -1,0 +1,8 @@
+#
+# RUN: %fab --parse-only --print-ast %s 2> %t || true
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: assigning record[foo:string, bar:string]
+# CHECK: to identifier of type record[foo:string, bar:string]
+foo:record[foo:string, bar:int] = record { foo = 'hi'; bar = 'world'; };

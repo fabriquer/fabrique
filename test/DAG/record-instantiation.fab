@@ -5,12 +5,12 @@
 
 # CHECK-DAG: foo:string = 'hi'
 # CHECK-DAG: bar:string = 'world'
-container = struct { foo = 'hi'; bar = 'world'; };
+container = record { foo = 'hi'; bar = 'world'; };
 
 # CHECK-DAG: value:string = 'world'
 value = container.bar;
 
-self_referential = struct
+self_referential = record
 {
 	# CHECK-DAG: def:string = 'Hello, world!'
 	def = 'Hello, world!';
@@ -22,10 +22,10 @@ self_referential = struct
 # CHECK-DAG: value2:string = 'Hello, world!'
 value2 = self_referential.ref;
 
-# CHECK-DAG: subset:struct[foo:int, bar:int] =
+# CHECK-DAG: subset:record[foo:int, bar:int] =
 # CHECK-DAG:       foo:int = 42
 # CHECK-DAG:       bar:int = 99
-subset:struct[foo:int] = struct
+subset:record[foo:int] = record
 {
 	foo = 42;
 	bar = 99;

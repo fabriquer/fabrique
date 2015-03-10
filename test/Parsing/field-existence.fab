@@ -3,13 +3,13 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: foo:struct[hello:string, world:string] =
-# CHECK: struct
+# CHECK: foo:record[hello:string, world:string] =
+# CHECK: record
 # CHECK: {
 # CHECK:   hello:string = 'Hello, ';
 # CHECK:   world:string = 'world!';
 # CHECK: }
-foo = struct
+foo = record
 {
 	hello = 'Hello, ';
 	world = 'world!';
@@ -21,9 +21,9 @@ bar = foo.hello ? 'default value for bar';
 # CHECK-DAG: baz:string = foo.wibble ? 'default value for wibble';
 baz = foo.wibble ? 'default value for wibble';
 
-# CHECK: x:string = struct
+# CHECK: x:string = record
 # CHECK-NEXT: {
 # CHECK-NEXT:   hello:string = 'world';
 # CHECK-NEXT: }
 # CHECK: .hello ? 'default value';
-x = (struct { hello = 'world'; }).hello ? 'default value';
+x = (record { hello = 'world'; }).hello ? 'default value';

@@ -3,7 +3,7 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-foo = struct
+foo = record
 {
 	# CHECK: {{.*}}/subdir-wrong-type.fab:10:{{[0-9]+}}: error: subdir must be a file
 	# CHECK:   (not 'string')

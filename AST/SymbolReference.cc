@@ -115,7 +115,7 @@ dag::ValuePtr SymbolReference::evaluate(EvalContext& ctx) const
 			throw SemanticException(
 				name.substr(0, end)
 				+ " (" + value->type().str()
-				+ ") is not a structure",
+				+ ") is not a record",
 				source());
 	}
 

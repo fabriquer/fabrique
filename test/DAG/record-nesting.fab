@@ -3,11 +3,11 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-foo = struct
+foo = record
 {
-	bar = struct
+	bar = record
 	{
-		baz = struct
+		baz = record
 		{
 			wibble = 1;
 		};

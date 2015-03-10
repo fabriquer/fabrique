@@ -53,7 +53,7 @@ void Record::PrettyPrint(Bytestream& out, size_t indent) const
 	const std::string outerTabs(indent, '\t');
 
 	out
-		<< Bytestream::Definition << "struct\n"
+		<< Bytestream::Definition << "record\n"
 		<< Bytestream::Operator << outerTabs << "{\n"
 		;
 
@@ -80,7 +80,7 @@ void Record::Accept(Visitor& v) const
 
 dag::ValuePtr Record::evaluate(EvalContext& ctx) const
 {
-	auto instantiationScope(ctx.EnterScope("struct instantiation"));
+	auto instantiationScope(ctx.EnterScope("record"));
 
 	std::vector<dag::Record::NamedValue> values;
 

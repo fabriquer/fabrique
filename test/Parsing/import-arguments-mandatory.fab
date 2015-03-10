@@ -3,7 +3,7 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: mandatory_args:struct[test_value:string]
+# CHECK: mandatory_args:record[test_value:string]
 # CHECK:  = import('Inputs/requires-args.fab', name = 'foo');
 mandatory_args = import('Inputs/requires-args.fab', name = 'foo');
 

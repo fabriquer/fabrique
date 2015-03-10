@@ -299,7 +299,7 @@ const RecordType* Parser::CreateRecordType(UniqPtr<UniqPtrVec<Identifier>>& f,
 	{
 		if (not id->isTyped())
 		{
-			ReportError("struct fields must have a name and a type",
+			ReportError("record fields must have a name and a type",
 			            id->source());
 			return nullptr;
 		}

@@ -1,5 +1,5 @@
 #
-# Generated at Mon  9 Mar 2015 22:06:38 NDT by regenerate-manifest.sh
+# Generated at Tue Mar 10 12:16:11 NDT 2015 by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -65,13 +65,13 @@ all_files = files(
 ./DAG/multiple-outputs.fab
 ./DAG/operators.fab
 ./DAG/param-default-values.fab
-./DAG/print-inside-struct.fab
+./DAG/print-inside-record.fab
+./DAG/record-instantiation.fab
+./DAG/record-nesting.fab
 ./DAG/rules.fab
 ./DAG/scopes.fab
 ./DAG/simple-build.fab
 ./DAG/string-list.fab
-./DAG/struct-instantiation.fab
-./DAG/struct-nesting.fab
 ./DAG/subdir-within-subdir.fab
 ./DAG/subdir.fab
 ./DAG/target-operations.fab
@@ -128,16 +128,16 @@ all_files = files(
 ./Parsing/maybe.fab
 ./Parsing/modules.fab
 ./Parsing/multiple-definition.fab
-./Parsing/not-a-struct.fab
 ./Parsing/operators.fab
 ./Parsing/positional-keyword-after-keyword.fab
+./Parsing/record-instantiation.fab
+./Parsing/record-nesting.fab
+./Parsing/record-not-a-record.fab
+./Parsing/record-type-too-many-fields.fab
+./Parsing/record-types.fab
+./Parsing/record-wrong-field-type.fab
 ./Parsing/scope-mismatch.fab
 ./Parsing/simple-build.fab
-./Parsing/struct-instantiation.fab
-./Parsing/struct-nesting.fab
-./Parsing/struct-type-too-many-fields.fab
-./Parsing/struct-type-wrong-field-type.fab
-./Parsing/struct-types.fab
 ./Parsing/subdir-wrong-type.fab
 ./Parsing/subdir.fab
 ./Parsing/tokeniser.fab

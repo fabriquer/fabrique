@@ -4,13 +4,13 @@
 #
 
 # CHECK: Hello, world!
-x = struct
+x = record
 {
 	print('Hello, world!');
 	foo = false;
 };
 
 y =
-	if true struct { print('hi'); foo = true; }
-	else struct { print('bye'); foo = 42; bar = 'hi'; }
+	if true record { print('hi'); foo = true; }
+	else record { print('bye'); foo = 42; bar = 'hi'; }
 	;

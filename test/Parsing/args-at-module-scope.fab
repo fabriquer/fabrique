@@ -6,9 +6,9 @@
 # CHECK: foo:int = args.foo;
 foo = args.foo;
 
-a_nested_scope = struct
+a_nested_scope = record
 {
-	another_scope = struct
+	another_scope = record
 	{
 		# CHECK: another_foo_reference:int = args.foo;
 		another_foo_reference = args.foo;

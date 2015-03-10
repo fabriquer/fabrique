@@ -3,5 +3,5 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: empty:struct = {
+# CHECK: empty:record = {
 empty = import('Inputs/empty.fab');

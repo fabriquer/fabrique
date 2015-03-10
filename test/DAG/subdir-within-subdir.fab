@@ -3,7 +3,7 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-scope = struct {
+scope = record {
 	subdir = file('foo');
 
 	# CHECK-DAG: single_file:file = foo/a/single.c

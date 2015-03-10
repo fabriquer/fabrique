@@ -3,8 +3,8 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: submodule:struct[foo:string, bar:(file)=>file, baz:(int)=>int,
-# CHECK:                  wibble:(int)=>int, subsubimport:struct[test:string]]
+# CHECK: submodule:record[foo:string, bar:(file)=>file, baz:(int)=>int,
+# CHECK:                  wibble:(int)=>int, subsubimport:record[test:string]]
 # CHECK:   = import('Inputs/submodule.fab');
 submodule = import('Inputs/submodule.fab');
 

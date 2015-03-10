@@ -3,7 +3,7 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: foo:struct[test_value:string] = import('Inputs');
+# CHECK: foo:record[test_value:string] = import('Inputs');
 foo = import('Inputs');
 
 # CHECK: bar:string = foo.test_value;

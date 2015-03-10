@@ -8,9 +8,9 @@
 # CHECK: foo:list[nil] = [ ];
 foo = [];
 
-# CHECK: bar:list[struct[x:int]] =
+# CHECK: bar:list[record[x:int]] =
 bar =
 [
-	struct { x = 42; y = 0; }
-	struct { x = 9; y = 'hi'; }
+	record { x = 42; y = 0; }
+	record { x = 9; y = 'hi'; }
 ];

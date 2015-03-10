@@ -3,7 +3,7 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-foo = struct
+foo = record
 {
 	hello = 'Hello, ';
 	world = 'world!';
@@ -16,4 +16,4 @@ bar = foo.hello ? 'default value for bar';
 baz = foo.wibble ? 'default value for wibble';
 
 # CHECK-DAG: x:string = 'world'
-x = (struct { hello = 'world'; }).hello ? 'default value';
+x = (record { hello = 'world'; }).hello ? 'default value';
