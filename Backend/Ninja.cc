@@ -36,6 +36,7 @@
 #include "DAG/File.h"
 #include "DAG/Formatter.h"
 #include "DAG/List.h"
+#include "DAG/Parameter.h"
 #include "DAG/Primitive.h"
 #include "DAG/Rule.h"
 #include "DAG/Structure.h"
@@ -73,6 +74,8 @@ public:
 	string Format(const Target&);
 };
 
+const char* ReservedRuleArguments[] = { "command", "description" };
+
 } // anonymous namespace
 
 
@@ -88,7 +91,8 @@ NinjaBackend::NinjaBackend()
 }
 
 
-void NinjaBackend::Process(const dag::DAG& dag, Bytestream& out, ErrorReport::Report)
+void NinjaBackend::Process(const dag::DAG& dag, Bytestream& out,
+                           ErrorReport::Report ReportError)
 {
 	NinjaFormatter formatter;
 
@@ -159,6 +163,18 @@ void NinjaBackend::Process(const dag::DAG& dag, Bytestream& out, ErrorReport::Re
 				<< Bytestream::Literal << "true"
 				<< Bytestream::Reset << "\n"
 				;
+
+		// Check for use of reserved names (e.g., 'command', 'description')
+		for (auto& p : rule.parameters())
+		{
+			for (auto& a : ReservedRuleArguments)
+			{
+				if (strcmp(p->name().c_str(), a) == 0)
+					ReportError("name has reserved meaning in Ninja",
+					            p->source(), ErrorReport::Severity::Warning);
+			}
+
+		}
 
 		for (auto& a : rule.arguments())
 			out

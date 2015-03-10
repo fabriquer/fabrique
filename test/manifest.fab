@@ -1,5 +1,5 @@
 #
-# Generated at Mon Mar  9 14:47:25 NDT 2015 by regenerate-manifest.sh
+# Generated at Mon  9 Mar 2015 22:06:38 NDT by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -166,6 +166,7 @@ all_files = files(
 ./backends/ninja/Inputs/foo.h
 ./backends/ninja/Inputs/tools.fab
 ./backends/ninja/action-default-param.fab
+./backends/ninja/action-reserved-names.fab
 ./backends/ninja/compile-arguments.fab
 ./backends/ninja/complex-build.fab
 ./backends/ninja/depfiles.fab
