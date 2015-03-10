@@ -1,5 +1,5 @@
 # TODO: get this from a Fabrique file
-fabrique = struct
+fabrique = record
 {
 	headers = srcroot;
 };
@@ -10,9 +10,9 @@ defines =
 	;
 
 plugins = [
-	struct { name = 'platform-tests'; sources = files(PlatformTests.cc); }
-	struct { name = 'sysctl'; sources = files(SysctlPlugin.cc); }
-	struct { name = 'which'; sources = files(Which.cc); }
+	record { name = 'platform-tests'; sources = files(PlatformTests.cc); }
+	record { name = 'sysctl'; sources = files(SysctlPlugin.cc); }
+	record { name = 'which'; sources = files(Which.cc); }
 ];
 
 cxxflags = [

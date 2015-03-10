@@ -4,7 +4,7 @@ platform = args.platform;
 use_colour = args.colour_diagnostics;
 
 
-default_flags = struct {
+default_flags = record {
 	colour = if use_colour [ '-fcolor-diagnostics' ] else [];
 
 	binary = colour
