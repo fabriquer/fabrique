@@ -1,4 +1,5 @@
 #
+# RUN: mkdir -p %t
 # RUN: %fab --format=ninja --output=%t %s 2> %t/err.txt
 # RUN: FileCheck %s -input-file %t/err.txt
 #
