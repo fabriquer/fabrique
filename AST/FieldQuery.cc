@@ -32,7 +32,7 @@
 #include "AST/FieldQuery.h"
 #include "AST/Identifier.h"
 #include "AST/Visitor.h"
-#include "DAG/Structure.h"
+#include "DAG/Record.h"
 #include "Support/Bytestream.h"
 #include "Types/Type.h"
 
@@ -90,8 +90,8 @@ dag::ValuePtr FieldQuery::evaluate(EvalContext& ctx) const
 		return defaultValue().evaluate(ctx);
 	}
 
-	std::shared_ptr<dag::Structure> base =
-		std::dynamic_pointer_cast<dag::Structure>(base_->evaluate(ctx));
+	std::shared_ptr<dag::Record> base =
+		std::dynamic_pointer_cast<dag::Record>(base_->evaluate(ctx));
 	assert(base);
 
 	return base->field(fieldName);

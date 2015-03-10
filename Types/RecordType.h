@@ -1,7 +1,4 @@
-/**
- * @file AST/StructInstantiation.h
- * Declaration of @ref fabrique::ast::StructInstantiation.
- */
+/** @file Types/RecordType.h    Declaration of @ref fabrique::RecordType. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -32,34 +29,50 @@
  * SUCH DAMAGE.
  */
 
-#ifndef STRUCT_INSTANTIATION_H
-#define STRUCT_INSTANTIATION_H
+#ifndef STRUCTURE_TYPE_H
+#define STRUCTURE_TYPE_H
 
-#include "AST/HasScope.h"
-#include "AST/Value.h"
+#include "ADT/StringMap.h"
+#include "Types/Type.h"
+#include <vector>
 
 namespace fabrique {
 
-class StructureType;
-
-namespace ast {
-
 /**
- * A list of same-typed expressions.
+ * The type of a record, which contains named, typed, immutable fields.
  */
-class StructInstantiation : public Expression, public HasScope
+class RecordType : public Type
 {
 public:
-	StructInstantiation(UniqPtr<Scope>& values, const StructureType&,
-	                    const SourceRange&);
+	static RecordType* Create(const NamedTypeVec&, TypeContext&);
 
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
-	virtual void Accept(Visitor&) const override;
+	virtual ~RecordType();
+	TypeMap fields() const override { return fieldTypes_; }
 
-	virtual dag::ValuePtr evaluate(EvalContext&) const override;
+	virtual bool hasFields() const override { return true; }
+	virtual bool isSubtype(const Type&) const override;
+	virtual const Type& supertype(const Type&) const override;
+
+	virtual void PrettyPrint(Bytestream&, size_t indent) const override;
+
+private:
+	RecordType(const StringMap<const Type&>& fields,
+	           const std::vector<std::string>& fieldNames, TypeContext&);
+
+	//! The types of fields within the record.
+	StringMap<const Type&> fieldTypes_;
+
+	/**
+	 * Ordered sequence of field names.
+	 *
+	 * This isn't semantically relevant, but it's nice to output field names
+	 * in the same order as their definition.
+	 */
+	std::vector<std::string> fieldNames_;
+
+	friend class TypeContext;
 };
 
-} // namespace ast
 } // namespace fabrique
 
 #endif

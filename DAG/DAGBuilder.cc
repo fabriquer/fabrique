@@ -325,10 +325,10 @@ ValuePtr DAGBuilder::String(const string& s, SourceRange src)
 }
 
 
-ValuePtr DAGBuilder::Struct(const vector<Structure::NamedValue>& values,
+ValuePtr DAGBuilder::Record(const vector<Record::NamedValue>& values,
                            const Type& t, SourceRange source)
 {
-	return ValuePtr(Structure::Create(values, t, source));
+	return ValuePtr(Record::Create(values, t, source));
 }
 
 

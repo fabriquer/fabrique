@@ -1,6 +1,6 @@
 /**
- * @file AST/StructInstantiation.cc
- * Definition of @ref fabrique::ast::StructInstantiation.
+ * @file AST/Record.cc
+ * Definition of @ref fabrique::ast::Record.
  */
 /*
  * Copyright (c) 2014 Jonathan Anderson
@@ -34,22 +34,21 @@
 
 #include "AST/EvalContext.h"
 #include "AST/Scope.h"
-#include "AST/StructInstantiation.h"
+#include "AST/Record.h"
 #include "AST/Visitor.h"
 #include "Support/Bytestream.h"
-#include "Types/StructureType.h"
+#include "Types/RecordType.h"
 
 using namespace fabrique;
 using namespace fabrique::ast;
 
 
-StructInstantiation::StructInstantiation(UniqPtr<Scope>& values, const StructureType& ty,
-                                         const SourceRange& loc)
+Record::Record(UniqPtr<Scope>& values, const RecordType& ty, const SourceRange& loc)
 	: Expression(ty, loc), HasScope(std::move(values))
 {
 }
 
-void StructInstantiation::PrettyPrint(Bytestream& out, size_t indent) const
+void Record::PrettyPrint(Bytestream& out, size_t indent) const
 {
 	const std::string outerTabs(indent, '\t');
 
@@ -71,7 +70,7 @@ void StructInstantiation::PrettyPrint(Bytestream& out, size_t indent) const
 		;
 }
 
-void StructInstantiation::Accept(Visitor& v) const
+void Record::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
 		scope().Accept(v);
@@ -79,16 +78,16 @@ void StructInstantiation::Accept(Visitor& v) const
 	v.Leave(*this);
 }
 
-dag::ValuePtr StructInstantiation::evaluate(EvalContext& ctx) const
+dag::ValuePtr Record::evaluate(EvalContext& ctx) const
 {
 	auto instantiationScope(ctx.EnterScope("struct instantiation"));
 
-	std::vector<dag::Structure::NamedValue> values;
+	std::vector<dag::Record::NamedValue> values;
 
 	for (auto& field : scope().values())
 		values.emplace_back(
 			field->name().name(),
 			field->evaluate(ctx));
 
-	return ctx.builder().Struct(values, type(), source());
+	return ctx.builder().Record(values, type(), source());
 }

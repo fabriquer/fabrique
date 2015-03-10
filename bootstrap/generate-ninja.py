@@ -34,8 +34,8 @@ cxx_srcs = {
 		'FieldAccess', 'FieldQuery', 'Filename', 'FileList',
 		'Foreach', 'Function',
 		'HasParameters', 'HasScope', 'Identifier', 'Import', 'List',
-		'Mapping', 'Node', 'Parameter',
-		'Scope', 'SomeValue', 'StructInstantiation', 'SymbolReference',
+		'Mapping', 'Node', 'Parameter', 'Record',
+		'Scope', 'SomeValue', 'SymbolReference',
 		'UnaryOperation', 'Value', 'Visitor',
 		'literals',
 	),
@@ -46,7 +46,7 @@ cxx_srcs = {
 		'Build', 'Callable', 'DAG', 'DAGBuilder',
 		'File', 'Formatter', 'Function',
 		'List', 'Parameter', 'Primitive',
-		'Rule', 'Structure', 'Target', 'UndefinedValueException',
+		'Record', 'Rule', 'Target', 'UndefinedValueException',
 		'Value', 'Visitor',
 	),
 	'Parsing/': (
@@ -62,7 +62,7 @@ cxx_srcs = {
 	),
 	'Types/': (
 		'BooleanType', 'FileType', 'FunctionType', 'IntegerType', 'MaybeType',
-		'OptionallyTyped', 'SequenceType', 'StringType', 'StructureType',
+		'OptionallyTyped', 'RecordType', 'SequenceType', 'StringType',
 		'Type', 'TypeContext', 'TypeError', 'Typed',
 	),
 	'': (

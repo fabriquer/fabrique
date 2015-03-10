@@ -23,9 +23,9 @@ sources = files(
 	Mapping.cc
 	Node.cc
 	Parameter.cc
+	Record.cc
 	Scope.cc
 	SomeValue.cc
-	StructInstantiation.cc
 	SymbolReference.cc
 	UnaryOperation.cc
 	Value.cc

@@ -1,4 +1,4 @@
-/** @file Types/StructureType.h    Declaration of @ref fabrique::StructureType. */
+/** @file DAG/Record.h    Declaration of @ref fabrique::dag::Record. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -29,50 +29,52 @@
  * SUCH DAMAGE.
  */
 
-#ifndef STRUCTURE_TYPE_H
-#define STRUCTURE_TYPE_H
+#ifndef DAG_STRUCTURE_H
+#define DAG_STRUCTURE_H
 
 #include "ADT/StringMap.h"
-#include "Types/Type.h"
-#include <vector>
+#include "DAG/Value.h"
+
+#include <memory>
+
 
 namespace fabrique {
+namespace dag {
 
 /**
- * The type of a structure, which contains named, typed, immutable fields.
+ * A reference to a file on disk (source or target).
  */
-class StructureType : public Type
+class Record : public Value
 {
 public:
-	static StructureType* Create(const NamedTypeVec&, TypeContext&);
+	// TODO: don't promise anything about ordering in the layout
+	typedef std::pair<std::string,ValuePtr> NamedValue;
 
-	virtual ~StructureType();
-	TypeMap fields() const override { return fieldTypes_; }
+	//! Create a record from an (optionally empty) vector of values.
+	static Record* Create(const std::vector<NamedValue>&, const Type&, SourceRange);
+
+	//! Create a record from a non-empty vector of values.
+	static Record* Create(const std::vector<NamedValue>&, SourceRange);
+
+	virtual ~Record();
 
 	virtual bool hasFields() const override { return true; }
-	virtual bool isSubtype(const Type&) const override;
-	virtual const Type& supertype(const Type&) const override;
+	virtual ValuePtr field(const std::string& name) const override;
+	ValuePtr operator[] (const std::string& name) const
+	{
+		return field(name);
+	}
 
-	virtual void PrettyPrint(Bytestream&, size_t indent) const override;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	void Accept(Visitor&) const override;
 
 private:
-	StructureType(const StringMap<const Type&>& fields,
-	              const std::vector<std::string>& fieldNames, TypeContext&);
+	Record(const std::vector<NamedValue>&, const Type&, SourceRange);
 
-	//! The types of fields within the structure.
-	StringMap<const Type&> fieldTypes_;
-
-	/**
-	 * Ordered sequence of field names.
-	 *
-	 * This isn't semantically relevant, but it's nice to output field names
-	 * in the same order as their definition.
-	 */
-	std::vector<std::string> fieldNames_;
-
-	friend class TypeContext;
+	const std::vector<NamedValue> values_;
 };
 
+} // namespace dag
 } // namespace fabrique
 
 #endif

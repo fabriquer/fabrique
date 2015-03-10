@@ -41,9 +41,9 @@ class File;
 class Function;
 class Integer;
 class List;
+class Record;
 class Rule;
 class String;
-class Structure;
 class Target;
 
 
@@ -59,9 +59,9 @@ public:
 	virtual bool Visit(const Function&) = 0;
 	virtual bool Visit(const Integer&) = 0;
 	virtual bool Visit(const List&) = 0;
+	virtual bool Visit(const Record&) = 0;
 	virtual bool Visit(const Rule&) = 0;
 	virtual bool Visit(const String&) = 0;
-	virtual bool Visit(const Structure&) = 0;
 	virtual bool Visit(const Target&) = 0;
 };
 

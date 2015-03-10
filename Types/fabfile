@@ -5,9 +5,9 @@ sources = files(
 	IntegerType.cc
 	MaybeType.cc
 	OptionallyTyped.cc
+	RecordType.cc
 	SequenceType.cc
 	StringType.cc
-	StructureType.cc
 	Type.cc
 	TypeContext.cc
 	TypeError.cc

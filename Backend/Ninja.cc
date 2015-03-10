@@ -38,8 +38,8 @@
 #include "DAG/List.h"
 #include "DAG/Parameter.h"
 #include "DAG/Primitive.h"
+#include "DAG/Record.h"
 #include "DAG/Rule.h"
-#include "DAG/Structure.h"
 #include "DAG/Target.h"
 
 #include "Support/Bytestream.h"
@@ -68,9 +68,9 @@ public:
 	string Format(const Function&);
 	string Format(const Integer&);
 	string Format(const List&);
+	string Format(const Record&);
 	string Format(const Rule&);
 	string Format(const String&);
-	string Format(const Structure&);
 	string Format(const Target&);
 };
 
@@ -287,6 +287,11 @@ string NinjaFormatter::Format(const List& l)
 	return fabrique::join(substrings, " ");
 }
 
+string NinjaFormatter::Format(const Record&)
+{
+	return "";
+}
+
 string NinjaFormatter::Format(const Rule& rule)
 {
 	return rule.command();
@@ -295,11 +300,6 @@ string NinjaFormatter::Format(const Rule& rule)
 string NinjaFormatter::Format(const String& s)
 {
 	return s.value();
-}
-
-string NinjaFormatter::Format(const Structure&)
-{
-	return "";
 }
 
 string NinjaFormatter::Format(const Target& t)

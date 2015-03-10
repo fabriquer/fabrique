@@ -35,8 +35,8 @@
 #include "DAG/Formatter.h"
 #include "DAG/List.h"
 #include "DAG/Primitive.h"
+#include "DAG/Record.h"
 #include "DAG/Rule.h"
-#include "DAG/Structure.h"
 #include "DAG/Target.h"
 #include "DAG/Value.h"
 
@@ -66,9 +66,9 @@ public:
 	string Format(const Function&);
 	string Format(const Integer&);
 	string Format(const List&);
+	string Format(const Record&);
 	string Format(const Rule&);
 	string Format(const String&);
-	string Format(const Structure&);
 	string Format(const Target&);
 };
 
@@ -239,6 +239,11 @@ string DotFormatter::Format(const List& l)
 	return fabrique::join(substrings, " ");
 }
 
+string DotFormatter::Format(const Record&)
+{
+	return "";
+}
+
 string DotFormatter::Format(const Rule& rule)
 {
 	return rule.command();
@@ -247,11 +252,6 @@ string DotFormatter::Format(const Rule& rule)
 string DotFormatter::Format(const String& s)
 {
 	return "'" + s.value() + "'";
-}
-
-string DotFormatter::Format(const Structure&)
-{
-	return "";
 }
 
 string DotFormatter::Format(const Target& t)

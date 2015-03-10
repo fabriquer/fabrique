@@ -1,4 +1,4 @@
-/** @file Types/StructureType.cc    Definition of @ref fabrique::StructureType. */
+/** @file Types/RecordType.cc    Definition of @ref fabrique::RecordType. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -31,7 +31,7 @@
 
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
-#include "Types/StructureType.h"
+#include "Types/RecordType.h"
 #include "Types/TypeContext.h"
 
 #include <cassert>
@@ -41,8 +41,8 @@ using std::string;
 using std::vector;
 
 
-StructureType*
-StructureType::Create(const NamedTypeVec& fields, TypeContext& ctx)
+RecordType*
+RecordType::Create(const NamedTypeVec& fields, TypeContext& ctx)
 {
 	StringMap<const Type&> types;
 	vector<string> names;
@@ -56,11 +56,11 @@ StructureType::Create(const NamedTypeVec& fields, TypeContext& ctx)
 		types.emplace(name, type);
 	}
 
-	return new StructureType(types, names, ctx);
+	return new RecordType(types, names, ctx);
 }
 
 
-StructureType::StructureType(const StringMap<const Type&>& fieldTypes,
+RecordType::RecordType(const StringMap<const Type&>& fieldTypes,
                              const vector<string>& fieldNames, TypeContext& ctx)
 	: Type("struct", PtrVec<Type>(), ctx),
 	  fieldTypes_(fieldTypes), fieldNames_(fieldNames)
@@ -71,22 +71,22 @@ StructureType::StructureType(const StringMap<const Type&>& fieldTypes,
 #endif
 }
 
-StructureType::~StructureType()
+RecordType::~RecordType()
 {
 }
 
 
-bool StructureType::isSubtype(const Type& t) const
+bool RecordType::isSubtype(const Type& t) const
 {
 	if (t.name() != name())
 		return false;
 
-	const StructureType *st = dynamic_cast<const StructureType*>(&t);
-	if (not st)
+	const RecordType *rt = dynamic_cast<const RecordType*>(&t);
+	if (not rt)
 		return false;
 
 	size_t fieldsChecked = 0;
-	for (auto& theirField : st->fields())
+	for (auto& theirField : rt->fields())
 	{
 		const string& name = theirField.first;
 		const Type& theirType = theirField.second;
@@ -96,7 +96,7 @@ bool StructureType::isSubtype(const Type& t) const
 			return false;
 
 		//
-		// Structures are covariant: you can assign
+		// Records are covariant: you can assign
 		// struct[foo:special_int] to struct[foo:int]
 		// but not the other way around.
 		//
@@ -111,7 +111,7 @@ bool StructureType::isSubtype(const Type& t) const
 }
 
 
-const Type& StructureType::supertype(const Type& t) const
+const Type& RecordType::supertype(const Type& t) const
 {
 	if (this->isSupertype(t))
 		return *this;
@@ -124,8 +124,8 @@ const Type& StructureType::supertype(const Type& t) const
 	if (t.name() != name())
 		return ctx.nilType();
 
-	const StructureType *st = dynamic_cast<const StructureType*>(&t);
-	if (not st)
+	const RecordType *rt = dynamic_cast<const RecordType*>(&t);
+	if (not rt)
 		return ctx.nilType();
 
 	NamedTypeVec commonFields;
@@ -135,8 +135,8 @@ const Type& StructureType::supertype(const Type& t) const
 		const string& name = field.first;
 		const Type& fieldType = field.second;
 
-		auto i = st->fieldTypes_.find(name);
-		if (i == st->fieldTypes_.end())
+		auto i = rt->fieldTypes_.find(name);
+		if (i == rt->fieldTypes_.end())
 			continue;
 
 		assert(i->first == name);
@@ -147,10 +147,10 @@ const Type& StructureType::supertype(const Type& t) const
 			commonFields.emplace_back(name, supertype);
 	}
 
-	return ctx.structureType(commonFields);
+	return ctx.recordType(commonFields);
 }
 
-void StructureType::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+void RecordType::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
 	out << Bytestream::Type << "struct" << Bytestream::Reset;
 

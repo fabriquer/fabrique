@@ -41,8 +41,8 @@
 #include "Types/BooleanType.h"
 #include "Types/FunctionType.h"
 #include "Types/IntegerType.h"
+#include "Types/RecordType.h"
 #include "Types/StringType.h"
-#include "Types/StructureType.h"
 #include "Types/TypeContext.h"
 #include "Types/TypeError.h"
 #include "Support/os.h"
@@ -112,7 +112,7 @@ const Type& Parser::ParseDefinitions(const std::vector<string>& definitions)
 
 	definitions_.swap(scope);
 
-	return ctx_.structureType(args);
+	return ctx_.recordType(args);
 }
 
 
@@ -288,8 +288,8 @@ const FunctionType& Parser::FnType(const PtrVec<Type>& inputs,
 }
 
 
-const StructureType* Parser::StructType(UniqPtr<UniqPtrVec<Identifier>>& f,
-                                        SourceRange /*src*/)
+const RecordType* Parser::CreateRecordType(UniqPtr<UniqPtrVec<Identifier>>& f,
+                                           SourceRange /*src*/)
 {
 	if (not f)
 		return nullptr;
@@ -307,7 +307,7 @@ const StructureType* Parser::StructType(UniqPtr<UniqPtrVec<Identifier>>& f,
 		fields.emplace_back(id->name(), id->type());
 	}
 
-	return &ctx_.structureType(fields);
+	return &ctx_.recordType(fields);
 }
 
 
@@ -423,21 +423,21 @@ CompoundExpression* Parser::CompoundExpr(UniqPtr<Expression>& result,
 
 
 
-FieldAccess* Parser::FieldAccess(UniqPtr<Expression>& structure,
+FieldAccess* Parser::FieldAccess(UniqPtr<Expression>& record,
                                  UniqPtr<Identifier>& field)
 {
-	if (not structure or not field)
+	if (not record or not field)
 		return nullptr;
 
 	const string& name = field->name();
 
-	const Type& structType = structure->type();
-	if (not structType.hasFields())
+	const Type& recordType = record->type();
+	if (not recordType.hasFields())
 		throw SemanticException(
-			"value of type '" + structType.str() + "' does not have fields",
-			structure->source());
+			"value of type '" + recordType.str() + "' does not have fields",
+			record->source());
 
-	Type::TypeMap fieldTypes { structType.fields() };
+	Type::TypeMap fieldTypes { recordType.fields() };
 	auto i = fieldTypes.find(name);
 	if (i == fieldTypes.end())
 		throw SemanticException("no such field", field->source());
@@ -449,26 +449,26 @@ FieldAccess* Parser::FieldAccess(UniqPtr<Expression>& structure,
 	else
 		field.reset(Id(std::move(field), &fieldType));
 
-	return new class FieldAccess(structure, field);
+	return new class FieldAccess(record, field);
 }
 
 
-FieldQuery* Parser::FieldQuery(UniqPtr<Expression>& structure,
+FieldQuery* Parser::FieldQuery(UniqPtr<Expression>& record,
                                UniqPtr<Identifier>& field, UniqPtr<Expression>& def,
                                SourceRange src)
 {
-	if (not structure or not field)
+	if (not record or not field)
 		return nullptr;
 
-	const Type& structType = structure->type();
-	if (not structType.hasFields())
+	const Type& recordType = record->type();
+	if (not recordType.hasFields())
 		throw SemanticException(
-			"value of type '" + structType.str() + "' does not have fields",
-			structure->source());
+			"value of type '" + recordType.str() + "' does not have fields",
+			record->source());
 
-	Type::TypeMap structFields = structType.fields();
-	auto i = structFields.find(field->name());
-	if (i != structFields.end())
+	Type::TypeMap recordFields = recordType.fields();
+	auto i = recordFields.find(field->name());
+	if (i != recordFields.end())
 	{
 		const Type& fieldType = i->second;
 		const Type& initializerType = def->type();
@@ -479,12 +479,12 @@ FieldQuery* Parser::FieldQuery(UniqPtr<Expression>& structure,
 	}
 
 	const Type& t =
-		i == structFields.end()
+		i == recordFields.end()
 			? def->type()
 			: def->type().supertype(i->second)
 			;
 
-	return new class FieldQuery(structure, field, def, t, src);
+	return new class FieldQuery(record, field, def, t, src);
 }
 
 
@@ -708,7 +708,7 @@ Import* Parser::ImportModule(UniqPtr<StringLiteral>& name, UniqPtrVec<Argument>&
 		argTypes.emplace_back(a->getName().name(), a->type());
 	}
 
-	const StructureType& argsType = ctx_.structureType(argTypes);
+	const RecordType& argsType = ctx_.recordType(argTypes);
 
 	UniqPtr<Scope> module = ParseFile(input, argsType, absolute);
 	if (not module)
@@ -723,7 +723,7 @@ Import* Parser::ImportModule(UniqPtr<StringLiteral>& name, UniqPtrVec<Argument>&
 		if (not id.reservedName())
 			fields.emplace_back(id.name(), value->type());
 	}
-	const StructureType& ty { ctx_.structureType(fields) };
+	const RecordType& ty { ctx_.recordType(fields) };
 
 	return new Import(name, args, directory, module, ty, src);
 }
@@ -811,7 +811,7 @@ SomeValue* Parser::Some(UniqPtr<Expression>& initializer, SourceRange src)
 	return new SomeValue(type, initializer, src);
 }
 
-StructInstantiation* Parser::StructInstantiation(SourceRange src)
+Record* Parser::Record(SourceRange src)
 {
 	UniqPtr<Scope> scope(ExitScope());
 
@@ -819,9 +819,9 @@ StructInstantiation* Parser::StructInstantiation(SourceRange src)
 	for (const UniqPtr<Value>& v : scope->values())
 		fields.emplace_back(v->name().name(), v->type());
 
-	const StructureType& t = ctx_.structureType(fields);
+	const RecordType& t = ctx_.recordType(fields);
 
-	return new ast::StructInstantiation(scope, t, src);
+	return new ast::Record(scope, t, src);
 }
 
 BoolLiteral* Parser::True()
@@ -1022,7 +1022,7 @@ bool Parser::Builtin(string name, string value, SourceRange src)
 bool Parser::Builtin(string name, UniqPtr<Scope>& scope, SourceRange src)
 {
 	EnterScope(std::move(*scope));
-	UniqPtr<Expression> value(StructInstantiation(src));
+	UniqPtr<Expression> value(Record(src));
 
 	return Builtin(name, value, src);
 }

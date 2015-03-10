@@ -38,7 +38,7 @@
 
 #include "DAG/DAG.h"
 #include "DAG/DAGBuilder.h"
-#include "DAG/Structure.h"
+#include "DAG/Record.h"
 #include "DAG/Value.h"
 
 

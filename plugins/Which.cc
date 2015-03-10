@@ -32,7 +32,7 @@
 #include "Plugin/Registry.h"
 #include "Types/FileType.h"
 #include "Types/FunctionType.h"
-#include "Types/StructureType.h"
+#include "Types/RecordType.h"
 #include "Types/TypeContext.h"
 #include "Support/PosixError.h"
 #include "Support/String.h"
@@ -67,7 +67,7 @@ namespace plugins {
 class Which : public plugin::Plugin
 {
 	public:
-	virtual shared_ptr<dag::Structure> Create(dag::DAGBuilder&) const override;
+	virtual shared_ptr<dag::Record> Create(dag::DAGBuilder&) const override;
 
 	class Factory : public Plugin::Descriptor
 	{
@@ -78,7 +78,7 @@ class Which : public plugin::Plugin
 	};
 
 	private:
-	Which(const Factory& factory, const StructureType& type,
+	Which(const Factory& factory, const RecordType& type,
 	      const Type& string, const FileType& file, const Type& files,
 	      const FunctionType& executable, const FunctionType& generic)
 		: Plugin(type, factory), string_(string), file_(file), fileList_(files),
@@ -116,7 +116,7 @@ UniqPtr<Plugin> Which::Factory::Instantiate(TypeContext& ctx) const
 	const FunctionType& executable = ctx.functionType(string, file);
 	const FunctionType& generic = ctx.functionType({ &string, &files }, file);
 
-	const StructureType& type = ctx.structureType({
+	const RecordType& type = ctx.recordType({
 		{ ExecutableFnName, executable },
 		{ GenericFnName, generic },
 	});
@@ -126,7 +126,7 @@ UniqPtr<Plugin> Which::Factory::Instantiate(TypeContext& ctx) const
 }
 
 
-shared_ptr<Structure> Which::Create(DAGBuilder& builder) const
+shared_ptr<Record> Which::Create(DAGBuilder& builder) const
 {
 	const ValueMap scope;
 	const SharedPtrVec<Parameter> name = {
@@ -137,7 +137,7 @@ shared_ptr<Structure> Which::Create(DAGBuilder& builder) const
 		std::make_shared<Parameter>(Directories, fileList_, ValuePtr()),
 	};
 
-	vector<Structure::NamedValue> fields = {
+	vector<Record::NamedValue> fields = {
 		{
 			ExecutableFnName,
 			builder.Function(
@@ -152,8 +152,8 @@ shared_ptr<Structure> Which::Create(DAGBuilder& builder) const
 		},
 	};
 
-	auto result = std::dynamic_pointer_cast<Structure>(
-		builder.Struct(fields, type(), SourceRange::None()));
+	auto result = std::dynamic_pointer_cast<Record>(
+		builder.Record(fields, type(), SourceRange::None()));
 
 	assert(result);
 	return result;

@@ -1,4 +1,4 @@
-/** @file DAG/Structure.h    Declaration of @ref fabrique::dag::Structure. */
+/** @file DAG/Record.h    Declaration of @ref fabrique::dag::Record. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -30,10 +30,10 @@
  */
 
 #include "AST/Builtins.h"
-#include "DAG/Structure.h"
+#include "DAG/Record.h"
 #include "DAG/Visitor.h"
 #include "Support/Bytestream.h"
-#include "Types/StructureType.h"
+#include "Types/RecordType.h"
 #include "Types/Type.h"
 
 #include <cassert>
@@ -43,11 +43,10 @@ using std::string;
 using std::vector;
 
 
-Structure* Structure::Create(const vector<NamedValue>& values,
-                             const Type& t, SourceRange src)
+Record* Record::Create(const vector<NamedValue>& values, const Type& t, SourceRange src)
 {
 	assert(values.size() >= t.fields().size());
-	const StructureType::TypeMap typeFields = t.fields();
+	const RecordType::TypeMap typeFields = t.fields();
 	for (const NamedValue& value : values)
 	{
 		const string name = value.first;
@@ -65,11 +64,11 @@ Structure* Structure::Create(const vector<NamedValue>& values,
 		src = SourceRange(begin, end);
 	}
 
-	return new Structure(values, t, src);
+	return new Record(values, t, src);
 }
 
 
-Structure* Structure::Create(const vector<NamedValue>& values, SourceRange src)
+Record* Record::Create(const vector<NamedValue>& values, SourceRange src)
 {
 	assert(not values.empty());
 
@@ -81,28 +80,27 @@ Structure* Structure::Create(const vector<NamedValue>& values, SourceRange src)
 		src = SourceRange(begin, end);
 	}
 
-	StructureType::NamedTypeVec types;
+	RecordType::NamedTypeVec types;
 	for (auto& v : values)
 		types.emplace_back(v.first, v.second->type());
 
 	TypeContext& ctx = values.front().second->type().context();
-	const Type& type = *StructureType::Create(types, ctx);
+	const Type& type = *RecordType::Create(types, ctx);
 
 	return Create(values, type, src);
 }
 
 
-Structure::Structure(const vector<NamedValue>& values,
-                     const Type& t, SourceRange src)
+Record::Record(const vector<NamedValue>& values, const Type& t, SourceRange src)
 	: Value(t, src), values_(values)
 {
 }
 
 
-Structure::~Structure() {}
+Record::~Record() {}
 
 
-ValuePtr Structure::field(const std::string& name) const
+ValuePtr Record::field(const std::string& name) const
 {
 	for (auto& i : values_)
 	{
@@ -114,7 +112,7 @@ ValuePtr Structure::field(const std::string& name) const
 }
 
 
-void Structure::PrettyPrint(Bytestream& out, size_t indent) const
+void Record::PrettyPrint(Bytestream& out, size_t indent) const
 {
 	const string tab(indent, '\t');
 	const string innerTab(indent + 1, '\t');
@@ -146,7 +144,7 @@ void Structure::PrettyPrint(Bytestream& out, size_t indent) const
 }
 
 
-void Structure::Accept(Visitor& v) const
+void Record::Accept(Visitor& v) const
 {
 	if (v.Visit(*this))
 		for (auto& i : values_)

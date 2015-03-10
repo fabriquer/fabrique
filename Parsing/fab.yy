@@ -10,7 +10,7 @@
 #include "Parsing/yacc.h"
 
 #include "Types/FunctionType.h"
-#include "Types/StructureType.h"
+#include "Types/RecordType.h"
 
 #include <cassert>
 
@@ -280,23 +280,23 @@ conditional:
 fieldAccess:
 	expression '.' name
 	{
-		auto structure = TakeNode<Expression>($1);
+		auto record = TakeNode<Expression>($1);
 		auto field = TakeNode<Identifier>($3);
 
-		SetOrDie($$, p->FieldAccess(structure, field));
+		SetOrDie($$, p->FieldAccess(record, field));
 	}
 	;
 
 fieldQuery:
 	expression '.' name '?' expression
 	{
-		auto structure = TakeNode<Expression>($1);
+		auto record = TakeNode<Expression>($1);
 		auto field = TakeNode<Identifier>($3);
 		auto defaultValue = TakeNode<Expression>($5);
 
-		SourceRange src = SourceRange::Over(structure, defaultValue);
+		SourceRange src = SourceRange::Over(record, defaultValue);
 
-		SetOrDie($$, p->FieldQuery(structure, field, defaultValue, src));
+		SetOrDie($$, p->FieldQuery(record, field, defaultValue, src));
 	}
 	;
 
@@ -524,7 +524,7 @@ structInstantiation:
 		SourceRange begin = Take(Parser::ParseToken($1))->source();
 		SourceRange end = Take($4.token)->source();
 
-		SetOrDie($$, p->StructInstantiation(SourceRange(begin, end)));
+		SetOrDie($$, p->Record(SourceRange(begin, end)));
 	}
 	;
 
@@ -566,7 +566,7 @@ type:
 		auto fields = Take(NodeVec<Identifier>($3));
 		SourceRange end = Take($4.token)->source();
 
-		$$.type = p->StructType(fields, SourceRange(begin, end));
+		$$.type = p->CreateRecordType(fields, SourceRange(begin, end));
 	}
 	| '(' types ')' PRODUCES type
 	{

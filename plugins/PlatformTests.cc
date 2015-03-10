@@ -35,7 +35,7 @@
 #include "Plugin/Registry.h"
 #include "Types/FileType.h"
 #include "Types/FunctionType.h"
-#include "Types/StructureType.h"
+#include "Types/RecordType.h"
 #include "Types/TypeContext.h"
 #include "Support/Platform.h"
 
@@ -68,7 +68,7 @@ namespace plugins {
 class PlatformTests : public plugin::Plugin
 {
 	public:
-	virtual shared_ptr<dag::Structure> Create(dag::DAGBuilder&) const override;
+	virtual shared_ptr<dag::Record> Create(dag::DAGBuilder&) const override;
 
 	class Factory : public Plugin::Descriptor
 	{
@@ -79,7 +79,7 @@ class PlatformTests : public plugin::Plugin
 	};
 
 	private:
-	PlatformTests(const Factory& factory, const StructureType& type)
+	PlatformTests(const Factory& factory, const RecordType& type)
 		: Plugin(type, factory)
 	{
 	}
@@ -114,18 +114,18 @@ UniqPtr<Plugin> PlatformTests::Factory::Instantiate(TypeContext& ctx) const
 	for (const char *platform : Platforms)
 		fields.emplace_back(platform, boolean);
 
-	const StructureType& type = ctx.structureType(fields);
+	const RecordType& type = ctx.recordType(fields);
 
 	return UniqPtr<Plugin>(new PlatformTests(*this, type));
 }
 
 
-shared_ptr<Structure> PlatformTests::Create(DAGBuilder& builder) const
+shared_ptr<Record> PlatformTests::Create(DAGBuilder& builder) const
 {
 	const ValueMap scope;
 	static const SourceRange src = SourceRange::None();
 
-	vector<Structure::NamedValue> fields;
+	vector<Record::NamedValue> fields;
 
 	for (const char *platform : Platforms)
 	{
@@ -133,8 +133,8 @@ shared_ptr<Structure> PlatformTests::Create(DAGBuilder& builder) const
 		fields.emplace_back(platform, builder.Bool(isThisPlatform, src));
 	}
 
-	auto result = std::dynamic_pointer_cast<Structure>(
-		builder.Struct(fields, type(), SourceRange::None()));
+	auto result = std::dynamic_pointer_cast<Record>(
+		builder.Record(fields, type(), SourceRange::None()));
 
 	assert(result);
 	return result;

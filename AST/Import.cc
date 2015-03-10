@@ -37,7 +37,7 @@
 #include "AST/Value.h"
 #include "AST/Visitor.h"
 #include "DAG/File.h"
-#include "DAG/Structure.h"
+#include "DAG/Record.h"
 #include "Plugin/Plugin.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
@@ -111,8 +111,8 @@ dag::ValuePtr Import::evaluate(EvalContext& ctx) const
 
 	scope.set(ast::Subdirectory, subdir);
 
-	// Gather arguments into an 'args' structure.
-	std::vector<dag::Structure::NamedValue> args;
+	// Gather arguments into an 'args' record.
+	std::vector<dag::Record::NamedValue> args;
 	for (const UniqPtr<ast::Argument>& a : arguments())
 	{
 		assert(a->hasName());
@@ -127,15 +127,15 @@ dag::ValuePtr Import::evaluate(EvalContext& ctx) const
 	if (plugin_)
 		return plugin_->Create(builder);
 
-	dag::ValuePtr argStruct(
-		builder.Struct(args, this->scope().arguments(), source()));
+	dag::ValuePtr argRecord(
+		builder.Record(args, this->scope().arguments(), source()));
 
-	scope.set(ast::Arguments, argStruct);
+	scope.set(ast::Arguments, argRecord);
 
 	for (const UniqPtr<ast::Value>& v : this->scope().values())
 		v->evaluate(ctx);
 
-	std::vector<dag::Structure::NamedValue> values;
+	std::vector<dag::Record::NamedValue> values;
 	Type::NamedTypeVec types;
 	for (auto& i : scope.leave())
 	{
@@ -143,5 +143,5 @@ dag::ValuePtr Import::evaluate(EvalContext& ctx) const
 		types.emplace_back(i.first, i.second->type());
 	}
 
-	return builder.Struct(values, type(), source());
+	return builder.Record(values, type(), source());
 }

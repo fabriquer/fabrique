@@ -36,7 +36,7 @@
 #include "DAG/Parameter.h"
 #include "Plugin/Registry.h"
 #include "Types/FunctionType.h"
-#include "Types/StructureType.h"
+#include "Types/RecordType.h"
 #include "Types/TypeContext.h"
 #include "Support/PosixError.h"
 #include "Support/exceptions.h"
@@ -65,7 +65,7 @@ namespace plugins {
 class SysctlPlugin : public plugin::Plugin
 {
 	public:
-	virtual shared_ptr<dag::Structure> Create(dag::DAGBuilder&) const override;
+	virtual shared_ptr<dag::Record> Create(dag::DAGBuilder&) const override;
 
 	class Factory : public Plugin::Descriptor
 	{
@@ -76,7 +76,7 @@ class SysctlPlugin : public plugin::Plugin
 	};
 
 	private:
-	SysctlPlugin(const Factory& factory, const StructureType& type,
+	SysctlPlugin(const Factory& factory, const RecordType& type,
 	             const Type& stringType,
 	             const FunctionType& stringSysctlType,
 		     const FunctionType& intSysctlType)
@@ -107,7 +107,7 @@ UniqPtr<Plugin> SysctlPlugin::Factory::Instantiate(TypeContext& ctx) const
 	const FunctionType& string = ctx.functionType(stringType, stringType);
 	const FunctionType& integer = ctx.functionType(stringType, intType);
 
-	const StructureType& type = ctx.structureType({
+	const RecordType& type = ctx.recordType({
 		{ "string", string },
 		{ "int", integer },
 	});
@@ -117,14 +117,14 @@ UniqPtr<Plugin> SysctlPlugin::Factory::Instantiate(TypeContext& ctx) const
 }
 
 
-shared_ptr<Structure> SysctlPlugin::Create(DAGBuilder& builder) const
+shared_ptr<Record> SysctlPlugin::Create(DAGBuilder& builder) const
 {
 	const ValueMap scope;
 	const SharedPtrVec<Parameter> params = {
 		std::make_shared<Parameter>("name", stringType_, ValuePtr()),
 	};
 
-	std::vector<Structure::NamedValue> fields = {
+	std::vector<Record::NamedValue> fields = {
 		{
 			"string",
 			builder.Function(StringSysctl, scope, params, stringSysctlType_)
@@ -135,8 +135,8 @@ shared_ptr<Structure> SysctlPlugin::Create(DAGBuilder& builder) const
 		},
 	};
 
-	auto result = std::dynamic_pointer_cast<Structure>(
-		builder.Struct(fields, type(), SourceRange::None()));
+	auto result = std::dynamic_pointer_cast<Record>(
+		builder.Record(fields, type(), SourceRange::None()));
 
 	assert(result);
 	return result;

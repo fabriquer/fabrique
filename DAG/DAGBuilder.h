@@ -35,7 +35,7 @@
 #include <string>
 
 #include "DAG/Function.h"
-#include "DAG/Structure.h"
+#include "DAG/Record.h"
 #include "DAG/Value.h"
 
 
@@ -127,8 +127,8 @@ public:
 	//! Create a @ref dag::String.
 	ValuePtr String(const std::string&, SourceRange = SourceRange::None());
 
-	//! Create a @ref dag::Structure.
-	ValuePtr Struct(const std::vector<Structure::NamedValue>&,
+	//! Create a @ref dag::Record.
+	ValuePtr Record(const std::vector<Record::NamedValue>&,
 	                const Type&, SourceRange);
 
 	//! Create a @ref dag::Target using the current value name.

@@ -187,10 +187,10 @@ TypeContext::functionType(const PtrVec<Type>& argTypes, const Type& retType)
 	return *t;
 }
 
-const StructureType&
-TypeContext::structureType(const Type::NamedTypeVec& fields)
+const RecordType&
+TypeContext::recordType(const Type::NamedTypeVec& fields)
 {
-	StructureType *t = StructureType::Create(fields, *this);
+	RecordType *t = RecordType::Create(fields, *this);
 	//Register(t);
 
 	return *t;

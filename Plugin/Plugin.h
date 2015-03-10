@@ -33,7 +33,7 @@
 #define PLUGIN_H
 
 #include "ADT/UniqPtr.h"
-#include "DAG/Structure.h"
+#include "DAG/Record.h"
 #include "Types/Typed.h"
 
 
@@ -80,7 +80,7 @@ class Plugin : public Typed
 
 	const Descriptor& descriptor() const { return descriptor_; }
 
-	virtual std::shared_ptr<dag::Structure> Create(dag::DAGBuilder&) const = 0;
+	virtual std::shared_ptr<dag::Record> Create(dag::DAGBuilder&) const = 0;
 
 
 	protected:

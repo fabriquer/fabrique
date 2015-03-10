@@ -54,9 +54,9 @@ public:
 	virtual std::string Format(const Function&) = 0;
 	virtual std::string Format(const Integer&) = 0;
 	virtual std::string Format(const List&) = 0;
+	virtual std::string Format(const Record&) = 0;
 	virtual std::string Format(const Rule&) = 0;
 	virtual std::string Format(const String&) = 0;
-	virtual std::string Format(const Structure&) = 0;
 	virtual std::string Format(const Target&) = 0;
 
 	bool Visit(const Boolean&);
@@ -65,9 +65,9 @@ public:
 	bool Visit(const Function&);
 	bool Visit(const Integer&);
 	bool Visit(const List&);
+	bool Visit(const Record&);
 	bool Visit(const Rule&);
 	bool Visit(const String&);
-	bool Visit(const Structure&);
 	bool Visit(const Target&);
 
 private:

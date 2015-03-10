@@ -33,7 +33,7 @@
 #include "AST/Node.h"
 #include "AST/SymbolReference.h"
 #include "AST/Visitor.h"
-#include "DAG/Structure.h"
+#include "DAG/Record.h"
 #include "DAG/UndefinedValueException.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
@@ -70,7 +70,7 @@ dag::ValuePtr SymbolReference::evaluate(EvalContext& ctx) const
 	static Bytestream& debug = Bytestream::Debug("eval.lookup");
 	const string& name = Type::UntypedPart(name_->str());
 
-	std::shared_ptr<dag::Structure> base;
+	std::shared_ptr<dag::Record> base;
 	dag::ValuePtr value;
 
 	//
@@ -78,7 +78,7 @@ dag::ValuePtr SymbolReference::evaluate(EvalContext& ctx) const
 	//
 	// foo = bar.baz.wibble;
 	//
-	// In this case, 'bar' and 'bar.baz' must both be structures
+	// In this case, 'bar' and 'bar.baz' must both be records
 	// (things that can contain named things), but 'wibble' can
 	// be any kind of Value.
 	//
@@ -109,8 +109,8 @@ dag::ValuePtr SymbolReference::evaluate(EvalContext& ctx) const
 		if (end == string::npos)
 			break;
 
-		// Not the last component: must be a structure!
-		base = std::dynamic_pointer_cast<dag::Structure>(value);
+		// Not the last component: must be a record!
+		base = std::dynamic_pointer_cast<dag::Record>(value);
 		if (not base)
 			throw SemanticException(
 				name.substr(0, end)

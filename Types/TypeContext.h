@@ -33,8 +33,8 @@
 #define TYPE_CONTEXT_H
 
 #include "ADT/PtrVec.h"
+#include "Types/RecordType.h"
 #include "Types/Type.h"
-#include "Types/StructureType.h"
 
 #include <map>
 #include <memory>
@@ -90,8 +90,8 @@ public:
 	const FunctionType& functionType(const PtrVec<Type>& argumentTypes,
 	                                 const Type& returnType);
 
-	//! A structure type describes its fields' names and types.
-	const StructureType& structureType(const Type::NamedTypeVec&);
+	//! A record type describes its fields' names and types.
+	const RecordType& recordType(const Type::NamedTypeVec&);
 
 	//! A string of characters.
 	const Type& stringType();

@@ -9,8 +9,8 @@ sources = files(
 	List.cc
 	Parameter.cc
 	Primitive.cc
+	Record.cc
 	Rule.cc
-	Structure.cc
 	Target.cc
 	UndefinedValueException.cc
 	Value.cc

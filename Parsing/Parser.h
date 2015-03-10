@@ -87,7 +87,7 @@ public:
 	 *
 	 * @param  name            a name used to describe the scope (for debugging)
 	 * @param  argumentsType   the type of the arguments (if any) being passed
-	 *                         into the scope: either a @ref StructureType or
+	 *                         into the scope: either a @ref RecordType or
 	 *                         else @ref TypeContext::nilType()
 	 * @param  src             the entire extent of the scope in source
 	 */
@@ -114,8 +114,8 @@ public:
 	const FunctionType& FnType(const PtrVec<Type>& inputs,
 	                           const Type& output, SourceRange);
 
-	const StructureType* StructType(UniqPtr<UniqPtrVec<Identifier>>& fields,
-	                                SourceRange);
+	const RecordType* CreateRecordType(UniqPtr<UniqPtrVec<Identifier>>& fields,
+	                                   SourceRange);
 
 
 	//! Define a build @ref Action.
@@ -140,12 +140,12 @@ public:
 	                                 SourceRange beg = SourceRange::None(),
 	                                 SourceRange end = SourceRange::None());
 
-	//! An expression that indirects into a structure.
-	FieldAccess* FieldAccess(UniqPtr<Expression>& structure,
+	//! An expression that indirects into a record.
+	FieldAccess* FieldAccess(UniqPtr<Expression>& record,
 	                         UniqPtr<Identifier>& field);
 
-	//! A test to see if a structure contains a field.
-	FieldQuery* FieldQuery(UniqPtr<Expression>& structure,
+	//! A test to see if a record contains a field.
+	FieldQuery* FieldQuery(UniqPtr<Expression>& record,
 	                       UniqPtr<Identifier>& field,
 	                       UniqPtr<Expression>& defaultValue,
 	                       SourceRange);
@@ -210,8 +210,8 @@ public:
 	//! Create a @ref SomeValue (populated maybe object).
 	SomeValue* Some(UniqPtr<Expression>&, SourceRange);
 
-	//! Turn the current scope into a structure instantiation.
-	StructInstantiation* StructInstantiation(SourceRange);
+	//! Turn the current scope into a record instantiation.
+	Record* Record(SourceRange);
 
 
 	// literals

@@ -1,4 +1,7 @@
-/** @file DAG/Structure.h    Declaration of @ref fabrique::dag::Structure. */
+/**
+ * @file AST/Record.h
+ * Declaration of @ref fabrique::ast::Record.
+ */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -29,53 +32,33 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DAG_STRUCTURE_H
-#define DAG_STRUCTURE_H
+#ifndef STRUCT_INSTANTIATION_H
+#define STRUCT_INSTANTIATION_H
 
-#include "ADT/StringMap.h"
-#include "DAG/Value.h"
-
-#include <memory>
-
+#include "AST/HasScope.h"
+#include "AST/Value.h"
 
 namespace fabrique {
-namespace dag {
+
+class RecordType;
+
+namespace ast {
 
 /**
- * A reference to a file on disk (source or target).
+ * A list of same-typed expressions.
  */
-class Structure : public Value
+class Record : public Expression, public HasScope
 {
 public:
-	// TODO: don't promise anything about ordering in the layout
-	typedef std::pair<std::string,ValuePtr> NamedValue;
-
-	//! Create a structure from an (optionally empty) vector of values.
-	static Structure* Create(const std::vector<NamedValue>&, const Type&,
-	                         SourceRange);
-
-	//! Create a structure from a non-empty vector of values.
-	static Structure* Create(const std::vector<NamedValue>&, SourceRange);
-
-	virtual ~Structure();
-
-	virtual bool hasFields() const override { return true; }
-	virtual ValuePtr field(const std::string& name) const override;
-	ValuePtr operator[] (const std::string& name) const
-	{
-		return field(name);
-	}
+	Record(UniqPtr<Scope>& values, const RecordType&, const SourceRange&);
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
-	void Accept(Visitor&) const override;
+	virtual void Accept(Visitor&) const override;
 
-private:
-	Structure(const std::vector<NamedValue>&, const Type&, SourceRange);
-
-	const std::vector<NamedValue> values_;
+	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 };
 
-} // namespace dag
+} // namespace ast
 } // namespace fabrique
 
 #endif

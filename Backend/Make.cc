@@ -71,9 +71,9 @@ public:
 	string Format(const Function&);
 	string Format(const Integer&);
 	string Format(const List&);
+	string Format(const Record&);
 	string Format(const Rule&);
 	string Format(const String&);
-	string Format(const Structure&);
 	string Format(const Target&);
 
 	int replaceAll(string& s, const string& pattern, const string&);
@@ -443,6 +443,11 @@ string MakeFormatter::Format(const List& l)
 	return fabrique::join(substrings, " ");
 }
 
+string MakeFormatter::Format(const Record&)
+{
+	return "";
+}
+
 string MakeFormatter::Format(const Rule& rule)
 {
 	return rule.command();
@@ -451,11 +456,6 @@ string MakeFormatter::Format(const Rule& rule)
 string MakeFormatter::Format(const String& s)
 {
 	return s.value();
-}
-
-string MakeFormatter::Format(const Structure&)
-{
-	return "";
 }
 
 string MakeFormatter::Format(const Target& t)

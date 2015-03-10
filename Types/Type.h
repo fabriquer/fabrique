@@ -74,7 +74,7 @@ public:
 	 *
 	 * This can be empty even if @b hasFields() is true: objects like this
 	 * one might not happen to have fields while still being the kind of
-	 * objects that, in general, do (e.g., a struct like @b args with no members).
+	 * objects that, in general, do (e.g., a record like @b args with no members).
 	 */
 	virtual TypeMap fields() const { return TypeMap(); }
 
@@ -99,7 +99,7 @@ public:
 	 * The default implementation checks to see if A is a supertype of B or
 	 * vice versa. Subtypes could override this method with logic for constructing
 	 * lowest-common-denominator supertypes, e.g., including the fields that
-	 * are common to two structure types.
+	 * are common to two record types.
 	 *
 	 * @returns   the common supertype, or @b nil if none is found
 	 */
