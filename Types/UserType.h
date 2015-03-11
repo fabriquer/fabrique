@@ -1,6 +1,6 @@
-/** @file DAG/DAG.cc    Definition of @ref fabrique::dag::DAG. */
+/** @file Types/UserType.h    Declaration of @ref fabrique::UserType. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2015 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,66 +29,30 @@
  * SUCH DAMAGE.
  */
 
-#include "DAG/Build.h"
-#include "DAG/DAG.h"
-#include "DAG/File.h"
-#include "DAG/Function.h"
-#include "DAG/Rule.h"
-#include "DAG/Target.h"
-#include "DAG/TypeReference.h"
+#ifndef USER_TYPE_H
+#define USER_TYPE_H
 
-#include "Support/Bytestream.h"
+#include "Types/Type.h"
 
-#include <cassert>
+namespace fabrique {
 
-using namespace fabrique;
-using namespace fabrique::dag;
-
-using std::shared_ptr;
-using std::string;
-
-
-void DAG::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+/**
+ * A type that represents an ordered sequence.
+ */
+class UserType : public Type
 {
-	SharedPtrMap<Value> namedValues;
-	for (auto& i : rules()) namedValues.emplace(i);
-	for (auto& i : targets()) namedValues.emplace(i);
-	for (auto& i : variables()) namedValues.emplace(i);
+public:
+	UserType(const Type& userType);
+	virtual ~UserType();
 
-	for (auto& i : namedValues)
-	{
-		const string& name = i.first;
-		const ValuePtr& v = i.second;
+	const Type& userType() const { return userType_; }
 
-		assert(v);
+	virtual bool isType() const override { return true; }
 
-		out
-			<< Bytestream::Definition << name
-			<< Bytestream::Operator << ":"
-			<< Bytestream::Type << v->type()
-			<< Bytestream::Operator << " = "
-			<< *v
-			<< Bytestream::Reset << "\n"
-			;
-	}
+private:
+	const Type& userType_;
+};
 
-	for (const shared_ptr<File>& f : files())
-	{
-		out
-			<< Bytestream::Type << f->type()
-			<< Bytestream::Operator << ": "
-			<< *f
-			<< Bytestream::Reset << "\n"
-			;
-	}
+} // namespace fabrique
 
-	for (const shared_ptr<Build>& b : builds())
-	{
-		out
-			<< Bytestream::Type << "build"
-			<< Bytestream::Operator << ": "
-			<< *b
-			<< Bytestream::Reset << "\n"
-			;
-	}
-}
+#endif

@@ -58,6 +58,7 @@ public:
 	virtual std::string Format(const Rule&) = 0;
 	virtual std::string Format(const String&) = 0;
 	virtual std::string Format(const Target&) = 0;
+	virtual std::string Format(const TypeReference&) = 0;
 
 	bool Visit(const Boolean&);
 	bool Visit(const Build&);
@@ -69,6 +70,7 @@ public:
 	bool Visit(const Rule&);
 	bool Visit(const String&);
 	bool Visit(const Target&);
+	bool Visit(const TypeReference&);
 
 private:
 	std::stack<std::string> values_;

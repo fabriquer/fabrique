@@ -36,6 +36,7 @@
 #include "Types/MaybeType.h"
 #include "Types/SequenceType.h"
 #include "Types/StringType.h"
+#include "Types/UserType.h"
 #include "Support/Bytestream.h"
 #include "Support/SourceLocation.h"
 #include "TypeContext.h"
@@ -194,6 +195,12 @@ TypeContext::recordType(const Type::NamedTypeVec& fields)
 	//Register(t);
 
 	return *t;
+}
+
+const UserType&
+TypeContext::userType(const Type& t)
+{
+	return *new UserType(t);
 }
 
 const Type&

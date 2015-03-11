@@ -276,6 +276,10 @@ const Type& Parser::getType(UniqPtr<Identifier>&& name,
 	if (not name)
 		return ctx_.nilType();
 
+	const Type& userType = CurrentScope().Lookup(*name);
+	if (userType)
+		return userType;
+
 	const SourceRange src = name->source();
 	return getType(name->name(), src, src, params ? *params : empty);
 }
@@ -535,6 +539,12 @@ ForeachExpr* Parser::Foreach(UniqPtr<Mapping>& mapping,
 
 	const Type& resultTy = ctx_.listOf(body->type(), src);
 	return new ForeachExpr(mapping, body, resultTy, src);
+}
+
+
+TypeDeclaration* Parser::DeclareType(const RecordType& t, SourceRange src)
+{
+	return new TypeDeclaration(ctx_.userType(t), src);
 }
 
 

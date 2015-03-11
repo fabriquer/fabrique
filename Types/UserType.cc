@@ -1,6 +1,6 @@
-/** @file DAG/DAG.cc    Definition of @ref fabrique::dag::DAG. */
+/** @file Types/UserType.h    Definition of @ref fabrique::UserType. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2015 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,66 +29,13 @@
  * SUCH DAMAGE.
  */
 
-#include "DAG/Build.h"
-#include "DAG/DAG.h"
-#include "DAG/File.h"
-#include "DAG/Function.h"
-#include "DAG/Rule.h"
-#include "DAG/Target.h"
-#include "DAG/TypeReference.h"
-
-#include "Support/Bytestream.h"
-
-#include <cassert>
-
+#include "Types/UserType.h"
 using namespace fabrique;
-using namespace fabrique::dag;
-
-using std::shared_ptr;
-using std::string;
 
 
-void DAG::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+UserType::UserType(const Type& userType)
+	: Type("type", PtrVec<Type>(), userType.context()), userType_(userType)
 {
-	SharedPtrMap<Value> namedValues;
-	for (auto& i : rules()) namedValues.emplace(i);
-	for (auto& i : targets()) namedValues.emplace(i);
-	for (auto& i : variables()) namedValues.emplace(i);
-
-	for (auto& i : namedValues)
-	{
-		const string& name = i.first;
-		const ValuePtr& v = i.second;
-
-		assert(v);
-
-		out
-			<< Bytestream::Definition << name
-			<< Bytestream::Operator << ":"
-			<< Bytestream::Type << v->type()
-			<< Bytestream::Operator << " = "
-			<< *v
-			<< Bytestream::Reset << "\n"
-			;
-	}
-
-	for (const shared_ptr<File>& f : files())
-	{
-		out
-			<< Bytestream::Type << f->type()
-			<< Bytestream::Operator << ": "
-			<< *f
-			<< Bytestream::Reset << "\n"
-			;
-	}
-
-	for (const shared_ptr<Build>& b : builds())
-	{
-		out
-			<< Bytestream::Type << "build"
-			<< Bytestream::Operator << ": "
-			<< *b
-			<< Bytestream::Reset << "\n"
-			;
-	}
 }
+
+UserType::~UserType() {}

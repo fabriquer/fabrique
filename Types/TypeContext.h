@@ -46,6 +46,7 @@ class FileType;
 class FunctionType;
 class SourceRange;
 class Type;
+class UserType;
 
 
 /**
@@ -95,6 +96,9 @@ public:
 
 	//! A string of characters.
 	const Type& stringType();
+
+	//! A type that represents a type.
+	const UserType& userType(const Type&);
 
 
 	/**

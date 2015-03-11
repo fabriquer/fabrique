@@ -105,7 +105,7 @@ static UniqPtrVec<T>* NodeVec(YYSTYPE& yyunion)
 %token WHITESPACE
 %token IDENTIFIER FILENAME
 %token IF ELSE FOREACH AS
-%token ACTION FILE_TOKEN FILES FUNCTION IMPORT NIL PRINT RECORD RETURN SOME
+%token ACTION FILE_TOKEN FILES FUNCTION IMPORT NIL PRINT RECORD RETURN SOME TYPE
 %token OPERATOR
 %token INPUT PRODUCES
 %token TRUE FALSE
@@ -147,6 +147,7 @@ expression:
 	| print
 	| reference
 	| some
+	| typeDeclaration
 	| recordInstantiation
 	| unaryOperation
 	;
@@ -615,6 +616,19 @@ fieldTypes:
 	}
 	;
 
+typeDeclaration:
+	TYPE '[' fieldTypes ']'
+	{
+		SourceRange begin = Take($1.token)->source();
+		auto fields = Take(NodeVec<Identifier>($3));
+		SourceRange end = Take($4.token)->source();
+
+		const RecordType& t =
+			*p->CreateRecordType(fields, SourceRange(begin, end));
+
+		SetOrDie($$, p->DeclareType(t, SourceRange(begin, end)));
+	}
+	;
 
 unaryOperation:
 	NOT expression

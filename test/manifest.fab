@@ -1,5 +1,5 @@
 #
-# Generated at Tue Mar 10 12:16:11 NDT 2015 by regenerate-manifest.sh
+# Generated at Wed 11 Mar 2015 14:23:22 NDT by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -78,6 +78,7 @@ all_files = files(
 ./DAG/tool-vs-src-directories.fab
 ./DAG/trace-simple.fab
 ./DAG/trace.fab
+./DAG/types.fab
 ./DAG/unnamed-values.fab
 ./DAG/value-redefinition.fab
 ./Parsing/Inputs/accepts-args.fab
@@ -142,6 +143,7 @@ all_files = files(
 ./Parsing/subdir.fab
 ./Parsing/tokeniser.fab
 ./Parsing/type-conflict.fab
+./Parsing/types.fab
 ./Parsing/unnamed-value.fab
 ./backends/dot/compile-arguments.fab
 ./backends/dot/compile-graph.fab

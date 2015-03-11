@@ -27,6 +27,7 @@ sources = files(
 	Scope.cc
 	SomeValue.cc
 	SymbolReference.cc
+	TypeDeclaration.cc
 	UnaryOperation.cc
 	Value.cc
 	Visitor.cc

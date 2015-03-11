@@ -1,6 +1,9 @@
-/** @file DAG/DAG.cc    Definition of @ref fabrique::dag::DAG. */
+/**
+ * @file AST/TypeDeclaration.cc
+ * Definition of @ref fabrique::ast::TypeDeclaration.
+ */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2015 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,66 +32,62 @@
  * SUCH DAMAGE.
  */
 
-#include "DAG/Build.h"
-#include "DAG/DAG.h"
-#include "DAG/File.h"
-#include "DAG/Function.h"
-#include "DAG/Rule.h"
-#include "DAG/Target.h"
+#include "AST/EvalContext.h"
+#include "AST/Scope.h"
+#include "AST/TypeDeclaration.h"
+#include "AST/Visitor.h"
 #include "DAG/TypeReference.h"
-
 #include "Support/Bytestream.h"
-
-#include <cassert>
+#include "Types/UserType.h"
 
 using namespace fabrique;
-using namespace fabrique::dag;
-
-using std::shared_ptr;
-using std::string;
+using namespace fabrique::ast;
 
 
-void DAG::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+TypeDeclaration::TypeDeclaration(const UserType& t, const SourceRange& loc)
+	: Expression(t, loc), declaredType_(t)
 {
-	SharedPtrMap<Value> namedValues;
-	for (auto& i : rules()) namedValues.emplace(i);
-	for (auto& i : targets()) namedValues.emplace(i);
-	for (auto& i : variables()) namedValues.emplace(i);
+}
 
-	for (auto& i : namedValues)
-	{
-		const string& name = i.first;
-		const ValuePtr& v = i.second;
+void TypeDeclaration::PrettyPrint(Bytestream& out, size_t indent) const
+{
+	out
+		<< Bytestream::Definition << "type"
+		<< Bytestream::Operator << '['
+		;
 
-		assert(v);
-
-		out
-			<< Bytestream::Definition << name
-			<< Bytestream::Operator << ":"
-			<< Bytestream::Type << v->type()
-			<< Bytestream::Operator << " = "
-			<< *v
-			<< Bytestream::Reset << "\n"
-			;
-	}
-
-	for (const shared_ptr<File>& f : files())
+	auto fields = declaredType_.userType().fields();
+	for (auto i = fields.begin(); i != fields.end(); )
 	{
 		out
-			<< Bytestream::Type << f->type()
-			<< Bytestream::Operator << ": "
-			<< *f
-			<< Bytestream::Reset << "\n"
+			<< Bytestream::Definition << i->first
+			<< Bytestream::Operator << ':'
 			;
+
+		i->second.PrettyPrint(out, indent);
+
+		i++;
+		if (i != fields.end())
+			out
+				<< Bytestream::Operator << ", "
+				<< Bytestream::Reset
+				;
 	}
 
-	for (const shared_ptr<Build>& b : builds())
-	{
-		out
-			<< Bytestream::Type << "build"
-			<< Bytestream::Operator << ": "
-			<< *b
-			<< Bytestream::Reset << "\n"
-			;
-	}
+	out
+		<< Bytestream::Operator << ']'
+		<< Bytestream::Reset
+		;
+}
+
+void TypeDeclaration::Accept(Visitor& v) const
+{
+	v.Enter(*this);
+	v.Leave(*this);
+}
+
+dag::ValuePtr TypeDeclaration::evaluate(EvalContext&) const
+{
+	return dag::ValuePtr(
+		dag::TypeReference::Create(declaredType_, type(), source()));
 }

@@ -12,6 +12,7 @@ sources = files(
 	Record.cc
 	Rule.cc
 	Target.cc
+	TypeReference.cc
 	UndefinedValueException.cc
 	Value.cc
 	Visitor.cc

@@ -1,6 +1,9 @@
-/** @file DAG/DAG.cc    Definition of @ref fabrique::dag::DAG. */
+/**
+ * @file DAG/TypeReference.h
+ * Declaration of @ref fabrique::dag::TypeReference.
+ */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2015 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,66 +32,41 @@
  * SUCH DAMAGE.
  */
 
-#include "DAG/Build.h"
-#include "DAG/DAG.h"
-#include "DAG/File.h"
-#include "DAG/Function.h"
-#include "DAG/Rule.h"
-#include "DAG/Target.h"
-#include "DAG/TypeReference.h"
+#ifndef DAG_TYPE_REFERENCE_H
+#define DAG_TYPE_REFERENCE_H
 
-#include "Support/Bytestream.h"
-
-#include <cassert>
-
-using namespace fabrique;
-using namespace fabrique::dag;
-
-using std::shared_ptr;
-using std::string;
+#include "DAG/Value.h"
 
 
-void DAG::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+namespace fabrique {
+
+class UserType;
+
+namespace dag {
+
+/**
+ * A reference to a file on disk (source or target).
+ */
+class TypeReference : public Value
 {
-	SharedPtrMap<Value> namedValues;
-	for (auto& i : rules()) namedValues.emplace(i);
-	for (auto& i : targets()) namedValues.emplace(i);
-	for (auto& i : variables()) namedValues.emplace(i);
+public:
+	static TypeReference* Create(const UserType& declaredType,
+	                             const Type& declarationType, SourceRange);
 
-	for (auto& i : namedValues)
-	{
-		const string& name = i.first;
-		const ValuePtr& v = i.second;
+	virtual ~TypeReference();
 
-		assert(v);
+	const UserType& declaredType() const;
 
-		out
-			<< Bytestream::Definition << name
-			<< Bytestream::Operator << ":"
-			<< Bytestream::Type << v->type()
-			<< Bytestream::Operator << " = "
-			<< *v
-			<< Bytestream::Reset << "\n"
-			;
-	}
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	void Accept(Visitor&) const override;
 
-	for (const shared_ptr<File>& f : files())
-	{
-		out
-			<< Bytestream::Type << f->type()
-			<< Bytestream::Operator << ": "
-			<< *f
-			<< Bytestream::Reset << "\n"
-			;
-	}
+private:
+	TypeReference(const UserType& declaredType, const Type&, SourceRange);
 
-	for (const shared_ptr<Build>& b : builds())
-	{
-		out
-			<< Bytestream::Type << "build"
-			<< Bytestream::Operator << ": "
-			<< *b
-			<< Bytestream::Reset << "\n"
-			;
-	}
-}
+	const UserType& declaredType_;
+};
+
+} // namespace dag
+} // namespace fabrique
+
+#endif

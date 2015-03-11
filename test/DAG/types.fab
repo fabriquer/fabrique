@@ -1,0 +1,10 @@
+#
+# RUN: %fab --format=null --print-dag %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK-DAG: foo:type = type[]
+foo = type[];
+
+# CHECK-DAG: bar:type = type[x:int, y:string, z:record[wibble:int]]
+bar = type[x:int, y:string, z:record[wibble:int]];

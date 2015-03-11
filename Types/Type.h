@@ -114,6 +114,7 @@ public:
 	virtual bool isString() const { return false; }
 	virtual bool isOptional() const { return false; }
 	virtual bool isOrdered() const { return false; }
+	virtual bool isType() const { return false; }
 	virtual bool canBeNegated() const { return false; }
 
 	virtual const Type& onAddTo(const Type&) const;

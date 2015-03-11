@@ -56,6 +56,7 @@ class Record;
 class Scope;
 class SomeValue;
 class SymbolReference;
+class TypeDeclaration;
 class UnaryOperation;
 class Value;
 

@@ -45,6 +45,7 @@ class Record;
 class Rule;
 class String;
 class Target;
+class TypeReference;
 
 
 //! Interfact for objects that visit @ref DAG nodes and add functionality.
@@ -63,6 +64,7 @@ public:
 	virtual bool Visit(const Rule&) = 0;
 	virtual bool Visit(const String&) = 0;
 	virtual bool Visit(const Target&) = 0;
+	virtual bool Visit(const TypeReference&) = 0;
 };
 
 } // namespace dag

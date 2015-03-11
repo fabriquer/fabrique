@@ -39,11 +39,14 @@
 #include "DAG/Primitive.h"
 #include "DAG/Rule.h"
 #include "DAG/Target.h"
+#include "DAG/TypeReference.h"
 #include "DAG/Value.h"
 
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
 #include "Support/os.h"
+
+#include "Types/UserType.h"
 
 #include <cassert>
 #include <set>
@@ -75,6 +78,7 @@ public:
 	string Format(const Rule&);
 	string Format(const String&);
 	string Format(const Target&);
+	string Format(const TypeReference&);
 
 	int replaceAll(string& s, const string& pattern, const string&);
 	int replaceAll(string& s, const string& pattern, const Build::FileVec&);
@@ -461,4 +465,9 @@ string MakeFormatter::Format(const String& s)
 string MakeFormatter::Format(const Target& t)
 {
 	return Format(*t.files());
+}
+
+string MakeFormatter::Format(const TypeReference& t)
+{
+	return t.declaredType().str();
 }

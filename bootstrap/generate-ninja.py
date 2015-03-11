@@ -36,7 +36,7 @@ cxx_srcs = {
 		'HasParameters', 'HasScope', 'Identifier', 'Import', 'List',
 		'Mapping', 'Node', 'Parameter', 'Record',
 		'Scope', 'SomeValue', 'SymbolReference',
-		'UnaryOperation', 'Value', 'Visitor',
+		'TypeDeclaration', 'UnaryOperation', 'Value', 'Visitor',
 		'literals',
 	),
 	'Backend/': (
@@ -46,7 +46,8 @@ cxx_srcs = {
 		'Build', 'Callable', 'DAG', 'DAGBuilder',
 		'File', 'Formatter', 'Function',
 		'List', 'Parameter', 'Primitive',
-		'Record', 'Rule', 'Target', 'UndefinedValueException',
+		'Record', 'Rule', 'Target', 'TypeReference',
+                'UndefinedValueException',
 		'Value', 'Visitor',
 	),
 	'Parsing/': (
@@ -63,7 +64,7 @@ cxx_srcs = {
 	'Types/': (
 		'BooleanType', 'FileType', 'FunctionType', 'IntegerType', 'MaybeType',
 		'OptionallyTyped', 'RecordType', 'SequenceType', 'StringType',
-		'Type', 'TypeContext', 'TypeError', 'Typed',
+		'Type', 'TypeContext', 'TypeError', 'Typed', 'UserType',
 	),
 	'': (
 		'driver',

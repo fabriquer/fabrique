@@ -167,6 +167,13 @@ public:
 	                     const SourceRange& start);
 
 
+	/**
+	 * A type declaration:
+	 *   `x:type = type[foo:int, bar:string];`
+	 */
+	TypeDeclaration* DeclareType(const RecordType&, SourceRange);
+
+
 	Function* DefineFunction(const SourceRange& begin,
 	                         UniqPtr<UniqPtrVec<Parameter>>& params,
 	                         UniqPtr<Expression>& body,

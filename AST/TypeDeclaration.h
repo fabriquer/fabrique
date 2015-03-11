@@ -1,6 +1,9 @@
-/** @file DAG/DAG.cc    Definition of @ref fabrique::dag::DAG. */
+/**
+ * @file AST/TypeDeclaration.h
+ * Declaration of @ref fabrique::ast::TypeDeclaration.
+ */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2015 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,66 +32,39 @@
  * SUCH DAMAGE.
  */
 
-#include "DAG/Build.h"
-#include "DAG/DAG.h"
-#include "DAG/File.h"
-#include "DAG/Function.h"
-#include "DAG/Rule.h"
-#include "DAG/Target.h"
-#include "DAG/TypeReference.h"
+#ifndef TYPE_DECLARATION_H
+#define TYPE_DECLARATION_H
 
-#include "Support/Bytestream.h"
+#include "AST/Expression.h"
 
-#include <cassert>
+namespace fabrique {
 
-using namespace fabrique;
-using namespace fabrique::dag;
+class UserType;
 
-using std::shared_ptr;
-using std::string;
+namespace ast {
 
-
-void DAG::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+/**
+ * A user-defined type's declaration.
+ */
+class TypeDeclaration : public Expression
 {
-	SharedPtrMap<Value> namedValues;
-	for (auto& i : rules()) namedValues.emplace(i);
-	for (auto& i : targets()) namedValues.emplace(i);
-	for (auto& i : variables()) namedValues.emplace(i);
+public:
+	/**
+	 * @param   declared      the type that we are declaring
+	 * @param   src           location of the declaration
+	 */
+	TypeDeclaration(const UserType& declared, const SourceRange& src);
 
-	for (auto& i : namedValues)
-	{
-		const string& name = i.first;
-		const ValuePtr& v = i.second;
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	virtual void Accept(Visitor&) const override;
 
-		assert(v);
+	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
-		out
-			<< Bytestream::Definition << name
-			<< Bytestream::Operator << ":"
-			<< Bytestream::Type << v->type()
-			<< Bytestream::Operator << " = "
-			<< *v
-			<< Bytestream::Reset << "\n"
-			;
-	}
+private:
+	const UserType& declaredType_;
+};
 
-	for (const shared_ptr<File>& f : files())
-	{
-		out
-			<< Bytestream::Type << f->type()
-			<< Bytestream::Operator << ": "
-			<< *f
-			<< Bytestream::Reset << "\n"
-			;
-	}
+} // namespace ast
+} // namespace fabrique
 
-	for (const shared_ptr<Build>& b : builds())
-	{
-		out
-			<< Bytestream::Type << "build"
-			<< Bytestream::Operator << ": "
-			<< *b
-			<< Bytestream::Reset << "\n"
-			;
-	}
-}
+#endif

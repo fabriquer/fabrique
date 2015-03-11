@@ -41,9 +41,12 @@
 #include "DAG/Record.h"
 #include "DAG/Rule.h"
 #include "DAG/Target.h"
+#include "DAG/TypeReference.h"
 
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
+
+#include "Types/UserType.h"
 
 #include <cassert>
 
@@ -72,6 +75,7 @@ public:
 	string Format(const Rule&);
 	string Format(const String&);
 	string Format(const Target&);
+	string Format(const TypeReference&);
 };
 
 const char* ReservedRuleArguments[] = { "command", "description" };
@@ -305,4 +309,9 @@ string NinjaFormatter::Format(const String& s)
 string NinjaFormatter::Format(const Target& t)
 {
 	return Format(*t.files());
+}
+
+string NinjaFormatter::Format(const TypeReference& t)
+{
+	return t.declaredType().str();
 }

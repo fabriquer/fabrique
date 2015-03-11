@@ -38,12 +38,14 @@
 #include "DAG/Record.h"
 #include "DAG/Rule.h"
 #include "DAG/Target.h"
+#include "DAG/TypeReference.h"
 #include "DAG/Value.h"
 
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
 
 #include "Types/FileType.h"
+#include "Types/UserType.h"
 
 #include <cassert>
 
@@ -70,6 +72,7 @@ public:
 	string Format(const Rule&);
 	string Format(const String&);
 	string Format(const Target&);
+	string Format(const TypeReference&);
 };
 
 } // anonymous namespace
@@ -257,4 +260,9 @@ string DotFormatter::Format(const String& s)
 string DotFormatter::Format(const Target& t)
 {
 	return Format(*t.files());
+}
+
+string DotFormatter::Format(const TypeReference& t)
+{
+	return t.declaredType().str();
 }

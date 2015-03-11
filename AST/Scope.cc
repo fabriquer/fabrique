@@ -39,6 +39,7 @@
 #include "Support/exceptions.h"
 #include "Types/FileType.h"
 #include "Types/TypeContext.h"
+#include "Types/UserType.h"
 
 #include <cassert>
 
