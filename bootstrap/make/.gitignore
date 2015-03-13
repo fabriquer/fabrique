@@ -6,3 +6,4 @@ fab
 fab.lex.*
 fab.yacc.*
 lit-test-results
+junit.xml
