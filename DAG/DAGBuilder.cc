@@ -142,6 +142,19 @@ UniqPtr<DAG> DAGBuilder::dag(const vector<string>& topLevelTargets) const
 	std::sort(f.begin(), f.end(), File::LessThan);
 	f.erase(std::unique(f.begin(), f.end(), File::Equals), f.end());
 
+	//
+	// Check for target/filename conflicts.
+	//
+	for (auto& file : f)
+	{
+		const auto& targets = topLevelTargets;
+		auto i = std::find(targets.begin(), targets.end(), file->filename());
+
+		if (i != targets.end())
+			throw SemanticException("target '" + *i + "' conflicts with file",
+			                        file->source());
+	}
+
 
 	//
 	// Find top-level targets.

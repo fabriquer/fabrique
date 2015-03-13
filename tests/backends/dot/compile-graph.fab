@@ -26,4 +26,4 @@ bar_o = cc(file('bar.c'), file('bar.o'));
 # CHECK-DAG: "foo.o" -> "link { foo.o bar.o => bin }{{.*}}";
 # CHECK-DAG: "bar.o" -> "link { foo.o bar.o => bin }{{.*}}";
 # CHECK-DAG: "link { foo.o bar.o => bin }{{.*}}" -> "bin";
-bin = link(objects = [ foo_o bar_o ], bin = file('bin'));
+binary = link(objects = [ foo_o bar_o ], bin = file('bin'));
