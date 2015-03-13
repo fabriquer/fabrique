@@ -80,7 +80,13 @@ const Type& Scope::Lookup(const Identifier& id) const
 
 	auto i = symbols_.find(name);
 	if (i != symbols_.end())
-		return i->second;
+	{
+		const Type& t = i->second;
+		if (t.isType())
+			return dynamic_cast<const UserType&>(t).userType();
+
+		return t;
+	}
 
 	if (parent_)
 		return parent_->Lookup(id);
