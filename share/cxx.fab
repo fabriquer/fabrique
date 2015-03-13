@@ -75,6 +75,6 @@ link_lib = action('${CXX} -shared -o ${library} ${flags} ${objects}',
 library = function(objects:list[file], libname:string, subdir:file,
                    flags:list[string] = []): file
 {
-	filename:string = library_name(libname);
-	link_lib(objects, file(filename), flags = flags + default_flags.library)
+	filename = subdir + '/' + library_name(libname);
+	link_lib(objects, filename, flags = flags + default_flags.library)
 };
