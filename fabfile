@@ -108,12 +108,12 @@ objects =
 	+ cxx.compile(cxx_srcs, cxx_flags)
 	;
 
-plugins = foreach lib <- import('plugins').libs
+plugins = foreach lib <- import('base-plugins').libs
 	shell.copy(lib, file('lib/fabrique') + '/' + lib.filename)
 	;
 
 fab = cxx.link_executable(objects, executable = file('fab', subdir = 'bin'));
 
-products = [ fab ] + plugins + import('test/manifest.fab').all_files;
+products = [ fab ] + plugins + import('tests/manifest.fab').all_files;
 
-test = lit.run(file('test'), file('junit.xml'), dependencies = products);
+test = lit.run(file('tests'), file('junit.xml'), dependencies = products);

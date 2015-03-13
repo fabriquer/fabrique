@@ -172,7 +172,7 @@ cxxflags = cxxflags + warnings
 plugin_files = dict([
 	(
 		('%s%s%s%s' % (libdir, libprefix, name, libsuffix)),
-		[ 'plugins/%s.cc' % s for s in sources ]
+		[ 'base-plugins/%s.cc' % s for s in sources ]
 	)
 	for (name, sources) in plugins.items()
 ])
@@ -216,7 +216,7 @@ for var in variables.items():
 
 out.write('\n')
 
-test_output = os.path.join(builddir, 'test')
+test_output = os.path.join(builddir, 'tests')
 if not os.path.isdir(builddir):
 	os.mkdir(test_output)
 
@@ -294,7 +294,7 @@ out.write('''build build.ninja: rebuild %s
 
 # Unit tests:
 out.write('build test: phony run-tests\n')
-out.write('build run-tests: lit %s/test | %sfab\n' % (src_root, bindir))
+out.write('build run-tests: lit %s/tests | %sfab\n' % (src_root, bindir))
 
 
 # Main executable
