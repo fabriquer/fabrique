@@ -1,5 +1,8 @@
 Fabrique
 =========
+
+[![Build Status](https://jack.jonandchrissy.ca/jenkins/buildStatus/icon?job=Fabrique)](https://jack.jonandchrissy.ca/jenkins/job/Fabrique/)
+
 Fabrique is a build language for constructing complex systems.
 It is functional, statically typed, has very few dependencies and is
 designed for either command-line use or IDE integration.
