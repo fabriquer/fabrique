@@ -34,6 +34,7 @@
 #include "Types/FunctionType.h"
 #include "Types/IntegerType.h"
 #include "Types/MaybeType.h"
+#include "Types/RecordType.h"
 #include "Types/SequenceType.h"
 #include "Types/StringType.h"
 #include "Types/UserType.h"

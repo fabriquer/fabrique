@@ -33,7 +33,6 @@
 #define TYPE_CONTEXT_H
 
 #include "ADT/PtrVec.h"
-#include "Types/RecordType.h"
 #include "Types/Type.h"
 
 #include <map>
@@ -44,6 +43,7 @@ namespace fabrique {
 
 class FileType;
 class FunctionType;
+class RecordType;
 class SourceRange;
 class Type;
 class UserType;
