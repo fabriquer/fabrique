@@ -179,8 +179,12 @@ ValuePtr File::field(const string& name) const
 
 ValuePtr File::Add(ValuePtr& suffix) const
 {
+	const string file = filename_ + suffix->str();
+	const string filename = FilenameComponent(file);
+	const string subdir = subdirectory_ + DirectoryOf(file);
+
 	shared_ptr<File> f(
-		new File(filename_ + suffix->str(), subdirectory_, absolute_,
+		new File(filename, subdir, absolute_,
 		         attributes_, type(), SourceRange::Over(this, suffix)));
 
 	return f;
