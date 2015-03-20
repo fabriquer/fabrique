@@ -11,6 +11,7 @@ args = argparse.ArgumentParser()
 args.add_argument('builddir', nargs = '?', default = '.')
 args.add_argument('--cxxflags', default = '')
 args.add_argument('--debug', action = 'store_true')
+args.add_argument('--withtests', action = 'store_true')
 args = args.parse_args()
 
 bootstrap = os.path.realpath(sys.argv[0])
@@ -196,7 +197,6 @@ variables = {
 	'cc': which('clang'),
 	'cxx': which('clang++'),
 	'lex': which('flex'),
-	'lit': which('llvm-lit'),
 	'yacc': which('byacc'),
 
 	# flags
@@ -204,6 +204,9 @@ variables = {
 	'ldflags': ' '.join(ldflags),
 	'yaccflags': '-d -g -t -v',
 }
+
+if args.withtests:
+	variables['lit'] = which('llvm-lit')
 
 
 
@@ -216,13 +219,14 @@ for var in variables.items():
 
 out.write('\n')
 
-test_output = os.path.join(builddir, 'tests')
-if not os.path.isdir(builddir):
-	os.mkdir(test_output)
+if args.withtests:
+	test_output = os.path.join(builddir, 'tests')
+	if not os.path.isdir(builddir):
+		os.mkdir(test_output)
 
-lit_config = '-sv --param=output-dir=%s --output=%s' % (
-	test_output, os.path.join(test_output, 'report.txt'),
-)
+	lit_config = '-sv --param=output-dir=%s --output=%s' % (
+		test_output, os.path.join(test_output, 'report.txt'),
+	)
 
 
 # Build rules: how we actually build things.
@@ -254,11 +258,6 @@ rules = {
 		'description': 'Linking library $out',
 	},
 
-	'lit': {
-		'command': 'PATH=$path $lit ' + lit_config + ' $in',
-		'description': 'Running unit tests',
-	},
-
 	'rebuild': {
 		'command': 'PATH=$path python $in $args',
 		'description': 'Regenerating $out',
@@ -270,6 +269,12 @@ rules = {
 		'description': 'Processing $in',
 	},
 }
+
+if args.withtests:
+	rules['lit'] = {
+		'command': 'PATH=$path $lit ' + lit_config + ' $in',
+		'description': 'Running unit tests',
+	}
 
 for (name, variables) in rules.items():
 	out.write('rule %s\n' % name)
@@ -293,8 +298,10 @@ out.write('''build build.ninja: rebuild %s
 ''' % (pipes.quote(bootstrap), ' '.join(bootstrap_args)))
 
 # Unit tests:
-out.write('build test: phony run-tests\n')
-out.write('build run-tests: lit %s/tests | %sfab\n' % (src_root, bindir))
+if args.withtests:
+	out.write('build test: phony run-tests\n')
+	out.write('build run-tests: lit %s/tests | %sfab\n' % (
+		src_root, bindir))
 
 
 # Main executable
