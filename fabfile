@@ -8,6 +8,8 @@ debug = args.debug ? true;
 asserts = args.asserts ? true;
 debug_and_asserts = debug and asserts;
 
+withtests = args.tests ? true;
+
 compiler = args.compiler ? 'c++';
 
 colour_output = args.colour_output ? true;
@@ -21,7 +23,6 @@ cxx = import('share/cxx.fab',
 	platform = platform);
 
 lex = import('share/lex.fab');
-lit = import('share/llvm-lit.fab', show_failure_details = verbose_tests);
 
 # TODO: let modules "pass through" values from other modules
 shell =
@@ -116,4 +117,9 @@ fab = cxx.link_executable(objects, executable = file('fab', subdir = 'bin'));
 
 products = [ fab ] + plugins + import('tests/manifest.fab').all_files;
 
-test = lit.run(file('tests'), file('junit.xml'), dependencies = products);
+test = if withtests {
+	lit = import('share/llvm-lit.fab', show_failure_details = verbose_tests);
+	[ lit.run(file('tests'), file('junit.xml'), dependencies = products) ]
+} else {
+	[]
+};
