@@ -54,6 +54,7 @@ public:
 	FileType& WithArguments(const TypeMap&) const;
 
 	virtual bool hasFields() const override { return true; }
+	virtual bool hasOutput() const override { return isOutputFile(); }
 	virtual bool isSubtype(const Type&) const override;
 	virtual bool isFile() const override { return true; }
 

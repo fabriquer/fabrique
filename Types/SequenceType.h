@@ -48,6 +48,7 @@ public:
 
 	virtual bool isSubtype(const Type&) const override;
 
+	virtual bool hasOutput() const override;
 	virtual bool isOrdered() const override { return true; }
 
 	virtual const Type& onAddTo(const Type&) const override;

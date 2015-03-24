@@ -50,6 +50,18 @@ SequenceType::~SequenceType()
 }
 
 
+bool SequenceType::hasOutput() const
+{
+	for (const Type *t : typeParameters())
+	{
+		if (t->hasOutput())
+			return true;
+	}
+
+	return false;
+}
+
+
 bool SequenceType::isSubtype(const Type& other) const
 {
 	if (not other.isOrdered())

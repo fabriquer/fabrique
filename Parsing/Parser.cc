@@ -333,8 +333,7 @@ Action* Parser::DefineAction(UniqPtr<UniqPtrVec<Argument>>& args,
 	bool hasOutput = false;
 	for (const auto& p : *params)
 	{
-		const Type& t = p->type();
-		if (t.isFile() and dynamic_cast<const FileType&>(t).isOutputFile())
+		if (p->type().hasOutput())
 		{
 			hasOutput = true;
 			break;

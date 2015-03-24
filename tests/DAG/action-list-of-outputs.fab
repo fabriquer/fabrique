@@ -1,0 +1,10 @@
+#
+# RUN: %fab --format=null --print-dag %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+
+gen = action('generate ${outputs}' <- outputs:list[file[out]]);
+
+# CHECK: build: gen { => bar baz }( )
+foo = gen(files(bar baz));
