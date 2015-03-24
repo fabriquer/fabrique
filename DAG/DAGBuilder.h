@@ -78,7 +78,7 @@ public:
 
 
 	//! Construct a @ref DAG from the current @ref DAGBuilder state.
-	UniqPtr<DAG> dag(const std::vector<std::string>& topLevelTargets) const;
+	UniqPtr<DAG> dag(std::vector<std::string> topLevelTargets) const;
 
 	TypeContext& typeContext() { return ctx_.types(); }
 

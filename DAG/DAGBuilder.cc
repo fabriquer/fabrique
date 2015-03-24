@@ -133,7 +133,7 @@ void DAGBuilder::Define(string name, ValuePtr v)
 }
 
 
-UniqPtr<DAG> DAGBuilder::dag(const vector<string>& topLevelTargets) const
+UniqPtr<DAG> DAGBuilder::dag(vector<string> topLevelTargets) const
 {
 	//
 	// Ensure all files are unique.
@@ -147,12 +147,31 @@ UniqPtr<DAG> DAGBuilder::dag(const vector<string>& topLevelTargets) const
 	//
 	for (auto& file : f)
 	{
-		const auto& targets = topLevelTargets;
-		auto i = std::find(targets.begin(), targets.end(), file->filename());
+		const string& filename = file->filename();
 
-		if (i != targets.end())
-			throw SemanticException("target '" + *i + "' conflicts with file",
-			                        file->source());
+		const auto& targets = topLevelTargets;
+		auto i = std::find(targets.begin(), targets.end(), filename);
+
+		if (i == targets.end())
+			continue;
+
+		// It's ok to have a target called 'foo' that generates
+		// a file called 'foo'. It's only the ambiguous cases
+		// (e.g., file 'foo' and target 'foo' are unrelated)
+		// that cause problems.
+		auto j = targets_.find(filename)->second->files();
+		assert(j);
+
+		const List& outputs = *j;
+		if (outputs.size() == 1)
+		{
+			auto& out = dynamic_cast<const dag::File&>(outputs[0]);
+			if (out.filename() == filename)
+				continue;
+		}
+
+		throw SemanticException("target '" + *i + "' conflicts with file",
+		                        file->source());
 	}
 
 
