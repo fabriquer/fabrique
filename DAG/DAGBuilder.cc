@@ -159,15 +159,16 @@ UniqPtr<DAG> DAGBuilder::dag(vector<string> topLevelTargets) const
 		// a file called 'foo'. It's only the ambiguous cases
 		// (e.g., file 'foo' and target 'foo' are unrelated)
 		// that cause problems.
-		auto j = targets_.find(filename)->second->files();
-		assert(j);
-
-		const List& outputs = *j;
-		if (outputs.size() == 1)
+		auto j = targets_.find(filename);
+		if (j != targets_.end())
 		{
-			auto& out = dynamic_cast<const dag::File&>(outputs[0]);
-			if (out.filename() == filename)
-				continue;
+			const List& outputs = *j->second->files();
+			if (outputs.size() == 1)
+			{
+				auto& out = dynamic_cast<const dag::File&>(outputs[0]);
+				if (out.filename() == filename)
+					continue;
+			}
 		}
 
 		throw SemanticException("target '" + *i + "' conflicts with file",
