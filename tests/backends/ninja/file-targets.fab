@@ -1,0 +1,27 @@
+#
+# RUN: %fab --format=ninja --output=%t %s
+# RUN: FileCheck %s -input-file %t/build.ninja
+#
+# XFAIL: *
+#
+
+compile = action('cc ${source} -o ${dest}' <- source:file[in], dest:file[out]);
+
+# CHECK-DAG: build buildit : phony foo
+# CHECK-DAG: build foo : compile ${srcroot}/foo.c
+buildit = compile(file('foo.c'), file('foo'));
+
+# CHECK-DAG: build buildem : phony bar baz
+# CHECK-DAG: build bar : compile ${srcroot}/bar.c
+# CHECK-DAG: build baz : compile ${srcroot}/baz.c
+buildem =
+[
+	compile(file('bar.c'), file('bar'))
+	compile(file('baz.c'), file('baz'))
+];
+
+# CHECK-DAG: build all : phony foo bar baz
+all = buildit :: buildem;
+
+# CHECK-DAG: build notquiteall : phony buildem
+notquiteall = buildem;

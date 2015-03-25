@@ -1,5 +1,5 @@
 #
-# Generated at Wed Mar 25 12:19:52 NDT 2015 by regenerate-manifest.sh
+# Generated at Wed Mar 25 16:39:07 NDT 2015 by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -180,6 +180,7 @@ all_files = files(
 ./backends/ninja/explicit-compiler-imported-tools.fab
 ./backends/ninja/explicit-compiler.fab
 ./backends/ninja/file-string-addition.fab
+./backends/ninja/file-targets.fab
 ./backends/ninja/file-variables.fab
 ./backends/ninja/literals.fab
 ./backends/ninja/modules.fab
