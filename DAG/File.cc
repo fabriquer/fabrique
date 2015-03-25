@@ -200,7 +200,7 @@ ValuePtr File::Add(ValuePtr& suffix) const
 {
 	const string file = filename_ + suffix->str();
 	const string filename = FilenameComponent(file);
-	const string subdir = subdirectory_ + DirectoryOf(file);
+	const string subdir = JoinPath(subdirectory_, DirectoryOf(file));
 
 	shared_ptr<File> f(
 		new File(filename, subdir, absolute_,

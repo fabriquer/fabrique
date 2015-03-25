@@ -8,3 +8,9 @@ foo = file('foo.txt');
 
 # CHECK-DAG: bar:file = foo.txt.gz
 bar = foo + '.gz';
+
+# CHECK-DAG: baz:file = path/to/baz
+baz = file('path/to/baz');
+
+# CHECK-DAG: wibble:file = path/to/baz/wibble
+wibble = baz + '/wibble';
