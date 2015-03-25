@@ -71,8 +71,7 @@ Build* Build::Create(shared_ptr<Rule>& rule, SharedPtrMap<Value>& arguments,
 		const Type& argType = i.second->type();
 		const Type& paramType = *paramTypes[name];
 
-		if (not argType.isSubtype(paramType))
-			throw WrongTypeException(paramType, argType, arg->source());
+		argType.CheckSubtype(paramType, arg->source());
 
 		if (FileType::isInput(paramType))
 			AppendFiles(arg, inputs);

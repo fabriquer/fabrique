@@ -76,10 +76,7 @@ dag::ValuePtr List::evaluate(EvalContext& ctx) const
 
 	for (auto& e : elements_)
 	{
-		if (not e->type().isSubtype(subtype))
-			throw WrongTypeException(subtype,
-			                         e->type(), e->source());
-
+		e->type().CheckSubtype(subtype, e->source());
 		values.push_back(e->evaluate(ctx));
 	}
 

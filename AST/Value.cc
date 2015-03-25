@@ -110,8 +110,7 @@ dag::ValuePtr Value::evaluate(EvalContext& ctx) const
 		<< "\n"
 		;
 
-	if (not val->type().isSubtype(type()))
-		throw WrongTypeException(type(), val->type(), source());
+	val->type().CheckSubtype(type(), val->source());
 
 	//
 	// If the right-hand side is a build, file or list of files,

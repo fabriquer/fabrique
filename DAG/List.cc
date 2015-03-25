@@ -114,9 +114,7 @@ ValuePtr List::Add(ValuePtr& n) const
 
 ValuePtr List::PrefixWith(ValuePtr& prefix) const
 {
-	if (prefix->type() != elementType_)
-		throw WrongTypeException(elementType_,
-		                         prefix->type(), prefix->source());
+	prefix->type().CheckSubtype(elementType_, prefix->source());
 
 	SharedPtrVec<Value> values;
 	values.push_back(prefix);

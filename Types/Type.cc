@@ -30,8 +30,10 @@
  */
 
 #include "Support/Bytestream.h"
+#include "Support/SourceLocation.h"
 #include "Types/Type.h"
 #include "Types/TypeContext.h"
+#include "Types/TypeError.h"
 
 #include <cassert>
 
@@ -66,6 +68,13 @@ Type::Type(const std::string& name, const PtrVec<Type>& params,
 bool Type::isSupertype(const Type& t) const
 {
 	return t.isSubtype(*this);
+}
+
+
+void Type::CheckSubtype(const Type& t, SourceRange src) const
+{
+	if (not this->isSubtype(t))
+		throw WrongTypeException(t, *this, src);
 }
 
 

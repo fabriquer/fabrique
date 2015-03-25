@@ -447,8 +447,8 @@ FieldAccess* Parser::FieldAccess(UniqPtr<Expression>& record,
 
 	const Type& fieldType = i->second;
 
-	if (field->isTyped() and field->type() != fieldType)
-		throw WrongTypeException(fieldType, field->type(), field->source());
+	if (field->isTyped())
+		field->type().CheckSubtype(fieldType, field->source());
 	else
 		field.reset(Id(std::move(field), &fieldType));
 
@@ -469,22 +469,20 @@ FieldQuery* Parser::FieldQuery(UniqPtr<Expression>& record,
 			"value of type '" + recordType.str() + "' does not have fields",
 			record->source());
 
+	const Type& defaultType = def->type();
+
 	Type::TypeMap recordFields = recordType.fields();
 	auto i = recordFields.find(field->name());
 	if (i != recordFields.end())
 	{
 		const Type& fieldType = i->second;
-		const Type& initializerType = def->type();
-
-		if (not fieldType.isSubtype(initializerType)
-		and not initializerType.isSubtype(fieldType))
-			throw WrongTypeException(initializerType, fieldType, src);
+		fieldType.CheckSubtype(defaultType, src);
 	}
 
 	const Type& t =
 		i == recordFields.end()
-			? def->type()
-			: def->type().supertype(i->second)
+			? defaultType
+			: defaultType.supertype(i->second)
 			;
 
 	return new class FieldQuery(record, field, def, t, src);

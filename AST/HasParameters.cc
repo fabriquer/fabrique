@@ -89,9 +89,8 @@ void HasParameters::CheckArguments(const UniqPtrVec<Argument>& args,
 			throw SemanticException(
 				"missing argument to '" + name + "'", src);
 
-		if (arg and not arg->type().isSubtype(p->type()))
-			throw WrongTypeException(p->type(),
-			                         arg->type(), arg->source());
+		if (arg)
+			arg->type().CheckSubtype(p->type(), arg->source());
 	}
 }
 

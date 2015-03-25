@@ -102,11 +102,7 @@ void Callable::CheckArguments(const ValueMap& args,
 		const ValuePtr& arg = i->second;
 		assert(arg);
 
-		if (not arg->type().isSubtype(t))
-		{
-			const SourceRange& argSource(argLocations.find(name)->second);
-			throw WrongTypeException(t, arg->type(), argSource);
-		}
+		arg->type().CheckSubtype(t, argLocations.find(name)->second);
 	}
 }
 

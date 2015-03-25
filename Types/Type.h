@@ -94,6 +94,12 @@ public:
 	virtual bool isSupertype(const Type&) const;
 
 	/**
+	 * Check to ensure that this type is a subtype of @b t.
+	 * If not, throw a @ref WrongTypeException.
+	 */
+	void CheckSubtype(const Type& t, SourceRange) const;
+
+	/**
 	 * Find a common supertype for @b this type and @b other.
 	 *
 	 * The default implementation checks to see if A is a supertype of B or
