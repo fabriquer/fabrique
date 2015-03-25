@@ -307,8 +307,11 @@ file:
 		SourceRange begin = Take(Parser::ParseToken($1))->source();
 		auto name = TakeNode<Expression>($3);
 		auto arguments = Take(NodeVec<Argument>($4));
+		SourceRange end = Take(Parser::ParseToken($5))->source();
 
-		SetOrDie($$, p->File(name, begin, std::move(arguments)));
+		SourceRange src(begin, end);
+
+		SetOrDie($$, p->File(name, src, std::move(arguments)));
 	}
 	;
 
