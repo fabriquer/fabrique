@@ -1,6 +1,6 @@
 /** @file Types/Type.h    Declaration of @ref fabrique::Type. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013-2015 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
