@@ -39,6 +39,8 @@
 #include "Types/FileType.h"
 #include "Types/TypeContext.h"
 
+#include <cassert>
+
 using namespace fabrique::dag;
 using std::shared_ptr;
 using std::string;
@@ -53,7 +55,7 @@ File* File::Create(string fullPath, ValueMap attrs, const FileType& t, SourceRan
 }
 
 File* File::Create(string dir, string path, ValueMap attrs,
-                   const FileType& t, SourceRange src)
+                   const FileType& type, SourceRange src)
 {
 	const string filename(FilenameComponent(path));
 	const string subdir(DirectoryOf(path));
@@ -62,7 +64,23 @@ File* File::Create(string dir, string path, ValueMap attrs,
 			? subdir
 			: JoinPath(dir, subdir));
 
-	return new File(filename, directory, PathIsAbsolute(directory), attrs, t, src);
+	bool generated = false;
+	auto i = attrs.find("generated");
+	if (i != attrs.end())
+	{
+		ValuePtr gen = i->second;
+		const Type& t = gen->type();
+		t.CheckSubtype(t.context().booleanType(), gen->source());
+
+		auto b = std::dynamic_pointer_cast<Boolean>(gen);
+		assert(b);
+		generated = b->value();
+
+		attrs.erase(i);
+	}
+
+	return new File(filename, directory, PathIsAbsolute(directory), attrs, type,
+	                src, generated);
 }
 
 bool File::Equals(const shared_ptr<File>& x, const shared_ptr<File>& y)
@@ -77,9 +95,10 @@ bool File::LessThan(const shared_ptr<File>& x, const shared_ptr<File>& y)
 
 
 File::File(string filename, string subdirectory, bool absolute,
-           const ValueMap& attributes, const FileType& t, SourceRange source)
+           const ValueMap& attributes, const FileType& t, SourceRange source,
+	   bool generated)
 	: Value(t, source), filename_(filename), subdirectory_(subdirectory),
-	  absolute_(absolute), generated_(false), attributes_(attributes)
+	  absolute_(absolute), generated_(generated), attributes_(attributes)
 {
 }
 

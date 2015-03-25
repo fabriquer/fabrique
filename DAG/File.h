@@ -89,7 +89,8 @@ public:
 
 private:
 	File(std::string name, std::string subdirectory, bool absolute,
-	     const ValueMap& attributes, const FileType&, SourceRange);
+	     const ValueMap& attributes, const FileType&, SourceRange,
+	     bool generated = false);
 
 	const std::string filename_;
 	std::string subdirectory_;
