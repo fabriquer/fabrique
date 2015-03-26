@@ -785,7 +785,13 @@ Mapping* Parser::Map(UniqPtr<Expression>& source, UniqPtr<Identifier>& target)
 		;
 
 	assert(source->type());
-	assert(source->type().typeParamCount() == 1);
+	if (source->type().typeParamCount() != 1)
+	{
+		ReportError("cannot iterate over " + source->type().str(),
+		            source->source());
+		return nullptr;
+	}
+
 	const Type& elementType = source->type()[0];
 
 	if (id->isTyped())

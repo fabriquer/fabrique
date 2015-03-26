@@ -1,5 +1,5 @@
 #
-# Generated at Wed Mar 25 16:39:07 NDT 2015 by regenerate-manifest.sh
+# Generated at Thu Mar 26 11:06:56 NDT 2015 by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -115,6 +115,7 @@ all_files = files(
 ./Parsing/file-attributes.fab
 ./Parsing/file-string-addition.fab
 ./Parsing/files.fab
+./Parsing/foreach-not-iterable.fab
 ./Parsing/foreach.fab
 ./Parsing/function-type-inference.fab
 ./Parsing/functions.fab
