@@ -1,5 +1,5 @@
 #
-# Generated at Thu Mar 26 11:06:56 NDT 2015 by regenerate-manifest.sh
+# Generated at Thu Mar 26 12:45:10 NDT 2015 by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -59,6 +59,7 @@ all_files = files(
 ./DAG/import-arguments-mandatory.fab
 ./DAG/import-directory.fab
 ./DAG/import-empty.fab
+./DAG/list-of-lists-of-targets.fab
 ./DAG/lists.fab
 ./DAG/literals.fab
 ./DAG/logical-operators.fab
