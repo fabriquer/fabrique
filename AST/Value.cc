@@ -1,6 +1,6 @@
-/** @file AST/Value.h    Declaration of @ref fabrique::ast::Value. */
+/** @file AST/Value.cc    Definition of @ref fabrique::ast::Value. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013-2015 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
