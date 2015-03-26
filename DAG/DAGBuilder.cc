@@ -399,4 +399,5 @@ ValuePtr DAGBuilder::Target(const shared_ptr<class List>& l)
 ValuePtr DAGBuilder::Target(const string& name, shared_ptr<class Target> t)
 {
 	targets_[name] = t;
+	return t;
 }
