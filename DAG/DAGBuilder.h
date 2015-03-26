@@ -135,6 +135,7 @@ public:
 	ValuePtr Target(const std::shared_ptr<class Build>&);
 	ValuePtr Target(const std::shared_ptr<class File>&);
 	ValuePtr Target(const std::shared_ptr<class List>&);
+	ValuePtr Target(const std::string& name, std::shared_ptr<class Target>);
 
 
 protected:

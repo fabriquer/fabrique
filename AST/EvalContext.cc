@@ -384,5 +384,5 @@ ValuePtr EvalContext::Function(const dag::Function::Evaluator fn,
 
 void EvalContext::Alias(const shared_ptr<dag::Target>& t)
 {
-	targets_[fullyQualifiedName()] = t;
+	builder_.Target(fullyQualifiedName(), t);
 }
