@@ -211,13 +211,6 @@ protected:
 	//! Symbols defined in this scope (or the one up from it, or up...).
 	std::deque<dag::ValueMap> scopes_;
 
-	// Values we've created:
-	SharedPtrVec<dag::File> files_;
-	SharedPtrVec<dag::Build> builds_;
-	SharedPtrMap<dag::Rule> rules_;
-	SharedPtrMap<dag::Value> variables_;
-	SharedPtrMap<dag::Target> targets_;
-
 private:
 	/** The name of the value we are currently processing. */
 	std::deque<std::string> currentValueName_;
