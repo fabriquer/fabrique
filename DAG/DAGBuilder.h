@@ -128,8 +128,7 @@ public:
 	ValuePtr String(const std::string&, SourceRange = SourceRange::None());
 
 	//! Create a @ref dag::Record.
-	ValuePtr Record(const std::vector<Record::NamedValue>&,
-	                const Type&, SourceRange);
+	ValuePtr Record(const std::vector<Record::Field>&, const Type&, SourceRange);
 
 	//! Create a @ref dag::Target using the current value name.
 	ValuePtr Target(const std::shared_ptr<class Build>&);

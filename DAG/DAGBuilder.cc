@@ -358,10 +358,10 @@ ValuePtr DAGBuilder::String(const string& s, SourceRange src)
 }
 
 
-ValuePtr DAGBuilder::Record(const vector<Record::NamedValue>& values,
-                           const Type& t, SourceRange source)
+ValuePtr DAGBuilder::Record(const vector<Record::Field>& fields,
+                            const Type& t, SourceRange source)
 {
-	return ValuePtr(Record::Create(values, t, source));
+	return ValuePtr(Record::Create(fields, t, source));
 }
 
 

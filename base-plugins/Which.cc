@@ -137,7 +137,7 @@ shared_ptr<Record> Which::Create(DAGBuilder& builder) const
 		std::make_shared<Parameter>(Directories, fileList_, ValuePtr()),
 	};
 
-	vector<Record::NamedValue> fields = {
+	vector<Record::Field> fields = {
 		{
 			ExecutableFnName,
 			builder.Function(

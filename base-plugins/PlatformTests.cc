@@ -125,7 +125,7 @@ shared_ptr<Record> PlatformTests::Create(DAGBuilder& builder) const
 	const ValueMap scope;
 	static const SourceRange src = SourceRange::None();
 
-	vector<Record::NamedValue> fields;
+	vector<Record::Field> fields;
 
 	for (const char *platform : Platforms)
 	{

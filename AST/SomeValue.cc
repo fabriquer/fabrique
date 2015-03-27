@@ -73,7 +73,7 @@ dag::ValuePtr SomeValue::evaluate(EvalContext& ctx) const
 		new dag::Boolean(true, t.context().booleanType(), source())
 	);
 
-	std::vector<dag::Record::NamedValue> values {
+	std::vector<dag::Record::Field> fields {
 		{
 			ast::MaybeExists,
 			exists
@@ -84,5 +84,5 @@ dag::ValuePtr SomeValue::evaluate(EvalContext& ctx) const
 		},
 	};
 
-	return ctx.builder().Record(values, t, source());
+	return ctx.builder().Record(fields, t, source());
 }

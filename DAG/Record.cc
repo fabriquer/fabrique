@@ -43,11 +43,11 @@ using std::string;
 using std::vector;
 
 
-Record* Record::Create(const vector<NamedValue>& values, const Type& t, SourceRange src)
+Record* Record::Create(const vector<Field>& fields, const Type& t, SourceRange src)
 {
-	assert(values.size() >= t.fields().size());
+	assert(fields.size() >= t.fields().size());
 	const RecordType::TypeMap typeFields = t.fields();
-	for (const NamedValue& value : values)
+	for (const Field& value : fields)
 	{
 		const string name = value.first;
 		if (name != ast::Arguments and name != ast::Subdirectory)
@@ -56,43 +56,43 @@ Record* Record::Create(const vector<NamedValue>& values, const Type& t, SourceRa
 		assert(value.second);
 	}
 
-	if (not src and not values.empty())
+	if (not src and not fields.empty())
 	{
-		SourceRange begin = values.front().second->source();
-		SourceRange end = (--values.end())->second->source();
+		SourceRange begin = fields.front().second->source();
+		SourceRange end = (--fields.end())->second->source();
 
 		src = SourceRange(begin, end);
 	}
 
-	return new Record(values, t, src);
+	return new Record(fields, t, src);
 }
 
 
-Record* Record::Create(const vector<NamedValue>& values, SourceRange src)
+Record* Record::Create(const vector<Field>& fields, SourceRange src)
 {
-	assert(not values.empty());
+	assert(not fields.empty());
 
 	if (not src)
 	{
-		SourceRange begin = values.front().second->source();
-		SourceRange end = (--values.end())->second->source();
+		SourceRange begin = fields.front().second->source();
+		SourceRange end = (--fields.end())->second->source();
 
 		src = SourceRange(begin, end);
 	}
 
 	RecordType::NamedTypeVec types;
-	for (auto& v : values)
+	for (auto& v : fields)
 		types.emplace_back(v.first, v.second->type());
 
-	TypeContext& ctx = values.front().second->type().context();
+	TypeContext& ctx = fields.front().second->type().context();
 	const Type& type = *RecordType::Create(types, ctx);
 
-	return Create(values, type, src);
+	return Create(fields, type, src);
 }
 
 
-Record::Record(const vector<NamedValue>& values, const Type& t, SourceRange src)
-	: Value(t, src), values_(values)
+Record::Record(const vector<Field>& fields, const Type& t, SourceRange src)
+	: Value(t, src), fields_(fields)
 {
 }
 
@@ -102,7 +102,7 @@ Record::~Record() {}
 
 ValuePtr Record::field(const std::string& name) const
 {
-	for (auto& i : values_)
+	for (auto& i : fields_)
 	{
 		if (i.first == name)
 			return i.second;
@@ -120,7 +120,7 @@ void Record::PrettyPrint(Bytestream& out, size_t indent) const
 	out << Bytestream::Operator << "{\n"
 		;
 
-	for (auto& i : values_)
+	for (auto& i : fields_)
 	{
 		out
 			<< innerTab
@@ -147,6 +147,6 @@ void Record::PrettyPrint(Bytestream& out, size_t indent) const
 void Record::Accept(Visitor& v) const
 {
 	if (v.Visit(*this))
-		for (auto& i : values_)
+		for (auto& i : fields_)
 			i.second->Accept(v);
 }

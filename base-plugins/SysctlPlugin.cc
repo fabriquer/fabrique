@@ -124,7 +124,7 @@ shared_ptr<Record> SysctlPlugin::Create(DAGBuilder& builder) const
 		std::make_shared<Parameter>("name", stringType_, ValuePtr()),
 	};
 
-	std::vector<Record::NamedValue> fields = {
+	std::vector<Record::Field> fields = {
 		{
 			"string",
 			builder.Function(StringSysctl, scope, params, stringSysctlType_)
