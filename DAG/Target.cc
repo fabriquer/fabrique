@@ -32,6 +32,7 @@
 #include "DAG/Build.h"
 #include "DAG/File.h"
 #include "DAG/List.h"
+#include "DAG/Record.h"
 #include "DAG/Target.h"
 #include "DAG/Visitor.h"
 #include "Support/Bytestream.h"
@@ -211,6 +212,15 @@ static SharedPtrVec<File> fabrique::Files(const ValuePtr& v)
 	{
 		for (const ValuePtr& element : *list)
 			Append(Files(element), files);
+	}
+	else if (auto record = dynamic_pointer_cast<Record>(v))
+	{
+		for (auto field : record->fields())
+		{
+			ValuePtr value = field.second;
+			if (value->type().isFile())
+				Append(Files(value), files);
+		}
 	}
 	else if (auto target = dynamic_pointer_cast<Target>(v))
 	{
