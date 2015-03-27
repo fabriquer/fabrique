@@ -76,6 +76,18 @@ RecordType::~RecordType()
 }
 
 
+bool RecordType::hasFiles() const
+{
+	for (auto& field : fields())
+	{
+		if (field.second.hasFiles())
+			return true;
+	}
+
+	return false;
+}
+
+
 bool RecordType::isSubtype(const Type& t) const
 {
 	if (t.name() != name())

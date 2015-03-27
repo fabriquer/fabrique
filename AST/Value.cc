@@ -124,7 +124,7 @@ dag::ValuePtr Value::evaluate(EvalContext& ctx) const
 
 	else if (auto list = std::dynamic_pointer_cast<dag::List>(val))
 	{
-		if (list->type().elementType().isFile())
+		if (list->type().hasFiles())
 			val = ctx.builder().Target(list);
 	}
 	else if (auto target = std::dynamic_pointer_cast<dag::Target>(val))

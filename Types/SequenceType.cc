@@ -50,6 +50,18 @@ SequenceType::~SequenceType()
 }
 
 
+bool SequenceType::hasFiles() const
+{
+	for (const Type *t : typeParameters())
+	{
+		if (t->hasFiles())
+			return true;
+	}
+
+	return false;
+}
+
+
 bool SequenceType::hasOutput() const
 {
 	for (const Type *t : typeParameters())

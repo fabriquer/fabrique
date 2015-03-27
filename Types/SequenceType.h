@@ -48,6 +48,7 @@ public:
 
 	virtual bool isSubtype(const Type&) const override;
 
+	virtual bool hasFiles() const override;
 	virtual bool hasOutput() const override;
 	virtual bool isOrdered() const override { return true; }
 

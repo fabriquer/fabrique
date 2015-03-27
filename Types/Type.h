@@ -115,6 +115,7 @@ public:
 
 	virtual bool valid() const { return true; }
 	virtual bool hasFields() const { return false; }
+	virtual bool hasFiles() const { return false; }
 	virtual bool hasOutput() const { return false; }
 	virtual bool isFile() const { return false; }
 	virtual bool isFunction() const { return false; }

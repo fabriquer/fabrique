@@ -50,6 +50,7 @@ public:
 	TypeMap fields() const override { return fieldTypes_; }
 
 	virtual bool hasFields() const override { return true; }
+	virtual bool hasFiles() const override;
 	virtual bool isSubtype(const Type&) const override;
 	virtual const Type& supertype(const Type&) const override;
 
