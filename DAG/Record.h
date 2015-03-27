@@ -60,6 +60,7 @@ public:
 	virtual ~Record();
 
 	virtual bool hasFields() const override { return true; }
+	FieldVec fields() const { return fields_; }
 	virtual ValuePtr field(const std::string& name) const override;
 	ValuePtr operator[] (const std::string& name) const
 	{
