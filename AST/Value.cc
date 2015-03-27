@@ -129,9 +129,7 @@ dag::ValuePtr Value::evaluate(EvalContext& ctx) const
 	}
 	else if (auto target = std::dynamic_pointer_cast<dag::Target>(val))
 	{
-		const Type& t = target->type();
-		if (t.isFile() or (t.isOrdered() and t[0].isFile()))
-			ctx.Alias(target);
+		ctx.Alias(target);
 	}
 
 	assert(val);
