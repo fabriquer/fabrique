@@ -51,6 +51,7 @@ public:
 
 	virtual bool hasFields() const override { return true; }
 	virtual bool hasFiles() const override;
+	virtual bool hasOutput() const override;
 	virtual bool isSubtype(const Type&) const override;
 	virtual const Type& supertype(const Type&) const override;
 
