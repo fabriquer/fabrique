@@ -43,7 +43,7 @@ using std::string;
 using std::vector;
 
 
-Record* Record::Create(const vector<Field>& fields, const Type& t, SourceRange src)
+Record* Record::Create(const FieldVec& fields, const Type& t, SourceRange src)
 {
 	assert(fields.size() >= t.fields().size());
 	const RecordType::TypeMap typeFields = t.fields();
@@ -68,7 +68,7 @@ Record* Record::Create(const vector<Field>& fields, const Type& t, SourceRange s
 }
 
 
-Record* Record::Create(const vector<Field>& fields, SourceRange src)
+Record* Record::Create(const FieldVec& fields, SourceRange src)
 {
 	assert(not fields.empty());
 
@@ -91,7 +91,7 @@ Record* Record::Create(const vector<Field>& fields, SourceRange src)
 }
 
 
-Record::Record(const vector<Field>& fields, const Type& t, SourceRange src)
+Record::Record(const FieldVec& fields, const Type& t, SourceRange src)
 	: Value(t, src), fields_(fields)
 {
 }
