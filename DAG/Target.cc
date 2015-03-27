@@ -43,6 +43,7 @@
 #include <cassert>
 
 using namespace fabrique::dag;
+using fabrique::SharedPtrVec;
 using std::dynamic_pointer_cast;
 using std::shared_ptr;
 using std::string;
@@ -50,8 +51,8 @@ using std::string;
 
 namespace fabrique
 {
-	static SharedPtrVec<File> Files(const shared_ptr<Build>& v);
-	static SharedPtrVec<File> Files(const shared_ptr<List>& v);
+	static void Append(const SharedPtrVec<File>&, SharedPtrVec<File>&);
+	static SharedPtrVec<File> Files(const ValuePtr& v);
 }
 
 
@@ -184,49 +185,40 @@ const ValuePtr Target::underlyingFiles() const
 }
 
 
-
-static fabrique::SharedPtrVec<File> fabrique::Files(const shared_ptr<Build>& b)
+static void fabrique::Append(const SharedPtrVec<File>& source, SharedPtrVec<File>& dest)
 {
-	SharedPtrVec<File> files(b->outputs());
-	assert(not files.empty());
-
-	if (b->type().isFile())
-		assert(files.size() == 1);
-
-	return b->outputs();
+	dest.insert(dest.end(), source.begin(), source.end());
 }
 
-static fabrique::SharedPtrVec<File> fabrique::Files(const shared_ptr<List>& v)
+static SharedPtrVec<File> fabrique::Files(const ValuePtr& v)
 {
 	SharedPtrVec<File> files;
+	assert(v);
 
-	for (auto& element : *v)
+	if (auto file = dynamic_pointer_cast<File>(v))
 	{
-		assert(element);
+		files.push_back(file);
+	}
+	else if (auto build = dynamic_pointer_cast<Build>(v))
+	{
+		assert(not build->outputs().empty());
+		if (build->type().isFile())
+			assert(build->outputs().size() == 1);
 
-		if (auto file = dynamic_pointer_cast<File>(element))
-		{
-			files.push_back(file);
-		}
-		else if (auto build = dynamic_pointer_cast<Build>(element))
-		{
-			auto sub(Files(build));
-			files.insert(files.end(), sub.begin(), sub.end());
-		}
-		else if (auto target = dynamic_pointer_cast<Target>(element))
-		{
-			auto sub(Files(target->files()));
-			files.insert(files.end(), sub.begin(), sub.end());
-		}
-		else if (auto list = dynamic_pointer_cast<List>(element))
-		{
-			auto sub(Files(list));
-			files.insert(files.end(), sub.begin(), sub.end());
-		}
-		else
-		{
-			assert(false && "invalid list element");
-		}
+		Append(build->outputs(), files);
+	}
+	else if (auto list = dynamic_pointer_cast<List>(v))
+	{
+		for (const ValuePtr& element : *list)
+			Append(Files(element), files);
+	}
+	else if (auto target = dynamic_pointer_cast<Target>(v))
+	{
+		Append(Files(target->files()), files);
+	}
+	else
+	{
+		assert(false && "unhandled value type");
 	}
 
 	return files;
