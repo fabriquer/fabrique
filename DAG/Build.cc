@@ -34,7 +34,6 @@
 #include "DAG/List.h"
 #include "DAG/Parameter.h"
 #include "DAG/Rule.h"
-#include "DAG/Target.h"
 #include "DAG/Visitor.h"
 
 #include "Support/Bytestream.h"
@@ -100,6 +99,75 @@ Build* Build::Create(shared_ptr<Rule>& rule, SharedPtrMap<Value>& arguments,
 }
 
 
+bool Build::hasFields() const
+{
+	// We only pass field requests through to underlying files, not lists
+	// of files (they're not currently stored that way).
+	return type().isFile();
+}
+
+ValuePtr Build::field(const std::string& name) const
+{
+	assert(hasFields());
+	assert(out_.size() == 1);
+	assert(out_[0]->hasFields());
+
+	return out_[0]->field(name);
+}
+
+ValuePtr Build::Negate(const SourceRange& loc) const
+{
+	return outputValue()->Negate(loc);
+}
+
+ValuePtr Build::Add(ValuePtr& rhs) const
+{
+	return outputValue()->Add(rhs);
+}
+
+ValuePtr Build::PrefixWith(ValuePtr& rhs) const
+{
+	return outputValue()->PrefixWith(rhs);
+}
+
+ValuePtr Build::ScalarAdd(ValuePtr& rhs) const
+{
+	return outputValue()->ScalarAdd(rhs);
+}
+
+ValuePtr Build::And(ValuePtr& rhs) const
+{
+	return outputValue()->And(rhs);
+}
+
+ValuePtr Build::Or(ValuePtr& rhs) const
+{
+	return outputValue()->Or(rhs);
+}
+
+ValuePtr Build::Xor(ValuePtr& rhs) const
+{
+	return outputValue()->Xor(rhs);
+}
+
+ValuePtr Build::Equals(ValuePtr& rhs) const
+{
+	return outputValue()->Equals(rhs);
+}
+
+ValuePtr Build::outputValue() const
+{
+	if (type().isFile())
+	{
+		assert(out_.size() == 1);
+		return out_[0];
+	}
+
+	SourceRange src(*out_.front(), **(out_.end() - 1));
+	return ValuePtr { List::of(out_, src, type().context()) };
+}
+
+
 Build::Build(shared_ptr<Rule>& rule,
              SharedPtrVec<File>& inputs,
              SharedPtrVec<File>& outputs,
@@ -115,6 +183,8 @@ Build::Build(shared_ptr<Rule>& rule,
 
 	for (auto& f : out_)
 		assert(f);
+
+	assert(t.hasFiles());
 #endif
 }
 
@@ -194,10 +264,6 @@ void Build::AppendFiles(const ValuePtr& in,
 	else if (const shared_ptr<List>& list = dynamic_pointer_cast<List>(in))
 		for (const ValuePtr& value : *list)
 			AppendFiles(value, out, generated);
-
-	else if (const shared_ptr<Target>& t = dynamic_pointer_cast<Target>(in))
-		for (const ValuePtr& f : *t->files())
-			AppendFiles(f, out, generated);
 
 	else throw WrongTypeException("file|list[file]",
 	                              in->type(), in->source());

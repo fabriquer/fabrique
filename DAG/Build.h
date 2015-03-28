@@ -66,6 +66,18 @@ public:
 
 	const ValueMap& arguments() const { return args_; }
 
+	virtual bool hasFields() const override;
+	virtual ValuePtr field(const std::string& name) const override;
+
+	virtual ValuePtr Negate(const SourceRange& loc) const;
+	virtual ValuePtr Add(ValuePtr&) const;
+	virtual ValuePtr PrefixWith(ValuePtr&) const;
+	virtual ValuePtr ScalarAdd(ValuePtr&) const;
+	virtual ValuePtr And(ValuePtr&) const;
+	virtual ValuePtr Or(ValuePtr&) const;
+	virtual ValuePtr Xor(ValuePtr&) const;
+	virtual ValuePtr Equals(ValuePtr&) const;
+
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	void Accept(Visitor& v) const override;
 
@@ -79,6 +91,8 @@ private:
 
 	static void AppendFiles(const ValuePtr& in, SharedPtrVec<File>& out,
 	                        bool generated = false);
+
+	ValuePtr outputValue() const;
 
 	std::shared_ptr<Rule> rule_;
 	SharedPtrVec<File> in_;
