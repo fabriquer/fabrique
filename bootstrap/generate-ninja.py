@@ -47,7 +47,7 @@ cxx_srcs = {
 		'Build', 'Callable', 'DAG', 'DAGBuilder',
 		'File', 'Formatter', 'Function',
 		'List', 'Parameter', 'Primitive',
-		'Record', 'Rule', 'Target', 'TypeReference',
+		'Record', 'Rule', 'TypeReference',
                 'UndefinedValueException',
 		'Value', 'Visitor',
 	),
@@ -291,6 +291,7 @@ for (name, variables) in rules.items():
 bootstrap_args = [ pipes.quote(builddir) ]
 if args.cxxflags: bootstrap_args += [ '--cxxflags="%s"' % args.cxxflags ]
 if args.debug: bootstrap_args.append('--debug')
+if args.withtests: bootstrap_args.append('--withtests')
 
 out.write('''build build.ninja: rebuild %s
   args = %s
