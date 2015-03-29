@@ -44,7 +44,6 @@ class List;
 class Record;
 class Rule;
 class String;
-class Target;
 class TypeReference;
 
 
@@ -63,7 +62,6 @@ public:
 	virtual bool Visit(const Record&) = 0;
 	virtual bool Visit(const Rule&) = 0;
 	virtual bool Visit(const String&) = 0;
-	virtual bool Visit(const Target&) = 0;
 	virtual bool Visit(const TypeReference&) = 0;
 };
 

@@ -34,7 +34,6 @@
 #include "DAG/File.h"
 #include "DAG/Function.h"
 #include "DAG/Rule.h"
-#include "DAG/Target.h"
 #include "DAG/TypeReference.h"
 
 #include "Support/Bytestream.h"

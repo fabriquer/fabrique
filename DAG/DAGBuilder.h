@@ -53,7 +53,6 @@ class DAG;
 class File;
 class Parameter;
 class Rule;
-class Target;
 
 
 //! A object that builds @ref DAG nodes in a @ref DAGBuilder::Context.
@@ -130,12 +129,6 @@ public:
 	//! Create a @ref dag::Record.
 	ValuePtr Record(const std::vector<Record::Field>&, const Type&, SourceRange);
 
-	//! Create a @ref dag::Target using the current value name.
-	ValuePtr Target(const std::shared_ptr<class Build>&);
-	ValuePtr Target(const std::shared_ptr<class File>&);
-	ValuePtr Target(const std::shared_ptr<class List>&);
-	ValuePtr Target(const std::string& name, std::shared_ptr<class Target>);
-
 
 protected:
 	ValuePtr Rule(std::string name, std::string command,
@@ -150,7 +143,7 @@ protected:
 	SharedPtrVec<class Build> builds_;
 	SharedPtrMap<class Rule> rules_;
 	SharedPtrMap<class Value> variables_;
-	SharedPtrMap<class Target> targets_;
+	SharedPtrMap<class Value> targets_;
 
 };
 

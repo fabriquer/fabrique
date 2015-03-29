@@ -42,7 +42,6 @@
 #include "DAG/Parameter.h"
 #include "DAG/Primitive.h"
 #include "DAG/Rule.h"
-#include "DAG/Target.h"
 
 #include "Support/Arguments.h"
 #include "Support/Bytestream.h"
@@ -76,7 +75,7 @@ public:
 	             const SharedPtrVec<Build>& builds,
 	             const SharedPtrMap<Rule>& rules,
 	             const SharedPtrMap<Value>& variables,
-	             const SharedPtrMap<Target>& targets,
+	             const SharedPtrMap<Value>& targets,
 	             vector<BuildTarget>& topLevelTargets)
 		: buildroot_(buildroot), srcroot_(srcroot),
 		  files_(files), builds_(builds), rules_(rules), vars_(variables),
@@ -91,7 +90,7 @@ public:
 	const SharedPtrVec<Build>& builds() const override { return builds_; }
 	const SharedPtrMap<Rule>& rules() const override { return rules_; }
 	const SharedPtrMap<Value>& variables() const override { return vars_; }
-	const SharedPtrMap<Target>& targets() const override
+	const SharedPtrMap<Value>& targets() const override
 	{
 		return targets_;
 	}
@@ -109,7 +108,7 @@ private:
 	const SharedPtrVec<Build> builds_;
 	const SharedPtrMap<Rule> rules_;
 	const SharedPtrMap<Value> vars_;
-	const SharedPtrMap<Target> targets_;
+	const SharedPtrMap<Value> targets_;
 	const vector<BuildTarget> topLevelTargets_;
 };
 
@@ -129,7 +128,10 @@ DAGBuilder::Context::~Context()
 
 void DAGBuilder::Define(string name, ValuePtr v)
 {
-	variables_.emplace(name, v);
+	if (v->type().hasFiles())
+		targets_.emplace(name, v);
+	else
+		variables_.emplace(name, v);
 }
 
 
@@ -162,11 +164,9 @@ UniqPtr<DAG> DAGBuilder::dag(vector<string> topLevelTargets) const
 		auto j = targets_.find(filename);
 		if (j != targets_.end())
 		{
-			const List& outputs = *j->second->files();
-			if (outputs.size() == 1)
+			if (auto out = dynamic_pointer_cast<class File>(j->second))
 			{
-				auto& out = dynamic_cast<const dag::File&>(outputs[0]);
-				if (out.filename() == filename)
+				if (out->filename() == filename)
 					continue;
 			}
 		}
@@ -362,42 +362,4 @@ ValuePtr DAGBuilder::Record(const vector<Record::Field>& fields,
                             const Type& t, SourceRange source)
 {
 	return ValuePtr(Record::Create(fields, t, source));
-}
-
-
-ValuePtr DAGBuilder::Target(const shared_ptr<class Build>& b)
-{
-	const string fullName = ctx_.currentValueName();
-
-	shared_ptr<class Target> t(Target::Create(fullName, b));
-	targets_[fullName] = t;
-
-	return t;
-}
-
-ValuePtr DAGBuilder::Target(const shared_ptr<class File>& f)
-{
-	const string fullName = ctx_.currentValueName();
-
-	shared_ptr<class Target> t(Target::Create(fullName, f));
-	targets_[fullName] = t;
-
-	return t;
-}
-
-ValuePtr DAGBuilder::Target(const shared_ptr<class List>& l)
-{
-	const string fullName = ctx_.currentValueName();
-
-	shared_ptr<class Target> t(Target::Create(fullName, l));
-	targets_[fullName] = t;
-
-	return t;
-}
-
-
-ValuePtr DAGBuilder::Target(const string& name, shared_ptr<class Target> t)
-{
-	targets_[name] = t;
-	return t;
 }

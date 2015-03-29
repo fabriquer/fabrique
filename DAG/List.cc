@@ -30,7 +30,6 @@
  */
 
 #include "DAG/List.h"
-#include "DAG/Target.h"
 #include "DAG/Visitor.h"
 #include "Support/Bytestream.h"
 #include "Support/Join.h"

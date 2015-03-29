@@ -36,9 +36,9 @@ bin = link(objs, file('foo'));
 # CHECK-DAG: link:(list[file])=>file = cc $objects -o $bin
 # CHECK-DAG: lex:(file)=>file = $LEX -c++ --yyclass=$classname --outfile=$gen $src
 #
-# CHECK-DAG: gen:file = foo.c
+# CHECK-DAG: gen:file = lex { foo.yy => foo.c }
 # CHECK-DAG: objs:list[file] = [ foo.c.o bar.c.o baz.c.o ]
-# CHECK-DAG: bin:file = foo
+# CHECK-DAG: bin:file = link { foo.c.o bar.c.o baz.c.o => foo }
 #
 # CHECK-DAG: build: lex { foo.yy => foo.c }( classname = 'FooClass' )
 # CHECK-DAG: build: cc { foo.c => foo.c.o }

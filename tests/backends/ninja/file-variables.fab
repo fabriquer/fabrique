@@ -6,5 +6,5 @@
 # CHECK-DAG: foo = /usr/bin/cc
 foo = '/usr/bin/cc';
 
-# CHECK-DAG: bar = /usr/bin/cc
+# CHECK-DAG: build bar : phony /usr/bin/cc
 bar = file('/usr/bin/cc');

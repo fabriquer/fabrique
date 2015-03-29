@@ -38,7 +38,6 @@
 #include "DAG/List.h"
 #include "DAG/Primitive.h"
 #include "DAG/Rule.h"
-#include "DAG/Target.h"
 #include "DAG/TypeReference.h"
 #include "DAG/Value.h"
 
@@ -77,7 +76,6 @@ public:
 	string Format(const Record&);
 	string Format(const Rule&);
 	string Format(const String&);
-	string Format(const Target&);
 	string Format(const TypeReference&);
 
 	int replaceAll(string& s, const string& pattern, const string&);
@@ -413,10 +411,14 @@ string MakeFormatter::Format(const Boolean& b)
 	return (b.value() ? "true" : "false");
 }
 
-string MakeFormatter::Format(const Build&)
+string MakeFormatter::Format(const Build& b)
 {
-	assert(false && "called MakeFormatter::Format(Build&)");
-	return "";
+	vector<string> substrings;
+
+	for (const shared_ptr<File>& file : b.outputs())
+		substrings.push_back(Format(*file));
+
+	return fabrique::join(substrings, " ");
 }
 
 string MakeFormatter::Format(const File& f)
@@ -460,11 +462,6 @@ string MakeFormatter::Format(const Rule& rule)
 string MakeFormatter::Format(const String& s)
 {
 	return s.value();
-}
-
-string MakeFormatter::Format(const Target& t)
-{
-	return Format(*t.files());
 }
 
 string MakeFormatter::Format(const TypeReference& t)

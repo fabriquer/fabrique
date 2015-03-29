@@ -37,7 +37,6 @@
 #include "DAG/Primitive.h"
 #include "DAG/Record.h"
 #include "DAG/Rule.h"
-#include "DAG/Target.h"
 #include "DAG/TypeReference.h"
 #include "DAG/Value.h"
 
@@ -71,7 +70,6 @@ public:
 	string Format(const Record&);
 	string Format(const Rule&);
 	string Format(const String&);
-	string Format(const Target&);
 	string Format(const TypeReference&);
 };
 
@@ -255,11 +253,6 @@ string DotFormatter::Format(const Rule& rule)
 string DotFormatter::Format(const String& s)
 {
 	return "'" + s.value() + "'";
-}
-
-string DotFormatter::Format(const Target& t)
-{
-	return Format(*t.files());
 }
 
 string DotFormatter::Format(const TypeReference& t)

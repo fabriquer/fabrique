@@ -46,7 +46,6 @@ namespace dag {
 class Build;
 class File;
 class Rule;
-class Target;
 
 
 /**
@@ -62,7 +61,7 @@ public:
 	virtual const SharedPtrVec<Build>& builds() const = 0;
 	virtual const SharedPtrMap<Rule>& rules() const = 0;
 	virtual const SharedPtrMap<Value>& variables() const = 0;
-	virtual const SharedPtrMap<Target>& targets() const = 0;
+	virtual const SharedPtrMap<Value>& targets() const = 0;
 
 	typedef std::pair<std::string,ValuePtr> BuildTarget;
 

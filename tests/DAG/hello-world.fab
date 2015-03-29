@@ -13,7 +13,7 @@ link = action('cc ${objects} -o ${bin}'
 # CHECK-DAG: srcs:list[file] = [ hello.c world.c ]
 srcs = files(hello.c world.c);
 
-# CHECK-DAG: objs:list[file] = [ hello.c.o world.c.o ]
+# CHECK-DAG: objs:list[file] = [ cc { hello.c => hello.c.o }( ) cc { world.c => world.c.o }( ) ]
 objs = foreach src <- srcs
 	cc(src, obj = src + '.o')
 	;

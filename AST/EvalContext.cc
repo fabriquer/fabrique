@@ -42,7 +42,6 @@
 #include "DAG/Parameter.h"
 #include "DAG/Primitive.h"
 #include "DAG/Rule.h"
-#include "DAG/Target.h"
 
 #include "Support/Arguments.h"
 #include "Support/Bytestream.h"
@@ -379,10 +378,4 @@ ValuePtr EvalContext::Function(const dag::Function::Evaluator fn,
                                const FunctionType& type, SourceRange source)
 {
 	return builder_.Function(fn, CopyCurrentScope(), params, type, source);
-}
-
-
-void EvalContext::Alias(const shared_ptr<dag::Target>& t)
-{
-	builder_.Target(fullyQualifiedName(), t);
 }

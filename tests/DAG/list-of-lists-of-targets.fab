@@ -13,5 +13,5 @@ objs = foreach src <- srcs
 # `all` should appear as a target (flat list of files) rather than a
 # regular variable.
 #
-# CHECK-DAG: all:list[list[file]] = [ hello.c world.c hello.c.o world.c.o ]
+# CHECK-DAG: all:list[list[file]] = [ [ hello.c world.c ] [ cc { hello.c => hello.c.o
 all:list[list[file]] = [ srcs objs ];

@@ -35,7 +35,6 @@
 #include "DAG/Build.h"
 #include "DAG/File.h"
 #include "DAG/List.h"
-#include "DAG/Target.h"
 #include "Support/Bytestream.h"
 #include "Types/Type.h"
 #include "Types/TypeError.h"
@@ -112,27 +111,6 @@ dag::ValuePtr Value::evaluate(EvalContext& ctx) const
 
 	val->type().CheckSubtype(type(), val->source());
 
-	//
-	// If the right-hand side is a build, file or list of files,
-	// convert to a named target (files and builds are already in the DAG).
-	//
-	if (auto build = std::dynamic_pointer_cast<dag::Build>(val))
-		val = ctx.builder().Target(build);
-
-	else if (auto file = std::dynamic_pointer_cast<dag::File>(val))
-		val = ctx.builder().Target(file);
-
-	else if (auto list = std::dynamic_pointer_cast<dag::List>(val))
-	{
-		if (list->type().hasFiles())
-			val = ctx.builder().Target(list);
-	}
-	else if (auto target = std::dynamic_pointer_cast<dag::Target>(val))
-	{
-		ctx.Alias(target);
-	}
-
-	assert(val);
 	ctx.Define(valueName, val);
 
 	return val;

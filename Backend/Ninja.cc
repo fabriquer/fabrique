@@ -40,7 +40,6 @@
 #include "DAG/Primitive.h"
 #include "DAG/Record.h"
 #include "DAG/Rule.h"
-#include "DAG/Target.h"
 #include "DAG/TypeReference.h"
 
 #include "Support/Bytestream.h"
@@ -74,7 +73,6 @@ public:
 	string Format(const Record&);
 	string Format(const Rule&);
 	string Format(const String&);
-	string Format(const Target&);
 	string Format(const TypeReference&);
 };
 
@@ -257,10 +255,14 @@ string NinjaFormatter::Format(const Boolean& b)
 	return b.value() ? "true" : "false";
 }
 
-string NinjaFormatter::Format(const Build&)
+string NinjaFormatter::Format(const Build& b)
 {
-	assert(false && "called NinjaFormatter(const Build&)");
-	return "<ERROR: NinjaFormatter::Format(const Build&) should never be called>";
+	std::vector<string> substrings;
+
+	for (const shared_ptr<File>& f : b.outputs())
+		substrings.push_back(Format(*f));
+
+	return fabrique::join(substrings, " ");
 }
 
 string NinjaFormatter::Format(const File& f)
@@ -304,11 +306,6 @@ string NinjaFormatter::Format(const Rule& rule)
 string NinjaFormatter::Format(const String& s)
 {
 	return s.value();
-}
-
-string NinjaFormatter::Format(const Target& t)
-{
-	return Format(*t.files());
 }
 
 string NinjaFormatter::Format(const TypeReference& t)
