@@ -46,16 +46,17 @@ using std::shared_ptr;
 using std::string;
 
 
-File* File::Create(string fullPath, ValueMap attrs, const FileType& t, SourceRange src)
+File* File::Create(string fullPath, ValueMap attrs, const FileType& t,
+                   SourceRange src, bool generated)
 {
 	const string filename(FilenameComponent(fullPath));
 	const string subdir(DirectoryOf(fullPath));
 
-	return Create(subdir, filename, attrs, t, src);
+	return Create(subdir, filename, attrs, t, src, generated);
 }
 
 File* File::Create(string dir, string path, ValueMap attrs,
-                   const FileType& type, SourceRange src)
+                   const FileType& type, SourceRange src, bool generated)
 {
 	const string filename(FilenameComponent(path));
 	const string subdir(DirectoryOf(path));
@@ -64,7 +65,6 @@ File* File::Create(string dir, string path, ValueMap attrs,
 			? subdir
 			: JoinPath(dir, subdir));
 
-	bool generated = false;
 	auto i = attrs.find("generated");
 	if (i != attrs.end())
 	{
@@ -204,7 +204,8 @@ ValuePtr File::Add(ValuePtr& suffix) const
 
 	shared_ptr<File> f(
 		new File(filename, subdir, absolute_,
-		         attributes_, type(), SourceRange::Over(this, suffix)));
+		         attributes_, type(), SourceRange::Over(this, suffix),
+		         generated_));
 
 	return f;
 }
@@ -214,7 +215,8 @@ ValuePtr File::PrefixWith(ValuePtr& prefix) const
 {
 	shared_ptr<File> f(
 		new File(prefix->str() + filename_, subdirectory_, absolute_,
-		         attributes_, type(), SourceRange::Over(prefix, this)));
+		         attributes_, type(), SourceRange::Over(prefix, this),
+		         generated_));
 
 	return f;
 }

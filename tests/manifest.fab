@@ -1,5 +1,5 @@
 #
-# Generated at Sat 28 Mar 2015 22:41:10 NDT by regenerate-manifest.sh
+# Generated at Mon Mar 30 10:24:34 NDT 2015 by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -29,6 +29,7 @@ all_files = files(
 ./DAG/argument-type-error-location.fab
 ./DAG/build-attributes.fab
 ./DAG/build-with-foreach.fab
+./DAG/builddir.fab
 ./DAG/builtins.fab
 ./DAG/compile-arguments.fab
 ./DAG/compile-object.fab
@@ -99,6 +100,7 @@ all_files = files(
 ./Parsing/actions.fab
 ./Parsing/add-to-nil-list.fab
 ./Parsing/args-at-module-scope.fab
+./Parsing/builddir.fab
 ./Parsing/builtins.fab
 ./Parsing/calling-the-uncallable.fab
 ./Parsing/compound-expr.fab

@@ -102,13 +102,14 @@ public:
 
 	//! Create a @ref dag::File from a path.
 	ValuePtr File(std::string fullPath, const ValueMap& attributes,
-	              const FileType&,
-	              const SourceRange& src = SourceRange::None());
+	              const FileType&, const SourceRange& src = SourceRange::None(),
+	              bool generated = false);
 
 	//! Create a @ref dag::File from a subdirectory and a filename.
 	ValuePtr File(std::string subdir, std::string filename,
 	              const ValueMap& attributes, const FileType&,
-	              const SourceRange& src = SourceRange::None());
+	              const SourceRange& src = SourceRange::None(),
+	              bool generated = false);
 
 	//! Define a @ref dag::Function.
 	ValuePtr Function(const Function::Evaluator, ValueMap scope,

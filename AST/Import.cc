@@ -105,10 +105,15 @@ dag::ValuePtr Import::evaluate(EvalContext& ctx) const
 {
 	auto scope(ctx.EnterScope("import()"));
 
+	dag::ValuePtr builddir(
+		ctx.builder().File(subdirectory(), dag::ValueMap(),
+	                           type().context().fileType(), source(), true));
+
 	dag::ValuePtr subdir(
 		ctx.builder().File(subdirectory(), dag::ValueMap(),
 	                           type().context().fileType(), source()));
 
+	scope.set(ast::BuildDirectory, builddir);
 	scope.set(ast::Subdirectory, subdir);
 
 	// Gather arguments into an 'args' record.

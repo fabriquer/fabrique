@@ -6,7 +6,7 @@
 # CHECK-DAG: with_replacement_subdir:file = replacement/with_replacement_subdir.c
 with_replacement_subdir = file('with_replacement_subdir.c', subdir = 'replacement');
 
-# CHECK-DAG: submodule:record[x:file] = {
+# CHECK-DAG: submodule:record[x:file, y:file] = {
 submodule = import('Inputs/subdir-test.fab');
 
 # CHECK-DAG: foo:file = Inputs

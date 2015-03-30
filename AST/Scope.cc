@@ -74,8 +74,8 @@ const Type& Scope::Lookup(const Identifier& id) const
 	if ((name == ast::Arguments) and arguments_.valid())
 		return arguments_;
 
-	// Another special case: 'subdir' is a file.
-	if (name == ast::Subdirectory)
+	// More special cases: 'builddir' and 'subdir' are files.
+	if (name == ast::BuildDirectory or name == ast::Subdirectory)
 		return arguments_.context().fileType();
 
 	auto i = symbols_.find(name);

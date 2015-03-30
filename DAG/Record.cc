@@ -50,7 +50,8 @@ Record* Record::Create(const FieldVec& fields, const Type& t, SourceRange src)
 	for (const Field& value : fields)
 	{
 		const string name = value.first;
-		if (name != ast::Arguments and name != ast::Subdirectory)
+		if (name != ast::Arguments and name != ast::BuildDirectory
+		    and name != ast::Subdirectory)
 			assert(typeFields.find(name) != typeFields.end());
 
 		assert(value.second);

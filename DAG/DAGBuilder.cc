@@ -296,16 +296,16 @@ DAGBuilder::Build(shared_ptr<class Rule> rule, ValueMap arguments,
 
 
 ValuePtr DAGBuilder::File(string fullPath, const ValueMap& attributes,
-                         const FileType& t, const SourceRange& src)
+                         const FileType& t, const SourceRange& src, bool generated)
 {
-	files_.emplace_back(File::Create(fullPath, attributes, t, src));
+	files_.emplace_back(File::Create(fullPath, attributes, t, src, generated));
 	return files_.back();
 }
 
 ValuePtr DAGBuilder::File(string subdir, string name, const ValueMap& attributes,
-                         const FileType& t, const SourceRange& src)
+                          const FileType& t, const SourceRange& src, bool generated)
 {
-	files_.emplace_back(File::Create(subdir, name, attributes, t, src));
+	files_.emplace_back(File::Create(subdir, name, attributes, t, src, generated));
 	return files_.back();
 }
 

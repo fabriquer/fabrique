@@ -40,6 +40,7 @@ namespace ast {
 
 static const char Arguments[] = "args";
 static const char Basename[] = "basename";
+static const char BuildDirectory[] = "builddir";
 static const char Extension[] = "extension";
 static const char FileName[] = "filename";
 static const char FullName[] = "fullname";
