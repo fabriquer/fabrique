@@ -11,3 +11,14 @@ compile = action('$CC -c $src -D NAME=\"${name}\" -o $obj'
 # CHECK-DAG: src = ${srcroot}/a.c
 # CHECK-DAG: name = foo
 obj = compile(file('a.c'), obj = file('a.o'));
+
+compile2 = function(src:file, name:string = 'undefined')
+{
+	compile(src, src + '.o', name)
+};
+
+# CHECK: build b.c.o : compile ${srcroot}/b.c
+# CHECK-DAG: obj = b.c.o
+# CHECK-DAG: src = ${srcroot}/b.c
+# CHECK-DAG: name = bar
+obj2 = compile2(file('b.c'), name = 'bar');
