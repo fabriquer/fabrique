@@ -40,8 +40,6 @@ using std::string;
 
 string Formatter::Format(const Value& v)
 {
-	assert(&v != nullptr);
-
 	v.Accept(*this);
 	assert(not values_.empty());
 
