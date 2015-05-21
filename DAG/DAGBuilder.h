@@ -132,6 +132,8 @@ public:
 
 
 protected:
+	std::shared_ptr<class Rule> MakeDirectory() const;
+
 	ValuePtr Rule(std::string name, std::string command,
 	              const ValueMap& arguments,
 	              const SharedPtrVec<Parameter>& parameters, const Type&,

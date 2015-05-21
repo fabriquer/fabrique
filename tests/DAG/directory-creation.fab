@@ -1,0 +1,14 @@
+#
+# RUN: %fab --print-dag --format=null %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK-NOT: build: {{.*}} => /usr/bin
+compiler = file('/usr/bin/cc');
+
+cc = action('${CC} -c $src -o $obj'
+            <- src:file[in], obj:file[out], CC:file[in] = compiler);
+
+# CHECK-DAG: build: {{.*}} => foo/bar/baz.o
+# CHECK-DAG: build: mkdir { {{.*}}=> foo/bar }
+obj = cc(file('foo/bar/baz.c'), obj = file('foo/bar/baz.o'));

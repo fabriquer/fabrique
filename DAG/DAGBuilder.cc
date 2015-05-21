@@ -56,6 +56,7 @@
 #include "Types/TypeError.h"
 
 #include <cassert>
+#include <set>
 
 using namespace fabrique;
 using namespace fabrique::dag;
@@ -64,6 +65,8 @@ using std::dynamic_pointer_cast;
 using std::shared_ptr;
 using std::string;
 using std::vector;
+
+using FileVec = SharedPtrVec<class File>;
 
 namespace {
 
@@ -138,16 +141,55 @@ void DAGBuilder::Define(string name, ValuePtr v)
 UniqPtr<DAG> DAGBuilder::dag(vector<string> topLevelTargets) const
 {
 	//
+	// If we create files in output directories, we should also generate
+	// rules to make those directories.
+	//
+	// Many tools (e.g., compilers) can create the output directories themselves,
+	// but sometimes the build tool itself wants to know where the directories
+	// come from (e.g., when a build depends on generated include directories).
+	//
+	std::map<string,shared_ptr<class File>> directories;
+	SharedPtrVec<class Build> builds = builds_;
+	shared_ptr<class Rule> mkdir = MakeDirectory();
+
+	for (auto& file : files_)
+	{
+		assert(file);
+
+		if (not file->generated())
+			continue;
+
+		const string dirname = file->directory();
+		if (dirname.empty())
+			continue;
+
+		shared_ptr<class File>& dir = directories[dirname];
+		if (not dir)
+		{
+			directories[dirname].reset(
+				File::Create(dirname, ValueMap(), ctx_.types().fileType(),
+				             SourceRange::None(), true));
+		}
+
+		ValueMap buildArgs;
+		buildArgs["directory"] = dir;
+		builds.emplace_back(Build::Create(mkdir, buildArgs, SourceRange::None()));
+	}
+
+	//
 	// Ensure all files are unique.
 	//
-	SharedPtrVec<class File> f = files_;
-	std::sort(f.begin(), f.end(), File::LessThan);
-	f.erase(std::unique(f.begin(), f.end(), File::Equals), f.end());
+	SharedPtrVec<class File> files = files_;
+	for (auto d : directories)
+		files.push_back(d.second);
+
+	std::sort(files.begin(), files.end(), File::LessThan);
+	files.erase(std::unique(files.begin(), files.end(), File::Equals), files.end());
 
 	//
 	// Check for target/filename conflicts.
 	//
-	for (auto& file : f)
+	for (auto& file : files)
 	{
 		const string& filename = file->filename();
 
@@ -189,7 +231,7 @@ UniqPtr<DAG> DAGBuilder::dag(vector<string> topLevelTargets) const
 
 
 	return UniqPtr<DAG>(new ImmutableDAG(ctx_.buildroot(), ctx_.srcroot(),
-		f, builds_, rules_, variables_, targets_, top));
+		files, builds, rules_, variables_, targets_, top));
 }
 
 
@@ -362,4 +404,23 @@ ValuePtr DAGBuilder::Record(const vector<Record::Field>& fields,
                             const Type& t, SourceRange source)
 {
 	return ValuePtr(Record::Create(fields, t, source));
+}
+
+
+shared_ptr<class Rule> DAGBuilder::MakeDirectory() const
+{
+	TypeContext& ctx = ctx_.types();
+	const Type& str = ctx.stringType();
+	const Type& file = ctx.outputFileType();
+	const FunctionType& type = ctx.functionType(str, file);
+
+	ValueMap arguments;
+	arguments["description"].reset(new class String("Creating ${directory}", str));
+
+	SharedPtrVec<class Parameter> parameters;
+	parameters.emplace_back(new class Parameter("directory", file, ValuePtr()));
+
+	return shared_ptr<class Rule>(
+		Rule::Create("mkdir", CreateDirCommand("${directory}"),
+			arguments, parameters, type));
 }
