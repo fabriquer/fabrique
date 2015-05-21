@@ -38,8 +38,7 @@ using namespace fabrique::dag;
 using std::shared_ptr;
 using std::string;
 
-Parameter::Parameter(const string& name, const Type& t,
-                     ValuePtr v, const SourceRange& src)
+Parameter::Parameter(string name, const Type& t, ValuePtr v, const SourceRange& src)
 	: HasSource(src), Typed(t), name_(name), defaultValue_(v)
 {
 }
