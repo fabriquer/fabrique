@@ -100,6 +100,8 @@ private:
 	ValueMap attributes_;
 };
 
+typedef std::vector<std::shared_ptr<File>> FileVec;
+
 } // namespace dag
 } // namespace fabrique
 

@@ -33,6 +33,7 @@
 #define DAG_BUILD_H
 
 #include "DAG/DAG.h"
+#include "DAG/File.h"
 #include "DAG/Value.h"
 
 #include <memory>
@@ -42,7 +43,6 @@
 namespace fabrique {
 namespace dag {
 
-class File;
 class Rule;
 
 
@@ -52,8 +52,6 @@ class Rule;
 class Build : public Value
 {
 public:
-	typedef std::vector<std::shared_ptr<File>> FileVec;
-
 	static Build* Create(std::shared_ptr<Rule>&, SharedPtrMap<Value>& args,
 	                     const SourceRange&);
 

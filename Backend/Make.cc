@@ -79,7 +79,7 @@ public:
 	string Format(const TypeReference&);
 
 	int replaceAll(string& s, const string& pattern, const string&);
-	int replaceAll(string& s, const string& pattern, const Build::FileVec&);
+	int replaceAll(string& s, const string& pattern, const FileVec&);
 };
 
 }
@@ -251,7 +251,7 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out, ErrorReport::Rep
 		// a pseudo-target that points to all outputs.
 		//
 
-		Build::FileVec outputs = build.outputs();
+		FileVec outputs = build.outputs();
 		if (outputs.size() > 1)
 		{
 			const string pseudoName =
@@ -392,7 +392,7 @@ int MakeFormatter::replaceAll(string& haystack, const string& needle,
 }
 
 int MakeFormatter::replaceAll(string& haystack, const string& pattern,
-                              const Build::FileVec& files)
+                              const FileVec& files)
 {
 	std::ostringstream oss;
 
