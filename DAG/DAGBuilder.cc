@@ -150,6 +150,7 @@ UniqPtr<DAG> DAGBuilder::dag(vector<string> topLevelTargets) const
 	//
 	std::map<string,shared_ptr<class File>> directories;
 	SharedPtrVec<class Build> builds = builds_;
+	SharedPtrMap<class Rule> rules = rules_;
 	shared_ptr<class Rule> mkdir = MakeDirectory();
 
 	for (auto& file : files_)
@@ -179,6 +180,9 @@ UniqPtr<DAG> DAGBuilder::dag(vector<string> topLevelTargets) const
 	//
 	// Ensure all files are unique.
 	//
+	if (not directories.empty())
+		rules["mkdir"] = mkdir;
+
 	SharedPtrVec<class File> files = files_;
 	for (auto d : directories)
 		files.push_back(d.second);
@@ -231,7 +235,7 @@ UniqPtr<DAG> DAGBuilder::dag(vector<string> topLevelTargets) const
 
 
 	return UniqPtr<DAG>(new ImmutableDAG(ctx_.buildroot(), ctx_.srcroot(),
-		files, builds, rules_, variables_, targets_, top));
+		files, builds, rules, variables_, targets_, top));
 }
 
 
