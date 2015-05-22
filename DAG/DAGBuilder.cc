@@ -170,11 +170,12 @@ UniqPtr<DAG> DAGBuilder::dag(vector<string> topLevelTargets) const
 			directories[dirname].reset(
 				File::Create(dirname, ValueMap(), ctx_.types().fileType(),
 				             SourceRange::None(), true));
-		}
 
-		ValueMap buildArgs;
-		buildArgs["directory"] = dir;
-		builds.emplace_back(Build::Create(mkdir, buildArgs, SourceRange::None()));
+			ValueMap buildArgs;
+			buildArgs["directory"] = dir;
+			builds.emplace_back(
+				Build::Create(mkdir, buildArgs, SourceRange::None()));
+		}
 	}
 
 	//
