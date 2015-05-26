@@ -88,7 +88,8 @@ class Which : public plugin::Plugin
 	}
 
 	ValuePtr FindExecutable(const ValueMap& /*scope*/, const ValueMap& args,
-	                        DAGBuilder& builder, SourceRange src) const;
+	                        vector<string> extraPaths, DAGBuilder& builder,
+	                        SourceRange src) const;
 
 	ValuePtr FindFile(const ValueMap& /*scope*/, const ValueMap& args,
 	                  DAGBuilder& builder, SourceRange src) const;
@@ -129,11 +130,29 @@ UniqPtr<Plugin> Which::Factory::Instantiate(TypeContext& ctx) const
 
 shared_ptr<Record> Which::Create(DAGBuilder& builder, const ValueMap& args) const
 {
-	// TODO: interpret the 'path' argument
+	vector<string> extraPaths;
+
 	for (auto a : args)
 	{
-		if (a.first != "path")
-			throw SemanticException("unknown argument", a.second->source());
+		if (a.first == "path")
+		{
+			ValuePtr paths = a.second;
+			const Type& t = paths->type();
+			SourceRange src = a.second->source();
+			t.CheckSubtype(Type::ListOf(t.context().fileType(), src), src);
+
+			auto list = std::dynamic_pointer_cast<List>(paths);
+
+			for (auto f : *list)
+			{
+				auto file = std::dynamic_pointer_cast<File>(f);
+				extraPaths.push_back(file->fullName());
+			}
+
+			continue;
+		}
+
+		throw SemanticException("unknown argument", a.second->source());
 	}
 
 	const ValueMap scope;
@@ -149,7 +168,8 @@ shared_ptr<Record> Which::Create(DAGBuilder& builder, const ValueMap& args) cons
 		{
 			ExecutableFnName,
 			builder.Function(
-				std::bind(&Which::FindExecutable, this, _1, _2, _3, _4),
+				std::bind(&Which::FindExecutable,
+				          this, _1, _2, extraPaths, _3, _4),
 				scope, name, executable_)
 		},
 		{
@@ -192,11 +212,13 @@ ValuePtr Which::FindFile(const ValueMap& /*scope*/, const ValueMap& args,
 
 
 ValuePtr Which::FindExecutable(const ValueMap& /*scope*/, const ValueMap& args,
-                               DAGBuilder& builder, SourceRange src) const
+                               vector<string> extraPaths, DAGBuilder& builder,
+                               SourceRange src) const
 {
 	const string filename = args.find(FileName)->second->str();
 
-	return builder.File(fabrique::FindExecutable(filename), ValueMap(), file_, src);
+	return builder.File(fabrique::FindExecutable(filename, extraPaths),
+	                    ValueMap(), file_, src);
 }
 
 

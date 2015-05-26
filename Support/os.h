@@ -97,8 +97,10 @@ std::string FileExtension(std::string path);
 //! Find the non-directory component of a path.
 std::string FilenameComponent(std::string pathIncludingDirectory);
 
-//! Search the current PATH for an executable file.
-std::string FindExecutable(std::string name, MissingFileReporter report = FileNotFound);
+//! Search the current PATH (as well as @b extraPaths) for an executable file.
+std::string FindExecutable(std::string name,
+	std::vector<std::string> extraPaths = std::vector<std::string>(),
+	MissingFileReporter report = FileNotFound);
 
 /**
  * Find a file named @a filename within a set of @a directories.

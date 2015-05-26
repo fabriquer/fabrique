@@ -232,13 +232,17 @@ string fabrique::FileNotFound(string name, const vector<string>& searchPaths)
 }
 
 
-string fabrique::FindExecutable(string name, MissingFileReporter report)
+string fabrique::FindExecutable(string name, vector<string> paths,
+                                MissingFileReporter report)
 {
 	const char *path = getenv("PATH");
 	if (not path)
 		throw PosixError("error in getenv('PATH')");
 
-	return FindFile(name, Split(path, PathDelimiter), FileIsExecutable, report);
+	vector<string> systemPath = Split(path, PathDelimiter);
+	paths.insert(paths.end(), systemPath.begin(), systemPath.end());
+
+	return FindFile(name, paths, FileIsExecutable, report);
 }
 
 
