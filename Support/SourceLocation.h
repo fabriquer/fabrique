@@ -99,6 +99,27 @@ public:
 		return SourceRange(begin.begin, end.end);
 	}
 
+	//! Create a range over a map of @ref fabrique::HasSource objects.
+	template<class T>
+	static SourceRange Over(const T& values)
+	{
+		SourceLocation begin, end;
+
+		for (auto i : values)
+		{
+			const SourceLocation& b = i.second->source().begin;
+			const SourceLocation& e = i.second->source().end;
+
+			if (not begin or b < begin)
+				begin = b;
+
+			if (not end or e > end)
+				end = e;
+		}
+
+		return SourceRange(begin, end);
+	}
+
 	SourceRange(const SourceLocation& begin, const SourceLocation& end);
 	SourceRange(const SourceRange& begin, const SourceRange& end);
 	SourceRange(const HasSource& begin, const HasSource& end);

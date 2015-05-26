@@ -59,21 +59,7 @@ Record* Record::Create(const ValueMap& fields, const Type& t, SourceRange src)
 
 	if (not src and not fields.empty())
 	{
-		SourceLocation begin, end;
-
-		for (auto f : fields)
-		{
-			const SourceLocation& b = f.second->source().begin;
-			const SourceLocation& e = f.second->source().end;
-
-			if (not begin or b < begin)
-				begin = b;
-
-			if (not end or e > end)
-				end = e;
-		}
-
-		src = SourceRange(begin, end);
+		src = SourceRange::Over(fields);
 	}
 
 	return new Record(fields, t, src);
