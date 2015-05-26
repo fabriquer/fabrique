@@ -47,20 +47,16 @@ namespace dag {
 class Record : public Value
 {
 public:
-	// TODO: don't promise anything about ordering in the layout
-	typedef std::pair<std::string,ValuePtr> Field;
-	typedef std::vector<Field> FieldVec;
-
 	//! Create a record from an (optionally empty) vector of fields.
-	static Record* Create(const FieldVec&, const Type&, SourceRange);
+	static Record* Create(const ValueMap&, const Type&, SourceRange);
 
 	//! Create a record from a non-empty vector of fields.
-	static Record* Create(const FieldVec&, SourceRange);
+	static Record* Create(const ValueMap&, SourceRange);
 
 	virtual ~Record();
 
 	virtual bool hasFields() const override { return true; }
-	FieldVec fields() const { return fields_; }
+	ValueMap fields() const { return fields_; }
 	virtual ValuePtr field(const std::string& name) const override;
 	ValuePtr operator[] (const std::string& name) const
 	{
@@ -71,9 +67,9 @@ public:
 	void Accept(Visitor&) const override;
 
 private:
-	Record(const FieldVec&, const Type&, SourceRange);
+	Record(const ValueMap&, const Type&, SourceRange);
 
-	const FieldVec fields_;
+	const ValueMap fields_;
 };
 
 } // namespace dag

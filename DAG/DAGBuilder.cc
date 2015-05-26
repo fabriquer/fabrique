@@ -405,7 +405,7 @@ ValuePtr DAGBuilder::String(const string& s, SourceRange src)
 }
 
 
-ValuePtr DAGBuilder::Record(const vector<Record::Field>& fields,
+ValuePtr DAGBuilder::Record(const ValueMap& fields,
                             const Type& t, SourceRange source)
 {
 	return ValuePtr(Record::Create(fields, t, source));

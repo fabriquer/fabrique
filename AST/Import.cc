@@ -117,7 +117,7 @@ dag::ValuePtr Import::evaluate(EvalContext& ctx) const
 	scope.set(ast::Subdirectory, subdir);
 
 	// Gather arguments into an 'args' record.
-	std::vector<dag::Record::Field> args;
+	dag::ValueMap args;
 	for (const UniqPtr<ast::Argument>& a : arguments())
 	{
 		assert(a->hasName());
@@ -125,7 +125,7 @@ dag::ValuePtr Import::evaluate(EvalContext& ctx) const
 		const std::string& argName = a->getName().name();
 		dag::ValuePtr value = a->evaluate(ctx);
 
-		args.emplace_back(argName, value);
+		args[argName] = value;
 	}
 
 	dag::DAGBuilder builder(ctx.builder());
@@ -140,11 +140,11 @@ dag::ValuePtr Import::evaluate(EvalContext& ctx) const
 	for (const UniqPtr<ast::Value>& v : this->scope().values())
 		v->evaluate(ctx);
 
-	std::vector<dag::Record::Field> fields;
+	dag::ValueMap fields;
 	Type::NamedTypeVec types;
 	for (auto& i : scope.leave())
 	{
-		fields.emplace_back(i.first, i.second);
+		fields[i.first] = i.second;
 		types.emplace_back(i.first, i.second->type());
 	}
 

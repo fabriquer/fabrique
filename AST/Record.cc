@@ -82,12 +82,10 @@ dag::ValuePtr Record::evaluate(EvalContext& ctx) const
 {
 	auto instantiationScope(ctx.EnterScope("record"));
 
-	std::vector<dag::Record::Field> fields;
+	dag::ValueMap fields;
 
 	for (auto& field : scope().values())
-		fields.emplace_back(
-			field->name().name(),
-			field->evaluate(ctx));
+		fields[field->name().name()] = field->evaluate(ctx);
 
 	return ctx.builder().Record(fields, type(), source());
 }

@@ -43,11 +43,11 @@ using std::string;
 using std::vector;
 
 
-Record* Record::Create(const FieldVec& fields, const Type& t, SourceRange src)
+Record* Record::Create(const ValueMap& fields, const Type& t, SourceRange src)
 {
 	assert(fields.size() >= t.fields().size());
 	const RecordType::TypeMap typeFields = t.fields();
-	for (const Field& value : fields)
+	for (auto value : fields)
 	{
 		const string name = value.first;
 		if (name != ast::Arguments and name != ast::BuildDirectory
@@ -59,8 +59,19 @@ Record* Record::Create(const FieldVec& fields, const Type& t, SourceRange src)
 
 	if (not src and not fields.empty())
 	{
-		SourceRange begin = fields.front().second->source();
-		SourceRange end = (--fields.end())->second->source();
+		SourceLocation begin, end;
+
+		for (auto f : fields)
+		{
+			const SourceLocation& b = f.second->source().begin;
+			const SourceLocation& e = f.second->source().end;
+
+			if (not begin or b < begin)
+				begin = b;
+
+			if (not end or e > end)
+				end = e;
+		}
 
 		src = SourceRange(begin, end);
 	}
@@ -69,30 +80,21 @@ Record* Record::Create(const FieldVec& fields, const Type& t, SourceRange src)
 }
 
 
-Record* Record::Create(const FieldVec& fields, SourceRange src)
+Record* Record::Create(const ValueMap& fields, SourceRange src)
 {
-	assert(not fields.empty());
-
-	if (not src)
-	{
-		SourceRange begin = fields.front().second->source();
-		SourceRange end = (--fields.end())->second->source();
-
-		src = SourceRange(begin, end);
-	}
-
 	RecordType::NamedTypeVec types;
 	for (auto& v : fields)
 		types.emplace_back(v.first, v.second->type());
 
-	TypeContext& ctx = fields.front().second->type().context();
+	assert(not fields.empty());
+	TypeContext& ctx = fields.begin()->second->type().context();
 	const Type& type = *RecordType::Create(types, ctx);
 
 	return Create(fields, type, src);
 }
 
 
-Record::Record(const FieldVec& fields, const Type& t, SourceRange src)
+Record::Record(const ValueMap& fields, const Type& t, SourceRange src)
 	: Value(t, src), fields_(fields)
 {
 }

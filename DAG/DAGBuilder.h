@@ -128,7 +128,7 @@ public:
 	ValuePtr String(const std::string&, SourceRange = SourceRange::None());
 
 	//! Create a @ref dag::Record.
-	ValuePtr Record(const std::vector<Record::Field>&, const Type&, SourceRange);
+	ValuePtr Record(const ValueMap&, const Type&, SourceRange);
 
 
 protected:

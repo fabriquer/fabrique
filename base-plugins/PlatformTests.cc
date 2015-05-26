@@ -125,12 +125,12 @@ shared_ptr<Record> PlatformTests::Create(DAGBuilder& builder) const
 	const ValueMap scope;
 	static const SourceRange src = SourceRange::None();
 
-	vector<Record::Field> fields;
+	ValueMap fields;
 
 	for (const char *platform : Platforms)
 	{
 		const bool isThisPlatform = (platform::Name == platform);
-		fields.emplace_back(platform, builder.Bool(isThisPlatform, src));
+		fields[platform] = builder.Bool(isThisPlatform, src);
 	}
 
 	auto result = std::dynamic_pointer_cast<Record>(
