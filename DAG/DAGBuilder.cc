@@ -160,21 +160,27 @@ UniqPtr<DAG> DAGBuilder::dag(vector<string> topLevelTargets) const
 		if (not file->generated())
 			continue;
 
-		const string dirname = file->directory();
-		if (dirname.empty())
-			continue;
-
-		shared_ptr<class File>& dir = directories[dirname];
-		if (not dir)
+		string dirname = file->directory();
+		while (not dirname.empty() and dirname != ".")
 		{
-			directories[dirname].reset(
-				File::Create(dirname, ValueMap(), ctx_.types().fileType(),
-				             SourceRange::None(), true));
+			shared_ptr<class File>& dir = directories[dirname];
+			if (not dir)
+			{
+				dir.reset(
+					File::Create(dirname, ValueMap(),
+					             ctx_.types().fileType(),
+					             SourceRange::None(), true));
 
-			ValueMap buildArgs;
-			buildArgs["directory"] = dir;
-			builds.emplace_back(
-				Build::Create(mkdir, buildArgs, SourceRange::None()));
+				directories[dirname] = dir;
+
+				ValueMap buildArgs;
+				buildArgs["directory"] = dir;
+				builds.emplace_back(
+					Build::Create(mkdir, buildArgs,
+					              SourceRange::None()));
+			}
+
+			dirname = dir->directory();
 		}
 	}
 

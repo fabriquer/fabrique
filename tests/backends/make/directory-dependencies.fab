@@ -14,10 +14,10 @@ cc = action('${CC} ${src} -o ${obj}' <- src:file[in], obj:file[out]);
 
 # CHECK-DAG: foo/subdir/foo.c.o : ${srcroot}/foo/subdir/foo.c
 # CHECK-DAG: ${CC} ${srcroot}/foo/subdir/foo.c -o foo/subdir/foo.c.o
-foo = file('foo.c', subdir = 'foo/subdir');
-foo_o = cc(foo, foo + '.o');
+foo_src = file('foo.c', subdir = 'foo/subdir');
+foo_o = cc(foo_src, foo_src + '.o');
 
 # CHECK-DAG: bar/subdir/bar.c.o : ${srcroot}/bar/subdir/bar.c
 # CHECK-DAG: ${CC} ${srcroot}/bar/subdir/bar.c -o bar/subdir/bar.c.o
-bar = file('bar/subdir/bar.c');
-bar_o = cc(bar, bar + '.o');
+bar_src = file('bar/subdir/bar.c');
+bar_o = cc(bar_src, bar_src + '.o');
