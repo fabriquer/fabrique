@@ -130,7 +130,7 @@ dag::ValuePtr Import::evaluate(EvalContext& ctx) const
 
 	dag::DAGBuilder builder(ctx.builder());
 	if (plugin_)
-		return plugin_->Create(builder);
+		return plugin_->Create(builder, args);
 
 	dag::ValuePtr argRecord(
 		builder.Record(args, this->scope().arguments(), source()));

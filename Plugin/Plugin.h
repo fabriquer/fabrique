@@ -80,7 +80,8 @@ class Plugin : public Typed
 
 	const Descriptor& descriptor() const { return descriptor_; }
 
-	virtual std::shared_ptr<dag::Record> Create(dag::DAGBuilder&) const = 0;
+	virtual std::shared_ptr<dag::Record>
+		Create(dag::DAGBuilder&, const dag::ValueMap& arguments) const = 0;
 
 
 	protected:

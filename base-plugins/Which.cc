@@ -67,7 +67,8 @@ namespace plugins {
 class Which : public plugin::Plugin
 {
 	public:
-	virtual shared_ptr<dag::Record> Create(dag::DAGBuilder&) const override;
+	virtual shared_ptr<dag::Record>
+		Create(dag::DAGBuilder&, const ValueMap& args) const override;
 
 	class Factory : public Plugin::Descriptor
 	{
@@ -126,8 +127,15 @@ UniqPtr<Plugin> Which::Factory::Instantiate(TypeContext& ctx) const
 }
 
 
-shared_ptr<Record> Which::Create(DAGBuilder& builder) const
+shared_ptr<Record> Which::Create(DAGBuilder& builder, const ValueMap& args) const
 {
+	// TODO: interpret the 'path' argument
+	for (auto a : args)
+	{
+		if (a.first != "path")
+			throw SemanticException("unknown argument", a.second->source());
+	}
+
 	const ValueMap scope;
 	const SharedPtrVec<Parameter> name = {
 		std::make_shared<Parameter>(FileName, string_, ValuePtr()),

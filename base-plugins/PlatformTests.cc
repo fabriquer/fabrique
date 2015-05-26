@@ -38,6 +38,7 @@
 #include "Types/RecordType.h"
 #include "Types/TypeContext.h"
 #include "Support/Platform.h"
+#include "Support/exceptions.h"
 
 #include <cassert>
 #include <sstream>
@@ -68,7 +69,8 @@ namespace plugins {
 class PlatformTests : public plugin::Plugin
 {
 	public:
-	virtual shared_ptr<dag::Record> Create(dag::DAGBuilder&) const override;
+	virtual shared_ptr<dag::Record>
+		Create(dag::DAGBuilder&, const ValueMap& args) const override;
 
 	class Factory : public Plugin::Descriptor
 	{
@@ -120,8 +122,12 @@ UniqPtr<Plugin> PlatformTests::Factory::Instantiate(TypeContext& ctx) const
 }
 
 
-shared_ptr<Record> PlatformTests::Create(DAGBuilder& builder) const
+shared_ptr<Record> PlatformTests::Create(DAGBuilder& builder, const ValueMap& args) const
 {
+	if (not args.empty())
+		throw SemanticException("platform plugin does not take arguments",
+		                        SourceRange::Over(args));
+
 	const ValueMap scope;
 	static const SourceRange src = SourceRange::None();
 

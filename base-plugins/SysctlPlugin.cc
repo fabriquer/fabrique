@@ -65,7 +65,8 @@ namespace plugins {
 class SysctlPlugin : public plugin::Plugin
 {
 	public:
-	virtual shared_ptr<dag::Record> Create(dag::DAGBuilder&) const override;
+	virtual shared_ptr<dag::Record>
+		Create(dag::DAGBuilder&, const dag::ValueMap& args) const override;
 
 	class Factory : public Plugin::Descriptor
 	{
@@ -117,8 +118,12 @@ UniqPtr<Plugin> SysctlPlugin::Factory::Instantiate(TypeContext& ctx) const
 }
 
 
-shared_ptr<Record> SysctlPlugin::Create(DAGBuilder& builder) const
+shared_ptr<Record> SysctlPlugin::Create(DAGBuilder& builder, const ValueMap& args) const
 {
+	if (not args.empty())
+		throw SemanticException("sysctl plugin does not take arguments",
+		                        SourceRange::Over(args));
+
 	const ValueMap scope;
 	const SharedPtrVec<Parameter> params = {
 		std::make_shared<Parameter>("name", stringType_, ValuePtr()),
