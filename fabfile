@@ -115,12 +115,12 @@ plugins = foreach lib <- import('base-plugins').libs
 
 fab = cxx.link_executable(objects, executable = file('fab', subdir = 'bin'));
 
-products = [ fab ] + plugins + import('tests/manifest.fab').all_files;
+everything = [ fab ] + plugins + import('tests/manifest.fab').all_files;
 
 test = if withtests {
 	lit = import('share/llvm-lit.fab', show_failure_details = verbose_tests,
 	             lit = args.lit ? import('which').executable('llvm-lit'));
-	[ lit.run(file('tests'), file('junit.xml'), dependencies = products) ]
+	[ lit.run(file('tests'), file('junit.xml'), dependencies = everything) ]
 } else {
 	[]
 };
