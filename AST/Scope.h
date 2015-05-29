@@ -65,8 +65,7 @@ class Visitor;
 class Scope : public Printable, public Uncopyable
 {
 public:
-	Scope(const Scope *parent, const std::string& name,
-	      const Type& argumentsType, TypeContext&);
+	Scope(const Scope *parent, const std::string& name, const Type& argumentsType);
 	Scope(Scope&&);
 	virtual ~Scope() {}
 
@@ -97,7 +96,6 @@ private:
 
 	const Scope *parent_;
 	const std::string name_;
-	const Type& nil_;
 
 	const Type& arguments_;
 	SymbolMap symbols_;

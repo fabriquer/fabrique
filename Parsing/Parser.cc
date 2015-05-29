@@ -80,7 +80,7 @@ const Type& Parser::ParseDefinitions(const std::vector<string>& definitions)
 	Type::NamedTypeVec args;
 	const Type& nil = ctx_.nilType();
 
-	UniqPtr<Scope> scope { new Scope(nullptr, "definitions", nil, ctx_) };
+	UniqPtr<Scope> scope { new Scope(nullptr, "definitions", nil) };
 
 	for (const string& d : definitions)
 	{
@@ -193,7 +193,7 @@ Scope& Parser::EnterScope(const string& name, const Type& args, SourceRange src)
 	const bool FirstScope = scopes_.empty();
 
 	const ast::Scope *parent = FirstScope ? nullptr : &CurrentScope();
-	scopes_.emplace(new Scope(parent, name, args, ctx_));
+	scopes_.emplace(new Scope(parent, name, args));
 
 	if (definitions_)
 	{

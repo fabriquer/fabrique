@@ -47,16 +47,14 @@ using namespace fabrique;
 using namespace fabrique::ast;
 
 
-Scope::Scope(const Scope *parent, const std::string& name,
-             const Type& argumentsType, TypeContext& ctx)
-	: parent_(parent), name_(name), nil_(ctx.nilType()),
-	  arguments_(argumentsType)
+Scope::Scope(const Scope *parent, const std::string& name, const Type& argumentsType)
+	: parent_(parent), name_(name), arguments_(argumentsType)
 {
 }
 
 
 Scope::Scope(Scope&& other)
-	: parent_(other.parent_), name_(other.name_), nil_(other.nil_),
+	: parent_(other.parent_), name_(other.name_),
 	  arguments_(other.arguments_), symbols_(other.symbols_),
 	  ownedValues_(std::move(other.ownedValues_))
 {
@@ -91,7 +89,7 @@ const Type& Scope::Lookup(const Identifier& id) const
 	if (parent_)
 		return parent_->Lookup(id);
 
-	return nil_;
+	return arguments_.context().nilType();
 }
 
 
