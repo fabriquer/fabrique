@@ -120,7 +120,7 @@ void ErrorReport::PrettyPrint(Bytestream& out, size_t indent) const
 			caret_.column - firstHighlightColumn;
 
 		const size_t postCaretHighlight =
-			source.end.column >= caret_.column
+			source.end.column > caret_.column
 			  ? source.end.column - caret_.column - 1
 			  : 0;
 
