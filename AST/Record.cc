@@ -60,7 +60,7 @@ void Record::PrettyPrint(Bytestream& out, size_t indent) const
 	const std::string innerTabs(indent + 1, '\t');
 	for (auto& i : scope().values())
 	{
-		i->PrettyPrint(out, indent + 1);
+		i.second->PrettyPrint(out, indent + 1);
 		out << "\n";
 	}
 
@@ -85,7 +85,7 @@ dag::ValuePtr Record::evaluate(EvalContext& ctx) const
 	dag::ValueMap fields;
 
 	for (auto& field : scope().values())
-		fields[field->name().name()] = field->evaluate(ctx);
+		fields[field.first] = field.second->evaluate(ctx);
 
 	return ctx.builder().Record(fields, type(), source());
 }

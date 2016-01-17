@@ -1,11 +1,10 @@
-/** @file AST/List.h    Declaration of @ref fabrique::ast::List. */
+/** @file Parsing/ABI.h    Declaration of ABI helper functions. */
 /*
- * Copyright (c) 2013, 2016 Jonathan Anderson
+ * Copyright (c) 2015 Jonathan Anderson
  * All rights reserved.
  *
- * This software was developed by SRI International and the University of
- * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * This software was developed at Memorial University of Newfoundland under
+ * the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,53 +28,32 @@
  * SUCH DAMAGE.
  */
 
-#ifndef LIST_H
-#define LIST_H
+#ifndef SUPPORT_ABI_H
+#define SUPPORT_ABI_H
 
-#include "Expression.h"
+#include <string>
+#include <typeinfo>
 
 namespace fabrique {
-namespace ast {
 
 /**
- * A list of same-typed expressions.
+ * Demangle a C++ name according the current compiler's ABI.
+ *
+ * Thanks to http://stackoverflow.com/a/4541470/611594.
  */
-class List : public Expression
+std::string DemangleABIName(const std::string&);
+
+/**
+ * Demangle the name inside a C++ type_info object.
+ */
+std::string Demangle(const std::type_info&);
+
+template<class T>
+std::string TypeName(const T& value)
 {
-public:
-	class Parser : public Expression::Parser
-	{
-	public:
-		virtual ~Parser();
+	return Demangle(typeid(value));
+}
 
-		List* Build(const Scope&, TypeContext&, Err&) const override;
-
-	private:
-		/// List elements (Pegmatite will automatically fill).
-		ChildNodes<Expression> elements_;
-	};
-
-	const UniqPtrVec<Expression>& elements() const { return elements_; }
-
-	using ConstIterator = UniqPtrVec<Expression>::const_iterator;
-	ConstIterator begin() const { return elements_.begin(); }
-	ConstIterator end() const { return elements_.end(); }
-
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
-	virtual void Accept(Visitor&) const override;
-
-	virtual dag::ValuePtr evaluate(EvalContext&) const override;
-
-private:
-	List(UniqPtrVec<Expression> e, const Type& ty, SourceRange loc)
-		: Expression(ty, loc), elements_(std::move(e))
-	{
-	}
-
-	const UniqPtrVec<Expression> elements_;
-};
-
-} // namespace ast
 } // namespace fabrique
 
 #endif

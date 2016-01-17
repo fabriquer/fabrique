@@ -132,13 +132,15 @@ dag::ValuePtr Import::evaluate(EvalContext& ctx) const
 	if (plugin_)
 		return plugin_->Create(builder, args);
 
+	/*
 	dag::ValuePtr argRecord(
 		builder.Record(args, this->scope().arguments(), source()));
 
 	scope.set(ast::Arguments, argRecord);
+	*/
 
-	for (const UniqPtr<ast::Value>& v : this->scope().values())
-		v->evaluate(ctx);
+	for (const auto& v : this->scope().values())
+		v.second->evaluate(ctx);
 
 	dag::ValueMap fields;
 	Type::NamedTypeVec types;

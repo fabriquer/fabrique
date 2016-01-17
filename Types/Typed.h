@@ -1,11 +1,7 @@
 /** @file Types/Typed.h    Declaration of @ref fabrique::Typed mixin. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2015 Jonathan Anderson
  * All rights reserved.
- *
- * This software was developed by SRI International and the University of
- * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -32,21 +28,18 @@
 #ifndef TYPED_H
 #define TYPED_H
 
-namespace fabrique {
+#include "Types/OptionallyTyped.h"
 
-class Type;
+
+namespace fabrique {
 
 
 /** A mixin type for something that has a @ref Type. */
-class Typed
+class Typed : public OptionallyTyped
 {
 public:
-	Typed(const Type& t) : type_(t) {}
+	Typed(const Type& t) : OptionallyTyped(t) {}
 	virtual ~Typed();
-	virtual const Type& type() const { return type_; }
-
-private:
-	const Type& type_;
 };
 
 } // namespace fabrique

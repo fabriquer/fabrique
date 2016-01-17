@@ -41,11 +41,12 @@ class Type;
 class OptionallyTyped
 {
 public:
-	OptionallyTyped(const Type *t) : type_(t) {}
+	OptionallyTyped(const Type&);
+	OptionallyTyped(const Type*);
 	virtual ~OptionallyTyped();
 
 	bool isTyped() const { return type_; }
-	const Type& type() const { return *type_; }
+	virtual const Type& type() const { return *type_; }
 
 private:
 	const Type *type_;

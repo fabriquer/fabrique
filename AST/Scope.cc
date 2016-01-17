@@ -35,6 +35,7 @@
 #include "AST/Scope.h"
 #include "AST/Value.h"
 #include "AST/Visitor.h"
+#include "Parsing/ErrorReporter.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 #include "Types/FileType.h"
@@ -47,30 +48,87 @@ using namespace fabrique;
 using namespace fabrique::ast;
 
 
-Scope::Scope(const Scope *parent, const std::string& name, const Type& argumentsType)
-	: parent_(parent), name_(name), arguments_(argumentsType)
+Scope::Parser::~Parser()
+{
+}
+
+
+Scope* Scope::Parser::Build(const Scope& parentScope, TypeContext& types, Err& err) const
+{
+	UniqPtrMap<Value> values;
+	SourceLocation begin, end;
+
+	for (const std::unique_ptr<Value::Parser>& v : values_)
+	{
+		if (v->source().begin < begin)
+			begin = v->source().begin;
+
+		if (v->source().end > end)
+			end = v->source().end;
+
+		// TODO: really handle scope lookup
+
+		UniqPtr<Value> value(v->Build(parentScope, types, err));
+		const std::string name = value->name().name();
+
+		if (values.find(name) != values.end())
+		{
+			err.ReportError("redefining value", *value);
+			return nullptr;
+		}
+
+		values.emplace(name, std::move(value));
+	}
+
+	if (err.hasErrors())
+		return nullptr;
+
+	return new Scope(&parentScope, std::move(values), source_);
+}
+
+
+/*
+Scope::Scope(const Scope *parent, const std::string& name, const Type& argumentsType,
+             SourceRange src)
+	: Node(src), parent_(parent), name_(name), arguments_(argumentsType)
+{
+}
+*/
+
+
+Scope::Scope(const Scope *parent, SourceRange src)
+	: Node(src), parent_(parent)
+{
+}
+
+
+Scope::Scope(const Scope *parent, UniqPtrMap<Value> values, SourceRange src)
+	: Node(src), parent_(parent), values_(std::move(values))
 {
 }
 
 
 Scope::Scope(Scope&& other)
-	: parent_(other.parent_), name_(other.name_),
-	  arguments_(other.arguments_), symbols_(other.symbols_),
-	  ownedValues_(std::move(other.ownedValues_))
+	: Node(other.source()), parent_(other.parent_), name_(other.name_),
+	  /*arguments_(other.arguments_),*/ symbols_(other.symbols_),
+	  values_(std::move(other.values_))
 {
 	other.symbols_.clear();
-	assert(other.ownedValues_.empty());
+	assert(other.values_.empty());
 }
 
 
+#if 0
 const Type& Scope::Lookup(const Identifier& id) const
 {
 	const std::string& name = id.name();
 
+	/*
 	// Special case: 'args' is a reserved name derived from external arguments
 	//               (command-line or via an import() expression).
 	if ((name == ast::Arguments) and arguments_.valid())
 		return arguments_;
+	*/
 
 	// More special cases: 'builddir' and 'subdir' are files.
 	if (name == ast::BuildDirectory or name == ast::Subdirectory)
@@ -97,6 +155,7 @@ bool Scope::hasArguments() const
 {
 	return arguments_.valid();
 }
+#endif
 
 
 bool Scope::contains(const Identifier& name) const
@@ -105,6 +164,7 @@ bool Scope::contains(const Identifier& name) const
 }
 
 
+/*
 void Scope::Register(const Argument *a)
 {
 	assert(a);
@@ -170,10 +230,11 @@ void Scope::Take(UniqPtr<Value>& val)
 }
 
 
-UniqPtrVec<Value> Scope::TakeValues()
+UniqPtrMap<Value> Scope::TakeValues()
 {
 	return std::move(ownedValues_);
 }
+*/
 
 
 void Scope::PrettyPrint(Bytestream& out, size_t indent) const
@@ -198,8 +259,8 @@ void Scope::Accept(Visitor& v) const
 {
 	v.Enter(*this);
 
-	for (auto& val : ownedValues_)
-		val->Accept(v);
+	for (auto& val : values_)
+		val.second->Accept(v);
 
 	v.Leave(*this);
 }

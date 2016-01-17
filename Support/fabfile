@@ -1,4 +1,5 @@
 platform_agnostic_sources = files(
+	ABI.cc
 	Arguments.cc
 	Bytestream.cc
 	ErrorReport.cc

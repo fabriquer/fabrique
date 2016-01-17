@@ -1,6 +1,6 @@
 /** @file AST/literals.h    Declaration of several literal expression types. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -74,6 +74,16 @@ public:
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const override;
+
+	class Parser : public Expression::Parser
+	{
+	public:
+		void construct(const ParserInput&, ParserStack&, ParseError) override;
+		BoolLiteral* Build(const Scope&, TypeContext&, Err&)
+			const override;
+
+		bool value_;
+	};
 };
 
 
@@ -91,6 +101,16 @@ public:
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const override;
+
+	class Parser : public Expression::Parser
+	{
+	public:
+		void construct(const ParserInput&, ParserStack&, ParseError) override;
+		IntLiteral* Build(const Scope&, TypeContext&, Err&)
+			const override;
+
+		int value_;
+	};
 };
 
 
@@ -98,9 +118,9 @@ public:
 class StringLiteral : public Literal<std::string>
 {
 public:
-	StringLiteral(const std::string& s, const Type& ty,
+	StringLiteral(const std::string& s, const Type& ty, std::string quote,
 	              const SourceRange& loc)
-		: Literal(s, ty, loc)
+		: Literal(s, ty, loc), quote_(quote)
 	{
 	}
 
@@ -109,6 +129,19 @@ public:
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const override;
+
+	class Parser : public Expression::Parser
+	{
+	public:
+		void construct(const ParserInput&, ParserStack&, ParseError) override;
+		StringLiteral* Build(const Scope&, TypeContext&, Err&) const override;
+
+		std::string value_;
+		int quotes_; // single, double, etc.
+	};
+
+private:
+	const std::string quote_;
 };
 
 } // namespace ast

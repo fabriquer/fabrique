@@ -31,4 +31,12 @@
 
 #include "AST/Node.h"
 
-fabrique::ast::Node::~Node() {}
+namespace fabrique {
+namespace ast {
+
+Node::~Node() {}
+
+Node::Parser::~Parser() {}
+
+} // namespace ast
+} // namespace fabrique

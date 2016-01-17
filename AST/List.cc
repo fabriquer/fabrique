@@ -42,6 +42,28 @@ using namespace fabrique;
 using namespace fabrique::ast;
 
 
+List::Parser::~Parser()
+{
+}
+
+
+List* List::Parser::Build(const Scope& scope, TypeContext& types, Err& err) const
+{
+	UniqPtrVec<Expression> elements;
+	const Type *elementType = &types.nilType();
+
+	for (auto& element : elements_)
+	{
+		elements.emplace_back(element->Build(scope, types, err));
+		elementType = &elementType->supertype(elements.back()->type());
+	}
+
+	const Type& type = types.listOf(*elementType, source());
+
+	return new List(std::move(elements), type, source());
+}
+
+
 void List::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
 	out << Bytestream::Operator << "[" << Bytestream::Reset;

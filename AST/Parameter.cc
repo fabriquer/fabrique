@@ -43,7 +43,7 @@ using namespace fabrique::ast;
 
 Parameter::Parameter(UniqPtr<Identifier>& name, const Type& resultTy,
                      UniqPtr<Expression>&& defaultValue)
-	: Node(SourceRange::Over(name, defaultValue)), Typed(resultTy),
+	: Node(SourceRange::Over(name, defaultValue), resultTy),
 	  name_(std::move(name)), defaultValue_(std::move(defaultValue))
 {
 	if (name_->reservedName())

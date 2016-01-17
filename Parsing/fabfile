@@ -1,5 +1,6 @@
 sources = files(
-	Lexer.cc
+	ErrorReporter.cc
+	Grammar.cc
 	Parser.cc
-	Token.cc
+	ParserDelegate.cc
 );

@@ -1,11 +1,7 @@
 /** @file AST/Node.h    Declaration of @ref fabrique::ast::Node. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014-2016 Jonathan Anderson
  * All rights reserved.
- *
- * This software was developed by SRI International and the University of
- * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -36,23 +32,73 @@
 #include "Support/SourceLocation.h"
 #include "Support/Uncopyable.h"
 #include "Support/Visitable.h"
+#include "Types/OptionallyTyped.h"
+#include "Types/TypeContext.h"
+
+#include "Pegmatite/ast.hh"
 
 namespace fabrique {
+
+typedef pegmatite::ASTStack ParserStack;
+typedef pegmatite::InputRange ParserInput;
+
+namespace parser {
+class ErrorReporter;
+}
+
 namespace ast {
 
+class Node;
+class Scope;
 class Visitor;
+
+typedef std::unique_ptr<Node> NodePtr;
 
 /**
  * Base class for expressions that can be evaluated.
  */
-class Node : public HasSource, public Printable, public Visitable<Visitor>,
-             private Uncopyable
+class Node : public HasSource, public OptionallyTyped, public Printable,
+             public Visitable<Visitor>, private Uncopyable
 {
 public:
 	virtual ~Node();
 
 protected:
-	Node(const SourceRange& src) : HasSource(src) {}
+	Node(const SourceRange& src, const Type &t)
+		: HasSource(src), OptionallyTyped(t)
+	{
+	}
+
+	Node(const SourceRange& src, const Type *t = nullptr)
+		: HasSource(src), OptionallyTyped(t)
+	{
+	}
+
+	class Parser : public pegmatite::ASTContainer
+	{
+		public:
+		template<class T, bool Optional = false>
+		using ChildNodeParser = pegmatite::ASTPtr<typename T::Parser, Optional>;
+
+		template<class T>
+		using ChildNodes = pegmatite::ASTList<typename T::Parser>;
+
+		using Err = parser::ErrorReporter;
+
+		Parser() : source_(SourceRange::None()), type_(nullptr) {}
+		virtual ~Parser();
+
+		virtual Node* Build(const Scope&, TypeContext&, Err&) const = 0;
+
+		SourceRange source() const { return source_; }
+
+		protected:
+		SourceRange source_;
+		Type *type_;
+	};
+
+	//using ParseContainer = pegmatite::ASTContainer;
+	using ParseError = pegmatite::ErrorReporter;
 };
 
 } // namespace ast

@@ -36,7 +36,6 @@
 
 #include "DAG/DAG.h"
 
-#include "Parsing/Lexer.h"
 #include "Parsing/Parser.h"
 
 #include "Plugin/Loader.h"
@@ -57,8 +56,12 @@
 
 using namespace fabrique;
 using namespace std;
-using fabrique::ast::Parser;
 using fabrique::backend::Backend;
+using fabrique::parser::Parser;
+using std::map;
+using std::string;
+using std::unique_ptr;
+using std::vector;
 
 
 static Bytestream& err();
@@ -115,8 +118,8 @@ int main(int argc, char *argv[]) {
 		//
 		// Parse the file, optionally pretty-printing it.
 		//
-		unique_ptr<ast::Parser> parser(
-			new ast::Parser(types, pluginRegistry, pluginLoader, srcroot));
+		unique_ptr<Parser> parser(
+			new Parser(types, pluginRegistry, pluginLoader, srcroot));
 
 		unique_ptr<ast::Scope> ast(
 			Parse(parser, fabfile, args->definitions,
@@ -158,10 +161,12 @@ int main(int argc, char *argv[]) {
 				return i.first;
 			});
 
+#if 0
 		// Add regeneration (if Fabrique files change):
 		if (not outputFiles.empty())
 			ctx.builder().AddRegeneration(
 				*args, parser->files(), outputFiles);
+#endif
 
 		unique_ptr<dag::DAG> dag = ctx.builder().dag(targets);
 		assert(dag);
@@ -257,7 +262,6 @@ unique_ptr<ast::Scope> Parse(UniqPtr<Parser>& parser, const string& filename,
                              const vector<string>& definitions,
                              string srcroot, string buildroot, bool printAST)
 {
-
 	// Parse command-line arguments.
 	const Type& args = parser->ParseDefinitions(definitions);
 
@@ -296,10 +300,10 @@ unique_ptr<ast::Scope> Parse(UniqPtr<Parser>& parser, const string& filename,
 			;
 
 		for (auto& val : ast->values())
-			Bytestream::Stdout() << *val << "\n";
+			Bytestream::Stdout() << *val.second << "\n";
 	}
 
-	return ast;
+	return std::move(ast);
 }
 
 

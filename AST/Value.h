@@ -35,6 +35,7 @@
 #include "ADT/UniqPtr.h"
 #include "AST/Expression.h"
 #include "AST/Identifier.h"
+#include "AST/TypeReference.h"
 
 namespace fabrique {
 namespace ast {
@@ -45,8 +46,6 @@ namespace ast {
 class Value : public Expression
 {
 public:
-	Value(UniqPtr<Identifier>&, UniqPtr<Expression>&, const Type& t);
-
 	const Identifier& name() const { return *name_; }
 	const Expression& value() const { return *value_; }
 
@@ -55,8 +54,24 @@ public:
 
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
+	class Parser : public Node::Parser
+	{
+	public:
+		virtual ~Parser();
+		Value* Build(const Scope&, TypeContext&, Err&) const override;
+
+	private:
+		ChildNodeParser<Identifier> name_;
+		ChildNodeParser<TypeReference, true> type_;
+		ChildNodeParser<Expression> value_;
+	};
+
 private:
+	Value(UniqPtr<Identifier>, UniqPtr<TypeReference>, UniqPtr<Expression>,
+	      const Type& t);
+
 	const UniqPtr<Identifier> name_;
+	const UniqPtr<TypeReference> explicitType_;
 	const UniqPtr<Expression> value_;
 };
 

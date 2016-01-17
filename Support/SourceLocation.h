@@ -42,6 +42,11 @@
 
 #include <string>
 
+namespace pegmatite {
+class InputRange;
+struct ParserPosition;
+}
+
 namespace fabrique {
 
 class Lexer;
@@ -55,6 +60,8 @@ public:
 
 	SourceLocation(const std::string& filename = "",
 	               size_t line = 0, size_t column = 0);
+
+	SourceLocation(const pegmatite::ParserPosition&);
 
 	operator bool() const;
 	bool operator < (const SourceLocation&) const;
@@ -123,6 +130,7 @@ public:
 	SourceRange(const SourceLocation& begin, const SourceLocation& end);
 	SourceRange(const SourceRange& begin, const SourceRange& end);
 	SourceRange(const HasSource& begin, const HasSource& end);
+	SourceRange(const pegmatite::InputRange&);
 
 	operator bool() const;
 	bool operator < (const SourceRange&) const;
@@ -148,6 +156,9 @@ class HasSource
 public:
 	HasSource(const SourceRange& src) : src_(src) {}
 	const SourceRange& source() const { return src_; }
+
+protected:
+	void UpdateSource(const SourceRange&);
 
 private:
 	SourceRange src_;

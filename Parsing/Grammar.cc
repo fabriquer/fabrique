@@ -1,6 +1,6 @@
-/** @file AST/Identifier.cc    Definition of @ref fabrique::ast::Identifier. */
+/** @file Parsing/Grammar.cc    Definition of the AST grammar. */
 /*
- * Copyright (c) 2013, 2016 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,75 +29,12 @@
  * SUCH DAMAGE.
  */
 
-#include "AST/Identifier.h"
-#include "AST/TypeReference.h"
-#include "AST/Visitor.h"
-#include "Support/Bytestream.h"
-#include "Types/Type.h"
-
-using namespace fabrique::ast;
+#include "Parsing/Grammar.h"
+using namespace fabrique::parser;
 
 
-static const char* ReservedNames[] =
+const Grammar& Grammar::get()
 {
-	"args",
-	"buildroot",
-	"in",
-	"out",
-	"srcroot",
-};
-
-
-Identifier::Parser::Parser()
-	: source_(SourceRange::None())
-{
-}
-
-
-void Identifier::Parser::construct(const ParserInput& input, ParserStack&, ParseError)
-{
-	source_ = input;
-	name_ = input.str();
-}
-
-
-Identifier* Identifier::Parser::Build(const Scope&, TypeContext&, Err&) const
-{
-	return new Identifier(name_, source_);
-}
-
-
-Identifier::Identifier(const std::string& name, const SourceRange& src)
-	: Node(src), name_(name)
-{
-}
-
-
-bool Identifier::reservedName() const
-{
-	for (const char *reserved : ReservedNames)
-		if (name_ == reserved)
-			return true;
-
-	return false;
-}
-
-
-void Identifier::PrettyPrint(Bytestream& out, size_t /*indent*/) const
-{
-	out << Bytestream::Reference << name_ << Bytestream::Reset;
-}
-
-
-void Identifier::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }
-
-
-bool Identifier::operator == (const Identifier& other) const
-{
-	return name() == other.name() and type() == other.type();
-}
-
-bool Identifier::operator < (const Identifier& other) const
-{
-	return name() < other.name() or type().isSubtype(other.type());
+	const Grammar& g = *new Grammar;
+	return g;
 }

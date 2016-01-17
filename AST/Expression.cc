@@ -32,3 +32,5 @@
 #include "AST/Expression.h"
 
 fabrique::ast::Expression::~Expression() {}
+
+fabrique::ast::Expression::Parser::~Parser() {}

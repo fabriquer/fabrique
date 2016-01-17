@@ -29,12 +29,14 @@
  * SUCH DAMAGE.
  */
 
+#include "AST/Builtins.h"
 #include "AST/EvalContext.h"
 #include "AST/Value.h"
 #include "AST/Visitor.h"
 #include "DAG/Build.h"
 #include "DAG/File.h"
 #include "DAG/List.h"
+#include "Parsing/ErrorReporter.h"
 #include "Support/Bytestream.h"
 #include "Types/Type.h"
 #include "Types/TypeError.h"
@@ -47,9 +49,54 @@ using namespace fabrique::ast;
 using std::string;
 
 
-Value::Value(UniqPtr<Identifier>& id, UniqPtr<Expression>& value, const Type& t)
+Value::Parser::~Parser()
+{
+}
+
+
+Value* Value::Parser::Build(const Scope& scope, TypeContext& types, Err& err) const
+{
+	UniqPtr<Identifier> name(name_->Build(scope, types, err));
+	UniqPtr<TypeReference> explicitType;
+	if (type_)
+		explicitType.reset(type_->Build(scope, types, err));
+
+	UniqPtr<Expression> value(value_->Build(scope, types, err));
+
+	SourceRange src = SourceRange::Over(name, value);
+
+	if (name->reservedName())
+	{
+		err.ReportError("defining value with reserved name", *name);
+		return nullptr;
+	}
+
+	const Type& type = explicitType ? explicitType->referencedType() : value->type();
+
+	if (explicitType and not value->type().isSubtype(type))
+	{
+		err.ReportError("assigning " + value->type().str()
+		                + " to value of type " + type.str(), src);
+		return nullptr;
+	}
+
+	if ((name->name() == ast::Subdirectory) and not type.isFile())
+	{
+		err.ReportError(string(ast::Subdirectory) + " must be a file (not '"
+		                + type.str() + "')", src);
+		return nullptr;
+	}
+
+	return new Value(std::move(name), std::move(explicitType), std::move(value),
+	                 type);
+}
+
+
+Value::Value(UniqPtr<Identifier> id, UniqPtr<TypeReference> explicitType,
+             UniqPtr<Expression> value, const Type& t)
 	: Expression(t, SourceRange::Over(id, value)),
-	  name_(std::move(id)), value_(std::move(value))
+	  name_(std::move(id)), explicitType_(std::move(explicitType)),
+	  value_(std::move(value))
 {
 	assert(not name_->isTyped() or t.isSubtype(name_->type()));
 	assert(value_->type().isSubtype(t));

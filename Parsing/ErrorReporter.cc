@@ -1,10 +1,10 @@
-/** @file AST/Identifier.h    Declaration of @ref fabrique::ast::Identifier. */
+/** @file Parsing/ErrorReporter.cc Definition of @ref fabrique::parser::ErrorReporter. */
 /*
- * Copyright (c) 2013, 2015-2016 Jonathan Anderson
+ * Copyright (c) 2016 Jonathan Anderson
  * All rights reserved.
  *
- * This software was developed at Memorial University of Newfoundland
- * under the NSERC Discovery program (RGPIN-2015-06048).
+ * This software was developed at Memorial University of Newfoundland under
+ * the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -28,57 +28,30 @@
  * SUCH DAMAGE.
  */
 
-#ifndef IDENTIFIER_H
-#define IDENTIFIER_H
-
-#include "AST/Node.h"
-#include "Types/OptionallyTyped.h"
-
-#include <string>
-
-namespace fabrique {
-namespace ast {
-
-class Scope;
-class Visitor;
+#include "Parsing/ErrorReporter.h"
+using namespace fabrique::parser;
+using fabrique::ErrorReport;
 
 
-/**
- * The name of a value, function, parameter or argument.
- */
-class Identifier : public Node
+ErrorReporter::ErrorReporter(UniqPtrVec<ErrorReport>& errors)
+	: errors_(errors)
 {
-public:
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
-	const std::string& name() const { return name_; }
+}
 
-	bool reservedName() const;
+bool ErrorReporter::hasErrors() const
+{
+	return not errors_.empty();
+}
 
-	bool operator == (const Identifier&) const;
-	bool operator < (const Identifier&) const;
+ErrorReport& ErrorReporter::ReportError(const std::string& msg, const SourceRange& src,
+                                        ErrorReport::Severity severity)
+{
+	errors_.emplace_back(ErrorReport::Create(msg, src, severity));
+	return *errors_.back();
+}
 
-	virtual void Accept(Visitor&) const override;
-
-	class Parser : public Node::Parser
-	{
-	public:
-		Parser();
-		void construct(const ParserInput&, ParserStack&, ParseError) override;
-		Identifier* Build(const Scope&, TypeContext&, Err&) const override;
-
-	private:
-		std::string name_;
-		SourceRange source_;
-	};
-
-
-private:
-	Identifier(const std::string& name, const SourceRange& src);
-
-	const std::string name_;
-};
-
-} // namespace ast
-} // namespace fabrique
-
-#endif
+ErrorReport& ErrorReporter::ReportError(const std::string& msg, const HasSource& s,
+                                        ErrorReport::Severity severity)
+{
+	return ReportError(msg, s.source(), severity);
+}

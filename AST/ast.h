@@ -65,6 +65,7 @@ namespace ast {}
 #include "SomeValue.h"
 #include "SymbolReference.h"
 #include "TypeDeclaration.h"
+#include "TypeReference.h"
 #include "UnaryOperation.h"
 #include "Value.h"
 

@@ -1,11 +1,7 @@
 //! @file Types/OptionallyTyped.cc Definition of @ref fabrique::OptionallyTyped mixin.
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014-2015 Jonathan Anderson
  * All rights reserved.
- *
- * This software was developed by SRI International and the University of
- * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -31,5 +27,15 @@
 
 #include "Types/OptionallyTyped.h"
 using namespace fabrique;
+
+OptionallyTyped::OptionallyTyped(const Type &t)
+	: type_(&t)
+{
+}
+
+OptionallyTyped::OptionallyTyped(const Type *t)
+	: type_(t)
+{
+}
 
 OptionallyTyped::~OptionallyTyped() {}

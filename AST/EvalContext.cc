@@ -74,9 +74,9 @@ std::vector<DAG::BuildTarget> EvalContext::Evaluate(const ast::Scope& root)
 	auto scope(EnterScope("top level scope"));
 	vector<DAG::BuildTarget> topLevelTargets;
 
-	for (const UniqPtr<ast::Value>& v : root.values())
+	for (const auto& v : root.values())
 		topLevelTargets.emplace_back(
-			v->name().name(), v->evaluate(*this));
+			v.first, v.second->evaluate(*this));
 
 	return topLevelTargets;
 }

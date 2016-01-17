@@ -1,10 +1,10 @@
-/** @file AST/Identifier.h    Declaration of @ref fabrique::ast::Identifier. */
+/** @file Parsing/ParseError.cc Definition of @ref fabrique::parser::ParseError. */
 /*
- * Copyright (c) 2013, 2015-2016 Jonathan Anderson
+ * Copyright (c) 2015 Jonathan Anderson
  * All rights reserved.
  *
- * This software was developed at Memorial University of Newfoundland
- * under the NSERC Discovery program (RGPIN-2015-06048).
+ * This software was developed at Memorial University of Newfoundland under
+ * the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -28,57 +28,21 @@
  * SUCH DAMAGE.
  */
 
-#ifndef IDENTIFIER_H
-#define IDENTIFIER_H
-
-#include "AST/Node.h"
-#include "Types/OptionallyTyped.h"
-
-#include <string>
-
-namespace fabrique {
-namespace ast {
-
-class Scope;
-class Visitor;
+#include "Parsing/ParseError.h"
+#include "Pegmatite/parser.hh"
+using namespace fabrique::parser;
 
 
-/**
- * The name of a value, function, parameter or argument.
- */
-class Identifier : public Node
+ParseError::ParseError(const pegmatite::Error& e)
+	: SourceCodeException("parse error", e)
 {
-public:
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
-	const std::string& name() const { return name_; }
+}
 
-	bool reservedName() const;
+ParseError::ParseError(const ParseError& orig)
+	: SourceCodeException("parse error", orig.source())
+{
+}
 
-	bool operator == (const Identifier&) const;
-	bool operator < (const Identifier&) const;
-
-	virtual void Accept(Visitor&) const override;
-
-	class Parser : public Node::Parser
-	{
-	public:
-		Parser();
-		void construct(const ParserInput&, ParserStack&, ParseError) override;
-		Identifier* Build(const Scope&, TypeContext&, Err&) const override;
-
-	private:
-		std::string name_;
-		SourceRange source_;
-	};
-
-
-private:
-	Identifier(const std::string& name, const SourceRange& src);
-
-	const std::string name_;
-};
-
-} // namespace ast
-} // namespace fabrique
-
-#endif
+ParseError::~ParseError()
+{
+}

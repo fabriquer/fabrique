@@ -28,6 +28,7 @@ sources = files(
 	SomeValue.cc
 	SymbolReference.cc
 	TypeDeclaration.cc
+	TypeReference.cc
 	UnaryOperation.cc
 	Value.cc
 	Visitor.cc

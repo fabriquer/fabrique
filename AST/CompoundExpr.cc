@@ -59,7 +59,7 @@ void CompoundExpression::PrettyPrint(Bytestream& out, size_t indent) const
 	out << tabs << Bytestream::Operator << "{\n";
 	for (auto& v : values())
 	{
-		v->PrettyPrint(out, indent + 1);
+		v.second->PrettyPrint(out, indent + 1);
 		out << "\n";
 	}
 
@@ -77,7 +77,7 @@ void CompoundExpression::Accept(Visitor& v) const
 	if (v.Enter(*this))
 	{
 		for (auto& val : values())
-			val->Accept(v);
+			val.second->Accept(v);
 
 		result_->Accept(v);
 	}
@@ -90,7 +90,7 @@ dag::ValuePtr CompoundExpression::evaluate(EvalContext& ctx) const
 	auto scope(ctx.EnterScope("CompoundExpression"));
 
 	for (auto& v : values())
-		v->evaluate(ctx);
+		v.second->evaluate(ctx);
 
 	return result_->evaluate(ctx);
 }

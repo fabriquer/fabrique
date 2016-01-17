@@ -22,16 +22,11 @@ cxx = import('share/cxx.fab',
 	colour_diagnostics = colour_output,
 	platform = platform);
 
-lex = import('share/lex.fab');
-
 # TODO: let modules "pass through" values from other modules
 shell =
 	if platform.posix import('share/shell-posix.fab')
 	else import('share/shell-unimplemented.fab')
 	;
-
-yacc = import('share/yacc.fab', yacc = which.executable('byacc'));
-
 
 
 #
@@ -50,7 +45,16 @@ defines =
 	[ '-D' 'USE_RTTI' ]
 
 	+ (if platform.posix [ '-D OS_POSIX' ] else [])
+
+	+ (if platform.freebsd [ '-D OS_FREEBSD' ] else [])
+	+ (if platform.netbsd [ '-D OS_NETBSD' ] else [])
+	+ (if platform.openbsd [ '-D OS_OPENBSD' ] else [])
+	+ (if platform.bsd [ '-D OS_BSD' ] else [])
+
+	+ (if platform.ios [ '-D OS_IOS' ] else [])
+	+ (if platform.mac [ '-D OS_MAC' ] else [])
 	+ (if platform.darwin [ '-D OS_DARWIN' ] else [])
+
 	+ (if platform.windows [ '-D OS_WINDOWS' ] else [])
 	;
 
@@ -65,9 +69,6 @@ warnings = [
 	# Use lots and lots of warnings.
 	'-Weverything'
 
-	# We intentionally hide yyFlexLexer::yylex().
-	'-Wno-overloaded-virtual'
-
 	# We really really don't care about C++98 compatibility.
 	'-Wno-c++98-compat' '-Wno-c++98-compat-pedantic'
 
@@ -79,7 +80,7 @@ cxx_flags = common_cxx_flags + warnings;
 generated_cxx_flags =
 	common_cxx_flags + [ '-Wno-deprecated-register' ]
 	+ if debug [ '-D' 'YYDEBUG' ] else [];
-vendor_cxx_flags = common_cxx_flags;
+vendor_cxx_flags = common_cxx_flags + [ '-Wno-weak-vtables' ];
 
 
 #
@@ -102,18 +103,7 @@ cxx_srcs =
 	+ import('vendor', cxxflags = vendor_cxx_flags).sources
 	;
 
-
-parser_src = yacc.process(file('Parsing/fab.yy'), subdir, 'Parsing/fab.yacc');
-lexer_src = lex.process(
-	src = file('Parsing/fab.lxx'), gen = file('Parsing/fab.lex.cc'),
-	flags = [ '-c++'], header_out = file('Parsing/fab.lex.h')
-);
-
-objects =
-	cxx.compile([ lexer_src ], generated_cxx_flags, deps = [ parser_src ])
-	+ cxx.compile([ parser_src ], generated_cxx_flags)
-	+ cxx.compile(cxx_srcs, cxx_flags)
-	;
+objects = cxx.compile(cxx_srcs, cxx_flags);
 
 plugins = foreach lib <- import('base-plugins').libs
 	shell.copy(lib, file('lib/fabrique') + '/' + lib.filename)

@@ -36,12 +36,10 @@
 #define DAG_TYPE_REFERENCE_H
 
 #include "DAG/Value.h"
+#include "Types/UserType.h"
 
 
 namespace fabrique {
-
-class UserType;
-
 namespace dag {
 
 /**

@@ -1,11 +1,10 @@
-/** @file AST/List.h    Declaration of @ref fabrique::ast::List. */
+/** @file AST/TypeReference.h    Declaration of @ref fabrique::ast::TypeReference. */
 /*
- * Copyright (c) 2013, 2016 Jonathan Anderson
+ * Copyright (c) 2015, 2016 Jonathan Anderson
  * All rights reserved.
  *
- * This software was developed by SRI International and the University of
- * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * This software was developed at Memorial University of Newfoundland under
+ * the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,50 +28,47 @@
  * SUCH DAMAGE.
  */
 
-#ifndef LIST_H
-#define LIST_H
+#ifndef TYPE_REFERENCE_H
+#define TYPE_REFERENCE_H
 
 #include "Expression.h"
+#include "Identifier.h"
 
 namespace fabrique {
 namespace ast {
 
 /**
- * A list of same-typed expressions.
+ * A reference to a named type.
  */
-class List : public Expression
+class TypeReference : public Expression
 {
 public:
-	class Parser : public Expression::Parser
-	{
-	public:
-		virtual ~Parser();
-
-		List* Build(const Scope&, TypeContext&, Err&) const override;
-
-	private:
-		/// List elements (Pegmatite will automatically fill).
-		ChildNodes<Expression> elements_;
-	};
-
-	const UniqPtrVec<Expression>& elements() const { return elements_; }
-
-	using ConstIterator = UniqPtrVec<Expression>::const_iterator;
-	ConstIterator begin() const { return elements_.begin(); }
-	ConstIterator end() const { return elements_.end(); }
-
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const override;
 
+	const Type& referencedType() const;
+
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
-private:
-	List(UniqPtrVec<Expression> e, const Type& ty, SourceRange loc)
-		: Expression(ty, loc), elements_(std::move(e))
-	{
-	}
 
-	const UniqPtrVec<Expression> elements_;
+	class Parser : public Node::Parser
+	{
+	public:
+		virtual ~Parser();
+		TypeReference* Build(const Scope&, TypeContext&, Err&) const override;
+
+	private:
+		ChildNodeParser<Identifier> name_;
+		ChildNodes<TypeReference> parameters_;
+	};
+
+private:
+	TypeReference(UniqPtr<Identifier> name, UniqPtrVec<TypeReference> parameters,
+	              const Type& referencedType, SourceRange);
+
+	UniqPtr<Identifier> name_;
+	UniqPtrVec<TypeReference> parameters_;
+	const Type& referencedType_;
 };
 
 } // namespace ast

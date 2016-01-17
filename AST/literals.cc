@@ -1,6 +1,6 @@
-/** @file AST/literals.h    Declaration of several literal expression types. */
+/** @file AST/literals.cc    Definition of several literal expression types. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -36,6 +36,7 @@
 
 using namespace fabrique;
 using namespace fabrique::ast;
+using std::string;
 
 
 std::string BoolLiteral::str() const
@@ -51,6 +52,28 @@ void BoolLiteral::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 }
 
 void BoolLiteral::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }
+
+void BoolLiteral::Parser::construct(const ParserInput& input, ParserStack&, ParseError)
+{
+	source_ = input;
+
+	const string str = input.str();
+	if (str == "true")
+	{
+		value_ = true;
+	}
+	else
+	{
+		assert(str == "false");
+		value_ = false;
+	}
+}
+
+BoolLiteral*
+BoolLiteral::Parser::Build(const Scope&, TypeContext& types, Err&) const
+{
+	return new BoolLiteral(value_, types.booleanType(), source_);
+}
 
 dag::ValuePtr BoolLiteral::evaluate(EvalContext&) const
 {
@@ -75,12 +98,26 @@ dag::ValuePtr IntLiteral::evaluate(EvalContext&) const
 	return dag::ValuePtr(new dag::Integer(value(), type(), source()));
 }
 
+void IntLiteral::Parser::construct(const ParserInput& input, ParserStack&, ParseError)
+{
+	source_ = input;
+
+	const string str = input.str();
+	value_ = std::stoi(input.str());
+}
+
+IntLiteral*
+IntLiteral::Parser::Build(const Scope&, TypeContext& types, Err&) const
+{
+	return new IntLiteral(value_, types.integerType(), source_);
+}
+
 
 std::string StringLiteral::str() const { return value(); }
 
 void StringLiteral::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
-	out << Bytestream::Literal << "'";
+	out << Bytestream::Literal << quote_;
 
 	std::string s = value();
 	size_t i = 0;
@@ -113,7 +150,7 @@ void StringLiteral::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 
 	} while (i < s.length());
 
-	out << "'" << Bytestream::Reset;
+	out << quote_ << Bytestream::Reset;
 }
 
 void StringLiteral::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }
@@ -121,4 +158,26 @@ void StringLiteral::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }
 dag::ValuePtr StringLiteral::evaluate(EvalContext&) const
 {
 	return dag::ValuePtr(new dag::String(value(), type(), source()));
+}
+
+void StringLiteral::Parser::construct(const ParserInput& input, ParserStack&, ParseError)
+{
+	source_ = input;
+
+	const string str = input.str();
+
+	if (str[0] == '\'')
+		quotes_ = 1;
+
+	else
+		quotes_ = 2;
+
+	value_ = str.substr(1, str.length() - 2);
+}
+
+StringLiteral*
+StringLiteral::Parser::Build(const Scope&, TypeContext& types, Err&) const
+{
+	const string quote = (quotes_ == 1) ? "'" : "\"";
+	return new StringLiteral(value_, types.stringType(), quote, source_);
 }

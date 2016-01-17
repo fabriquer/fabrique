@@ -36,6 +36,7 @@
 
 #include "Support/Bytestream.h"
 #include "Support/SourceLocation.h"
+#include "Pegmatite/parser.hh"
 
 #include <cassert>
 #include <fstream>
@@ -54,6 +55,13 @@ static const SourceLocation& Nowhere()
 SourceLocation::SourceLocation(const std::string& file,
                                size_t lineno, size_t colno)
 	: filename(file), line(lineno), column(colno)
+{
+}
+
+SourceLocation::SourceLocation(const pegmatite::ParserPosition& p)
+	: filename(p.filename()),
+	  line(static_cast<size_t>(p.line)),
+	  column(static_cast<size_t>(p.col))
 {
 }
 
@@ -135,6 +143,11 @@ SourceRange::SourceRange(const SourceRange& b, const SourceRange& e)
 
 SourceRange::SourceRange(const HasSource& b, const HasSource& e)
 	: SourceRange(b.source(), e.source())
+{
+}
+
+SourceRange::SourceRange(const pegmatite::InputRange& r)
+	: SourceRange(r.start, r.finish)
 {
 }
 
@@ -292,4 +305,10 @@ Bytestream& SourceRange::PrintSource(Bytestream& out, unsigned int indent,
 	out << Bytestream::Reset;
 
 	return out;
+}
+
+
+void HasSource::UpdateSource(const SourceRange& src)
+{
+	src_ = src;
 }

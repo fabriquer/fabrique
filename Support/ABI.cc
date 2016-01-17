@@ -1,10 +1,10 @@
-/** @file AST/Identifier.h    Declaration of @ref fabrique::ast::Identifier. */
+/** @file Parsing/ABI.cc    Definition of ABI helper functions. */
 /*
- * Copyright (c) 2013, 2015-2016 Jonathan Anderson
+ * Copyright (c) 2015 Jonathan Anderson
  * All rights reserved.
  *
- * This software was developed at Memorial University of Newfoundland
- * under the NSERC Discovery program (RGPIN-2015-06048).
+ * This software was developed at Memorial University of Newfoundland under
+ * the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -28,57 +28,27 @@
  * SUCH DAMAGE.
  */
 
-#ifndef IDENTIFIER_H
-#define IDENTIFIER_H
+#include "Support/ABI.h"
+#include <cxxabi.h>
+#include <memory>
 
-#include "AST/Node.h"
-#include "Types/OptionallyTyped.h"
-
-#include <string>
-
-namespace fabrique {
-namespace ast {
-
-class Scope;
-class Visitor;
+using std::string;
+using std::unique_ptr;
 
 
-/**
- * The name of a value, function, parameter or argument.
- */
-class Identifier : public Node
+string fabrique::DemangleABIName(const string& name)
 {
-public:
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
-	const std::string& name() const { return name_; }
+	int status;
 
-	bool reservedName() const;
-
-	bool operator == (const Identifier&) const;
-	bool operator < (const Identifier&) const;
-
-	virtual void Accept(Visitor&) const override;
-
-	class Parser : public Node::Parser
-	{
-	public:
-		Parser();
-		void construct(const ParserInput&, ParserStack&, ParseError) override;
-		Identifier* Build(const Scope&, TypeContext&, Err&) const override;
-
-	private:
-		std::string name_;
-		SourceRange source_;
+	unique_ptr<char> demangled {
+		abi::__cxa_demangle(name.c_str(), 0, 0, &status)
 	};
 
+	return (status == 0) ? string(demangled.get()) : "";
+}
 
-private:
-	Identifier(const std::string& name, const SourceRange& src);
 
-	const std::string name_;
-};
-
-} // namespace ast
-} // namespace fabrique
-
-#endif
+string fabrique::Demangle(const std::type_info& t)
+{
+	return DemangleABIName(t.name());
+}
