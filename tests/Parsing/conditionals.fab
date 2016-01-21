@@ -12,13 +12,13 @@ foo = true;
 # CHECK-NEXT:   31415926
 bar = if true 42 else 31415926;
 
-# CHECK: baz:string = if (not foo)
+# CHECK: bar:string = if (foo > 10)
 # CHECK-NEXT:   'hello'
 # CHECK-NEXT: else
 # CHECK-NEXT:   'world'
-baz = if not foo "hello" else "world";
+bar = if foo > 10 "hello" else "world";
 
-# CHECK: wibble:string = if (foo)
+# CHECK: baz:string = if (foo)
 # CHECK-NEXT: {
 # CHECK-NEXT:   'a'
 # CHECK-NEXT: }
@@ -26,4 +26,4 @@ baz = if not foo "hello" else "world";
 # CHECK-NEXT: {
 # CHECK-NEXT:   'b'
 # CHECK-NEXT: };
-wibble = if foo { 'a' } else { 'b' };
+baz = if bar == "hello" { 'a' } else { 'b' };
