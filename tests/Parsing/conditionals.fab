@@ -6,11 +6,11 @@
 # CHECK: foo:bool = true;
 foo = true;
 
-# CHECK: bar:int = if (foo)
+# CHECK: bar:int = if (true)
 # CHECK-NEXT:   42
 # CHECK-NEXT: else
 # CHECK-NEXT:   31415926
-bar = if foo 42 else 31415926;
+bar = if true 42 else 31415926;
 
 # CHECK: baz:string = if (not foo)
 # CHECK-NEXT:   'hello'
