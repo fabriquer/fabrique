@@ -1,6 +1,6 @@
 /** @file Support/Bytestream.h    Declaration of @ref fabrique::Bytestream. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -106,6 +106,9 @@ public:
 
 
 	virtual ~Bytestream() {}
+
+	virtual bool active() const { return true; }
+	virtual operator bool() const { return active(); }
 
 	virtual Bytestream& operator << (enum Format) = 0;
 	virtual Bytestream& operator << (const Printable&);

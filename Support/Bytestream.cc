@@ -1,6 +1,6 @@
 /** @file Support/Bytestream.cc    Definition of @ref fabrique::Bytestream. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -103,6 +103,8 @@ class NullStream : public Bytestream
 {
 public:
 	NullStream() : Bytestream(out_) {}
+
+	bool active() const override { return false; }
 
 	Bytestream& operator << (enum Format) { return *this; }
 	Bytestream& operator << (const Printable&) { return *this; }
