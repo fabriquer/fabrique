@@ -76,7 +76,7 @@ public:
 		EndOfModifiers,
 	};
 
-	Bytestream& operator << (enum Format);
+	Bytestream& operator << (enum Format) override;
 
 private:
 	enum Colour Background(enum Colour c)
@@ -92,7 +92,7 @@ class PlainStream : public Bytestream
 {
 public:
 	PlainStream(ostream& o) : Bytestream(o) {}
-	Bytestream& operator << (enum Format /*f*/)
+	Bytestream& operator << (enum Format /*f*/) override
 	{
 		// Ignore all formatting.
 		return *this;
@@ -106,12 +106,12 @@ public:
 
 	bool active() const override { return false; }
 
-	Bytestream& operator << (enum Format) { return *this; }
-	Bytestream& operator << (const Printable&) { return *this; }
-	Bytestream& operator << (const string&) { return *this; }
-	Bytestream& operator << (char) { return *this; }
-	Bytestream& operator << (int) { return *this; }
-	Bytestream& operator << (unsigned long) { return *this; }
+	Bytestream& operator << (enum Format) override { return *this; }
+	Bytestream& operator << (const Printable&) override { return *this; }
+	Bytestream& operator << (const string&) override { return *this; }
+	Bytestream& operator << (char) override { return *this; }
+	Bytestream& operator << (int) override { return *this; }
+	Bytestream& operator << (unsigned long) override { return *this; }
 
 private:
 	/**
