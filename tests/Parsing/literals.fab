@@ -7,7 +7,7 @@
 foo = 'a string literal';
 
 # CHECK: bar:int = 42;
-bar = 42;
+bar:int = 42;
 
 # CHECK: baz:list[int] = [ 1 2 3 ];
 baz = [ 1 2 3 ];
