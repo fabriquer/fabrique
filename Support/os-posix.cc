@@ -239,7 +239,7 @@ string fabrique::FindExecutable(string name, vector<string> paths,
 	if (not path)
 		throw PosixError("error in getenv('PATH')");
 
-	vector<string> systemPath = Split(path, PathDelimiter);
+	vector<string> systemPath = Split(path, string(1, PathDelimiter));
 	paths.insert(paths.end(), systemPath.begin(), systemPath.end());
 
 	return FindFile(name, paths, FileIsExecutable, report);

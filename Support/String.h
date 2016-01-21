@@ -38,7 +38,7 @@
 
 namespace fabrique {
 
-std::vector<std::string> Split(const std::string&, char delimiter = ',');
+std::vector<std::string> Split(const std::string&, std::string delimiter = ",");
 
 } // namespace fabrique
 

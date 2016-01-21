@@ -35,7 +35,7 @@
 using namespace std;
 
 
-vector<string> fabrique::Split(const std::string& s, char delim)
+vector<string> fabrique::Split(const std::string& s, const std::string delim)
 {
 	long long lastDelimiter = -1;
 	vector<string> parts;
@@ -43,7 +43,7 @@ vector<string> fabrique::Split(const std::string& s, char delim)
 	while (true)
 	{
 		assert(lastDelimiter >= -1);
-		size_t last = static_cast<size_t>(lastDelimiter + 1);
+		size_t last = static_cast<size_t>(lastDelimiter) + delim.length();
 
 		size_t next = s.find(delim, last);
 		if (next == string::npos)
@@ -57,7 +57,7 @@ vector<string> fabrique::Split(const std::string& s, char delim)
 	}
 
 	assert(lastDelimiter >= -1);
-	parts.push_back(s.substr(static_cast<size_t>(lastDelimiter + 1)));
+	parts.push_back(s.substr(static_cast<size_t>(lastDelimiter + delim.length())));
 
 	return parts;
 }
