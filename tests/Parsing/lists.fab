@@ -8,3 +8,9 @@ default_cflags = [ 'a' 'list' 'of' 'strings'];
 
 # CHECK: some_numbers:list[int] = [ 1 2 3 ];
 some_numbers = [ 1 2 3 ];
+
+# CHECK: singleton:list[string] = [ '!' ];
+singleton = [ '!' ];
+
+# CHECK: nothing:list[nil] = [ ];
+nothing = [ ];
