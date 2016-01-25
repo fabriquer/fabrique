@@ -43,6 +43,7 @@
 #include "Types/UserType.h"
 
 #include <cassert>
+#include <set>
 
 using namespace fabrique;
 using namespace fabrique::ast;
@@ -55,7 +56,8 @@ Scope::Parser::~Parser()
 
 Scope* Scope::Parser::Build(const Scope& parentScope, TypeContext& types, Err& err) const
 {
-	UniqPtrMap<Value> values;
+	UniqPtrVec<Value> values;
+	std::set<std::string> names;
 	SourceLocation begin, end;
 
 	for (const std::unique_ptr<Value::Parser>& v : values_)
@@ -71,13 +73,14 @@ Scope* Scope::Parser::Build(const Scope& parentScope, TypeContext& types, Err& e
 		UniqPtr<Value> value(v->Build(parentScope, types, err));
 		const std::string name = value->name().name();
 
-		if (values.find(name) != values.end())
+		if (names.find(name) != names.end())
 		{
 			err.ReportError("redefining value", *value);
 			return nullptr;
 		}
 
-		values.emplace(name, std::move(value));
+		names.insert(name);
+		values.emplace_back(std::move(value));
 	}
 
 	if (err.hasErrors())
@@ -102,7 +105,7 @@ Scope::Scope(const Scope *parent, SourceRange src)
 }
 
 
-Scope::Scope(const Scope *parent, UniqPtrMap<Value> values, SourceRange src)
+Scope::Scope(const Scope *parent, UniqPtrVec<Value> values, SourceRange src)
 	: Node(src), parent_(parent), values_(std::move(values))
 {
 }
@@ -230,7 +233,7 @@ void Scope::Take(UniqPtr<Value>& val)
 }
 
 
-UniqPtrMap<Value> Scope::TakeValues()
+UniqPtrVec<Value> Scope::TakeValues()
 {
 	return std::move(ownedValues_);
 }
@@ -260,7 +263,7 @@ void Scope::Accept(Visitor& v) const
 	v.Enter(*this);
 
 	for (auto& val : values_)
-		val.second->Accept(v);
+		val->Accept(v);
 
 	v.Leave(*this);
 }

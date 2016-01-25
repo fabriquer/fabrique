@@ -59,22 +59,16 @@ ParserDelegate::ParserDelegate(const Grammar& g, TypeContext& t,
                                UniqPtrVec<ErrorReport>& e)
 	: grammar_(g), types_(t), errors_(e)
 {
+	BindType<ast::Identifier>(g.Identifier);
 	BindType<ast::TypeReference>(g.Type);
 
 	BindType<ast::BoolLiteral>(g.BoolLiteral);
 	BindType<ast::IntLiteral>(g.IntLiteral);
 	BindType<ast::StringLiteral>(g.StringLiteral);
 
-	BindType<ast::Identifier>(g.Identifier);
-
-	/*
-	BIND(g.File,                 File);
-	BIND(g.FileListWithArgs,     FilesWithArgs);
-	BIND(g.FileListWithoutArgs,  Files);
-	BIND(g.Filename,             Filename);
-	*/
-
+	BindType<ast::Conditional>(g.Conditional);
 	BindType<ast::List>(g.List);
+	BindType<ast::Record>(g.Record);
 
 	/*
 	BIND(g.NamedArgument,        NamedArgument);
@@ -119,7 +113,7 @@ ast::Scope& ParserDelegate::CurrentScope()
 }
 
 
-ast::Scope& ParserDelegate::EnterScope(const string& name, const Type& args, SourceRange /*src*/)
+ast::Scope& ParserDelegate::EnterScope(const string& name, const Type& /*args*/, SourceRange /*src*/)
 {
 	Bytestream::Debug("parser.scope")
 		<< string(scopes_.size(), ' ')

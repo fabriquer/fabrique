@@ -53,7 +53,7 @@ void BoolLiteral::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 
 void BoolLiteral::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }
 
-void BoolLiteral::Parser::construct(const ParserInput& input, ParserStack&, ParseError)
+bool BoolLiteral::Parser::construct(const ParserInput& input, ParserStack&, ParseError err)
 {
 	source_ = input;
 
@@ -62,11 +62,17 @@ void BoolLiteral::Parser::construct(const ParserInput& input, ParserStack&, Pars
 	{
 		value_ = true;
 	}
-	else
+	else if (str == "false")
 	{
-		assert(str == "false");
 		value_ = false;
 	}
+	else
+	{
+		err(input, "expected 'true' or 'false'");
+		return false;
+	}
+
+	return true;
 }
 
 BoolLiteral*
@@ -98,12 +104,20 @@ dag::ValuePtr IntLiteral::evaluate(EvalContext&) const
 	return dag::ValuePtr(new dag::Integer(value(), type(), source()));
 }
 
-void IntLiteral::Parser::construct(const ParserInput& input, ParserStack&, ParseError)
+bool IntLiteral::Parser::construct(const ParserInput& input, ParserStack&, ParseError err)
 {
 	source_ = input;
 
 	const string str = input.str();
-	value_ = std::stoi(input.str());
+
+	try { value_ = std::stoi(str); }
+	catch (std::invalid_argument&)
+	{
+		err(input, "not an integer ('" + str + "')");
+		return false;
+	}
+
+	return true;
 }
 
 IntLiteral*
@@ -160,11 +174,12 @@ dag::ValuePtr StringLiteral::evaluate(EvalContext&) const
 	return dag::ValuePtr(new dag::String(value(), type(), source()));
 }
 
-void StringLiteral::Parser::construct(const ParserInput& input, ParserStack&, ParseError)
+bool StringLiteral::Parser::construct(const ParserInput& input, ParserStack&, ParseError)
 {
 	source_ = input;
 
 	const string str = input.str();
+	assert(str.length() >= 2);
 
 	if (str[0] == '\'')
 		quotes_ = 1;
@@ -173,6 +188,7 @@ void StringLiteral::Parser::construct(const ParserInput& input, ParserStack&, Pa
 		quotes_ = 2;
 
 	value_ = str.substr(1, str.length() - 2);
+	return true;
 }
 
 StringLiteral*

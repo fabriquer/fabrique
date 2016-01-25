@@ -140,7 +140,7 @@ dag::ValuePtr Import::evaluate(EvalContext& ctx) const
 	*/
 
 	for (const auto& v : this->scope().values())
-		v.second->evaluate(ctx);
+		v->evaluate(ctx);
 
 	dag::ValueMap fields;
 	Type::NamedTypeVec types;

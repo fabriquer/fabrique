@@ -41,12 +41,39 @@ using namespace fabrique;
 using namespace fabrique::ast;
 
 
-Conditional::Conditional(const SourceRange& ifLoc,
-                         UniqPtr<Expression>& condition,
+Conditional::Parser::~Parser()
+{
+}
+
+
+bool Conditional::Parser::construct(const ParserInput& in, ParserStack& s, ParseError e)
+{
+	source_ = in;
+	return Node::Parser::construct(in, s, e);
+}
+
+
+Conditional*
+Conditional::Parser::Build(const Scope& scope, TypeContext& types, Err& err) const
+{
+	UniqPtr<Expression> condition(condition_->Build(scope, types, err));
+	UniqPtr<Expression> thenClause(thenClause_->Build(scope, types, err));
+	UniqPtr<Expression> elseClause(elseClause_->Build(scope, types, err));
+
+	if (not condition or not thenClause or not elseClause)
+		return nullptr;
+
+	const Type& type = thenClause->type().supertype(elseClause->type());
+
+	return new Conditional(condition, thenClause, elseClause, source_, type);
+}
+
+
+Conditional::Conditional(UniqPtr<Expression>& condition,
                          UniqPtr<Expression>& thenResult,
                          UniqPtr<Expression>& elseResult,
-                         const Type& ty)
-	: Expression(ty, SourceRange(ifLoc.begin, elseResult->source().end)),
+                         SourceRange source, const Type& ty)
+	: Expression(ty, source),
 	  condition_(std::move(condition)),
 	  thenClause_(std::move(thenResult)),
 	  elseClause_(std::move(elseResult))

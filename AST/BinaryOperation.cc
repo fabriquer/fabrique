@@ -50,6 +50,90 @@ namespace fabrique
 }
 
 
+BinaryOperation::Parser::~Parser()
+{
+}
+
+
+BinaryOperation*
+BinaryOperation::Parser::Build(const Scope& scope, TypeContext& types, Err& err,
+                               Operator op) const
+{
+	UniqPtr<Expression> lhs(lhs_->Build(scope, types, err));
+	UniqPtr<Expression> rhs(rhs_->Build(scope, types, err));
+
+	if (not lhs or not rhs)
+		return nullptr;
+
+	return BinaryOperation::Create(std::move(lhs), op, std::move(rhs));
+}
+
+
+BinaryOperation*
+BinaryOperation::And::Build(const Scope& scope, TypeContext& types, Err& err) const
+{
+	return Parser::Build(scope, types, err, Operator::And);
+}
+
+BinaryOperation*
+BinaryOperation::Or::Build(const Scope& scope, TypeContext& types, Err& err) const
+{
+	return Parser::Build(scope, types, err, Operator::Or);
+}
+
+BinaryOperation*
+BinaryOperation::XOr::Build(const Scope& scope, TypeContext& types, Err& err) const
+{
+	return Parser::Build(scope, types, err, Operator::XOr);
+}
+
+
+BinaryOperation*
+BinaryOperation::LessThan::Build(const Scope& scope, TypeContext& types, Err& err) const
+{
+	return Parser::Build(scope, types, err, Operator::LessThan);
+}
+
+BinaryOperation*
+BinaryOperation::GreaterThan::Build(const Scope& scope, TypeContext& types, Err& err) const
+{
+	return Parser::Build(scope, types, err, Operator::GreaterThan);
+}
+
+BinaryOperation*
+BinaryOperation::Equals::Build(const Scope& scope, TypeContext& types, Err& err) const
+{
+	return Parser::Build(scope, types, err, Operator::Equal);
+}
+
+BinaryOperation*
+BinaryOperation::NotEqual::Build(const Scope& scope, TypeContext& types, Err& err) const
+{
+	return Parser::Build(scope, types, err, Operator::NotEqual);
+}
+
+
+BinaryOperation*
+BinaryOperation::Add::Build(const Scope& scope, TypeContext& types, Err& err) const
+{
+	return Parser::Build(scope, types, err, Operator::Add);
+}
+
+
+BinaryOperation*
+BinaryOperation::Prefix::Build(const Scope& scope, TypeContext& types, Err& err) const
+{
+	return Parser::Build(scope, types, err, Operator::Prefix);
+}
+
+
+BinaryOperation*
+BinaryOperation::ScalarAdd::Build(const Scope& scope, TypeContext& types, Err& err) const
+{
+	return Parser::Build(scope, types, err, Operator::ScalarAdd);
+}
+
+
 BinaryOperation* BinaryOperation::Create(UniqPtr<Expression>&& lhs,
                                          Operator op,
                                          UniqPtr<Expression>&& rhs)
@@ -78,10 +162,10 @@ BinaryOperation::Operator BinaryOperation::Op(const std::string& o)
 {
 	Operator op;
 
-	if (o == "+") op = Add;
-	else if (o == "::") op = Prefix;
-	else if (o == ".+") op = ScalarAdd;
-	else op = Invalid;
+	if (o == "+") op = Operator::Add;
+	else if (o == "::") op = Operator::Prefix;
+	else if (o == ".+") op = Operator::ScalarAdd;
+	else op = Operator::Invalid;
 
 	assert(o == OpStr(op));
 
@@ -92,15 +176,17 @@ std::string BinaryOperation::OpStr(Operator op)
 {
 	switch (op)
 	{
-		case Add:               return "+";
-		case Prefix:            return "::";
-		case ScalarAdd:         return ".+";
-		case And:               return "and";
-		case Or:                return "or";
-		case Xor:               return "xor";
-		case Equal:             return "==";
-		case NotEqual:          return "!=";
-		case Invalid:           assert(false && "op == Invalid");
+		case Operator::Add:           return "+";
+		case Operator::Prefix:        return "::";
+		case Operator::ScalarAdd:     return ".+";
+		case Operator::And:           return "and";
+		case Operator::Or:            return "or";
+		case Operator::XOr:           return "xor";
+		case Operator::LessThan:      return "<";
+		case Operator::GreaterThan:   return ">";
+		case Operator::Equal:         return "==";
+		case Operator::NotEqual:      return "!=";
+		case Operator::Invalid:       assert(false && "op == Invalid");
 	}
 
 	assert(false && "unhandled Operator type");
@@ -140,15 +226,18 @@ dag::ValuePtr BinaryOperation::evaluate(EvalContext& ctx) const
 
 	switch (op_)
 	{
-		case Add:       return lhs->Add(rhs);
-		case Prefix:    return rhs->PrefixWith(lhs);
-		case And:       return lhs->And(rhs);
-		case Or:        return lhs->Or(rhs);
-		case Xor:       return lhs->Xor(rhs);
-		case Equal:     return lhs->Equals(rhs);
-		case NotEqual:  return lhs->Equals(rhs)->Negate(source());
+		case Operator::Add:          return lhs->Add(rhs);
+		case Operator::Prefix:       return rhs->PrefixWith(lhs);
+		case Operator::And:          return lhs->And(rhs);
+		case Operator::Or:           return lhs->Or(rhs);
+		case Operator::XOr:          return lhs->Xor(rhs);
 
-		case ScalarAdd:
+		case Operator::LessThan:     return lhs->Equals(rhs);
+		case Operator::GreaterThan:  return lhs->Equals(rhs);
+		case Operator::Equal:        return lhs->Equals(rhs);
+		case Operator::NotEqual:     return lhs->Equals(rhs)->Negate(source());
+
+		case Operator::ScalarAdd:
 			if (lhs->canScalarAdd(*rhs))
 				return lhs->ScalarAdd(rhs);
 
@@ -159,7 +248,7 @@ dag::ValuePtr BinaryOperation::evaluate(EvalContext& ctx) const
 				throw SemanticException(
 					"invalid types for addition", source());
 
-		case Invalid:
+		case Operator::Invalid:
 			throw SemanticException("invalid operation", source());
 	}
 
@@ -181,7 +270,7 @@ const fabrique::Type& BinaryOperation::ResultType(const Type& lhs, const Type& r
 {
 	switch (op)
 	{
-		case Add:
+		case Operator::Add:
 			if (auto& t = lhs.onAddTo(rhs))
 				return t;
 
@@ -190,13 +279,13 @@ const fabrique::Type& BinaryOperation::ResultType(const Type& lhs, const Type& r
 
 			break;
 
-		case Prefix:
+		case Operator::Prefix:
 			if (auto& t = rhs.onPrefixWith(lhs))
 				return t;
 
 			break;
 
-		case ScalarAdd:
+		case Operator::ScalarAdd:
 		{
 			if (lhs.isOrdered() and lhs.typeParamCount() == 1
 			    and lhs[0].onAddTo(rhs))
@@ -213,16 +302,19 @@ const fabrique::Type& BinaryOperation::ResultType(const Type& lhs, const Type& r
 			break;
 		}
 
-		case And:
-		case Or:
-		case Xor:
-		case Equal:
-		case NotEqual:
+		case Operator::And:
+		case Operator::Or:
+		case Operator::XOr:
+
+		case Operator::LessThan:
+		case Operator::GreaterThan:
+		case Operator::Equal:
+		case Operator::NotEqual:
 			if (lhs == rhs)
 				return lhs.context().booleanType();
 			break;
 
-		case Invalid:
+		case Operator::Invalid:
 			break;
 	}
 

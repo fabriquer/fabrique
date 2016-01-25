@@ -49,7 +49,7 @@ namespace ast {
 class BinaryOperation : public Expression
 {
 public:
-	enum Operator
+	enum class Operator
 	{
 		Add,
 		Prefix,
@@ -59,16 +59,17 @@ public:
 		// logical operators:
 		And,
 		Or,
-		Xor,
+		XOr,
+
+		// comparitors:
+		LessThan,
+		GreaterThan,
 		Equal,
 		NotEqual,
 	};
 
 	static Operator Op(const std::string&);
 	static std::string OpStr(Operator);
-
-	static BinaryOperation* Create(
-		UniqPtr<Expression>&&, Operator, UniqPtr<Expression>&&);
 
 	Operator getOp() const { return op_; }
 	const Expression& getLHS() const { return *lhs_; }
@@ -79,7 +80,86 @@ public:
 
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
+protected:
+	class Parser : public Expression::Parser
+	{
+	public:
+		virtual ~Parser();
+
+		virtual BinaryOperation*
+		Build(const Scope&, TypeContext&, Err&) const override = 0;
+
+	protected:
+		BinaryOperation* Build(const Scope&, TypeContext&, Err&, Operator) const;
+
+		ChildNodeParser<Expression> lhs_, rhs_;
+	};
+
+public:
+	class And : public Parser
+	{
+	public:
+		BinaryOperation* Build(const Scope&, TypeContext&, Err&) const override;
+	};
+
+	class Or : public Parser
+	{
+	public:
+		BinaryOperation* Build(const Scope&, TypeContext&, Err&) const override;
+	};
+
+	class XOr : public Parser
+	{
+	public:
+		BinaryOperation* Build(const Scope&, TypeContext&, Err&) const override;
+	};
+
+	class LessThan : public Parser
+	{
+	public:
+		BinaryOperation* Build(const Scope&, TypeContext&, Err&) const override;
+	};
+
+	class GreaterThan : public Parser
+	{
+	public:
+		BinaryOperation* Build(const Scope&, TypeContext&, Err&) const override;
+	};
+
+	class Equals : public Parser
+	{
+	public:
+		BinaryOperation* Build(const Scope&, TypeContext&, Err&) const override;
+	};
+
+	class NotEqual : public Parser
+	{
+	public:
+		BinaryOperation* Build(const Scope&, TypeContext&, Err&) const override;
+	};
+
+	class Add : public Parser
+	{
+	public:
+		BinaryOperation* Build(const Scope&, TypeContext&, Err&) const override;
+	};
+
+	class Prefix : public Parser
+	{
+	public:
+		BinaryOperation* Build(const Scope&, TypeContext&, Err&) const override;
+	};
+
+	class ScalarAdd : public Parser
+	{
+	public:
+		BinaryOperation* Build(const Scope&, TypeContext&, Err&) const override;
+	};
+
 private:
+	static BinaryOperation* Create(
+		UniqPtr<Expression>&&, Operator, UniqPtr<Expression>&&);
+
 	BinaryOperation(UniqPtr<Expression>&& lhs, UniqPtr<Expression>&& rhs,
 	                enum Operator, const Type&, const SourceRange&);
 

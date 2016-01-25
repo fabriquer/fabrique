@@ -75,7 +75,7 @@ void ErrorReport::PrettyPrint(Bytestream& out, size_t indent) const
 		<< Bytestream::Reset << "\n"
 		;
 
-	source().PrintSource(out, indent, caret_, contextLines_);
+	source().PrintSource(out, indent, contextLines_, caret_);
 
 	out << Bytestream::Reset;
 }

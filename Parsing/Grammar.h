@@ -81,9 +81,9 @@ struct Grammar
 		const ExprPtr Function = term("function");
 		const ExprPtr Import = term("import");
 		const ExprPtr Nil = term("nil");
+		const ExprPtr Record = term("record");
 		const ExprPtr Return = term("return");
 		const ExprPtr Some = term("some");
-		const ExprPtr Struct = term("struct");
 	} Keywords;
 
 	const Rule Alpha = ('A'_E - 'Z') | ('a'_E - 'z');
@@ -97,8 +97,8 @@ struct Grammar
 	TRACE_RULE(BoolLiteral, Keywords.True | Keywords.False);
 	TRACE_RULE(IntLiteral, +Digit);
 
-	TRACE_RULE(SingleQuotedString, "'.*'"_R);
-	TRACE_RULE(DoubleQuotedString, "\".*\""_R);
+	TRACE_RULE(SingleQuotedString, "'"_E >> *(!"'"_E >> any()) >> "'");
+	TRACE_RULE(DoubleQuotedString, "\""_E >> *(!"\""_E >> any()) >> "\"");
 	TRACE_RULE(StringLiteral, SingleQuotedString | DoubleQuotedString);
 
 	TRACE_RULE(Literal, term(BoolLiteral | IntLiteral | StringLiteral));
@@ -143,12 +143,17 @@ struct Grammar
 		(term('('_E) >> Expression >> term(')'_E))
 		/*
 		| Operation
+		| Conditional
 		| File
 		| FileList
 		*/
 		| List
 		| Literal
 	);
+
+	TRACE_RULE(Conditional,
+		   Keywords.If >> Expression >> Expression
+		   >> Keywords.Else >> Expression);
 
 #if 0
 	/**
@@ -198,50 +203,52 @@ struct Grammar
 	 * [ 1 2 3 x y ]   # the type of this is list[int]
 	 * ```
 	 */
-	TRACE_RULE(List, '['_E >> *Expression >> ']'_E);
+	TRACE_RULE(List, term('['_E) >> *Expression >> term(']'_E));
 
-#if 0
-	/**
-	 * Fabrique supports unary and binary operations (no trinary operations).
-	 */
-	TRACE_RULE(Operation, UnaryOperation | BinaryOperation);
+	TRACE_RULE(Record, Keywords.Record >> term('{'_E) >> Values >> term('}'_E));
+
 	struct
 	{
-		TRACE_RULE(Not, term("not"_E));
-		TRACE_RULE(And, term("and"_E));
-		TRACE_RULE(Or, term("or"_E));
-		TRACE_RULE(XOr, term("xor"_E));
-
-		TRACE_RULE(Equals, term("=="_E));
-		TRACE_RULE(NotEquals, term("!="_E));
-
-		TRACE_RULE(Add, term("+"_E));
-		TRACE_RULE(Prefix, term("::"_E));
-		TRACE_RULE(ScalarAdd, term(".+"_E));
-
-		TRACE_RULE(Input, term("<-"_E));
-		TRACE_RULE(Produces, term("=>"_E));
-
-		TRACE_RULE(Binary,
-				   And | Or | XOr
-				   |
-				   Equals | NotEquals
-				   |
-				   Add | Prefix | ScalarAdd
-		);
-
-		TRACE_RULE(Unary, term(Not));
+		const char* Input = "<-";
+		const char* Produces = "=>";
 	} Operators;
 
-	TRACE_RULE(BinaryOperation, Expression >> Operators.Binary >> Expression);
-	TRACE_RULE(UnaryOperation, Operators.Unary >> Expression);
+	TRACE_RULE(AndOperation, Expression >> "and" >> Expression);
+	TRACE_RULE(OrOperation, Expression >> "or" >> Expression);
+	TRACE_RULE(XOrOperation, Expression >> "xor" >> Expression);
+
+	TRACE_RULE(LessThanOperation, Expression >> "<" >> Expression);
+	TRACE_RULE(GreaterThanOperation, Expression >> ">" >> Expression);
+	TRACE_RULE(EqualsOperation, Expression >> "==" >> Expression);
+	TRACE_RULE(NotEqualOperation, Expression >> "!=" >> Expression);
+
+	TRACE_RULE(AddOperation, Expression >> "+" >> Expression);
+	TRACE_RULE(PrefixOperation, Expression >> "::" >> Expression);
+	TRACE_RULE(ScalarAddOperation, Expression >> ".+" >> Expression);
+
+	TRACE_RULE(BinaryOperation,
+		AndOperation
+		| OrOperation
+		| XOrOperation
+
+		| LessThanOperation
+		| GreaterThanOperation
+		| EqualsOperation
+		| NotEqualOperation
+
+		| AddOperation
+		| PrefixOperation
+		| ScalarAddOperation
+	);
+
+	TRACE_RULE(UnaryOperation, "not"_E >> Expression);
+	TRACE_RULE(Operation, UnaryOperation /*| BinaryOperation*/);
 
 	TRACE_RULE(Arguments, NamedArguments | (Argument >> *(','_E >> Argument)));
 	TRACE_RULE(Argument, NamedArgument | UnnamedArgument);
 	TRACE_RULE(NamedArgument, Identifier >> '=' >> Expression);
 	TRACE_RULE(NamedArguments, NamedArgument >> *(','_E >> NamedArgument));
 	TRACE_RULE(UnnamedArgument, Expression);
-#endif
 
 	TRACE_RULE(Value,
 		Identifier >> "=" >> Expression >> ";"

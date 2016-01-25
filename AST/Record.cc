@@ -43,6 +43,34 @@ using namespace fabrique;
 using namespace fabrique::ast;
 
 
+Record::Parser::~Parser()
+{
+}
+
+
+bool Record::Parser::construct(const ParserInput& input, ParserStack& s, ParseError err)
+{
+	source_ = input;
+	return Node::Parser::construct(input, s, err);
+}
+
+
+Record* Record::Parser::Build(const Scope& s, TypeContext& types, Err& err) const
+{
+	UniqPtr<Scope> scope(values_->Build(s, types, err));
+	if (not scope)
+		return nullptr;
+
+	Type::NamedTypeVec fieldTypes;
+	for (const auto& v : scope->values())
+	{
+		fieldTypes.emplace_back(v->name().name(), v->type());
+	}
+
+	return new Record(scope, types.recordType(fieldTypes), source_);
+}
+
+
 Record::Record(UniqPtr<Scope>& fields, const RecordType& ty, const SourceRange& loc)
 	: Expression(ty, loc), HasScope(std::move(fields))
 {
@@ -60,7 +88,7 @@ void Record::PrettyPrint(Bytestream& out, size_t indent) const
 	const std::string innerTabs(indent + 1, '\t');
 	for (auto& i : scope().values())
 	{
-		i.second->PrettyPrint(out, indent + 1);
+		i->PrettyPrint(out, indent + 1);
 		out << "\n";
 	}
 
@@ -85,7 +113,7 @@ dag::ValuePtr Record::evaluate(EvalContext& ctx) const
 	dag::ValueMap fields;
 
 	for (auto& field : scope().values())
-		fields[field.first] = field.second->evaluate(ctx);
+		fields[field->name().name()] = field->evaluate(ctx);
 
 	return ctx.builder().Record(fields, type(), source());
 }

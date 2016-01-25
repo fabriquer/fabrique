@@ -236,8 +236,11 @@ void SourceRange::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 
 
 Bytestream& SourceRange::PrintSource(Bytestream& out, unsigned int indent,
-                                     SourceLocation caret, unsigned int context) const
+                                     unsigned int context, SourceLocation caret) const
 {
+	if (not caret)
+		caret = begin;
+
 	const string tabs(indent, '\t');
 
 	/*

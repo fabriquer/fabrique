@@ -43,6 +43,17 @@ namespace ast {
 class List : public Expression
 {
 public:
+	const UniqPtrVec<Expression>& elements() const { return elements_; }
+
+	using ConstIterator = UniqPtrVec<Expression>::const_iterator;
+	ConstIterator begin() const { return elements_.begin(); }
+	ConstIterator end() const { return elements_.end(); }
+
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	virtual void Accept(Visitor&) const override;
+
+	virtual dag::ValuePtr evaluate(EvalContext&) const override;
+
 	class Parser : public Expression::Parser
 	{
 	public:
@@ -54,17 +65,6 @@ public:
 		/// List elements (Pegmatite will automatically fill).
 		ChildNodes<Expression> elements_;
 	};
-
-	const UniqPtrVec<Expression>& elements() const { return elements_; }
-
-	using ConstIterator = UniqPtrVec<Expression>::const_iterator;
-	ConstIterator begin() const { return elements_.begin(); }
-	ConstIterator end() const { return elements_.end(); }
-
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
-	virtual void Accept(Visitor&) const override;
-
-	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
 private:
 	List(UniqPtrVec<Expression> e, const Type& ty, SourceRange loc)

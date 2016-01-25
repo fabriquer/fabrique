@@ -300,7 +300,7 @@ unique_ptr<ast::Scope> Parse(UniqPtr<Parser>& parser, const string& filename,
 			;
 
 		for (auto& val : ast->values())
-			Bytestream::Stdout() << *val.second << "\n";
+			Bytestream::Stdout() << *val << "\n";
 	}
 
 	return std::move(ast);

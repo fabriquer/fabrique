@@ -76,7 +76,7 @@ std::vector<DAG::BuildTarget> EvalContext::Evaluate(const ast::Scope& root)
 
 	for (const auto& v : root.values())
 		topLevelTargets.emplace_back(
-			v.first, v.second->evaluate(*this));
+			v->name().name(), v->evaluate(*this));
 
 	return topLevelTargets;
 }

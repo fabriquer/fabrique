@@ -3,7 +3,7 @@
  * Declaration of @ref fabrique::ast::Record.
  */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -50,12 +50,25 @@ namespace ast {
 class Record : public Expression, public HasScope
 {
 public:
-	Record(UniqPtr<Scope>& fields, const RecordType&, const SourceRange&);
-
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const override;
 
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
+
+	class Parser : public Expression::Parser
+	{
+	public:
+		virtual ~Parser();
+
+		bool construct(const ParserInput&, ParserStack&, ParseError) override;
+		Record* Build(const Scope&, TypeContext&, Err&) const override;
+
+	private:
+		ChildNodeParser<Scope> values_;
+	};
+
+private:
+	Record(UniqPtr<Scope>& fields, const RecordType&, const SourceRange&);
 };
 
 } // namespace ast

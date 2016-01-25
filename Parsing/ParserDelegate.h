@@ -96,6 +96,12 @@ class ParserDelegate : public pegmatite::ASTParserDelegate
 	template<class ASTType>
 	void BindType(const pegmatite::Rule& rule)
 	{
+		BindParser<typename ASTType::Parser>(rule);
+	}
+
+	template<class ParserType>
+	void BindParser(const pegmatite::Rule& rule)
+	{
 		pegmatite::ErrorReporter err =
 			[this](const ParserInput& input, const std::string& message)
 			{
@@ -111,8 +117,8 @@ class ParserDelegate : public pegmatite::ASTParserDelegate
 			{
 				dbg
 					<< SourceRange(input) << "\n"
-					<< Bytestream::Action << "  creating "
-					<< Bytestream::Type << Demangle(typeid(ASTType))
+					<< Bytestream::Action << "  parsing "
+					<< Bytestream::Type << Demangle(typeid(ParserType))
 					<< Bytestream::Operator << " «"
 					<< Bytestream::Definition << input.str()
 					<< Bytestream::Operator << "»"
@@ -140,9 +146,10 @@ class ParserDelegate : public pegmatite::ASTParserDelegate
 					;
 			}
 
-			using ParserType = typename ASTType::Parser;
 			std::unique_ptr<pegmatite::ASTNode> parser(new ParserType());
-			parser->construct(input, stack, err);
+
+			if (not parser->construct(input, stack, err))
+				return false;
 
 			stack.emplace_back(input, std::move(parser));
 			return true;

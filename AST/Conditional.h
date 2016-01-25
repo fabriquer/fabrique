@@ -47,12 +47,6 @@ class CompoundExpression;
 class Conditional : public Expression
 {
 public:
-	Conditional(const SourceRange& ifLoc,
-	            UniqPtr<Expression>& condition,
-	            UniqPtr<Expression>& thenClause,
-	            UniqPtr<Expression>& elseClause,
-	            const Type& resultTy);
-
 	const Expression& condition() const { return *condition_; }
 	const Expression& thenClause() const { return *thenClause_; }
 	const Expression& elseClause() const { return *elseClause_; }
@@ -62,7 +56,25 @@ public:
 
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
+	class Parser : public Expression::Parser
+	{
+	public:
+		virtual ~Parser();
+		bool construct(const ParserInput&, ParserStack&, ParseError) override;
+		Conditional* Build(const Scope&, TypeContext&, Err&) const override;
+
+	private:
+		ChildNodeParser<Expression> condition_;
+		ChildNodeParser<Expression> thenClause_;
+		ChildNodeParser<Expression> elseClause_;
+	};
+
 private:
+	Conditional(UniqPtr<Expression>& condition,
+	            UniqPtr<Expression>& thenClause,
+	            UniqPtr<Expression>& elseClause,
+	            SourceRange, const Type& resultTy);
+
 	const std::unique_ptr<Expression> condition_;
 	const std::unique_ptr<Expression> thenClause_;
 	const std::unique_ptr<Expression> elseClause_;

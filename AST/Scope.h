@@ -67,7 +67,7 @@ class Scope : public Node
 public:
 	Scope(const Scope *parent, /*const std::string& name, const Type& argumentsType,*/
 	      SourceRange src = SourceRange::None());
-	Scope(const Scope *parent, UniqPtrMap<Value> values, SourceRange src);
+	Scope(const Scope *parent, UniqPtrVec<Value> values, SourceRange src);
 	Scope(Scope&&);
 	virtual ~Scope() {}
 
@@ -77,7 +77,7 @@ public:
 	const std::string& name() const { return name_; }
 	//bool hasArguments() const;
 	//const Type& arguments() const { return arguments_; }
-	const UniqPtrMap<Value>& values() const { return values_; }
+	const UniqPtrVec<Value>& values() const { return values_; }
 
 	bool contains(const Identifier&) const;
 	/*
@@ -91,7 +91,7 @@ public:
 
 	void Take(Value*);
 	void Take(UniqPtr<Value>&);
-	UniqPtrMap<Value> TakeValues();
+	UniqPtrVec<Value> TakeValues();
 	*/
 
 	virtual void PrettyPrint(Bytestream&, size_t indent) const override;
@@ -115,7 +115,7 @@ private:
 
 	//const Type& arguments_;
 	SymbolMap symbols_;
-	UniqPtrMap<Value> values_;
+	UniqPtrVec<Value> values_;
 };
 
 } // namespace ast

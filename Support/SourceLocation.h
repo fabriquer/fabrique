@@ -141,8 +141,8 @@ public:
 	bool isInside(const SourceRange&) const;
 
 	Bytestream& PrintSource(Bytestream&, unsigned int indent,
-	                        SourceLocation caret = SourceLocation(),
-	                        unsigned int contextLines = 3) const;
+	                        unsigned int contextLines = 3,
+	                        SourceLocation caret = SourceLocation()) const;
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 
 	SourceLocation begin;

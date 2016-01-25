@@ -1,6 +1,6 @@
 /** @file AST/CompoundExpr.h    Declaration of @ref fabrique::ast::CompoundExpression. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -62,6 +62,18 @@ public:
 	virtual void Accept(Visitor&) const override;
 
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
+
+	class Parser : public Expression::Parser
+	{
+	public:
+		virtual ~Parser();
+		bool construct(const ParserInput&, ParserStack&, ParseError) override;
+		CompoundExpression* Build(const Scope&, TypeContext&, Err&) const override;
+
+	private:
+		ChildNodes<Value> values_;
+		ChildNodeParser<Expression> result_;
+	};
 
 private:
 	const UniqPtr<Expression> result_;

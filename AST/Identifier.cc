@@ -32,6 +32,7 @@
 #include "AST/Identifier.h"
 #include "AST/TypeReference.h"
 #include "AST/Visitor.h"
+#include "Parsing/ErrorReporter.h"
 #include "Support/Bytestream.h"
 #include "Types/Type.h"
 
@@ -54,15 +55,22 @@ Identifier::Parser::Parser()
 }
 
 
-void Identifier::Parser::construct(const ParserInput& input, ParserStack&, ParseError)
+bool Identifier::Parser::construct(const ParserInput& input, ParserStack&, ParseError)
 {
 	source_ = input;
 	name_ = input.str();
+	return true;
 }
 
 
-Identifier* Identifier::Parser::Build(const Scope&, TypeContext&, Err&) const
+Identifier* Identifier::Parser::Build(const Scope&, TypeContext&, Err& err) const
 {
+	if (name_.length() == 0)
+	{
+		err.ReportError("empty identifier", source_);
+		return nullptr;
+	}
+
 	return new Identifier(name_, source_);
 }
 

@@ -63,7 +63,7 @@ public:
 	{
 	public:
 		Parser();
-		void construct(const ParserInput&, ParserStack&, ParseError) override;
+		bool construct(const ParserInput&, ParserStack&, ParseError) override;
 		Identifier* Build(const Scope&, TypeContext&, Err&) const override;
 
 	private:
