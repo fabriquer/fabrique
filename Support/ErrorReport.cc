@@ -50,7 +50,7 @@ ErrorReport* ErrorReport::Create(const string& message, const SourceRange& loc,
 
 void ErrorReport::PrettyPrint(Bytestream& out, size_t indent) const
 {
-	string tabs(indent, '\t');
+	const string tabs(indent, '\t');
 
 	out << "\n" << tabs << caret_ << ": ";
 
