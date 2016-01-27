@@ -5,7 +5,7 @@
  * @ref fabrique::SourceRange.
  */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -38,8 +38,10 @@
 #include "Support/SourceLocation.h"
 
 #include <cassert>
+#include <fstream>
 
 using namespace fabrique;
+using std::string;
 
 
 static const SourceLocation& Nowhere()
@@ -217,4 +219,77 @@ void SourceRange::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 			;
 
 	out << Bytestream::Reset;
+}
+
+
+Bytestream& SourceRange::PrintSource(Bytestream& out, unsigned int indent,
+                                     SourceLocation caret, unsigned int context) const
+{
+	const string tabs(indent, '\t');
+
+	/*
+	 * If we are reading a file (rather than stdin), re-read the
+	 * source file to display the line in question.
+	 *
+	 * We are very careful not to make any assumptions about how the parsing
+	 * code works, so we need to re-open the file. Also, this means that we can't
+	 * do anything similar for stdin.
+	 */
+	const string filename = begin.filename;
+
+	if (!filename.empty())
+	{
+		std::ifstream sourceFile(filename.c_str());
+		assert(sourceFile.good());
+
+		for (size_t i = 1; i <= caret.line; i++) {
+			string line;
+			getline(sourceFile, line);
+
+			if ((caret.line - i) <= context)
+				out
+					<< tabs
+					<< Bytestream::Line << i << "\t"
+					<< Bytestream::Reset << line << "\n"
+					;
+		}
+
+		/*
+		 * If the expression starts on a line before the caret point,
+		 * start highlighting with '~' characters from the beginning
+		 * of the line.
+		 *
+		 * Otherwise, start where the source range says to.
+		 */
+		const size_t firstHighlightColumn =
+			begin.column < caret.column
+				? caret.column - begin.column
+				: caret.column;
+
+		const size_t preCaretHighlight =
+			caret.column - firstHighlightColumn;
+
+		const size_t postCaretHighlight =
+			end.column > caret.column
+			  ? end.column - caret.column - 1
+			  : 0;
+
+		assert(firstHighlightColumn >= 1);
+		assert(preCaretHighlight >= 0);
+		assert(postCaretHighlight >= 0);
+
+		out
+			<< tabs << "\t"
+			<< string(firstHighlightColumn - 1, ' ')
+			<< Bytestream::ErrorLoc
+			<< string(preCaretHighlight, '~')
+			<< "^"
+			<< string(postCaretHighlight, '~')
+			<< "\n"
+			;
+	}
+
+	out << Bytestream::Reset;
+
+	return out;
 }

@@ -1,6 +1,6 @@
 /** @file Support/ErrorReport.cc    Definition of @ref fabrique::ErrorReport. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -75,69 +75,7 @@ void ErrorReport::PrettyPrint(Bytestream& out, size_t indent) const
 		<< Bytestream::Reset << "\n"
 		;
 
-	/*
-	 * If we are reading a file (rather than stdin), re-read the
-	 * source file to display the offending line.
-	 *
-	 * Currently, we are very careful not to make any assumptions about
-	 * how much of the original source buffer lex has kept around, so
-	 * there's no such output for source from stdin.
-	 */
-	string filename(caret_.filename);
-	const SourceRange& source = this->source();
-	if (filename.empty()) filename = source.begin.filename;
-
-	if (!filename.empty())
-	{
-		std::ifstream sourceFile(filename.c_str());
-		assert(sourceFile.good());
-
-		for (size_t i = 1; i <= caret_.line; i++) {
-			string line;
-			getline(sourceFile, line);
-
-			if ((caret_.line - i) <= contextLines_)
-				out
-					<< tabs
-					<< Bytestream::Line << i << "\t"
-					<< Bytestream::Reset << line << "\n"
-					;
-		}
-
-		/*
-		 * If the expression starts on a line before the caret point,
-		 * start highlighting with '~' characters from the beginning
-		 * of the line.
-		 *
-		 * Otherwise, start where the source range says to.
-		 */
-		const size_t firstHighlightColumn =
-			source.begin.column < caret_.column
-				? caret_.column - source.begin.column
-				: caret_.column;
-
-		const size_t preCaretHighlight =
-			caret_.column - firstHighlightColumn;
-
-		const size_t postCaretHighlight =
-			source.end.column > caret_.column
-			  ? source.end.column - caret_.column - 1
-			  : 0;
-
-		assert(firstHighlightColumn >= 1);
-		assert(preCaretHighlight >= 0);
-		assert(postCaretHighlight >= 0);
-
-		out
-			<< tabs << "\t"
-			<< string(firstHighlightColumn - 1, ' ')
-			<< Bytestream::ErrorLoc
-			<< string(preCaretHighlight, '~')
-			<< "^"
-			<< string(postCaretHighlight, '~')
-			<< "\n"
-			;
-	}
+	source().PrintSource(out, indent, caret_, contextLines_);
 
 	out << Bytestream::Reset;
 }

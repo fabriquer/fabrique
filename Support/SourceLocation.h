@@ -5,7 +5,7 @@
  * @ref fabrique::SourceRange.
  */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -132,6 +132,9 @@ public:
 
 	bool isInside(const SourceRange&) const;
 
+	Bytestream& PrintSource(Bytestream&, unsigned int indent,
+	                        SourceLocation caret = SourceLocation(),
+	                        unsigned int contextLines = 3) const;
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 
 	SourceLocation begin;
