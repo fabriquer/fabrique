@@ -70,10 +70,18 @@ ParserDelegate::ParserDelegate(const Grammar& g, TypeContext& t,
 	BindType<ast::List>(g.List);
 	BindType<ast::Record>(g.Record);
 
-	/*
-	BIND(g.NamedArgument,        NamedArgument);
-	BIND(g.UnnamedArgument,      UnnamedArgument);
-	*/
+	BindParser<ast::BinaryOperation::And>(g.AndOperation);
+	BindParser<ast::BinaryOperation::Or>(g.OrOperation);
+	BindParser<ast::BinaryOperation::XOr>(g.XOrOperation);
+
+	BindParser<ast::BinaryOperation::LessThan>(g.LessThanOperation);
+	BindParser<ast::BinaryOperation::GreaterThan>(g.GreaterThanOperation);
+	BindParser<ast::BinaryOperation::Equals>(g.EqualsOperation);
+	BindParser<ast::BinaryOperation::NotEqual>(g.NotEqualOperation);
+
+	BindParser<ast::BinaryOperation::Add>(g.AddOperation);
+	BindParser<ast::BinaryOperation::Prefix>(g.PrefixOperation);
+	BindParser<ast::BinaryOperation::ScalarAdd>(g.ScalarAddOperation);
 
 	BindType<ast::Value>(g.Value);
 	BindType<ast::Scope>(g.Values);

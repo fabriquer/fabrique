@@ -59,8 +59,9 @@ struct Grammar
 	//
 	// Things that we ignore:
 	//
-	const Rule Whitespace = ' '_E | '\t' | nl('\n');
-	const Rule Comment = '#'_E >> *(!nl('\n') >> any()) >> nl('\n');
+	const Rule Newline = nl('\n');
+	const Rule Whitespace = ' '_E | '\t' | Newline;
+	const Rule Comment = '#'_E >> *(!Newline >> any()) >> Newline;
 	const Rule Ignored = *(Comment | Whitespace);
 
 	//
@@ -94,12 +95,12 @@ struct Grammar
 	/*
 	 * Fabrique supports boolean, integer and string literals.
 	 */
-	TRACE_RULE(BoolLiteral, Keywords.True | Keywords.False);
-	TRACE_RULE(IntLiteral, +Digit);
+	const Rule BoolLiteral = Keywords.True | Keywords.False;
+	const Rule IntLiteral = +Digit;
 
-	TRACE_RULE(SingleQuotedString, "'"_E >> *(!"'"_E >> any()) >> "'");
-	TRACE_RULE(DoubleQuotedString, "\""_E >> *(!"\""_E >> any()) >> "\"");
-	TRACE_RULE(StringLiteral, SingleQuotedString | DoubleQuotedString);
+	const Rule SingleQuotedString = "'"_E >> *(!"'"_E >> any()) >> "'";
+	const Rule DoubleQuotedString = "\""_E >> *(!"\""_E >> any()) >> "\"";
+	const Rule StringLiteral = SingleQuotedString | DoubleQuotedString;
 
 	TRACE_RULE(Literal, term(BoolLiteral | IntLiteral | StringLiteral));
 
@@ -140,16 +141,17 @@ struct Grammar
 	 * Almost everything in Fabrique is an Expression.
 	 */
 	TRACE_RULE(Expression,
-		(term('('_E) >> Expression >> term(')'_E))
+		Operation
 		/*
-		| Operation
 		| Conditional
 		| File
 		| FileList
 		*/
-		| List
-		| Literal
 	);
+
+	TRACE_RULE(Term, Literal | ParentheticalExpression | List);
+
+	const Rule ParentheticalExpression = term('('_E) >> Expression >> term(')'_E);
 
 	TRACE_RULE(Conditional,
 		   Keywords.If >> Expression >> Expression
@@ -213,20 +215,30 @@ struct Grammar
 		const char* Produces = "=>";
 	} Operators;
 
-	TRACE_RULE(AndOperation, Expression >> "and" >> Expression);
-	TRACE_RULE(OrOperation, Expression >> "or" >> Expression);
-	TRACE_RULE(XOrOperation, Expression >> "xor" >> Expression);
+	TRACE_RULE(Sum, AddOperation | PrefixOperation | ScalarAddOperation | Term);
+	const Rule AddOperation = Sum >> "+" >> Sum;
+	const Rule PrefixOperation = Sum >> "::" >> Sum;
+	const Rule ScalarAddOperation = Sum >> ".+" >> Sum;
 
-	TRACE_RULE(LessThanOperation, Expression >> "<" >> Expression);
-	TRACE_RULE(GreaterThanOperation, Expression >> ">" >> Expression);
-	TRACE_RULE(EqualsOperation, Expression >> "==" >> Expression);
-	TRACE_RULE(NotEqualOperation, Expression >> "!=" >> Expression);
+	TRACE_RULE(CompareExpr,
+		LessThanOperation | GreaterThanOperation
+		| EqualsOperation | NotEqualOperation
+		| Sum);
 
-	TRACE_RULE(AddOperation, Expression >> "+" >> Expression);
-	TRACE_RULE(PrefixOperation, Expression >> "::" >> Expression);
-	TRACE_RULE(ScalarAddOperation, Expression >> ".+" >> Expression);
+	const Rule LessThanOperation = Sum >> "<" >> Sum;
+	const Rule GreaterThanOperation = Sum >> ">" >> Sum;
+	const Rule EqualsOperation = Sum >> "==" >> Sum;
+	const Rule NotEqualOperation = Sum >> "!=" >> Sum;
 
-	TRACE_RULE(BinaryOperation,
+	TRACE_RULE(LogicExpr, AndOperation | OrOperation | XOrOperation | CompareExpr);
+	const Rule AndOperation = LogicExpr >> "and" >> LogicExpr;
+	const Rule OrOperation = LogicExpr >> "or" >> LogicExpr;
+	const Rule XOrOperation = LogicExpr >> "xor" >> LogicExpr;
+
+	TRACE_RULE(BinaryOperation, LogicExpr);
+
+#if 0
+
 		AndOperation
 		| OrOperation
 		| XOrOperation
@@ -240,9 +252,10 @@ struct Grammar
 		| PrefixOperation
 		| ScalarAddOperation
 	);
+#endif
 
 	TRACE_RULE(UnaryOperation, "not"_E >> Expression);
-	TRACE_RULE(Operation, UnaryOperation /*| BinaryOperation*/);
+	TRACE_RULE(Operation, UnaryOperation | BinaryOperation);
 
 	TRACE_RULE(Arguments, NamedArguments | (Argument >> *(','_E >> Argument)));
 	TRACE_RULE(Argument, NamedArgument | UnnamedArgument);

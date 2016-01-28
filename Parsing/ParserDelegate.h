@@ -115,13 +115,16 @@ class ParserDelegate : public pegmatite::ASTParserDelegate
 			Bytestream& dbg = Bytestream::Debug("parser.node");
 			if (dbg)
 			{
+				SourceRange src(input);
+
 				dbg
-					<< SourceRange(input) << "\n"
-					<< Bytestream::Action << "  parsing "
+					<< Bytestream::Action << "\nparsing "
 					<< Bytestream::Type << Demangle(typeid(ParserType))
-					<< Bytestream::Operator << " «"
-					<< Bytestream::Definition << input.str()
-					<< Bytestream::Operator << "»"
+					<< Bytestream::Reset << ":\n"
+					;
+
+				src.PrintSource(dbg, 0, 0);
+				dbg
 					<< Bytestream::Reset << " on stack:\n"
 					;
 
