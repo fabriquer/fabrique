@@ -8,3 +8,9 @@ integers = 0 :: [ 1 2 ] + [ 3 4 ] .+ 5;
 
 # CHECK: strings:list[string] = 'hello' :: [ 'world' ] + [ '!' ];
 strings = 'hello' :: [ 'world' ] + [ '!' ];
+
+# CHECK: same:bool = 'foo' == 'bar';
+same = 'foo' == 'bar';
+
+# CHECK: logic:bool = 1 < 2 and 3 < 4 or 10 > 9 xor 0 == 0;
+logic = (1 < 2) and 3 < 4 or 10 > 9 xor 0 == 0;
