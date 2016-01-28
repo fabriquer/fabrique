@@ -1,6 +1,6 @@
-/** @file AST/SymbolReference.cc    Definition of @ref fabrique::ast::SymbolReference. */
+/** @file AST/NameReference.cc    Definition of @ref fabrique::ast::NameReference. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -30,8 +30,8 @@
  */
 
 #include "AST/EvalContext.h"
+#include "AST/NameReference.h"
 #include "AST/Node.h"
-#include "AST/SymbolReference.h"
 #include "AST/Visitor.h"
 #include "DAG/Record.h"
 #include "DAG/UndefinedValueException.h"
@@ -44,20 +44,20 @@ using namespace fabrique::ast;
 using std::string;
 
 
-SymbolReference::SymbolReference(UniqPtr<Node>&& name, const Type& t)
+NameReference::NameReference(UniqPtr<Node>&& name, const Type& t)
 	: Expression(t, name->source()),
 	  name_(std::move(name))
 {
 }
 
 
-void SymbolReference::PrettyPrint(Bytestream& out, size_t indent) const
+void NameReference::PrettyPrint(Bytestream& out, size_t indent) const
 {
 	name_->PrettyPrint(out, indent);
 }
 
 
-void SymbolReference::Accept(Visitor& v) const
+void NameReference::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
 		name_->Accept(v);
@@ -65,7 +65,7 @@ void SymbolReference::Accept(Visitor& v) const
 	v.Leave(*this);
 }
 
-dag::ValuePtr SymbolReference::evaluate(EvalContext& ctx) const
+dag::ValuePtr NameReference::evaluate(EvalContext& ctx) const
 {
 	static Bytestream& debug = Bytestream::Debug("eval.lookup");
 	const string& name = Type::UntypedPart(name_->str());

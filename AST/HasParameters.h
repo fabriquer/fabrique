@@ -38,8 +38,8 @@
 #include "ADT/PtrVec.h"
 #include "ADT/StringMap.h"
 
+#include "AST/NameReference.h"
 #include "AST/Parameter.h"
-#include "AST/SymbolReference.h"
 
 #include <memory>
 #include <set>

@@ -21,12 +21,12 @@ sources = files(
 	Import.cc
 	List.cc
 	Mapping.cc
+	NameReference.cc
 	Node.cc
 	Parameter.cc
 	Record.cc
 	Scope.cc
 	SomeValue.cc
-	SymbolReference.cc
 	TypeDeclaration.cc
 	TypeReference.cc
 	UnaryOperation.cc

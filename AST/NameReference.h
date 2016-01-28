@@ -1,6 +1,6 @@
-/** @file AST/SymbolReference.h    Declaration of @ref fabrique::ast::SymbolReference. */
+/** @file AST/NameReference.h    Declaration of @ref fabrique::ast::NameReference. */
 /*
- * Copyright (c) 2013, 2015 Jonathan Anderson
+ * Copyright (c) 2013, 2015-2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -30,8 +30,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef SYMBOL_REFERENCE_H
-#define SYMBOL_REFERENCE_H
+#ifndef NAME_REFERENCE_H
+#define NAME_REFERENCE_H
 
 #include "Expression.h"
 
@@ -45,10 +45,10 @@ class Node;
 /**
  * A reference to a named symbol.
  */
-class SymbolReference : public Expression
+class NameReference : public Expression
 {
 public:
-	SymbolReference(UniqPtr<Node>&& name, const Type&);
+	NameReference(UniqPtr<Node>&& name, const Type&);
 
 	const Node& name() const { return *name_; }
 
