@@ -66,6 +66,8 @@ ParserDelegate::ParserDelegate(const Grammar& g, TypeContext& t,
 	BindType<ast::IntLiteral>(g.IntLiteral);
 	BindType<ast::StringLiteral>(g.StringLiteral);
 
+	BindType<ast::NameReference>(g.NameReference);
+
 	BindType<ast::Conditional>(g.Conditional);
 	BindType<ast::List>(g.List);
 	BindType<ast::Record>(g.Record);
@@ -92,24 +94,39 @@ ParserDelegate::~ParserDelegate()
 }
 
 
-unique_ptr<ast::Scope> ParserDelegate::Parse(pegmatite::Input& input)
+pegmatite::ErrorReporter ParserDelegate::pegErr()
+{
+	return [this](const InputRange& src, std::string message)
+	{
+		errors_.ReportError(message, SourceRange(src));
+	};
+}
+
+
+UniqPtr<ast::Scope>
+ParserDelegate::Parse(pegmatite::Input& input, const ast::Scope& containingScope)
 {
 	unique_ptr<ast::Scope::Parser> parseTree;
-	pegmatite::ErrorReporter err = [this](const InputRange& src, std::string message)
-	{
-		errors_.ReportError(message, src);
-	};
-
-	if (not parse(input, grammar_.Values, grammar_.Ignored, err, parseTree))
+	if (not parse(input, grammar_.Values, grammar_.Ignored, pegErr(), parseTree))
 		return nullptr;
 
-	unique_ptr<ast::Scope> scope(parseTree->Build(CurrentScope(), types_, errors_));
+	unique_ptr<ast::Scope> scope(parseTree->Build(containingScope, types_, errors_));
 
 	return scope;
 }
 
+UniqPtr<ast::Value>
+ParserDelegate::ParseValue(pegmatite::Input& input, const ast::Scope& containingScope)
+{
+	unique_ptr<ast::Value::Parser> value;
+	if (not parse(input, grammar_.Value, grammar_.Ignored, pegErr(), value))
+		return nullptr;
+
+	return UniqPtr<ast::Value>(value->Build(containingScope, types_, errors_));
+}
 
 
+#if 0
 //
 // AST scopes:
 //
@@ -191,6 +208,7 @@ unique_ptr<ast::Scope> ParserDelegate::ExitScope()
 
 	return std::move(scope);
 }
+#endif
 
 
 /*

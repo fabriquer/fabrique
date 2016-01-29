@@ -35,6 +35,7 @@
 
 #include "AST/ast.h"
 #include "ADT/UniqPtr.h"
+#include "Parsing/ParserDelegate.h"
 #include "Support/ErrorReport.h"
 
 #include <map>
@@ -57,11 +58,11 @@ public:
 	Parser(TypeContext&, plugin::Registry&, plugin::Loader&, std::string srcroot);
 
 	//! Parse Fabrique fragments defined at, e.g., the command line.
-	const Type& ParseDefinitions(const std::vector<std::string>& defs);
+	UniqPtr<ast::Record> ParseDefinitions(const std::vector<std::string>& defs);
 
 	//! Parse Fabrique input (usually a file) into a @ref Scope.
 	UniqPtr<ast::Scope> ParseFile(
-		std::istream& input, const Type& arguments, std::string name = "",
+		std::istream& input, const ast::Record& args, std::string name = "",
 		StringMap<std::string> builtins = StringMap<std::string>(),
 		SourceRange openedFrom = SourceRange::None());
 
@@ -75,6 +76,7 @@ private:
 	std::unique_ptr<plugin::Plugin> FindPlugin(std::string name);
 
 	TypeContext& types_;
+	ParserDelegate delegate_;
 
 	plugin::Registry& pluginRegistry_;
 	plugin::Loader& pluginLoader_;
@@ -82,16 +84,11 @@ private:
 	//! Input files, in order they were parsed.
 	std::vector<std::string> files_;
 
-
 	//! The root of all source files (where the top-level Fabrique file lives).
 	std::string srcroot_;
 
 	//! The subdirectory that we are currently working from.
 	std::stack<std::string> currentSubdirectory_;
-
-
-	//! Pre-defined values (e.g., from the command line).
-	UniqPtr<ast::Scope> definitions_;
 
 	UniqPtrVec<ErrorReport> errs_;
 };

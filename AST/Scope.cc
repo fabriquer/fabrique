@@ -1,6 +1,6 @@
 /** @file AST/Scope.cc    Definition of @ref fabrique::ast::Scope. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -49,6 +49,50 @@ using namespace fabrique;
 using namespace fabrique::ast;
 
 
+namespace {
+
+class CompleteScope : public Scope
+{
+public:
+	CompleteScope(const Scope *parent, UniqPtrVec<Value> values, SourceRange src)
+		: Scope(src, parent), values_(std::move(values))
+	{
+	}
+
+	virtual const UniqPtrVec<Value>& values() const override { return values_; }
+
+private:
+	UniqPtrVec<Value> values_;
+};
+
+class ScopeBuilder : public Scope
+{
+public:
+	virtual const UniqPtrVec<Value>& values() const override;
+
+private:
+	//! Already-parsed values.
+	UniqPtrVec<Value> values_;
+
+	//! Values we haven't parsed yet.
+	UniqPtrVec<Value::Parser> parsers_;
+};
+
+} // anonymous namespace
+
+
+UniqPtr<Scope> Scope::Create(UniqPtrVec<Value> values, const Scope *parent)
+{
+	SourceRange src =
+		values.empty()
+		? SourceRange::None()
+		: SourceRange::Over(values.front(), values.back())
+		;
+
+	return UniqPtr<Scope>(new CompleteScope(parent, std::move(values), src));
+}
+
+
 Scope::Parser::~Parser()
 {
 }
@@ -86,84 +130,52 @@ Scope* Scope::Parser::Build(const Scope& parentScope, TypeContext& types, Err& e
 	if (err.hasErrors())
 		return nullptr;
 
-	return new Scope(&parentScope, std::move(values), source_);
+	return new CompleteScope(&parentScope, std::move(values), source_);
 }
 
 
-/*
-Scope::Scope(const Scope *parent, const std::string& name, const Type& argumentsType,
-             SourceRange src)
-	: Node(src), parent_(parent), name_(name), arguments_(argumentsType)
+const Scope& Scope::None()
 {
+	const Scope& none =
+		*new CompleteScope(nullptr, UniqPtrVec<Value>(), SourceRange::None());
+
+	return none;
 }
-*/
 
 
-Scope::Scope(const Scope *parent, SourceRange src)
+Scope::Scope(SourceRange src, const Scope* parent)
 	: Node(src), parent_(parent)
 {
 }
 
 
-Scope::Scope(const Scope *parent, UniqPtrVec<Value> values, SourceRange src)
-	: Node(src), parent_(parent), values_(std::move(values))
+Scope::~Scope()
 {
 }
 
 
-Scope::Scope(Scope&& other)
-	: Node(other.source()), parent_(other.parent_), name_(other.name_),
-	  /*arguments_(other.arguments_),*/ symbols_(other.symbols_),
-	  values_(std::move(other.values_))
+const UniqPtr<Value>& Scope::Lookup(const Identifier& id) const
 {
-	other.symbols_.clear();
-	assert(other.values_.empty());
-}
+	static UniqPtr<Value>& NoValue = *new UniqPtr<Value>();
 
-
-#if 0
-const Type& Scope::Lookup(const Identifier& id) const
-{
-	const std::string& name = id.name();
-
-	/*
-	// Special case: 'args' is a reserved name derived from external arguments
-	//               (command-line or via an import() expression).
-	if ((name == ast::Arguments) and arguments_.valid())
-		return arguments_;
-	*/
-
-	// More special cases: 'builddir' and 'subdir' are files.
-	if (name == ast::BuildDirectory or name == ast::Subdirectory)
-		return arguments_.context().fileType();
-
-	auto i = symbols_.find(name);
-	if (i != symbols_.end())
+	for (auto& v : values())
 	{
-		const Type& t = i->second;
-		if (t.isType())
-			return dynamic_cast<const UserType&>(t).userType();
-
-		return t;
+		if (v->name() == id)
+		{
+			return v;
+		}
 	}
 
 	if (parent_)
 		return parent_->Lookup(id);
 
-	return arguments_.context().nilType();
+	return NoValue;
 }
-
-
-bool Scope::hasArguments() const
-{
-	return arguments_.valid();
-}
-#endif
 
 
 bool Scope::contains(const Identifier& name) const
 {
-	return symbols_.find(name.name()) != symbols_.end();
+	return static_cast<bool>(Lookup(name));
 }
 
 
@@ -246,12 +258,12 @@ void Scope::PrettyPrint(Bytestream& out, size_t indent) const
 
 	out << Bytestream::Operator << "{\n";
 
-	for (auto& symbol : symbols_)
+	for (auto& v : values())
 		out
 			<< tabs
-			<< Bytestream::Definition << symbol.first
+			<< Bytestream::Definition << v->name()
 			<< Bytestream::Operator << ":"
-			<< symbol.second
+			<< *v
 			<< Bytestream::Reset << "\n"
 			;
 
@@ -262,7 +274,7 @@ void Scope::Accept(Visitor& v) const
 {
 	v.Enter(*this);
 
-	for (auto& val : values_)
+	for (auto& val : values())
 		val->Accept(v);
 
 	v.Leave(*this);

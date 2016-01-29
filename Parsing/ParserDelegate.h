@@ -28,6 +28,9 @@
  * SUCH DAMAGE.
  */
 
+#ifndef PARSER_DELEGATE_H
+#define PARSER_DELEGATE_H
+
 #include "AST/forward-decls.h"
 #include "Parsing/ErrorReporter.h"
 #include "Support/ABI.h"
@@ -58,8 +61,12 @@ class ParserDelegate : public pegmatite::ASTParserDelegate
 	virtual ~ParserDelegate();
 
 	/// Parse an input file and return an ast::Scope containing ast::Value objects.
-	std::unique_ptr<ast::Scope> Parse(pegmatite::Input& input);
+	UniqPtr<ast::Scope> Parse(pegmatite::Input&, const ast::Scope& container);
+	UniqPtr<ast::Value> ParseValue(pegmatite::Input&, const ast::Scope& container);
 
+	ErrorReporter& errors() { return errors_; }
+
+#if 0
 	ast::Scope& CurrentScope();
 
 	/**
@@ -90,6 +97,7 @@ class ParserDelegate : public pegmatite::ASTParserDelegate
 	 * (and, transitively, everything it contains).
 	 */
 	std::unique_ptr<ast::Scope> ExitScope();
+#endif
 
 
 	private:
@@ -102,11 +110,7 @@ class ParserDelegate : public pegmatite::ASTParserDelegate
 	template<class ParserType>
 	void BindParser(const pegmatite::Rule& rule)
 	{
-		pegmatite::ErrorReporter err =
-			[this](const ParserInput& input, const std::string& message)
-			{
-				errors_.ReportError(message, input);
-			};
+		pegmatite::ErrorReporter err = pegErr();
 
 		bind_parse_proc(rule, [err](const ParserInput& input, void *data)
 		{
@@ -158,6 +162,8 @@ class ParserDelegate : public pegmatite::ASTParserDelegate
 			return true;
 		});
 	}
+
+	pegmatite::ErrorReporter pegErr();
 
 
 	/*
@@ -556,8 +562,7 @@ private:
 #endif
 #endif
 
-
-
-
 } // namespace parser
 } // namespace fabrique
+
+#endif

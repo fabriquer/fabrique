@@ -263,7 +263,7 @@ unique_ptr<ast::Scope> Parse(UniqPtr<Parser>& parser, const string& filename,
                              string srcroot, string buildroot, bool printAST)
 {
 	// Parse command-line arguments.
-	const Type& args = parser->ParseDefinitions(definitions);
+	UniqPtr<ast::Record> args = parser->ParseDefinitions(definitions);
 
 	// Open and parse the top-level build description.
 	std::ifstream infile(filename.c_str());
@@ -278,7 +278,7 @@ unique_ptr<ast::Scope> Parse(UniqPtr<Parser>& parser, const string& filename,
 		PathIsAbsolute(filename) ? filename : AbsolutePath(filename);
 
 	unique_ptr<ast::Scope> ast(
-		parser->ParseFile(infile, args, absolute, builtins));
+		parser->ParseFile(infile, *args, absolute, builtins));
 
 	if (not ast)
 	{

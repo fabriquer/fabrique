@@ -1,5 +1,5 @@
 #
-# Generated at Wed 20 May 2015 19:31:43 NDT by regenerate-manifest.sh
+# Generated at Thu 28 Jan 2016 19:05:44 NST by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -104,6 +104,7 @@ all_files = files(
 ./Parsing/builddir.fab
 ./Parsing/builtins.fab
 ./Parsing/calling-the-uncallable.fab
+./Parsing/comments.fab
 ./Parsing/compound-expr.fab
 ./Parsing/conditionals.fab
 ./Parsing/config-cli-optional.fab
@@ -153,10 +154,10 @@ all_files = files(
 ./Parsing/simple-build.fab
 ./Parsing/subdir-wrong-type.fab
 ./Parsing/subdir.fab
-./Parsing/tokeniser.fab
 ./Parsing/type-conflict.fab
 ./Parsing/types.fab
 ./Parsing/unnamed-value.fab
+./Regression/comments.fab
 ./backends/dot/compile-arguments.fab
 ./backends/dot/compile-graph.fab
 ./backends/dot/complex-build.fab

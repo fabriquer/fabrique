@@ -43,6 +43,24 @@ using namespace fabrique;
 using namespace fabrique::ast;
 
 
+UniqPtr<Record> Record::Create(UniqPtr<Scope> scope, TypeContext& types)
+{
+	if (not scope)
+		return UniqPtr<Record>();
+
+	Type::NamedTypeVec fieldTypes;
+	for (auto& value : scope->values())
+	{
+		fieldTypes.emplace_back(value->name().name(), value->type());
+	}
+	const RecordType& t = types.recordType(fieldTypes);
+
+	SourceRange src = scope->source();
+
+	return UniqPtr<Record>(new Record(scope, t, src));
+}
+
+
 Record::Parser::~Parser()
 {
 }
@@ -75,6 +93,13 @@ Record::Record(UniqPtr<Scope>& fields, const RecordType& ty, const SourceRange& 
 	: Expression(ty, loc), HasScope(std::move(fields))
 {
 }
+
+
+const UniqPtrVec<Value>& Record::fields() const
+{
+	return scope().values();
+}
+
 
 void Record::PrettyPrint(Bytestream& out, size_t indent) const
 {

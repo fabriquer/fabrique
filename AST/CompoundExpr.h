@@ -50,7 +50,7 @@ class Value;
 /**
  * An expression that can contain intermediate values.
  */
-class CompoundExpression : public Expression, public Scope
+class CompoundExpression : public Expression
 {
 public:
 	CompoundExpression(UniqPtr<Scope>&& values, UniqPtr<Expression>& result,
@@ -76,6 +76,7 @@ public:
 	};
 
 private:
+	const UniqPtr<Scope> scope_;
 	const UniqPtr<Expression> result_;
 };
 

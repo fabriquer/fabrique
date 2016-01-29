@@ -57,60 +57,50 @@ using std::unique_ptr;
 
 Parser::Parser(TypeContext& types, plugin::Registry& pluginRegistry,
                plugin::Loader& pluginLoader, string srcroot)
-	: types_(types), pluginRegistry_(pluginRegistry), pluginLoader_(pluginLoader),
+	: types_(types), delegate_(Grammar::get(), types_, errs_),
+	  pluginRegistry_(pluginRegistry), pluginLoader_(pluginLoader),
 	  srcroot_(srcroot)
 {
 	currentSubdirectory_.push("");
 }
 
 
-const Type& Parser::ParseDefinitions(const std::vector<string>& definitions)
+UniqPtr<ast::Record> Parser::ParseDefinitions(const std::vector<string>& definitions)
 {
-	if (definitions_)
-		throw UserError("arguments already defined");
-
 	Type::NamedTypeVec args;
-	const Type& nil = types_.nilType();
 
-	UniqPtr<Scope> scope { new Scope(nullptr/*, "definitions", nil*/) };
+	const Scope& noScope = Scope::None();
+	UniqPtrVec<Value> values;
 
 	for (const string& d : definitions)
 	{
-		std::istringstream input(d + ";");
-		UniqPtr<Scope> definitionTree { ParseFile(input, nil) };
-		if (not definitionTree)
+		std::istringstream stream(d + ";");
+		pegmatite::StreamInput input =
+			pegmatite::StreamInput::Create("definition", stream);
+
+		UniqPtr<ast::Value> v(delegate_.ParseValue(input, noScope));
+		if (not v)
 			throw UserError("invalid definition '" + d + "'");
 
-#if 0
-		for (UniqPtr<Value>& value : definitionTree->ReleaseValues())
-		{
-			const string name = value->name().name();
+		Bytestream::Debug("parser.cli.defines")
+			<< Bytestream::Action << "Parsed definition"
+			<< Bytestream::Operator << ": "
+			<< *v
+			<< Bytestream::Reset << "\n"
+			;
 
-			if (name == Arguments)
-				continue;
-
-			Bytestream::Debug("parser.cli.defines")
-				<< Bytestream::Action << "Parsed definition"
-				<< Bytestream::Operator << ": "
-				<< *value
-				<< Bytestream::Reset << "\n"
-				;
-
-			args.emplace_back(name, value->type());
-			scope->Take(value);
-		}
-#endif
-
-		definitionTree.reset();
+		values.push_back(std::move(v));
 	}
 
-	definitions_.swap(scope);
+	UniqPtr<Scope> scope = Scope::Create(std::move(values));
+	if (not scope)
+		return UniqPtr<ast::Record>();
 
-	return types_.recordType(args);
+	return ast::Record::Create(std::move(scope), types_);
 }
 
 
-UniqPtr<Scope> Parser::ParseFile(std::istream& input, const Type& args,
+UniqPtr<Scope> Parser::ParseFile(std::istream& input, const ast::Record& args,
                                  string name, StringMap<string> /*builtins*/,
                                  SourceRange /*openedFrom*/)
 {
@@ -121,23 +111,17 @@ UniqPtr<Scope> Parser::ParseFile(std::istream& input, const Type& args,
 		<< Bytestream::Operator << " '"
 		<< Bytestream::Literal << name
 		<< Bytestream::Operator << "'"
+		<< Bytestream::Reset << " with "
+		<< Bytestream::Definition << "args"
+		<< Bytestream::Operator << ": "
 		;
 
-	if (args.valid())
-	{
+	for (auto& f : args.fields())
 		dbg
-			<< Bytestream::Reset << " with "
-			<< Bytestream::Definition << "args"
-			<< Bytestream::Operator << ": "
+			<< Bytestream::Definition << f->name()
+			<< Bytestream::Operator << ":"
+			<< *f
 			;
-
-		for (auto& i : args.fields())
-			dbg
-				<< Bytestream::Definition << i.first
-				<< Bytestream::Operator << ":"
-				<< i.second
-				;
-	}
 
 	dbg << Bytestream::Reset << "\n";
 
@@ -152,15 +136,14 @@ UniqPtr<Scope> Parser::ParseFile(std::istream& input, const Type& args,
 	}
 
 	pegmatite::StreamInput file(pegmatite::StreamInput::Create(name, input));
-	ParserDelegate p(Grammar::get(), types_, errs_);
 
 	/*
 	unique_ptr<ast::Scope> builtins = p.DefineBuiltins(builtins);
 	p.EnterScope(builtins);
-	*/
 	p.EnterScope(name, args);
+	*/
 
-	return p.Parse(file);
+	return delegate_.Parse(file, Scope::None());
 }
 
 

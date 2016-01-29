@@ -149,7 +149,9 @@ struct Grammar
 		*/
 	);
 
-	TRACE_RULE(Term, Literal | ParentheticalExpression | List);
+	TRACE_RULE(Term, Literal | NameReference | ParentheticalExpression | List);
+
+	TRACE_RULE(NameReference, Identifier);
 
 	const Rule ParentheticalExpression = term('('_E) >> Expression >> term(')'_E);
 
@@ -264,10 +266,10 @@ struct Grammar
 	TRACE_RULE(UnnamedArgument, Expression);
 
 	TRACE_RULE(Value,
-		Identifier >> "=" >> Expression >> ";"
-		| Identifier >> ':' >> Type >> "=" >> Expression >> ";"
+		Identifier >> "=" >> Expression
+		| Identifier >> ':' >> Type >> "=" >> Expression
 	);
-	TRACE_RULE(Values, *Value);
+	TRACE_RULE(Values, *(Value >> ';'));
 
 #if 0
 action:

@@ -112,7 +112,7 @@ public:
 	{
 		SourceLocation begin, end;
 
-		for (auto i : values)
+		for (auto& i : values)
 		{
 			const SourceLocation& b = i.second->source().begin;
 			const SourceLocation& e = i.second->source().end;

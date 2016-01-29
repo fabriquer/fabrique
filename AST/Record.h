@@ -50,6 +50,10 @@ namespace ast {
 class Record : public Expression, public HasScope
 {
 public:
+	static UniqPtr<Record> Create(UniqPtr<Scope>, TypeContext&);
+
+	const UniqPtrVec<Value>& fields() const;
+
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const override;
 

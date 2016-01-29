@@ -65,34 +65,16 @@ class Visitor;
 class Scope : public Node
 {
 public:
-	Scope(const Scope *parent, /*const std::string& name, const Type& argumentsType,*/
-	      SourceRange src = SourceRange::None());
-	Scope(const Scope *parent, UniqPtrVec<Value> values, SourceRange src);
-	Scope(Scope&&);
-	virtual ~Scope() {}
+	static const Scope& None();
+	static UniqPtr<Scope> Create(UniqPtrVec<Value>, const Scope *parent = nullptr);
 
-	typedef StringMap<const Type&> SymbolMap;
-	const SymbolMap& symbols() const { return symbols_; }
-
-	const std::string& name() const { return name_; }
-	//bool hasArguments() const;
-	//const Type& arguments() const { return arguments_; }
-	const UniqPtrVec<Value>& values() const { return values_; }
+	virtual ~Scope();
 
 	bool contains(const Identifier&) const;
-	/*
-	virtual const Type& Lookup(const Identifier&) const;
-	*/
+	const UniqPtr<Value>& Lookup(const Identifier&) const;
 
-	/*
-	void Register(const Argument*);
-	void Register(const Parameter*);
-	void Register(const Value&);
-
-	void Take(Value*);
-	void Take(UniqPtr<Value>&);
-	UniqPtrVec<Value> TakeValues();
-	*/
+	//! Values defined in the scope, in AST order.
+	virtual const UniqPtrVec<Value>& values() const = 0;
 
 	virtual void PrettyPrint(Bytestream&, size_t indent) const override;
 	virtual void Accept(Visitor&) const override;
@@ -107,15 +89,9 @@ public:
 		ChildNodes<Value> values_;
 	};
 
-private:
-	void Register(const Identifier&, const Type&);
-
+protected:
+	Scope(SourceRange src, const Scope* parent = nullptr);
 	const Scope *parent_;
-	const std::string name_;
-
-	//const Type& arguments_;
-	SymbolMap symbols_;
-	UniqPtrVec<Value> values_;
 };
 
 } // namespace ast
