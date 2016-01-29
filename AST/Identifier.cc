@@ -63,7 +63,7 @@ bool Identifier::Parser::construct(const ParserInput& input, ParserStack&, Parse
 }
 
 
-Identifier* Identifier::Parser::Build(const Scope&, TypeContext&, Err& err) const
+Identifier* Identifier::Parser::Build(const Scope&, TypeContext&, Err& err)
 {
 	if (name_.length() == 0)
 	{

@@ -58,7 +58,9 @@ public:
 	{
 	public:
 		virtual ~Parser();
-		Value* Build(const Scope&, TypeContext&, Err&) const override;
+
+		std::string name(const Scope&, Err&) const;
+		Value* Build(const Scope&, TypeContext&, Err&) override;
 
 	private:
 		ChildNodeParser<Identifier> name_;

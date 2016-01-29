@@ -57,7 +57,7 @@ public:
 	{
 	public:
 		virtual ~Parser();
-		Expression* Build(const Scope&, TypeContext&, Err&) const override = 0;
+		Expression* Build(const Scope&, TypeContext&, Err&) override = 0;
 	};
 
 protected:

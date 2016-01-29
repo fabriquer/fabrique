@@ -88,7 +88,7 @@ protected:
 		Parser() : source_(SourceRange::None()), type_(nullptr) {}
 		virtual ~Parser();
 
-		virtual Node* Build(const Scope&, TypeContext&, Err&) const = 0;
+		virtual Node* Build(const Scope&, TypeContext&, Err&) = 0;
 
 		SourceRange source() const { return source_; }
 

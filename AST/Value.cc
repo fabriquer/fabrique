@@ -54,7 +54,18 @@ Value::Parser::~Parser()
 }
 
 
-Value* Value::Parser::Build(const Scope& scope, TypeContext& types, Err& err) const
+string Value::Parser::name(const Scope& scope, Err& err) const
+{
+	TypeContext none;
+
+	UniqPtr<Identifier> id(name_->Build(scope, none, err));
+	assert(id && "Identifier should not encounter parsing errors");
+
+	return id->name();
+}
+
+
+Value* Value::Parser::Build(const Scope& scope, TypeContext& types, Err& err)
 {
 	UniqPtr<Identifier> name(name_->Build(scope, types, err));
 	UniqPtr<TypeReference> explicitType;
@@ -62,6 +73,8 @@ Value* Value::Parser::Build(const Scope& scope, TypeContext& types, Err& err) co
 		explicitType.reset(type_->Build(scope, types, err));
 
 	UniqPtr<Expression> value(value_->Build(scope, types, err));
+	if (not name or not value)
+		return nullptr;
 
 	SourceRange src = SourceRange::Over(name, value);
 

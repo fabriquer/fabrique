@@ -54,7 +54,7 @@ bool Conditional::Parser::construct(const ParserInput& in, ParserStack& s, Parse
 
 
 Conditional*
-Conditional::Parser::Build(const Scope& scope, TypeContext& types, Err& err) const
+Conditional::Parser::Build(const Scope& scope, TypeContext& types, Err& err)
 {
 	UniqPtr<Expression> condition(condition_->Build(scope, types, err));
 	UniqPtr<Expression> thenClause(thenClause_->Build(scope, types, err));

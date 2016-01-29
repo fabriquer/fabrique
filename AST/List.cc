@@ -47,7 +47,7 @@ List::Parser::~Parser()
 }
 
 
-List* List::Parser::Build(const Scope& scope, TypeContext& types, Err& err) const
+List* List::Parser::Build(const Scope& scope, TypeContext& types, Err& err)
 {
 	UniqPtrVec<Expression> elements;
 	const Type *elementType = &types.nilType();

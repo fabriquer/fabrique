@@ -79,8 +79,7 @@ public:
 	{
 	public:
 		bool construct(const ParserInput&, ParserStack&, ParseError) override;
-		BoolLiteral* Build(const Scope&, TypeContext&, Err&)
-			const override;
+		BoolLiteral* Build(const Scope&, TypeContext&, Err&) override;
 
 		bool value_;
 	};
@@ -106,8 +105,7 @@ public:
 	{
 	public:
 		bool construct(const ParserInput&, ParserStack&, ParseError) override;
-		IntLiteral* Build(const Scope&, TypeContext&, Err&)
-			const override;
+		IntLiteral* Build(const Scope&, TypeContext&, Err&) override;
 
 		int value_;
 	};
@@ -134,7 +132,7 @@ public:
 	{
 	public:
 		bool construct(const ParserInput&, ParserStack&, ParseError) override;
-		StringLiteral* Build(const Scope&, TypeContext&, Err&) const override;
+		StringLiteral* Build(const Scope&, TypeContext&, Err&) override;
 
 		std::string value_;
 		int quotes_; // single, double, etc.

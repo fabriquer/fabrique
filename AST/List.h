@@ -59,7 +59,7 @@ public:
 	public:
 		virtual ~Parser();
 
-		List* Build(const Scope&, TypeContext&, Err&) const override;
+		List* Build(const Scope&, TypeContext&, Err&) override;
 
 	private:
 		/// List elements (Pegmatite will automatically fill).

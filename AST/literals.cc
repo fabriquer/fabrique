@@ -76,7 +76,7 @@ bool BoolLiteral::Parser::construct(const ParserInput& input, ParserStack&, Pars
 }
 
 BoolLiteral*
-BoolLiteral::Parser::Build(const Scope&, TypeContext& types, Err&) const
+BoolLiteral::Parser::Build(const Scope&, TypeContext& types, Err&)
 {
 	return new BoolLiteral(value_, types.booleanType(), source_);
 }
@@ -121,7 +121,7 @@ bool IntLiteral::Parser::construct(const ParserInput& input, ParserStack&, Parse
 }
 
 IntLiteral*
-IntLiteral::Parser::Build(const Scope&, TypeContext& types, Err&) const
+IntLiteral::Parser::Build(const Scope&, TypeContext& types, Err&)
 {
 	return new IntLiteral(value_, types.integerType(), source_);
 }
@@ -192,7 +192,7 @@ bool StringLiteral::Parser::construct(const ParserInput& input, ParserStack&, Pa
 }
 
 StringLiteral*
-StringLiteral::Parser::Build(const Scope&, TypeContext& types, Err&) const
+StringLiteral::Parser::Build(const Scope&, TypeContext& types, Err&)
 {
 	const string quote = (quotes_ == 1) ? "'" : "\"";
 	return new StringLiteral(value_, types.stringType(), quote, source_);

@@ -55,7 +55,7 @@ public:
 	{
 	public:
 		virtual ~Parser();
-		TypeReference* Build(const Scope&, TypeContext&, Err&) const override;
+		TypeReference* Build(const Scope&, TypeContext&, Err&) override;
 
 	private:
 		ChildNodeParser<Identifier> name_;

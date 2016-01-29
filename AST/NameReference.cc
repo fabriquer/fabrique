@@ -31,10 +31,11 @@
 
 #include "AST/EvalContext.h"
 #include "AST/NameReference.h"
-#include "AST/Node.h"
+#include "AST/Scope.h"
 #include "AST/Visitor.h"
 #include "DAG/Record.h"
 #include "DAG/UndefinedValueException.h"
+#include "Parsing/ErrorReporter.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 #include "Types/Type.h"
@@ -44,9 +45,33 @@ using namespace fabrique::ast;
 using std::string;
 
 
-NameReference::NameReference(UniqPtr<Node>&& name, const Type& t)
-	: Expression(t, name->source()),
-	  name_(std::move(name))
+NameReference::Parser::~Parser()
+{
+}
+
+
+NameReference*
+NameReference::Parser::Build(const Scope& scope, TypeContext& types, Err& err)
+{
+	if (not name_)
+		return nullptr;
+
+	UniqPtr<Identifier> name(name_->Build(scope, types, err));
+
+	const Value* target = scope.Lookup(*name);
+	if (not target)
+	{
+		err.ReportError("reference to undefined value", *name);
+		return nullptr;
+	}
+
+	return new NameReference(std::move(name), *target);
+}
+
+
+NameReference::NameReference(UniqPtr<Identifier> name, const Value& target)
+	: Expression(target.type(), name->source()),
+	  name_(std::move(name)), target_(target)
 {
 }
 

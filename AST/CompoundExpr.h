@@ -68,7 +68,7 @@ public:
 	public:
 		virtual ~Parser();
 		bool construct(const ParserInput&, ParserStack&, ParseError) override;
-		CompoundExpression* Build(const Scope&, TypeContext&, Err&) const override;
+		CompoundExpression* Build(const Scope&, TypeContext&, Err&) override;
 
 	private:
 		ChildNodes<Value> values_;

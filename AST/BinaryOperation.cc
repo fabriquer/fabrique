@@ -57,7 +57,7 @@ BinaryOperation::Parser::~Parser()
 
 BinaryOperation*
 BinaryOperation::Parser::Build(const Scope& scope, TypeContext& types, Err& err,
-                               Operator op) const
+                               Operator op)
 {
 	UniqPtr<Expression> lhs(lhs_->Build(scope, types, err));
 	UniqPtr<Expression> rhs(rhs_->Build(scope, types, err));
@@ -70,65 +70,65 @@ BinaryOperation::Parser::Build(const Scope& scope, TypeContext& types, Err& err,
 
 
 BinaryOperation*
-BinaryOperation::And::Build(const Scope& scope, TypeContext& types, Err& err) const
+BinaryOperation::And::Build(const Scope& scope, TypeContext& types, Err& err)
 {
 	return Parser::Build(scope, types, err, Operator::And);
 }
 
 BinaryOperation*
-BinaryOperation::Or::Build(const Scope& scope, TypeContext& types, Err& err) const
+BinaryOperation::Or::Build(const Scope& scope, TypeContext& types, Err& err)
 {
 	return Parser::Build(scope, types, err, Operator::Or);
 }
 
 BinaryOperation*
-BinaryOperation::XOr::Build(const Scope& scope, TypeContext& types, Err& err) const
+BinaryOperation::XOr::Build(const Scope& scope, TypeContext& types, Err& err)
 {
 	return Parser::Build(scope, types, err, Operator::XOr);
 }
 
 
 BinaryOperation*
-BinaryOperation::LessThan::Build(const Scope& scope, TypeContext& types, Err& err) const
+BinaryOperation::LessThan::Build(const Scope& scope, TypeContext& types, Err& err)
 {
 	return Parser::Build(scope, types, err, Operator::LessThan);
 }
 
 BinaryOperation*
-BinaryOperation::GreaterThan::Build(const Scope& scope, TypeContext& types, Err& err) const
+BinaryOperation::GreaterThan::Build(const Scope& scope, TypeContext& types, Err& err)
 {
 	return Parser::Build(scope, types, err, Operator::GreaterThan);
 }
 
 BinaryOperation*
-BinaryOperation::Equals::Build(const Scope& scope, TypeContext& types, Err& err) const
+BinaryOperation::Equals::Build(const Scope& scope, TypeContext& types, Err& err)
 {
 	return Parser::Build(scope, types, err, Operator::Equal);
 }
 
 BinaryOperation*
-BinaryOperation::NotEqual::Build(const Scope& scope, TypeContext& types, Err& err) const
+BinaryOperation::NotEqual::Build(const Scope& scope, TypeContext& types, Err& err)
 {
 	return Parser::Build(scope, types, err, Operator::NotEqual);
 }
 
 
 BinaryOperation*
-BinaryOperation::Add::Build(const Scope& scope, TypeContext& types, Err& err) const
+BinaryOperation::Add::Build(const Scope& scope, TypeContext& types, Err& err)
 {
 	return Parser::Build(scope, types, err, Operator::Add);
 }
 
 
 BinaryOperation*
-BinaryOperation::Prefix::Build(const Scope& scope, TypeContext& types, Err& err) const
+BinaryOperation::Prefix::Build(const Scope& scope, TypeContext& types, Err& err)
 {
 	return Parser::Build(scope, types, err, Operator::Prefix);
 }
 
 
 BinaryOperation*
-BinaryOperation::ScalarAdd::Build(const Scope& scope, TypeContext& types, Err& err) const
+BinaryOperation::ScalarAdd::Build(const Scope& scope, TypeContext& types, Err& err)
 {
 	return Parser::Build(scope, types, err, Operator::ScalarAdd);
 }

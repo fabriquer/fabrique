@@ -71,10 +71,10 @@ public:
 	virtual ~Scope();
 
 	bool contains(const Identifier&) const;
-	const UniqPtr<Value>& Lookup(const Identifier&) const;
+	virtual const Value* Lookup(const Identifier&) const;
 
 	//! Values defined in the scope, in AST order.
-	virtual const UniqPtrVec<Value>& values() const = 0;
+	virtual PtrVec<Value> values() const = 0;
 
 	virtual void PrettyPrint(Bytestream&, size_t indent) const override;
 	virtual void Accept(Visitor&) const override;
@@ -83,7 +83,7 @@ public:
 	{
 	public:
 		virtual ~Parser();
-		Scope* Build(const Scope&, TypeContext&, Err&) const override;
+		Scope* Build(const Scope&, TypeContext&, Err&) override;
 
 	private:
 		ChildNodes<Value> values_;

@@ -44,7 +44,7 @@ TypeReference::Parser::~Parser()
 
 
 TypeReference*
-TypeReference::Parser::Build(const Scope& scope, TypeContext& types, Err& err) const
+TypeReference::Parser::Build(const Scope& scope, TypeContext& types, Err& err)
 {
 	UniqPtr<Identifier> name(name_->Build(scope, types, err));
 	SourceRange src(name->source());

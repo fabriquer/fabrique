@@ -15,5 +15,5 @@ baz = foo or bar;
 # CHECK: wibble:bool = foo and bar;
 wibble = foo and bar;
 
-# CHECK: wobble:bool = foo xor bar;
-wobble = foo xor bar;
+# CHECK: wobble:bool = foo and bar or baz xor wibble;
+wobble = foo and bar or baz xor wibble;

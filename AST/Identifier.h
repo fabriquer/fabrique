@@ -64,7 +64,7 @@ public:
 	public:
 		Parser();
 		bool construct(const ParserInput&, ParserStack&, ParseError) override;
-		Identifier* Build(const Scope&, TypeContext&, Err&) const override;
+		Identifier* Build(const Scope&, TypeContext&, Err&) override;
 
 	private:
 		std::string name_;

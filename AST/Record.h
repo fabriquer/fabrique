@@ -52,7 +52,7 @@ class Record : public Expression, public HasScope
 public:
 	static UniqPtr<Record> Create(UniqPtr<Scope>, TypeContext&);
 
-	const UniqPtrVec<Value>& fields() const;
+	const PtrVec<Value>& fields() const;
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const override;
@@ -65,7 +65,7 @@ public:
 		virtual ~Parser();
 
 		bool construct(const ParserInput&, ParserStack&, ParseError) override;
-		Record* Build(const Scope&, TypeContext&, Err&) const override;
+		Record* Build(const Scope&, TypeContext&, Err&) override;
 
 	private:
 		ChildNodeParser<Scope> values_;

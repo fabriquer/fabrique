@@ -73,7 +73,7 @@ bool Record::Parser::construct(const ParserInput& input, ParserStack& s, ParseEr
 }
 
 
-Record* Record::Parser::Build(const Scope& s, TypeContext& types, Err& err) const
+Record* Record::Parser::Build(const Scope& s, TypeContext& types, Err& err)
 {
 	UniqPtr<Scope> scope(values_->Build(s, types, err));
 	if (not scope)
@@ -95,7 +95,7 @@ Record::Record(UniqPtr<Scope>& fields, const RecordType& ty, const SourceRange& 
 }
 
 
-const UniqPtrVec<Value>& Record::fields() const
+const PtrVec<Value>& Record::fields() const
 {
 	return scope().values();
 }

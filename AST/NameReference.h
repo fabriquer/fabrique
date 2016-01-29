@@ -33,7 +33,8 @@
 #ifndef NAME_REFERENCE_H
 #define NAME_REFERENCE_H
 
-#include "Expression.h"
+#include "AST/Expression.h"
+#include "AST/Identifier.h"
 
 #include <memory>
 
@@ -41,6 +42,7 @@ namespace fabrique {
 namespace ast {
 
 class Node;
+class Value;
 
 /**
  * A reference to a named symbol.
@@ -48,17 +50,29 @@ class Node;
 class NameReference : public Expression
 {
 public:
-	NameReference(UniqPtr<Node>&& name, const Type&);
-
 	const Node& name() const { return *name_; }
+	const Value& target() const { return target_; }
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const override;
 
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
+	class Parser : public Expression::Parser
+	{
+	public:
+		virtual ~Parser();
+		NameReference* Build(const Scope&, TypeContext&, Err&) override;
+
+	private:
+		ChildNodeParser<Identifier> name_;
+	};
+
 private:
-	const std::unique_ptr<Node> name_;
+	NameReference(UniqPtr<Identifier> name, const Value& target);
+
+	const std::unique_ptr<Identifier> name_;
+	const Value& target_;
 };
 
 } // namespace ast

@@ -47,9 +47,39 @@
 
 using namespace fabrique;
 using namespace fabrique::ast;
+using std::string;
 
 
 namespace {
+
+class ScopeBuilder : public Scope
+{
+public:
+	static ScopeBuilder Create(const Scope *parent, Node::Parser::ChildNodes<Value>&,
+	                           TypeContext& types, parser::ErrorReporter& err);
+
+	ScopeBuilder(ScopeBuilder&&);
+
+	virtual const Value* Lookup(const Identifier&) const override;
+	virtual PtrVec<Value> values() const override;
+
+	UniqPtr<Scope> Build();
+
+private:
+	ScopeBuilder(const Scope *parent, std::vector<string> names,
+	             UniqPtrMap<Value::Parser> parsers,
+	             TypeContext& types, SourceRange src, parser::ErrorReporter& err);
+
+	const Value* LookupOrBuild(const string& name);
+	void BuildAllValues();
+
+	TypeContext& types_;                    //!< TypeContext for use in construction.
+	parser::ErrorReporter& err_;            //!< For reporting parse errors.
+
+	std::vector<string> names_;             //!< Names of scoped elements, in order.
+	UniqPtrMap<Value> values_;              //!< Already-parsed values.
+	UniqPtrMap<Value::Parser> parsers_;     //!< Values we haven't parsed yet.
+};
 
 class CompleteScope : public Scope
 {
@@ -57,25 +87,30 @@ public:
 	CompleteScope(const Scope *parent, UniqPtrVec<Value> values, SourceRange src)
 		: Scope(src, parent), values_(std::move(values))
 	{
+		Bytestream& dbg = Bytestream::Debug("ast.scope.new");
+		if (dbg)
+		{
+			dbg
+				<< Bytestream::Action << "created "
+				<< Bytestream::Type << "ast::CompleteScope"
+				<< Bytestream::Operator << ":"
+				<< Bytestream::Reset << "\n"
+				;
+
+			for (const auto& v : values_)
+			{
+				dbg
+					<< Bytestream::Operator << " - "
+					<< Bytestream::Reset << *v << "\n"
+					;
+			}
+		}
 	}
 
-	virtual const UniqPtrVec<Value>& values() const override { return values_; }
+	virtual PtrVec<Value> values() const override;
 
 private:
 	UniqPtrVec<Value> values_;
-};
-
-class ScopeBuilder : public Scope
-{
-public:
-	virtual const UniqPtrVec<Value>& values() const override;
-
-private:
-	//! Already-parsed values.
-	UniqPtrVec<Value> values_;
-
-	//! Values we haven't parsed yet.
-	UniqPtrVec<Value::Parser> parsers_;
 };
 
 } // anonymous namespace
@@ -93,44 +128,165 @@ UniqPtr<Scope> Scope::Create(UniqPtrVec<Value> values, const Scope *parent)
 }
 
 
+ScopeBuilder
+ScopeBuilder::Create(const Scope *parent, Node::Parser::ChildNodes<Value>& valueNodes,
+                     TypeContext& types, parser::ErrorReporter& err)
+{
+	std::vector<string> names;
+	UniqPtrMap<Value::Parser> parsers;
+	SourceLocation begin, end;
+
+	for (auto& node : valueNodes)
+	{
+		if (node->source().begin < begin)
+			begin = node->source().begin;
+
+		if (node->source().end > end)
+			end = node->source().end;
+
+		const string name = node->name(*parent, err);
+		names.push_back(name);
+		parsers.emplace(name, std::move(node));
+	}
+
+	SourceRange src(begin, end);
+	return ScopeBuilder(parent, names, std::move(parsers), types, src, err);
+}
+
+
+ScopeBuilder::ScopeBuilder(const Scope *parent, std::vector<string> names,
+                           UniqPtrMap<Value::Parser> parsers,
+                           TypeContext& types, SourceRange src, parser::ErrorReporter& err)
+	: Scope(src, parent), types_(types), err_(err), names_(names),
+	  parsers_(std::move(parsers))
+{
+}
+
+
+ScopeBuilder::ScopeBuilder(ScopeBuilder&& orig)
+	: Scope(source(), orig.parent_), types_(orig.types_), err_(orig.err_),
+	  names_(orig.names_), values_(std::move(orig.values_)),
+	  parsers_(std::move(orig.parsers_))
+{
+}
+
+
+const Value* ScopeBuilder::Lookup(const Identifier& id) const
+{
+	const string name = id.name();
+
+	//
+	// Play a slightly naughty game: de-`const`ify `this`.
+	//
+	// Since a ScopeBuilder is a very short-lived thing, but we need to
+	// satisfy the same contract as a long-lived Scope object, we just
+	// strip the `const` for the duration of this lookup.
+	//
+	ScopeBuilder *self = const_cast<ScopeBuilder*>(this);
+	if (const Value *v = self->LookupOrBuild(id.name()))
+		return v;
+
+	// Do we have a parent scope to answer the question?
+	if (parent_)
+		return parent_->Lookup(id);
+
+	return nullptr;
+}
+
+
+const Value* ScopeBuilder::LookupOrBuild(const string& name)
+{
+	// Have we already built this value?
+	auto i = values_.find(name);
+	if (i != values_.end())
+		return i->second.get();
+
+	// Do we have a parser to build it with?
+	auto j = parsers_.find(name);
+	if (j != parsers_.end())
+	{
+		Bytestream& dbg = Bytestream::Debug("ast.scope.builder");
+		if (dbg)
+		{
+			dbg
+				<< Bytestream::Action << "building "
+				<< Bytestream::Definition << name
+				<< Bytestream::Reset << "\n"
+				;
+		}
+
+		Value::Parser& p = *j->second;
+
+		UniqPtr<Value> value(p.Build(*this, types_, err_));
+
+		const Value *ptr = value.get();
+		values_.emplace(name, std::move(value));
+
+		return ptr;
+	}
+
+	return nullptr;
+}
+
+
+PtrVec<Value> ScopeBuilder::values() const
+{
+	PtrVec<Value> values;
+
+	for (auto& i : values_)
+		values.push_back(i.second.get());
+
+	return values;
+}
+
+
+UniqPtr<Scope> ScopeBuilder::Build()
+{
+	BuildAllValues();
+
+	UniqPtrVec<Value> values;
+	for (const string& name : names_)
+	{
+		assert(values_.find(name) != values_.end());
+		values.push_back(std::move(values_[name]));
+	}
+
+	return UniqPtr<Scope>(new CompleteScope(parent_, std::move(values), source()));
+}
+
+
+void ScopeBuilder::BuildAllValues()
+{
+	for (const string& name : names_)
+		LookupOrBuild(name);
+}
+
+
+PtrVec<Value> CompleteScope::values() const
+{
+	PtrVec<Value> values;
+
+	for (auto& i : values_)
+		values.push_back(i.get());
+
+	return values;
+}
+
+
 Scope::Parser::~Parser()
 {
 }
 
 
-Scope* Scope::Parser::Build(const Scope& parentScope, TypeContext& types, Err& err) const
+Scope* Scope::Parser::Build(const Scope& parentScope, TypeContext& types, Err& err)
 {
-	UniqPtrVec<Value> values;
-	std::set<std::string> names;
-	SourceLocation begin, end;
-
-	for (const std::unique_ptr<Value::Parser>& v : values_)
-	{
-		if (v->source().begin < begin)
-			begin = v->source().begin;
-
-		if (v->source().end > end)
-			end = v->source().end;
-
-		// TODO: really handle scope lookup
-
-		UniqPtr<Value> value(v->Build(parentScope, types, err));
-		const std::string name = value->name().name();
-
-		if (names.find(name) != names.end())
-		{
-			err.ReportError("redefining value", *value);
-			return nullptr;
-		}
-
-		names.insert(name);
-		values.emplace_back(std::move(value));
-	}
+	ScopeBuilder builder = ScopeBuilder::Create(&parentScope, values_, types, err);
+	UniqPtr<Scope> scope = builder.Build();
 
 	if (err.hasErrors())
 		return nullptr;
 
-	return new CompleteScope(&parentScope, std::move(values), source_);
+	return scope.release();
 }
 
 
@@ -154,10 +310,8 @@ Scope::~Scope()
 }
 
 
-const UniqPtr<Value>& Scope::Lookup(const Identifier& id) const
+const Value* Scope::Lookup(const Identifier& id) const
 {
-	static UniqPtr<Value>& NoValue = *new UniqPtr<Value>();
-
 	for (auto& v : values())
 	{
 		if (v->name() == id)
@@ -169,7 +323,7 @@ const UniqPtr<Value>& Scope::Lookup(const Identifier& id) const
 	if (parent_)
 		return parent_->Lookup(id);
 
-	return NoValue;
+	return nullptr;
 }
 
 
@@ -254,7 +408,7 @@ UniqPtrVec<Value> Scope::TakeValues()
 
 void Scope::PrettyPrint(Bytestream& out, size_t indent) const
 {
-	std::string tabs(indent + 1, '\t');
+	string tabs(indent + 1, '\t');
 
 	out << Bytestream::Operator << "{\n";
 

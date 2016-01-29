@@ -87,10 +87,10 @@ protected:
 		virtual ~Parser();
 
 		virtual BinaryOperation*
-		Build(const Scope&, TypeContext&, Err&) const override = 0;
+		Build(const Scope&, TypeContext&, Err&) override = 0;
 
 	protected:
-		BinaryOperation* Build(const Scope&, TypeContext&, Err&, Operator) const;
+		BinaryOperation* Build(const Scope&, TypeContext&, Err&, Operator);
 
 		ChildNodeParser<Expression> lhs_, rhs_;
 	};
@@ -99,61 +99,61 @@ public:
 	class And : public Parser
 	{
 	public:
-		BinaryOperation* Build(const Scope&, TypeContext&, Err&) const override;
+		BinaryOperation* Build(const Scope&, TypeContext&, Err&) override;
 	};
 
 	class Or : public Parser
 	{
 	public:
-		BinaryOperation* Build(const Scope&, TypeContext&, Err&) const override;
+		BinaryOperation* Build(const Scope&, TypeContext&, Err&) override;
 	};
 
 	class XOr : public Parser
 	{
 	public:
-		BinaryOperation* Build(const Scope&, TypeContext&, Err&) const override;
+		BinaryOperation* Build(const Scope&, TypeContext&, Err&) override;
 	};
 
 	class LessThan : public Parser
 	{
 	public:
-		BinaryOperation* Build(const Scope&, TypeContext&, Err&) const override;
+		BinaryOperation* Build(const Scope&, TypeContext&, Err&) override;
 	};
 
 	class GreaterThan : public Parser
 	{
 	public:
-		BinaryOperation* Build(const Scope&, TypeContext&, Err&) const override;
+		BinaryOperation* Build(const Scope&, TypeContext&, Err&) override;
 	};
 
 	class Equals : public Parser
 	{
 	public:
-		BinaryOperation* Build(const Scope&, TypeContext&, Err&) const override;
+		BinaryOperation* Build(const Scope&, TypeContext&, Err&) override;
 	};
 
 	class NotEqual : public Parser
 	{
 	public:
-		BinaryOperation* Build(const Scope&, TypeContext&, Err&) const override;
+		BinaryOperation* Build(const Scope&, TypeContext&, Err&) override;
 	};
 
 	class Add : public Parser
 	{
 	public:
-		BinaryOperation* Build(const Scope&, TypeContext&, Err&) const override;
+		BinaryOperation* Build(const Scope&, TypeContext&, Err&) override;
 	};
 
 	class Prefix : public Parser
 	{
 	public:
-		BinaryOperation* Build(const Scope&, TypeContext&, Err&) const override;
+		BinaryOperation* Build(const Scope&, TypeContext&, Err&) override;
 	};
 
 	class ScalarAdd : public Parser
 	{
 	public:
-		BinaryOperation* Build(const Scope&, TypeContext&, Err&) const override;
+		BinaryOperation* Build(const Scope&, TypeContext&, Err&) override;
 	};
 
 private:
