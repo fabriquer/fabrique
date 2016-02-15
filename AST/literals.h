@@ -64,11 +64,6 @@ private:
 class BoolLiteral : public Literal<bool>
 {
 public:
-	BoolLiteral(bool value, const Type& ty, const SourceRange& loc)
-		: Literal(value, ty, loc)
-	{
-	}
-
 	std::string str() const override;
 
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
@@ -83,6 +78,12 @@ public:
 
 		bool value_;
 	};
+
+private:
+	BoolLiteral(bool value, const Type& ty, const SourceRange& loc)
+		: Literal(value, ty, loc)
+	{
+	}
 };
 
 
@@ -90,11 +91,6 @@ public:
 class IntLiteral : public Literal<int>
 {
 public:
-	IntLiteral(int value, const Type& ty, const SourceRange& loc)
-		: Literal(value, ty, loc)
-	{
-	}
-
 	std::string str() const override;
 
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
@@ -109,6 +105,12 @@ public:
 
 		int value_;
 	};
+
+private:
+	IntLiteral(int value, const Type& ty, const SourceRange& loc)
+		: Literal(value, ty, loc)
+	{
+	}
 };
 
 
@@ -116,12 +118,6 @@ public:
 class StringLiteral : public Literal<std::string>
 {
 public:
-	StringLiteral(const std::string& s, const Type& ty, std::string quote,
-	              const SourceRange& loc)
-		: Literal(s, ty, loc), quote_(quote)
-	{
-	}
-
 	std::string str() const override;
 
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
@@ -135,10 +131,16 @@ public:
 		StringLiteral* Build(const Scope&, TypeContext&, Err&) override;
 
 		std::string value_;
-		int quotes_; // single, double, etc.
+		std::string quote_; // single quote, double quote, etc.
 	};
 
 private:
+	StringLiteral(const std::string& s, const Type& ty, std::string quote,
+	              const SourceRange& loc)
+		: Literal(s, ty, loc), quote_(quote)
+	{
+	}
+
 	const std::string quote_;
 };
 

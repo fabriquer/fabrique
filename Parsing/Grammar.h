@@ -1,6 +1,6 @@
 /** @file Parsing/Grammar.h    Declaration of the AST grammar. */
 /*
- * Copyright (c) 2014-2015 Jonathan Anderson
+ * Copyright (c) 2014-2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -87,10 +87,31 @@ struct Grammar
 		const ExprPtr Some = term("some");
 	} Keywords;
 
+	struct
+	{
+		const ExprPtr Assign = term('=');
+		const ExprPtr Colon = term(':');
+		const ExprPtr Comma = term(',');
+		const ExprPtr Dot = term('.');
+		const ExprPtr Semicolon = term(';');
+
+		const ExprPtr OpenBrace = term('{');
+		const ExprPtr CloseBrace = term('}');
+
+		const ExprPtr OpenBracket = term('[');
+		const ExprPtr CloseBracket = term(']');
+
+		const ExprPtr OpenParen = term('(');
+		const ExprPtr CloseParen = term(')');
+	} Symbols;
+
 	const Rule Alpha = ('A'_E - 'Z') | ('a'_E - 'z');
 	const Rule Digit = '0'_E - '9';
 	const Rule AlphaNum = Alpha | Digit;
 	const Rule IdChar = AlphaNum | '_';
+
+	//! An identifier starts with [A-Za-z_] and contains [A-Za-z0-9_].
+	const Rule Identifier = term((Alpha | '_') >> *IdChar);
 
 	/*
 	 * Fabrique supports boolean, integer and string literals.
@@ -105,12 +126,31 @@ struct Grammar
 	TRACE_RULE(Literal, term(BoolLiteral | IntLiteral | StringLiteral));
 
 
-	/*
-	 * Types can be simple (e.g., `int`) or parametric (e.g., `list[int]`).
+	/**
+	 * There are four syntaxes for naming types:
+	 *
+	 *  - function types: (type1, type2) => resultType
+	 *  - record types: record[field1:type2, field2:type2]
+	 *  - parametric types: simpleName[typeArg1, typeArg2]
+	 *  - simple types: int, string, foo, etc.
 	 */
-	TRACE_RULE(SimpleType, Identifier);
-	TRACE_RULE(ParametricType, Type >> '[' >> Type >> *(','_E >> Type) >> ']');
-	TRACE_RULE(Type, ParametricType | SimpleType);
+	const Rule Type = RecordType | ParametricType | SimpleType;
+
+	const Rule RecordType =
+		Keywords.Record >> Symbols.OpenBracket
+		>> FieldType >> *(Symbols.Comma >> FieldType)
+		>> Symbols.CloseBracket
+		;
+
+	const Rule FieldType = Identifier >> Symbols.Colon >> Type;
+
+	const Rule ParametricType =
+		SimpleType >> Symbols.OpenBracket
+		>> Type >> *(Symbols.Comma >> Type)
+		>> Symbols.CloseBracket
+		;
+
+	const Rule SimpleType = Identifier;
 
 #if 0
 	| STRUCT '[' fieldTypes ']'
@@ -135,29 +175,44 @@ struct Grammar
 	;
 #endif
 
-	TRACE_RULE(Identifier, term((Alpha | '_') >> *IdChar));
-
 	/*
 	 * Almost everything in Fabrique is an Expression.
 	 */
 	TRACE_RULE(Expression,
 		Operation
-		/*
-		| Conditional
-		| File
-		| FileList
-		*/
 	);
 
-	TRACE_RULE(Term, Literal | NameReference | ParentheticalExpression | List);
+	TRACE_RULE(Operation, UnaryOperation | BinaryOperation);
 
-	TRACE_RULE(NameReference, Identifier);
+	TRACE_RULE(Term,
+		Literal
+		| ParentheticalExpression
+		| CompoundExpression
+		| Conditional
+		| List
+		| Record
+		| UnaryOperation
 
-	const Rule ParentheticalExpression = term('('_E) >> Expression >> term(')'_E);
+		// Put identifier references after keywords so that
+		// we don't match keywords as identifiers:
+		| FieldReference
+		| NameReference
+	);
 
-	TRACE_RULE(Conditional,
-		   Keywords.If >> Expression >> Expression
-		   >> Keywords.Else >> Expression);
+	const Rule CompoundExpression =
+		Symbols.OpenBrace >> Values >> Expression >> Symbols.CloseBrace;
+
+	const Rule Conditional =
+		Keywords.If >> Expression >> Expression
+		>> Keywords.Else >> Expression;
+
+	const Rule FieldReference =
+		Term >> Symbols.Dot >> Identifier;
+
+	const Rule NameReference = Identifier;
+
+	const Rule ParentheticalExpression =
+		Symbols.OpenParen >> Expression >> Symbols.CloseParen;
 
 #if 0
 	/**
@@ -196,8 +251,8 @@ struct Grammar
 
 	/*
 	 * Lists are containers for like types and do not use comma separators.
-	 * The element types do not have to be identical, but they do have to have
-	 * a common supertype.
+	 * The type of the list is taken to be "list of the supertype of all of the
+	 * list's elements".
 	 *
 	 * Example:
 	 * ```
@@ -207,69 +262,69 @@ struct Grammar
 	 * [ 1 2 3 x y ]   # the type of this is list[int]
 	 * ```
 	 */
-	TRACE_RULE(List, term('['_E) >> *Expression >> term(']'_E));
-
-	TRACE_RULE(Record, Keywords.Record >> term('{'_E) >> Values >> term('}'_E));
+	TRACE_RULE(List, Symbols.OpenBracket >> *Expression >> Symbols.CloseBracket);
 
 	struct
 	{
-		const char* Input = "<-";
-		const char* Produces = "=>";
+		const ExprPtr Input = term("<-");
+		const ExprPtr Produces = term("=>");
+
+		const ExprPtr Plus = term("+");
+		const ExprPtr Prefix = term("::");
+		const ExprPtr ScalarAdd = term(".+");
+
+		const ExprPtr GreaterThan = term(">");
+		const ExprPtr LessThan = term("<");
+		const ExprPtr Equals = term("==");
+		const ExprPtr NotEqual = term("!=");
+
+		const ExprPtr And = term("and");
+		const ExprPtr Not = term("not");
+		const ExprPtr Or = term("or");
+		const ExprPtr XOr = term("xor");
+
+		const ExprPtr Assign = term("=");
 	} Operators;
 
-	TRACE_RULE(Sum, AddOperation | PrefixOperation | ScalarAddOperation | Term);
-	const Rule AddOperation = Sum >> "+" >> Sum;
-	const Rule PrefixOperation = Sum >> "::" >> Sum;
-	const Rule ScalarAddOperation = Sum >> ".+" >> Sum;
+	TRACE_RULE(UnaryOperation, NotOperation);
+	const Rule NotOperation = Operators.Not >> Expression;
 
-	TRACE_RULE(CompareExpr,
+	TRACE_RULE(Sum, AddOperation | PrefixOperation | ScalarAddOperation | Term);
+	const Rule AddOperation = Sum >> Operators.Plus >> Sum;
+	const Rule PrefixOperation = Sum >> Operators.Prefix >> Sum;
+	const Rule ScalarAddOperation = Sum >> Operators.ScalarAdd >> Sum;
+
+	const Rule CompareExpr =
 		LessThanOperation | GreaterThanOperation
 		| EqualsOperation | NotEqualOperation
-		| Sum);
+		| Sum;
 
-	const Rule LessThanOperation = Sum >> "<" >> Sum;
-	const Rule GreaterThanOperation = Sum >> ">" >> Sum;
-	const Rule EqualsOperation = Sum >> "==" >> Sum;
-	const Rule NotEqualOperation = Sum >> "!=" >> Sum;
+	const Rule GreaterThanOperation = Sum >> Operators.GreaterThan >> Sum;
+	const Rule LessThanOperation = Sum >> Operators.LessThan >> Sum;
+	const Rule EqualsOperation = Sum >> Operators.Equals >> Sum;
+	const Rule NotEqualOperation = Sum >> Operators.NotEqual >> Sum;
 
 	TRACE_RULE(LogicExpr, AndOperation | OrOperation | XOrOperation | CompareExpr);
-	const Rule AndOperation = LogicExpr >> "and" >> LogicExpr;
-	const Rule OrOperation = LogicExpr >> "or" >> LogicExpr;
-	const Rule XOrOperation = LogicExpr >> "xor" >> LogicExpr;
+	const Rule AndOperation = LogicExpr >> Operators.And >> LogicExpr;
+	const Rule OrOperation = LogicExpr >> Operators.Or >> LogicExpr;
+	const Rule XOrOperation = LogicExpr >> Operators.XOr >> LogicExpr;
 
 	TRACE_RULE(BinaryOperation, LogicExpr);
 
-#if 0
-
-		AndOperation
-		| OrOperation
-		| XOrOperation
-
-		| LessThanOperation
-		| GreaterThanOperation
-		| EqualsOperation
-		| NotEqualOperation
-
-		| AddOperation
-		| PrefixOperation
-		| ScalarAddOperation
-	);
-#endif
-
-	TRACE_RULE(UnaryOperation, "not"_E >> Expression);
-	TRACE_RULE(Operation, UnaryOperation | BinaryOperation);
-
-	TRACE_RULE(Arguments, NamedArguments | (Argument >> *(','_E >> Argument)));
+	TRACE_RULE(Arguments, NamedArguments | (Argument >> *(Symbols.Comma >> Argument)));
 	TRACE_RULE(Argument, NamedArgument | UnnamedArgument);
-	TRACE_RULE(NamedArgument, Identifier >> '=' >> Expression);
-	TRACE_RULE(NamedArguments, NamedArgument >> *(','_E >> NamedArgument));
+	TRACE_RULE(NamedArgument, Identifier >> Symbols.Assign >> Expression);
+	TRACE_RULE(NamedArguments, NamedArgument >> *(Symbols.Comma >> NamedArgument));
 	TRACE_RULE(UnnamedArgument, Expression);
 
 	TRACE_RULE(Value,
-		Identifier >> "=" >> Expression
-		| Identifier >> ':' >> Type >> "=" >> Expression
+		Identifier >> Operators.Assign >> Expression
+		| Identifier >> Symbols.Colon >> Type >> Operators.Assign >> Expression
 	);
-	TRACE_RULE(Values, *(Value >> ';'));
+	TRACE_RULE(Values, *(Value >> Symbols.Semicolon));
+
+	TRACE_RULE(Record,
+		Keywords.Record >> Symbols.OpenBrace >> Values >> Symbols.CloseBrace);
 
 #if 0
 action:
@@ -291,16 +346,7 @@ action:
 	}
 	;
 
-actionBegin:
-	ACTION
-	{
-		p->EnterScope("action");
-	}
-	;
-#endif
 
-
-#if 0
 expression:
 	literal
 	| action
@@ -373,14 +419,6 @@ compoundExpr:
 	}
 	;
 
-compoundBegin:
-	'{'
-	{
-		p->EnterScope("compound expression");
-		$$.token = $1.token;
-	}
-	;
-
 conditional:
 	IF expression expression ELSE expression
 	{
@@ -427,10 +465,6 @@ foreach:
 	}
 	;
 
-foreachbegin:
-	FOREACH			{ p->EnterScope("foreach"); }
-	;
-
 function:
 	functiondecl '(' parameterList ')' ':' type expression
 	{
@@ -450,15 +484,6 @@ function:
 
 		SetOrDie($$, p->DefineFunction(begin, params, body));
 	}
-	;
-
-functiondecl:
-	FUNCTION		{ p->EnterScope("function"); }
-	;
-
-identifier:
-	name			/* keep result of 'name' production */
-	| name ':' type		{ SetOrDie($$, p->Id(TakeNode<Identifier>($1), $3.type)); }
 	;
 
 import:
@@ -542,20 +567,6 @@ some:
 
 		SetOrDie($$, p->Some(value, src));
 	}
-	;
-
-structInstantiation:
-	structBegin '{' values '}'
-	{
-		SourceRange begin = Take(Parser::ParseToken($1))->source();
-		SourceRange end = Take($4.token)->source();
-
-		SetOrDie($$, p->StructInstantiation(SourceRange(begin, end)));
-	}
-	;
-
-structBegin:
-	STRUCT	{ p->EnterScope("struct"); }
 	;
 
 types:

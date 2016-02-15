@@ -1,6 +1,6 @@
 /** @file AST/Value.cc    Definition of @ref fabrique::ast::Value. */
 /*
- * Copyright (c) 2013-2015 Jonathan Anderson
+ * Copyright (c) 2013-2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -100,8 +100,15 @@ Value* Value::Parser::Build(const Scope& scope, TypeContext& types, Err& err)
 		return nullptr;
 	}
 
-	return new Value(std::move(name), std::move(explicitType), std::move(value),
-	                 type);
+	UniqPtr<Value> v(new Value(std::move(name), std::move(explicitType),
+	                           std::move(value), type));
+
+	Bytestream::Debug("parsing.ast.value")
+		<< Bytestream::Action << "defined "
+		<< Bytestream::Reset << *v << "\n"
+		;
+
+	return v.release();
 }
 
 

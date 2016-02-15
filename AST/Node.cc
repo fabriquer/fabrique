@@ -38,5 +38,11 @@ Node::~Node() {}
 
 Node::Parser::~Parser() {}
 
+bool Node::Parser::construct(const ParserInput& input, ParserStack& stack, ParseError err)
+{
+	source_ = input;
+	return pegmatite::ASTContainer::construct(input, stack, err);
+}
+
 } // namespace ast
 } // namespace fabrique

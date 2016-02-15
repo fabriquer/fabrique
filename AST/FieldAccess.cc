@@ -1,6 +1,6 @@
 /** @file AST/FieldAccess.cc    Definition of @ref fabrique::ast::FieldAccess. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -34,6 +34,7 @@
 #include "AST/Identifier.h"
 #include "AST/Scope.h"
 #include "AST/Visitor.h"
+#include "Parsing/ErrorReporter.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 
@@ -43,9 +44,44 @@ using namespace fabrique;
 using namespace fabrique::ast;
 
 
-FieldAccess::FieldAccess(UniqPtr<Expression>& base, UniqPtr<Identifier>& field)
-	: Expression(field->type(), SourceRange::Over(base, field)),
-	  base_(std::move(base)), field_(std::move(field))
+FieldAccess::Parser::~Parser()
+{
+}
+
+
+FieldAccess* FieldAccess::Parser::Build(const Scope& scope, TypeContext& t, Err& err)
+{
+	UniqPtr<Expression> base(base_->Build(scope, t, err));
+	UniqPtr<Identifier> field(field_->Build(scope, t, err));
+	if (not base or not field)
+		return nullptr;
+
+	SourceRange src = SourceRange::Over(base, field);
+
+	if (not base->type().hasFields())
+	{
+		err.ReportError("value of type '" + base->type().str()
+		                + "' does not have fields", src);
+		return nullptr;
+	}
+
+	Type::TypeMap fieldTypes = base->type().fields();
+	auto i = fieldTypes.find(field->name());
+
+	if (i == fieldTypes.end())
+	{
+		err.ReportError("no such field", src);
+		return nullptr;
+	}
+	const Type& fieldType = i->second;
+
+	return new FieldAccess(base, field, fieldType, src);
+}
+
+
+FieldAccess::FieldAccess(UniqPtr<Expression>& base, UniqPtr<Identifier>& field,
+                         const Type& type, SourceRange src)
+	: Expression(type, src), base_(std::move(base)), field_(std::move(field))
 {
 }
 

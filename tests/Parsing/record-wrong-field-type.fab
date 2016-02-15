@@ -4,5 +4,5 @@
 #
 
 # CHECK: assigning record[foo:string, bar:string]
-# CHECK: to identifier of type record[foo:string, bar:string]
+# CHECK: to identifier of type record[foo:string, bar:int]
 foo:record[foo:string, bar:int] = record { foo = 'hi'; bar = 'world'; };

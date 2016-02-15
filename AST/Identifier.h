@@ -78,6 +78,9 @@ private:
 	const std::string name_;
 };
 
+template<class T>
+using NamedPtrVec = std::vector<std::pair<UniqPtr<Identifier>, UniqPtr<T>>>;
+
 } // namespace ast
 } // namespace fabrique
 

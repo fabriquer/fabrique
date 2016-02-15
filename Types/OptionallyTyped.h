@@ -46,7 +46,7 @@ public:
 	virtual ~OptionallyTyped();
 
 	bool isTyped() const { return type_; }
-	virtual const Type& type() const { return *type_; }
+	virtual const Type& type() const;
 
 private:
 	const Type *type_;

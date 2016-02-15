@@ -1,6 +1,6 @@
 /** @file AST/UnaryOperation.cc    Definition of @ref fabrique::ast::UnaryOperation. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -42,14 +42,21 @@ using namespace fabrique;
 using namespace fabrique::ast;
 
 
-UnaryOperation* UnaryOperation::Create(Operator op, const SourceRange& opLoc,
-                                       UniqPtr<Expression>& e)
+UnaryOperation::NotParser::~NotParser()
 {
-	assert(e);
-
-	SourceRange loc = SourceRange(opLoc, e->source());
-	return new UnaryOperation(e, op, e->type(), loc);
 }
+
+
+UnaryOperation*
+UnaryOperation::NotParser::Build(const Scope& scope, TypeContext& types, Err& err)
+{
+	UniqPtr<Expression> operand(operand_->Build(scope, types, err));
+	if (not operand)
+		return nullptr;
+
+	return new UnaryOperation(operand, Operator::Negate, types.booleanType(), source());
+}
+
 
 UnaryOperation::UnaryOperation(UniqPtr<Expression>& e, enum Operator op,
                                const Type& ty, const SourceRange& loc)

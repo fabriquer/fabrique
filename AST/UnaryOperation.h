@@ -1,6 +1,6 @@
 /** @file AST/UnaryOperation.h    Declaration of @ref fabrique::ast::UnaryOperation. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -54,11 +54,18 @@ public:
 		Invalid,
 	};
 
+	class NotParser : public Expression::Parser
+	{
+	public:
+		virtual ~NotParser();
+		virtual UnaryOperation* Build(const Scope&, TypeContext&, Err&) override;
+
+	private:
+		ChildNodeParser<Expression> operand_;
+	};
+
 	static Operator Op(const std::string&);
 	static std::string OpStr(Operator);
-
-	static UnaryOperation* Create(Operator, const SourceRange& opLoc,
-	                              UniqPtr<Expression>&);
 
 	Operator getOp() const { return op_; }
 	const Expression& getSubExpr() const { return *subexpr_; }

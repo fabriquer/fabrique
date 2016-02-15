@@ -53,9 +53,6 @@ class Value;
 class CompoundExpression : public Expression
 {
 public:
-	CompoundExpression(UniqPtr<Scope>&& values, UniqPtr<Expression>& result,
-	                   const SourceRange& loc);
-
 	const Expression& result() const { return *result_; }
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
@@ -67,15 +64,17 @@ public:
 	{
 	public:
 		virtual ~Parser();
-		bool construct(const ParserInput&, ParserStack&, ParseError) override;
 		CompoundExpression* Build(const Scope&, TypeContext&, Err&) override;
 
 	private:
-		ChildNodes<Value> values_;
+		ChildNodeParser<Scope> values_;
 		ChildNodeParser<Expression> result_;
 	};
 
 private:
+	CompoundExpression(UniqPtr<Scope> values, UniqPtr<Expression> result,
+	                   const SourceRange loc);
+
 	const UniqPtr<Scope> scope_;
 	const UniqPtr<Expression> result_;
 };

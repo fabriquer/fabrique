@@ -26,6 +26,7 @@
  */
 
 #include "Types/OptionallyTyped.h"
+#include <cassert>
 using namespace fabrique;
 
 OptionallyTyped::OptionallyTyped(const Type &t)
@@ -39,3 +40,9 @@ OptionallyTyped::OptionallyTyped(const Type *t)
 }
 
 OptionallyTyped::~OptionallyTyped() {}
+
+const Type& OptionallyTyped::type() const
+{
+	assert(type_);
+	return *type_;
+}

@@ -1,6 +1,6 @@
 /** @file Support/String.h    Declaration of string utility functions. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of

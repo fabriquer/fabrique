@@ -1,6 +1,6 @@
 /** @file AST/Expression.h    Declaration of @ref fabrique::ast::Expression. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of

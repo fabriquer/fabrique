@@ -1,6 +1,6 @@
 /** @file AST/TypeReference.h    Declaration of @ref fabrique::ast::TypeReference. */
 /*
- * Copyright (c) 2015, 2016 Jonathan Anderson
+ * Copyright (c) 2015-2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed at Memorial University of Newfoundland under
@@ -50,24 +50,52 @@ public:
 
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
+	class FieldTypeParser;
 
-	class Parser : public Node::Parser
+	class Parser : public Expression::Parser
 	{
 	public:
+		enum class Kind
+		{
+			FunctionType,
+			ParametricType,
+			RecordType,
+			SimpleType,
+		};
+
 		virtual ~Parser();
 		TypeReference* Build(const Scope&, TypeContext&, Err&) override;
 
 	private:
-		ChildNodeParser<Identifier> name_;
+		TypeReference* BuildParameterized(const Scope&, TypeContext&, Err&);
+		TypeReference* BuildRecordType(const Scope&, TypeContext&, Err&);
+		TypeReference* BuildSimpleType(const Scope&, TypeContext&, Err&);
+
+		ChildNodeParser<Identifier, true> name_;
+		ChildNodeParsers<FieldTypeParser> fieldTypes_;
 		ChildNodes<TypeReference> parameters_;
+	};
+
+	class FieldTypeParser : public Expression::Parser
+	{
+	public:
+		virtual ~FieldTypeParser();
+		TypeReference* Build(const Scope&, TypeContext&, Err&) override;
+
+		ChildNodeParser<Identifier> name_;
+		ChildNodeParser<TypeReference> type_;
 	};
 
 private:
 	TypeReference(UniqPtr<Identifier> name, UniqPtrVec<TypeReference> parameters,
 	              const Type& referencedType, SourceRange);
 
+	TypeReference(NamedPtrVec<TypeReference> fieldTypes,
+	              const RecordType& referencedType, SourceRange);
+
 	UniqPtr<Identifier> name_;
 	UniqPtrVec<TypeReference> parameters_;
+	NamedPtrVec<TypeReference> fieldTypes_;
 	const Type& referencedType_;
 };
 

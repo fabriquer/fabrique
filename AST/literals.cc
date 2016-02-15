@@ -33,6 +33,7 @@
 #include "AST/Visitor.h"
 #include "DAG/Primitive.h"
 #include "Support/Bytestream.h"
+#include "Support/String.h"
 
 using namespace fabrique;
 using namespace fabrique::ast;
@@ -181,19 +182,14 @@ bool StringLiteral::Parser::construct(const ParserInput& input, ParserStack&, Pa
 	const string str = input.str();
 	assert(str.length() >= 2);
 
-	if (str[0] == '\'')
-		quotes_ = 1;
-
-	else
-		quotes_ = 2;
-
+	quote_ = str[0];
 	value_ = str.substr(1, str.length() - 2);
+
 	return true;
 }
 
 StringLiteral*
 StringLiteral::Parser::Build(const Scope&, TypeContext& types, Err&)
 {
-	const string quote = (quotes_ == 1) ? "'" : "\"";
-	return new StringLiteral(value_, types.stringType(), quote, source_);
+	return new StringLiteral(value_, types.stringType(), quote_, source_);
 }

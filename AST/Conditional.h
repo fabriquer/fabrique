@@ -60,7 +60,6 @@ public:
 	{
 	public:
 		virtual ~Parser();
-		bool construct(const ParserInput&, ParserStack&, ParseError) override;
 		Conditional* Build(const Scope&, TypeContext&, Err&) override;
 
 	private:

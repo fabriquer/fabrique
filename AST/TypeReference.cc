@@ -1,6 +1,6 @@
 /** @file AST/TypeReference.cc    Definition of @ref fabrique::ast::TypeReference. */
 /*
- * Copyright (c) 2015 Jonathan Anderson
+ * Copyright (c) 2015-2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed at Memorial University of Newfoundland under
@@ -31,11 +31,25 @@
 #include "AST/TypeReference.h"
 #include "AST/Visitor.h"
 #include "DAG/TypeReference.h"
+#include "Types/RecordType.h"
 #include "Types/Type.h"
 #include "Types/TypeContext.h"
 
 using namespace fabrique::ast;
 using std::string;
+
+
+TypeReference::FieldTypeParser::~FieldTypeParser()
+{
+}
+
+
+TypeReference* TypeReference::FieldTypeParser::Build(const Scope&, TypeContext&, Err&)
+{
+	assert(false && "unreachable");
+	return nullptr;
+}
+
 
 
 TypeReference::Parser::~Parser()
@@ -46,6 +60,45 @@ TypeReference::Parser::~Parser()
 TypeReference*
 TypeReference::Parser::Build(const Scope& scope, TypeContext& types, Err& err)
 {
+	if (not parameters_.empty())
+	{
+		return BuildParameterized(scope, types, err);
+	}
+	else if (not fieldTypes_.empty())
+	{
+		return BuildRecordType(scope, types, err);
+	}
+	else
+	{
+		return BuildSimpleType(scope, types, err);
+	}
+}
+
+
+TypeReference*
+TypeReference::Parser::BuildSimpleType(const Scope& scope, TypeContext& types, Err& err)
+{
+	assert(name_);
+	assert(fieldTypes_.empty());
+	assert(parameters_.empty());
+
+	UniqPtr<Identifier> name(name_->Build(scope, types, err));
+	SourceRange src(name->source());
+
+	const Type& referencedType = types.find(name->name(), src);
+
+	return new TypeReference(std::move(name), UniqPtrVec<TypeReference>(),
+	                         referencedType, src);
+}
+
+
+TypeReference*
+TypeReference::Parser::BuildParameterized(const Scope& scope, TypeContext& types, Err& err)
+{
+	assert(name_);
+	assert(fieldTypes_.empty());
+	assert(not parameters_.empty());
+
 	UniqPtr<Identifier> name(name_->Build(scope, types, err));
 	SourceRange src(name->source());
 
@@ -70,11 +123,45 @@ TypeReference::Parser::Build(const Scope& scope, TypeContext& types, Err& err)
 }
 
 
+TypeReference*
+TypeReference::Parser::BuildRecordType(const Scope& scope, TypeContext& types, Err& err)
+{
+	assert(not name_);
+	assert(not fieldTypes_.empty());
+	assert(parameters_.empty());
+
+	Type::NamedTypeVec fieldTypes;
+	NamedPtrVec<TypeReference> fieldTypeRefs;
+
+	for (auto& f : fieldTypes_)
+	{
+		UniqPtr<Identifier> name(f->name_->Build(scope, types, err));
+		UniqPtr<TypeReference> type(f->type_->Build(scope, types, err));
+
+		if (not name or not type)
+			return nullptr;
+
+		fieldTypes.emplace_back(name->name(), type->referencedType());
+		fieldTypeRefs.emplace_back(std::move(name), std::move(type));
+	}
+
+	const RecordType& type = types.recordType(fieldTypes);
+	return new TypeReference(std::move(fieldTypeRefs), type, source());
+}
+
+
 TypeReference::TypeReference(UniqPtr<Identifier> name, UniqPtrVec<TypeReference> params,
                              const Type& referencedType, SourceRange src)
 	: Expression(referencedType.context().find("type", src), src),
 	  name_(std::move(name)), parameters_(std::move(params)),
 	  referencedType_(referencedType)
+{
+}
+
+TypeReference::TypeReference(NamedPtrVec<TypeReference> fieldTypes,
+                             const RecordType& referencedType, SourceRange src)
+	: Expression(referencedType.context().find("type", src), src),
+	  fieldTypes_(std::move(fieldTypes)), referencedType_(referencedType)
 {
 }
 

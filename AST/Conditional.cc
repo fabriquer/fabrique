@@ -1,6 +1,6 @@
 /** @file AST/Conditional.cc    Definition of @ref fabrique::ast::Conditional. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2013-2014, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -46,13 +46,6 @@ Conditional::Parser::~Parser()
 }
 
 
-bool Conditional::Parser::construct(const ParserInput& in, ParserStack& s, ParseError e)
-{
-	source_ = in;
-	return Node::Parser::construct(in, s, e);
-}
-
-
 Conditional*
 Conditional::Parser::Build(const Scope& scope, TypeContext& types, Err& err)
 {
@@ -65,7 +58,7 @@ Conditional::Parser::Build(const Scope& scope, TypeContext& types, Err& err)
 
 	const Type& type = thenClause->type().supertype(elseClause->type());
 
-	return new Conditional(condition, thenClause, elseClause, source_, type);
+	return new Conditional(condition, thenClause, elseClause, source(), type);
 }
 
 
@@ -80,17 +73,25 @@ Conditional::Conditional(UniqPtr<Expression>& condition,
 {
 }
 
-void Conditional::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+void Conditional::PrettyPrint(Bytestream& out, size_t indent) const
 {
+	const std::string tabs(indent, '\t');
+
+	out << tabs << Bytestream::Operator << "if ";
+
+	condition_->PrettyPrint(out, indent + 1);
+
+	out << Bytestream::Reset << "\n";
+
+	thenClause_->PrettyPrint(out, indent + 1);
+
 	out
-		<< Bytestream::Operator << "if ("
-		<< *condition_
-		<< Bytestream::Operator << ")\n"
-		<< *thenClause_
-		<< Bytestream::Operator << "\nelse\n"
-		<< *elseClause_
-		<< Bytestream::Reset
+		<< "\n"
+		<< Bytestream::Operator << tabs << "else"
+		<< Bytestream::Reset << "\n"
 		;
+
+	elseClause_->PrettyPrint(out, indent + 1);
 }
 
 

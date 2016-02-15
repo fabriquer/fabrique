@@ -55,10 +55,8 @@ namespace {
 class ScopeBuilder : public Scope
 {
 public:
-	static ScopeBuilder Create(const Scope *parent, Node::Parser::ChildNodes<Value>&,
-	                           TypeContext& types, parser::ErrorReporter& err);
-
-	ScopeBuilder(ScopeBuilder&&);
+	static ScopeBuilder* Create(const Scope *parent, Node::Parser::ChildNodes<Value>&,
+	                            TypeContext& types, parser::ErrorReporter& err);
 
 	virtual const Value* Lookup(const Identifier&) const override;
 	virtual PtrVec<Value> values() const override;
@@ -71,7 +69,7 @@ private:
 	             TypeContext& types, SourceRange src, parser::ErrorReporter& err);
 
 	const Value* LookupOrBuild(const string& name);
-	void BuildAllValues();
+	bool BuildAllValues();
 
 	TypeContext& types_;                    //!< TypeContext for use in construction.
 	parser::ErrorReporter& err_;            //!< For reporting parse errors.
@@ -99,6 +97,7 @@ public:
 
 			for (const auto& v : values_)
 			{
+				assert(v);
 				dbg
 					<< Bytestream::Operator << " - "
 					<< Bytestream::Reset << *v << "\n"
@@ -128,7 +127,7 @@ UniqPtr<Scope> Scope::Create(UniqPtrVec<Value> values, const Scope *parent)
 }
 
 
-ScopeBuilder
+ScopeBuilder*
 ScopeBuilder::Create(const Scope *parent, Node::Parser::ChildNodes<Value>& valueNodes,
                      TypeContext& types, parser::ErrorReporter& err)
 {
@@ -145,12 +144,18 @@ ScopeBuilder::Create(const Scope *parent, Node::Parser::ChildNodes<Value>& value
 			end = node->source().end;
 
 		const string name = node->name(*parent, err);
+		if (parsers.find(name) != parsers.end())
+		{
+			err.ReportError("redefining value", node->source());
+			return nullptr;
+		}
+
 		names.push_back(name);
 		parsers.emplace(name, std::move(node));
 	}
 
 	SourceRange src(begin, end);
-	return ScopeBuilder(parent, names, std::move(parsers), types, src, err);
+	return new ScopeBuilder(parent, names, std::move(parsers), types, src, err);
 }
 
 
@@ -159,14 +164,6 @@ ScopeBuilder::ScopeBuilder(const Scope *parent, std::vector<string> names,
                            TypeContext& types, SourceRange src, parser::ErrorReporter& err)
 	: Scope(src, parent), types_(types), err_(err), names_(names),
 	  parsers_(std::move(parsers))
-{
-}
-
-
-ScopeBuilder::ScopeBuilder(ScopeBuilder&& orig)
-	: Scope(source(), orig.parent_), types_(orig.types_), err_(orig.err_),
-	  names_(orig.names_), values_(std::move(orig.values_)),
-	  parsers_(std::move(orig.parsers_))
 {
 }
 
@@ -184,7 +181,10 @@ const Value* ScopeBuilder::Lookup(const Identifier& id) const
 	//
 	ScopeBuilder *self = const_cast<ScopeBuilder*>(this);
 	if (const Value *v = self->LookupOrBuild(id.name()))
+	{
+		assert(v->isTyped());
 		return v;
+	}
 
 	// Do we have a parent scope to answer the question?
 	if (parent_)
@@ -218,6 +218,8 @@ const Value* ScopeBuilder::LookupOrBuild(const string& name)
 		Value::Parser& p = *j->second;
 
 		UniqPtr<Value> value(p.Build(*this, types_, err_));
+		if (not value)
+			return nullptr;
 
 		const Value *ptr = value.get();
 		values_.emplace(name, std::move(value));
@@ -242,7 +244,8 @@ PtrVec<Value> ScopeBuilder::values() const
 
 UniqPtr<Scope> ScopeBuilder::Build()
 {
-	BuildAllValues();
+	if (not BuildAllValues())
+		return UniqPtr<Scope>();
 
 	UniqPtrVec<Value> values;
 	for (const string& name : names_)
@@ -255,10 +258,17 @@ UniqPtr<Scope> ScopeBuilder::Build()
 }
 
 
-void ScopeBuilder::BuildAllValues()
+bool ScopeBuilder::BuildAllValues()
 {
 	for (const string& name : names_)
-		LookupOrBuild(name);
+	{
+		if (not LookupOrBuild(name))
+		{
+			return false;
+		}
+	}
+
+	return true;
 }
 
 
@@ -280,10 +290,14 @@ Scope::Parser::~Parser()
 
 Scope* Scope::Parser::Build(const Scope& parentScope, TypeContext& types, Err& err)
 {
-	ScopeBuilder builder = ScopeBuilder::Create(&parentScope, values_, types, err);
-	UniqPtr<Scope> scope = builder.Build();
+	UniqPtr<ScopeBuilder> builder(
+		ScopeBuilder::Create(&parentScope, values_, types, err));
 
-	if (err.hasErrors())
+	if (not builder)
+		return nullptr;
+
+	UniqPtr<Scope> scope = builder->Build();
+	if (not scope or err.hasErrors())
 		return nullptr;
 
 	return scope.release();

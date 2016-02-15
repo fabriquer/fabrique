@@ -122,7 +122,7 @@ class ParserDelegate : public pegmatite::ASTParserDelegate
 				SourceRange src(input);
 
 				dbg
-					<< Bytestream::Action << "\nparsing "
+					<< Bytestream::Action << "parsing "
 					<< Bytestream::Type << Demangle(typeid(ParserType))
 					<< Bytestream::Operator << " «"
 					<< Bytestream::Literal << input.str()
@@ -138,8 +138,7 @@ class ParserDelegate : public pegmatite::ASTParserDelegate
 				for (auto i = stack.rbegin(); i != stack.rend(); i++)
 				{
 					auto& node = *i->second;
-					const std::string typeName =
-						Split(TypeName(node), "::")[2];
+					const std::string typeName = TypeName(node);
 
 					dbg
 						<< Bytestream::Operator << "   - "
@@ -160,6 +159,15 @@ class ParserDelegate : public pegmatite::ASTParserDelegate
 
 			if (not parser->construct(input, stack, err))
 				return false;
+
+			if (dbg)
+			{
+				dbg
+					<< Bytestream::Action << "parsed: "
+					<< Bytestream::Type << TypeName(*parser)
+					<< Bytestream::Reset << "\n\n"
+					;
+			}
 
 			stack.emplace_back(input, std::move(parser));
 			return true;

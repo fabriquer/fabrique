@@ -3,7 +3,7 @@
  * Definition of @ref fabrique::ast::Record.
  */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -66,13 +66,6 @@ Record::Parser::~Parser()
 }
 
 
-bool Record::Parser::construct(const ParserInput& input, ParserStack& s, ParseError err)
-{
-	source_ = input;
-	return Node::Parser::construct(input, s, err);
-}
-
-
 Record* Record::Parser::Build(const Scope& s, TypeContext& types, Err& err)
 {
 	UniqPtr<Scope> scope(values_->Build(s, types, err));
@@ -85,7 +78,7 @@ Record* Record::Parser::Build(const Scope& s, TypeContext& types, Err& err)
 		fieldTypes.emplace_back(v->name().name(), v->type());
 	}
 
-	return new Record(scope, types.recordType(fieldTypes), source_);
+	return new Record(scope, types.recordType(fieldTypes), source());
 }
 
 
@@ -95,7 +88,7 @@ Record::Record(UniqPtr<Scope>& fields, const RecordType& ty, const SourceRange& 
 }
 
 
-const PtrVec<Value>& Record::fields() const
+const PtrVec<Value> Record::fields() const
 {
 	return scope().values();
 }

@@ -81,24 +81,27 @@ protected:
 		using ChildNodeParser = pegmatite::ASTPtr<typename T::Parser, Optional>;
 
 		template<class T>
-		using ChildNodes = pegmatite::ASTList<typename T::Parser>;
+		using ChildNodeParsers = pegmatite::ASTList<T>;
+
+		template<class T>
+		using ChildNodes = ChildNodeParsers<typename T::Parser>;
 
 		using Err = parser::ErrorReporter;
+		using ParseError = pegmatite::ErrorReporter;
 
-		Parser() : source_(SourceRange::None()), type_(nullptr) {}
+		Parser() : source_(SourceRange::None()) {}
 		virtual ~Parser();
 
 		virtual Node* Build(const Scope&, TypeContext&, Err&) = 0;
+
+		virtual bool construct(const ParserInput&, ParserStack&, ParseError)
+			override;
 
 		SourceRange source() const { return source_; }
 
 		protected:
 		SourceRange source_;
-		Type *type_;
 	};
-
-	//using ParseContainer = pegmatite::ASTContainer;
-	using ParseError = pegmatite::ErrorReporter;
 };
 
 } // namespace ast

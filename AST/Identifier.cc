@@ -102,10 +102,28 @@ void Identifier::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }
 
 bool Identifier::operator == (const Identifier& other) const
 {
-	return name() == other.name() and type() == other.type();
+	if (name() != other.name())
+		return false;
+
+	if (isTyped() != other.isTyped())
+		return false;
+
+	if (isTyped() and type() != other.type())
+		return false;
+
+	return true;
 }
 
 bool Identifier::operator < (const Identifier& other) const
 {
-	return name() < other.name() or type().isSubtype(other.type());
+	if (name() < other.name())
+		return true;
+
+	if (not isTyped() and other.isTyped())
+		return true;
+
+	if (isTyped() and type() < other.type())
+		return true;
+
+	return false;
 }

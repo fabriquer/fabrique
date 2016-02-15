@@ -1,6 +1,6 @@
 /** @file AST/FieldAccess.h    Declaration of @ref fabrique::ast::FieldAccess. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -34,6 +34,7 @@
 
 #include "ADT/UniqPtr.h"
 #include "AST/Expression.h"
+#include "AST/Identifier.h"
 
 namespace fabrique {
 namespace ast {
@@ -48,7 +49,8 @@ class StringLiteral;
 class FieldAccess : public Expression
 {
 public:
-	FieldAccess(UniqPtr<Expression>& base, UniqPtr<Identifier>& field);
+	FieldAccess(UniqPtr<Expression>& base, UniqPtr<Identifier>& field,
+	            const Type&, SourceRange src);
 
 	const Expression& base() const { return *base_; }
 	const Identifier& field() const { return *field_; }
@@ -57,6 +59,17 @@ public:
 	virtual void Accept(Visitor&) const override;
 
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
+
+	class Parser : public Expression::Parser
+	{
+	public:
+		virtual ~Parser();
+		FieldAccess* Build(const Scope&, TypeContext&, Err&) override;
+
+	private:
+		ChildNodeParser<Expression> base_;
+		ChildNodeParser<Identifier> field_;
+	};
 
 private:
 	const UniqPtr<Expression> base_;

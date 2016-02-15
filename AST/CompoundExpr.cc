@@ -1,6 +1,6 @@
 /** @file AST/CompoundExpr.cc    Definition of @ref fabrique::ast::CompoundExpression. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -41,9 +41,29 @@ using namespace fabrique;
 using namespace fabrique::ast;
 
 
-CompoundExpression::CompoundExpression(UniqPtr<Scope>&& scope,
-                                       UniqPtr<Expression>& result,
-                                       const SourceRange& loc)
+CompoundExpression::Parser::~Parser()
+{
+}
+
+
+CompoundExpression*
+CompoundExpression::Parser::Build(const Scope& scope, TypeContext& types, Err& err)
+{
+	UniqPtr<Scope> values(values_->Build(scope, types, err));
+	if (not values)
+		return nullptr;
+
+	UniqPtr<Expression> result(result_->Build(*values, types, err));
+	if (not result)
+		return nullptr;
+
+	return new CompoundExpression(std::move(values), std::move(result), source());
+}
+
+
+CompoundExpression::CompoundExpression(UniqPtr<Scope> scope,
+                                       UniqPtr<Expression> result,
+                                       const SourceRange loc)
 	: Expression(result->type(), loc), scope_(std::move(scope)),
 	  result_(std::move(result))
 {

@@ -61,16 +61,20 @@ ParserDelegate::ParserDelegate(const Grammar& g, TypeContext& t,
 {
 	BindType<ast::Identifier>(g.Identifier);
 	BindType<ast::TypeReference>(g.Type);
+	BindParser<ast::TypeReference::FieldTypeParser>(g.FieldType);
 
 	BindType<ast::BoolLiteral>(g.BoolLiteral);
 	BindType<ast::IntLiteral>(g.IntLiteral);
 	BindType<ast::StringLiteral>(g.StringLiteral);
 
-	BindType<ast::NameReference>(g.NameReference);
-
+	BindType<ast::CompoundExpression>(g.CompoundExpression);
 	BindType<ast::Conditional>(g.Conditional);
+	BindType<ast::FieldAccess>(g.FieldReference);
+	BindType<ast::NameReference>(g.NameReference);
 	BindType<ast::List>(g.List);
 	BindType<ast::Record>(g.Record);
+
+	BindParser<ast::UnaryOperation::NotParser>(g.NotOperation);
 
 	BindParser<ast::BinaryOperation::And>(g.AndOperation);
 	BindParser<ast::BinaryOperation::Or>(g.OrOperation);
