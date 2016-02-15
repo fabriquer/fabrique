@@ -1,5 +1,5 @@
 #
-# Generated at Thu 28 Jan 2016 19:05:44 NST by regenerate-manifest.sh
+# Generated at Sun 14 Feb 2016 21:55:15 NST by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -147,6 +147,7 @@ all_files = files(
 ./Parsing/record-instantiation.fab
 ./Parsing/record-nesting.fab
 ./Parsing/record-not-a-record.fab
+./Parsing/record-simple.fab
 ./Parsing/record-type-too-many-fields.fab
 ./Parsing/record-types.fab
 ./Parsing/record-wrong-field-type.fab
