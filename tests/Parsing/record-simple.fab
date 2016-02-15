@@ -1,0 +1,9 @@
+#
+# RUN: %fab --parse-only --print-ast %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: foo:record[bar:string] = record
+# CHECK-NEXT: {
+# CHECK-DAG:   bar:string = 'world';
+foo:record[bar:string] = record { bar = 'world'; };
