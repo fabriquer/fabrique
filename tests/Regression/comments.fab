@@ -1,0 +1,18 @@
+#
+# This tests a regression in comment handing.
+#
+# RUN: %fab --parse-only --print-ast %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK: integers:list[int] = 0 :: [ 1 2 ] + [ 3 4 ] .+ 5;
+integers = 0 :: [ 1 2 ] + [ 3 4 ] .+ 5;
+
+# CHECK: strings:list[string] = 'hello' :: [ 'world' ] + [ '!' ];
+strings = 'hello' :: [ 'world' ] + [ '!' ];
+
+# CHECK: logic:bool = 1 < 2 and 3 < 4 or 10 > 9 xor 0 == 0;
+logic = 1 < 2 and 3 < 4 or 10 > 9 xor 0 == 0;
+
+# CHECK: negation:bool = not logic;
+negation = not logic;
