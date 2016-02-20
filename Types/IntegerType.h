@@ -1,6 +1,6 @@
 /** @file Types/IntegerType.h    Declaration of @ref fabrique::IntegerType. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -49,6 +49,7 @@ public:
 	static const Type& get(TypeContext&);
 
 	virtual const Type& onAddTo(const Type&) const override;
+	bool isNumeric() const override { return true; }
 
 protected:
 	IntegerType(TypeContext&);

@@ -1,6 +1,6 @@
 /** @file Types/Type.h    Declaration of @ref fabrique::Type. */
 /*
- * Copyright (c) 2013-2015 Jonathan Anderson
+ * Copyright (c) 2013-2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -119,6 +119,7 @@ public:
 	virtual bool hasOutput() const { return false; }
 	virtual bool isFile() const { return false; }
 	virtual bool isFunction() const { return false; }
+	virtual bool isNumeric() const { return false; }
 	virtual bool isString() const { return false; }
 	virtual bool isOptional() const { return false; }
 	virtual bool isOrdered() const { return false; }
