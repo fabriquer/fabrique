@@ -70,11 +70,16 @@ ParserDelegate::ParserDelegate(const Grammar& g, TypeContext& t,
 	BindType<ast::CompoundExpression>(g.CompoundExpression);
 	BindType<ast::Conditional>(g.Conditional);
 	BindType<ast::FieldAccess>(g.FieldReference);
-	BindType<ast::NameReference>(g.NameReference);
+	BindType<ast::File>(g.File);
+	BindType<ast::FileList>(g.FileList);
 	BindType<ast::List>(g.List);
+	BindType<ast::NameReference>(g.NameReference);
 	BindType<ast::Record>(g.Record);
+	BindType<ast::TypeDeclaration>(g.TypeDeclaration);
 
-	BindParser<ast::UnaryOperation::NotParser>(g.NotOperation);
+	BindParser<ast::UnaryOperation::Negative>(g.NegativeOperation);
+	BindParser<ast::UnaryOperation::Not>(g.NotOperation);
+	BindParser<ast::UnaryOperation::Positive>(g.PositiveOperation);
 
 	BindParser<ast::BinaryOperation::And>(g.AndOperation);
 	BindParser<ast::BinaryOperation::Or>(g.OrOperation);

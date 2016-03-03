@@ -37,7 +37,7 @@
 namespace fabrique {
 
 /**
- * A type that represents an ordered sequence.
+ * A type that has been defined by the user.
  */
 class UserType : public Type
 {
@@ -48,6 +48,7 @@ public:
 	const Type& userType() const { return userType_; }
 
 	virtual bool isType() const override { return true; }
+	virtual const Type& lookupType() const override;
 
 private:
 	const Type& userType_;

@@ -28,9 +28,14 @@
  * SUCH DAMAGE.
  */
 
+#include "AST/Scope.h"
+#include "AST/TypeDeclaration.h"
 #include "AST/TypeReference.h"
 #include "AST/Visitor.h"
 #include "DAG/TypeReference.h"
+#include "Parsing/ErrorReporter.h"
+#include "Support/ABI.h"
+#include "Support/Bytestream.h"
 #include "Types/RecordType.h"
 #include "Types/Type.h"
 #include "Types/TypeContext.h"
@@ -64,13 +69,13 @@ TypeReference::Parser::Build(const Scope& scope, TypeContext& types, Err& err)
 	{
 		return BuildParameterized(scope, types, err);
 	}
-	else if (not fieldTypes_.empty())
+	else if (name_)
 	{
-		return BuildRecordType(scope, types, err);
+		return BuildSimpleType(scope, types, err);
 	}
 	else
 	{
-		return BuildSimpleType(scope, types, err);
+		return BuildRecordType(scope, types, err);
 	}
 }
 
@@ -85,10 +90,19 @@ TypeReference::Parser::BuildSimpleType(const Scope& scope, TypeContext& types, E
 	UniqPtr<Identifier> name(name_->Build(scope, types, err));
 	SourceRange src(name->source());
 
-	const Type& referencedType = types.find(name->name(), src);
+	const Type *type;
 
-	return new TypeReference(std::move(name), UniqPtrVec<TypeReference>(),
-	                         referencedType, src);
+	// Is this a type reference or user-defined type declaration?
+	if (const Value* value = scope.Lookup(*name))
+	{
+		type = &value->value().type().lookupType();
+	}
+	else
+	{
+		type = &types.find(name->name(), src);
+	}
+
+	return new TypeReference(std::move(name), *type, src);
 }
 
 
@@ -118,8 +132,8 @@ TypeReference::Parser::BuildParameterized(const Scope& scope, TypeContext& types
 
 	const Type& referencedType = types.find(name->name(), src, paramTypes);
 
-	return new TypeReference(std::move(name), std::move(parameters),
-	                         referencedType, src);
+	return new TypeReference(std::move(name), referencedType, src,
+	                         std::move(parameters));
 }
 
 
@@ -127,7 +141,6 @@ TypeReference*
 TypeReference::Parser::BuildRecordType(const Scope& scope, TypeContext& types, Err& err)
 {
 	assert(not name_);
-	assert(not fieldTypes_.empty());
 	assert(parameters_.empty());
 
 	Type::NamedTypeVec fieldTypes;
@@ -150,8 +163,8 @@ TypeReference::Parser::BuildRecordType(const Scope& scope, TypeContext& types, E
 }
 
 
-TypeReference::TypeReference(UniqPtr<Identifier> name, UniqPtrVec<TypeReference> params,
-                             const Type& referencedType, SourceRange src)
+TypeReference::TypeReference(UniqPtr<Identifier> name, const Type& referencedType,
+                             SourceRange src, UniqPtrVec<TypeReference> params)
 	: Expression(referencedType.context().find("type", src), src),
 	  name_(std::move(name)), parameters_(std::move(params)),
 	  referencedType_(referencedType)
@@ -167,7 +180,34 @@ TypeReference::TypeReference(NamedPtrVec<TypeReference> fieldTypes,
 
 void TypeReference::PrettyPrint(Bytestream& out, size_t indent) const
 {
-	type().PrettyPrint(out, indent);
+	if (name_)
+	{
+		out << Bytestream::Type << *name_;
+
+		if (not parameters_.empty())
+		{
+			out << Bytestream::Operator << "[";
+
+			for (size_t i = 0; i < parameters_.size(); i++)
+			{
+				out << *parameters_[i];
+
+				if ((i + 1) < parameters_.size())
+				{
+					out << Bytestream::Operator << ", ";
+				}
+			}
+
+			out
+				<< Bytestream::Operator << "]"
+				<< Bytestream::Reset
+				;
+		}
+	}
+	else
+	{
+		referencedType_.PrettyPrint(out, indent);
+	}
 }
 
 void TypeReference::Accept(Visitor& v) const
@@ -178,6 +218,9 @@ void TypeReference::Accept(Visitor& v) const
 
 const fabrique::Type& TypeReference::referencedType() const
 {
+	if (referencedType_.isType())
+		return dynamic_cast<const UserType&>(referencedType_).userType();
+
 	return referencedType_;
 }
 

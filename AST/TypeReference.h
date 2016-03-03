@@ -87,8 +87,8 @@ public:
 	};
 
 private:
-	TypeReference(UniqPtr<Identifier> name, UniqPtrVec<TypeReference> parameters,
-	              const Type& referencedType, SourceRange);
+	TypeReference(UniqPtr<Identifier> name, const Type& referencedType, SourceRange,
+	              UniqPtrVec<TypeReference> parameters = UniqPtrVec<TypeReference>());
 
 	TypeReference(NamedPtrVec<TypeReference> fieldTypes,
 	              const RecordType& referencedType, SourceRange);

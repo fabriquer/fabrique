@@ -3,7 +3,7 @@
  * Declaration of @ref fabrique::ast::TypeDeclaration.
  */
 /*
- * Copyright (c) 2015 Jonathan Anderson
+ * Copyright (c) 2015-2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -49,18 +49,26 @@ namespace ast {
 class TypeDeclaration : public Expression
 {
 public:
-	/**
-	 * @param   declared      the type that we are declaring
-	 * @param   src           location of the declaration
-	 */
-	TypeDeclaration(const UserType& declared, const SourceRange& src);
-
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const override;
 
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
+	class Parser : public Expression::Parser
+	{
+	public:
+		virtual ~Parser();
+		TypeDeclaration* Build(const Scope&, TypeContext&, Err&) override;
+
+	private:
+		ChildNodeParsers<TypeReference::FieldTypeParser> fieldTypes_;
+	};
+
 private:
+	TypeDeclaration(NamedPtrVec<TypeReference> fieldTypes,
+	                const UserType&, SourceRange);
+
+	NamedPtrVec<TypeReference> fieldTypes_;
 	const UserType& declaredType_;
 };
 

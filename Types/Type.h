@@ -126,6 +126,12 @@ public:
 	virtual bool isType() const { return false; }
 	virtual bool canBeNegated() const { return false; }
 
+	/**
+	 * If this is a type-of-type, look up the referenced type;
+	 * if not, return this type.
+	 */
+	virtual const Type& lookupType() const;
+
 	virtual const Type& onAddTo(const Type&) const;
 	virtual const Type& onPrefixWith(const Type&) const;
 

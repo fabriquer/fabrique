@@ -65,7 +65,7 @@ struct Grammar
 	const Rule Ignored = *(Comment | Whitespace);
 
 	//
-	// Terminals that need to be declared before parsing rules:
+	// Terminals that need to be declared before rules:
 	//
 	struct
 	{
@@ -85,6 +85,7 @@ struct Grammar
 		const ExprPtr Record = term("record");
 		const ExprPtr Return = term("return");
 		const ExprPtr Some = term("some");
+		const ExprPtr Type = term("type");
 	} Keywords;
 
 	struct
@@ -105,6 +106,29 @@ struct Grammar
 		const ExprPtr CloseParen = term(')');
 	} Symbols;
 
+	struct
+	{
+		const ExprPtr Input = term("<-");
+		const ExprPtr Produces = term("=>");
+
+		const ExprPtr Minus = term("-");
+		const ExprPtr Plus = term("+");
+		const ExprPtr Prefix = term("::");
+		const ExprPtr ScalarAdd = term(".+");
+
+		const ExprPtr GreaterThan = term(">");
+		const ExprPtr LessThan = term("<");
+		const ExprPtr Equals = term("==");
+		const ExprPtr NotEqual = term("!=");
+
+		const ExprPtr And = term("and");
+		const ExprPtr Not = term("not");
+		const ExprPtr Or = term("or");
+		const ExprPtr XOr = term("xor");
+
+		const ExprPtr Assign = term("=");
+	} Operators;
+
 	const Rule Alpha = ('A'_E - 'Z') | ('a'_E - 'z');
 	const Rule Digit = '0'_E - '9';
 	const Rule AlphaNum = Alpha | Digit;
@@ -123,7 +147,7 @@ struct Grammar
 	const Rule DoubleQuotedString = "\""_E >> *(!"\""_E >> any()) >> "\"";
 	const Rule StringLiteral = SingleQuotedString | DoubleQuotedString;
 
-	TRACE_RULE(Literal, term(BoolLiteral | IntLiteral | StringLiteral));
+	const Rule Literal = term(BoolLiteral | IntLiteral | StringLiteral);
 
 
 	/**
@@ -138,7 +162,7 @@ struct Grammar
 
 	const Rule RecordType =
 		Keywords.Record >> Symbols.OpenBracket
-		>> FieldType >> *(Symbols.Comma >> FieldType)
+		>> -(FieldType >> *(Symbols.Comma >> FieldType))
 		>> Symbols.CloseBracket
 		;
 
@@ -153,14 +177,6 @@ struct Grammar
 	const Rule SimpleType = Identifier;
 
 #if 0
-	| STRUCT '[' fieldTypes ']'
-	{
-		SourceRange begin = Take($1.token)->source();
-		auto fields = Take(NodeVec<Identifier>($3));
-		SourceRange end = Take($4.token)->source();
-
-		$$.type = p->StructType(fields, SourceRange(begin, end));
-	}
 	| '(' types ')' PRODUCES type
 	{
 		SourceRange begin = Take($1.token)->source();
@@ -172,25 +188,27 @@ struct Grammar
 
 		$$.type = &p->FnType(*argTypes, *returnType, src);
 	}
-	;
 #endif
 
-	/*
+	/**
 	 * Almost everything in Fabrique is an Expression.
 	 */
-	TRACE_RULE(Expression,
-		Operation
-	);
+	TRACE_RULE(Expression, BinaryOperation);
 
-	TRACE_RULE(Operation, UnaryOperation | BinaryOperation);
-
+	/**
+	 * The most fundamental component of an Expression (evaluated first).
+	 */
 	TRACE_RULE(Term,
 		Literal
 		| ParentheticalExpression
+		| Action
 		| CompoundExpression
 		| Conditional
+		| File
+		| FileList
 		| List
 		| Record
+		| TypeDeclaration
 		| UnaryOperation
 
 		// Put identifier references after keywords so that
@@ -199,24 +217,51 @@ struct Grammar
 		| NameReference
 	);
 
+	/**
+	 * An expression in parenthesis is evaluated before other operations.
+	 */
+	const Rule ParentheticalExpression =
+		Symbols.OpenParen >> Expression >> Symbols.CloseParen;
+
+	/**
+	 * A build action: transforms input files to some number of output files.
+	 */
+	TRACE_RULE(Action,
+		Keywords.Action
+		>> Symbols.OpenParen
+		>> Arguments
+		>> -(Operators.Input >> Parameters)
+		>> Symbols.CloseParen
+		);
+
+	/**
+	 * A compound expression includes zero or more value definitions and ends with
+	 * an expression (which the compound expression evaluates to).
+	 *
+	 * Example:
+	 * ```
+	 * {
+	 *   foo = 42;
+	 *   bar = 3.1415926;
+	 *
+	 *   foo / bar
+	 * }
+	 * ```
+	 */
 	const Rule CompoundExpression =
 		Symbols.OpenBrace >> Values >> Expression >> Symbols.CloseBrace;
 
+	/**
+	 * A conditional expression: evaluates to either the `then` or the `else` clause.
+	 */
 	const Rule Conditional =
 		Keywords.If >> Expression >> Expression
 		>> Keywords.Else >> Expression;
 
-	const Rule FieldReference =
-		Term >> Symbols.Dot >> Identifier;
+	const Rule FieldReference = Expression >> Symbols.Dot >> Identifier;
 
-	const Rule NameReference = Identifier;
-
-	const Rule ParentheticalExpression =
-		Symbols.OpenParen >> Expression >> Symbols.CloseParen;
-
-#if 0
 	/**
-	 * Files have names and optional arguments.
+	 * A file in the described build, with a name and, optionally, arguments.
 	 *
 	 * Example:
 	 * `file('foo.c', cflags = [ '-D' 'FOO' ])`
@@ -228,7 +273,7 @@ struct Grammar
 
 	TRACE_RULE(Filename, term(+(IdChar | '.' | '/')));
 
-	/*
+	/**
 	 * File lists can include raw filenames as well as embedded file declarations,
 	 * optionally followed by arguments.
 	 *
@@ -243,14 +288,16 @@ struct Grammar
 	 * )
 	 * ```
 	 */
-	TRACE_RULE(FileListWithoutArgs, Keywords.Files >> '(' >> *Filename >> ')');
-	TRACE_RULE(FileListWithArgs,
-		Keywords.Files >> '(' >> *Filename >> ',' >> NamedArguments >> ')');
-	TRACE_RULE(FileList, FileListWithArgs | FileListWithoutArgs);
-#endif
+	TRACE_RULE(FileList,
+		Keywords.Files
+		>> Symbols.OpenParen
+		>> *Filename
+		>> -(Symbols.Comma >> NamedArguments)
+		>> Symbols.CloseParen
+	);
 
-	/*
-	 * Lists are containers for like types and do not use comma separators.
+	/**
+	 * Lists are containers for like values and do not use comma separators.
 	 * The type of the list is taken to be "list of the supertype of all of the
 	 * list's elements".
 	 *
@@ -262,34 +309,24 @@ struct Grammar
 	 * [ 1 2 3 x y ]   # the type of this is list[int]
 	 * ```
 	 */
-	TRACE_RULE(List, Symbols.OpenBracket >> *Expression >> Symbols.CloseBracket);
+	const Rule List = Symbols.OpenBracket >> *Expression >> Symbols.CloseBracket;
 
-	struct
-	{
-		const ExprPtr Input = term("<-");
-		const ExprPtr Produces = term("=>");
+	const Rule NameReference = Identifier;
 
-		const ExprPtr Plus = term("+");
-		const ExprPtr Prefix = term("::");
-		const ExprPtr ScalarAdd = term(".+");
+	const Rule RecordTypeDeclaration =
+		Keywords.Record >> Symbols.OpenBracket
+		>> -(FieldType >> *(Symbols.Comma >> FieldType))
+		>> Symbols.CloseBracket
+		;
 
-		const ExprPtr GreaterThan = term(">");
-		const ExprPtr LessThan = term("<");
-		const ExprPtr Equals = term("==");
-		const ExprPtr NotEqual = term("!=");
+	const Rule TypeDeclaration = RecordTypeDeclaration;
 
-		const ExprPtr And = term("and");
-		const ExprPtr Not = term("not");
-		const ExprPtr Or = term("or");
-		const ExprPtr XOr = term("xor");
-
-		const ExprPtr Assign = term("=");
-	} Operators;
-
-	TRACE_RULE(UnaryOperation, NotOperation);
+	const Rule UnaryOperation = NotOperation | NegativeOperation | PositiveOperation;
 	const Rule NotOperation = Operators.Not >> Expression;
+	const Rule NegativeOperation = Operators.Minus >> Expression;
+	const Rule PositiveOperation = Operators.Plus >> Expression;
 
-	TRACE_RULE(Sum, AddOperation | PrefixOperation | ScalarAddOperation | Term);
+	const Rule Sum = AddOperation | PrefixOperation | ScalarAddOperation | Term;
 	const Rule AddOperation = Sum >> Operators.Plus >> Sum;
 	const Rule PrefixOperation = Sum >> Operators.Prefix >> Sum;
 	const Rule ScalarAddOperation = Sum >> Operators.ScalarAdd >> Sum;
@@ -297,25 +334,36 @@ struct Grammar
 	const Rule CompareExpr =
 		LessThanOperation | GreaterThanOperation
 		| EqualsOperation | NotEqualOperation
-		| Sum;
+		| Sum
+		;
 
 	const Rule GreaterThanOperation = Sum >> Operators.GreaterThan >> Sum;
 	const Rule LessThanOperation = Sum >> Operators.LessThan >> Sum;
 	const Rule EqualsOperation = Sum >> Operators.Equals >> Sum;
 	const Rule NotEqualOperation = Sum >> Operators.NotEqual >> Sum;
 
-	TRACE_RULE(LogicExpr, AndOperation | OrOperation | XOrOperation | CompareExpr);
+	const Rule LogicExpr = AndOperation | OrOperation | XOrOperation | CompareExpr;
 	const Rule AndOperation = LogicExpr >> Operators.And >> LogicExpr;
 	const Rule OrOperation = LogicExpr >> Operators.Or >> LogicExpr;
 	const Rule XOrOperation = LogicExpr >> Operators.XOr >> LogicExpr;
 
-	TRACE_RULE(BinaryOperation, LogicExpr);
+	const Rule BinaryOperation = LogicExpr;
 
 	TRACE_RULE(Arguments, NamedArguments | (Argument >> *(Symbols.Comma >> Argument)));
-	TRACE_RULE(Argument, NamedArgument | UnnamedArgument);
-	TRACE_RULE(NamedArgument, Identifier >> Symbols.Assign >> Expression);
-	TRACE_RULE(NamedArguments, NamedArgument >> *(Symbols.Comma >> NamedArgument));
-	TRACE_RULE(UnnamedArgument, Expression);
+	const Rule Argument = NamedArgument | UnnamedArgument;
+	const Rule NamedArgument = Identifier >> Symbols.Assign >> Expression;
+	const Rule NamedArguments = NamedArgument >> *(Symbols.Comma >> NamedArgument);
+	const Rule UnnamedArgument = Expression;
+
+	TRACE_RULE(Parameters,
+		Parameters >> Symbols.Comma >> Parameter
+		| Parameter
+	);
+
+	TRACE_RULE(Parameter,
+		Identifier >> Symbols.Colon >> Type
+		>> -(Symbols.Assign >> Expression)
+	);
 
 	TRACE_RULE(Value,
 		Identifier >> Operators.Assign >> Expression
@@ -323,30 +371,10 @@ struct Grammar
 	);
 	TRACE_RULE(Values, *(Value >> Symbols.Semicolon));
 
-	TRACE_RULE(Record,
-		Keywords.Record >> Symbols.OpenBrace >> Values >> Symbols.CloseBrace);
+	const Rule Record =
+		Keywords.Record >> Symbols.OpenBrace >> Values >> Symbols.CloseBrace;
 
 #if 0
-action:
-	actionBegin '(' argumentList ')'
-	{
-		SourceRange begin = Take(Parser::ParseToken($1))->source();
-		auto args = Take(NodeVec<Argument>($3));
-		SourceRange end = Take(Parser::ParseToken($4))->source();
-
-		SetOrDie($$, p->DefineAction(args, SourceRange(begin, end)));
-	}
-	| actionBegin '(' argumentList INPUT parameterList ')'
-	{
-		SourceRange begin = Take(Parser::ParseToken($1))->source();
-		auto args = Take(NodeVec<Argument>($3));
-		auto params = Take(NodeVec<Parameter>($5));
-
-		SetOrDie($$, p->DefineAction(args, begin, std::move(params)));
-	}
-	;
-
-
 expression:
 	literal
 	| action
@@ -385,17 +413,6 @@ binaryOperation:
 	}
 	;
 
-binaryOperator:
-	ADD			{ $$.intVal = BinaryOperation::Add; }
-	| PREFIX		{ $$.intVal = BinaryOperation::Prefix; }
-	| SCALAR_ADD		{ $$.intVal = BinaryOperation::ScalarAdd; }
-	| AND			{ $$.intVal = BinaryOperation::And; }
-	| OR			{ $$.intVal = BinaryOperation::Or; }
-	| XOR			{ $$.intVal = BinaryOperation::Xor; }
-	| EQUAL			{ $$.intVal = BinaryOperation::Equal; }
-	| NEQUAL		{ $$.intVal = BinaryOperation::NotEqual; }
-	;
-
 call:
 	expression '(' argumentList ')'
 	{
@@ -404,40 +421,6 @@ call:
 		auto end = Take($4.token);
 
 		SetOrDie($$, p->CreateCall(target, arguments, end->source()));
-	}
-	;
-
-compoundExpr:
-	compoundBegin values expression '}'
-	{
-		SourceRange begin = Take(Parser::ParseToken($1))->source();
-		// NOTE: values have already been added to the scope by Parser
-		auto result = TakeNode<Expression>($3);
-		SourceRange end = Take(Parser::ParseToken($4))->source();
-
-		SetOrDie($$, p->CompoundExpr(result, begin, end));
-	}
-	;
-
-conditional:
-	IF expression expression ELSE expression
-	{
-		SourceRange begin = Take(Parser::ParseToken($1))->source();
-		auto condition = TakeNode<Expression>($2);
-		auto then = TakeNode<Expression>($3);
-		auto elseClause = TakeNode<Expression>($5);
-
-		SetOrDie($$, p->IfElse(begin, condition, then, elseClause));
-	}
-	;
-
-fieldAccess:
-	expression '.' name
-	{
-		auto structure = TakeNode<Expression>($1);
-		auto field = TakeNode<Identifier>($3);
-
-		SetOrDie($$, p->FieldAccess(structure, field));
 	}
 	;
 
@@ -522,41 +505,6 @@ mapping:
 	}
 	;
 
-parameter:
-	identifier
-	{
-		SetOrDie($$, p->Param(TakeNode<Identifier>($1)));
-	}
-	| identifier '=' expression
-	{
-		SetOrDie($$, p->Param(TakeNode<Identifier>($1), TakeNode<Expression>($3)));
-	}
-	;
-
-parameterList:
-	/* empty */
-	{
-		CreateNodeList($$);
-	}
-	| parameter
-	{
-		CreateNodeList($$);
-		Append($$, TakeNode<Parameter>($1));
-	}
-	| parameterList ',' parameter
-	{
-		$$.nodes = $1.nodes;
-		Append($$, TakeNode<Parameter>($3));
-	}
-	;
-
-reference:
-	identifier
-	{
-		SetOrDie($$, p->Reference(TakeNode<Identifier>($1)));
-	}
-	;
-
 some:
 	SOME '(' expression ')'
 	{
@@ -566,40 +514,6 @@ some:
 		SourceRange src(begin, end);
 
 		SetOrDie($$, p->Some(value, src));
-	}
-	;
-
-types:
-	/* empty */
-	{
-		$$.types = new PtrVec<Type>();
-	}
-	|
-	type
-	{
-		$$.types = new PtrVec<Type>(1, $1.type);
-	}
-	| types ',' type
-	{
-		$$.types = $1.types;
-		$$.types->push_back($3.type);
-	}
-	;
-
-fieldTypes:
-	/* empty */
-	{
-		CreateNodeList($$);
-	}
-	| identifier
-	{
-		CreateNodeList($$);
-		Append($$, TakeNode<Identifier>($1));
-	}
-	| fieldTypes ',' identifier
-	{
-		$$.nodes = $1.nodes;
-		Append($$, TakeNode<Identifier>($3));
 	}
 	;
 #endif

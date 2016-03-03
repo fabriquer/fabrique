@@ -174,12 +174,11 @@ const Type& RecordType::supertype(const Type& t) const
 
 void RecordType::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
-	out << Bytestream::Type << "record" << Bytestream::Reset;
-
-	if (fieldNames_.empty())
-		return;
-
-	out << Bytestream::Operator << '[';
+	out
+		<< Bytestream::Type << "record"
+		<< Bytestream::Operator << '['
+		<< Bytestream::Reset
+		;
 
 	bool first = true;
 	for (const string& name : fieldNames_)

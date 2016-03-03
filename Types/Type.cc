@@ -97,6 +97,12 @@ const Type& Type::supertype(const Type& other) const
 }
 
 
+const Type& Type::lookupType() const
+{
+	assert(not isType());
+	return *this;
+}
+
 const Type& Type::onAddTo(const Type& t) const { return t.parent_.nilType(); }
 
 const Type& Type::onPrefixWith(const Type& t) const { return t.parent_.nilType(); }

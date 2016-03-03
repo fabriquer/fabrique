@@ -1,5 +1,5 @@
 #
-# Generated at Sun 14 Feb 2016 21:55:15 NST by regenerate-manifest.sh
+# Generated at Mon 22 Feb 2016 15:35:19 NST by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -63,6 +63,7 @@ all_files = files(
 ./DAG/import-directory.fab
 ./DAG/import-empty.fab
 ./DAG/list-of-lists-of-targets.fab
+./DAG/list-supertype.fab
 ./DAG/lists.fab
 ./DAG/literals.fab
 ./DAG/logical-operators.fab
@@ -134,7 +135,6 @@ all_files = files(
 ./Parsing/import-arguments-type-mismatch.fab
 ./Parsing/import-arguments-unnamed.fab
 ./Parsing/import-directory.fab
-./Parsing/list-supertype.fab
 ./Parsing/list-type-mismatch.fab
 ./Parsing/lists.fab
 ./Parsing/literals.fab

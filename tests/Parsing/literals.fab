@@ -3,14 +3,14 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: foo:bool = true;
+# CHECK: foo = true;
 foo = true;
 
 # CHECK: bar:int = 42;
 bar:int = 42;
 
 # CHECK: baz:list[int] = [ 1 2 3 ];
-baz = [ 1 2 3 ];
+baz:list[int] = [ 1 2 3 ];
 
-# CHECK-DAG: wibble:list[string] = [ 'some' "strings" ];
+# CHECK-DAG: wibble = [ 'some' "strings" ];
 wibble = [ 'some' "strings" ];

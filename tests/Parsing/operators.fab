@@ -3,14 +3,17 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: integers:list[int] = 0 :: [ 1 2 ] + [ 3 4 ] .+ 5;
+# CHECK: negative = - 1;
+negative = -1;
+
+# CHECK: integers = 0 :: [ 1 2 ] + [ 3 4 ] .+ 5;
 integers = 0 :: [ 1 2 ] + [ 3 4 ] .+ 5;
 
-# CHECK: strings:list[string] = 'hello' :: [ 'world' ] + [ '!' ];
+# CHECK: strings = 'hello' :: [ 'world' ] + [ '!' ];
 strings = 'hello' :: [ 'world' ] + [ '!' ];
 
-# CHECK: same:bool = 'foo' == 'bar';
+# CHECK: same = 'foo' == 'bar';
 same = 'foo' == 'bar';
 
-# CHECK: logic:bool = 1 < 2 and 3 < 4 or 10 > 9 xor 0 == 0;
+# CHECK: logic = 1 < 2 and 3 < 4 or 10 > 9 xor 0 == 0;
 logic = (1 < 2) and 3 < 4 or 10 > 9 xor 0 == 0;

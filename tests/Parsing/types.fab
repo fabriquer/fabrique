@@ -3,21 +3,27 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: foo:type = type[];
-foo = type[];
+# CHECK: foo = record[];
+foo = record[];
 
-# CHECK: bar:type = type[x:int, y:string, z:record[wibble:int]];
-bar = type[x:int, y:string, z:record[wibble:int]];
+# CHECK: bar = record[x:int, y:string, z:record[wibble:int]];
+bar = record[x:int, y:string, z:record[wibble:int]];
 
-# CHECK: my_foo:record = record
+# CHECK: my_foo:foo = record
 # CHECK-NEXT: {
-# CHECK-NEXT:   x:string = 'anything at all';
+# CHECK-NEXT:   x = 'anything at all';
 # CHECK-NEXT: };
 my_foo:foo = record { x = 'anything at all'; };
 
-# CHECK: baz:record[x:int, y:string, z:record[wibble:int]] = record
+# CHECK: duck_typed_foo:record[] = record
 # CHECK-NEXT: {
-# CHECK-NEXT:   x:int = 42;
-# CHECK-NEXT:   y:string = 'hello';
-# CHECK-NEXT:   z:record[wibble:int] =
+# CHECK-NEXT:   x = 'absolutely anything';
+# CHECK-NEXT: };
+duck_typed_foo:record[] = record { x = 'absolutely anything'; };
+
+# CHECK: baz:bar = record
+# CHECK-NEXT: {
+# CHECK-NEXT:   x = 42;
+# CHECK-NEXT:   y = 'hello';
+# CHECK-NEXT:   z =
 baz:bar = record { x = 42; y = 'hello'; z = record { wibble = -1; }; };

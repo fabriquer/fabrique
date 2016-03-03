@@ -31,6 +31,7 @@
 
 #include "AST/UnaryOperation.h"
 #include "AST/Visitor.h"
+#include "Parsing/ErrorReporter.h"
 #include "Support/Bytestream.h"
 #include "Support/SourceLocation.h"
 #include "Support/exceptions.h"
@@ -42,19 +43,64 @@ using namespace fabrique;
 using namespace fabrique::ast;
 
 
-UnaryOperation::NotParser::~NotParser()
+UnaryOperation::Parser::~Parser()
 {
 }
 
 
 UnaryOperation*
-UnaryOperation::NotParser::Build(const Scope& scope, TypeContext& types, Err& err)
+UnaryOperation::Negative::Build(const Scope& scope, TypeContext& types, Err& err)
 {
 	UniqPtr<Expression> operand(operand_->Build(scope, types, err));
 	if (not operand)
 		return nullptr;
 
-	return new UnaryOperation(operand, Operator::Negate, types.booleanType(), source());
+	const Type& t = operand->type();
+	if (not t.isNumeric())
+	{
+		err.ReportError("cannot apply unary negative operator"
+		                " to non-numeric type " + t.str(), source());
+		return nullptr;
+	}
+
+	return new UnaryOperation(operand, Operator::Negative, t, source());
+}
+
+
+UnaryOperation*
+UnaryOperation::Not::Build(const Scope& scope, TypeContext& types, Err& err)
+{
+	UniqPtr<Expression> operand(operand_->Build(scope, types, err));
+	if (not operand)
+		return nullptr;
+
+	const Type& t = operand->type();
+	if (not t.canBeNegated())
+	{
+		err.ReportError("cannot apply negation operator to " + t.str(), source());
+		return nullptr;
+	}
+
+	return new UnaryOperation(operand, Operator::Not, t, source());
+}
+
+
+UnaryOperation*
+UnaryOperation::Positive::Build(const Scope& scope, TypeContext& types, Err& err)
+{
+	UniqPtr<Expression> operand(operand_->Build(scope, types, err));
+	if (not operand)
+		return nullptr;
+
+	const Type& t = operand->type();
+	if (not t.isNumeric())
+	{
+		err.ReportError("cannot apply unary positive operator"
+		                " to non-numeric type " + t.str(), source());
+		return nullptr;
+	}
+
+	return new UnaryOperation(operand, Operator::Positive, t, source());
 }
 
 
@@ -65,24 +111,13 @@ UnaryOperation::UnaryOperation(UniqPtr<Expression>& e, enum Operator op,
 }
 
 
-UnaryOperation::Operator UnaryOperation::Op(const std::string& o)
-{
-	Operator op;
-
-	if (o == "not") op = Negate;
-	else op = Invalid;
-
-	assert(o == OpStr(op));
-
-	return op;
-}
-
 std::string UnaryOperation::OpStr(Operator op)
 {
 	switch (op)
 	{
-		case Negate:            return "not";
-		case Invalid:           assert(false && "op == Invalid");
+		case Operator::Negative:          return "-";
+		case Operator::Not:               return "not";
+		case Operator::Positive:          return "+";
 	}
 
 	assert(false && "unhandled Operator type");
@@ -117,11 +152,15 @@ dag::ValuePtr UnaryOperation::evaluate(EvalContext& ctx) const
 
 	switch (op_)
 	{
-		case ast::UnaryOperation::Negate:
+		case Operator::Negative:
+			assert(false && "unimplemented");
+			break;
+
+		case Operator::Not:
 			return subexpr->Negate(source());
 
-		case ast::UnaryOperation::Invalid:
-			throw SemanticException("Invalid operation", source());
+		case Operator::Positive:
+			return subexpr;
 	}
 
 	assert(false && "unreachable");

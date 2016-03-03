@@ -3,7 +3,7 @@
  * Definition of @ref fabrique::ast::TypeDeclaration.
  */
 /*
- * Copyright (c) 2015 Jonathan Anderson
+ * Copyright (c) 2015-2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -38,21 +38,68 @@
 #include "AST/Visitor.h"
 #include "DAG/TypeReference.h"
 #include "Support/Bytestream.h"
+#include "Types/RecordType.h"
 #include "Types/UserType.h"
 
 using namespace fabrique;
 using namespace fabrique::ast;
 
 
-TypeDeclaration::TypeDeclaration(const UserType& t, const SourceRange& loc)
-	: Expression(t, loc), declaredType_(t)
+TypeDeclaration::Parser::~Parser()
+{
+}
+
+
+TypeDeclaration*
+TypeDeclaration::Parser::Build(const Scope& scope, TypeContext& types, Err& err)
+{
+	Type::NamedTypeVec fieldTypes;
+	NamedPtrVec<TypeReference> fieldTypeRefs;
+
+	for (auto& f : fieldTypes_)
+	{
+		UniqPtr<Identifier> name(f->name_->Build(scope, types, err));
+		UniqPtr<TypeReference> type(f->type_->Build(scope, types, err));
+
+		if (not name or not type)
+			return nullptr;
+
+		fieldTypes.emplace_back(name->name(), type->referencedType());
+		fieldTypeRefs.emplace_back(std::move(name), std::move(type));
+	}
+
+	const RecordType& rec = types.recordType(fieldTypes);
+	if (not rec)
+		return nullptr;
+
+	const UserType& type = types.userType(rec);
+	if (not type)
+		return nullptr;
+
+	Bytestream& dbg = Bytestream::Debug("ast.usertype");
+	if (dbg)
+	{
+		dbg
+			<< Bytestream::Action << "defining "
+			<< type.userType()
+			<< Bytestream::Reset << "\n"
+			;
+	}
+
+	return new TypeDeclaration(std::move(fieldTypeRefs), type, source());
+}
+
+
+TypeDeclaration::TypeDeclaration(NamedPtrVec<TypeReference> fieldTypes,
+                                 const UserType& t, SourceRange loc)
+	: Expression(t, loc), fieldTypes_(std::move(fieldTypes)), declaredType_(t)
 {
 }
 
 void TypeDeclaration::PrettyPrint(Bytestream& out, size_t indent) const
 {
 	out
-		<< Bytestream::Definition << "type"
+		<< Bytestream::Definition << "record"
 		<< Bytestream::Operator << '['
 		;
 

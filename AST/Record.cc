@@ -99,8 +99,10 @@ void Record::PrettyPrint(Bytestream& out, size_t indent) const
 	const std::string outerTabs(indent, '\t');
 
 	out
-		<< Bytestream::Definition << "record\n"
-		<< Bytestream::Operator << outerTabs << "{\n"
+		<< Bytestream::Definition << "record"
+		<< "\n" << outerTabs
+		<< Bytestream::Operator << outerTabs << "{"
+		<< "\n" << outerTabs
 		;
 
 	const std::string innerTabs(indent + 1, '\t');

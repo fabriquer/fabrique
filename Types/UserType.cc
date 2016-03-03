@@ -39,3 +39,8 @@ UserType::UserType(const Type& userType)
 }
 
 UserType::~UserType() {}
+
+const Type& UserType::lookupType() const
+{
+	return userType_;
+}

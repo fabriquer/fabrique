@@ -37,6 +37,7 @@
 #include "DAG/File.h"
 #include "DAG/List.h"
 #include "Parsing/ErrorReporter.h"
+#include "Support/ABI.h"
 #include "Support/Bytestream.h"
 #include "Types/Type.h"
 #include "Types/TypeError.h"
@@ -84,7 +85,22 @@ Value* Value::Parser::Build(const Scope& scope, TypeContext& types, Err& err)
 		return nullptr;
 	}
 
-	const Type& type = explicitType ? explicitType->referencedType() : value->type();
+	Bytestream& dbg = Bytestream::Debug("parsing.types");
+	if (dbg and explicitType)
+	{
+		dbg
+			<< Bytestream::Action << "deferencing explicit type "
+			<< Bytestream::Type << TypeName(explicitType->referencedType())
+			<< Bytestream::Operator << " -> "
+			<< explicitType->referencedType()
+			<< Bytestream::Reset << "\n"
+			;
+	}
+
+	const Type& type = explicitType
+		? explicitType->referencedType().lookupType()
+		: value->type()
+		;
 
 	if (explicitType and not value->type().isSubtype(type))
 	{
@@ -133,8 +149,17 @@ void Value::PrettyPrint(Bytestream& out, size_t indent) const
 	out
 		<< tabs
 		<< Bytestream::Definition << name_->name()
-		<< Bytestream::Operator << ":"
-		<< Bytestream::Type << type()
+		;
+
+	if (explicitType_)
+	{
+		out
+			<< Bytestream::Operator << ":"
+			<< Bytestream::Type << *explicitType_ 
+			;
+	}
+
+	out
 		<< Bytestream::Operator << " = "
 		<< Bytestream::Reset << *value_
 		<< Bytestream::Operator << ";"

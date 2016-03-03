@@ -5,5 +5,5 @@
 
 # CHECK: foo:record[bar:string] = record
 # CHECK-NEXT: {
-# CHECK-DAG:   bar:string = 'world';
+# CHECK-DAG:   bar = 'world';
 foo:record[bar:string] = record { bar = 'world'; };

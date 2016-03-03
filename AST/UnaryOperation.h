@@ -48,20 +48,11 @@ namespace ast {
 class UnaryOperation : public Expression
 {
 public:
-	enum Operator
+	enum class Operator
 	{
-		Negate,
-		Invalid,
-	};
-
-	class NotParser : public Expression::Parser
-	{
-	public:
-		virtual ~NotParser();
-		virtual UnaryOperation* Build(const Scope&, TypeContext&, Err&) override;
-
-	private:
-		ChildNodeParser<Expression> operand_;
+		Negative,
+		Not,
+		Positive,
 	};
 
 	static Operator Op(const std::string&);
@@ -74,6 +65,36 @@ public:
 	virtual void Accept(Visitor&) const override;
 
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
+
+private:
+	class Parser : public Expression::Parser
+	{
+	public:
+		virtual ~Parser();
+		virtual UnaryOperation* Build(const Scope&, TypeContext&, Err&) = 0;
+
+	protected:
+		ChildNodeParser<Expression> operand_;
+	};
+
+public:
+	class Negative : public Parser
+	{
+	public:
+		UnaryOperation* Build(const Scope&, TypeContext&, Err&) override;
+	};
+
+	class Not : public Parser
+	{
+	public:
+		UnaryOperation* Build(const Scope&, TypeContext&, Err&) override;
+	};
+
+	class Positive : public Parser
+	{
+	public:
+		UnaryOperation* Build(const Scope&, TypeContext&, Err&) override;
+	};
 
 private:
 	UnaryOperation(UniqPtr<Expression>& e, enum Operator op,

@@ -1,0 +1,20 @@
+#
+# RUN: %fab --format=null --print-dag %s > %t
+# RUN: FileCheck %s -input-file %t
+#
+
+# CHECK-DAG: foo:record[foo:string, bar:string] =
+foo = record { foo = 'hi'; bar = 'world'; };
+
+# CHECK-DAG: bar:string =
+bar:string = foo.bar;
+
+# CHECK-DAG: self_referential:record[def:string, ref:string] =
+self_referential:record[def:string, ref:string] = record
+{
+	# CHECK-DAG: def:string =
+	def = 'Hello, world!';
+
+	# CHECK-DAG: ref:string =
+	ref = def;
+};
