@@ -1,6 +1,6 @@
 /** @file AST/Argument.h    Declaration of @ref fabrique::ast::Argument. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -35,6 +35,7 @@
 #include "ADT/UniqPtr.h"
 #include "AST/Expression.h"
 #include "AST/Identifier.h"
+#include "AST/TypeReference.h"
 
 #include <memory>
 
@@ -48,8 +49,6 @@ namespace ast {
 class Argument : public Expression
 {
 public:
-	Argument(UniqPtr<Identifier>& name, UniqPtr<Expression>& value);
-
 	bool hasName() const { return static_cast<bool>(name_); }
 	const Identifier& getName() const { return *name_; }
 	const Expression& getValue() const { return *value_; }
@@ -59,7 +58,20 @@ public:
 
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
+	class Parser : public Expression::Parser
+	{
+	public:
+		virtual ~Parser();
+		Argument* Build(const Scope&, TypeContext&, Err&) override;
+
+	private:
+		ChildNodeParser<Identifier, true> name_;
+		ChildNodeParser<Expression> value_;
+	};
+
 private:
+	Argument(UniqPtr<Identifier>& name, UniqPtr<Expression>& value);
+
 	const UniqPtr<Identifier> name_;
 	const UniqPtr<Expression> value_;
 };

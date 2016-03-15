@@ -70,7 +70,8 @@ ParserDelegate::ParserDelegate(const Grammar& g, TypeContext& t,
 	BindType<ast::CompoundExpression>(g.CompoundExpression);
 	BindType<ast::Conditional>(g.Conditional);
 	BindType<ast::FieldAccess>(g.FieldReference);
-	BindType<ast::File>(g.File);
+	BindType<ast::Filename>(g.File);
+	BindType<ast::Filename>(g.Filename);
 	BindType<ast::FileList>(g.FileList);
 	BindType<ast::List>(g.List);
 	BindType<ast::NameReference>(g.NameReference);

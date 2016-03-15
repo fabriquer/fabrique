@@ -1,6 +1,6 @@
 /** @file AST/FileList.h    Declaration of @ref fabrique::ast::FileList. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -45,13 +45,6 @@ namespace ast {
 class FileList : public Expression
 {
 public:
-	FileList(UniqPtrVec<Filename>& f, UniqPtrVec<Argument>& a,
-	         const Type& ty, const SourceRange& loc)
-		: Expression(ty, loc), files_(std::move(f)),
-		  args_(std::move(a))
-	{
-	}
-
 	const UniqPtrVec<Argument>& arguments() const { return args_; }
 
 	using ConstIterator = UniqPtrVec<Filename>::const_iterator;
@@ -63,7 +56,28 @@ public:
 
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
+	class Parser : public Expression::Parser
+	{
+	public:
+		virtual ~Parser();
+		FileList* Build(const Scope&, TypeContext&, Err&) override;
+
+	private:
+		/// List elements (Pegmatite will automatically fill).
+		ChildNodes<Filename> files_;
+
+		/// Arguments, e.g., `subdir`, `cxxflags`.
+		ChildNodes<Argument> arguments_;
+	};
+
 private:
+	FileList(UniqPtrVec<Filename>& f, UniqPtrVec<Argument>& a,
+	         const Type& ty, const SourceRange& loc)
+		: Expression(ty, loc), files_(std::move(f)),
+		  args_(std::move(a))
+	{
+	}
+
 	UniqPtrVec<Filename> files_;
 	UniqPtrVec<Argument> args_;
 };

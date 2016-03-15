@@ -1,6 +1,6 @@
 /** @file AST/Filename.cc    Definition of @ref fabrique::ast::Filename. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -45,6 +45,41 @@
 using namespace fabrique;
 using namespace fabrique::ast;
 using std::string;
+
+
+Filename::Parser::~Parser()
+{
+}
+
+bool Filename::Parser::construct(const ParserInput& in, ParserStack& s, ParseError err)
+{
+	raw_ = in.str();
+	return Expression::Parser::construct(in, s, err);
+}
+
+Filename* Filename::Parser::Build(const Scope& scope, TypeContext& types, Err& err)
+{
+	if (not name_)
+	{
+		// If there is no filename expression, we must be dealing with
+		// a literal filename.
+		return nullptr;
+	}
+
+	UniqPtr<Expression> name(name_->Build(scope, types, err));
+
+	UniqPtrVec<Argument> arguments;
+	for (auto& a : arguments_)
+	{
+		arguments.emplace_back(a->Build(scope, types, err));
+		if (not arguments.back())
+		{
+			return nullptr;
+		}
+	}
+
+	return new Filename(name, arguments, types.fileType(), source());
+}
 
 
 Filename* Filename::Create(UniqPtr<Expression>& name, UniqPtrVec<Argument>& args,

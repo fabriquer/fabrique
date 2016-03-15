@@ -1,6 +1,6 @@
 /** @file AST/Argument.cc    Definition of @ref fabrique::ast::Argument. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -38,6 +38,28 @@
 using namespace fabrique;
 using namespace fabrique::ast;
 
+
+
+Argument::Parser::~Parser()
+{
+}
+
+Argument* Argument::Parser::Build(const Scope& scope, TypeContext& types, Err& err)
+{
+	UniqPtr<Identifier> name;
+	if (name_)
+	{
+		name.reset(name_->Build(scope, types, err));
+	}
+
+	UniqPtr<Expression> value(value_->Build(scope, types, err));
+	if ((name_ and not name) or not value)
+	{
+		return nullptr;
+	}
+
+	return new Argument(name, value);
+}
 
 Argument::Argument(UniqPtr<Identifier>& id, UniqPtr<Expression>& value)
 	: Expression(value->type(), SourceRange::Over(id, value)),

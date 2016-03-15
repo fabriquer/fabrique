@@ -1,6 +1,6 @@
 /** @file AST/Filename.h    Declaration of @ref fabrique::ast::Filename. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -58,6 +58,19 @@ public:
 	virtual void Accept(Visitor&) const override;
 
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
+
+	class Parser : public Expression::Parser
+	{
+	public:
+		virtual ~Parser();
+		bool construct(const ParserInput&, ParserStack&, ParseError) override;
+		Filename* Build(const Scope&, TypeContext&, Err&) override;
+
+	private:
+		ChildNodeParser<Expression> name_;
+		ChildNodes<Argument> arguments_;
+		std::string raw_;
+	};
 
 private:
 	Filename(UniqPtr<Expression>& name, UniqPtrVec<Argument>& args,

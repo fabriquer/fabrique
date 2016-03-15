@@ -48,6 +48,38 @@ using namespace fabrique::ast;
 using std::string;
 
 
+
+FileList::Parser::~Parser()
+{
+}
+
+
+FileList* FileList::Parser::Build(const Scope& scope, TypeContext& types, Err& err)
+{
+	UniqPtrVec<Filename> files;
+	for (auto& f : files_)
+	{
+		files.emplace_back(f->Build(scope, types, err));
+		if (not files.back())
+		{
+			return nullptr;
+		}
+	}
+
+	UniqPtrVec<Argument> arguments;
+	for (auto& a : arguments_)
+	{
+		arguments.emplace_back(a->Build(scope, types, err));
+		if (not arguments.back())
+		{
+			return nullptr;
+		}
+	}
+
+	return new FileList(files, arguments, types.fileListType(), source());
+}
+
+
 void FileList::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
 	out << Bytestream::Operator << "[" << Bytestream::Reset;
