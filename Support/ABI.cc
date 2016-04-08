@@ -44,7 +44,7 @@ string fabrique::DemangleABIName(const string& name)
 		abi::__cxa_demangle(name.c_str(), 0, 0, &status)
 	};
 
-	return (status == 0) ? string(demangled.get()) : "";
+	return (status == 0) ? string(demangled.get()) : name;
 }
 
 
