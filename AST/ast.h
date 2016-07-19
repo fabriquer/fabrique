@@ -1,6 +1,6 @@
 /** @file AST/ast.h    Meta-include file for all AST node types. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -50,6 +50,7 @@ namespace ast {}
 #include "DebugTracePoint.h"
 #include "FieldAccess.h"
 #include "FieldQuery.h"
+#include "File.h"
 #include "Filename.h"
 #include "FileList.h"
 #include "Foreach.h"

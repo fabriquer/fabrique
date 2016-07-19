@@ -11,6 +11,7 @@ sources = files(
 	Expression.cc
 	FieldAccess.cc
 	FieldQuery.cc
+	File.cc
 	Filename.cc
 	FileList.cc
 	Foreach.cc

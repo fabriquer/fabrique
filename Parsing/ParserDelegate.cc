@@ -67,10 +67,12 @@ ParserDelegate::ParserDelegate(const Grammar& g, TypeContext& t,
 	BindType<ast::IntLiteral>(g.IntLiteral);
 	BindType<ast::StringLiteral>(g.StringLiteral);
 
+	BindType<ast::Argument>(g.NamedArgument);
+	BindType<ast::Argument>(g.UnnamedArgument);
 	BindType<ast::CompoundExpression>(g.CompoundExpression);
 	BindType<ast::Conditional>(g.Conditional);
 	BindType<ast::FieldAccess>(g.FieldReference);
-	BindType<ast::Filename>(g.File);
+	BindType<ast::File>(g.File);
 	BindType<ast::Filename>(g.Filename);
 	BindType<ast::FileList>(g.FileList);
 	BindType<ast::List>(g.List);

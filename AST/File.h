@@ -1,4 +1,4 @@
-/** @file AST/Filename.cc    Definition of @ref fabrique::ast::Filename. */
+/** @file AST/File.h    Declaration of @ref fabrique::ast::File. */
 /*
  * Copyright (c) 2013, 2016 Jonathan Anderson
  * All rights reserved.
@@ -29,64 +29,59 @@
  * SUCH DAMAGE.
  */
 
-#include "AST/Argument.h"
-#include "AST/Builtins.h"
-#include "AST/EvalContext.h"
-#include "AST/Filename.h"
-#include "AST/Visitor.h"
-#include "DAG/File.h"
-#include "Support/Bytestream.h"
-#include "Support/exceptions.h"
+#ifndef FILE_H
+#define FILE_H
+
+#include "AST/Expression.h"
 #include "Types/FileType.h"
 
-#include <cassert>
-#include <set>
+namespace fabrique {
+namespace ast {
 
-using namespace fabrique;
-using namespace fabrique::ast;
-using std::string;
+class Argument;
 
-
-Filename::Parser::~Parser()
+/**
+ * A reference to a file on disk (source or target).
+ */
+class File : public Expression
 {
-}
+public:
+	static File* Create(UniqPtr<Expression>& name, UniqPtrVec<Argument>& args,
+	                    const FileType& ty, const SourceRange& loc);
 
-bool Filename::Parser::construct(const ParserInput& in, ParserStack& s, ParseError err)
-{
-	raw_ = in.str();
-	assert(not raw_.empty());
+	const UniqPtrVec<Argument>& arguments() const { return args_; }
 
-	return Expression::Parser::construct(in, s, err);
-}
+	const FileType& type() const override;
 
-Filename* Filename::Parser::Build(const Scope&, TypeContext& types, Err&)
-{
-	return new Filename(raw_, types.fileType(), source());
-}
+	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	virtual void Accept(Visitor&) const override;
 
+	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
-dag::ValuePtr Filename::evaluate(EvalContext& ctx) const
-{
-	assert(ctx.Lookup(ast::Subdirectory));
-	string subdir = ctx.Lookup(ast::Subdirectory)->str();
+	class Parser : public Expression::Parser
+	{
+	public:
+		virtual ~Parser();
+		File* Build(const Scope&, TypeContext&, Err&) override;
 
-	return ctx.builder().File(subdir, name_, dag::ValueMap(), type(), source());
-}
+	private:
+		ChildNodeParser<Expression> name_;
+		ChildNodes<Argument> arguments_;
+	};
 
-Filename::Filename(string name, const FileType& t, const SourceRange& src)
-	: File(UniqPtr<Expression>(), UniqPtrVec<Argument>(), t, src), name_(name)
-{
-}
+protected:
+	File(UniqPtr<Expression> name, UniqPtrVec<Argument> args,
+	     const FileType& ty, const SourceRange& loc);
 
+private:
+	//! A filename, without qualifiers like "in this subdirectory".
+	const UniqPtr<Expression> unqualName_;
 
-void Filename::PrettyPrint(Bytestream& out, size_t /*indent*/) const
-{
-	out << Bytestream::Literal << name_ << Bytestream::Reset;
-}
+	//! Additional information about the file (e.g., "subdir").
+	const UniqPtrVec<Argument> args_;
+};
 
+} // namespace ast
+} // namespace fabrique
 
-void Filename::Accept(Visitor& v) const
-{
-	v.Enter(*this);
-	v.Leave(*this);
-}
+#endif

@@ -34,7 +34,7 @@
 
 #include "AST/Argument.h"
 #include "AST/Expression.h"
-#include "AST/Filename.h"
+#include "AST/File.h"
 
 namespace fabrique {
 namespace ast {
@@ -47,7 +47,7 @@ class FileList : public Expression
 public:
 	const UniqPtrVec<Argument>& arguments() const { return args_; }
 
-	using ConstIterator = UniqPtrVec<Filename>::const_iterator;
+	using ConstIterator = UniqPtrVec<File>::const_iterator;
 	ConstIterator begin() const { return files_.begin(); }
 	ConstIterator end() const { return files_.end(); }
 
@@ -64,21 +64,21 @@ public:
 
 	private:
 		/// List elements (Pegmatite will automatically fill).
-		ChildNodes<Filename> files_;
+		ChildNodes<Expression> files_;
 
 		/// Arguments, e.g., `subdir`, `cxxflags`.
 		ChildNodes<Argument> arguments_;
 	};
 
 private:
-	FileList(UniqPtrVec<Filename>& f, UniqPtrVec<Argument>& a,
+	FileList(UniqPtrVec<File>& files, UniqPtrVec<Argument>& a,
 	         const Type& ty, const SourceRange& loc)
-		: Expression(ty, loc), files_(std::move(f)),
+		: Expression(ty, loc), files_(std::move(files)),
 		  args_(std::move(a))
 	{
 	}
 
-	UniqPtrVec<Filename> files_;
+	UniqPtrVec<File> files_;
 	UniqPtrVec<Argument> args_;
 };
 

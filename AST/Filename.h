@@ -29,10 +29,10 @@
  * SUCH DAMAGE.
  */
 
-#ifndef FILE_H
-#define FILE_H
+#ifndef FILENAME_H
+#define FILENAME_H
 
-#include "AST/Expression.h"
+#include "AST/File.h"
 #include "Types/FileType.h"
 
 namespace fabrique {
@@ -40,19 +40,11 @@ namespace ast {
 
 class Argument;
 
-/**
- * A reference to a file on disk (source or target).
- */
-class Filename : public Expression
+//! A raw filename, not wrapped up in `file()`, for use within `files()`.
+class Filename : public File
 {
 public:
-	static Filename* Create(UniqPtr<Expression>& name, UniqPtrVec<Argument>& args,
-	                        const FileType& ty, const SourceRange& loc);
-
-	const Expression& name() const { return *unqualName_; }
-	const UniqPtrVec<Argument>& arguments() const { return args_; }
-
-	const FileType& type() const override;
+	const std::string& name() const { return name_; }
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const override;
@@ -67,20 +59,14 @@ public:
 		Filename* Build(const Scope&, TypeContext&, Err&) override;
 
 	private:
-		ChildNodeParser<Expression> name_;
-		ChildNodes<Argument> arguments_;
 		std::string raw_;
 	};
 
 private:
-	Filename(UniqPtr<Expression>& name, UniqPtrVec<Argument>& args,
-	         const FileType& ty, const SourceRange& loc);
+	Filename(std::string name, const FileType& type, const SourceRange& loc);
 
-	//! A filename, without qualifiers like "in this subdirectory".
-	const UniqPtr<Expression> unqualName_;
-
-	//! Additional information about the file (e.g., "subdir").
-	const UniqPtrVec<Argument> args_;
+	//! The filename as literally written in the build description.
+	const std::string name_;
 };
 
 } // namespace ast

@@ -291,7 +291,7 @@ struct Grammar
 	TRACE_RULE(FileList,
 		Keywords.Files
 		>> Symbols.OpenParen
-		>> *Filename
+		>> *(File | Filename)
 		>> -(Symbols.Comma >> NamedArguments)
 		>> Symbols.CloseParen
 	);

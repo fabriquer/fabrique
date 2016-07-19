@@ -56,14 +56,20 @@ FileList::Parser::~Parser()
 
 FileList* FileList::Parser::Build(const Scope& scope, TypeContext& types, Err& err)
 {
-	UniqPtrVec<Filename> files;
+	UniqPtrVec<File> files;
 	for (auto& f : files_)
 	{
-		files.emplace_back(f->Build(scope, types, err));
-		if (not files.back())
+		UniqPtr<Expression> built(f->Build(scope, types, err));
+		if (not built)
 		{
 			return nullptr;
 		}
+
+		assert(built->type().isFile());
+		UniqPtr<File> file(dynamic_cast<File*>(built.release()));
+		assert(file);
+
+		files.emplace_back(std::move(file));
 	}
 
 	UniqPtrVec<Argument> arguments;
@@ -82,7 +88,11 @@ FileList* FileList::Parser::Build(const Scope& scope, TypeContext& types, Err& e
 
 void FileList::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
-	out << Bytestream::Operator << "[" << Bytestream::Reset;
+	out
+		<< Bytestream::Definition << "files"
+		<< Bytestream::Operator << "( "
+		<< Bytestream::Reset
+		;
 
 	for (auto& file : files_)
 		out << " " << *file;
@@ -90,7 +100,7 @@ void FileList::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 	for (auto& arg : args_)
 		out << ", " << *arg;
 
-	out << Bytestream::Operator << " ]" << Bytestream::Reset;
+	out << Bytestream::Operator << " )" << Bytestream::Reset;
 }
 
 
@@ -135,7 +145,7 @@ dag::ValuePtr FileList::evaluate(EvalContext& ctx) const
 			                        arg->source());
 	}
 
-	for (const UniqPtr<Filename>& file : files_)
+	for (const UniqPtr<File>& file : files_)
 		files.push_back(
 			std::dynamic_pointer_cast<dag::File>(
 				file->evaluate(ctx)));
