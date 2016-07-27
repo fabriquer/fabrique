@@ -249,7 +249,7 @@ unique_ptr<Scope> Parser::ExitScope()
 		<< Bytestream::Reset << "\n"
 		;
 
-	return std::move(scope);
+	return scope;
 }
 
 

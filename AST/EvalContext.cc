@@ -115,7 +115,7 @@ bool EvalContext::Scope::contains(const string& name)
 ValueMap EvalContext::Scope::leave()
 {
 	name_ = "";
-	return std::move(stack_.PopScope());
+	return stack_.PopScope();
 }
 
 
@@ -130,7 +130,7 @@ EvalContext::Scope EvalContext::EnterScope(const string& name)
 		;
 
 	scopes_.push_back(ValueMap());
-	return std::move(Scope(*this, name, CurrentScope()));
+	return Scope(*this, name, CurrentScope());
 }
 
 
@@ -211,7 +211,7 @@ ValueMap EvalContext::PopScope()
 
 	dbg << Bytestream::Reset << "\n";
 
-	return std::move(values);
+	return values;
 }
 
 ValueMap& EvalContext::CurrentScope()
