@@ -172,7 +172,7 @@ static ValuePtr StringSysctl(const ValueMap& /*scope*/, const ValueMap& args,
 	const string name = SysctlName(args);
 	const char *rawName = name.c_str();
 
-	size_t len;
+	size_t len = 0;
 	if (sysctlbyname(rawName, NULL, &len, NULL, 0))
 		throw PosixError(
 			"error querying size of '" + name + "' sysctl");
@@ -197,7 +197,7 @@ static ValuePtr IntegerSysctl(const ValueMap& /*scope*/, const ValueMap& args,
 	const char *rawName = name.c_str();
 
 	int value;
-	size_t len;
+	size_t len = sizeof(value);
 	if (sysctlbyname(rawName, &value, &len, NULL, 0))
 		throw PosixError(
 			"error retrieving '" + name + "' via sysctlbyname()");
