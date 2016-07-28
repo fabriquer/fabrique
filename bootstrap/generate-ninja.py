@@ -270,7 +270,7 @@ rules = {
 	},
 
 	'yacc': {
-		'command': '$yacc $yaccflags -o $main_out $in',
+		'command': '$yacc $yaccflags -b Parsing/fab.yacc -o $main_out $in',
 		'description': 'Processing $in',
 	},
 }
@@ -339,7 +339,7 @@ for src in cxx_srcs:
 	src = os.path.join(src_root, '%s.cc' % src)
 
 	if 'Lex' in src or 'Parser' in src or 'driver' in src:
-		src += ' | Parsing/fab.yacc.h'
+		src += ' | Parsing/fab.yacc.tab.h'
 
 	out.write('build %s: cxx %s\n' % (obj, src))
 
@@ -360,5 +360,5 @@ for (src,target) in yacc.items():
 	out.write('build %s.o: cxx %s.cc\n' % (target, target))
 	out.write('  cxxflags = %s\n\n' % ' '.join(gencxxflags))
 
-	out.write('build %s.h %s.cc: yacc %s\n' % (target, target, src))
+	out.write('build %s.tab.h %s.cc: yacc %s\n' % (target, target, src))
 	out.write('  main_out = %s.cc\n\n' % target)
