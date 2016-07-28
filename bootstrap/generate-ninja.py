@@ -259,7 +259,7 @@ rules = {
 	},
 
 	'rebuild': {
-		'command': 'PATH=$path python $in $args',
+		'command': 'python $in $args',
 		'description': 'Regenerating $out',
 		'generator': '',
 	},
