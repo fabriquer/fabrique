@@ -11,6 +11,7 @@ args = argparse.ArgumentParser()
 args.add_argument('builddir', nargs = '?', default = '.')
 args.add_argument('--cxxflags', default = '')
 args.add_argument('--debug', action = 'store_true')
+args.add_argument('--testpath', help = 'PATH containing llvm-lit and FileCheck')
 args.add_argument('--withtests', action = 'store_true')
 args = args.parse_args()
 
@@ -180,13 +181,17 @@ plugin_files = dict([
 
 
 def which(name):
-	for p in os.environ.get('PATH', '').split(os.pathsep):
+	paths = []
+	if args.testpath: paths.append(args.testpath)
+	paths += os.environ.get('PATH', '').split(os.pathsep)
+
+	for p in paths:
 		fullname = os.path.join(p, name)
 		if os.path.isfile(fullname) and os.access(fullname, os.X_OK):
 			return fullname
 
-	raise OSError('no %s in $PATH (%s)' % (
-		name, os.environ.get('PATH')))
+	raise OSError('no %s in --testpath (%s) or $PATH (%s)' % (
+		name, args.testpath, os.environ.get('PATH')))
 
 
 variables = {
@@ -224,8 +229,8 @@ if args.withtests:
 	if not os.path.isdir(builddir):
 		os.mkdir(test_output)
 
-	lit_config = '-sv --param=output-dir=%s --output=%s' % (
-		test_output, os.path.join(test_output, 'report.txt'),
+	lit_config = '-sv --param=build-dir=%s --param=output-dir=%s --output=%s' % (
+		builddir, test_output, os.path.join(test_output, 'report.txt'),
 	)
 
 
@@ -291,6 +296,7 @@ for (name, variables) in rules.items():
 bootstrap_args = [ pipes.quote(builddir) ]
 if args.cxxflags: bootstrap_args += [ '--cxxflags="%s"' % args.cxxflags ]
 if args.debug: bootstrap_args.append('--debug')
+if args.testpath: bootstrap_args += [ '--testpath', args.testpath ]
 if args.withtests: bootstrap_args.append('--withtests')
 
 out.write('''build build.ninja: rebuild %s
