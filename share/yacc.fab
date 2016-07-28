@@ -3,17 +3,17 @@ yacc:file = args.yacc;
 
 # Yacc's command-line arguments are confusing and don't expose information like
 # the name of the generated header file, so we wrap it in a function that does.
-raw_yacc = action('${YACC} -d -t -o ${gen} ${src}',
+raw_yacc = action('${YACC} -b ${prefix} -d -t -o ${gen} ${src}',
                   description = 'Processing ${in}'
-                  <- src:file[in], gen:file[out], header:file[out],
+                  <- src:file[in], prefix:string, gen:file[out], header:file[out],
                      YACC:file[in] = yacc);
 
 process = function(src:file, subdir:file, outname:string): file
 {
 	parser = file(outname + '.cc');
-	header = file(outname + '.h');
+	header = file(outname + '.tab.h');
 
-	raw_yacc(src, gen = parser, header = header);
+	raw_yacc(src, prefix = outname, gen = parser, header = header);
 
 	parser
 };

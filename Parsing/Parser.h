@@ -40,7 +40,7 @@
 #include <stack>
 
 namespace fabrique { class Token; }
-#include "Parsing/fab.yacc.h"
+#include "Parsing/fab.yacc.tab.h"
 
 namespace fabrique {
 
