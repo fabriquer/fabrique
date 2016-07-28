@@ -30,7 +30,6 @@
  */
 
 #include "Parsing/Lexer.h"
-#include "Parsing/fab.yacc.h"
 #include "Support/Bytestream.h"
 #include "Support/ErrorReport.h"
 

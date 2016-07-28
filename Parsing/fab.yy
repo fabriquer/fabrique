@@ -6,7 +6,6 @@
 #include "Parsing/Parser.h"
 #include "Parsing/Token.h"
 #include "Parsing/lex.h"
-#include "Parsing/fab.yacc.h"
 #include "Parsing/yacc.h"
 
 #include "Types/FunctionType.h"
