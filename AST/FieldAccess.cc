@@ -52,47 +52,61 @@ FieldAccess::Parser::~Parser()
 FieldAccess* FieldAccess::Parser::Build(const Scope& scope, TypeContext& t, Err& err)
 {
 	UniqPtr<Expression> base(base_->Build(scope, t, err));
-	UniqPtr<Identifier> field(field_->Build(scope, t, err));
-	if (not base or not field)
+	if (not base)
 		return nullptr;
 
-	SourceRange src = SourceRange::Over(base, field);
+	UniqPtrVec<Identifier> fields;
+	assert(not fields_.empty());
 
-	if (not base->type().hasFields())
+	const Type *type = &base->type();
+	for (auto& f : fields_)
 	{
-		err.ReportError("value of type '" + base->type().str()
-		                + "' does not have fields", src);
-		return nullptr;
+		UniqPtr<Identifier> field(f->Build(scope, t, err));
+		if (not f)
+			return nullptr;
+
+		if (not type->hasFields())
+		{
+			err.ReportError("value of type '" + type->str()
+			                + "' does not have fields",
+			                SourceRange(*base, *field));
+			return nullptr;
+		}
+
+		Type::TypeMap fieldTypes = type->fields();
+		auto i = fieldTypes.find(field->name());
+		if (i == fieldTypes.end())
+		{
+			err.ReportError("no such field", SourceRange(*base, *field));
+			return nullptr;
+		}
+
+		type = &i->second;
+		fields.emplace_back(std::move(field));
 	}
 
-	Type::TypeMap fieldTypes = base->type().fields();
-	auto i = fieldTypes.find(field->name());
-
-	if (i == fieldTypes.end())
-	{
-		err.ReportError("no such field", src);
-		return nullptr;
-	}
-	const Type& fieldType = i->second;
-
-	return new FieldAccess(base, field, fieldType, src);
+	return new FieldAccess(base, fields, *type, source());
 }
 
 
-FieldAccess::FieldAccess(UniqPtr<Expression>& base, UniqPtr<Identifier>& field,
+FieldAccess::FieldAccess(UniqPtr<Expression>& base, UniqPtrVec<Identifier>& fields,
                          const Type& type, SourceRange src)
-	: Expression(type, src), base_(std::move(base)), field_(std::move(field))
+	: Expression(type, src), base_(std::move(base)), fields_(std::move(fields))
 {
 }
 
 
-void FieldAccess::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+void FieldAccess::PrettyPrint(Bytestream& out, size_t indent) const
 {
-	out
-		<< *base_
-		<< Bytestream::Operator << "."
-		<< Bytestream::Reference << field_->name()
-		;
+	base_->PrettyPrint(out, indent);
+
+	for (auto& f : fields_)
+	{
+		out
+			<< Bytestream::Operator << "."
+			<< Bytestream::Reference << f->name()
+			;
+	}
 }
 
 
@@ -101,7 +115,11 @@ void FieldAccess::Accept(Visitor& v) const
 	if (v.Enter(*this))
 	{
 		base_->Accept(v);
-		field_->Accept(v);
+
+		for (auto& f : fields_)
+		{
+			f->Accept(v);
+		}
 	}
 
 	v.Leave(*this);
@@ -110,19 +128,25 @@ void FieldAccess::Accept(Visitor& v) const
 
 dag::ValuePtr FieldAccess::evaluate(EvalContext& ctx) const
 {
-	dag::ValuePtr base = base_->evaluate(ctx);
-	if (not base->hasFields())
-		throw AssertionFailure("base->hasFields()",
-			base->type().str() + " (" + typeid(base).name()
-			+ ") should have fields");
+	dag::ValuePtr val = base_->evaluate(ctx);
 
-	const std::string fieldName(field_->name());
-	dag::ValuePtr field = base->field(fieldName);
+	for (auto& f : fields_)
+	{
+		if (not val->hasFields())
+			throw AssertionFailure("val->hasFields()",
+				val->type().str() + " (" + typeid(val).name()
+				+ ") should have fields");
 
-	if (not field)
-		throw AssertionFailure("field",
-			base->type().str() + " (" + typeid(base).name()
-			+ ") should have field '" + fieldName + "'");
+		const std::string fieldName(f->name());
+		dag::ValuePtr field = val->field(fieldName);
 
-	return field;
+		if (not field)
+			throw AssertionFailure("field",
+				val->type().str() + " (" + typeid(val).name()
+				+ ") should have field '" + fieldName + "'");
+
+		val = field;
+	}
+
+	return val;
 }

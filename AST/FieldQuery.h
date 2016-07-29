@@ -1,6 +1,6 @@
 /** @file AST/FieldQuery.h    Declaration of @ref fabrique::ast::FieldQuery. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -34,6 +34,7 @@
 
 #include "ADT/UniqPtr.h"
 #include "AST/Expression.h"
+#include "AST/FieldAccess.h"
 
 namespace fabrique {
 namespace ast {
@@ -48,9 +49,6 @@ class SymbolReference;
 class FieldQuery : public Expression
 {
 public:
-	FieldQuery(UniqPtr<Expression>& base, UniqPtr<Identifier>& field,
-	           UniqPtr<Expression>& defaultValue, const Type&, SourceRange);
-
 	const Expression& base() const { return *base_; }
 	const Identifier& field() const { return *field_; }
 	const Expression& defaultValue() const { return *defaultValue_; }
@@ -60,7 +58,22 @@ public:
 
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
+	class Parser : public Expression::Parser
+	{
+	public:
+		virtual ~Parser();
+		FieldQuery* Build(const Scope&, TypeContext&, Err&) override;
+
+	private:
+		ChildNodeParser<Expression> base_;
+		ChildNodeParser<Identifier> field_;
+		ChildNodeParser<Expression> default_;
+	};
+
 private:
+	FieldQuery(UniqPtr<Expression>& base, UniqPtr<Identifier>& field,
+	           UniqPtr<Expression>& defaultValue, const Type&, SourceRange);
+
 	const UniqPtr<Expression> base_;
 	const UniqPtr<Identifier> field_;
 	const UniqPtr<Expression> defaultValue_;

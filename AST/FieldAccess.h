@@ -49,11 +49,7 @@ class StringLiteral;
 class FieldAccess : public Expression
 {
 public:
-	FieldAccess(UniqPtr<Expression>& base, UniqPtr<Identifier>& field,
-	            const Type&, SourceRange src);
-
 	const Expression& base() const { return *base_; }
-	const Identifier& field() const { return *field_; }
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const override;
@@ -68,12 +64,15 @@ public:
 
 	private:
 		ChildNodeParser<Expression> base_;
-		ChildNodeParser<Identifier> field_;
+		ChildNodes<Identifier> fields_;
 	};
 
 private:
+	FieldAccess(UniqPtr<Expression>& base, UniqPtrVec<Identifier>& field,
+	            const Type&, SourceRange);
+
 	const UniqPtr<Expression> base_;
-	const UniqPtr<Identifier> field_;
+	const UniqPtrVec<Identifier> fields_;
 };
 
 } // namespace ast

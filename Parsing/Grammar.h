@@ -93,7 +93,6 @@ struct Grammar
 		const ExprPtr Assign = term('=');
 		const ExprPtr Colon = term(':');
 		const ExprPtr Comma = term(',');
-		const ExprPtr Dot = term('.');
 		const ExprPtr Semicolon = term(';');
 
 		const ExprPtr OpenBrace = term('{');
@@ -108,7 +107,10 @@ struct Grammar
 
 	struct
 	{
-		const ExprPtr Input = term("<-");
+		const ExprPtr Dot = term('.');
+		const ExprPtr Query = term('?');
+
+		const ExprPtr Input = trace("Operators.Input", term("<-"));
 		const ExprPtr Produces = term("=>");
 
 		const ExprPtr Minus = term("-");
@@ -193,7 +195,7 @@ struct Grammar
 	/**
 	 * Almost everything in Fabrique is an Expression.
 	 */
-	TRACE_RULE(Expression, BinaryOperation);
+	TRACE_RULE(Expression, FieldReference | BinaryOperation);
 
 	/**
 	 * The most fundamental component of an Expression (evaluated first).
@@ -213,7 +215,6 @@ struct Grammar
 
 		// Put identifier references after keywords so that
 		// we don't match keywords as identifiers:
-		| FieldReference
 		| NameReference
 	);
 
@@ -226,13 +227,13 @@ struct Grammar
 	/**
 	 * A build action: transforms input files to some number of output files.
 	 */
-	TRACE_RULE(Action,
+	const Rule Action =
 		Keywords.Action
 		>> Symbols.OpenParen
 		>> Arguments
 		>> -(Operators.Input >> Parameters)
 		>> Symbols.CloseParen
-		);
+		;
 
 	/**
 	 * A compound expression includes zero or more value definitions and ends with
@@ -258,7 +259,9 @@ struct Grammar
 		Keywords.If >> Expression >> Expression
 		>> Keywords.Else >> Expression;
 
-	const Rule FieldReference = Expression >> Symbols.Dot >> Identifier;
+	const Rule FieldReference = trace("FieldReference",
+		Term >> +(Operators.Dot >> Identifier)
+		);
 
 	/**
 	 * A file in the described build, with a name and, optionally, arguments.
@@ -266,12 +269,12 @@ struct Grammar
 	 * Example:
 	 * `file('foo.c', cflags = [ '-D' 'FOO' ])`
 	 */
-	TRACE_RULE(File,
+	const Rule File =
 	     Keywords.File >> '('
 	     >> Expression >> -(','_E >> NamedArguments)
-	     >> ')');
+	     >> ')';
 
-	TRACE_RULE(Filename, term(+(IdChar | '.' | '/')));
+	const Rule Filename = term(+(IdChar | '.' | '/'));
 
 	/**
 	 * File lists can include raw filenames as well as embedded file declarations,
@@ -288,13 +291,13 @@ struct Grammar
 	 * )
 	 * ```
 	 */
-	TRACE_RULE(FileList,
+	const Rule FileList =
 		Keywords.Files
 		>> Symbols.OpenParen
 		>> *(File | Filename)
 		>> -(Symbols.Comma >> NamedArguments)
 		>> Symbols.CloseParen
-	);
+		;
 
 	/**
 	 * Lists are containers for like values and do not use comma separators.
@@ -383,8 +386,6 @@ expression:
 	| compoundExpr
 	| conditional
 	| '(' expression ')'	{ SetOrDie($$, $2.node); }
-	| fieldAccess
-	| fieldQuery
 	| file
 	| fileList
 	| foreach
@@ -402,16 +403,6 @@ expression:
 	| structInstantiation
 	| unaryOperation
 	;
-binaryOperation:
-	expression binaryOperator expression
-	{
-		UniqPtr<Expression> lhs = TakeNode<Expression>($1);
-		UniqPtr<Expression> rhs = TakeNode<Expression>($3);
-		auto op = static_cast<BinaryOperation::Operator>($2.intVal);
-
-		SetOrDie($$, p->BinaryOp(op, lhs, rhs));
-	}
-	;
 
 call:
 	expression '(' argumentList ')'
@@ -421,19 +412,6 @@ call:
 		auto end = Take($4.token);
 
 		SetOrDie($$, p->CreateCall(target, arguments, end->source()));
-	}
-	;
-
-fieldQuery:
-	expression '.' name '?' expression
-	{
-		auto structure = TakeNode<Expression>($1);
-		auto field = TakeNode<Identifier>($3);
-		auto defaultValue = TakeNode<Expression>($5);
-
-		SourceRange src = SourceRange::Over(structure, defaultValue);
-
-		SetOrDie($$, p->FieldQuery(structure, field, defaultValue, src));
 	}
 	;
 

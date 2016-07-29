@@ -97,15 +97,14 @@ const PtrVec<Value> Record::fields() const
 void Record::PrettyPrint(Bytestream& out, size_t indent) const
 {
 	const std::string outerTabs(indent, '\t');
+	const std::string innerTabs(indent + 1, '\t');
 
 	out
-		<< Bytestream::Definition << "record"
-		<< "\n" << outerTabs
-		<< Bytestream::Operator << outerTabs << "{"
-		<< "\n" << outerTabs
+		<< Bytestream::Definition << "record\n"
+		<< Bytestream::Operator << outerTabs << "{\n"
+		<< Bytestream::Reset
 		;
 
-	const std::string innerTabs(indent + 1, '\t');
 	for (auto& i : scope().values())
 	{
 		i->PrettyPrint(out, indent + 1);

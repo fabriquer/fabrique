@@ -206,7 +206,7 @@ variables = {
 }
 
 if args.withtests:
-	variables['lit'] = which('llvm-lit')
+	variables['lit'] = which('lit')
 
 
 

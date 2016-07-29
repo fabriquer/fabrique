@@ -161,7 +161,11 @@ void Value::PrettyPrint(Bytestream& out, size_t indent) const
 
 	out
 		<< Bytestream::Operator << " = "
-		<< Bytestream::Reset << *value_
+		<< Bytestream::Reset;
+	
+	value_->PrettyPrint(out, indent);
+
+	out
 		<< Bytestream::Operator << ";"
 		<< Bytestream::Reset
 		;

@@ -16,6 +16,3 @@ foo = record
 
 # CHECK: the_wibble:int = foo.bar.baz.wibble;
 the_wibble = foo.bar.baz.wibble;
-
-# CHECK: the_wobble:string = foo.bar.wobble ? 'not there';
-the_wobble = foo.bar.wobble ? 'not there';

@@ -33,6 +33,7 @@
 #include "AST/Identifier.h"
 #include "AST/Visitor.h"
 #include "DAG/Record.h"
+#include "Parsing/ErrorReporter.h"
 #include "Support/Bytestream.h"
 #include "Types/Type.h"
 
@@ -40,6 +41,40 @@
 
 using namespace fabrique;
 using namespace fabrique::ast;
+
+
+FieldQuery::Parser::~Parser()
+{
+}
+
+
+FieldQuery* FieldQuery::Parser::Build(const Scope& scope, TypeContext& t, Err& err)
+{
+	UniqPtr<Expression> base(base_->Build(scope, t, err));
+	UniqPtr<Identifier> field(field_->Build(scope, t, err));
+	UniqPtr<Expression> defaultValue(default_->Build(scope, t, err));
+
+	if (not base or not field or not defaultValue)
+		return nullptr;
+
+	if (not base->type().hasFields())
+	{
+		err.ReportError("value of type '" + base->type().str()
+		                + "' does not have fields", source());
+		return nullptr;
+	}
+
+	Type::TypeMap fieldTypes = base->type().fields();
+	auto i = fieldTypes.find(field->name());
+
+	const Type *type = &defaultValue->type();
+	if (i != fieldTypes.end())
+	{
+		type = &type->supertype(i->second);
+	}
+
+	return new FieldQuery(base, field, defaultValue, *type, source());
+}
 
 
 FieldQuery::FieldQuery(UniqPtr<Expression>& base, UniqPtr<Identifier>& field,
