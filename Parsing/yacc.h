@@ -38,6 +38,14 @@
  */
 #include "AST/ast.h"
 
+namespace fabrique { class Token; }
+
+#if defined(OS_DARWIN)
+#include "Parsing/fab.yacc.h"
+#else
+#include "Parsing/fab.yacc.tab.h"
+#endif
+
 #include "Parsing/Parser.h"
 
 void	yyerror(const char*);
