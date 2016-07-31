@@ -40,7 +40,7 @@
 
 namespace fabrique { class Token; }
 
-#if defined(OS_DARWIN)
+#if __has_include("Parsing/fab.yacc.h")
 #include "Parsing/fab.yacc.h"
 #else
 #include "Parsing/fab.yacc.tab.h"
