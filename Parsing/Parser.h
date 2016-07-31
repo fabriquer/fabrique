@@ -34,18 +34,17 @@
 
 #include "AST/ast.h"
 #include "ADT/UniqPtr.h"
+#include "Parsing/yacc.h"
 #include "Support/ErrorReport.h"
 
 #include <map>
 #include <stack>
 
-namespace fabrique { class Token; }
-#include "Parsing/fab.yacc.tab.h"
-
 namespace fabrique {
 
 class TypeContext;
 class Lexer;
+class Token;
 
 namespace plugin {
 class Loader;

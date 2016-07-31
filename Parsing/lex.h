@@ -41,6 +41,6 @@
 
 #include "AST/forward-decls.h"
 #include "Parsing/Token.h"
-#include "Parsing/fab.yacc.tab.h"
+#include "Parsing/yacc.h"
 
 #endif
