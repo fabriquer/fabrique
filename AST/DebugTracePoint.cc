@@ -47,7 +47,7 @@ DebugTracePoint::DebugTracePoint(UniqPtr<Expression>& e, SourceRange src)
 }
 
 
-void DebugTracePoint::PrettyPrint(Bytestream& out, size_t indent) const
+void DebugTracePoint::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
 	out
 		<< Bytestream::Action << "trace"

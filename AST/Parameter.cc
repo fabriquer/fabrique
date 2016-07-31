@@ -51,7 +51,7 @@ Parameter::Parameter(UniqPtr<Identifier>& name, const Type& resultTy,
 }
 
 
-void Parameter::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+void Parameter::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
 	out << *name_;
 

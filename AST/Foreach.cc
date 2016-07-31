@@ -52,7 +52,7 @@ ForeachExpr::ForeachExpr(UniqPtr<Mapping>& mapping, UniqPtr<Expression>& body,
 }
 
 
-void ForeachExpr::PrettyPrint(Bytestream& out, size_t indent) const
+void ForeachExpr::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
 	out
 		<< Bytestream::Operator << "foreach "

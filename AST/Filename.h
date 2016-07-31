@@ -54,7 +54,7 @@ public:
 
 	const FileType& type() const override;
 
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 	virtual void Accept(Visitor&) const override;
 
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;

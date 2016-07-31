@@ -49,7 +49,7 @@ TypeDeclaration::TypeDeclaration(const UserType& t, const SourceRange& loc)
 {
 }
 
-void TypeDeclaration::PrettyPrint(Bytestream& out, size_t indent) const
+void TypeDeclaration::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
 	out
 		<< Bytestream::Definition << "type"

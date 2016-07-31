@@ -92,7 +92,7 @@ bool SourceLocation::operator != (const SourceLocation& other) const
 }
 
 
-void SourceLocation::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+void SourceLocation::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
 	out
 		<< Bytestream::Filename
@@ -182,7 +182,7 @@ bool SourceRange::isInside(const SourceRange& other) const
 }
 
 
-void SourceRange::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+void SourceRange::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
 	out
 		<< Bytestream::Filename << begin.filename

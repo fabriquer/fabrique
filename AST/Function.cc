@@ -62,7 +62,7 @@ const FunctionType& Function::type() const
 }
 
 
-void Function::PrettyPrint(Bytestream& out, size_t indent) const
+void Function::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
 	std::string tabs(indent, '\t');
 	std::string intabs(indent + 1, '\t');

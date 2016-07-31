@@ -59,7 +59,7 @@ Value::Value(UniqPtr<Identifier>& id, UniqPtr<Expression>& value, const Type& t)
 }
 
 
-void Value::PrettyPrint(Bytestream& out, size_t indent) const
+void Value::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
 	string tabs(indent, '\t');
 

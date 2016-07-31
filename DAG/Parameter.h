@@ -62,7 +62,7 @@ public:
 		return defaultValue_;
 	}
 
-	virtual void PrettyPrint(Bytestream&, size_t indent) const override;
+	virtual void PrettyPrint(Bytestream&, unsigned int indent) const override;
 
 private:
 	const std::string name_;

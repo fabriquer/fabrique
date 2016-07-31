@@ -47,7 +47,7 @@ Parameter::~Parameter()
 {
 }
 
-void Parameter::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+void Parameter::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
 	out
 		<< Bytestream::Definition << name_

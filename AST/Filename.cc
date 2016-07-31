@@ -78,7 +78,7 @@ const fabrique::FileType& Filename::type() const
 }
 
 
-void Filename::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+void Filename::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
 	out
 		<< Bytestream::Action << "file"

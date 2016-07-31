@@ -172,7 +172,7 @@ const Type& RecordType::supertype(const Type& t) const
 	return ctx.recordType(commonFields);
 }
 
-void RecordType::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+void RecordType::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
 	out << Bytestream::Type << "record" << Bytestream::Reset;
 

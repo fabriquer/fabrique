@@ -78,7 +78,7 @@ private:
 	void Write(const std::string& message, const void *ptr);
 
 	Bytestream& out_;
-	size_t indent_;
+	unsigned int indent_;
 };
 
 } // namespace ast

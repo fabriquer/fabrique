@@ -70,7 +70,7 @@ OSError::OSError(const OSError& orig)
 
 OSError::~OSError() {}
 
-void OSError::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+void OSError::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
 	out
 		<< Bytestream::Error << "OS error"
@@ -93,7 +93,7 @@ UserError::UserError(const UserError& orig)
 
 UserError::~UserError() {}
 
-void UserError::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+void UserError::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
 	out << Bytestream::ErrorMessage << message_ << Bytestream::Reset;
 }
@@ -123,7 +123,7 @@ const char* SourceCodeException::what() const noexcept
 	return message().c_str();
 }
 
-void SourceCodeException::PrettyPrint(Bytestream& out, size_t indent) const
+void SourceCodeException::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
 	err_->PrettyPrint(out, indent);
 }

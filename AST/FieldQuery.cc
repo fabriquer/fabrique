@@ -53,7 +53,7 @@ FieldQuery::FieldQuery(UniqPtr<Expression>& base, UniqPtr<Identifier>& field,
 }
 
 
-void FieldQuery::PrettyPrint(Bytestream& out, size_t indent) const
+void FieldQuery::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
 	out
 		<< *base_

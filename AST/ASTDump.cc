@@ -72,12 +72,12 @@ DUMP_NODE(Value)
 
 void ASTDump::Write(const string& s, const void *ptr)
 {
-	const size_t indentLen = 2 * this->indent_;
+	const unsigned int indentLen = 2 * this->indent_;
 	std::vector<char> indentChars(indentLen, ' ');
 	string indent(indentChars.data(), indentLen);
 
 	out_
-		<< indent_ << s
+		<< static_cast<unsigned long>(indent_) << s
 		<< " @ " << reinterpret_cast<unsigned long>(ptr)
 		<< "\n"
 		;

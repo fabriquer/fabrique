@@ -83,7 +83,7 @@ std::string UnaryOperation::OpStr(Operator op)
 }
 
 
-void UnaryOperation::PrettyPrint(Bytestream& out, size_t indent) const
+void UnaryOperation::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
 	out
 		<< Bytestream::Operator << OpStr(op_)

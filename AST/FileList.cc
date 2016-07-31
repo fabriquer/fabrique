@@ -48,7 +48,7 @@ using namespace fabrique::ast;
 using std::string;
 
 
-void FileList::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+void FileList::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
 	out << Bytestream::Operator << "[" << Bytestream::Reset;
 

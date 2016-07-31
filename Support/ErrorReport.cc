@@ -42,13 +42,13 @@ using std::string;
 
 
 ErrorReport* ErrorReport::Create(const string& message, const SourceRange& loc,
-                                 Severity severity, size_t contextLines)
+                                 Severity severity, unsigned int contextLines)
 {
 	return new ErrorReport(message, loc, loc.begin, severity, contextLines);
 }
 
 
-void ErrorReport::PrettyPrint(Bytestream& out, size_t indent) const
+void ErrorReport::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
 	const string tabs(indent, '\t');
 

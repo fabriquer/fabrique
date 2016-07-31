@@ -58,16 +58,16 @@ public:
 	Create(const std::string& message,
 	       const SourceRange& loc = SourceRange::None(),
 	       Severity severity = Severity::Error,
-	       size_t contextLines = 3);
+	       unsigned int contextLines = 3);
 
 	virtual ~ErrorReport() {}
 
 	const std::string& getMessage() const { return message_; }
-	void PrettyPrint(Bytestream& out, size_t indent = 0) const override;
+	void PrettyPrint(Bytestream& out, unsigned int indent = 0) const override;
 
 private:
 	ErrorReport(const std::string& message, const SourceRange& range,
-	            const SourceLocation& loc, Severity severity, size_t lines)
+	            const SourceLocation& loc, Severity severity, unsigned int lines)
 		: HasSource(range), severity_(severity), message_(message),
 		  caret_(loc), contextLines_(lines)
 	{
@@ -76,7 +76,7 @@ private:
 	const Severity severity_;
 	const std::string message_;
 	const SourceLocation caret_;
-	const size_t contextLines_;
+	const unsigned int contextLines_;
 };
 
 } // namespace fabrique

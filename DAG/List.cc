@@ -146,7 +146,7 @@ bool List::canScalarAdd(const Value& other) const
 }
 
 
-void List::PrettyPrint(Bytestream& out, size_t indent) const
+void List::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
 	out
 		<< Bytestream::Operator << "[ "

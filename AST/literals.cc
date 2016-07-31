@@ -43,7 +43,7 @@ std::string BoolLiteral::str() const
 	return (value() ? "true" : "false");
 }
 
-void BoolLiteral::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+void BoolLiteral::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
 	out
 		<< Bytestream::Literal << str()
@@ -63,7 +63,7 @@ std::string IntLiteral::str() const
 	return std::to_string(value());
 }
 
-void IntLiteral::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+void IntLiteral::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
 	out << Bytestream::Literal << value() << Bytestream::Reset;
 }
@@ -78,7 +78,7 @@ dag::ValuePtr IntLiteral::evaluate(EvalContext&) const
 
 std::string StringLiteral::str() const { return value(); }
 
-void StringLiteral::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+void StringLiteral::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
 	out << Bytestream::Literal << "'";
 

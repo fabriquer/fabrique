@@ -55,7 +55,7 @@ const fabrique::UserType& TypeReference::declaredType() const
 }
 
 
-void TypeReference::PrettyPrint(Bytestream& out, size_t indent) const
+void TypeReference::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
 	out
 		<< Bytestream::Definition << "type"

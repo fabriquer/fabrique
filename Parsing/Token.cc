@@ -51,7 +51,7 @@ Token::Token(const char *begin, size_t len, const SourceRange& src)
 }
 
 
-void Token::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+void Token::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
 	out
 		<< Bytestream::Literal << "'" << str_ << "'"

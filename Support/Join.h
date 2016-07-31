@@ -62,7 +62,7 @@ public:
 	{
 	}
 
-	virtual void PrettyPrint(Bytestream& out, size_t) const override
+	virtual void PrettyPrint(Bytestream& out, unsigned int /*indent*/) const override
 	{
 		for (size_t i = 0; i < objects_.size(); )
 		{

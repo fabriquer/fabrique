@@ -47,7 +47,7 @@ using std::shared_ptr;
 using std::string;
 
 
-void DAG::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+void DAG::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
 	SharedPtrMap<Value> namedValues;
 	for (auto& i : rules()) namedValues.emplace(i);

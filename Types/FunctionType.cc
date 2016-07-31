@@ -87,7 +87,7 @@ bool FunctionType::isSubtype(const Type& other) const
 }
 
 
-void FunctionType::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+void FunctionType::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
 	out
 		<< Bytestream::Operator << "("

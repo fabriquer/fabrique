@@ -52,7 +52,7 @@ public:
 	virtual T value() const { return value_; }
 
 	virtual void
-	PrettyPrint(Bytestream& b, size_t /*indent*/ = 0) const override
+	PrettyPrint(Bytestream& b, unsigned int /*indent*/ = 0) const override
 	{
 		b << Bytestream::Literal << str() << Bytestream::Reset;
 	}
@@ -108,7 +108,7 @@ public:
 	virtual ValuePtr Add(ValuePtr&) const override;
 	virtual ValuePtr Equals(ValuePtr&) const override;
 
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 
 	void Accept(Visitor& v) const override;
 };

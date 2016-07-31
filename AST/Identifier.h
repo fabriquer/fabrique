@@ -52,7 +52,7 @@ public:
 	Identifier(const std::string& name, const Type* = nullptr,
 	           const SourceRange& src = SourceRange::None());
 
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 	const std::string& name() const { return name_; }
 
 	bool reservedName() const;

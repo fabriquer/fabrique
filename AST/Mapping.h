@@ -55,7 +55,7 @@ public:
 	const Parameter& target() const { return *target_; }
 	const Expression& source() const { return *source_; }
 
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 	virtual void Accept(Visitor&) const override;
 
 private:

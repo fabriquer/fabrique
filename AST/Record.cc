@@ -48,7 +48,7 @@ Record::Record(UniqPtr<Scope>& fields, const RecordType& ty, const SourceRange& 
 {
 }
 
-void Record::PrettyPrint(Bytestream& out, size_t indent) const
+void Record::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
 	const std::string outerTabs(indent, '\t');
 

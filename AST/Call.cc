@@ -57,7 +57,7 @@ Call::Call(UniqPtr<Expression>& target, UniqPtrVec<Argument>& a,
 {
 }
 
-void Call::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+void Call::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
 	out
 		<< *target_

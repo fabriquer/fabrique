@@ -101,7 +101,7 @@ void Rule::setSelf(std::weak_ptr<Rule> r)
 }
 
 
-void Rule::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+void Rule::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
 	out
 		<< Bytestream::Action << command_

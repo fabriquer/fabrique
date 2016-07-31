@@ -85,7 +85,7 @@ public:
 	//! Our type is always a @ref FileType.
 	const FileType& type() const override;
 
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 	void Accept(Visitor&) const override;
 
 private:

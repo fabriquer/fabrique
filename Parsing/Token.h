@@ -53,7 +53,7 @@ public:
 	operator std::string() const { return str(); }
 	std::string str() const override { return str_; }
 
-	void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 
 private:
 	std::string str_;

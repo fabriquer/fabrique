@@ -88,7 +88,7 @@ public:
 	void Take(UniqPtr<Value>&);
 	UniqPtrVec<Value> TakeValues();
 
-	virtual void PrettyPrint(Bytestream&, size_t indent) const override;
+	virtual void PrettyPrint(Bytestream&, unsigned int indent) const override;
 	virtual void Accept(Visitor&) const;
 
 private:

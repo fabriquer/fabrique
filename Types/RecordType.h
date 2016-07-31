@@ -55,7 +55,7 @@ public:
 	virtual bool isSubtype(const Type&) const override;
 	virtual const Type& supertype(const Type&) const override;
 
-	virtual void PrettyPrint(Bytestream&, size_t indent) const override;
+	virtual void PrettyPrint(Bytestream&, unsigned int indent) const override;
 
 private:
 	RecordType(const StringMap<const Type&>& fields,

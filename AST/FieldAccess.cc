@@ -50,7 +50,7 @@ FieldAccess::FieldAccess(UniqPtr<Expression>& base, UniqPtr<Identifier>& field)
 }
 
 
-void FieldAccess::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+void FieldAccess::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
 	out
 		<< *base_

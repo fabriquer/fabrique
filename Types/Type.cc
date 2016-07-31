@@ -144,7 +144,7 @@ bool Type::isSubtype(const Type& t) const
 const std::string Type::name() const { return typeName_; }
 
 
-void Type::PrettyPrint(Bytestream& out, size_t indent) const
+void Type::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
 	out << Bytestream::Type << typeName_;
 

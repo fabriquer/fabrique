@@ -64,7 +64,7 @@ bool Identifier::reservedName() const
 }
 
 
-void Identifier::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+void Identifier::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
 	out << Bytestream::Reference << name_;
 

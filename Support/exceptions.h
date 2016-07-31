@@ -76,7 +76,7 @@ public:
 	virtual const std::string& description() const { return description_; }
 
 	const char* what() const noexcept { return completeMessage_.c_str(); }
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const;
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const;
 
 private:
 	const std::string message_;
@@ -97,7 +97,7 @@ public:
 	virtual const std::string& message() const { return message_; }
 	const char* what() const noexcept override { return message_.c_str(); }
 
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 
 private:
 	const std::string message_;
@@ -117,7 +117,7 @@ public:
 	const std::string& message() const;
 	virtual const char* what() const noexcept override;
 
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 
 protected:
 	SourceCodeException(const std::string& message, const SourceRange&);

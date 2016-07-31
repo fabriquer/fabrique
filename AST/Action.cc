@@ -119,7 +119,7 @@ Action::Action(UniqPtrVec<Argument>& a, UniqPtrVec<Parameter>& params,
 }
 
 
-void Action::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+void Action::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
 	out
 		<< Bytestream::Action << "action"

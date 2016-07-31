@@ -51,7 +51,7 @@ CompoundExpression::CompoundExpression(UniqPtr<Scope>&& scope,
 }
 
 
-void CompoundExpression::PrettyPrint(Bytestream& out, size_t indent) const
+void CompoundExpression::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
 	std::string tabs(indent, '\t');
 	std::string intabs(indent + 1, '\t');

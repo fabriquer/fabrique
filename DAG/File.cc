@@ -228,7 +228,7 @@ const fabrique::FileType& File::type() const
 }
 
 
-void File::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+void File::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
 	if (not subdirectory_.empty())
 		out

@@ -44,7 +44,7 @@ class FunctionType : public Type
 {
 public:
 	const std::string name() const override;
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 
 	const PtrVec<Type>& parameterTypes() const { return paramTypes_; }
 	const Type& returnType() const { return retTy_; }

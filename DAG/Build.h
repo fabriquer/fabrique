@@ -76,7 +76,7 @@ public:
 	virtual ValuePtr Xor(ValuePtr&) const override;
 	virtual ValuePtr Equals(ValuePtr&) const override;
 
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 	void Accept(Visitor& v) const override;
 
 private:

@@ -42,7 +42,7 @@ using namespace fabrique;
 using namespace fabrique::ast;
 
 
-void List::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+void List::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
 	out << Bytestream::Operator << "[" << Bytestream::Reset;
 

@@ -191,7 +191,7 @@ ValuePtr String::Equals(ValuePtr& v) const
 		new Boolean(equal, type().context().booleanType(), loc));
 }
 
-void String::PrettyPrint(Bytestream& b, size_t /*indent*/) const
+void String::PrettyPrint(Bytestream& b, unsigned int /*indent*/) const
 {
 	b << Bytestream::Literal << "'" << str() << "'" << Bytestream::Reset;
 }

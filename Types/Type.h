@@ -78,7 +78,7 @@ public:
 	 */
 	virtual TypeMap fields() const { return TypeMap(); }
 
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 
 	bool operator == (const Type&) const;
 	bool operator != (const Type& t) const { return !(*this == t); }

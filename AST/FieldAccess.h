@@ -53,7 +53,7 @@ public:
 	const Expression& base() const { return *base_; }
 	const Identifier& field() const { return *field_; }
 
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 	virtual void Accept(Visitor&) const override;
 
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;

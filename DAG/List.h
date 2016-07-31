@@ -80,7 +80,7 @@ public:
 	virtual const List* asList() const override { return this; }
 	virtual bool canScalarAdd(const Value&) const override;
 
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 	void Accept(Visitor& v) const override;
 
 private:

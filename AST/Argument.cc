@@ -47,7 +47,7 @@ Argument::Argument(UniqPtr<Identifier>& id, UniqPtr<Expression>& value)
 }
 
 
-void Argument::PrettyPrint(Bytestream& out, size_t indent) const
+void Argument::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
 	if (name_)
 		out

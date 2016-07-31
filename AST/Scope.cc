@@ -176,7 +176,7 @@ UniqPtrVec<Value> Scope::TakeValues()
 }
 
 
-void Scope::PrettyPrint(Bytestream& out, size_t indent) const
+void Scope::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
 	std::string tabs(indent + 1, '\t');
 

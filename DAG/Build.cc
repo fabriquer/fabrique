@@ -189,7 +189,7 @@ Build::Build(shared_ptr<Rule>& rule,
 }
 
 
-void Build::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+void Build::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
 	out
 		<< Bytestream::Definition << rule_->name()

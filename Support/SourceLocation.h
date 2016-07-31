@@ -62,7 +62,7 @@ public:
 	bool operator == (const SourceLocation&) const;
 	bool operator != (const SourceLocation&) const;
 
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 
 	std::string filename;
 	size_t line;
@@ -135,7 +135,7 @@ public:
 	Bytestream& PrintSource(Bytestream&, unsigned int indent,
 	                        SourceLocation caret = SourceLocation(),
 	                        unsigned int contextLines = 3) const;
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 
 	SourceLocation begin;
 	SourceLocation end;

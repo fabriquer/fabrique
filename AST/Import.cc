@@ -68,7 +68,7 @@ Import::Import(UniqPtr<StringLiteral>& name, UniqPtrVec<Argument>& arguments,
 }
 
 
-void Import::PrettyPrint(Bytestream& out, size_t indent) const
+void Import::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
 	out
 		<< Bytestream::Action << "import"

@@ -68,7 +68,7 @@ public:
 	//! A file's top-level targets, in order of original definition.
 	virtual const std::vector<BuildTarget>& topLevelTargets() const = 0;
 
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 };
 
 } // namespace dag

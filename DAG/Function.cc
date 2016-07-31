@@ -55,7 +55,7 @@ Function::Function(Callable::Evaluator evaluator,
 Function::~Function() {}
 
 
-void Function::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+void Function::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
 	out << Bytestream::Action << "a function" << Bytestream::Reset;
 }

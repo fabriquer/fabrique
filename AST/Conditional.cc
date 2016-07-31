@@ -53,7 +53,7 @@ Conditional::Conditional(const SourceRange& ifLoc,
 {
 }
 
-void Conditional::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+void Conditional::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
 	out
 		<< Bytestream::Operator << "if ("

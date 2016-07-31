@@ -43,7 +43,7 @@ Mapping::Mapping(UniqPtr<Parameter>& target, UniqPtr<Expression>& source,
 }
 
 
-void Mapping::PrettyPrint(Bytestream& out, size_t /*indent*/) const
+void Mapping::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
 	out
 		<< *target_

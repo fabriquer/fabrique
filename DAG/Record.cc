@@ -101,7 +101,7 @@ ValuePtr Record::field(const std::string& name) const
 }
 
 
-void Record::PrettyPrint(Bytestream& out, size_t indent) const
+void Record::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
 	const string tab(indent, '\t');
 	const string innerTab(indent + 1, '\t');

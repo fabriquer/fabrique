@@ -50,7 +50,7 @@ SomeValue::SomeValue(const Type& type, UniqPtr<Expression>& init, SourceRange sr
 }
 
 
-void SomeValue::PrettyPrint(Bytestream& out, size_t indent) const
+void SomeValue::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
 	out << Bytestream::Operator << "some(";
 	initializer_->PrettyPrint(out, indent + 1);

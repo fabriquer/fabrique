@@ -108,7 +108,7 @@ std::string BinaryOperation::OpStr(Operator op)
 }
 
 
-void BinaryOperation::PrettyPrint(Bytestream& out, size_t indent) const
+void BinaryOperation::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
 	lhs_->PrettyPrint(out, indent);
 	out
