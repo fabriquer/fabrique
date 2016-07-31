@@ -11,7 +11,9 @@ raw_yacc = action('${YACC} -b ${prefix} -d -t -o ${gen} ${src}',
 process = function(src:file, subdir:file, outname:string): file
 {
 	parser = file(outname + '.cc');
-	header = file(outname + '.tab.h');
+
+	header_suffix = if platform.darwin '.h' else '.tab.h';
+	header = file(outname + header_suffix);
 
 	raw_yacc(src, prefix = outname, gen = parser, header = header);
 
