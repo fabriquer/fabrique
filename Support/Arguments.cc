@@ -255,7 +255,7 @@ std::vector<string> Arguments::ArgVector(const Arguments& args)
 	for (const string& d : args.definitions)
 		argv.push_back("-D '" + d + "'");
 
-	return std::move(argv);
+	return argv;
 }
 
 
