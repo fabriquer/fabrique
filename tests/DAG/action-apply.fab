@@ -6,7 +6,7 @@
 # CHECK-DAG: compile_one_cxx_file:(file)=>list[file] = $CXX -c $cxxflags
 compile_one_cxx_file = action('$CXX -c $cxxflags -MMD -MF $depfile $src -o $obj',
 	description = 'Compiling $src'
-	<- src:file[in], obj:file[out], depfile:file[out]);
+	<= src:file[in], obj:file[out], depfile:file[out]);
 
 # CHECK-DAG: build: compile_one_cxx_file { a.cc => a.o{{(.d)?}} a.o{{(.d)?}} }
 # CHECK-DAG: single_object:list[file] = compile_one_cxx_file { a.cc => a.o

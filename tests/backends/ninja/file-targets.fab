@@ -3,7 +3,7 @@
 # RUN: FileCheck %s -input-file %t/build.ninja
 #
 
-compile = action('cc ${source} -o ${dest}' <- source:file[in], dest:file[out]);
+compile = action('cc ${source} -o ${dest}' <= source:file[in], dest:file[out]);
 
 # CHECK-DAG: build buildit : phony foo
 # CHECK-DAG: build foo : compile ${srcroot}/foo.c

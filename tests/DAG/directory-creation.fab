@@ -7,7 +7,7 @@
 compiler = file('/usr/bin/cc');
 
 cc = action('${CC} -c $src -o $obj'
-            <- src:file[in], obj:file[out], CC:file[in] = compiler);
+            <= src:file[in], obj:file[out], CC:file[in] = compiler);
 
 # CHECK-DAG: build: {{.*}} => foo/bar/baz.o
 # CHECK-DAG: build: mkdir { {{.*}}=> foo/bar }

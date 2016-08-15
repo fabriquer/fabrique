@@ -8,10 +8,10 @@ compiler = file('/usr/bin/cc');
 src = file('Inputs/foo.c');
 
 cc = action('${CC} -c ${src} -o ${obj}'
-            <- src:file[in], obj:file[out], CC:file[in] = compiler);
+            <= src:file[in], obj:file[out], CC:file[in] = compiler);
 
 link = action('${CC} ${objects} -o ${binary}'
-              <- objects:list[file[in]], binary:file[out], CC:file[in] = compiler);
+              <= objects:list[file[in]], binary:file[out], CC:file[in] = compiler);
 
 # CHECK: foo.o : ${srcroot}/Inputs/foo.c
 # CHECK:   /usr/bin/cc -c ${srcroot}/Inputs/foo.c -o foo.o

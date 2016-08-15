@@ -4,7 +4,7 @@
 #
 
 compile = action('$CC -c $src -D NAME=\"${name}\" -o $obj'
-	<- src:file[in], obj:file[out], name:string = 'foo');
+	<= src:file[in], obj:file[out], name:string = 'foo');
 
 # CHECK: build a.o : compile ${srcroot}/a.c
 # CHECK-DAG: obj = a.o

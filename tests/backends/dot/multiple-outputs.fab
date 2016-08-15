@@ -4,7 +4,7 @@
 #
 
 lex = action('$LEX -c++ --header-file=$header --outfile=$gen $src'
-              <- src:file[in], gen:file[out], header:file[out]);
+              <= src:file[in], gen:file[out], header:file[out]);
 
 # CHECK-DAG: "foo.yy" -> [[BUILD:"lex { foo.yy => foo.[ch] foo.[ch] }"]];
 # CHECK-DAG: [[BUILD]] -> "foo.c";

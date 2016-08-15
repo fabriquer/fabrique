@@ -4,7 +4,7 @@
 #
 
 
-gen = action('generate ${outputs}' <- outputs:list[file[out]]);
+gen = action('generate ${outputs}' <= outputs:list[file[out]]);
 
 # CHECK: build: gen { => bar baz }( )
 foo = gen(files(bar baz));

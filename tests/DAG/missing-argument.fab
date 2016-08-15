@@ -6,7 +6,7 @@
 
 lex = action('$LEX --header-file=$header --outfile=$gen $src',
              description = 'Processing $src'
-	     <- src:file[in], gen:file[out], header:file[out]);
+	     <= src:file[in], gen:file[out], header:file[out]);
 
 # CHECK: error: missing argument to 'header'
 lexer = lex(file('foo.l'), file('foo.lex.c'));

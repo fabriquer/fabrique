@@ -6,7 +6,7 @@
 # CHECK: {{.*}}:10:{{[0-9]+}}: error: syntax error
 foo = function(xs:list[int])
 {
-	foreach x <- xs:
+	foreach x <= xs:
 	{
 		x + 1
 };

@@ -6,4 +6,4 @@
 # CHECK: cc:(list[file])=>file = ${CC} -c $src -o $obj { '${CC} -c
 # CHECK:   src:file[in], obj:file[out], CC:file[in] = /usr/bin/cc
 cc = action('${CC} -c $src -o $obj'
-            <- src:file[in], obj:file[out], CC:file[in] = file('/usr/bin/cc'));
+            <= src:file[in], obj:file[out], CC:file[in] = file('/usr/bin/cc'));

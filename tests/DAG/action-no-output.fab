@@ -7,7 +7,7 @@
 # builds. Builds should be reorderable and silent in the common case.
 #
 
-echo = action('echo ${text}' <- text:string);
+echo = action('echo ${text}' <= text:string);
 
 # CHECK: action does not produce any output files
 echo('something');

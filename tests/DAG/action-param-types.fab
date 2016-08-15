@@ -9,4 +9,4 @@
 #
 # CHECK-DAG: lex:(file)=>list[file] = $LEX -c++ --header-file=$header --outfile=$gen $src
 lex = action('$LEX -c++ --header-file=$header --outfile=$gen $src'
-              <- src:file[in], gen:file[out], header:file[out]);
+              <= src:file[in], gen:file[out], header:file[out]);

@@ -4,4 +4,4 @@
 #
 
 # CHECK-DAG: cxx:(file)=>file = c++ -c $src -o $obj
-cxx = action(command = 'c++ -c $src -o $obj' <- src:file[in], obj:file[out]);
+cxx = action(command = 'c++ -c $src -o $obj' <= src:file[in], obj:file[out]);

@@ -7,7 +7,7 @@
 # CHECK-NEXT:  command = ${LEX} -c++ --yyclass=${classname} --outfile=${gen} ${src}
 # CHECK-NEXT:  description = ${LEX} -c++ --yyclass=${classname} --outfile=${gen}
 lex = action('${LEX} -c++ --yyclass=${classname} --outfile=${gen} ${src}'
-              <- src:file[in], gen:file[out], classname:string);
+              <= src:file[in], gen:file[out], classname:string);
 
 # CHECK: build foo.c : lex ${srcroot}/foo.yy
 # CHECK-NEXT: classname = FooClass

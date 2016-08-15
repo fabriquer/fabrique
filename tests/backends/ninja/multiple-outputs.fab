@@ -7,14 +7,14 @@
 # CHECK-DAG:  command = ${LEX} -c++ --header-file=${header} --outfile=${gen} ${src}
 # CHECK-DAG:  description = ${LEX} -c++ --header-file=${header} --outfile=${gen}
 lex = action('${LEX} -c++ --header-file=${header} --outfile=${gen} ${src}'
-              <- src:file[in], gen:file[out], header:file[out]);
+              <= src:file[in], gen:file[out], header:file[out]);
 
 # CHECK-DAG: rule cxx
 # CHECK-DAG:  command = ${CXX} -c ${flags} -MMD -MF ${depfile} ${src} -o ${obj}
 # CHECK-DAG:  description = Compiling ${in}
 cxx = action('${CXX} -c ${flags} -MMD -MF ${depfile} ${src} -o ${obj}',
              description = 'Compiling ${in}'
-             <- src:file[in], obj:file[out], depfile:file[out], flags:list[string]);
+             <= src:file[in], obj:file[out], depfile:file[out], flags:list[string]);
 
 # CHECK-DAG: build foo.{{[hc]}} foo.{{[hc]}} : lex ${srcroot}/foo.yy
 gen = lex(file('foo.yy'), file('foo.c'), header = file('foo.h'));

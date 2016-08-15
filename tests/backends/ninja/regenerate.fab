@@ -3,7 +3,7 @@
 # RUN: FileCheck %s -input-file %t/build.ninja
 #
 
-process = action('process ${src} -o ${gen}' <- src:file[in], gen:file[out]);
+process = action('process ${src} -o ${gen}' <= src:file[in], gen:file[out]);
 
 # CHECK-DAG: build foo.out : process ${srcroot}/foo.in
 foo = process(file('foo.in'), file('foo.out'));

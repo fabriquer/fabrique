@@ -1,6 +1,6 @@
 foo = 'Hello, world!';
 
-bar = action('${BAR} ${src} -o ${dest}' <- src:file[in], dest:file[out]);
+bar = action('${BAR} ${src} -o ${dest}' <= src:file[in], dest:file[out]);
 
 baz = function(x:int): int x + 1;
 

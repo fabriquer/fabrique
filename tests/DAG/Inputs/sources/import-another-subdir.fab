@@ -4,6 +4,6 @@ srcs = {
 	files(a.c b.c, subdir = 'another_subdir')
 };
 
-objs = foreach src <- srcs
+objs = foreach src <= srcs
 	c.compile(src)
 	;

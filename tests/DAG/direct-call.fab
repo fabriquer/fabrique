@@ -13,4 +13,4 @@ src = file('foo.c');
 obj = file('foo.o');
 
 # CHECK-DAG: build: bar { foo.c => foo.o }
-bar = action('${CC} -c ${src} -o ${obj}' <- src:file[in], obj:file[out])(src, obj);
+bar = action('${CC} -c ${src} -o ${obj}' <= src:file[in], obj:file[out])(src, obj);

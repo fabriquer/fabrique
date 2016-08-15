@@ -4,7 +4,7 @@
 # RUN: FileCheck %s -input-file %t/err.txt
 #
 
-foo = action('foo' <- src:file[in], obj:file[out], command:string = '');
+foo = action('foo' <= src:file[in], obj:file[out], command:string = '');
 
 # CHECK: name has reserved meaning in Ninja
 bar = foo(file('a'), file('b'), 'blah');

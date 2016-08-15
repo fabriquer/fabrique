@@ -10,7 +10,7 @@ foo = file('foo');
 
 # More complex targets, such as build actions, should not be allowed to
 # have the same names as the files that they generate.
-gen = action('generate ${outputs}' <- outputs:list[file[out]]);
+gen = action('generate ${outputs}' <= outputs:list[file[out]]);
 
 # CHECK: {{.*}}.fab:[[line:[0-9]+]]:{{.*}} target 'bar' conflicts with file
 bar = gen(files(bar baz));

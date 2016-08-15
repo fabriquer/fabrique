@@ -4,7 +4,7 @@
 #
 
 # CHECK: 7:{{[0-9]+}}: error: cannot iterate over int
-foo = foreach x <- 42
+foo = foreach x <= 42
 {
 	x
 };

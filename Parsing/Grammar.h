@@ -110,7 +110,7 @@ struct Grammar
 		const ExprPtr Dot = term('.');
 		const ExprPtr Query = term('?');
 
-		const ExprPtr Input = trace("Operators.Input", term("<-"));
+		const ExprPtr Input = trace("Operators.Input", term("<="));
 		const ExprPtr Produces = term("=>");
 
 		const ExprPtr Minus = term("-");

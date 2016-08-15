@@ -7,7 +7,7 @@
 # CHECK-NEXT:  command = cc $src -o $obj
 # CHECK-NEXT:  description = Compiling $in
 cc = action('cc $src -o $obj', description = 'Compiling $in'
-            <- src:file[in], obj:file[out]);
+            <= src:file[in], obj:file[out]);
 
 # CHECK: rule cxx
 # CHECK-NEXT:  command = c++ $src -o $obj
@@ -15,4 +15,4 @@ cc = action('cc $src -o $obj', description = 'Compiling $in'
 # CHECK-DAG:   foo = f
 # CHECK-DAG:   bar = b
 cxx = action(command = 'c++ $src -o $obj', bar = 'b', foo = 'f'
-             <- src:file[in], obj:file[out]);
+             <= src:file[in], obj:file[out]);
