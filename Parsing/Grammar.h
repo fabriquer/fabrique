@@ -195,7 +195,27 @@ struct Grammar
 	/**
 	 * Almost everything in Fabrique is an Expression.
 	 */
-	TRACE_RULE(Expression, FieldReference | BinaryOperation);
+	TRACE_RULE(Expression,
+		Foreach
+		| FieldReference
+		| BinaryOperation
+	);
+
+	/**
+	 * ```fab
+	 * y = foreach x <- [ 1 2 3 ] {
+	 * 	x + 1
+	 * };
+	 * ```
+	 *
+	 * Or, equivalently:
+	 *
+	 * ```fab
+	 * y = foreach x <- [ 1 2 3 ]
+	 * 	x + 1;
+	 * ```
+	 */
+	const Rule Foreach = Keywords.Foreach >> Identifier >> Expression >> Expression;
 
 	/**
 	 * The most fundamental component of an Expression (evaluated first).
