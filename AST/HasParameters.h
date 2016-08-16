@@ -57,7 +57,7 @@ class Argument;
 class HasParameters
 {
 public:
-	HasParameters(UniqPtrVec<Parameter>&);
+	HasParameters(UniqPtrVec<Parameter>&&);
 
 	const UniqPtrVec<Parameter>& parameters() const;
 	const std::set<std::string>& parameterNames() const;

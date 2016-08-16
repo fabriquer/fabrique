@@ -7,7 +7,7 @@
 # CHECK-NEXT: {
 # CHECK-NEXT:   x
 # CHECK-NEXT: };
-foo = foreach x <= [ 1 2 3 ]
+foo:list[int] = foreach x:int <= [ 1 2 3 ]
 {
 	x
 };
@@ -17,7 +17,7 @@ foo = foreach x <= [ 1 2 3 ]
 # Also check the shorthand version:
 #
 
-# CHECK: bar:list[int] = foreach x:int <= [ 1 2 3 ]
+# CHECK: bar = foreach x <= [ 1 2 3 ]
 # CHECK-NEXT:   x
 # CHECK:        ;
 bar = foreach x <= [ 1 2 3 ] x;

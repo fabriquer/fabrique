@@ -69,7 +69,7 @@ UniqPtr<ast::Record> Parser::ParseDefinitions(const std::vector<string>& definit
 {
 	Type::NamedTypeVec args;
 
-	const Scope& noScope = Scope::None();
+	const Scope& noScope = Scope::None(types_);
 	UniqPtrVec<Value> values;
 
 	for (const string& d : definitions)
@@ -92,7 +92,7 @@ UniqPtr<ast::Record> Parser::ParseDefinitions(const std::vector<string>& definit
 		values.push_back(std::move(v));
 	}
 
-	UniqPtr<Scope> scope = Scope::Create(std::move(values));
+	UniqPtr<Scope> scope = Scope::Create({}, std::move(values), types_);
 	if (not scope)
 		return UniqPtr<ast::Record>();
 
@@ -143,7 +143,7 @@ UniqPtr<Scope> Parser::ParseFile(std::istream& input, const ast::Record& args,
 	p.EnterScope(name, args);
 	*/
 
-	return delegate_.Parse(file, Scope::None());
+	return delegate_.Parse(file, Scope::None(types_));
 }
 
 

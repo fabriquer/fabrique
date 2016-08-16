@@ -57,7 +57,7 @@ const std::string FunctionType::name() const
 
 bool FunctionType::isSubtype(const Type& other) const
 {
-	if (not other.isFunction())
+	if (not other.isCallable())
 		return false;
 
 	auto& t = dynamic_cast<const FunctionType&>(other);

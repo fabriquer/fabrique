@@ -65,13 +65,15 @@ class Visitor;
 class Scope : public Node
 {
 public:
-	static const Scope& None();
-	static UniqPtr<Scope> Create(UniqPtrVec<Value>, const Scope *parent = nullptr);
+	static const Scope& None(TypeContext&);
+	static UniqPtr<Scope> Create(Type::TypeMap parameters,
+	                             UniqPtrVec<Value> ownedValues, TypeContext&,
+	                             const Scope *parent = nullptr);
 
 	virtual ~Scope();
 
 	bool contains(const Identifier&) const;
-	virtual const Value* Lookup(const Identifier&) const;
+	virtual const Type& Lookup(const Identifier&) const;
 
 	//! Values defined in the scope, in AST order.
 	virtual PtrVec<Value> values() const = 0;
@@ -90,7 +92,11 @@ public:
 	};
 
 protected:
-	Scope(SourceRange src, const Scope* parent = nullptr);
+	Scope(SourceRange src, Type::TypeMap parameters, const Type& nil,
+	      const Scope* parent = nullptr);
+
+	Type::TypeMap parameters_;
+	const Type& nil_;
 	const Scope *parent_;
 };
 

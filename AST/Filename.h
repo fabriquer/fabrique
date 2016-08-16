@@ -55,7 +55,9 @@ public:
 	{
 	public:
 		virtual ~Parser();
-		bool construct(const ParserInput&, ParserStack&, ParseError&) override;
+		bool construct(const ParserInput&, ParserStack&,
+		               const ParseError&) override;
+
 		Filename* Build(const Scope&, TypeContext&, Err&) override;
 
 	private:

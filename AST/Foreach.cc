@@ -1,6 +1,6 @@
 /** @file AST/ForeachExpr.cc    Declaration of @ref fabrique::ast::ForeachExpr. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2013-2014, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -35,6 +35,7 @@
 #include "AST/Value.h"
 #include "AST/Visitor.h"
 #include "DAG/List.h"
+#include "Parsing/ErrorReporter.h"
 #include "Support/Bytestream.h"
 #include "Types/Type.h"
 
@@ -47,6 +48,7 @@ using namespace fabrique::ast;
 ForeachExpr::ForeachExpr(UniqPtr<Identifier>& loopVar,
                          UniqPtr<TypeReference>& explicitType,
                          UniqPtr<Expression>& sourceValue,
+                         UniqPtr<Scope>& scope,
                          UniqPtr<Expression>& body,
                          const Type& type,
                          const SourceRange& source)
@@ -54,6 +56,7 @@ ForeachExpr::ForeachExpr(UniqPtr<Identifier>& loopVar,
 	  loopVariable_(std::move(loopVar)),
 	  explicitType_(std::move(explicitType)),
 	  sourceValue_(std::move(sourceValue)),
+	  scope_(std::move(scope)),
 	  body_(std::move(body))
 {
 }
@@ -64,9 +67,17 @@ void ForeachExpr::PrettyPrint(Bytestream& out, size_t indent) const
 	out
 		<< Bytestream::Operator << "foreach "
 		<< Bytestream::Reset << *loopVariable_
-		<< Bytestream::Operator << " <= "
 		;
 
+	if (explicitType_)
+	{
+		out
+			<< Bytestream::Operator << ":"
+			<< Bytestream::Reset << *explicitType_
+			;
+	}
+
+	out << Bytestream::Operator << " <= ";
 
 	sourceValue_->PrettyPrint(out, indent);
 
@@ -99,10 +110,7 @@ ForeachExpr::Parser::~Parser()
 ForeachExpr* ForeachExpr::Parser::Build(const Scope& s, TypeContext& t, Err& err)
 {
 	UniqPtr<Identifier> loopVariable(loopVariable_->Build(s, t, err));
-	UniqPtr<Expression> sourceValue(sourceValue_->Build(s, t, err));
-	UniqPtr<Expression> body(body_->Build(s, t, err));
-
-	if (not loopVariable or not sourceValue or not body)
+	if (not loopVariable)
 		return nullptr;
 
 	UniqPtr<TypeReference> explicitType;
@@ -113,13 +121,35 @@ ForeachExpr* ForeachExpr::Parser::Build(const Scope& s, TypeContext& t, Err& err
 			return nullptr;
 	}
 
-	const Type& type =
+	UniqPtr<Expression> sourceValue(sourceValue_->Build(s, t, err));
+	if (not sourceValue)
+		return nullptr;
+
+	const Type& sourceType = sourceValue->type();
+	if (not sourceType.isOrdered())
+	{
+		err.ReportError("cannot iterate over " + sourceType.str(),
+		                sourceValue->source());
+		return nullptr;
+	}
+
+	const Type& loopVarType =
 		explicitType
 		? explicitType->referencedType()
-		: body->type()[0]
+		: sourceType[0]
 		;
 
-	return new ForeachExpr(loopVariable, explicitType, sourceValue,
+	Type::TypeMap params = { { loopVariable->name(), loopVarType } };
+	UniqPtr<Scope> containingScope(Scope::Create(params, {}, t, &s));
+
+	UniqPtr<Expression> body(body_->Build(*containingScope, t, err));
+
+	if (not body)
+		return nullptr;
+
+	const Type& type = Type::ListOf(body->type(), body->source());
+
+	return new ForeachExpr(loopVariable, explicitType, sourceValue, containingScope,
 	                       body, type, source());
 }
 

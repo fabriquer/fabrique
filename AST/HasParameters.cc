@@ -45,7 +45,7 @@ using std::string;
 using std::vector;
 
 
-HasParameters::HasParameters(UniqPtrVec<Parameter>& params)
+HasParameters::HasParameters(UniqPtrVec<Parameter>&& params)
 	: params_(std::move(params))
 {
 	for (auto& p : params_)

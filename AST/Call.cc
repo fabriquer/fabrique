@@ -1,6 +1,6 @@
 /** @file AST/Call.cc    Definition of @ref fabrique::ast::Call. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -38,6 +38,7 @@
 #include "DAG/Function.h"
 #include "DAG/Parameter.h"
 #include "DAG/Rule.h"
+#include "Parsing/ErrorReporter.h"
 #include "Support/Bytestream.h"
 #include "Support/SourceLocation.h"
 #include "Support/exceptions.h"
@@ -49,6 +50,37 @@ using namespace fabrique;
 using namespace fabrique::ast;
 using std::dynamic_pointer_cast;
 using std::shared_ptr;
+
+
+Call::Parser::~Parser()
+{
+}
+
+
+Call* Call::Parser::Build(const Scope& s, TypeContext& t, Err& err)
+{
+	UniqPtr<Expression> target(target_->Build(s, t, err));
+	if (not target)
+		return nullptr;
+
+	UniqPtrVec<Argument> arguments;
+	for (auto& a : arguments_)
+	{
+		arguments.emplace_back(a->Build(s, t, err));
+		if (not arguments.back())
+			return nullptr;
+	}
+
+	if (not target->type().isCallable())
+	{
+		err.ReportError("not callable", *target);
+		return nullptr;
+	}
+
+	const FunctionType& fnType = dynamic_cast<const FunctionType&>(target->type());
+
+	return new Call(target, arguments, fnType.returnType(), source());
+}
 
 
 Call::Call(UniqPtr<Expression>& target, UniqPtrVec<Argument>& a,

@@ -58,20 +58,19 @@ NameReference::Parser::Build(const Scope& scope, TypeContext& types, Err& err)
 
 	UniqPtr<Identifier> name(name_->Build(scope, types, err));
 
-	const Value* target = scope.Lookup(*name);
-	if (not target)
+	const Type& targetType = scope.Lookup(*name);
+	if (not targetType)
 	{
 		err.ReportError("reference to undefined value", *name);
 		return nullptr;
 	}
 
-	return new NameReference(std::move(name), *target);
+	return new NameReference(std::move(name), targetType);
 }
 
 
-NameReference::NameReference(UniqPtr<Identifier> name, const Value& target)
-	: Expression(target.type(), name->source()),
-	  name_(std::move(name)), target_(target)
+NameReference::NameReference(UniqPtr<Identifier> name, const Type& targetType)
+	: Expression(targetType, name->source()), name_(std::move(name))
 {
 }
 

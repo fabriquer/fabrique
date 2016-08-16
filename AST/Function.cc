@@ -1,6 +1,6 @@
 /** @file AST/Function.cc    Definition of @ref fabrique::ast::Function. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -37,6 +37,7 @@
 #include "AST/Visitor.h"
 #include "DAG/Function.h"
 #include "DAG/Parameter.h"
+#include "Parsing/ErrorReporter.h"
 #include "Support/Bytestream.h"
 #include "Types/FunctionType.h"
 
@@ -47,9 +48,62 @@ using namespace fabrique::ast;
 using std::dynamic_pointer_cast;
 
 
-Function::Function(UniqPtrVec<Parameter>& params, const FunctionType& ty,
-                   UniqPtr<Expression>& body, const SourceRange& loc)
-	: Expression(ty, loc), HasParameters(params), body_(std::move(body))
+Function::Parser::~Parser()
+{
+}
+
+
+Function* Function::Parser::Build(const Scope& s, TypeContext& t, Err& err)
+{
+	UniqPtrVec<Parameter> parameters;
+	for (auto& p : parameters_)
+	{
+		parameters.emplace_back(p->Build(s, t, err));
+		if (not parameters.back())
+			return nullptr;
+	}
+
+	UniqPtr<TypeReference> resultType;
+	if (explicitResultType_)
+	{
+		resultType.reset(explicitResultType_->Build(s, t, err));
+		if (not resultType)
+			return nullptr;
+	}
+
+	UniqPtr<Expression> body(body_->Build(s, t, err));
+	if (not body)
+		return nullptr;
+
+	const FunctionType* type = nullptr;
+
+	if (resultType)
+	{
+		type = dynamic_cast<const FunctionType*>(&resultType->referencedType());
+		if (not type)
+		{
+			err.ReportError("not a function type", *resultType);
+			return nullptr;
+		}
+	}
+	else
+	{
+		PtrVec<Type> paramTypes;
+		for (auto& p : parameters)
+			paramTypes.push_back(&p->type());
+
+		type = &t.functionType(paramTypes, body->type());
+	}
+
+	return new Function(parameters, resultType, body, *type, source());
+}
+
+
+Function::Function(UniqPtrVec<Parameter>& params, UniqPtr<TypeReference>& resultType,
+                   UniqPtr<Expression>& body, const FunctionType& type,
+                   const SourceRange& loc)
+	: Expression(type, loc), HasParameters(std::move(params)),
+	  explicitResultType_(std::move(resultType)), body_(std::move(body))
 {
 }
 

@@ -51,7 +51,8 @@ Filename::Parser::~Parser()
 {
 }
 
-bool Filename::Parser::construct(const ParserInput& in, ParserStack& s, ParseError& err)
+bool Filename::Parser::construct(const ParserInput& in, ParserStack& s,
+                                 const ParseError& err)
 {
 	raw_ = in.str();
 	assert(not raw_.empty());

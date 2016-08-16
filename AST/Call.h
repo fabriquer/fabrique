@@ -1,6 +1,6 @@
 /** @file AST/Call.h    Declaration of @ref fabrique::ast::Call. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -50,9 +50,6 @@ namespace ast {
 class Call : public Expression
 {
 public:
-	Call(UniqPtr<Expression>& target, UniqPtrVec<Argument>&,
-	     const Type& resultType, const SourceRange&);
-
 	const Expression& target() const { return *target_; }
 
 	const UniqPtrVec<Argument>& arguments() const { return args_; }
@@ -64,9 +61,24 @@ public:
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const override;
 
+	class Parser : public Expression::Parser
+	{
+	public:
+		virtual ~Parser();
+
+		Call* Build(const Scope&, TypeContext&, Err&) override;
+
+	private:
+		ChildNodeParser<Expression> target_;
+		ChildNodes<Argument> arguments_;
+	};
+
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
 private:
+	Call(UniqPtr<Expression>& target, UniqPtrVec<Argument>&,
+	     const Type& resultType, const SourceRange&);
+
 	const UniqPtr<Expression> target_;
 	const UniqPtrVec<Argument> args_;
 };

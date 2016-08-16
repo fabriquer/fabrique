@@ -94,8 +94,8 @@ protected:
 
 		virtual Node* Build(const Scope&, TypeContext&, Err&) = 0;
 
-		virtual bool construct(const ParserInput&, ParserStack&, ParseError&)
-			override;
+		virtual bool construct(const ParserInput&, ParserStack&,
+		                       const ParseError&) override;
 
 		SourceRange source() const { return source_; }
 

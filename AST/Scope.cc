@@ -55,17 +55,18 @@ namespace {
 class ScopeBuilder : public Scope
 {
 public:
-	static ScopeBuilder* Create(const Scope *parent, Node::Parser::ChildNodes<Value>&,
-	                            TypeContext& types, parser::ErrorReporter& err);
+	static ScopeBuilder* Create(const Scope *parent, Type::TypeMap parameters,
+	                            Node::Parser::ChildNodes<Value>&, TypeContext& types,
+	                            parser::ErrorReporter& err);
 
-	virtual const Value* Lookup(const Identifier&) const override;
+	virtual const Type& Lookup(const Identifier&) const override;
 	virtual PtrVec<Value> values() const override;
 
 	UniqPtr<Scope> Build();
 
 private:
-	ScopeBuilder(const Scope *parent, std::vector<string> names,
-	             UniqPtrMap<Value::Parser> parsers,
+	ScopeBuilder(const Scope *parent, Type::TypeMap parameters,
+	             std::vector<string> names, UniqPtrMap<Value::Parser> parsers,
 	             TypeContext& types, SourceRange src, parser::ErrorReporter& err);
 
 	const Value* LookupOrBuild(const string& name);
@@ -82,8 +83,9 @@ private:
 class CompleteScope : public Scope
 {
 public:
-	CompleteScope(const Scope *parent, UniqPtrVec<Value> values, SourceRange src)
-		: Scope(src, parent), values_(std::move(values))
+	CompleteScope(const Scope *parent, Type::TypeMap parameters,
+	              UniqPtrVec<Value> values, const Type& nil, SourceRange src)
+		: Scope(src, parameters, nil, parent), values_(std::move(values))
 	{
 		Bytestream& dbg = Bytestream::Debug("ast.scope.new");
 		if (dbg)
@@ -115,20 +117,26 @@ private:
 } // anonymous namespace
 
 
-UniqPtr<Scope> Scope::Create(UniqPtrVec<Value> values, const Scope *parent)
+UniqPtr<Scope> Scope::Create(Type::TypeMap parameters,
+                             UniqPtrVec<Value> values, TypeContext& types,
+                             const Scope *parent)
 {
+	const Type& nil = types.nilType();
+
 	SourceRange src =
 		values.empty()
 		? SourceRange::None()
 		: SourceRange::Over(values.front(), values.back())
 		;
 
-	return UniqPtr<Scope>(new CompleteScope(parent, std::move(values), src));
+	return UniqPtr<Scope>(
+		new CompleteScope(parent, parameters, std::move(values), nil, src));
 }
 
 
 ScopeBuilder*
-ScopeBuilder::Create(const Scope *parent, Node::Parser::ChildNodes<Value>& valueNodes,
+ScopeBuilder::Create(const Scope *parent, Type::TypeMap parameters,
+                     Node::Parser::ChildNodes<Value>& valueNodes,
                      TypeContext& types, parser::ErrorReporter& err)
 {
 	std::vector<string> names;
@@ -155,20 +163,21 @@ ScopeBuilder::Create(const Scope *parent, Node::Parser::ChildNodes<Value>& value
 	}
 
 	SourceRange src(begin, end);
-	return new ScopeBuilder(parent, names, std::move(parsers), types, src, err);
+	return new ScopeBuilder(parent, std::move(parameters), names, std::move(parsers),
+	                        types, src, err);
 }
 
 
-ScopeBuilder::ScopeBuilder(const Scope *parent, std::vector<string> names,
-                           UniqPtrMap<Value::Parser> parsers,
+ScopeBuilder::ScopeBuilder(const Scope *parent, Type::TypeMap parameters,
+                           std::vector<string> names, UniqPtrMap<Value::Parser> parsers,
                            TypeContext& types, SourceRange src, parser::ErrorReporter& err)
-	: Scope(src, parent), types_(types), err_(err), names_(names),
-	  parsers_(std::move(parsers))
+	: Scope(src, std::move(parameters), types.nilType(), parent),
+	  types_(types), err_(err), names_(names), parsers_(std::move(parsers))
 {
 }
 
 
-const Value* ScopeBuilder::Lookup(const Identifier& id) const
+const Type& ScopeBuilder::Lookup(const Identifier& id) const
 {
 	const string name = id.name();
 
@@ -183,14 +192,21 @@ const Value* ScopeBuilder::Lookup(const Identifier& id) const
 	if (const Value *v = self->LookupOrBuild(id.name()))
 	{
 		assert(v->isTyped());
-		return v;
+		return v->type();
 	}
+
+	//
+	// If we haven't defined the value, check passed-in parameters.
+	//
+	auto p = parameters_.find(name);
+	if (p != parameters_.end())
+		return p->second;
 
 	// Do we have a parent scope to answer the question?
 	if (parent_)
 		return parent_->Lookup(id);
 
-	return nullptr;
+	return nil_;
 }
 
 
@@ -254,7 +270,10 @@ UniqPtr<Scope> ScopeBuilder::Build()
 		values.push_back(std::move(values_[name]));
 	}
 
-	return UniqPtr<Scope>(new CompleteScope(parent_, std::move(values), source()));
+	SourceRange src(source());
+
+	return UniqPtr<Scope>(
+		new CompleteScope(parent_, parameters_, std::move(values), nil_, src));
 }
 
 
@@ -291,7 +310,7 @@ Scope::Parser::~Parser()
 Scope* Scope::Parser::Build(const Scope& parentScope, TypeContext& types, Err& err)
 {
 	UniqPtr<ScopeBuilder> builder(
-		ScopeBuilder::Create(&parentScope, values_, types, err));
+		ScopeBuilder::Create(&parentScope, {}, values_, types, err));
 
 	if (not builder)
 		return nullptr;
@@ -304,17 +323,18 @@ Scope* Scope::Parser::Build(const Scope& parentScope, TypeContext& types, Err& e
 }
 
 
-const Scope& Scope::None()
+const Scope& Scope::None(TypeContext& types)
 {
-	const Scope& none =
-		*new CompleteScope(nullptr, UniqPtrVec<Value>(), SourceRange::None());
+	const Scope& none = *new CompleteScope(nullptr, {}, {}, types.nilType(),
+	                                       SourceRange::None());
 
 	return none;
 }
 
 
-Scope::Scope(SourceRange src, const Scope* parent)
-	: Node(src), parent_(parent)
+Scope::Scope(SourceRange src, Type::TypeMap parameters, const Type& nil,
+             const Scope* parent)
+	: Node(src), parameters_(parameters), nil_(nil), parent_(parent)
 {
 }
 
@@ -324,20 +344,26 @@ Scope::~Scope()
 }
 
 
-const Value* Scope::Lookup(const Identifier& id) const
+const Type& Scope::Lookup(const Identifier& id) const
 {
 	for (auto& v : values())
 	{
 		if (v->name() == id)
 		{
-			return v;
+			return v->type();
 		}
+	}
+
+	auto p = parameters_.find(id.name());
+	if (p != parameters_.end())
+	{
+		return p->second;
 	}
 
 	if (parent_)
 		return parent_->Lookup(id);
 
-	return nullptr;
+	return nil_;
 }
 
 

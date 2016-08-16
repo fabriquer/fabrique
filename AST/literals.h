@@ -73,7 +73,9 @@ public:
 	class Parser : public Expression::Parser
 	{
 	public:
-		bool construct(const ParserInput&, ParserStack&, ParseError&) override;
+		bool construct(const ParserInput&, ParserStack&,
+		               const ParseError&) override;
+
 		BoolLiteral* Build(const Scope&, TypeContext&, Err&) override;
 
 		bool value_;
@@ -100,7 +102,9 @@ public:
 	class Parser : public Expression::Parser
 	{
 	public:
-		bool construct(const ParserInput&, ParserStack&, ParseError&) override;
+		bool construct(const ParserInput&, ParserStack&,
+		               const ParseError&) override;
+
 		IntLiteral* Build(const Scope&, TypeContext&, Err&) override;
 
 		int value_;
@@ -127,7 +131,9 @@ public:
 	class Parser : public Expression::Parser
 	{
 	public:
-		bool construct(const ParserInput&, ParserStack&, ParseError&) override;
+		bool construct(const ParserInput&, ParserStack&,
+		               const ParseError&) override;
+
 		StringLiteral* Build(const Scope&, TypeContext&, Err&) override;
 
 		std::string value_;

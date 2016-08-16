@@ -103,15 +103,15 @@ struct Grammar
 
 		const ExprPtr OpenParen = term('(');
 		const ExprPtr CloseParen = term(')');
+
+		const ExprPtr Input = term("<=");
+		const ExprPtr Produces = term("=>");
 	} Symbols;
 
 	struct
 	{
 		const ExprPtr Dot = term('.');
 		const ExprPtr Query = term('?');
-
-		const ExprPtr Input = trace("Operators.Input", term("<="));
-		const ExprPtr Produces = term("=>");
 
 		const ExprPtr Minus = term("-");
 		const ExprPtr Plus = term("+");
@@ -160,7 +160,12 @@ struct Grammar
 	 *  - parametric types: simpleName[typeArg1, typeArg2]
 	 *  - simple types: int, string, foo, etc.
 	 */
-	const Rule Type = RecordType | ParametricType | SimpleType;
+	const Rule Type = FunctionType | RecordType | ParametricType | SimpleType;
+
+	const Rule FunctionType =
+		Symbols.OpenParen >> TypeList >> Symbols.CloseParen
+		>> Symbols.Produces >> Type
+		;
 
 	const Rule RecordType =
 		Keywords.Record >> Symbols.OpenBracket
@@ -178,19 +183,8 @@ struct Grammar
 
 	const Rule SimpleType = Identifier;
 
-#if 0
-	| '(' types ')' PRODUCES type
-	{
-		SourceRange begin = Take($1.token)->source();
-		auto argTypes(Take($2.types));
-		SourceRange end = Take($3.token)->source();
-		const Type *returnType = $5.type;
+	const Rule TypeList = -(Type >> *(Symbols.Comma >> Type));
 
-		SourceRange src(begin, end);
-
-		$$.type = &p->FnType(*argTypes, *returnType, src);
-	}
-#endif
 
 	/**
 	 * Almost everything in Fabrique is an Expression.
@@ -200,6 +194,39 @@ struct Grammar
 		| FieldReference
 		| BinaryOperation
 	);
+
+
+	/**
+	 * Named arguments must always come after unnamed (positional) arguments.
+	 *
+	 * ```fab
+	 * f(x, y, z);
+	 * f(a = x, b = y, c = z);
+	 * f(x, c = z, b = y);
+	 * ```
+	 */
+	const Rule Arguments =
+		UnnamedArguments >> -(Symbols.Comma >> NamedArguments)
+		| NamedArguments
+		;
+
+	const Rule Argument = NamedArgument | UnnamedArgument;
+
+	const Rule NamedArgument = Identifier >> Symbols.Assign >> Expression;
+	const Rule NamedArguments =
+		(NamedArgument >> *(Symbols.Comma >> NamedArgument));
+
+	const Rule UnnamedArgument = Expression;
+	const Rule UnnamedArguments =
+		UnnamedArgument >> *(Symbols.Comma >> UnnamedArgument);
+
+	const Rule Parameters = -(Parameter >> *(Symbols.Comma >> Parameter));
+
+	const Rule Parameter =
+		Identifier >> Symbols.Colon >> Type
+		>> trace("default argument", -(Symbols.Assign >> Expression))
+		;
+
 
 	/**
 	 * ```fab
@@ -218,7 +245,7 @@ struct Grammar
 	const Rule Foreach =
 		Keywords.Foreach >> Identifier
 		>> -(Symbols.Colon >> Type)
-		>> Operators.Input >> Expression
+		>> Symbols.Input >> Expression
 		>> Expression
 		;
 
@@ -229,10 +256,12 @@ struct Grammar
 		Literal
 		| ParentheticalExpression
 		| Action
+		| Call
 		| CompoundExpression
 		| Conditional
 		| File
 		| FileList
+		| Function
 		| List
 		| Record
 		| TypeDeclaration
@@ -256,9 +285,19 @@ struct Grammar
 		Keywords.Action
 		>> Symbols.OpenParen
 		>> trace("Action Arguments", Arguments)
-		>> trace("Action optional params", (Operators.Input >> Parameters))
-		>> Symbols.CloseParen
+		>> trace("Action optional params", -(Symbols.Input >> Parameters))
+		>> trace("end of Action", Symbols.CloseParen)
 		);
+
+	/**
+	 * A call to a callable value (action or function).
+	 *
+	 * ```fab
+	 * y = f(x);
+	 * z = f(r = x, theta = 0);
+	 * ```
+	 */
+	const Rule Call = Term >> Symbols.OpenParen >> -Arguments >> Symbols.CloseParen;
 
 	/**
 	 * A compound expression includes zero or more value definitions and ends with
@@ -284,9 +323,7 @@ struct Grammar
 		Keywords.If >> Expression >> Expression
 		>> Keywords.Else >> Expression;
 
-	const Rule FieldReference = trace("FieldReference",
-		Term >> +(Operators.Dot >> Identifier)
-		);
+	const Rule FieldReference = Term >> +(Operators.Dot >> Identifier);
 
 	/**
 	 * A file in the described build, with a name and, optionally, arguments.
@@ -323,6 +360,45 @@ struct Grammar
 		>> -(Symbols.Comma >> NamedArguments)
 		>> Symbols.CloseParen
 		;
+
+	/**
+	 * A function takes (optional) parameters and returns a value.
+	 *
+	 * ```fab
+	 * foo = function(names:list[string])
+	 *     foreach name <= names
+	 *         file(name)
+	 *         ;
+	 * ```
+	 */
+	const Rule Function =
+		Keywords.Function
+		>> Symbols.OpenParen >> Parameters >> Symbols.CloseParen
+		>> -(Symbols.Colon >> Type)
+		>> Expression
+		;
+/*
+function:
+	functiondecl '(' parameterList ')' ':' type expression
+	{
+		SourceRange begin = Take(Parser::ParseToken($1))->source();
+		auto params = Take(NodeVec<Parameter>($3));
+		auto *retTy = $6.type;
+		auto body = TakeNode<Expression>($7);
+
+		SetOrDie($$, p->DefineFunction(begin, params, body, retTy));
+	}
+	|
+	functiondecl '(' parameterList ')' expression
+	{
+		SourceRange begin = Take(Parser::ParseToken($1))->source();
+		auto params = Take(NodeVec<Parameter>($3));
+		auto body = TakeNode<Expression>($5);
+
+		SetOrDie($$, p->DefineFunction(begin, params, body));
+	}
+	;
+*/
 
 	/**
 	 * Lists are containers for like values and do not use comma separators.
@@ -377,27 +453,11 @@ struct Grammar
 
 	const Rule BinaryOperation = LogicExpr;
 
-	TRACE_RULE(Arguments, NamedArguments | (Argument >> *(Symbols.Comma >> Argument)));
-	const Rule Argument = NamedArgument | UnnamedArgument;
-	const Rule NamedArgument = Identifier >> Symbols.Assign >> Expression;
-	const Rule NamedArguments = NamedArgument >> *(Symbols.Comma >> NamedArgument);
-	const Rule UnnamedArgument = Expression;
-
-	TRACE_RULE(Parameters,
-		Parameters >> Symbols.Comma >> Parameter
-		| Parameter
-	);
-
-	TRACE_RULE(Parameter,
-		Identifier >> Symbols.Colon >> Type
-		>> -(Symbols.Assign >> Expression)
-	);
-
 	TRACE_RULE(Value,
 		Identifier >> Operators.Assign >> Expression
 		| Identifier >> Symbols.Colon >> Type >> Operators.Assign >> Expression
 	);
-	TRACE_RULE(Values, *(Value >> Symbols.Semicolon));
+	const Rule Values = *(Value >> Symbols.Semicolon);
 
 	const Rule Record =
 		Keywords.Record >> Symbols.OpenBrace >> Values >> Symbols.CloseBrace;
@@ -414,7 +474,6 @@ expression:
 	| file
 	| fileList
 	| foreach
-	| function
 	| import
 	| '[' listElements ']'
 	{
@@ -429,17 +488,6 @@ expression:
 	| unaryOperation
 	;
 
-call:
-	expression '(' argumentList ')'
-	{
-		auto target = TakeNode<Expression>($1);
-		auto arguments = Take(NodeVec<Argument>($3));
-		auto end = Take($4.token);
-
-		SetOrDie($$, p->CreateCall(target, arguments, end->source()));
-	}
-	;
-
 foreach:
 	foreachbegin mapping expression
 	{
@@ -448,27 +496,6 @@ foreach:
 		auto body = TakeNode<Expression>($3);
 
 		SetOrDie($$, p->Foreach(mapping, body, begin));
-	}
-	;
-
-function:
-	functiondecl '(' parameterList ')' ':' type expression
-	{
-		SourceRange begin = Take(Parser::ParseToken($1))->source();
-		auto params = Take(NodeVec<Parameter>($3));
-		auto *retTy = $6.type;
-		auto body = TakeNode<Expression>($7);
-
-		SetOrDie($$, p->DefineFunction(begin, params, body, retTy));
-	}
-	|
-	functiondecl '(' parameterList ')' expression
-	{
-		SourceRange begin = Take(Parser::ParseToken($1))->source();
-		auto params = Take(NodeVec<Parameter>($3));
-		auto body = TakeNode<Expression>($5);
-
-		SetOrDie($$, p->DefineFunction(begin, params, body));
 	}
 	;
 

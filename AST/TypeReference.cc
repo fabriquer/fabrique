@@ -90,19 +90,16 @@ TypeReference::Parser::BuildSimpleType(const Scope& scope, TypeContext& types, E
 	UniqPtr<Identifier> name(name_->Build(scope, types, err));
 	SourceRange src(name->source());
 
-	const Type *type;
 
-	// Is this a type reference or user-defined type declaration?
-	if (const Value* value = scope.Lookup(*name))
-	{
-		type = &value->value().type().lookupType();
-	}
-	else
-	{
-		type = &types.find(name->name(), src);
-	}
+	// Is this a user-defined type declaration?
+	const Type& userType = scope.Lookup(*name);
+	const Type& type =
+		userType
+		? userType.lookupType()
+		: types.find(name->name(), src)
+		;
 
-	return new TypeReference(std::move(name), *type, src);
+	return new TypeReference(std::move(name), type, src);
 }
 
 

@@ -51,7 +51,7 @@ public:
 
 	virtual bool isSubtype(const Type&) const override;
 
-	virtual bool isFunction() const override { return true; }
+	virtual bool isCallable() const override { return true; }
 
 private:
 	static FunctionType* Create(const PtrVec<Type>& parameterTypes,

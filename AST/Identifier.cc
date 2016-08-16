@@ -55,7 +55,8 @@ Identifier::Parser::Parser()
 }
 
 
-bool Identifier::Parser::construct(const ParserInput& input, ParserStack&, ParseError&)
+bool Identifier::Parser::construct(const ParserInput& input, ParserStack&,
+                                   const ParseError&)
 {
 	source_ = input;
 	name_ = input.str();

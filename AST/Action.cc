@@ -114,7 +114,7 @@ Action* Action::Create(UniqPtrVec<Argument>& args,
 
 Action::Action(UniqPtrVec<Argument>& a, UniqPtrVec<Parameter>& params,
                const FunctionType& ty, const SourceRange& loc)
-	: Expression(ty, loc), HasParameters(params), args_(std::move(a))
+	: Expression(ty, loc), HasParameters(std::move(params)), args_(std::move(a))
 {
 }
 

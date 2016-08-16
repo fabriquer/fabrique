@@ -117,8 +117,8 @@ public:
 	virtual bool hasFields() const { return false; }
 	virtual bool hasFiles() const { return false; }
 	virtual bool hasOutput() const { return false; }
+	virtual bool isCallable() const { return false; }
 	virtual bool isFile() const { return false; }
-	virtual bool isFunction() const { return false; }
 	virtual bool isNumeric() const { return false; }
 	virtual bool isString() const { return false; }
 	virtual bool isOptional() const { return false; }

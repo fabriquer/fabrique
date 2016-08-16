@@ -1,6 +1,6 @@
 /** @file AST/ForeachExpr.h    Declaration of @ref fabrique::ast::ForeachExpr. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2013-2014, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -71,12 +71,13 @@ public:
 
 private:
 	ForeachExpr(UniqPtr<Identifier>& loopVar, UniqPtr<TypeReference>& explicitType,
-	            UniqPtr<Expression>& source, UniqPtr<Expression>& body,
-	            const Type&, const SourceRange&);
+	            UniqPtr<Expression>& source, UniqPtr<Scope>& scope,
+	            UniqPtr<Expression>& body, const Type&, const SourceRange&);
 
 	const UniqPtr<Identifier> loopVariable_;
 	const UniqPtr<TypeReference> explicitType_;
 	const UniqPtr<Expression> sourceValue_;
+	const UniqPtr<Scope> scope_;
 	const UniqPtr<Expression> body_;
 };
 

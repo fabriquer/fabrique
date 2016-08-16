@@ -69,6 +69,7 @@ ParserDelegate::ParserDelegate(const Grammar& g, TypeContext& t,
 
 	BindType<ast::Argument>(g.NamedArgument);
 	BindType<ast::Argument>(g.UnnamedArgument);
+	BindType<ast::Call>(g.Call);
 	BindType<ast::CompoundExpression>(g.CompoundExpression);
 	BindType<ast::Conditional>(g.Conditional);
 	BindType<ast::FieldAccess>(g.FieldReference);
@@ -76,6 +77,7 @@ ParserDelegate::ParserDelegate(const Grammar& g, TypeContext& t,
 	BindType<ast::Filename>(g.Filename);
 	BindType<ast::FileList>(g.FileList);
 	BindType<ast::ForeachExpr>(g.Foreach);
+	BindType<ast::Function>(g.Function);
 	BindType<ast::List>(g.List);
 	BindType<ast::NameReference>(g.NameReference);
 	BindType<ast::Record>(g.Record);
@@ -120,8 +122,7 @@ UniqPtr<ast::Scope>
 ParserDelegate::Parse(pegmatite::Input& input, const ast::Scope& containingScope)
 {
 	unique_ptr<ast::Scope::Parser> parseTree;
-	pegmatite::ErrorReporter err = pegErr();
-	if (not parse(input, grammar_.Values, grammar_.Ignored, err, parseTree))
+	if (not parse(input, grammar_.Values, grammar_.Ignored, pegErr(), parseTree))
 		return nullptr;
 
 	unique_ptr<ast::Scope> scope(parseTree->Build(containingScope, types_, errors_));
@@ -133,8 +134,7 @@ UniqPtr<ast::Value>
 ParserDelegate::ParseValue(pegmatite::Input& input, const ast::Scope& containingScope)
 {
 	unique_ptr<ast::Value::Parser> value;
-	pegmatite::ErrorReporter err = pegErr();
-	if (not parse(input, grammar_.Value, grammar_.Ignored, err, value))
+	if (not parse(input, grammar_.Value, grammar_.Ignored, pegErr(), value))
 		return nullptr;
 
 	return UniqPtr<ast::Value>(value->Build(containingScope, types_, errors_));
