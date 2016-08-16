@@ -54,7 +54,7 @@ void BoolLiteral::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 
 void BoolLiteral::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }
 
-bool BoolLiteral::Parser::construct(const ParserInput& input, ParserStack&, ParseError err)
+bool BoolLiteral::Parser::construct(const ParserInput& input, ParserStack&, ParseError& err)
 {
 	source_ = input;
 
@@ -105,7 +105,7 @@ dag::ValuePtr IntLiteral::evaluate(EvalContext&) const
 	return dag::ValuePtr(new dag::Integer(value(), type(), source()));
 }
 
-bool IntLiteral::Parser::construct(const ParserInput& input, ParserStack&, ParseError err)
+bool IntLiteral::Parser::construct(const ParserInput& input, ParserStack&, ParseError& err)
 {
 	source_ = input;
 
@@ -175,7 +175,7 @@ dag::ValuePtr StringLiteral::evaluate(EvalContext&) const
 	return dag::ValuePtr(new dag::String(value(), type(), source()));
 }
 
-bool StringLiteral::Parser::construct(const ParserInput& input, ParserStack&, ParseError)
+bool StringLiteral::Parser::construct(const ParserInput& input, ParserStack&, ParseError&)
 {
 	source_ = input;
 

@@ -34,6 +34,7 @@
 
 #include "AST/CompoundExpr.h"
 #include "AST/Mapping.h"
+#include "AST/Parameter.h"
 
 namespace fabrique {
 
@@ -41,7 +42,6 @@ class Type;
 
 namespace ast {
 
-class Parameter;
 class Value;
 
 
@@ -51,20 +51,32 @@ class Value;
 class ForeachExpr : public Expression
 {
 public:
-	ForeachExpr(UniqPtr<Mapping>&, UniqPtr<Expression>& body,
-	            const Type&, const SourceRange&);
-
-	const Expression& sourceSequence() const { return mapping_->source(); }
-	const Parameter& loopParameter() const { return mapping_->target(); }
-	const Expression& loopBody() const { return *body_; }
-
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const override;
 
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
+	class Parser : public Expression::Parser
+	{
+	public:
+		virtual ~Parser();
+		ForeachExpr* Build(const Scope&, TypeContext&, Err&) override;
+
+	private:
+		ChildNodeParser<Identifier> loopVariable_;
+		ChildNodeParser<TypeReference, true> explicitType_;
+		ChildNodeParser<Expression> sourceValue_;
+		ChildNodeParser<Expression> body_;
+	};
+
 private:
-	const UniqPtr<Mapping> mapping_;
+	ForeachExpr(UniqPtr<Identifier>& loopVar, UniqPtr<TypeReference>& explicitType,
+	            UniqPtr<Expression>& source, UniqPtr<Expression>& body,
+	            const Type&, const SourceRange&);
+
+	const UniqPtr<Identifier> loopVariable_;
+	const UniqPtr<TypeReference> explicitType_;
+	const UniqPtr<Expression> sourceValue_;
 	const UniqPtr<Expression> body_;
 };
 

@@ -215,7 +215,12 @@ struct Grammar
 	 * 	x + 1;
 	 * ```
 	 */
-	const Rule Foreach = Keywords.Foreach >> Identifier >> Expression >> Expression;
+	const Rule Foreach =
+		Keywords.Foreach >> Identifier
+		>> -(Symbols.Colon >> Type)
+		>> Operators.Input >> Expression
+		>> Expression
+		;
 
 	/**
 	 * The most fundamental component of an Expression (evaluated first).
@@ -247,13 +252,13 @@ struct Grammar
 	/**
 	 * A build action: transforms input files to some number of output files.
 	 */
-	const Rule Action =
+	const Rule Action = trace("Action",
 		Keywords.Action
 		>> Symbols.OpenParen
-		>> Arguments
-		>> -(Operators.Input >> Parameters)
+		>> trace("Action Arguments", Arguments)
+		>> trace("Action optional params", (Operators.Input >> Parameters))
 		>> Symbols.CloseParen
-		;
+		);
 
 	/**
 	 * A compound expression includes zero or more value definitions and ends with

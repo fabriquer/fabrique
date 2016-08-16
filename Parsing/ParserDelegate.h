@@ -112,7 +112,7 @@ class ParserDelegate : public pegmatite::ASTParserDelegate
 	{
 		pegmatite::ErrorReporter err = pegErr();
 
-		bind_parse_proc(rule, [err](const ParserInput& input, void *data)
+		bind_parse_proc(rule, [&err](const ParserInput& input, void *data)
 		{
 			auto &stack = *reinterpret_cast<ParserStack*>(data);
 

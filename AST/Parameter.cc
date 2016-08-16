@@ -41,10 +41,11 @@ using namespace fabrique;
 using namespace fabrique::ast;
 
 
-Parameter::Parameter(UniqPtr<Identifier>& name, const Type& resultTy,
-                     UniqPtr<Expression>&& defaultValue)
-	: Node(SourceRange::Over(name, defaultValue), resultTy),
-	  name_(std::move(name)), defaultValue_(std::move(defaultValue))
+Parameter::Parameter(UniqPtr<Identifier>& name, UniqPtr<TypeReference>& t,
+                     UniqPtr<Expression>& defaultArgument)
+	: Node(SourceRange::Over(name, defaultArgument), t->referencedType()),
+	  name_(std::move(name)), type_(std::move(t)),
+	  defaultArgument_(std::move(defaultArgument))
 {
 	if (name_->reservedName())
 		throw SyntaxError("reserved name", name_->source());
@@ -55,10 +56,10 @@ void Parameter::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
 	out << *name_;
 
-	if (defaultValue_)
+	if (defaultArgument_)
 		out
 			<< Bytestream::Operator << " = "
-			<< *defaultValue_
+			<< *defaultArgument_
 			;
 }
 
@@ -68,20 +69,44 @@ void Parameter::Accept(Visitor& v) const
 	if (v.Enter(*this))
 	{
 		name_->Accept(v);
-		if (defaultValue_)
-			defaultValue_->Accept(v);
+		if (defaultArgument_)
+			defaultArgument_->Accept(v);
 	}
 
 	v.Leave(*this);
 }
 
+
+Parameter::Parser::~Parser()
+{
+}
+
+
+Parameter* Parameter::Parser::Build(const Scope& s, TypeContext& t, Err& err)
+{
+	UniqPtr<Identifier> name(name_->Build(s, t, err));
+	UniqPtr<TypeReference> type(type_->Build(s, t, err));
+	if (not name or not type)
+		return nullptr;
+
+	UniqPtr<Expression> defaultArgument;
+	if (defaultArgument_) {
+		defaultArgument.reset(defaultArgument_->Build(s, t, err));
+		if (not defaultArgument)
+			return nullptr;
+	}
+
+	return new Parameter(name, type, defaultArgument);
+}
+
+
 std::shared_ptr<dag::Parameter> Parameter::evaluate(EvalContext& ctx) const
 {
-	dag::ValuePtr defaultValue;
-	if (defaultValue_)
-		defaultValue = defaultValue_->evaluate(ctx);
+	dag::ValuePtr defaultArgument;
+	if (defaultArgument_)
+		defaultArgument = defaultArgument_->evaluate(ctx);
 
 	return std::shared_ptr<dag::Parameter>(
-		new dag::Parameter(name_->name(), type(), defaultValue, source())
+		new dag::Parameter(name_->name(), type(), defaultArgument, source())
 	);
 }

@@ -85,7 +85,7 @@ void HasParameters::CheckArguments(const UniqPtrVec<Argument>& args,
 		const string& name = p->getName().name();
 		const Argument *arg = namedArguments[name];
 
-		if (not arg and not p->defaultValue())
+		if (not arg and not p->defaultArgument())
 			throw SemanticException(
 				"missing argument to '" + name + "'", src);
 

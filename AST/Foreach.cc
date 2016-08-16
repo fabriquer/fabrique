@@ -44,10 +44,17 @@ using namespace fabrique;
 using namespace fabrique::ast;
 
 
-ForeachExpr::ForeachExpr(UniqPtr<Mapping>& mapping, UniqPtr<Expression>& body,
-                         const Type& type, const SourceRange& source)
+ForeachExpr::ForeachExpr(UniqPtr<Identifier>& loopVar,
+                         UniqPtr<TypeReference>& explicitType,
+                         UniqPtr<Expression>& sourceValue,
+                         UniqPtr<Expression>& body,
+                         const Type& type,
+                         const SourceRange& source)
 	: Expression(type, source),
-	  mapping_(std::move(mapping)), body_(std::move(body))
+	  loopVariable_(std::move(loopVar)),
+	  explicitType_(std::move(explicitType)),
+	  sourceValue_(std::move(sourceValue)),
+	  body_(std::move(body))
 {
 }
 
@@ -56,9 +63,14 @@ void ForeachExpr::PrettyPrint(Bytestream& out, size_t indent) const
 {
 	out
 		<< Bytestream::Operator << "foreach "
-		<< *mapping_
-		<< "\n"
+		<< Bytestream::Reset << *loopVariable_
+		<< Bytestream::Operator << " <= "
 		;
+
+
+	sourceValue_->PrettyPrint(out, indent);
+
+	out << "\n";
 
 	body_->PrettyPrint(out, indent + 1);
 
@@ -70,7 +82,8 @@ void ForeachExpr::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
 	{
-		mapping_->Accept(v);
+		loopVariable_->Accept(v);
+		sourceValue_->Accept(v);
 		body_->Accept(v);
 	}
 
@@ -78,11 +91,44 @@ void ForeachExpr::Accept(Visitor& v) const
 }
 
 
+ForeachExpr::Parser::~Parser()
+{
+}
+
+
+ForeachExpr* ForeachExpr::Parser::Build(const Scope& s, TypeContext& t, Err& err)
+{
+	UniqPtr<Identifier> loopVariable(loopVariable_->Build(s, t, err));
+	UniqPtr<Expression> sourceValue(sourceValue_->Build(s, t, err));
+	UniqPtr<Expression> body(body_->Build(s, t, err));
+
+	if (not loopVariable or not sourceValue or not body)
+		return nullptr;
+
+	UniqPtr<TypeReference> explicitType;
+	if (explicitType_)
+	{
+		explicitType.reset(explicitType_->Build(s, t, err));
+		if (not explicitType)
+			return nullptr;
+	}
+
+	const Type& type =
+		explicitType
+		? explicitType->referencedType()
+		: body->type()[0]
+		;
+
+	return new ForeachExpr(loopVariable, explicitType, sourceValue,
+	                       body, type, source());
+}
+
+
 dag::ValuePtr ForeachExpr::evaluate(EvalContext& ctx) const
 {
 	SharedPtrVec<dag::Value> values;
 
-	auto target = sourceSequence().evaluate(ctx);
+	auto target = sourceValue_->evaluate(ctx);
 	assert(target->type().isOrdered());
 	assert(target->asList());
 
@@ -90,13 +136,13 @@ dag::ValuePtr ForeachExpr::evaluate(EvalContext& ctx) const
 	// For each input element, put its value in scope as the loop parameter
 	// and then evaluate the CompoundExpression.
 	//
-	const ast::Parameter& loopParam = loopParameter();
+	const Identifier& loopVar = *loopVariable_;
 	for (const dag::ValuePtr& element : *target->asList())
 	{
-		assert(element->type().isSubtype(loopParameter().type()));
+		assert(element->type().isSubtype(loopVar.type()));
 
 		auto scope(ctx.EnterScope("foreach body"));
-		scope.set(loopParam.getName().name(), element);
+		scope.set(loopVar.name(), element);
 
 		dag::ValuePtr result = body_->evaluate(ctx);
 		assert(result);

@@ -1,6 +1,6 @@
 /** @file AST/Parameter.h    Declaration of @ref fabrique::ast::Parameter. */
 /*
- * Copyright (c) 2013, 2015 Jonathan Anderson
+ * Copyright (c) 2013, 2015-2016 Jonathan Anderson
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,6 +29,7 @@
 #define PARAMETER_H
 
 #include "AST/Identifier.h"
+#include "AST/TypeReference.h"
 #include "Types/Typed.h"
 
 #include <memory>
@@ -50,23 +51,36 @@ class Expression;
 class Parameter : public Node
 {
 public:
-	Parameter(UniqPtr<Identifier>& id, const Type& resultTy,
-	          UniqPtr<Expression>&& e = nullptr);
-
 	const Identifier& getName() const { return *name_; }
-	const UniqPtr<Expression>& defaultValue() const
+	const UniqPtr<Expression>& defaultArgument() const
 	{
-		return defaultValue_;
+		return defaultArgument_;
 	}
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const override;
 
+	class Parser : public Node::Parser
+	{
+	public:
+		virtual ~Parser();
+		Parameter* Build(const Scope&, TypeContext&, Err&) override;
+
+	private:
+		ChildNodeParser<Identifier> name_;
+		ChildNodeParser<TypeReference> type_;
+		ChildNodeParser<Expression, true> defaultArgument_;
+	};
+
 	virtual std::shared_ptr<dag::Parameter> evaluate(EvalContext&) const;
 
 private:
+	Parameter(UniqPtr<Identifier>& id, UniqPtr<TypeReference>& t,
+	          UniqPtr<Expression>& defaultArgument);
+
 	const UniqPtr<Identifier> name_;
-	const UniqPtr<Expression> defaultValue_;
+	const UniqPtr<TypeReference> type_;
+	const UniqPtr<Expression> defaultArgument_;
 };
 
 } // namespace ast
