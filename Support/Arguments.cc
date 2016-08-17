@@ -29,6 +29,9 @@
  * SUCH DAMAGE.
  */
 
+// Include Matthias Benkmann's "Lean Mean C++ Option Parser".
+#include "optionparser.h"
+
 #include "Support/Arguments.h"
 #include "Support/Bytestream.h"
 #include "Support/String.h"

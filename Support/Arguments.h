@@ -32,9 +32,6 @@
 #ifndef ARGUMENTS_H
 #define ARGUMENTS_H
 
-// Include Matthias Benkmann's "Lean Mean C++ Option Parser".
-#include "optionparser.h"
-
 #include <string>
 #include <vector>
 
