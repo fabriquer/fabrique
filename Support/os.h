@@ -91,6 +91,9 @@ std::string CreateDirCommand(std::string directory);
 //! Find the directory containing a file, optionally returning an absolute path.
 std::string DirectoryOf(std::string filename, bool absolute = false);
 
+//! Find the directory component of a path.
+std::string DirectoryName(std::string filename);
+
 //! Get the extension of a path: 'foo/bar.c' -> 'c'.
 std::string FileExtension(std::string path);
 

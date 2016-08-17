@@ -143,11 +143,7 @@ fabrique::MissingFileReporter fabrique::DefaultFilename(std::string name)
 
 string fabrique::DirectoryOf(string filename, bool absolute)
 {
-	const char *dir = dirname(filename.c_str());
-
-	if (not dir)
-		throw PosixError("error looking for parent of " + filename);
-
+	const string dir = DirectoryName(filename);
 	const string relative(dir);
 	if (not absolute)
 		return (relative == ".") ? "" : relative;
@@ -162,6 +158,21 @@ string fabrique::DirectoryOf(string filename, bool absolute)
 		throw PosixError(filename + " is not a directory");
 
 	return absoluteDir;
+}
+
+
+string fabrique::DirectoryName(string filename)
+{
+	const size_t namelen = filename.length() + 1;
+	UniqPtr<char> cname(new char[namelen]);
+
+	strlcpy(cname.get(), filename.c_str(), namelen);
+
+	const char *dir = dirname(cname.get());
+	if (not dir)
+		throw PosixError("error looking for parent of " + filename);
+
+	return dir;
 }
 
 
