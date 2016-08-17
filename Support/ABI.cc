@@ -38,7 +38,7 @@ using std::unique_ptr;
 
 string fabrique::DemangleABIName(const string& name)
 {
-	int status;
+	int status = 0;
 
 	unique_ptr<char> demangled {
 		abi::__cxa_demangle(name.c_str(), 0, 0, &status)
