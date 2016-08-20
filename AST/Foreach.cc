@@ -81,7 +81,7 @@ void ForeachExpr::PrettyPrint(Bytestream& out, size_t indent) const
 
 	sourceValue_->PrettyPrint(out, indent);
 
-	out << "\n";
+	out << "\n" << std::string(indent + 1, '\t');
 
 	body_->PrettyPrint(out, indent + 1);
 

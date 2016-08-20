@@ -76,7 +76,7 @@ void CompoundExpression::PrettyPrint(Bytestream& out, size_t indent) const
 	std::string tabs(indent, '\t');
 	std::string intabs(indent + 1, '\t');
 
-	out << tabs << Bytestream::Operator << "{\n";
+	out << Bytestream::Operator << "{\n";
 
 	for (auto& v : scope_->values())
 	{
