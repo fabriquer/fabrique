@@ -43,61 +43,159 @@ namespace ast {
 class TypeReference : public Expression
 {
 public:
-	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
-	virtual void Accept(Visitor&) const override;
+	virtual ~TypeReference();
+
+	void PrettyPrint(Bytestream&, size_t indent) const override;
 
 	const Type& referencedType() const;
-
-	virtual dag::ValuePtr evaluate(EvalContext&) const override;
-
-	class FieldTypeParser;
 
 	class Parser : public Expression::Parser
 	{
 	public:
-		enum class Kind
-		{
-			FunctionType,
-			ParametricType,
-			RecordType,
-			SimpleType,
-		};
-
 		virtual ~Parser();
-		TypeReference* Build(const Scope&, TypeContext&, Err&) override;
-
-	private:
-		TypeReference* BuildParameterized(const Scope&, TypeContext&, Err&);
-		TypeReference* BuildRecordType(const Scope&, TypeContext&, Err&);
-		TypeReference* BuildSimpleType(const Scope&, TypeContext&, Err&);
-
-		ChildNodeParser<Identifier, true> name_;
-		ChildNodeParsers<FieldTypeParser> fieldTypes_;
-		ChildNodes<TypeReference> parameters_;
+		virtual TypeReference* Build(const Scope&, TypeContext&, Err&) override = 0;
 	};
 
+	virtual dag::ValuePtr evaluate(EvalContext&) const override;
+
+protected:
+	TypeReference(const Type& referencedType, SourceRange);
+
+private:
+	const Type& referencedType_;
+};
+
+
+//! A simple type is just a name, e.g., `int`.
+class SimpleTypeReference : public TypeReference
+{
+public:
+	virtual void Accept(Visitor&) const override;
+
+	class Parser : public TypeReference::Parser
+	{
+	public:
+		SimpleTypeReference* Build(const Scope&, TypeContext&, Err&) override;
+
+	private:
+		ChildNodeParser<Identifier> name_;
+	};
+
+private:
+	SimpleTypeReference(UniqPtr<Identifier> name, const Type& type, SourceRange);
+
+	UniqPtr<Identifier> name_;
+};
+
+
+/**
+ * A parameterized type has a base type and parameters.
+ *
+ * ```fab
+ * list[int]
+ * ```
+ */
+class ParametricTypeReference : public TypeReference
+{
+public:
+	virtual void Accept(Visitor&) const override;
+
+	class Parser : public TypeReference::Parser
+	{
+	public:
+		ParametricTypeReference* Build(const Scope&, TypeContext&, Err&) override;
+
+	private:
+		// Contained types: base + parameters
+		ChildNodes<TypeReference> types_;
+	};
+
+private:
+	ParametricTypeReference(UniqPtr<TypeReference> base, const Type&, SourceRange,
+	                        UniqPtrVec<TypeReference> parameters);
+
+	UniqPtr<TypeReference> base_;
+	UniqPtrVec<TypeReference> parameters_;
+};
+
+
+/**
+ * The type of something that can be called (an action or a function).
+ *
+ * ```fab
+ * (x:int, y:string, z:list[file])=>list[file]
+ * ```
+ */
+class FunctionTypeReference : public TypeReference
+{
+public:
+	virtual void Accept(Visitor&) const override;
+
+	class Parser : public TypeReference::Parser
+	{
+	public:
+		FunctionTypeReference* Build(const Scope&, TypeContext&, Err&) override;
+
+	private:
+		/**
+		 * The types referenced within this (params)=>result type:
+		 * some number of parameters followed by a result type at the end.
+		 */
+		ChildNodes<TypeReference> types_;
+	};
+
+private:
+	FunctionTypeReference(UniqPtrVec<TypeReference> params,
+	                      UniqPtr<TypeReference> result,
+	                      const FunctionType& type, SourceRange);
+
+	UniqPtrVec<TypeReference> parameters_;
+	UniqPtr<TypeReference> resultType_;
+};
+
+
+/**
+ * The type of a record (unordered structure).
+ *
+ * ```fab
+ * record[x:int, y:string, z:list[file]]
+ * ```
+ */
+class RecordTypeReference : public TypeReference
+{
+public:
+	virtual void Accept(Visitor&) const override;
+
+	/**
+	 * The type of a field within a record type (e.g., `foo:int`).
+	 *
+	 * This parser's Build method is never called: its fields are accessed directly
+	 * by the RecordTypeReference::Parser.
+	 */
 	class FieldTypeParser : public Expression::Parser
 	{
 	public:
-		virtual ~FieldTypeParser();
 		TypeReference* Build(const Scope&, TypeContext&, Err&) override;
 
 		ChildNodeParser<Identifier> name_;
 		ChildNodeParser<TypeReference> type_;
 	};
 
+	class Parser : public TypeReference::Parser
+	{
+	public:
+		RecordTypeReference* Build(const Scope&, TypeContext&, Err&) override;
+
+	private:
+		ChildNodeParsers<FieldTypeParser> fieldTypes_;
+	};
+
 private:
-	TypeReference(UniqPtr<Identifier> name, const Type& referencedType, SourceRange,
-	              UniqPtrVec<TypeReference> parameters = UniqPtrVec<TypeReference>());
+	RecordTypeReference(NamedPtrVec<TypeReference>, const RecordType&, SourceRange);
 
-	TypeReference(NamedPtrVec<TypeReference> fieldTypes,
-	              const RecordType& referencedType, SourceRange);
-
-	UniqPtr<Identifier> name_;
-	UniqPtrVec<TypeReference> parameters_;
 	NamedPtrVec<TypeReference> fieldTypes_;
-	const Type& referencedType_;
 };
+
 
 } // namespace ast
 } // namespace fabrique

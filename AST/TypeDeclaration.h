@@ -61,7 +61,7 @@ public:
 		TypeDeclaration* Build(const Scope&, TypeContext&, Err&) override;
 
 	private:
-		ChildNodeParsers<TypeReference::FieldTypeParser> fieldTypes_;
+		ChildNodeParsers<RecordTypeReference::FieldTypeParser> fieldTypes_;
 	};
 
 private:

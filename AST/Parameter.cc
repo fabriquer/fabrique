@@ -42,7 +42,7 @@ using namespace fabrique::ast;
 
 
 Parameter::Parameter(UniqPtr<Identifier>& name, UniqPtr<TypeReference>& t,
-                     UniqPtr<Expression>& defaultArgument)
+                     UniqPtr<Expression> defaultArgument)
 	: Node(SourceRange::Over(name, defaultArgument), t->referencedType()),
 	  name_(std::move(name)), type_(std::move(t)),
 	  defaultArgument_(std::move(defaultArgument))
@@ -54,7 +54,11 @@ Parameter::Parameter(UniqPtr<Identifier>& name, UniqPtr<TypeReference>& t,
 
 void Parameter::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 {
-	out << *name_;
+	out
+		<< *name_
+		<< Bytestream::Operator << ":"
+		<< Bytestream::Reset << *type_
+		;
 
 	if (defaultArgument_)
 		out
@@ -84,21 +88,36 @@ Parameter::Parser::~Parser()
 
 Parameter* Parameter::Parser::Build(const Scope& s, TypeContext& t, Err& err)
 {
+	assert(name_);
+	assert(type_);
+
 	UniqPtr<Identifier> name(name_->Build(s, t, err));
 	UniqPtr<TypeReference> type(type_->Build(s, t, err));
 	if (not name or not type)
 		return nullptr;
 
-	UniqPtr<Expression> defaultArgument;
-	if (defaultArgument_) {
-		defaultArgument.reset(defaultArgument_->Build(s, t, err));
-		if (not defaultArgument)
-			return nullptr;
-	}
-
-	return new Parameter(name, type, defaultArgument);
+	return new Parameter(name, type, UniqPtr<Expression>());
 }
 
+
+Parameter::WithDefault::~WithDefault()
+{
+}
+
+
+Parameter* Parameter::WithDefault::Build(const Scope& s, TypeContext& t, Err& err)
+{
+	assert(name_);
+	assert(type_);
+
+	UniqPtr<Identifier> name(name_->Build(s, t, err));
+	UniqPtr<TypeReference> type(type_->Build(s, t, err));
+	UniqPtr<Expression> defaultArgument(defaultArgument_->Build(s, t, err));
+	if (not name or not type or not defaultArgument)
+		return nullptr;
+
+	return new Parameter(name, type, std::move(defaultArgument));
+}
 
 std::shared_ptr<dag::Parameter> Parameter::evaluate(EvalContext& ctx) const
 {

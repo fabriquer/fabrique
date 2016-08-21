@@ -112,7 +112,7 @@ class ParserDelegate : public pegmatite::ASTParserDelegate
 	{
 		pegmatite::ErrorReporter err = pegErr();
 
-		bind_parse_proc(rule, [&err](const ParserInput& input, void *data)
+		bind_parse_proc(rule, [err](const ParserInput& input, void *data)
 		{
 			auto &stack = *reinterpret_cast<ParserStack*>(data);
 
@@ -131,28 +131,6 @@ class ParserDelegate : public pegmatite::ASTParserDelegate
 					;
 
 				src.PrintSource(dbg, 0, 0);
-				dbg
-					<< Bytestream::Reset << " on stack:\n"
-					;
-
-				for (auto i = stack.rbegin(); i != stack.rend(); i++)
-				{
-					auto& node = *i->second;
-					const std::string typeName = TypeName(node);
-
-					dbg
-						<< Bytestream::Operator << "   - "
-						<< Bytestream::Type << typeName
-						<< Bytestream::Reset << "\n"
-						;
-				}
-
-				dbg
-					<< Bytestream::Operator << "   ("
-					<< Bytestream::Definition << "bottom of stack"
-					<< Bytestream::Operator << ")"
-					<< Bytestream::Reset << "\n"
-					;
 			}
 
 			std::unique_ptr<pegmatite::ASTNode> parser(new ParserType());
@@ -163,13 +141,40 @@ class ParserDelegate : public pegmatite::ASTParserDelegate
 			if (dbg)
 			{
 				dbg
-					<< Bytestream::Action << "parsed: "
+					<< Bytestream::Action << "\n  parsed "
 					<< Bytestream::Type << TypeName(*parser)
-					<< Bytestream::Reset << "\n\n"
+					<< Bytestream::Reset << "\n"
 					;
 			}
 
 			stack.emplace_back(input, std::move(parser));
+
+			if (dbg)
+			{
+				dbg
+					<< Bytestream::Reset << "  resulting stack:\n"
+					;
+
+				for (auto i = stack.rbegin(); i != stack.rend(); i++)
+				{
+					auto& node = *i->second;
+					const std::string typeName = TypeName(node);
+
+					dbg
+						<< Bytestream::Operator << "    - "
+						<< Bytestream::Type << typeName
+						<< Bytestream::Reset << "\n"
+						;
+				}
+
+				dbg
+					<< Bytestream::Operator << "    ("
+					<< Bytestream::Definition << "bottom of stack"
+					<< Bytestream::Operator << ")"
+					<< Bytestream::Reset << "\n\n"
+					;
+			}
+
 			return true;
 		});
 	}

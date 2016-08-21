@@ -45,7 +45,6 @@
 
 using namespace fabrique;
 using namespace fabrique::ast;
-using std::dynamic_pointer_cast;
 
 
 Function::Parser::~Parser()
@@ -63,6 +62,14 @@ Function* Function::Parser::Build(const Scope& s, TypeContext& t, Err& err)
 			return nullptr;
 	}
 
+	PtrVec<Type> paramTypeVec;
+	Type::TypeMap paramTypeMap;
+	for (auto& p : parameters)
+	{
+		paramTypeVec.push_back(&p->type());
+		paramTypeMap.emplace(p->getName().name(), p->type());
+	}
+
 	UniqPtr<TypeReference> resultType;
 	if (explicitResultType_)
 	{
@@ -71,39 +78,35 @@ Function* Function::Parser::Build(const Scope& s, TypeContext& t, Err& err)
 			return nullptr;
 	}
 
-	UniqPtr<Expression> body(body_->Build(s, t, err));
+	UniqPtr<Scope> fnScope(Scope::Create(paramTypeMap, {}, t, &s));
+	assert(fnScope);
+
+	UniqPtr<Expression> body(body_->Build(*fnScope, t, err));
 	if (not body)
 		return nullptr;
 
-	const FunctionType* type = nullptr;
-
+	const Type *result;
 	if (resultType)
 	{
-		type = dynamic_cast<const FunctionType*>(&resultType->referencedType());
-		if (not type)
-		{
-			err.ReportError("not a function type", *resultType);
-			return nullptr;
-		}
+		result = &resultType->referencedType();
 	}
 	else
 	{
-		PtrVec<Type> paramTypes;
-		for (auto& p : parameters)
-			paramTypes.push_back(&p->type());
-
-		type = &t.functionType(paramTypes, body->type());
+		result = &body->type();
 	}
 
-	return new Function(parameters, resultType, body, *type, source());
+	const FunctionType& type = t.functionType(paramTypeVec, *result);
+
+	return new Function(parameters, resultType, fnScope, body, type, source());
 }
 
 
 Function::Function(UniqPtrVec<Parameter>& params, UniqPtr<TypeReference>& resultType,
-                   UniqPtr<Expression>& body, const FunctionType& type,
-                   const SourceRange& loc)
+                   UniqPtr<Scope>& scope, UniqPtr<Expression>& body,
+                   const FunctionType& type, const SourceRange& loc)
 	: Expression(type, loc), HasParameters(std::move(params)),
-	  explicitResultType_(std::move(resultType)), body_(std::move(body))
+	  explicitResultType_(std::move(resultType)), scope_(std::move(scope)),
+	  body_(std::move(body))
 {
 }
 
@@ -131,7 +134,7 @@ void Function::PrettyPrint(Bytestream& out, size_t indent) const
 
 	for (auto& p : params)
 	{
-		out << *p;
+		p->PrettyPrint(out, indent);
 		if (++printed < params.size())
 			out
 				<< Bytestream::Operator << ", "
@@ -141,10 +144,11 @@ void Function::PrettyPrint(Bytestream& out, size_t indent) const
 	out
 		<< Bytestream::Operator << "): "
 		<< Bytestream::Reset
-		<< dynamic_cast<const FunctionType&>(type()).returnType()
-		<< "\n";
+		<< type().returnType()
+		<< "\n" << intabs
+		;
 
-	body_->PrettyPrint(out, indent);
+	body_->PrettyPrint(out, indent + 1);
 
 	out << Bytestream::Reset;
 }

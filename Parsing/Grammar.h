@@ -222,9 +222,11 @@ struct Grammar
 
 	const Rule Parameters = -(Parameter >> *(Symbols.Comma >> Parameter));
 
-	const Rule Parameter =
-		Identifier >> Symbols.Colon >> Type
-		>> trace("default argument", -(Symbols.Assign >> Expression))
+	const Rule Parameter = ParameterWithoutDefault | ParameterWithDefault;
+
+	const Rule ParameterWithoutDefault = Identifier >> Symbols.Colon >> Type;
+	const Rule ParameterWithDefault =
+		Identifier >> Symbols.Colon >> Type >> Symbols.Assign >> Expression
 		;
 
 

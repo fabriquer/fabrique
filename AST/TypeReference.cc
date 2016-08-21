@@ -36,6 +36,7 @@
 #include "Parsing/ErrorReporter.h"
 #include "Support/ABI.h"
 #include "Support/Bytestream.h"
+#include "Types/FunctionType.h"
 #include "Types/RecordType.h"
 #include "Types/Type.h"
 #include "Types/TypeContext.h"
@@ -44,52 +45,41 @@ using namespace fabrique::ast;
 using std::string;
 
 
-TypeReference::FieldTypeParser::~FieldTypeParser()
+TypeReference::TypeReference(const Type& t, SourceRange source)
+	: Expression(t.context().find("type", source), source), referencedType_(t)
 {
 }
 
-
-TypeReference* TypeReference::FieldTypeParser::Build(const Scope&, TypeContext&, Err&)
+TypeReference::~TypeReference()
 {
-	assert(false && "unreachable");
-	return nullptr;
 }
 
+const fabrique::Type& TypeReference::referencedType() const
+{
+	if (referencedType_.isType())
+		return dynamic_cast<const UserType&>(referencedType_).userType();
 
+	return referencedType_;
+}
+
+void TypeReference::PrettyPrint(Bytestream& out, size_t indent) const
+{
+	referencedType_.PrettyPrint(out, indent);
+}
 
 TypeReference::Parser::~Parser()
 {
 }
 
 
-TypeReference*
-TypeReference::Parser::Build(const Scope& scope, TypeContext& types, Err& err)
+SimpleTypeReference*
+SimpleTypeReference::Parser::Build(const Scope& scope, TypeContext& types, Err& err)
 {
-	if (not parameters_.empty())
-	{
-		return BuildParameterized(scope, types, err);
-	}
-	else if (name_)
-	{
-		return BuildSimpleType(scope, types, err);
-	}
-	else
-	{
-		return BuildRecordType(scope, types, err);
-	}
-}
-
-
-TypeReference*
-TypeReference::Parser::BuildSimpleType(const Scope& scope, TypeContext& types, Err& err)
-{
-	assert(name_);
-	assert(fieldTypes_.empty());
-	assert(parameters_.empty());
-
 	UniqPtr<Identifier> name(name_->Build(scope, types, err));
-	SourceRange src(name->source());
+	if (not name)
+		return nullptr;
 
+	SourceRange src(name->source());
 
 	// Is this a user-defined type declaration?
 	const Type& userType = scope.Lookup(*name);
@@ -99,47 +89,138 @@ TypeReference::Parser::BuildSimpleType(const Scope& scope, TypeContext& types, E
 		: types.find(name->name(), src)
 		;
 
-	return new TypeReference(std::move(name), type, src);
+	return new SimpleTypeReference(std::move(name), type, src);
+}
+
+SimpleTypeReference::SimpleTypeReference(UniqPtr<Identifier> name, const Type& t,
+                                         SourceRange src)
+	: TypeReference(t, src), name_(std::move(name))
+{
+}
+
+void SimpleTypeReference::Accept(Visitor& v) const
+{
+	if (v.Enter(*this))
+	{
+		name_->Accept(v);
+	}
+
+	v.Leave(*this);
 }
 
 
-TypeReference*
-TypeReference::Parser::BuildParameterized(const Scope& scope, TypeContext& types, Err& err)
+ParametricTypeReference*
+ParametricTypeReference::Parser::Build(const Scope& scope, TypeContext& t, Err& err)
 {
-	assert(name_);
-	assert(fieldTypes_.empty());
-	assert(not parameters_.empty());
+	assert(not types_.empty());
 
-	UniqPtr<Identifier> name(name_->Build(scope, types, err));
-	SourceRange src(name->source());
+	UniqPtr<TypeReference> base(types_.pop_front()->Build(scope, t, err));
+	if (not base)
+		return nullptr;
+
+	assert(not types_.empty());
 
 	UniqPtrVec<TypeReference> parameters;
 	PtrVec<Type> paramTypes;
 
-	for (const UniqPtr<TypeReference::Parser>& p : parameters_)
+	for (const UniqPtr<TypeReference::Parser>& p : types_)
 	{
-		if (p->source().end > src.end)
-			src.end = p->source().end;
-
-		UniqPtr<TypeReference> r(p->Build(scope, types, err));
+		UniqPtr<TypeReference> r(p->Build(scope, t, err));
 		paramTypes.push_back(&r->referencedType());
 
 		parameters.emplace_back(std::move(r));
 	}
 
-	const Type& referencedType = types.find(name->name(), src, paramTypes);
+	const string baseName = base->referencedType().name();
+	const Type& referencedType = t.find(baseName, source(), paramTypes);
 
-	return new TypeReference(std::move(name), referencedType, src,
-	                         std::move(parameters));
+	return new ParametricTypeReference(std::move(base), referencedType, source(),
+	                                   std::move(parameters));
+}
+
+
+ParametricTypeReference::ParametricTypeReference(UniqPtr<TypeReference> base,
+                                                 const Type& t, SourceRange src,
+                                                 UniqPtrVec<TypeReference> params)
+	: TypeReference(t, src), base_(std::move(base)), parameters_(std::move(params))
+{
+}
+
+void ParametricTypeReference::Accept(Visitor& v) const
+{
+	if (v.Enter(*this))
+	{
+		base_->Accept(v);
+
+		for (auto& p : parameters_)
+		{
+			p->Accept(v);
+		}
+	}
+
+	v.Leave(*this);
+}
+
+
+FunctionTypeReference*
+FunctionTypeReference::Parser::Build(const Scope& s, TypeContext& t, Err& err)
+{
+	// The result type is the final reference in the types_ vector.
+	assert(not types_.empty());
+	UniqPtr<TypeReference> result(types_.pop_back()->Build(s, t, err));
+	if (not result)
+		return nullptr;
+
+	UniqPtrVec<TypeReference> parameters;
+	PtrVec<Type> paramTypes;
+	for (auto& typeParam : types_)
+	{
+		UniqPtr<TypeReference> param(typeParam->Build(s, t, err));
+		if (not param)
+			return nullptr;
+
+		paramTypes.push_back(&param->referencedType());
+		parameters.push_back(std::move(param));
+	}
+
+	const FunctionType& type = t.functionType(paramTypes, result->referencedType());
+
+	return new FunctionTypeReference(std::move(parameters), std::move(result),
+	                                 type, source());
+}
+
+FunctionTypeReference::FunctionTypeReference(UniqPtrVec<TypeReference> params,
+                                             UniqPtr<TypeReference> result,
+                                             const FunctionType& type, SourceRange source)
+	: TypeReference(type, source),
+	  parameters_(std::move(params)), resultType_(std::move(result))
+{
+}
+
+void FunctionTypeReference::Accept(Visitor& v) const
+{
+	if (v.Enter(*this))
+	{
+		for (auto& p : parameters_)
+			p->Accept(v);
+
+		resultType_->Accept(v);
+	}
+
+	v.Leave(*this);
 }
 
 
 TypeReference*
-TypeReference::Parser::BuildRecordType(const Scope& scope, TypeContext& types, Err& err)
+RecordTypeReference::FieldTypeParser::Build(const Scope&, TypeContext&, Err&)
 {
-	assert(not name_);
-	assert(parameters_.empty());
+	assert(false && "unreachable");
+	return nullptr;
+}
 
+RecordTypeReference*
+RecordTypeReference::Parser::Build(const Scope& scope, TypeContext& types, Err& err)
+{
 	Type::NamedTypeVec fieldTypes;
 	NamedPtrVec<TypeReference> fieldTypeRefs;
 
@@ -156,74 +237,30 @@ TypeReference::Parser::BuildRecordType(const Scope& scope, TypeContext& types, E
 	}
 
 	const RecordType& type = types.recordType(fieldTypes);
-	return new TypeReference(std::move(fieldTypeRefs), type, source());
+	return new RecordTypeReference(std::move(fieldTypeRefs), type, source());
 }
 
-
-TypeReference::TypeReference(UniqPtr<Identifier> name, const Type& referencedType,
-                             SourceRange src, UniqPtrVec<TypeReference> params)
-	: Expression(referencedType.context().find("type", src), src),
-	  name_(std::move(name)), parameters_(std::move(params)),
-	  referencedType_(referencedType)
+RecordTypeReference::RecordTypeReference(NamedPtrVec<TypeReference> fieldTypes,
+                                         const RecordType& type, SourceRange src)
+	: TypeReference(type, src), fieldTypes_(std::move(fieldTypes))
 {
 }
 
-TypeReference::TypeReference(NamedPtrVec<TypeReference> fieldTypes,
-                             const RecordType& referencedType, SourceRange src)
-	: Expression(referencedType.context().find("type", src), src),
-	  fieldTypes_(std::move(fieldTypes)), referencedType_(referencedType)
+void RecordTypeReference::Accept(Visitor& v) const
 {
-}
-
-void TypeReference::PrettyPrint(Bytestream& out, size_t indent) const
-{
-	if (name_)
+	if (v.Enter(*this))
 	{
-		out << Bytestream::Type << *name_;
-
-		if (not parameters_.empty())
-		{
-			out << Bytestream::Operator << "[";
-
-			for (size_t i = 0; i < parameters_.size(); i++)
-			{
-				out << *parameters_[i];
-
-				if ((i + 1) < parameters_.size())
-				{
-					out << Bytestream::Operator << ", ";
-				}
-			}
-
-			out
-				<< Bytestream::Operator << "]"
-				<< Bytestream::Reset
-				;
-		}
+		for (auto& f : fieldTypes_)
+			f.second->Accept(v);
 	}
-	else
-	{
-		referencedType_.PrettyPrint(out, indent);
-	}
+
+	v.Leave(*this);
 }
 
-void TypeReference::Accept(Visitor& v) const
-{
-	v.Enter(type());
-	v.Leave(type());
-}
-
-const fabrique::Type& TypeReference::referencedType() const
-{
-	if (referencedType_.isType())
-		return dynamic_cast<const UserType&>(referencedType_).userType();
-
-	return referencedType_;
-}
 
 fabrique::dag::ValuePtr TypeReference::evaluate(EvalContext&) const
 {
 	return dag::ValuePtr {
-		dag::TypeReference::Create(type().context().nilType(), type(), source())
+		dag::TypeReference::Create(referencedType(), type(), source())
 	};
 }

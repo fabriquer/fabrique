@@ -3,12 +3,12 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: foo:(list[int])=>list[int] = function(ints:list[int]): list[int]
+# CHECK: foo = function(ints:list[int]): list[int]
 # CHECK-NEXT: {
-# CHECK-NEXT:   local_var:int = 42;
-# CHECK-NEXT:   foreach x:int <= ints
+# CHECK-NEXT:   local_var = 42;
+# CHECK-NEXT:   foreach x <= ints
 # CHECK-NEXT:   {
-# CHECK-NEXT:     y:int = x + local_var;
+# CHECK-NEXT:     y = x + local_var;
 # CHECK-NEXT:     y + 1
 # CHECK-NEXT:   }
 # CHECK-NEXT: }
@@ -24,9 +24,9 @@ foo = function(ints:list[int]): list[int]
 };
 
 # CHECK: bar:(list[string])=>list[file] = function(names:list[string]): list[file]
-# CHECK-NEXT:   foreach name:string <= names
+# CHECK-NEXT:   foreach name <= names
 # CHECK-NEXT:     file(name)
-bar = function(names:list[string]): list[file]
+bar:(list[string])=>list[file] = function(names:list[string]): list[file]
 	foreach name <= names
 		file(name);
 
@@ -35,6 +35,9 @@ bar = function(names:list[string]): list[file]
 baz:(int)=>int = function(x:int): int x + 1;
 
 
+# CHECK: wibble:()=>()=>int = function(): ()=>int
+# CHECK:   function(): int
+# CHECK:     42
 wibble:()=>()=>int = function(): ()=>int
 {
 	function(): int
@@ -43,6 +46,7 @@ wibble:()=>()=>int = function(): ()=>int
 	}
 };
 
+# CHECK: wobble = wibble();
 wobble = wibble();
 
 
@@ -50,15 +54,17 @@ wobble = wibble();
 # Functions should act as closures:
 #
 
-# CHECK: makeClosure:(int)=>(int)=>int = function(x:int): (int)=>int
-makeClosure = function(x:int): (int)=>int
+# CHECK: makeClosure:(int)=>(int)=>int = function(x:int)
+# CHECK:   function(y:int)
+# CHECK:     x + y
+makeClosure:(int)=>(int)=>int = function(x:int)
 {
-	function(y:int): int
+	function(y:int)
 		x + y
 };
 
 # CHECK: theClosure:(int)=>int = makeClosure(4);
-theClosure = makeClosure(4);
+theClosure:(int)=>int = makeClosure(4);
 
 # CHECK: closed:int = theClosure(1);
-closed = theClosure(1);
+closed:int = theClosure(1);

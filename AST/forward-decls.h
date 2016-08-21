@@ -58,6 +58,7 @@ class Record;
 class Scope;
 class SomeValue;
 class TypeDeclaration;
+class TypeReference;
 class UnaryOperation;
 class Value;
 

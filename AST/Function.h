@@ -76,10 +76,12 @@ public:
 
 private:
 	Function(UniqPtrVec<Parameter>& params, UniqPtr<TypeReference>& resultType,
-	         UniqPtr<Expression>& body, const FunctionType&, const SourceRange&);
+	         UniqPtr<Scope>& scope, UniqPtr<Expression>& body,
+	         const FunctionType&, const SourceRange&);
 
 	const UniqPtrVec<Parameter> parameters_;
 	const UniqPtr<TypeReference> explicitResultType_;
+	const UniqPtr<Scope> scope_;
 	const UniqPtr<Expression> body_;
 };
 

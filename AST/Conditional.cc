@@ -29,9 +29,7 @@
  * SUCH DAMAGE.
  */
 
-#include "AST/CompoundExpr.h"
 #include "AST/Conditional.h"
-#include "AST/Value.h"
 #include "AST/Visitor.h"
 #include "DAG/Primitive.h"
 #include "Support/Bytestream.h"

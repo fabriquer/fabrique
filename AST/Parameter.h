@@ -64,19 +64,29 @@ public:
 	{
 	public:
 		virtual ~Parser();
+		virtual Parameter* Build(const Scope&, TypeContext&, Err&)
+			override;
+
+	protected:
+		ChildNodeParser<Identifier> name_;
+		ChildNodeParser<TypeReference> type_;
+	};
+
+	class WithDefault : public Parser
+	{
+	public:
+		virtual ~WithDefault();
 		Parameter* Build(const Scope&, TypeContext&, Err&) override;
 
 	private:
-		ChildNodeParser<Identifier> name_;
-		ChildNodeParser<TypeReference> type_;
-		ChildNodeParser<Expression, true> defaultArgument_;
+		ChildNodeParser<Expression> defaultArgument_;
 	};
 
 	virtual std::shared_ptr<dag::Parameter> evaluate(EvalContext&) const;
 
 private:
 	Parameter(UniqPtr<Identifier>& id, UniqPtr<TypeReference>& t,
-	          UniqPtr<Expression>& defaultArgument);
+	          UniqPtr<Expression> defaultArgument);
 
 	const UniqPtr<Identifier> name_;
 	const UniqPtr<TypeReference> type_;

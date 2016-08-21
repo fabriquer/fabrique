@@ -1,5 +1,5 @@
 #
-# Generated at Mon 22 Feb 2016 15:35:19 NST by regenerate-manifest.sh
+# Generated at Sun Aug 21 17:39:30 BST 2016 by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -77,6 +77,7 @@ all_files = files(
 ./DAG/print-inside-record.fab
 ./DAG/record-instantiation.fab
 ./DAG/record-nesting.fab
+./DAG/record-types.fab
 ./DAG/rules.fab
 ./DAG/scopes.fab
 ./DAG/simple-build.fab
@@ -125,7 +126,6 @@ all_files = files(
 ./Parsing/files.fab
 ./Parsing/foreach-not-iterable.fab
 ./Parsing/foreach.fab
-./Parsing/function-type-inference.fab
 ./Parsing/functions.fab
 ./Parsing/hello-world.fab
 ./Parsing/higher-order-functions.fab

@@ -59,9 +59,13 @@ ParserDelegate::ParserDelegate(const Grammar& g, TypeContext& t,
                                UniqPtrVec<ErrorReport>& e)
 	: grammar_(g), types_(t), errors_(e)
 {
+	BindParser<ast::SimpleTypeReference::Parser>(g.SimpleType);
+	BindParser<ast::ParametricTypeReference::Parser>(g.ParametricType);
+	BindParser<ast::FunctionTypeReference::Parser>(g.FunctionType);
+	BindParser<ast::RecordTypeReference::Parser>(g.RecordType);
+	BindParser<ast::RecordTypeReference::FieldTypeParser>(g.FieldType);
+
 	BindType<ast::Identifier>(g.Identifier);
-	BindType<ast::TypeReference>(g.Type);
-	BindParser<ast::TypeReference::FieldTypeParser>(g.FieldType);
 
 	BindType<ast::BoolLiteral>(g.BoolLiteral);
 	BindType<ast::IntLiteral>(g.IntLiteral);
@@ -80,6 +84,8 @@ ParserDelegate::ParserDelegate(const Grammar& g, TypeContext& t,
 	BindType<ast::Function>(g.Function);
 	BindType<ast::List>(g.List);
 	BindType<ast::NameReference>(g.NameReference);
+	BindType<ast::Parameter>(g.ParameterWithoutDefault);
+	BindParser<ast::Parameter::WithDefault>(g.ParameterWithDefault);
 	BindType<ast::Record>(g.Record);
 	BindType<ast::TypeDeclaration>(g.TypeDeclaration);
 

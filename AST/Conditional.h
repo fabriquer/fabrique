@@ -38,8 +38,6 @@
 namespace fabrique {
 namespace ast {
 
-class CompoundExpression;
-
 
 /**
  * A function allows users to create build abstractions.
