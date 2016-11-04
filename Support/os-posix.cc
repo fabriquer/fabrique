@@ -143,7 +143,9 @@ fabrique::MissingFileReporter fabrique::DefaultFilename(std::string name)
 
 string fabrique::DirectoryOf(string filename, bool absolute)
 {
-	const char *dir = dirname(filename.c_str());
+	vector<char> buffer(filename.length(), '\0');
+	strncpy(buffer.data(), filename.c_str(), buffer.size());
+	const char *dir = dirname(buffer.data());
 
 	if (not dir)
 		throw PosixError("error looking for parent of " + filename);
