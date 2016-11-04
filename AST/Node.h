@@ -87,7 +87,7 @@ protected:
 		using ChildNodes = ChildNodeParsers<typename T::Parser>;
 
 		using Err = parser::ErrorReporter;
-		using ParseError = pegmatite::ErrorReporter;
+		using ParseError = const pegmatite::ErrorReporter;
 
 		Parser() : source_(SourceRange::None()) {}
 		virtual ~Parser();
