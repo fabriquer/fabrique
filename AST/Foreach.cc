@@ -35,6 +35,7 @@
 #include "AST/Value.h"
 #include "AST/Visitor.h"
 #include "DAG/List.h"
+#include "Parsing/ErrorReporter.h"
 #include "Support/Bytestream.h"
 #include "Types/SequenceType.h"
 
@@ -61,12 +62,17 @@ ForeachExpr::ForeachExpr(UniqPtr<Identifier>& loopVar,
 
 void ForeachExpr::PrettyPrint(Bytestream& out, size_t indent) const
 {
-	out
-		<< Bytestream::Operator << "foreach "
-		<< Bytestream::Reset << *loopVariable_
-		<< Bytestream::Operator << " <= "
-		;
+	out << Bytestream::Operator << "foreach " << Bytestream::Reset;
 
+	loopVariable_->PrettyPrint(out, indent);
+
+	if (explicitType_)
+	{
+		out << Bytestream::Operator << ":" << Bytestream::Reset;
+		explicitType_->PrettyPrint(out, indent);
+	}
+
+	out << Bytestream::Operator << " <= ";
 
 	sourceValue_->PrettyPrint(out, indent);
 
@@ -110,10 +116,21 @@ ForeachExpr* ForeachExpr::Parser::Build(const Scope& s, TypeContext& t, Err& err
 
 	UniqPtr<Expression> sourceValue(sourceValue_->Build(s, t, err));
 
+	if (not loopVariable or not sourceValue)
+		return nullptr;
+
+	auto *sourceType = dynamic_cast<const SequenceType*>(&sourceValue->type());
+	if (not sourceType)
+	{
+		err.ReportError("cannot iterate over " + sourceValue->type().str(),
+		                *sourceValue);
+		return nullptr;
+	}
+
 	// Build a scope for the body, passing in the loop variable as a parameter.
 	const Type& paramType =
 		explicitType
-		? explicitType->type()
+		? explicitType->referencedType()
 		: dynamic_cast<const SequenceType&>(sourceValue->type()).elementType()
 		;
 
@@ -121,18 +138,15 @@ ForeachExpr* ForeachExpr::Parser::Build(const Scope& s, TypeContext& t, Err& err
 	UniqPtr<Scope> foreachScope = s.CreateChild(loopParams);
 
 	UniqPtr<Expression> body(body_->Build(*foreachScope, t, err));
-
-	if (not loopVariable or not sourceValue or not body)
+	if (not body)
 		return nullptr;
 
-	const Type& type =
-		explicitType
-		? explicitType->referencedType()
-		: body->type()[0]
-		;
+	const Type& bodyType = body->type();
+	TypeContext& types = bodyType.context();
+	const Type& resultType = types.listOf(bodyType, body->source());
 
 	return new ForeachExpr(loopVariable, explicitType, sourceValue,
-	                       body, type, source());
+	                       body, resultType, source());
 }
 
 
