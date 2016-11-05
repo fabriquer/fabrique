@@ -367,6 +367,12 @@ const Type& Scope::Lookup(const Identifier& id) const
 }
 
 
+UniqPtr<Scope> Scope::CreateChild(Parameters p) const
+{
+	return Create(UniqPtrVec<Value>(), p, nil_, this);
+}
+
+
 bool Scope::contains(const Identifier& name) const
 {
 	return static_cast<bool>(Lookup(name));

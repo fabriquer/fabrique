@@ -73,6 +73,9 @@ public:
 
 	virtual ~Scope();
 
+	//! Create a child scope that has parameters but no values.
+	UniqPtr<Scope> CreateChild(Parameters) const;
+
 	bool contains(const Identifier&) const;
 	virtual const Type& Lookup(const Identifier&) const;
 
