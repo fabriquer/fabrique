@@ -35,6 +35,7 @@
 #include "Support/Bytestream.h"
 #include "Types/RecordType.h"
 #include "Types/Type.h"
+#include "Types/TypeContext.h"
 
 #include <cassert>
 
@@ -66,15 +67,13 @@ Record* Record::Create(const ValueMap& fields, const Type& t, SourceRange src)
 }
 
 
-Record* Record::Create(const ValueMap& fields, SourceRange src)
+Record* Record::Create(const ValueMap& fields, TypeContext& types, SourceRange src)
 {
-	RecordType::NamedTypeVec types;
+	RecordType::NamedTypeVec fieldTypes;
 	for (auto& v : fields)
-		types.emplace_back(v.first, v.second->type());
+		fieldTypes.emplace_back(v.first, v.second->type());
 
-	assert(not fields.empty());
-	TypeContext& ctx = fields.begin()->second->type().context();
-	const Type& type = *RecordType::Create(types, ctx);
+	const Type& type = types.recordType(fieldTypes);
 
 	return Create(fields, type, src);
 }

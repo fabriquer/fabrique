@@ -411,10 +411,15 @@ ValuePtr DAGBuilder::String(const string& s, SourceRange src)
 }
 
 
-ValuePtr DAGBuilder::Record(const ValueMap& fields,
-                            const Type& t, SourceRange source)
+ValuePtr DAGBuilder::Record(const ValueMap& fields, SourceRange source)
 {
-	return ValuePtr(Record::Create(fields, t, source));
+	Type::NamedTypeVec fieldTypes;
+	for (auto i : fields)
+	{
+		fieldTypes.emplace_back(i.first, i.second->type());
+	}
+
+	return ValuePtr(Record::Create(fields, ctx_.types(), source));
 }
 
 

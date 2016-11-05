@@ -84,5 +84,5 @@ dag::ValuePtr SomeValue::evaluate(EvalContext& ctx) const
 		},
 	};
 
-	return ctx.builder().Record(fields, t, source());
+	return ctx.builder().Record(fields, source());
 }

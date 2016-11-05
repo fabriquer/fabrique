@@ -39,6 +39,9 @@
 
 
 namespace fabrique {
+
+class TypeContext;
+
 namespace dag {
 
 /**
@@ -51,7 +54,7 @@ public:
 	static Record* Create(const ValueMap&, const Type&, SourceRange);
 
 	//! Create a record from a non-empty vector of fields.
-	static Record* Create(const ValueMap&, SourceRange);
+	static Record* Create(const ValueMap&, TypeContext&, SourceRange);
 
 	virtual ~Record();
 

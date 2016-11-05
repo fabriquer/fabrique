@@ -150,5 +150,5 @@ dag::ValuePtr Import::evaluate(EvalContext& ctx) const
 		types.emplace_back(i.first, i.second->type());
 	}
 
-	return builder.Record(fields, type(), source());
+	return builder.Record(fields, source());
 }

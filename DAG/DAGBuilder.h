@@ -1,6 +1,6 @@
 /** @file DAG/DAGBuilder.h    Declaration of @ref fabrique::dag::DAGBuilder. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -128,7 +128,7 @@ public:
 	ValuePtr String(const std::string&, SourceRange = SourceRange::None());
 
 	//! Create a @ref dag::Record.
-	ValuePtr Record(const ValueMap&, const Type&, SourceRange);
+	ValuePtr Record(const ValueMap&, SourceRange = SourceRange::None());
 
 
 protected:
