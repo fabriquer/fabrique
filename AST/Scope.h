@@ -65,9 +65,11 @@ class Visitor;
 class Scope : public Node
 {
 public:
+	using Parameters = StringMap<const Type&>;
+
 	static const Scope& None(TypeContext&);
-	static UniqPtr<Scope> Create(UniqPtrVec<Value>, const Type& nil,
-	                             const Scope *parent = nullptr);
+	static UniqPtr<Scope> Create(UniqPtrVec<Value>, Parameters,
+	                             const Type& nil, const Scope *parent = nullptr);
 
 	virtual ~Scope();
 
@@ -91,8 +93,10 @@ public:
 	};
 
 protected:
-	Scope(SourceRange src, const Type& nil, const Scope* parent = nullptr);
+	Scope(SourceRange, Parameters, const Type& nil, const Scope* parent = nullptr);
+
 	const Scope *parent_;
+	const Parameters parameters_;
 	const Type& nil_;
 };
 

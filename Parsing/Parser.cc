@@ -92,7 +92,8 @@ UniqPtr<ast::Record> Parser::ParseDefinitions(const std::vector<string>& definit
 		values.push_back(std::move(v));
 	}
 
-	UniqPtr<Scope> scope = Scope::Create(std::move(values), types_.nilType());
+	Scope::Parameters params;  // TODO: initialize with command-line arguments
+	UniqPtr<Scope> scope = Scope::Create(std::move(values), params, types_.nilType());
 	if (not scope)
 		return UniqPtr<ast::Record>();
 

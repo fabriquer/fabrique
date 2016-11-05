@@ -36,7 +36,7 @@
 #include "AST/Visitor.h"
 #include "DAG/List.h"
 #include "Support/Bytestream.h"
-#include "Types/Type.h"
+#include "Types/SequenceType.h"
 
 #include <cassert>
 
@@ -99,11 +99,6 @@ ForeachExpr::Parser::~Parser()
 ForeachExpr* ForeachExpr::Parser::Build(const Scope& s, TypeContext& t, Err& err)
 {
 	UniqPtr<Identifier> loopVariable(loopVariable_->Build(s, t, err));
-	UniqPtr<Expression> sourceValue(sourceValue_->Build(s, t, err));
-	UniqPtr<Expression> body(body_->Build(s, t, err));
-
-	if (not loopVariable or not sourceValue or not body)
-		return nullptr;
 
 	UniqPtr<TypeReference> explicitType;
 	if (explicitType_)
@@ -112,6 +107,23 @@ ForeachExpr* ForeachExpr::Parser::Build(const Scope& s, TypeContext& t, Err& err
 		if (not explicitType)
 			return nullptr;
 	}
+
+	UniqPtr<Expression> sourceValue(sourceValue_->Build(s, t, err));
+
+	// Build a scope for the body, passing in the loop variable as a parameter.
+	const Type& paramType =
+		explicitType
+		? explicitType->type()
+		: dynamic_cast<const SequenceType&>(sourceValue->type()).elementType()
+		;
+
+	Scope::Parameters loopParams = { { loopVariable->name(), paramType } };
+	UniqPtr<Scope> foreachScope = s.CreateChild(loopParams);
+
+	UniqPtr<Expression> body(body_->Build(*foreachScope, t, err));
+
+	if (not loopVariable or not sourceValue or not body)
+		return nullptr;
 
 	const Type& type =
 		explicitType

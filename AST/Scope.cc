@@ -56,7 +56,7 @@ class ScopeBuilder : public Scope
 {
 public:
 	static ScopeBuilder* Create(const Scope *parent, Node::Parser::ChildNodes<Value>&,
-	                            TypeContext& types, parser::ErrorReporter& err);
+	                            Parameters, TypeContext&, parser::ErrorReporter& err);
 
 	virtual const Type& Lookup(const Identifier&) const override;
 	virtual PtrVec<Value> values() const override;
@@ -65,7 +65,7 @@ public:
 
 private:
 	ScopeBuilder(const Scope *parent, std::vector<string> names,
-	             UniqPtrMap<Value::Parser> parsers,
+	             UniqPtrMap<Value::Parser> parsers, Parameters,
 	             TypeContext& types, SourceRange src, parser::ErrorReporter& err);
 
 	const Value* LookupOrBuild(const string& name);
@@ -82,9 +82,9 @@ private:
 class CompleteScope : public Scope
 {
 public:
-	CompleteScope(const Scope *parent, UniqPtrVec<Value> values,
+	CompleteScope(const Scope *parent, UniqPtrVec<Value> values, Parameters params,
 	              const Type& nil, SourceRange src)
-		: Scope(src, nil, parent), values_(std::move(values))
+		: Scope(src, params, nil, parent), values_(std::move(values))
 	{
 		Bytestream& dbg = Bytestream::Debug("ast.scope.new");
 		if (dbg)
@@ -116,8 +116,8 @@ private:
 } // anonymous namespace
 
 
-UniqPtr<Scope> Scope::Create(UniqPtrVec<Value> values, const Type& nil,
-                             const Scope *parent)
+UniqPtr<Scope> Scope::Create(UniqPtrVec<Value> values, Parameters parameters,
+                             const Type& nil, const Scope *parent)
 {
 	SourceRange src =
 		values.empty()
@@ -125,13 +125,14 @@ UniqPtr<Scope> Scope::Create(UniqPtrVec<Value> values, const Type& nil,
 		: SourceRange::Over(values.front(), values.back())
 		;
 
-	return UniqPtr<Scope>(new CompleteScope(parent, std::move(values), nil, src));
+	return UniqPtr<Scope>(
+		new CompleteScope(parent, std::move(values), parameters, nil, src));
 }
 
 
 ScopeBuilder*
 ScopeBuilder::Create(const Scope *parent, Node::Parser::ChildNodes<Value>& valueNodes,
-                     TypeContext& nil, parser::ErrorReporter& err)
+                     Parameters params, TypeContext& nil, parser::ErrorReporter& err)
 {
 	std::vector<string> names;
 	UniqPtrMap<Value::Parser> parsers;
@@ -152,20 +153,26 @@ ScopeBuilder::Create(const Scope *parent, Node::Parser::ChildNodes<Value>& value
 			return nullptr;
 		}
 
+		if (params.find(name) != params.end())
+		{
+			err.ReportError("value obscures parameter", node->source());
+			return nullptr;
+		}
+
 		names.push_back(name);
 		parsers.emplace(name, std::move(node));
 	}
 
 	SourceRange src(begin, end);
-	return new ScopeBuilder(parent, names, std::move(parsers), nil, src, err);
+	return new ScopeBuilder(parent, names, std::move(parsers), params, nil, src, err);
 }
 
 
 ScopeBuilder::ScopeBuilder(const Scope *parent, std::vector<string> names,
-                           UniqPtrMap<Value::Parser> parsers, TypeContext& types,
-                           SourceRange src, parser::ErrorReporter& err)
-	: Scope(src, types.nilType(), parent), types_(types), err_(err), names_(names),
-	  parsers_(std::move(parsers))
+                           UniqPtrMap<Value::Parser> parsers, Parameters params,
+                           TypeContext& types, SourceRange src, parser::ErrorReporter& err)
+	: Scope(src, params, types.nilType(), parent), types_(types), err_(err),
+	  names_(names), parsers_(std::move(parsers))
 {
 }
 
@@ -186,6 +193,13 @@ const Type& ScopeBuilder::Lookup(const Identifier& id) const
 	{
 		assert(v->isTyped());
 		return v->type();
+	}
+
+	// Is there a parameter by this name?
+	auto i = parameters_.find(id.name());
+	if (i != parameters_.end())
+	{
+		return i->second;
 	}
 
 	// Do we have a parent scope to answer the question?
@@ -258,7 +272,7 @@ UniqPtr<Scope> ScopeBuilder::Build()
 
 	const Type& nil = types_.nilType();
 	return UniqPtr<Scope>(
-		new CompleteScope(parent_, std::move(values), nil, source()));
+		new CompleteScope(parent_, std::move(values), parameters_, nil, source()));
 }
 
 
@@ -295,7 +309,7 @@ Scope::Parser::~Parser()
 Scope* Scope::Parser::Build(const Scope& parentScope, TypeContext& types, Err& err)
 {
 	UniqPtr<ScopeBuilder> builder(
-		ScopeBuilder::Create(&parentScope, values_, types, err));
+		ScopeBuilder::Create(&parentScope, values_, Parameters(), types, err));
 
 	if (not builder)
 		return nullptr;
@@ -312,14 +326,15 @@ const Scope& Scope::None(TypeContext& t)
 {
 	const Type& nil = t.nilType();
 	const Scope& none =
-		*new CompleteScope(nullptr, UniqPtrVec<Value>(), nil, SourceRange::None());
+		*new CompleteScope(nullptr, UniqPtrVec<Value>(), Parameters(),
+		                   nil, SourceRange::None());
 
 	return none;
 }
 
 
-Scope::Scope(SourceRange src, const Type& nil, const Scope* parent)
-	: Node(src), parent_(parent), nil_(nil)
+Scope::Scope(SourceRange src, Parameters parameters, const Type& nil, const Scope* parent)
+	: Node(src), parent_(parent), parameters_(parameters), nil_(nil)
 {
 }
 
@@ -337,6 +352,12 @@ const Type& Scope::Lookup(const Identifier& id) const
 		{
 			return v->type();
 		}
+	}
+
+	auto i = parameters_.find(id.name());
+	if (i != parameters_.end())
+	{
+		return i->second;
 	}
 
 	if (parent_)
