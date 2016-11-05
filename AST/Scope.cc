@@ -58,7 +58,7 @@ public:
 	static ScopeBuilder* Create(const Scope *parent, Node::Parser::ChildNodes<Value>&,
 	                            TypeContext& types, parser::ErrorReporter& err);
 
-	virtual const Value* Lookup(const Identifier&) const override;
+	virtual const Type& Lookup(const Identifier&) const override;
 	virtual PtrVec<Value> values() const override;
 
 	UniqPtr<Scope> Build();
@@ -82,8 +82,9 @@ private:
 class CompleteScope : public Scope
 {
 public:
-	CompleteScope(const Scope *parent, UniqPtrVec<Value> values, SourceRange src)
-		: Scope(src, parent), values_(std::move(values))
+	CompleteScope(const Scope *parent, UniqPtrVec<Value> values,
+	              const Type& nil, SourceRange src)
+		: Scope(src, nil, parent), values_(std::move(values))
 	{
 		Bytestream& dbg = Bytestream::Debug("ast.scope.new");
 		if (dbg)
@@ -115,7 +116,8 @@ private:
 } // anonymous namespace
 
 
-UniqPtr<Scope> Scope::Create(UniqPtrVec<Value> values, const Scope *parent)
+UniqPtr<Scope> Scope::Create(UniqPtrVec<Value> values, const Type& nil,
+                             const Scope *parent)
 {
 	SourceRange src =
 		values.empty()
@@ -123,13 +125,13 @@ UniqPtr<Scope> Scope::Create(UniqPtrVec<Value> values, const Scope *parent)
 		: SourceRange::Over(values.front(), values.back())
 		;
 
-	return UniqPtr<Scope>(new CompleteScope(parent, std::move(values), src));
+	return UniqPtr<Scope>(new CompleteScope(parent, std::move(values), nil, src));
 }
 
 
 ScopeBuilder*
 ScopeBuilder::Create(const Scope *parent, Node::Parser::ChildNodes<Value>& valueNodes,
-                     TypeContext& types, parser::ErrorReporter& err)
+                     TypeContext& nil, parser::ErrorReporter& err)
 {
 	std::vector<string> names;
 	UniqPtrMap<Value::Parser> parsers;
@@ -155,20 +157,20 @@ ScopeBuilder::Create(const Scope *parent, Node::Parser::ChildNodes<Value>& value
 	}
 
 	SourceRange src(begin, end);
-	return new ScopeBuilder(parent, names, std::move(parsers), types, src, err);
+	return new ScopeBuilder(parent, names, std::move(parsers), nil, src, err);
 }
 
 
 ScopeBuilder::ScopeBuilder(const Scope *parent, std::vector<string> names,
-                           UniqPtrMap<Value::Parser> parsers,
-                           TypeContext& types, SourceRange src, parser::ErrorReporter& err)
-	: Scope(src, parent), types_(types), err_(err), names_(names),
+                           UniqPtrMap<Value::Parser> parsers, TypeContext& types,
+                           SourceRange src, parser::ErrorReporter& err)
+	: Scope(src, types.nilType(), parent), types_(types), err_(err), names_(names),
 	  parsers_(std::move(parsers))
 {
 }
 
 
-const Value* ScopeBuilder::Lookup(const Identifier& id) const
+const Type& ScopeBuilder::Lookup(const Identifier& id) const
 {
 	const string name = id.name();
 
@@ -183,14 +185,14 @@ const Value* ScopeBuilder::Lookup(const Identifier& id) const
 	if (const Value *v = self->LookupOrBuild(id.name()))
 	{
 		assert(v->isTyped());
-		return v;
+		return v->type();
 	}
 
 	// Do we have a parent scope to answer the question?
 	if (parent_)
 		return parent_->Lookup(id);
 
-	return nullptr;
+	return types_.nilType();
 }
 
 
@@ -254,7 +256,9 @@ UniqPtr<Scope> ScopeBuilder::Build()
 		values.push_back(std::move(values_[name]));
 	}
 
-	return UniqPtr<Scope>(new CompleteScope(parent_, std::move(values), source()));
+	const Type& nil = types_.nilType();
+	return UniqPtr<Scope>(
+		new CompleteScope(parent_, std::move(values), nil, source()));
 }
 
 
@@ -304,17 +308,18 @@ Scope* Scope::Parser::Build(const Scope& parentScope, TypeContext& types, Err& e
 }
 
 
-const Scope& Scope::None()
+const Scope& Scope::None(TypeContext& t)
 {
+	const Type& nil = t.nilType();
 	const Scope& none =
-		*new CompleteScope(nullptr, UniqPtrVec<Value>(), SourceRange::None());
+		*new CompleteScope(nullptr, UniqPtrVec<Value>(), nil, SourceRange::None());
 
 	return none;
 }
 
 
-Scope::Scope(SourceRange src, const Scope* parent)
-	: Node(src), parent_(parent)
+Scope::Scope(SourceRange src, const Type& nil, const Scope* parent)
+	: Node(src), parent_(parent), nil_(nil)
 {
 }
 
@@ -324,20 +329,20 @@ Scope::~Scope()
 }
 
 
-const Value* Scope::Lookup(const Identifier& id) const
+const Type& Scope::Lookup(const Identifier& id) const
 {
 	for (auto& v : values())
 	{
 		if (v->name() == id)
 		{
-			return v;
+			return v->type();
 		}
 	}
 
 	if (parent_)
 		return parent_->Lookup(id);
 
-	return nullptr;
+	return nil_;
 }
 
 

@@ -51,7 +51,6 @@ class NameReference : public Expression
 {
 public:
 	const Node& name() const { return *name_; }
-	const Value& target() const { return target_; }
 
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
 	virtual void Accept(Visitor&) const override;
@@ -69,10 +68,9 @@ public:
 	};
 
 private:
-	NameReference(UniqPtr<Identifier> name, const Value& target);
+	NameReference(UniqPtr<Identifier> name, const Type& type);
 
 	const std::unique_ptr<Identifier> name_;
-	const Value& target_;
 };
 
 } // namespace ast

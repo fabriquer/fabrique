@@ -93,9 +93,9 @@ TypeReference::Parser::BuildSimpleType(const Scope& scope, TypeContext& types, E
 	const Type *type;
 
 	// Is this a type reference or user-defined type declaration?
-	if (const Value* value = scope.Lookup(*name))
+	if (const Type& t = scope.Lookup(*name))
 	{
-		type = &value->value().type().lookupType();
+		type = &t.lookupType();
 	}
 	else
 	{
