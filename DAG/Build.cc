@@ -164,7 +164,7 @@ ValuePtr Build::outputValue() const
 	}
 
 	SourceRange src(*out_.front(), **(out_.end() - 1));
-	return ValuePtr { List::of(out_, src, type().context()) };
+	return ValuePtr { List::of(out_, type().context()) };
 }
 
 

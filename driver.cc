@@ -129,8 +129,8 @@ int main(int argc, char *argv[]) {
 
 		dag::ValueMap builtins {
 			{ "args", dagBuilder.Record(defines) },
-			{ "srcroot", dagBuilder.File(srcroot, dag::ValueMap(), fileType) },
-			{ "buildroot", dagBuilder.File(buildroot, dag::ValueMap(), fileType) },
+			{ "srcroot", dagBuilder.File(srcroot, fileType) },
+			{ "buildroot", dagBuilder.File(buildroot, fileType) },
 		};
 
 		//

@@ -98,17 +98,18 @@ public:
 
 	//! Construct a @ref dag::Build from a @ref dag::Rule and parameters.
 	std::shared_ptr<class Build>
-	Build(std::shared_ptr<class Rule>, ValueMap, SourceRange);
+	Build(std::shared_ptr<class Rule>, ValueMap, SourceRange = SourceRange::None());
 
 	//! Create a @ref dag::File from a path.
-	ValuePtr File(std::string fullPath, const ValueMap& attributes,
-	              const FileType&, const SourceRange& src = SourceRange::None(),
+	ValuePtr File(std::string fullPath, const FileType&,
+	              const ValueMap& attributes = ValueMap(),
+	              SourceRange src = SourceRange::None(),
 	              bool generated = false);
 
 	//! Create a @ref dag::File from a subdirectory and a filename.
 	ValuePtr File(std::string subdir, std::string filename,
-	              const ValueMap& attributes, const FileType&,
-	              const SourceRange& src = SourceRange::None(),
+	              const FileType&, const ValueMap& attributes = ValueMap(),
+	              SourceRange src = SourceRange::None(),
 	              bool generated = false);
 
 	//! Define a @ref dag::Function.
@@ -122,7 +123,7 @@ public:
 	//! Create a @ref dag::Rule in the current scope.
 	ValuePtr Rule(std::string command, const ValueMap& arguments,
 	              const SharedPtrVec<Parameter>& parameters, const Type&,
-	              const SourceRange& from = SourceRange::None());
+	              SourceRange from = SourceRange::None());
 
 	//! Create a @ref dag::String.
 	ValuePtr String(const std::string&, SourceRange = SourceRange::None());

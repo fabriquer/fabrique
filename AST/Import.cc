@@ -112,8 +112,8 @@ dag::ValuePtr Import::evaluate(EvalContext& ctx) const
 
 	dag::DAGBuilder builder = ctx.builder();
 
-	dag::ValuePtr builddir(builder.File(subdirName, empty, fileType, src, true));
-	dag::ValuePtr subdir(builder.File(subdirName, empty, fileType, src));
+	dag::ValuePtr builddir(builder.File(subdirName, fileType, empty, src, true));
+	dag::ValuePtr subdir(builder.File(subdirName, fileType, empty, src));
 
 	scope.set(ast::BuildDirectory, builddir);
 	scope.set(ast::Subdirectory, subdir);

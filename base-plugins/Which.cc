@@ -206,7 +206,7 @@ ValuePtr Which::FindFile(const ValueMap& /*scope*/, const ValueMap& args,
 	}
 
 	const string fullName = ::FindFile(filename, directories);
-	return builder.File(fullName, ValueMap(), file_, src);
+	return builder.File(fullName, file_, ValueMap(), src);
 }
 
 
@@ -217,7 +217,7 @@ ValuePtr Which::FindExecutable(const ValueMap& /*scope*/, const ValueMap& args,
 	const string filename = args.find(FileName)->second->str();
 
 	return builder.File(fabrique::FindExecutable(filename, extraPaths),
-	                    ValueMap(), file_, src);
+	                    file_, ValueMap(), src);
 }
 
 

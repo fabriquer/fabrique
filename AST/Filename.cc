@@ -70,7 +70,7 @@ dag::ValuePtr Filename::evaluate(EvalContext& ctx) const
 	assert(ctx.Lookup(ast::Subdirectory));
 	string subdir = ctx.Lookup(ast::Subdirectory)->str();
 
-	return ctx.builder().File(subdir, name_, dag::ValueMap(), type(), source());
+	return ctx.builder().File(subdir, name_, type(), dag::ValueMap(), source());
 }
 
 Filename::Filename(string name, const FileType& t, const SourceRange& src)
