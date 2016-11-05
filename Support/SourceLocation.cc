@@ -263,11 +263,13 @@ Bytestream& SourceRange::PrintSource(Bytestream& out, unsigned int indent,
 			getline(sourceFile, line);
 
 			if ((caret.line - i) <= context)
+			{
 				out
 					<< tabs
 					<< Bytestream::Line << i << "\t"
 					<< Bytestream::Reset << line << "\n"
 					;
+			}
 		}
 
 		/*
