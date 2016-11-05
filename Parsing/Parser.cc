@@ -104,8 +104,7 @@ dag::ValueMap Parser::ParseDefinitions(const std::vector<string>& definitions,
 
 
 UniqPtr<Scope> Parser::ParseFile(std::istream& input, string name,
-                                 StringMap<dag::ValuePtr> builtins,
-                                 SourceRange openedFrom)
+                                 StringMap<dag::ValuePtr> builtins)
 {
 	Bytestream& dbg = Bytestream::Debug("parser.file");
 	dbg
@@ -151,7 +150,7 @@ UniqPtr<Scope> Parser::ParseFile(std::istream& input, string name,
 		parameters.emplace(i.first, i.second->type());
 	}
 
-	return delegate_.Parse(file, types_, parameters);
+	return delegate_.Parse(file, parameters);
 }
 
 

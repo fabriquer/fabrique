@@ -118,8 +118,7 @@ pegmatite::ErrorReporter ParserDelegate::pegErr()
 
 
 UniqPtr<Scope>
-ParserDelegate::Parse(pegmatite::Input& input, TypeContext& types,
-                      Scope::Parameters parameters)
+ParserDelegate::Parse(pegmatite::Input& input, Scope::Parameters parameters)
 {
 	unique_ptr<Scope::Parser> parseTree;
 	pegmatite::ErrorReporter err = pegErr();

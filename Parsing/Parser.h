@@ -64,8 +64,7 @@ public:
 	//! Parse Fabrique input (usually a file) into a @ref Scope.
 	UniqPtr<ast::Scope> ParseFile(
 		std::istream& input, std::string name = "",
-		dag::ValueMap builtins = dag::ValueMap(),
-		SourceRange openedFrom = SourceRange::None());
+		dag::ValueMap builtins = dag::ValueMap());
 
 	//! Errors encountered during parsing.
 	const UniqPtrVec<ErrorReport>& errors() const { return errs_; }
