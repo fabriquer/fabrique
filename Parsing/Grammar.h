@@ -151,7 +151,6 @@ struct Grammar
 
 	const Rule Literal = term(BoolLiteral | IntLiteral | StringLiteral);
 
-
 	/**
 	 * There are four syntaxes for naming types:
 	 *
@@ -160,7 +159,15 @@ struct Grammar
 	 *  - parametric types: simpleName[typeArg1, typeArg2]
 	 *  - simple types: int, string, foo, etc.
 	 */
-	const Rule Type = RecordType | ParametricType | SimpleType;
+	const Rule Type = FunctionType | RecordType | ParametricType | SimpleType;
+
+	const Rule FunctionType =
+		Symbols.OpenParen
+		>> -(Type >> *(Symbols.Comma >> Type))
+		>> Symbols.CloseParen
+		>> Operators.Produces
+		>> Type
+		;
 
 	const Rule RecordType =
 		Keywords.Record >> Symbols.OpenBracket
@@ -196,12 +203,51 @@ struct Grammar
 	 * Almost everything in Fabrique is an Expression.
 	 */
 	TRACE_RULE(Expression,
-		Foreach
-		| FieldReference
+		FieldReference
 		| BinaryOperation
 	);
 
+	const Rule Arguments =
+		NamedArguments
+		| (Argument >> *(Symbols.Comma >> Argument))
+		;
+
+	const Rule Argument = NamedArgument | UnnamedArgument;
+	const Rule NamedArgument = Identifier >> Symbols.Assign >> Expression;
+	const Rule NamedArguments = NamedArgument >> *(Symbols.Comma >> NamedArgument);
+	const Rule UnnamedArgument = Expression;
+
+	const Rule Parameters =
+		Parameters >> Symbols.Comma >> Parameter
+		| Parameter
+		;
+
+	const Rule Parameter =
+		Identifier >> Symbols.Colon >> Type
+		>> -(Symbols.Assign >> Expression)
+		;
+
 	/**
+	 * Actions and functions are both callable.
+	 *
+	 * ```fab
+	 * f = function(x:int) x + 1;
+	 * a = action(...);
+	 *
+	 * result = a(version = f(42));
+	 * ```
+	 */
+	const Rule Call =
+		Term
+		>> Symbols.OpenParen
+		>> -Arguments
+		>> Symbols.CloseParen
+		;
+
+	/**
+	 * Foreach transforms a sequence of values into another sequence,
+	 * possibly of different type.
+	 *
 	 * ```fab
 	 * y = foreach x <- [ 1 2 3 ] {
 	 * 	x + 1
@@ -223,16 +269,44 @@ struct Grammar
 		;
 
 	/**
+	 * A function is a fairly conventional closure that can capture values
+	 * from its surrounding scope.
+	 *
+	 * ```fab
+	 * f = function(x:int, y:list[string]): int
+	 * {
+	 * 	x + 1
+	 * };
+	 * y = f(1);
+	 * ```
+	 *
+	 * Or, equivalently:
+	 *
+	 * ```fab
+	 * y = (function(x:int, y:list[string]) x + 1)(1);
+	 * ```
+	 */
+	const Rule Function =
+		Keywords.Function
+		>> Symbols.OpenParen >> -Parameters >> Symbols.CloseParen
+		>> -(Symbols.Colon >> Type)
+		>> Expression
+		;
+
+	/**
 	 * The most fundamental component of an Expression (evaluated first).
 	 */
 	TRACE_RULE(Term,
 		Literal
 		| ParentheticalExpression
 		| Action
+		| Call
 		| CompoundExpression
 		| Conditional
 		| File
 		| FileList
+		| Foreach
+		| Function
 		| List
 		| Record
 		| TypeDeclaration
@@ -376,22 +450,6 @@ struct Grammar
 	const Rule XOrOperation = LogicExpr >> Operators.XOr >> LogicExpr;
 
 	const Rule BinaryOperation = LogicExpr;
-
-	TRACE_RULE(Arguments, NamedArguments | (Argument >> *(Symbols.Comma >> Argument)));
-	const Rule Argument = NamedArgument | UnnamedArgument;
-	const Rule NamedArgument = Identifier >> Symbols.Assign >> Expression;
-	const Rule NamedArguments = NamedArgument >> *(Symbols.Comma >> NamedArgument);
-	const Rule UnnamedArgument = Expression;
-
-	TRACE_RULE(Parameters,
-		Parameters >> Symbols.Comma >> Parameter
-		| Parameter
-	);
-
-	TRACE_RULE(Parameter,
-		Identifier >> Symbols.Colon >> Type
-		>> -(Symbols.Assign >> Expression)
-	);
 
 	TRACE_RULE(Value,
 		Identifier >> Operators.Assign >> Expression
