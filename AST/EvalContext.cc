@@ -333,14 +333,16 @@ ValuePtr EvalContext::Lookup(const string& name)
 		dbg << Bytestream::Reset << "\n";
 	}
 
+	/*
 	// If we are looking for 'builddir' or 'subdir' and haven't found it
 	// defined anywhere, provide the top-level build/source subdirectory ('').
 	if (name == ast::BuildDirectory)
-		return builder_.File("", ValueMap(), ctx_.fileType(),
+		return builder_.File("", ctx_.fileType(), ValueMap(),
 		                     SourceRange::None(), true);
 
 	if (name == ast::Subdirectory)
 		return builder_.File("", ValueMap(), ctx_.fileType());
+	*/
 
 	return nullptr;
 }

@@ -3,8 +3,8 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: foo:string = srcroot;
+# CHECK: foo = srcroot;
 foo = srcroot;
 
-# CHECK: bar:string = buildroot;
+# CHECK: bar = buildroot;
 bar = buildroot;

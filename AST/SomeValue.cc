@@ -67,10 +67,8 @@ void SomeValue::Accept(Visitor& v) const
 
 dag::ValuePtr SomeValue::evaluate(EvalContext& ctx) const
 {
-	const Type& t = type();
-
 	dag::ValuePtr exists(
-		new dag::Boolean(true, t.context().booleanType(), source())
+		new dag::Boolean(true, type().context().booleanType(), source())
 	);
 
 	dag::ValueMap fields {

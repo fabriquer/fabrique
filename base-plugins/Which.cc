@@ -180,8 +180,7 @@ shared_ptr<Record> Which::Create(DAGBuilder& builder, const ValueMap& args) cons
 		},
 	};
 
-	auto result = std::dynamic_pointer_cast<Record>(
-		builder.Record(fields, type(), SourceRange::None()));
+	auto result = std::dynamic_pointer_cast<Record>(builder.Record(fields));
 
 	assert(result);
 	return result;

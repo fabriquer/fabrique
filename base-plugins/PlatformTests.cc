@@ -139,9 +139,7 @@ shared_ptr<Record> PlatformTests::Create(DAGBuilder& builder, const ValueMap& ar
 		fields[platform] = builder.Bool(isThisPlatform, src);
 	}
 
-	auto result = std::dynamic_pointer_cast<Record>(
-		builder.Record(fields, type(), SourceRange::None()));
-
+	auto result = std::dynamic_pointer_cast<Record>(builder.Record(fields));
 	assert(result);
 	return result;
 }
