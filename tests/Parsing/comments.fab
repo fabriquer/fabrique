@@ -3,5 +3,5 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: foo:string = 'hello';
+# CHECK: foo = 'hello';
 foo = 'hello';# [ 'world' ];
