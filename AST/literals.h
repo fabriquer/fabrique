@@ -33,6 +33,8 @@
 #define LITERALS_H
 
 #include "AST/Expression.h"
+#include "Types/BooleanType.h"
+#include "Types/IntegerType.h"
 
 #include <string>
 
@@ -65,6 +67,7 @@ class BoolLiteral : public Literal<bool>
 {
 public:
 	std::string str() const override;
+	const BooleanType& type() const override;
 
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
@@ -80,10 +83,7 @@ public:
 	};
 
 private:
-	BoolLiteral(bool value, const Type& ty, const SourceRange& loc)
-		: Literal(value, ty, loc)
-	{
-	}
+	BoolLiteral(bool value, const BooleanType&, SourceRange);
 };
 
 
@@ -92,6 +92,7 @@ class IntLiteral : public Literal<int>
 {
 public:
 	std::string str() const override;
+	const IntegerType& type() const override;
 
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 	virtual void PrettyPrint(Bytestream&, size_t indent = 0) const override;
@@ -107,10 +108,7 @@ public:
 	};
 
 private:
-	IntLiteral(int value, const Type& ty, const SourceRange& loc)
-		: Literal(value, ty, loc)
-	{
-	}
+	IntLiteral(int value, const IntegerType& ty, SourceRange loc);
 };
 
 

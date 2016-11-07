@@ -1,6 +1,6 @@
 /** @file TypeContext.h    Declaration of fabrique::TypeContext. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -34,6 +34,8 @@
 
 #include "ADT/PtrVec.h"
 #include "Types/Type.h"
+#include "Types/BooleanType.h"
+#include "Types/IntegerType.h"
 
 #include <map>
 #include <memory>
@@ -41,9 +43,13 @@
 
 namespace fabrique {
 
+class BooleanType;
 class FileType;
 class FunctionType;
+class IntegerType;
+class MaybeType;
 class RecordType;
+class SequenceType;
 class SourceRange;
 class Type;
 class UserType;
@@ -65,16 +71,16 @@ public:
 	const Type& nilType();
 
 	//! The type of a boolean expression.
-	const Type& booleanType();
+	const BooleanType& booleanType();
 
 	//! The type of an integer number.
-	const Type& integerType();
+	const IntegerType& integerType();
 
 	//! The type of a list.
-	const Type& listOf(const Type&, const SourceRange&);
+	const SequenceType& listOf(const Type&, const SourceRange&);
 
 	//! An optional ("maybe") type.
-	const Type& maybe(const Type&, const SourceRange&);
+	const MaybeType& maybe(const Type&, const SourceRange&);
 
 	//! A file in a build.
 	const FileType& fileType();
@@ -82,7 +88,7 @@ public:
 	const FileType& outputFileType();
 
 	//! A list of files (a pretty fundamental type!).
-	const Type& fileListType();
+	const SequenceType& fileListType();
 
 	//! A function type for a simple (one in, one out) function.
 	const FunctionType& functionType(const Type& in, const Type& out);

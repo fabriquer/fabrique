@@ -43,6 +43,7 @@
 
 namespace fabrique {
 
+class SequenceType;
 class SourceRange;
 class TypeContext;
 
@@ -56,7 +57,7 @@ public:
 	typedef std::pair<std::string, const Type&> NamedType;
 	typedef std::vector<NamedType> NamedTypeVec;
 
-	static const Type& ListOf(const Type&, const SourceRange&);
+	static const SequenceType& ListOf(const Type&, const SourceRange&);
 
 	static std::string UntypedPart(std::string typedName);
 

@@ -42,6 +42,7 @@
 
 #include "Types/FileType.h"
 #include "Types/FunctionType.h"
+#include "Types/SequenceType.h"
 #include "Types/TypeError.h"
 
 #include <cassert>
@@ -90,9 +91,10 @@ Build* Build::Create(shared_ptr<Rule>& rule, SharedPtrMap<Value>& arguments,
 	}
 
 	const File& out = *outputs.front();
+	const Type& firstOutputType = outputs.front()->type();
 	const Type& type =
 		(outputs.size() == 1)
-			? outputs.front()->type()
+			? firstOutputType
 			: Type::ListOf(out.type(), out.source());
 
 	return new Build(rule, inputs, outputs, arguments, type, src);

@@ -33,6 +33,7 @@
 #include "AST/Visitor.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
+#include "Types/BooleanType.h"
 #include "Types/SequenceType.h"
 #include "Types/TypeContext.h"
 

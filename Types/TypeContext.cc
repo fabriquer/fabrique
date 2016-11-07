@@ -110,30 +110,34 @@ const Type& TypeContext::nilType()
 	return nil;
 }
 
-const Type& TypeContext::booleanType()
+const BooleanType& TypeContext::booleanType()
 {
-	static const Type& t = Register(
-		new Type("bool", PtrVec<Type>(), *this));
+	static const BooleanType& t =
+		dynamic_cast<const BooleanType&>(
+			Register(new Type("bool", PtrVec<Type>(), *this)));
 
 	return t;
 }
 
-const Type& TypeContext::integerType()
+const IntegerType& TypeContext::integerType()
 {
-	static const Type& t = Register(new IntegerType(*this));
+	static const IntegerType& t =
+		dynamic_cast<const IntegerType&>(Register(new IntegerType(*this)));
+
 	return t;
 }
 
-const Type& TypeContext::listOf(const Type& elementTy, const SourceRange& src)
+const SequenceType& TypeContext::listOf(const Type& elementTy, const SourceRange& src)
 {
 	PtrVec<Type> params(1, &elementTy);
-	return find(rawSequenceType_->name(), src, params);
+	return dynamic_cast<const SequenceType&>(
+		find(rawSequenceType_->name(), src, params));
 }
 
-const Type& TypeContext::maybe(const Type& elementTy, const SourceRange& src)
+const MaybeType& TypeContext::maybe(const Type& elementTy, const SourceRange& src)
 {
 	PtrVec<Type> params(1, &elementTy);
-	return find(rawMaybeType_->name(), src, params);
+	return dynamic_cast<const MaybeType&>(find(rawMaybeType_->name(), src, params));
 }
 
 const FileType& TypeContext::fileType()
@@ -161,9 +165,9 @@ const FileType& TypeContext::outputFileType()
 	return ty;
 }
 
-const Type& TypeContext::fileListType()
+const SequenceType& TypeContext::fileListType()
 {
-	static const Type& f = listOf(fileType(), SourceRange::None());
+	static const SequenceType& f = listOf(fileType(), SourceRange::None());
 	return f;
 }
 
