@@ -113,8 +113,10 @@ ParametricTypeReference*
 ParametricTypeReference::Parser::Build(const Scope& scope, TypeContext& t, Err& err)
 {
 	assert(not types_.empty());
+	UniqPtr<TypeReference::Parser> baseParser = std::move(types_.front());
+	types_.pop_front();
 
-	UniqPtr<TypeReference> base(types_.pop_front()->Build(scope, t, err));
+	UniqPtr<TypeReference> base(baseParser->Build(scope, t, err));
 	if (not base)
 		return nullptr;
 
@@ -167,7 +169,10 @@ FunctionTypeReference::Parser::Build(const Scope& s, TypeContext& t, Err& err)
 {
 	// The result type is the final reference in the types_ vector.
 	assert(not types_.empty());
-	UniqPtr<TypeReference> result(types_.pop_back()->Build(s, t, err));
+	UniqPtr<TypeReference::Parser> resultParser = std::move(types_.back());
+	types_.pop_back();
+
+	UniqPtr<TypeReference> result(resultParser->Build(s, t, err));
 	if (not result)
 		return nullptr;
 
