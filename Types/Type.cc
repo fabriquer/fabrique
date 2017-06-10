@@ -41,7 +41,7 @@ using namespace fabrique;
 using std::string;
 
 
-const Type& Type::ListOf(const Type& t, const SourceRange& src)
+const SequenceType& Type::ListOf(const Type& t, const SourceRange& src)
 {
 	return t.parent_.listOf(t, src);
 }

@@ -301,7 +301,7 @@ ValuePtr DAGBuilder::AddRegeneration(const Arguments& commandLineArgs,
 	for (const string& name : inputFiles)
 	{
 		shared_ptr<dag::File> file = dynamic_pointer_cast<class File>(
-			File(name, ValueMap(), inputFileType, Nowhere));
+			File(name, inputFileType));
 
 		assert(file);
 
@@ -313,15 +313,17 @@ ValuePtr DAGBuilder::AddRegeneration(const Arguments& commandLineArgs,
 
 	SharedPtrVec<Value> outputs;
 	for (const string& output : outputFiles)
-		outputs.push_back(File(output, ValueMap(), outputType));
+	{
+		outputs.push_back(File(output, outputType));
+	}
 
 	ValueMap args;
 	args["rootInput"] = rootInput;
-	args["otherInputs"].reset(List::of(otherInputs, Nowhere, t));
+	args["otherInputs"].reset(List::of(otherInputs, t));
 
-	args["output"].reset(List::of(outputs, Nowhere, t));
+	args["output"].reset(List::of(outputs, t));
 
-	return Build(rule, args, Nowhere);
+	return Build(rule, args);
 }
 
 ValuePtr DAGBuilder::Bool(bool b, SourceRange src)
@@ -348,15 +350,15 @@ DAGBuilder::Build(shared_ptr<class Rule> rule, ValueMap arguments,
 }
 
 
-ValuePtr DAGBuilder::File(string fullPath, const ValueMap& attributes,
-                         const FileType& t, const SourceRange& src, bool generated)
+ValuePtr DAGBuilder::File(string fullPath, const FileType& t, const ValueMap& attributes,
+                          SourceRange src, bool generated)
 {
 	files_.emplace_back(File::Create(fullPath, attributes, t, src, generated));
 	return files_.back();
 }
 
-ValuePtr DAGBuilder::File(string subdir, string name, const ValueMap& attributes,
-                          const FileType& t, const SourceRange& src, bool generated)
+ValuePtr DAGBuilder::File(string subdir, string name, const FileType& t,
+                          const ValueMap& attributes, SourceRange src, bool generated)
 {
 	files_.emplace_back(File::Create(subdir, name, attributes, t, src, generated));
 	return files_.back();
@@ -398,7 +400,7 @@ ValuePtr DAGBuilder::Rule(string name, string command, const ValueMap& arguments
 
 ValuePtr DAGBuilder::Rule(string command, const ValueMap& arguments,
                          const SharedPtrVec<Parameter>& parameters,
-                         const Type& type, const SourceRange& source)
+                         const Type& type, SourceRange source)
 {
 	return Rule(ctx_.currentValueName(), command, arguments, parameters,
 	            type, source);
@@ -411,10 +413,15 @@ ValuePtr DAGBuilder::String(const string& s, SourceRange src)
 }
 
 
-ValuePtr DAGBuilder::Record(const ValueMap& fields,
-                            const Type& t, SourceRange source)
+ValuePtr DAGBuilder::Record(const ValueMap& fields, SourceRange source)
 {
-	return ValuePtr(Record::Create(fields, t, source));
+	Type::NamedTypeVec fieldTypes;
+	for (auto i : fields)
+	{
+		fieldTypes.emplace_back(i.first, i.second->type());
+	}
+
+	return ValuePtr(Record::Create(fields, ctx_.types(), source));
 }
 
 

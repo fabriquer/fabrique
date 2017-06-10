@@ -103,7 +103,7 @@ static ValuePtr IntegerSysctl(const ValueMap& /*scope*/, const ValueMap& args,
 UniqPtr<Plugin> SysctlPlugin::Factory::Instantiate(TypeContext& ctx) const
 {
 	const Type& stringType = ctx.stringType();
-	const Type& intType = ctx.integerType();
+	const IntegerType& intType = ctx.integerType();
 
 	const FunctionType& string = ctx.functionType(stringType, stringType);
 	const FunctionType& integer = ctx.functionType(stringType, intType);
@@ -141,7 +141,7 @@ shared_ptr<Record> SysctlPlugin::Create(DAGBuilder& builder, const ValueMap& arg
 	};
 
 	auto result = std::dynamic_pointer_cast<Record>(
-		builder.Record(fields, type(), SourceRange::None()));
+		builder.Record(fields, SourceRange::None()));
 
 	assert(result);
 	return result;

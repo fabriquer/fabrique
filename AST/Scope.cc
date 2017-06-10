@@ -117,12 +117,9 @@ private:
 } // anonymous namespace
 
 
-UniqPtr<Scope> Scope::Create(Type::TypeMap parameters,
-                             UniqPtrVec<Value> values, TypeContext& types,
-                             const Scope *parent)
+UniqPtr<Scope> Scope::Create(Type::TypeMap parameters, const Type& nil,
+                             const Scope *parent, UniqPtrVec<Value> values)
 {
-	const Type& nil = types.nilType();
-
 	SourceRange src =
 		values.empty()
 		? SourceRange::None()
@@ -155,6 +152,12 @@ ScopeBuilder::Create(const Scope *parent, Type::TypeMap parameters,
 		if (parsers.find(name) != parsers.end())
 		{
 			err.ReportError("redefining value", node->source());
+			return nullptr;
+		}
+
+		if (parameters.find(name) != parameters.end())
+		{
+			err.ReportError("value obscures parameter", node->source());
 			return nullptr;
 		}
 
@@ -334,7 +337,7 @@ const Scope& Scope::None(TypeContext& types)
 
 Scope::Scope(SourceRange src, Type::TypeMap parameters, const Type& nil,
              const Scope* parent)
-	: Node(src), parameters_(parameters), nil_(nil), parent_(parent)
+	: Node(src), nil_(nil), parameters_(parameters), parent_(parent)
 {
 }
 
@@ -364,6 +367,12 @@ const Type& Scope::Lookup(const Identifier& id) const
 		return parent_->Lookup(id);
 
 	return nil_;
+}
+
+
+UniqPtr<Scope> Scope::CreateChild(Type::TypeMap parameters) const
+{
+	return Create(parameters, nil_, this);
 }
 
 

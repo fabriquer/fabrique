@@ -37,28 +37,20 @@ using namespace std;
 
 vector<string> fabrique::Split(const std::string& s, const std::string delim)
 {
-	long long lastDelimiter = -1;
+	size_t start = 0;
 	vector<string> parts;
 
 	while (true)
 	{
-		assert(lastDelimiter >= -1);
-		size_t last = static_cast<size_t>(lastDelimiter) + delim.length();
-
-		size_t next = s.find(delim, last);
+		size_t next = s.find(delim, start);
 		if (next == string::npos)
 			break;
 
-		const size_t len = next - last;
-		parts.push_back(s.substr(last, len));
-
-		assert(next >= 0);
-		lastDelimiter = static_cast<long long>(next);
+		parts.push_back(s.substr(start, next - start));
+		start = next + delim.length();
 	}
 
-	assert(lastDelimiter >= -1);
-	parts.push_back(s.substr(static_cast<size_t>(
-		static_cast<unsigned long long>(lastDelimiter) + delim.length())));
+	parts.push_back(s.substr(start));
 
 	return parts;
 }

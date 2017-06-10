@@ -33,8 +33,8 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include "AST/ast.h"
 #include "ADT/UniqPtr.h"
+#include "AST/forward-decls.h"
 #include "Parsing/ParserDelegate.h"
 #include "Support/ErrorReport.h"
 
@@ -58,13 +58,13 @@ public:
 	Parser(TypeContext&, plugin::Registry&, plugin::Loader&, std::string srcroot);
 
 	//! Parse Fabrique fragments defined at, e.g., the command line.
-	UniqPtr<ast::Record> ParseDefinitions(const std::vector<std::string>& defs);
+	dag::ValueMap ParseDefinitions(const std::vector<std::string>& defs,
+	                               ast::EvalContext&);
 
 	//! Parse Fabrique input (usually a file) into a @ref Scope.
 	UniqPtr<ast::Scope> ParseFile(
-		std::istream& input, const ast::Record& args, std::string name = "",
-		StringMap<std::string> builtins = StringMap<std::string>(),
-		SourceRange openedFrom = SourceRange::None());
+		std::istream& input, std::string name = "",
+		dag::ValueMap builtins = dag::ValueMap());
 
 	//! Errors encountered during parsing.
 	const UniqPtrVec<ErrorReport>& errors() const { return errs_; }

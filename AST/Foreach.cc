@@ -37,7 +37,7 @@
 #include "DAG/List.h"
 #include "Parsing/ErrorReporter.h"
 #include "Support/Bytestream.h"
-#include "Types/Type.h"
+#include "Types/SequenceType.h"
 
 #include <cassert>
 
@@ -64,17 +64,14 @@ ForeachExpr::ForeachExpr(UniqPtr<Identifier>& loopVar,
 
 void ForeachExpr::PrettyPrint(Bytestream& out, size_t indent) const
 {
-	out
-		<< Bytestream::Operator << "foreach "
-		<< Bytestream::Reset << *loopVariable_
-		;
+	out << Bytestream::Operator << "foreach " << Bytestream::Reset;
+
+	loopVariable_->PrettyPrint(out, indent);
 
 	if (explicitType_)
 	{
-		out
-			<< Bytestream::Operator << ":"
-			<< Bytestream::Reset << *explicitType_
-			;
+		out << Bytestream::Operator << ":" << Bytestream::Reset;
+		explicitType_->PrettyPrint(out, indent);
 	}
 
 	out << Bytestream::Operator << " <= ";
@@ -140,8 +137,7 @@ ForeachExpr* ForeachExpr::Parser::Build(const Scope& s, TypeContext& t, Err& err
 		;
 
 	Type::TypeMap params = { { loopVariable->name(), loopVarType } };
-	UniqPtr<Scope> containingScope(Scope::Create(params, {}, t, &s));
-
+	UniqPtr<Scope> containingScope(Scope::Create(params, t.nilType(), &s));
 	UniqPtr<Expression> body(body_->Build(*containingScope, t, err));
 
 	if (not body)

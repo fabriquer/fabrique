@@ -1,6 +1,6 @@
 /** @file Parsing/Grammar.h    Declaration of the AST grammar. */
 /*
- * Copyright (c) 2014-2016 Jonathan Anderson
+ * Copyright (c) 2014-2017 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -90,7 +90,6 @@ struct Grammar
 
 	struct
 	{
-		const ExprPtr Assign = term('=');
 		const ExprPtr Colon = term(':');
 		const ExprPtr Comma = term(',');
 		const ExprPtr Semicolon = term(';');
@@ -113,6 +112,8 @@ struct Grammar
 		const ExprPtr Dot = term('.');
 		const ExprPtr Query = term('?');
 
+		const ExprPtr Assign = trace("Operators.Assign", term('='));
+
 		const ExprPtr Minus = term("-");
 		const ExprPtr Plus = term("+");
 		const ExprPtr Prefix = term("::");
@@ -127,8 +128,6 @@ struct Grammar
 		const ExprPtr Not = term("not");
 		const ExprPtr Or = term("or");
 		const ExprPtr XOr = term("xor");
-
-		const ExprPtr Assign = term("=");
 	} Operators;
 
 	const Rule Alpha = ('A'_E - 'Z') | ('a'_E - 'z');
@@ -151,7 +150,6 @@ struct Grammar
 
 	const Rule Literal = term(BoolLiteral | IntLiteral | StringLiteral);
 
-
 	/**
 	 * There are four syntaxes for naming types:
 	 *
@@ -164,7 +162,8 @@ struct Grammar
 
 	const Rule FunctionType =
 		Symbols.OpenParen >> TypeList >> Symbols.CloseParen
-		>> Symbols.Produces >> Type
+		>> Symbols.Produces
+		>> Type
 		;
 
 	const Rule RecordType =
@@ -190,11 +189,32 @@ struct Grammar
 	 * Almost everything in Fabrique is an Expression.
 	 */
 	TRACE_RULE(Expression,
-		Foreach
-		| FieldReference
-		| BinaryOperation
+		BinaryOperation
+		| UnaryOperation
+		| Term
 	);
 
+
+	/**
+	 * Positional arguments are matched to parameters by order.
+	 *
+	 * ```fab
+	 * f(1, 2.0)
+	 * ```
+	 */
+	const Rule PositionalArgument = trace("PositionalArgument", Expression);
+	const Rule PositionalArguments =
+		trace("PositionalArguments", PositionalArgument >> *(trace("another pos arg", Symbols.Comma >> PositionalArgument)));
+
+	/**
+	 * Keyword arguments are matched to parameters by explicit name.
+	 *
+	 * ```fab
+	 * f(a = 1, b = 2.0)
+	 * ```
+	 */
+	const Rule KeywordArgument = trace("KeywordArgument", trace("Arg name", term(Identifier)) >> term(trace("Assign", Operators.Assign)) >> trace("Arg value", Expression));
+	const Rule KeywordArguments = trace("KeywordArguments", KeywordArgument >> *(Symbols.Comma >> KeywordArgument));
 
 	/**
 	 * Named arguments must always come after unnamed (positional) arguments.
@@ -206,31 +226,41 @@ struct Grammar
 	 * ```
 	 */
 	const Rule Arguments =
-		UnnamedArguments >> -(Symbols.Comma >> NamedArguments)
-		| NamedArguments
+		// Positional arguments followed by keyword arguments
+		*(PositionalArgument >> Symbols.Comma) >> KeywordArguments
+
+		// Positional arguments only (or none!)
+		| -(*(PositionalArgument >> Symbols.Comma) >> PositionalArgument)
 		;
-
-	const Rule Argument = NamedArgument | UnnamedArgument;
-
-	const Rule NamedArgument = Identifier >> Symbols.Assign >> Expression;
-	const Rule NamedArguments =
-		(NamedArgument >> *(Symbols.Comma >> NamedArgument));
-
-	const Rule UnnamedArgument = Expression;
-	const Rule UnnamedArguments =
-		UnnamedArgument >> *(Symbols.Comma >> UnnamedArgument);
 
 	const Rule Parameters = -(Parameter >> *(Symbols.Comma >> Parameter));
 
-	const Rule Parameter = ParameterWithoutDefault | ParameterWithDefault;
-
-	const Rule ParameterWithoutDefault = Identifier >> Symbols.Colon >> Type;
-	const Rule ParameterWithDefault =
-		Identifier >> Symbols.Colon >> Type >> Symbols.Assign >> Expression
+	const Rule Parameter =
+		Identifier >> Symbols.Colon >> Type
+		>> -(Operators.Assign >> Expression)
 		;
 
+	/**
+	 * Actions and functions are both callable.
+	 *
+	 * ```fab
+	 * f = function(x:int) x + 1;
+	 * a = action(...);
+	 *
+	 * result = a(version = f(42));
+	 * ```
+	 */
+	const Rule Call =
+		Term
+		>> Symbols.OpenParen
+		>> Arguments
+		>> Symbols.CloseParen
+		;
 
 	/**
+	 * Foreach transforms a sequence of values into another sequence,
+	 * possibly of different type.
+	 *
 	 * ```fab
 	 * y = foreach x <- [ 1 2 3 ] {
 	 * 	x + 1
@@ -254,25 +284,29 @@ struct Grammar
 	/**
 	 * The most fundamental component of an Expression (evaluated first).
 	 */
-	TRACE_RULE(Term,
+	const Rule Term =
 		Literal
 		| ParentheticalExpression
 		| Action
-		| Call
 		| CompoundExpression
 		| Conditional
+		| FieldReference
 		| File
 		| FileList
+		| Foreach
 		| Function
 		| List
 		| Record
 		| TypeDeclaration
 		| UnaryOperation
 
+		// Match calls after things that look vaguely call-like such as files:
+		| Call
+
 		// Put identifier references after keywords so that
 		// we don't match keywords as identifiers:
 		| NameReference
-	);
+		;
 
 	/**
 	 * An expression in parenthesis is evaluated before other operations.
@@ -281,25 +315,26 @@ struct Grammar
 		Symbols.OpenParen >> Expression >> Symbols.CloseParen;
 
 	/**
-	 * A build action: transforms input files to some number of output files.
-	 */
-	const Rule Action = trace("Action",
-		Keywords.Action
-		>> Symbols.OpenParen
-		>> trace("Action Arguments", Arguments)
-		>> trace("Action optional params", -(Symbols.Input >> Parameters))
-		>> trace("end of Action", Symbols.CloseParen)
-		);
-
-	/**
-	 * A call to a callable value (action or function).
+	 * A build action: transforms input file(s) to some number of output files.
+	 *
+	 * An action contains:
+	 *  * a command to run,
+	 *  * [optional] arguments to the action itself (e.g., `description`) and
+	 *  * parameters that invocations of the action need to provide.
 	 *
 	 * ```fab
-	 * y = f(x);
-	 * z = f(r = x, theta = 0);
+	 * action('${cc} ${flags} -c ${src} -o ${obj}', description = 'Compiling ${src}'
+	 *         <= src: file[in], obj: file[out], flags: list[string] = [])
 	 * ```
 	 */
-	const Rule Call = Term >> Symbols.OpenParen >> -Arguments >> Symbols.CloseParen;
+	const Rule Action =
+		Keywords.Action
+		>> Symbols.OpenParen
+		>> PositionalArgument
+		>> -(Symbols.Comma >> KeywordArguments)
+		>> -(Symbols.Input >> Parameters)
+		>> Symbols.CloseParen
+		;
 
 	/**
 	 * A compound expression includes zero or more value definitions and ends with
@@ -335,7 +370,7 @@ struct Grammar
 	 */
 	const Rule File =
 	     Keywords.File >> '('
-	     >> Expression >> -(','_E >> NamedArguments)
+	     >> Expression >> -(','_E >> KeywordArguments)
 	     >> ')';
 
 	const Rule Filename = term(+(IdChar | '.' | '/'));
@@ -359,18 +394,26 @@ struct Grammar
 		Keywords.Files
 		>> Symbols.OpenParen
 		>> *(File | Filename)
-		>> -(Symbols.Comma >> NamedArguments)
+		>> -(Symbols.Comma >> KeywordArguments)
 		>> Symbols.CloseParen
 		;
 
 	/**
-	 * A function takes (optional) parameters and returns a value.
+	 * A function is a fairly conventional closure that can capture values
+	 * from its surrounding scope.
 	 *
 	 * ```fab
-	 * foo = function(names:list[string])
-	 *     foreach name <= names
-	 *         file(name)
-	 *         ;
+	 * f = function(x:int, y:list[string]): int
+	 * {
+	 * 	x + 1
+	 * };
+	 * y = f(1);
+	 * ```
+	 *
+	 * Or, equivalently:
+	 *
+	 * ```fab
+	 * y = (function(x:int, y:list[string]) x + 1)(1);
 	 * ```
 	 */
 	const Rule Function =
@@ -427,28 +470,26 @@ function:
 
 	const Rule TypeDeclaration = RecordTypeDeclaration;
 
-	const Rule UnaryOperation = NotOperation | NegativeOperation | PositiveOperation;
 	const Rule NotOperation = Operators.Not >> Expression;
 	const Rule NegativeOperation = Operators.Minus >> Expression;
 	const Rule PositiveOperation = Operators.Plus >> Expression;
+	const Rule UnaryOperation = NotOperation | NegativeOperation | PositiveOperation;
 
-	const Rule Sum = AddOperation | PrefixOperation | ScalarAddOperation | Term;
 	const Rule AddOperation = Sum >> Operators.Plus >> Sum;
 	const Rule PrefixOperation = Sum >> Operators.Prefix >> Sum;
 	const Rule ScalarAddOperation = Sum >> Operators.ScalarAdd >> Sum;
-
-	const Rule CompareExpr =
-		LessThanOperation | GreaterThanOperation
-		| EqualsOperation | NotEqualOperation
-		| Sum
-		;
+	const Rule Sum = AddOperation | PrefixOperation | ScalarAddOperation | Term;
 
 	const Rule GreaterThanOperation = Sum >> Operators.GreaterThan >> Sum;
 	const Rule LessThanOperation = Sum >> Operators.LessThan >> Sum;
 	const Rule EqualsOperation = Sum >> Operators.Equals >> Sum;
 	const Rule NotEqualOperation = Sum >> Operators.NotEqual >> Sum;
+	const Rule CompareExpr =
+		LessThanOperation | GreaterThanOperation
+		| EqualsOperation | NotEqualOperation
+		;
 
-	const Rule LogicExpr = AndOperation | OrOperation | XOrOperation | CompareExpr;
+	const Rule LogicExpr = AndOperation | OrOperation | XOrOperation | CompareExpr | Sum;
 	const Rule AndOperation = LogicExpr >> Operators.And >> LogicExpr;
 	const Rule OrOperation = LogicExpr >> Operators.Or >> LogicExpr;
 	const Rule XOrOperation = LogicExpr >> Operators.XOr >> LogicExpr;

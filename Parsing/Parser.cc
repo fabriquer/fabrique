@@ -29,6 +29,8 @@
  * SUCH DAMAGE.
  */
 
+#include "AST/EvalContext.h"
+#include "AST/Scope.h"
 #include "Parsing/Grammar.h"
 #include "Parsing/Parser.h"
 #include "Parsing/ParserDelegate.h"
@@ -65,12 +67,13 @@ Parser::Parser(TypeContext& types, plugin::Registry& pluginRegistry,
 }
 
 
-UniqPtr<ast::Record> Parser::ParseDefinitions(const std::vector<string>& definitions)
+dag::ValueMap Parser::ParseDefinitions(const std::vector<string>& definitions,
+                                       ast::EvalContext& evalCtx)
 {
 	Type::NamedTypeVec args;
 
 	const Scope& noScope = Scope::None(types_);
-	UniqPtrVec<Value> values;
+	dag::ValueMap values;
 
 	for (const string& d : definitions)
 	{
@@ -78,31 +81,30 @@ UniqPtr<ast::Record> Parser::ParseDefinitions(const std::vector<string>& definit
 		pegmatite::StreamInput input =
 			pegmatite::StreamInput::Create("definition", stream);
 
-		UniqPtr<ast::Value> v(delegate_.ParseValue(input, noScope));
-		if (not v)
+		UniqPtr<ast::Value> astVal(delegate_.ParseValue(input, noScope));
+		if (not astVal)
 			throw UserError("invalid definition '" + d + "'");
+
+		const string name = astVal->name().name();
+		dag::ValuePtr v = astVal->evaluate(evalCtx);
 
 		Bytestream::Debug("parser.cli.defines")
 			<< Bytestream::Action << "Parsed definition"
-			<< Bytestream::Operator << ": "
-			<< *v
+			<< Bytestream::Definition << name
+			<< Bytestream::Operator << " = "
+			<< Bytestream::Reset << *v
 			<< Bytestream::Reset << "\n"
 			;
 
-		values.push_back(std::move(v));
+		values.emplace(name, v);
 	}
 
-	UniqPtr<Scope> scope = Scope::Create({}, std::move(values), types_);
-	if (not scope)
-		return UniqPtr<ast::Record>();
-
-	return ast::Record::Create(std::move(scope), types_);
+	return values;
 }
 
 
-UniqPtr<Scope> Parser::ParseFile(std::istream& input, const ast::Record& args,
-                                 string name, StringMap<string> /*builtins*/,
-                                 SourceRange /*openedFrom*/)
+UniqPtr<Scope> Parser::ParseFile(std::istream& input, string name,
+                                 StringMap<dag::ValuePtr> builtins)
 {
 	Bytestream& dbg = Bytestream::Debug("parser.file");
 	dbg
@@ -112,18 +114,23 @@ UniqPtr<Scope> Parser::ParseFile(std::istream& input, const ast::Record& args,
 		<< Bytestream::Literal << name
 		<< Bytestream::Operator << "'"
 		<< Bytestream::Reset << " with "
-		<< Bytestream::Definition << "args"
-		<< Bytestream::Operator << ": "
+		<< Bytestream::Definition << "builtins"
+		<< Bytestream::Operator << " ["
+		<< Bytestream::Reset
 		;
 
-	for (auto& f : args.fields())
+	for (auto i : builtins)
 		dbg
-			<< Bytestream::Definition << f->name()
+			<< " "
+			<< Bytestream::Definition << i.first
 			<< Bytestream::Operator << ":"
-			<< *f
+			<< i.second->type()
 			;
 
-	dbg << Bytestream::Reset << "\n";
+	dbg
+		<< Bytestream::Operator << " ]"
+		<< Bytestream::Reset << "\n"
+		;
 
 	if (not name.empty())
 	{
@@ -137,13 +144,13 @@ UniqPtr<Scope> Parser::ParseFile(std::istream& input, const ast::Record& args,
 
 	pegmatite::StreamInput file(pegmatite::StreamInput::Create(name, input));
 
-	/*
-	unique_ptr<ast::Scope> builtins = p.DefineBuiltins(builtins);
-	p.EnterScope(builtins);
-	p.EnterScope(name, args);
-	*/
+	Type::TypeMap parameters;
+	for (auto i : builtins)
+	{
+		parameters.emplace(i.first, i.second->type());
+	}
 
-	return delegate_.Parse(file, Scope::None(types_));
+	return delegate_.Parse(file, parameters);
 }
 
 

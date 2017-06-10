@@ -61,7 +61,7 @@ class ParserDelegate : public pegmatite::ASTParserDelegate
 	virtual ~ParserDelegate();
 
 	/// Parse an input file and return an ast::Scope containing ast::Value objects.
-	UniqPtr<ast::Scope> Parse(pegmatite::Input&, const ast::Scope& container);
+	UniqPtr<ast::Scope> Parse(pegmatite::Input&, Type::TypeMap Parameters);
 	UniqPtr<ast::Value> ParseValue(pegmatite::Input&, const ast::Scope& container);
 
 	ErrorReporter& errors() { return errors_; }

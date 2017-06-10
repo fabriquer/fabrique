@@ -134,5 +134,5 @@ dag::ValuePtr Record::evaluate(EvalContext& ctx) const
 	for (auto& field : scope().values())
 		fields[field->name().name()] = field->evaluate(ctx);
 
-	return ctx.builder().Record(fields, type(), source());
+	return ctx.builder().Record(fields, source());
 }

@@ -66,11 +66,14 @@ class Scope : public Node
 {
 public:
 	static const Scope& None(TypeContext&);
-	static UniqPtr<Scope> Create(Type::TypeMap parameters,
-	                             UniqPtrVec<Value> ownedValues, TypeContext&,
-	                             const Scope *parent = nullptr);
+	static UniqPtr<Scope> Create(Type::TypeMap parameters, const Type& nil,
+	                             const Scope *parent = nullptr,
+	                             UniqPtrVec<Value> ownedValues = UniqPtrVec<Value>());
 
 	virtual ~Scope();
+
+	//! Create a child scope that has parameters but no values.
+	UniqPtr<Scope> CreateChild(Type::TypeMap Parameters) const;
 
 	bool contains(const Identifier&) const;
 	virtual const Type& Lookup(const Identifier&) const;
@@ -95,8 +98,8 @@ protected:
 	Scope(SourceRange src, Type::TypeMap parameters, const Type& nil,
 	      const Scope* parent = nullptr);
 
-	Type::TypeMap parameters_;
 	const Type& nil_;
+	const Type::TypeMap parameters_;
 	const Scope *parent_;
 };
 

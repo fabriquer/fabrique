@@ -1,6 +1,6 @@
 /** @file Parsing/ParserDelegate.cc Definition of @ref fabrique::parser::ParserDelegate. */
 /*
- * Copyright (c) 2015-2016 Jonathan Anderson
+ * Copyright (c) 2015-2017 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed at Memorial University of Newfoundland under
@@ -43,6 +43,7 @@
 #include "Types/TypeError.h"
 
 using namespace fabrique;
+using namespace fabrique::ast;
 using namespace fabrique::parser;
 
 using pegmatite::ASTStack;
@@ -59,55 +60,54 @@ ParserDelegate::ParserDelegate(const Grammar& g, TypeContext& t,
                                UniqPtrVec<ErrorReport>& e)
 	: grammar_(g), types_(t), errors_(e)
 {
-	BindParser<ast::SimpleTypeReference::Parser>(g.SimpleType);
-	BindParser<ast::ParametricTypeReference::Parser>(g.ParametricType);
-	BindParser<ast::FunctionTypeReference::Parser>(g.FunctionType);
-	BindParser<ast::RecordTypeReference::Parser>(g.RecordType);
-	BindParser<ast::RecordTypeReference::FieldTypeParser>(g.FieldType);
+	BindType<Identifier>(g.Identifier);
 
-	BindType<ast::Identifier>(g.Identifier);
+	BindParser<SimpleTypeReference::Parser>(g.SimpleType);
+	BindParser<ParametricTypeReference::Parser>(g.ParametricType);
+	BindParser<FunctionTypeReference::Parser>(g.FunctionType);
+	BindParser<RecordTypeReference::FieldTypeParser>(g.FieldType);
+	BindParser<RecordTypeReference::Parser>(g.RecordType);
 
-	BindType<ast::BoolLiteral>(g.BoolLiteral);
-	BindType<ast::IntLiteral>(g.IntLiteral);
-	BindType<ast::StringLiteral>(g.StringLiteral);
+	BindType<BoolLiteral>(g.BoolLiteral);
+	BindType<IntLiteral>(g.IntLiteral);
+	BindType<StringLiteral>(g.StringLiteral);
 
-	BindType<ast::Argument>(g.NamedArgument);
-	BindType<ast::Argument>(g.UnnamedArgument);
-	BindType<ast::Call>(g.Call);
-	BindType<ast::CompoundExpression>(g.CompoundExpression);
-	BindType<ast::Conditional>(g.Conditional);
-	BindType<ast::FieldAccess>(g.FieldReference);
-	BindType<ast::File>(g.File);
-	BindType<ast::Filename>(g.Filename);
-	BindType<ast::FileList>(g.FileList);
-	BindType<ast::ForeachExpr>(g.Foreach);
-	BindType<ast::Function>(g.Function);
-	BindType<ast::List>(g.List);
-	BindType<ast::NameReference>(g.NameReference);
-	BindType<ast::Parameter>(g.ParameterWithoutDefault);
-	BindParser<ast::Parameter::WithDefault>(g.ParameterWithDefault);
-	BindType<ast::Record>(g.Record);
-	BindType<ast::TypeDeclaration>(g.TypeDeclaration);
+	BindType<Action>(g.Action);
+	BindType<Argument>(g.KeywordArgument);
+	BindType<Argument>(g.PositionalArgument);
+	BindType<Call>(g.Call);
+	BindType<CompoundExpression>(g.CompoundExpression);
+	BindType<Conditional>(g.Conditional);
+	BindType<FieldAccess>(g.FieldReference);
+	BindType<File>(g.File);
+	BindType<Filename>(g.Filename);
+	BindType<FileList>(g.FileList);
+	BindType<ForeachExpr>(g.Foreach);
+	BindType<List>(g.List);
+	BindType<NameReference>(g.NameReference);
+	BindType<Parameter>(g.Parameter);
+	BindType<Record>(g.Record);
+	BindType<TypeDeclaration>(g.TypeDeclaration);
 
-	BindParser<ast::UnaryOperation::Negative>(g.NegativeOperation);
-	BindParser<ast::UnaryOperation::Not>(g.NotOperation);
-	BindParser<ast::UnaryOperation::Positive>(g.PositiveOperation);
+	BindParser<UnaryOperation::Negative>(g.NegativeOperation);
+	BindParser<UnaryOperation::Not>(g.NotOperation);
+	BindParser<UnaryOperation::Positive>(g.PositiveOperation);
 
-	BindParser<ast::BinaryOperation::And>(g.AndOperation);
-	BindParser<ast::BinaryOperation::Or>(g.OrOperation);
-	BindParser<ast::BinaryOperation::XOr>(g.XOrOperation);
+	BindParser<BinaryOperation::And>(g.AndOperation);
+	BindParser<BinaryOperation::Or>(g.OrOperation);
+	BindParser<BinaryOperation::XOr>(g.XOrOperation);
 
-	BindParser<ast::BinaryOperation::LessThan>(g.LessThanOperation);
-	BindParser<ast::BinaryOperation::GreaterThan>(g.GreaterThanOperation);
-	BindParser<ast::BinaryOperation::Equals>(g.EqualsOperation);
-	BindParser<ast::BinaryOperation::NotEqual>(g.NotEqualOperation);
+	BindParser<BinaryOperation::LessThan>(g.LessThanOperation);
+	BindParser<BinaryOperation::GreaterThan>(g.GreaterThanOperation);
+	BindParser<BinaryOperation::Equals>(g.EqualsOperation);
+	BindParser<BinaryOperation::NotEqual>(g.NotEqualOperation);
 
-	BindParser<ast::BinaryOperation::Add>(g.AddOperation);
-	BindParser<ast::BinaryOperation::Prefix>(g.PrefixOperation);
-	BindParser<ast::BinaryOperation::ScalarAdd>(g.ScalarAddOperation);
+	BindParser<BinaryOperation::Add>(g.AddOperation);
+	BindParser<BinaryOperation::Prefix>(g.PrefixOperation);
+	BindParser<BinaryOperation::ScalarAdd>(g.ScalarAddOperation);
 
-	BindType<ast::Value>(g.Value);
-	BindType<ast::Scope>(g.Values);
+	BindType<Value>(g.Value);
+	BindType<Scope>(g.Values);
 }
 
 ParserDelegate::~ParserDelegate()
@@ -124,26 +124,30 @@ pegmatite::ErrorReporter ParserDelegate::pegErr()
 }
 
 
-UniqPtr<ast::Scope>
-ParserDelegate::Parse(pegmatite::Input& input, const ast::Scope& containingScope)
+UniqPtr<Scope>
+ParserDelegate::Parse(pegmatite::Input& input, Type::TypeMap parameters)
 {
-	unique_ptr<ast::Scope::Parser> parseTree;
-	if (not parse(input, grammar_.Values, grammar_.Ignored, pegErr(), parseTree))
+	unique_ptr<Scope::Parser> parseTree;
+	pegmatite::ErrorReporter err = pegErr();
+	if (not parse(input, grammar_.Values, grammar_.Ignored, err, parseTree))
 		return nullptr;
 
-	unique_ptr<ast::Scope> scope(parseTree->Build(containingScope, types_, errors_));
+
+	unique_ptr<Scope> container = Scope::Create(parameters, types_.nilType());
+	unique_ptr<Scope> scope(parseTree->Build(*container, types_, errors_));
 
 	return scope;
 }
 
-UniqPtr<ast::Value>
-ParserDelegate::ParseValue(pegmatite::Input& input, const ast::Scope& containingScope)
+UniqPtr<Value>
+ParserDelegate::ParseValue(pegmatite::Input& input, const Scope& containingScope)
 {
-	unique_ptr<ast::Value::Parser> value;
-	if (not parse(input, grammar_.Value, grammar_.Ignored, pegErr(), value))
+	unique_ptr<Value::Parser> value;
+	pegmatite::ErrorReporter err = pegErr();
+	if (not parse(input, grammar_.Value, grammar_.Ignored, err, value))
 		return nullptr;
 
-	return UniqPtr<ast::Value>(value->Build(containingScope, types_, errors_));
+	return UniqPtr<Value>(value->Build(containingScope, types_, errors_));
 }
 
 
@@ -151,7 +155,7 @@ ParserDelegate::ParseValue(pegmatite::Input& input, const ast::Scope& containing
 //
 // AST scopes:
 //
-ast::Scope& ParserDelegate::CurrentScope()
+Scope& ParserDelegate::CurrentScope()
 {
 	// We must always have at least a top-level scope on the stack.
 	assert(scopes_.size() > 0);
@@ -159,7 +163,7 @@ ast::Scope& ParserDelegate::CurrentScope()
 }
 
 
-ast::Scope& ParserDelegate::EnterScope(const string& name, const Type& /*args*/, SourceRange /*src*/)
+Scope& ParserDelegate::EnterScope(const string& name, const Type& /*args*/, SourceRange /*src*/)
 {
 	Bytestream::Debug("parser.scope")
 		<< string(scopes_.size(), ' ')
@@ -171,8 +175,8 @@ ast::Scope& ParserDelegate::EnterScope(const string& name, const Type& /*args*/,
 
 	const bool FirstScope = scopes_.empty();
 
-	const ast::Scope *parent = FirstScope ? nullptr : &CurrentScope();
-	scopes_.emplace(new ast::Scope(parent/*, name, args*/));
+	const Scope *parent = FirstScope ? nullptr : &CurrentScope();
+	scopes_.emplace(new Scope(parent/*, name, args*/));
 
 #if 0
 	if (definitions_)
@@ -185,12 +189,12 @@ ast::Scope& ParserDelegate::EnterScope(const string& name, const Type& /*args*/,
 	return *scopes_.top();
 }
 
-ast::Scope& ParserDelegate::EnterScope(const string& name)
+Scope& ParserDelegate::EnterScope(const string& name)
 {
 	return EnterScope(name, types_.nilType());
 }
 
-ast::Scope& ParserDelegate::EnterScope(ast::Scope&& s)
+Scope& ParserDelegate::EnterScope(Scope&& s)
 {
 	Bytestream::Debug("parser.scope")
 		<< string(scopes_.size(), ' ')
@@ -200,14 +204,14 @@ ast::Scope& ParserDelegate::EnterScope(ast::Scope&& s)
 		<< Bytestream::Reset << "\n"
 		;
 
-	scopes_.emplace(new ast::Scope(std::move(s)));
+	scopes_.emplace(new Scope(std::move(s)));
 
 	return *scopes_.top();
 }
 
-unique_ptr<ast::Scope> ParserDelegate::ExitScope()
+unique_ptr<Scope> ParserDelegate::ExitScope()
 {
-	unique_ptr<ast::Scope> scope = std::move(scopes_.top());
+	unique_ptr<Scope> scope = std::move(scopes_.top());
 	assert(scope and not scopes_.top());
 	scopes_.pop();
 
@@ -233,7 +237,7 @@ unique_ptr<ast::Scope> ParserDelegate::ExitScope()
 
 
 /*
-bool ParserDelegate::Builtin(string name, UniqPtr<ast::Expression>& e, SourceRange src)
+bool ParserDelegate::Builtin(string name, UniqPtr<Expression>& e, SourceRange src)
 {
 	UniqPtr<Token> token(new Token(name, src));
 	UniqPtr<Identifier> id(Id(std::move(token)));
@@ -272,8 +276,8 @@ bool ParserDelegate::Builtin(string name, UniqPtr<Scope>& scope, SourceRange src
 #if 0
 ParserDelegate::NodePtr ParserDelegate::File(const InputRange& input, ASTStack *stack)
 {
-	auto arguments = nodes<ast::Argument>(input, stack, StopOnWrongType);
-	auto filename = pop<ast::Expression>(stack);
+	auto arguments = nodes<Argument>(input, stack, StopOnWrongType);
+	auto filename = pop<Expression>(stack);
 
 	if (not filename->type().isSubtype(StringType::get(types_)))
 	{
@@ -285,70 +289,70 @@ ParserDelegate::NodePtr ParserDelegate::File(const InputRange& input, ASTStack *
 	const FileType& type = types_.fileType();
 
 	return NodePtr {
-		ast::Filename::Create(filename, arguments, type, input)
+		Filename::Create(filename, arguments, type, input)
 	};
 }
 
 ParserDelegate::NodePtr ParserDelegate::Files(const InputRange& input, ASTStack *stack)
 {
-	auto files = nodes<ast::Filename>(input, stack);
+	auto files = nodes<Filename>(input, stack);
 	const Type& type = types_.fileListType();
 
 	return NodePtr {
-		new ast::FileList(files, UniqPtrVec<ast::Argument>(), type, input)
+		new FileList(files, UniqPtrVec<Argument>(), type, input)
 	};
 }
 
 ParserDelegate::NodePtr
 ParserDelegate::FilesWithArgs(const InputRange& input, ASTStack *stack)
 {
-	auto args = nodes<ast::Argument>(input, stack, StopOnWrongType);
-	auto files = nodes<ast::Filename>(input, stack);
+	auto args = nodes<Argument>(input, stack, StopOnWrongType);
+	auto files = nodes<Filename>(input, stack);
 
 	return NodePtr {
-		new ast::FileList(files, std::move(args), types_.fileListType(), input)
+		new FileList(files, std::move(args), types_.fileListType(), input)
 	};
 }
 
 ParserDelegate::NodePtr
 ParserDelegate::Filename(const InputRange& input, ASTStack*)
 {
-	unique_ptr<ast::Expression> filename {
-		new ast::StringLiteral(input.str(), StringType::get(types_), input)
+	unique_ptr<Expression> filename {
+		new StringLiteral(input.str(), StringType::get(types_), input)
 	};
 
-	UniqPtrVec<ast::Argument> args;
+	UniqPtrVec<Argument> args;
 	const FileType& type = types_.fileType();
 
-	return NodePtr { ast::Filename::Create(filename, args, type, input) };
+	return NodePtr { Filename::Create(filename, args, type, input) };
 }
 
 ParserDelegate::NodePtr
 ParserDelegate::NamedArgument(const InputRange&, ASTStack *stack)
 {
-	auto value = pop<ast::Expression>(stack);
-	auto name = pop<ast::Identifier>(stack);
+	auto value = pop<Expression>(stack);
+	auto name = pop<Identifier>(stack);
 
-	return NodePtr { new ast::Argument(name, value) };
+	return NodePtr { new Argument(name, value) };
 }
 
 ParserDelegate::NodePtr
 ParserDelegate::UnnamedArgument(const InputRange&, ASTStack *stack)
 {
-	unique_ptr<ast::Identifier> name;
-	auto value = pop<ast::Expression>(stack);
+	unique_ptr<Identifier> name;
+	auto value = pop<Expression>(stack);
 
-	return NodePtr { new ast::Argument(name, value) };
+	return NodePtr { new Argument(name, value) };
 }
 
 ParserDelegate::NodePtr ParserDelegate::List(const InputRange& input, ASTStack *stack)
 {
-	auto elements = nodes<ast::Expression>(input, stack);
+	auto elements = nodes<Expression>(input, stack);
 
 	const Type& elementType = types_.supertype(elements.begin(), elements.end());
 	const Type& type = types_.listOf(elementType, input);
 
-	return NodePtr { new ast::List(elements, type, input) };
+	return NodePtr { new List(elements, type, input) };
 }
 
 ParserDelegate::NodePtr ParserDelegate::ScopedValues(const Input& input, Stack* stack)
@@ -356,7 +360,7 @@ ParserDelegate::NodePtr ParserDelegate::ScopedValues(const Input& input, Stack* 
 	auto scope = ExitScope();
 	scope->UpdateSource(input);
 
-	for (auto& value : nodes<ast::Value>(input, stack))
+	for (auto& value : nodes<Value>(input, stack))
 		scope->Take(value);
 
 	return NodePtr { scope.release() };

@@ -3,17 +3,17 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: foo:bool = true;
+# CHECK: foo = true;
 foo = true;
 
 # CHECK: bar:bool = not foo;
-bar = not foo;
+bar:bool = not foo;
 
-# CHECK: baz:bool = foo or bar;
+# CHECK: baz = foo or bar;
 baz = foo or bar;
 
 # CHECK: wibble:bool = foo and bar;
-wibble = foo and bar;
+wibble:bool = foo and bar;
 
-# CHECK: wobble:bool = foo and bar or baz xor wibble;
+# CHECK: wobble = foo and bar or baz xor wibble;
 wobble = foo and bar or baz xor wibble;

@@ -36,6 +36,7 @@
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 #include "Support/os.h"
+#include "Types/BooleanType.h"
 #include "Types/FileType.h"
 #include "Types/TypeContext.h"
 

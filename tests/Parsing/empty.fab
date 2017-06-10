@@ -3,4 +3,5 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: srcroot
+# an empty file should have no AST: the AST represents user input, not builtins
+# CHECK-NOT: srcroot

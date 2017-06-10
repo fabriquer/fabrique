@@ -30,6 +30,7 @@
  */
 
 #include "AST/Builtins.h"
+#include "Types/BooleanType.h"
 #include "Types/FileType.h"
 #include "Types/SequenceType.h"
 #include "Types/TypeContext.h"

@@ -31,6 +31,7 @@
 
 #include "AST/ASTDump.h"
 #include "AST/EvalContext.h"
+#include "AST/Scope.h"
 
 #include "Backend/Backend.h"
 
@@ -67,39 +68,40 @@ using std::vector;
 static Bytestream& err();
 static void reportError(string message, SourceRange, ErrorReport::Severity);
 static unique_ptr<ast::Scope> Parse(UniqPtr<Parser>& parser, const string& filename,
-                                    const vector<string>& definitions,
-                                    string srcroot, string buildroot, bool printAST);
+                                    const dag::ValueMap& builtins, bool printAST);
 
 int main(int argc, char *argv[]) {
-	//
-	// Parse command-line arguments.
-	//
-	unique_ptr<Arguments> args(Arguments::Parse(argc, argv));
-	if (not args or args->help)
-	{
-		Arguments::PrintUsage(cerr);
-		return (args ? 0 : 1);
-	}
-
-	//
-	// Set up debug streams.
-	//
-	Bytestream::SetDebugPattern(args->debugPattern);
-	Bytestream::SetDebugStream(Bytestream::Stdout());
-
-	Bytestream& argDebug = Bytestream::Debug("cli.args");
-	Arguments::Print(*args, argDebug);
-	argDebug << Bytestream::Reset << "\n";
-
-	//
-	// Parse the file, build the DAG and pass it to the backend.
-	// These operations can report errors with exceptions, so put them in
-	// a `try` block.
-	//
 	try
 	{
+		//
+		// Parse command-line arguments.
+		//
+		unique_ptr<Arguments> args(Arguments::Parse(argc, argv));
+		if (not args or args->help)
+		{
+			Arguments::PrintUsage(cerr);
+			return (args ? 0 : 1);
+		}
+
+		//
+		// Set up debug streams.
+		//
+		Bytestream::SetDebugPattern(args->debugPattern);
+		Bytestream::SetDebugStream(Bytestream::Stdout());
+
+		Bytestream& argDebug = Bytestream::Debug("cli.args");
+		Arguments::Print(*args, argDebug);
+		argDebug << Bytestream::Reset << "\n";
+
+		//
+		// Parse the file, build the DAG and pass it to the backend.
+		//
 		TypeContext types;
 
+		plugin::Registry& pluginRegistry = plugin::Registry::get();
+		plugin::Loader pluginLoader(PluginSearchPaths(args->executable));
+
+		// Find and validate fabfile path.
 		const string fabfile =
 			PathIsDirectory(args->input)
 			? JoinPath(args->input, "fabfile")
@@ -109,21 +111,31 @@ int main(int argc, char *argv[]) {
 		if (not PathIsFile(fabfile))
 			throw UserError("no such file: '" + fabfile + "'");
 
+		// Create the parser.
 		const string srcroot = DirectoryOf(AbsolutePath(fabfile));
 		const string buildroot = AbsoluteDirectory(args->output, true);
 
-		plugin::Registry& pluginRegistry = plugin::Registry::get();
-		plugin::Loader pluginLoader(PluginSearchPaths(args->executable));
+		unique_ptr<Parser> parser(
+			new Parser(types, pluginRegistry, pluginLoader, srcroot));
+
+		// Parse command-line arguments and define builtin values.
+		ast::EvalContext ctx(types, buildroot, srcroot);
+		dag::ValueMap defines = parser->ParseDefinitions(args->definitions, ctx);
+
+		const FileType& fileType = types.fileType();
+		dag::DAGBuilder dagBuilder(ctx);
+
+		dag::ValueMap builtins {
+			{ "args", dagBuilder.Record(defines) },
+			{ "srcroot", dagBuilder.File(srcroot, fileType) },
+			{ "buildroot", dagBuilder.File(buildroot, fileType) },
+		};
 
 		//
 		// Parse the file, optionally pretty-printing it.
 		//
-		unique_ptr<Parser> parser(
-			new Parser(types, pluginRegistry, pluginLoader, srcroot));
-
 		unique_ptr<ast::Scope> ast(
-			Parse(parser, fabfile, args->definitions,
-			      srcroot, buildroot, args->printAST));
+			Parse(parser, fabfile, builtins, args->printAST));
 
 		if (not ast)
 			return -1;
@@ -150,7 +162,6 @@ int main(int argc, char *argv[]) {
 		//
 		// Convert the AST into a build graph.
 		//
-		ast::EvalContext ctx(types, buildroot, srcroot);
 		auto topScope(ctx.Evaluate(*ast));
 
 		// Get the names of the top-level targets:
@@ -259,26 +270,16 @@ int main(int argc, char *argv[]) {
 
 
 unique_ptr<ast::Scope> Parse(UniqPtr<Parser>& parser, const string& filename,
-                             const vector<string>& definitions,
-                             string srcroot, string buildroot, bool printAST)
+                             const dag::ValueMap& builtins, bool printAST)
 {
-	// Parse command-line arguments.
-	UniqPtr<ast::Record> args = parser->ParseDefinitions(definitions);
-
 	// Open and parse the top-level build description.
 	std::ifstream infile(filename.c_str());
 	assert(infile);
 
-	map<string,string> builtins {
-		std::make_pair("srcroot", srcroot),
-		std::make_pair("buildroot", buildroot),
-	};
-
 	const string absolute =
 		PathIsAbsolute(filename) ? filename : AbsolutePath(filename);
 
-	unique_ptr<ast::Scope> ast(
-		parser->ParseFile(infile, *args, absolute, builtins));
+	unique_ptr<ast::Scope> ast(parser->ParseFile(infile, absolute, builtins));
 
 	if (not ast)
 	{

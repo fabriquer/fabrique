@@ -1,6 +1,6 @@
 /** @file AST/Action.h    Declaration of @ref fabrique::ast::Action. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2013-2014, 2017 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -72,6 +72,17 @@ public:
 	virtual void Accept(Visitor&) const override;
 
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
+
+	class Parser : public Expression::Parser
+	{
+	public:
+		virtual ~Parser();
+		Action* Build(const Scope&, TypeContext&, Err&) override;
+
+	private:
+		ChildNodes<Argument> arguments_;
+		ChildNodes<Parameter> parameters_;
+	};
 
 private:
 	Action(UniqPtrVec<Argument>&, UniqPtrVec<Parameter>&,

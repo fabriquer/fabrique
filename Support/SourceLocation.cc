@@ -241,7 +241,7 @@ Bytestream& SourceRange::PrintSource(Bytestream& out, unsigned int indent,
 	if (not caret)
 		caret = begin;
 
-	const string tabs(indent, '\t');
+	const string indentTabs(indent, '\t');
 
 	/*
 	 * If we are reading a file (rather than stdin), re-read the
@@ -258,16 +258,33 @@ Bytestream& SourceRange::PrintSource(Bytestream& out, unsigned int indent,
 		std::ifstream sourceFile(filename.c_str());
 		assert(sourceFile.good());
 
+		// Count the number of tab characters preceding the caret location
+		// in the relevant line: we must output 8*tabs spaces before the caret.
+		size_t tabs = 0;
+
 		for (size_t i = 1; i <= caret.line; i++) {
 			string line;
 			getline(sourceFile, line);
 
 			if ((caret.line - i) <= context)
+			{
+				string num = std::to_string(i);
+				auto pad = (num.length() > 7) ? 0 : (7 - num.length());
+				num = string(pad, ' ') + num;
+
 				out
-					<< tabs
-					<< Bytestream::Line << i << "\t"
+					<< indentTabs
+					<< Bytestream::Line << num << " "
 					<< Bytestream::Reset << line << "\n"
 					;
+
+				if (caret.line - i == 0)
+				{
+					auto b = line.begin();
+					auto e = b + static_cast<long>(caret.column);
+					tabs = static_cast<size_t>(std::count(b, e, '\t'));
+				}
+			}
 		}
 
 		/*
@@ -295,8 +312,9 @@ Bytestream& SourceRange::PrintSource(Bytestream& out, unsigned int indent,
 		assert(postCaretHighlight >= 0);
 
 		out
-			<< tabs << "\t"
-			<< string(firstHighlightColumn - 1, ' ')
+			<< indentTabs << "        "
+			<< string(tabs, '\t')
+			<< string(firstHighlightColumn - tabs - 1, ' ')
 			<< Bytestream::ErrorLoc
 			<< string(preCaretHighlight, '~')
 			<< "^"

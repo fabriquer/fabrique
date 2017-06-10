@@ -48,8 +48,8 @@ class List : public Value
 {
 public:
 	template<class T>
-	static List* of(const SharedPtrVec<T>& values, const SourceRange& src,
-	                TypeContext& ctx)
+	static List* of(const SharedPtrVec<T>& values, TypeContext& ctx,
+	                SourceRange src = SourceRange::None())
 	{
 		SharedPtrVec<Value> v;
 		for (const std::shared_ptr<T>& x : values)

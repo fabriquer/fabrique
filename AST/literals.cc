@@ -34,11 +34,22 @@
 #include "DAG/Primitive.h"
 #include "Support/Bytestream.h"
 #include "Support/String.h"
+#include "Types/IntegerType.h"
 
 using namespace fabrique;
 using namespace fabrique::ast;
 using std::string;
 
+
+BoolLiteral::BoolLiteral(bool value, const BooleanType& ty, SourceRange loc)
+	: Literal(value, ty, loc)
+{
+}
+
+const BooleanType& BoolLiteral::type() const
+{
+	return dynamic_cast<const BooleanType&>(Literal::type());
+}
 
 std::string BoolLiteral::str() const
 {
@@ -88,6 +99,16 @@ dag::ValuePtr BoolLiteral::evaluate(EvalContext&) const
 	return dag::ValuePtr(new dag::Boolean(value(), type(), source()));
 }
 
+
+IntLiteral::IntLiteral(int value, const IntegerType& ty, SourceRange loc)
+	: Literal(value, ty, loc)
+{
+}
+
+const IntegerType& IntLiteral::type() const
+{
+	return dynamic_cast<const IntegerType&>(Literal::type());
+}
 
 std::string IntLiteral::str() const
 {

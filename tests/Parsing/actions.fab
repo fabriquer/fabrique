@@ -5,9 +5,10 @@
 
 # CHECK: simple_cxx:(list[file])=>file = action(
 # CHECK:   '$CXX -c $src -o $obj' <= src:list[file[in]], obj:file[out]);
-simple_cxx = action('$CXX -c $src -o $obj' <= src:list[file[in]], obj:file[out]);
+simple_cxx:(list[file])=>file =
+	action('$CXX -c $src -o $obj' <= src:list[file[in]], obj:file[out]);
 
-# CHECK: cxx:(list[file])=>list[file] = action('$CXX{{.*}} -MMD -MF $dep -o $out $src',
+# CHECK: cxx = action('$CXX{{.*}} -MMD -MF $dep -o $out $src',
 # CHECK:            description = 'Compiling $src'
 # CHECK:            <= src:file[out], obj:file[out], depfile:file[out]);
 cxx = action('$CXX -c $cxxflags -MMD -MF $dep -o $out $src',
@@ -16,12 +17,12 @@ cxx = action('$CXX -c $cxxflags -MMD -MF $dep -o $out $src',
 
 # CHECK: lex:(file)=>list[file] = action('$LEX{{.*}} --outfile=$gen $lex'
 # CHECK:            <= lex:file[in], gen:file[out], header:file[out]);
-lex = action('$LEX -c++ --header-file=$header --outfile=$gen $lex'
-              <= lex:file[in], gen:file[out], header:file[out]);
+lex:(file)=>list[file] = action('$LEX -c++ --header-file=$header --outfile=$gen $lex'
+                                <= lex:file[in], gen:file[out], header:file[out]);
 
 # CHECK: single_object:list[file] =
 # CHECK:   cxx(file('a.cc'), obj = file('a.o'), depfile = file('a.o.d'));
-single_object = cxx(file('a.cc'), obj = file('a.o'), depfile = file('a.o.d'));
+single_object:list[file] = cxx(file('a.cc'), obj = file('a.o'), depfile = file('a.o.d'));
 
-# CHECK: lexed:list[file] = lex(file('foo.l'), file('foo.lex.c'), file('foo.lex.h'));
+# CHECK: lexed = lex(file('foo.l'), file('foo.lex.c'), file('foo.lex.h'));
 lexed = lex(file('foo.l'), file('foo.lex.c'), file('foo.lex.h'));

@@ -30,6 +30,7 @@
  */
 
 #include "AST/Builtins.h"
+#include "Types/BooleanType.h"
 #include "Types/MaybeType.h"
 #include "Types/TypeContext.h"
 #include <cassert>

@@ -1,6 +1,6 @@
 /** @file DAG/Primitive.cc    Definition of @ref fabrique::dag::Primitive. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2013-2014, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -46,10 +46,15 @@ using std::shared_ptr;
 using std::string;
 
 
-Boolean::Boolean(bool b, const Type& t, SourceRange loc)
+Boolean::Boolean(bool b, const BooleanType& t, SourceRange loc)
 	: Primitive(t, b, loc)
 {
 	// TODO: assert(t is a subtype of bool?)
+}
+
+const fabrique::BooleanType& Boolean::type() const
+{
+	return dynamic_cast<const BooleanType&>(Primitive::type());
 }
 
 ValuePtr Boolean::Negate(const SourceRange& loc) const
@@ -59,13 +64,11 @@ ValuePtr Boolean::Negate(const SourceRange& loc) const
 
 ValuePtr Boolean::And(ValuePtr& v) const
 {
-	auto other = dynamic_pointer_cast<Boolean>(v);
-	assert(other);
+	auto b = dynamic_pointer_cast<Boolean>(v);
+	assert(b);
 
 	return ValuePtr(
-		new Boolean(value_ and other->value_,
-			type().supertype(other->type()),
-			SourceRange(*this, *other))
+		new Boolean(value_ and b->value_, type(), SourceRange(*this, *b))
 	);
 }
 
@@ -75,10 +78,7 @@ ValuePtr Boolean::Or(ValuePtr& v) const
 	assert(other);
 
 	return ValuePtr(
-		new Boolean(value_ or other->value_,
-			type().supertype(other->type()),
-			SourceRange(*this, *other))
-	);
+		new Boolean(value_ or other->value_, type(), SourceRange(*this, *other)));
 }
 
 ValuePtr Boolean::Xor(ValuePtr& v) const
@@ -87,10 +87,7 @@ ValuePtr Boolean::Xor(ValuePtr& v) const
 	assert(other);
 
 	return ValuePtr(
-		new Boolean(value_ xor other->value_,
-			type().supertype(other->type()),
-			SourceRange(*this, *other))
-	);
+		new Boolean(value_ xor other->value_, type(), SourceRange(*this, *other)));
 }
 
 ValuePtr Boolean::Equals(ValuePtr& v) const
@@ -99,10 +96,7 @@ ValuePtr Boolean::Equals(ValuePtr& v) const
 	assert(other);
 
 	return ValuePtr(
-		new Boolean(value_ == other->value_,
-			type().supertype(other->type()),
-			SourceRange(*this, *other))
-	);
+		new Boolean(value_ == other->value_, type(), SourceRange(*this, *other)));
 }
 
 string Boolean::str() const { return value_ ? "true" : "false"; }
@@ -113,9 +107,14 @@ void Boolean::Accept(Visitor& v) const
 }
 
 
-Integer::Integer(int i, const Type& t, SourceRange loc)
+Integer::Integer(int i, const IntegerType& t, SourceRange loc)
 	: Primitive(t, i, loc)
 {
+}
+
+const fabrique::IntegerType& Integer::type() const
+{
+	return dynamic_cast<const IntegerType&>(Primitive::type());
 }
 
 string Integer::str() const { return std::to_string(value_); }
@@ -141,7 +140,7 @@ ValuePtr Integer::Equals(ValuePtr& v) const
 		throw WrongTypeException("int", v->type(), v->source());
 
 	const bool eq = this->value_ == other->value_;
-	const Type& boolTy = type().context().booleanType();
+	const BooleanType& boolTy = type().context().booleanType();
 	return ValuePtr(new Boolean(eq, boolTy, loc));
 }
 

@@ -35,6 +35,7 @@
 #include "AST/Visitor.h"
 #include "DAG/Parameter.h"
 #include "DAG/Primitive.h"
+#include "Parsing/ErrorReporter.h"
 #include "Support/Bytestream.h"
 #include "Types/FileType.h"
 #include "Types/FunctionType.h"
@@ -77,38 +78,58 @@ size_t Count(const UniqPtrVec<T>& values, TypePredicate predicate)
 }
 
 
-Action* Action::Create(UniqPtrVec<Argument>& args,
-                       UniqPtr<UniqPtrVec<Parameter>>& params,
-                       const SourceRange& src, TypeContext& ctx)
+Action::Parser::~Parser()
 {
-	UniqPtrVec<Parameter> parameters;
-	if (params)
+}
+
+
+Action* Action::Parser::Build(const Scope& scope, TypeContext& types, Err& err)
+{
+	UniqPtrVec<Argument> arguments;
+	for (auto& a : arguments_)
 	{
-		// Verify that all file parameters are either inputs or outputs.
-		for (auto& p : *params)
+		UniqPtr<Argument> arg(a->Build(scope, types, err));
+		if (not arg)
 		{
-			const Type& t = p->type();
-			if (t.isFile())
+			return nullptr;
+		}
+
+		arguments.push_back(std::move(arg));
+	}
+
+	UniqPtrVec<Parameter> parameters;
+	for (auto& p : parameters_)
+	{
+		UniqPtr<Parameter> param(p->Build(scope, types, err));
+		if (not param)
+		{
+			return nullptr;
+		}
+
+		// Verify that all file parameters are either inputs or outputs.
+		const Type& t = param->type();
+		if (t.isFile())
+		{
+			auto& file = dynamic_cast<const FileType&>(t);
+			if (not file.isInputFile()
+			    and not file.isOutputFile())
 			{
-				auto& file = dynamic_cast<const FileType&>(t);
-				if (not file.isInputFile()
-				    and not file.isOutputFile())
-					throw WrongTypeException(
-						"file[in|out]", t, p->source());
+				err.ReportError("expected file[in] or file[out]",
+				                param->source());
 			}
 		}
 
-		parameters = std::move(*params);
+		parameters.push_back(std::move(param));
 	}
 
-	const Type& file = ctx.fileType();
-	const Type& fileList = ctx.fileListType();
+	const Type& file = types.fileType();
+	const Type& fileList = types.fileListType();
 
-	const FunctionType& type = ctx.functionType(
+	const FunctionType& type = types.functionType(
 		Count(parameters, FileType::isInput) == 1 ? file : fileList,
 		Count(parameters, FileType::isOutput) == 1 ? file : fileList);
 
-	return new Action(args, parameters, type, src);
+	return new Action(arguments, parameters, type, source());
 }
 
 
@@ -139,7 +160,7 @@ void Action::PrettyPrint(Bytestream& out, size_t /*indent*/) const
 	const UniqPtrVec<Parameter>& params = parameters();
 	if (not params.empty())
 	{
-		out << Bytestream::Operator << " <- ";
+		out << Bytestream::Operator << " <= ";
 
 		for (size_t i = 0; i < params.size(); )
 		{

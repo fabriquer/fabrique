@@ -105,13 +105,15 @@ dag::ValuePtr Import::evaluate(EvalContext& ctx) const
 {
 	auto scope(ctx.EnterScope("import()"));
 
-	dag::ValuePtr builddir(
-		ctx.builder().File(subdirectory(), dag::ValueMap(),
-	                           type().context().fileType(), source(), true));
+	const std::string subdirName = subdirectory();
+	const FileType& fileType = type().context().fileType();
+	const dag::ValueMap empty;
+	const SourceRange src = source();
 
-	dag::ValuePtr subdir(
-		ctx.builder().File(subdirectory(), dag::ValueMap(),
-	                           type().context().fileType(), source()));
+	dag::DAGBuilder builder = ctx.builder();
+
+	dag::ValuePtr builddir(builder.File(subdirName, fileType, empty, src, true));
+	dag::ValuePtr subdir(builder.File(subdirName, fileType, empty, src));
 
 	scope.set(ast::BuildDirectory, builddir);
 	scope.set(ast::Subdirectory, subdir);
@@ -128,7 +130,6 @@ dag::ValuePtr Import::evaluate(EvalContext& ctx) const
 		args[argName] = value;
 	}
 
-	dag::DAGBuilder builder(ctx.builder());
 	if (plugin_)
 		return plugin_->Create(builder, args);
 
@@ -150,5 +151,5 @@ dag::ValuePtr Import::evaluate(EvalContext& ctx) const
 		types.emplace_back(i.first, i.second->type());
 	}
 
-	return builder.Record(fields, type(), source());
+	return builder.Record(fields, source());
 }

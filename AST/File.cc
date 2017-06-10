@@ -160,5 +160,5 @@ dag::ValuePtr File::evaluate(EvalContext& ctx) const
 	}
 
 	return ctx.builder().File(
-		subdirectory, filename, attributes, type(), source());
+		subdirectory, filename, type(), attributes, source());
 }

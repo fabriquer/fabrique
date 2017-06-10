@@ -1,6 +1,6 @@
 /** @file DAG/Primitive.h    Declaration of @ref fabrique::dag::Primitive. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2013-2014, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -36,6 +36,8 @@
 #include "Support/Bytestream.h"
 #include "Support/Printable.h"
 #include "Support/SourceLocation.h"
+#include "Types/BooleanType.h"
+#include "Types/IntegerType.h"
 
 #include <string>
 
@@ -71,8 +73,10 @@ protected:
 class Boolean : public Primitive<bool>
 {
 public:
-	Boolean(bool, const Type&, SourceRange src = SourceRange::None());
+	Boolean(bool, const BooleanType&, SourceRange src = SourceRange::None());
 	std::string str() const override;
+
+	const BooleanType& type() const override;
 
 	virtual ValuePtr Negate(const SourceRange& src) const override;
 	virtual ValuePtr And(ValuePtr&) const override;
@@ -88,8 +92,10 @@ public:
 class Integer : public Primitive<int>
 {
 public:
-	Integer(int, const Type&, SourceRange src = SourceRange::None());
+	Integer(int, const IntegerType&, SourceRange src = SourceRange::None());
 	std::string str() const override;
+
+	const IntegerType& type() const override;
 
 	virtual ValuePtr Add(ValuePtr&) const override;
 	virtual ValuePtr Equals(ValuePtr&) const override;

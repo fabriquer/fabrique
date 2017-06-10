@@ -48,6 +48,7 @@ public:
 	virtual ~BooleanType();
 	static const Type& get(TypeContext&);
 
+	virtual bool canBeNegated() const override { return true; }
 	virtual const Type& onAddTo(const Type&) const override;
 
 protected:

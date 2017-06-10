@@ -7,12 +7,12 @@
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
  * ("CTSRD"), as part of the DARPA CRASH research programme.
  *
- * Bytestream::Actionistribution and use in source and binary forms, with or without
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 1. Bytestream::Actionistributions of source code must retain the above copyright
+ * 1. Redistributions of source code must retain the above copyright
  *    notice, this list of conditions and the following disclaimer.
- * 2. Bytestream::Actionistributions in binary form must reproduce the above copyright
+ * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
  *
@@ -78,7 +78,7 @@ Function* Function::Parser::Build(const Scope& s, TypeContext& t, Err& err)
 			return nullptr;
 	}
 
-	UniqPtr<Scope> fnScope(Scope::Create(paramTypeMap, {}, t, &s));
+	UniqPtr<Scope> fnScope(Scope::Create(paramTypeMap, t.nilType(), &s));
 	assert(fnScope);
 
 	UniqPtr<Expression> body(body_->Build(*fnScope, t, err));
