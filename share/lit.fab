@@ -1,16 +1,16 @@
 #
-# Run llvm-lit, putting it in Ninja's 'console' pool to provide unbuffered
+# Run lit, putting it in Ninja's 'console' pool to provide unbuffered
 # console access. This has no effect on other backends.
 #
 
-lit = args.lit ? import('which').executable('llvm-lit');
+lit = args.lit ? import('which').executable('lit');
 
 run_lit = action(
 	'${lit} ${flags} --xunit-xml-output=${results} ${tree}',
 	description = 'Running LLVM Integrated Tester on ${tree}', pool = 'console'
 	<- tree:file[in], results:file[out],
 	   flags:list[string] = [], dependencies:list[file[in]] = [],
-	   lit:file[in] = lit);  # TODO: find precise llvm-lit with 'which' plugin
+	   lit:file[in] = lit);  # TODO: find precise lit with 'which' plugin
 
 
 run = function(fabpath:string, test_tree:file[in], results_file:file[out],
