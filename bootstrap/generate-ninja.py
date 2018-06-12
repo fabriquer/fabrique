@@ -138,18 +138,6 @@ cxxflags = defines + [
 ] + args.cxxflags.split()
 
 warnings = [
-	# Use lots and lots of warnings.
-	'-Weverything',
-
-	# We intentionally hide yyFlexLexer::yylex().
-	'-Wno-overloaded-virtual',
-
-	# We really, really don't care about C++98 compatibility.
-	'-Wno-c++98-compat', '-Wno-c++98-compat-pedantic',
-
-	# We aren't attempting to preserve an ABI. At least not yet.
-	'-Wno-padded',
-
 	# Treat vendor headers as system headers: disable warnings.
 	'-isystem %s/vendor' % src_root
 ]
