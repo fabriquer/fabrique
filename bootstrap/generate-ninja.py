@@ -327,8 +327,7 @@ for src in cxx_srcs:
 	src = os.path.join(src_root, '%s.cc' % src)
 
 	if 'Lex' in src or 'Parser' in src or 'driver' in src:
-		header_suffix = '.tab.h' if system == 'Darwin' else '.h'
-		src += ' | Parsing/fab.yacc' + header_suffix
+		src += ' | Parsing/fab.yacc.tab.h'
 
 	out.write('build %s: cxx %s\n' % (obj, src))
 
