@@ -13,11 +13,11 @@ run_lit = action(
 	   lit:file[in] = lit);  # TODO: find precise llvm-lit with 'which' plugin
 
 
-run = function(test_tree:file[in], results_file:file[out],
+run = function(fabpath:string, test_tree:file[in], results_file:file[out],
                dependencies:list[file[in]] = [],
                suppress_success_output = false, show_failure_details = true)
 {
-	flags = []
+	flags = ['-D fab=' + fabpath]
 		+ (if suppress_success_output [ '--quiet' ] else [ '--succinct' ])
 		+ (if show_failure_details [ '--verbose' ] else [])
 		;

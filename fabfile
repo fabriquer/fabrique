@@ -120,7 +120,10 @@ everything = [ fab ] + plugins + import('tests/manifest.fab').all_files;
 test = if withtests {
 	lit = import('share/llvm-lit.fab', show_failure_details = verbose_tests,
 	             lit = args.lit ? import('which').executable('llvm-lit'));
-	[ lit.run(file('tests'), file('junit.xml'), dependencies = everything) ]
+
+	fab_path = buildroot + '/bin/fab';
+
+	[ lit.run(fab_path, file('tests'), file('junit.xml'), dependencies = everything) ]
 } else {
 	[]
 };
