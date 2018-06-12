@@ -150,7 +150,7 @@ const option::Descriptor usage[] =
 		DebugPattern, SetOpt, "", "debug", option::Arg::Optional,
 		"  --debug          Show debug output (e.g. 'parser', equivalent to 'parser.*')"
 	},
-	{ 0, 0, 0, 0, 0, 0 }
+	{ 0, 0, nullptr, nullptr, 0, nullptr }
 };
 
 #pragma clang diagnostic pop
