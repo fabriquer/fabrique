@@ -63,18 +63,6 @@ bool FileExists(const string& filename, bool directory = false)
 }
 
 
-#if defined(__DARWIN_UNIX03)
-/**
- * A Darwin-specific wrapper around dirname(3) that accepts a const char*
- * argument (rather than the plain char* accepted by dirname(3) under
- * __DARWIN_UNIX03).
- */
-static const char* dirname(const char *filename)
-{
-	return ::dirname(const_cast<char*>(filename));
-}
-#endif
-
 static const char PathDelimiter = ':';
 
 }
@@ -143,7 +131,11 @@ fabrique::MissingFileReporter fabrique::DefaultFilename(std::string name)
 
 string fabrique::DirectoryOf(string filename, bool absolute)
 {
-	const char *dir = dirname(filename.c_str());
+	// Allocate space for an extra byte in case `filename` isn't null-terminated
+	const size_t NameLength = filename.length() + 1;
+	char nameCopy[NameLength];
+	strlcpy(nameCopy, filename.c_str(), NameLength);
+	const char *dir = dirname(nameCopy);
 
 	if (not dir)
 		throw PosixError("error looking for parent of " + filename);
