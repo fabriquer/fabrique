@@ -102,7 +102,7 @@ public:
 class NullStream : public Bytestream
 {
 public:
-	NullStream() : Bytestream(out_) {}
+	NullStream() : Bytestream(nullOut_) {}
 
 	bool active() const override { return false; }
 
@@ -120,7 +120,7 @@ private:
 	 * will never be performed; this saves us the cost of formatting
 	 * characters before throwing them away.
 	 */
-	std::ofstream out_;
+	std::ofstream nullOut_;
 };
 
 
