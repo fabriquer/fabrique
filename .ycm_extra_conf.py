@@ -1,3 +1,7 @@
+import os.path
+
+srcroot = os.path.abspath(os.path.dirname(__file__))
+
 def FlagsForFile(filename, **kwargs):
     if not (filename.endswith('.h') or filename.endswith('.cc')):
         return {}
@@ -9,7 +13,7 @@ def FlagsForFile(filename, **kwargs):
             'std=c++11'
 
             # Include files rooted in the current source tree
-            '-I', '.',
+            '-I', srcroot,
 
             # Treat vendor headers as system headers (ignore warnings)
             '-isystem', 'vendor'
