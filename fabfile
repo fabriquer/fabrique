@@ -37,7 +37,7 @@ yacc = import('share/yacc.fab', yacc = which.executable('byacc'));
 #
 # C++ compilation flags:
 #
-cxxoptions = [ '-std=c++11' ];
+cxxoptions = [ '-std=c++14' ];
 
 dbgflags =
 	if debug [ '-g' '-ggdb' '-O0' ] else [ '-O2' ]
