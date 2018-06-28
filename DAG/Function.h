@@ -61,7 +61,7 @@ public:
 	                        const FunctionType&,
 	                        SourceRange source = SourceRange::None());
 
-	virtual ~Function();
+	virtual ~Function() override;
 
 	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 	void Accept(Visitor&) const override;

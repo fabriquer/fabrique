@@ -43,7 +43,7 @@ namespace fabrique {
 class MaybeType : public Type
 {
 public:
-	virtual ~MaybeType();
+	virtual ~MaybeType() override;
 	const Type& elementType() const { return elementType_; }
 
 	virtual TypeMap fields() const override;

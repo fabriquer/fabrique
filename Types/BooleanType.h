@@ -45,7 +45,7 @@ class TypeContext;
 class BooleanType : public Type
 {
 public:
-	virtual ~BooleanType();
+	virtual ~BooleanType() override;
 	static const Type& get(TypeContext&);
 
 	virtual const Type& onAddTo(const Type&) const override;

@@ -43,7 +43,7 @@ public:
 	explicit PosixError(std::string message);
 	PosixError(PosixError&&);
 
-	virtual ~PosixError();
+	virtual ~PosixError() override;
 
 private:
 	PosixError(const PosixError&) = delete;

@@ -45,7 +45,7 @@ class TypeContext;
 class StringType : public Type
 {
 public:
-	virtual ~StringType();
+	virtual ~StringType() override;
 	static const Type& get(TypeContext&);
 
 	virtual bool isString() const override { return true; }

@@ -75,7 +75,7 @@ public:
 	{
 	}
 
-	~EvalContext() {}
+	~EvalContext() override {}
 
 	std::vector<dag::DAG::BuildTarget> Evaluate(const ast::Scope&);
 

@@ -67,7 +67,7 @@ class Scope : public Printable, public Uncopyable
 public:
 	Scope(const Scope *parent, const std::string& name, const Type& argumentsType);
 	Scope(Scope&&);
-	virtual ~Scope() {}
+	virtual ~Scope() override {}
 
 	typedef StringMap<const Type&> SymbolMap;
 	const SymbolMap& symbols() const { return symbols_; }

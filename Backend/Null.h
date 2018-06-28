@@ -49,10 +49,10 @@ namespace backend {
 class NullBackend : public Backend
 {
 public:
-	virtual ~NullBackend();
+	virtual ~NullBackend() override;
 
-	std::string DefaultFilename() const { return ""; }
-	void Process(const dag::DAG&, Bytestream&, ErrorReport::Report) {}
+	std::string DefaultFilename() const override { return ""; }
+	void Process(const dag::DAG&, Bytestream&, ErrorReport::Report) override {}
 };
 
 } // namespace backend

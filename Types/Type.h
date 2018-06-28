@@ -61,7 +61,7 @@ public:
 	static std::string UntypedPart(std::string typedName);
 
 	Type(std::weak_ptr<Type> parent) = delete;
-	virtual ~Type() {}
+	virtual ~Type() override {}
 
 	TypeContext& context() const { return parent_; }
 

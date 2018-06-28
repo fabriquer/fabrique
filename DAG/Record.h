@@ -53,7 +53,7 @@ public:
 	//! Create a record from a non-empty vector of fields.
 	static Record* Create(const ValueMap&, SourceRange);
 
-	virtual ~Record();
+	virtual ~Record() override;
 
 	virtual bool hasFields() const override { return true; }
 	ValueMap fields() const { return fields_; }

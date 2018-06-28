@@ -55,7 +55,7 @@ public:
 	static Build* Create(std::shared_ptr<Rule>&, SharedPtrMap<Value>& args,
 	                     const SourceRange&);
 
-	virtual ~Build() {}
+	virtual ~Build() override {}
 
 	const Rule& buildRule() const { return *rule_; }
 

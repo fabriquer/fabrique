@@ -61,7 +61,7 @@ public:
 	                    const Type&,
 	                    const SourceRange& from = SourceRange::None());
 
-	virtual ~Rule() {}
+	virtual ~Rule() override {}
 
 	ValuePtr Call(const ValueMap&, DAGBuilder&, SourceRange) const override;
 

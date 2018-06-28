@@ -46,7 +46,7 @@ class RecordType : public Type
 public:
 	static RecordType* Create(const NamedTypeVec&, TypeContext&);
 
-	virtual ~RecordType();
+	virtual ~RecordType() override;
 	TypeMap fields() const override { return fieldTypes_; }
 
 	virtual bool hasFields() const override { return true; }

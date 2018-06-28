@@ -43,7 +43,7 @@ namespace fabrique {
 class SequenceType : public Type
 {
 public:
-	virtual ~SequenceType();
+	virtual ~SequenceType() override;
 	const Type& elementType() const { return elementType_; }
 
 	virtual bool isSubtype(const Type&) const override;

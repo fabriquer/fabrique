@@ -46,7 +46,7 @@ class TypeError : public SemanticException
 public:
 	TypeError(const std::string& message, const SourceRange&);
 	TypeError(const TypeError&);
-	virtual ~TypeError();
+	virtual ~TypeError() override;
 };
 
 //! Something is wrong with a @ref fabrique::Type.
@@ -63,7 +63,7 @@ public:
 	                   const std::string& actual, const SourceRange&);
 
 	WrongTypeException(const WrongTypeException&);
-	virtual ~WrongTypeException();
+	virtual ~WrongTypeException() override;
 };
 
 }

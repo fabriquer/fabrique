@@ -52,9 +52,9 @@ public:
 
 	AssertionFailure(const AssertionFailure&);
 
-	virtual ~AssertionFailure();
+	virtual ~AssertionFailure() override;
 
-	const char* what() const noexcept;
+	const char* what() const noexcept override;
 	const std::string& condition() const noexcept { return condition_; }
 	const std::string& message() const noexcept { return message_; }
 
@@ -70,13 +70,13 @@ class OSError : public std::exception, public Printable
 public:
 	OSError(const std::string& message, const std::string& description);
 	OSError(const OSError&);
-	virtual ~OSError();
+	virtual ~OSError() override;
 
 	virtual const std::string& message() const { return message_; }
 	virtual const std::string& description() const { return description_; }
 
-	const char* what() const noexcept { return completeMessage_.c_str(); }
-	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const;
+	const char* what() const noexcept override { return completeMessage_.c_str(); }
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 
 private:
 	const std::string message_;
@@ -92,7 +92,7 @@ class UserError : public std::exception, public Printable
 public:
 	UserError(const std::string& message);
 	UserError(const UserError&);
-	virtual ~UserError();
+	virtual ~UserError() override;
 
 	virtual const std::string& message() const { return message_; }
 	const char* what() const noexcept override { return message_.c_str(); }
@@ -112,7 +112,7 @@ class SourceCodeException
 	: public std::exception, public HasSource, public Printable
 {
 public:
-	virtual ~SourceCodeException();
+	virtual ~SourceCodeException() override;
 
 	const std::string& message() const;
 	virtual const char* what() const noexcept override;
@@ -134,7 +134,7 @@ class SyntaxError : public SourceCodeException
 public:
 	SyntaxError(const std::string& message, const SourceRange&);
 	SyntaxError(const SyntaxError&);
-	virtual ~SyntaxError();
+	virtual ~SyntaxError() override;
 };
 
 //! A semantic error is present in the Fabrique description.
@@ -143,7 +143,7 @@ class SemanticException : public SourceCodeException
 public:
 	SemanticException(const std::string& message, const SourceRange&);
 	SemanticException(const SemanticException&);
-	virtual ~SemanticException();
+	virtual ~SemanticException() override;
 };
 
 }

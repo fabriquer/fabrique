@@ -53,7 +53,7 @@ public:
 	static TypeReference* Create(const UserType& declaredType,
 	                             const Type& declarationType, SourceRange);
 
-	virtual ~TypeReference();
+	virtual ~TypeReference() override;
 
 	const UserType& declaredType() const;
 

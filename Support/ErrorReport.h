@@ -60,7 +60,7 @@ public:
 	       Severity severity = Severity::Error,
 	       unsigned int contextLines = 3);
 
-	virtual ~ErrorReport() {}
+	virtual ~ErrorReport() override {}
 
 	const std::string& getMessage() const { return message_; }
 	void PrettyPrint(Bytestream& out, unsigned int indent = 0) const override;

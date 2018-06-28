@@ -42,7 +42,7 @@ class PosixSharedLibrary : public SharedLibrary
 {
 	public:
 	PosixSharedLibrary(void*);
-	virtual ~PosixSharedLibrary();
+	virtual ~PosixSharedLibrary() override;
 
 	private:
 	void *libHandle_;

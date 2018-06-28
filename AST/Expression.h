@@ -49,7 +49,7 @@ class EvalContext;
 class Expression : public Node, public Typed
 {
 public:
-	virtual ~Expression();
+	virtual ~Expression() override;
 
 	virtual dag::ValuePtr evaluate(EvalContext&) const  = 0;
 

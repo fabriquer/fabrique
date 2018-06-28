@@ -43,7 +43,7 @@ class UserType : public Type
 {
 public:
 	UserType(const Type& userType);
-	virtual ~UserType();
+	virtual ~UserType() override;
 
 	const Type& userType() const { return userType_; }
 

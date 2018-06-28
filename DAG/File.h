@@ -56,7 +56,7 @@ public:
 	static bool Equals(const std::shared_ptr<File>&, const std::shared_ptr<File>&);
 	static bool LessThan(const std::shared_ptr<File>&, const std::shared_ptr<File>&);
 
-	virtual ~File() {}
+	virtual ~File() override {}
 
 	virtual std::string filename() const;
 	virtual std::string relativeName() const;

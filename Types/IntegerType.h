@@ -45,7 +45,7 @@ class TypeContext;
 class IntegerType : public Type
 {
 public:
-	virtual ~IntegerType();
+	virtual ~IntegerType() override;
 	static const Type& get(TypeContext&);
 
 	virtual const Type& onAddTo(const Type&) const override;

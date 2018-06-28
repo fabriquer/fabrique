@@ -54,7 +54,7 @@ public:
 	Parameter(std::string name, const Type& type, std::shared_ptr<Value> defaultValue,
 	          const SourceRange& = SourceRange::None());
 
-	virtual ~Parameter();
+	virtual ~Parameter() override;
 
 	const std::string& name() const { return name_; }
 	const std::shared_ptr<Value>& defaultValue() const
