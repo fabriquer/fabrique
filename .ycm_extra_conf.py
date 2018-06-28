@@ -3,20 +3,15 @@ import os.path
 srcroot = os.path.abspath(os.path.dirname(__file__))
 
 def FlagsForFile(filename, **kwargs):
-    if not (filename.endswith('.h') or filename.endswith('.cc')):
-        return {}
-
     return {
         'flags': [
-            # We use C++11 features (but not C++14) for a balance of non-terribleness
-            # and almost-ubiquitous availability.
-            'std=c++11'
-
             # Include files rooted in the current source tree
-            '-I', srcroot,
+            '-I%s' % srcroot,
+            '-I%s/build' % srcroot,
+            '-I%s/build/Debug' % srcroot,
 
             # Treat vendor headers as system headers (ignore warnings)
-            '-isystem', 'vendor'
+            '-isystem ', ' vendor ',
 
             # Provide lots and lots of warnings!
             '-Weverything',
@@ -26,5 +21,9 @@ def FlagsForFile(filename, **kwargs):
 
             # We aren't (yet) concerned about ABI stability.
             '-Wno-padded',
+
+            # We use C++11 features (but not C++14) for a balance of non-terribleness
+            # and almost-ubiquitous availability.
+            '-std=c++11'
         ],
     }
