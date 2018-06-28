@@ -66,8 +66,6 @@ using std::shared_ptr;
 using std::string;
 using std::vector;
 
-using FileVec = SharedPtrVec<class File>;
-
 namespace {
 
 class ImmutableDAG : public DAG
