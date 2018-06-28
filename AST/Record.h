@@ -50,7 +50,7 @@ namespace ast {
 class Record : public Expression, public HasScope
 {
 public:
-	Record(UniqPtr<Scope>& fields, const RecordType&, const SourceRange&);
+	Record(UniqPtr<Scope>& fields, const SourceRange&);
 
 	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 	virtual void Accept(Visitor&) const override;

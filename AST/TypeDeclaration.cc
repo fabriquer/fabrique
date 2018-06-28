@@ -44,6 +44,7 @@ using namespace fabrique;
 using namespace fabrique::ast;
 
 
+#if 0
 TypeDeclaration::TypeDeclaration(const UserType& t, const SourceRange& loc)
 	: Expression(t, loc), declaredType_(t)
 {
@@ -91,3 +92,4 @@ dag::ValuePtr TypeDeclaration::evaluate(EvalContext&) const
 	return dag::ValuePtr(
 		dag::TypeReference::Create(declaredType_, type(), source()));
 }
+#endif

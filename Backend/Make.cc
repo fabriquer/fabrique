@@ -432,5 +432,5 @@ string MakeFormatter::Format(const String& s)
 
 string MakeFormatter::Format(const TypeReference& t)
 {
-	return t.declaredType().str();
+	return t.referencedType().str();
 }

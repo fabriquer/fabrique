@@ -43,8 +43,8 @@ using namespace fabrique::ast;
 
 
 FieldQuery::FieldQuery(UniqPtr<Expression>& base, UniqPtr<Identifier>& field,
-                       UniqPtr<Expression>& defaultValue, const Type& ty, SourceRange src)
-	: Expression(ty, src), base_(std::move(base)), field_(std::move(field)),
+                       UniqPtr<Expression>& defaultValue, SourceRange src)
+	: Expression(src), base_(std::move(base)), field_(std::move(field)),
 	  defaultValue_(std::move(defaultValue))
 {
 	assert(base_);
@@ -80,19 +80,14 @@ void FieldQuery::Accept(Visitor& v) const
 
 dag::ValuePtr FieldQuery::evaluate(EvalContext& ctx) const
 {
-	const Type::TypeMap fields = base_->type().fields();
-	const std::string fieldName(field_->name());
-
-	auto i = fields.find(fieldName);
-	if (i == fields.end())
-	{
-		// The field doesn't exist, use the default value.
-		return defaultValue().evaluate(ctx);
-	}
-
 	std::shared_ptr<dag::Record> base =
 		std::dynamic_pointer_cast<dag::Record>(base_->evaluate(ctx));
 	assert(base);
 
-	return base->field(fieldName);
+	if (auto result = base->field(field_->name()))
+	{
+		return result;
+	}
+
+	return defaultValue().evaluate(ctx);
 }

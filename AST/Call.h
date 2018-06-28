@@ -50,8 +50,7 @@ namespace ast {
 class Call : public Expression
 {
 public:
-	Call(UniqPtr<Expression>& target, UniqPtrVec<Argument>&,
-	     const Type& resultType, const SourceRange&);
+	Call(UniqPtr<Expression>& target, UniqPtrVec<Argument>&, const SourceRange&);
 
 	const Expression& target() const { return *target_; }
 

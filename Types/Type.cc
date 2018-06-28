@@ -127,10 +127,10 @@ Type* Type::Parameterise(const PtrVec<Type>&, const SourceRange&) const
 	return nullptr;
 }
 
-const Type& Type::Map(TypesMapper convert, const SourceRange& src) const
+const Type& Type::Map(TypesMapper convert, const SourceRange&) const
 {
 	PtrVec<Type> newTypeParams = convert(parameters_);
-	return parent_.find(typeName_, src, newTypeParams);
+	return parent_.find(typeName_, newTypeParams);
 }
 
 

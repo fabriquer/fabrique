@@ -185,10 +185,6 @@ public:
 	//! A typed @ref ast::Identifier.
 	Identifier* Id(UniqPtr<Identifier>&& untyped, const Type*);
 
-	//! An expression that imports a Fabrique module.
-	Import* ImportModule(UniqPtr<StringLiteral>& name,
-	                     UniqPtrVec<Argument>& arguments, SourceRange);
-
 	/**
 	 * A conditional if-then-else expression
 	 * (not a statement, an expression).

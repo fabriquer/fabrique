@@ -58,7 +58,7 @@ public:
 	TypeContext();
 
 	//! Find an existing type (nil type if not found).
-	const Type& find(const std::string& name, const SourceRange& src,
+	const Type& find(const std::string& name,
 	                 const PtrVec<Type>& params = PtrVec<Type>());
 
 	//! The type of a typeless thing.

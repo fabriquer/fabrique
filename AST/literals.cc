@@ -29,6 +29,7 @@
  * SUCH DAMAGE.
  */
 
+#include "AST/EvalContext.h"
 #include "AST/literals.h"
 #include "AST/Visitor.h"
 #include "DAG/Primitive.h"
@@ -52,9 +53,9 @@ void BoolLiteral::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 
 void BoolLiteral::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }
 
-dag::ValuePtr BoolLiteral::evaluate(EvalContext&) const
+dag::ValuePtr BoolLiteral::evaluate(EvalContext& ctx) const
 {
-	return dag::ValuePtr(new dag::Boolean(value(), type(), source()));
+	return ctx.builder().Bool(value(), source());
 }
 
 
@@ -70,9 +71,9 @@ void IntLiteral::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 
 void IntLiteral::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }
 
-dag::ValuePtr IntLiteral::evaluate(EvalContext&) const
+dag::ValuePtr IntLiteral::evaluate(EvalContext& ctx) const
 {
-	return dag::ValuePtr(new dag::Integer(value(), type(), source()));
+	return ctx.builder().Integer(value(), source());
 }
 
 
@@ -118,7 +119,7 @@ void StringLiteral::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 
 void StringLiteral::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }
 
-dag::ValuePtr StringLiteral::evaluate(EvalContext&) const
+dag::ValuePtr StringLiteral::evaluate(EvalContext& ctx) const
 {
-	return dag::ValuePtr(new dag::String(value(), type(), source()));
+	return ctx.builder().String(value(), source());
 }

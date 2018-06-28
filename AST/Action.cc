@@ -51,8 +51,8 @@ using std::string;
 
 typedef std::function<bool (const Type&)> TypePredicate;
 
-template<class T>
-size_t Count(const UniqPtrVec<T>& values, TypePredicate predicate)
+template<typename Values>
+size_t Count(const Values& values, TypePredicate predicate)
 {
 	size_t count = 0;
 
@@ -79,7 +79,7 @@ size_t Count(const UniqPtrVec<T>& values, TypePredicate predicate)
 
 Action* Action::Create(UniqPtrVec<Argument>& args,
                        UniqPtr<UniqPtrVec<Parameter>>& params,
-                       const SourceRange& src, TypeContext& ctx)
+                       const SourceRange& src)
 {
 	UniqPtrVec<Parameter> parameters;
 	if (params)
@@ -101,20 +101,13 @@ Action* Action::Create(UniqPtrVec<Argument>& args,
 		parameters = std::move(*params);
 	}
 
-	const Type& file = ctx.fileType();
-	const Type& fileList = ctx.fileListType();
-
-	const FunctionType& type = ctx.functionType(
-		Count(parameters, FileType::isInput) == 1 ? file : fileList,
-		Count(parameters, FileType::isOutput) == 1 ? file : fileList);
-
-	return new Action(args, parameters, type, src);
+	return new Action(args, parameters, src);
 }
 
 
 Action::Action(UniqPtrVec<Argument>& a, UniqPtrVec<Parameter>& params,
-               const FunctionType& ty, const SourceRange& loc)
-	: Expression(ty, loc), HasParameters(params), args_(std::move(a))
+               const SourceRange& loc)
+	: Expression(loc), HasParameters(params), args_(std::move(a))
 {
 }
 
@@ -174,6 +167,7 @@ dag::ValuePtr Action::evaluate(EvalContext& ctx) const
 {
 	string command;
 	dag::ValueMap arguments;
+	TypeContext &types = ctx.types();
 
 	if (args_.size() < 1)
 		throw SemanticException("Missing action arguments", source());
@@ -196,7 +190,7 @@ dag::ValuePtr Action::evaluate(EvalContext& ctx) const
 
 		dag::ValuePtr v(
 			new dag::String(value->str(),
-			                type().context().stringType(),
+			                types.stringType(),
 			                arg->source())
 		);
 		arguments.emplace(arg->getName().name(), v);
@@ -216,5 +210,12 @@ dag::ValuePtr Action::evaluate(EvalContext& ctx) const
 		parameters.emplace_back(param);
 	}
 
-	return ctx.builder().Rule(command, arguments, parameters, type(), source());
+	const Type& file = types.fileType();
+	const Type& fileList = types.fileListType();
+
+	const FunctionType& type = types.functionType(
+		Count(parameters, FileType::isInput) == 1 ? file : fileList,
+		Count(parameters, FileType::isOutput) == 1 ? file : fileList);
+
+	return ctx.builder().Rule(command, arguments, parameters, type, source());
 }

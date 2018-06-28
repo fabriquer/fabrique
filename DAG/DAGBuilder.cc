@@ -409,10 +409,9 @@ ValuePtr DAGBuilder::String(const string& s, SourceRange src)
 }
 
 
-ValuePtr DAGBuilder::Record(const ValueMap& fields,
-                            const Type& t, SourceRange source)
+std::shared_ptr<Record> DAGBuilder::Record(const ValueMap& fields, SourceRange source)
 {
-	return ValuePtr(Record::Create(fields, t, source));
+	return std::shared_ptr<class Record>(Record::Create(fields, ctx_.types(), source));
 }
 
 

@@ -49,7 +49,7 @@ class FieldQuery : public Expression
 {
 public:
 	FieldQuery(UniqPtr<Expression>& base, UniqPtr<Identifier>& field,
-	           UniqPtr<Expression>& defaultValue, const Type&, SourceRange);
+	           UniqPtr<Expression>& defaultValue, SourceRange);
 
 	const Expression& base() const { return *base_; }
 	const Identifier& field() const { return *field_; }

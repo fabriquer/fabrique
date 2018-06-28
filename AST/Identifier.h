@@ -33,7 +33,6 @@
 #define IDENTIFIER_H
 
 #include "AST/Node.h"
-#include "Types/OptionallyTyped.h"
 
 #include <string>
 
@@ -46,11 +45,10 @@ class Visitor;
 /**
  * The name of a value, function, parameter or argument.
  */
-class Identifier : public Node, public OptionallyTyped
+class Identifier : public Node
 {
 public:
-	Identifier(const std::string& name, const Type* = nullptr,
-	           const SourceRange& src = SourceRange::None());
+	Identifier(std::string name, SourceRange src = SourceRange::None());
 
 	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 	const std::string& name() const { return name_; }
@@ -65,6 +63,9 @@ public:
 private:
 	const std::string name_;
 };
+
+template<class T>
+using NamedPtrVec = std::vector<std::pair<UniqPtr<Identifier>, UniqPtr<T>>>;
 
 } // namespace ast
 } // namespace fabrique

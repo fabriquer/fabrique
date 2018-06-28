@@ -110,5 +110,5 @@ dag::ValuePtr FileList::evaluate(EvalContext& ctx) const
 
 	scope.leave();
 
-	return dag::ValuePtr(dag::List::of(files, source(), type().context()));
+	return dag::ValuePtr(dag::List::of(files, source(), ctx.types()));
 }

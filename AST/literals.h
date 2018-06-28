@@ -50,8 +50,8 @@ public:
 	virtual std::string str() const override = 0;
 
 protected:
-	Literal(const T& value, const Type& ty, const SourceRange& loc)
-		: Expression(ty, loc), value_(value)
+	Literal(const T& value, const SourceRange& loc)
+		: Expression(loc), value_(value)
 	{
 	}
 
@@ -64,8 +64,8 @@ private:
 class BoolLiteral : public Literal<bool>
 {
 public:
-	BoolLiteral(bool value, const Type& ty, const SourceRange& loc)
-		: Literal(value, ty, loc)
+	BoolLiteral(bool value, const SourceRange& loc)
+		: Literal(value, loc)
 	{
 	}
 
@@ -81,8 +81,8 @@ public:
 class IntLiteral : public Literal<int>
 {
 public:
-	IntLiteral(int value, const Type& ty, const SourceRange& loc)
-		: Literal(value, ty, loc)
+	IntLiteral(int value, const SourceRange& loc)
+		: Literal(value, loc)
 	{
 	}
 
@@ -98,9 +98,8 @@ public:
 class StringLiteral : public Literal<std::string>
 {
 public:
-	StringLiteral(const std::string& s, const Type& ty,
-	              const SourceRange& loc)
-		: Literal(s, ty, loc)
+	StringLiteral(const std::string& s, const SourceRange& loc)
+		: Literal(s, loc)
 	{
 	}
 

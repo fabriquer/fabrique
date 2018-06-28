@@ -69,8 +69,7 @@ public:
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
 private:
-	UnaryOperation(UniqPtr<Expression>& e, enum Operator op,
-	               const Type& ty, const SourceRange& loc);
+	UnaryOperation(UniqPtr<Expression>& e, enum Operator op, const SourceRange&);
 
 	const UniqPtr<Expression> subexpr_;
 	const Operator op_;

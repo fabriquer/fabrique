@@ -107,27 +107,34 @@ bool Scope::contains(const Identifier& name) const
 
 void Scope::Register(const Argument *a)
 {
+#if 0
 	assert(a);
 	assert(a->hasName());
 	Register(a->getName(), a->getValue().type());
+#endif
 }
 
 
 void Scope::Register(const Parameter *p)
 {
+#if 0
 	assert(p);
 	Register(p->getName(), p->type());
+#endif
 }
 
 
 void Scope::Register(const Value& v)
 {
+#if 0
 	Register(v.name(), v.value().type());
+#endif
 }
 
 
 void Scope::Register(const Identifier& id, const Type& t)
 {
+#if 0
 	Bytestream::Debug("ast.scope")
 		<< Bytestream::Action << "scope"
 		<< Bytestream::Operator << " <- "
@@ -142,6 +149,7 @@ void Scope::Register(const Identifier& id, const Type& t)
 		                  id.source());
 
 	symbols_.emplace(id.name(), t);
+#endif
 }
 
 

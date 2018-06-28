@@ -62,6 +62,7 @@ using std::unique_ptr;
 int yyparse(ast::Parser*);
 
 
+#if 0
 Parser::Parser(TypeContext& ctx, plugin::Registry& pluginRegistry,
                plugin::Loader& pluginLoader, string srcroot)
 	: ctx_(ctx), lexer_(Lexer::instance()),
@@ -72,7 +73,7 @@ Parser::Parser(TypeContext& ctx, plugin::Registry& pluginRegistry,
 }
 
 
-const Type& Parser::ParseDefinitions(const std::vector<string>& definitions)
+const Type& Parser::ParseDefinitions(const std::vector<string>& /*definitions*/)
 {
 	if (definitions_)
 		throw UserError("arguments already defined");
@@ -82,6 +83,7 @@ const Type& Parser::ParseDefinitions(const std::vector<string>& definitions)
 
 	UniqPtr<Scope> scope { new Scope(nullptr, "definitions", nil) };
 
+	// TODO: do this differently
 	for (const string& d : definitions)
 	{
 		std::istringstream input(d + ";");
@@ -259,7 +261,7 @@ const Type& Parser::getType(const string& name,
 {
 	const SourceRange src(begin, end);
 
-	const Type& t = ctx_.find(name, src, params);
+	const Type& t = ctx_.find(name, params);
 	if (not t)
 	{
 		ReportError("unknown type", src);
@@ -346,7 +348,7 @@ Action* Parser::DefineAction(UniqPtr<UniqPtrVec<Argument>>& args,
 		return nullptr;
 	}
 
-	return Action::Create(*args, params, src, ctx_);
+	return Action::Create(*args, params, src);
 }
 
 
@@ -404,7 +406,7 @@ Call* Parser::CreateCall(UniqPtr<Expression>& targetExpr,
 		}
 	}
 
-	return new Call(targetExpr, *args, fnType.returnType(), src);
+	return new Call(targetExpr, *args, src);
 }
 
 
@@ -1109,3 +1111,4 @@ const ErrorReport& Parser::ReportError(const string& message,
 
 	return *errs_.back();
 }
+#endif

@@ -45,8 +45,8 @@ using namespace fabrique::ast;
 
 
 ForeachExpr::ForeachExpr(UniqPtr<Mapping>& mapping, UniqPtr<Expression>& body,
-                         const Type& type, const SourceRange& source)
-	: Expression(type, source),
+                         const SourceRange& source)
+	: Expression(source),
 	  mapping_(std::move(mapping)), body_(std::move(body))
 {
 }
@@ -83,7 +83,6 @@ dag::ValuePtr ForeachExpr::evaluate(EvalContext& ctx) const
 	SharedPtrVec<dag::Value> values;
 
 	auto target = sourceSequence().evaluate(ctx);
-	assert(target->type().isOrdered());
 	assert(target->asList());
 
 	//
@@ -93,17 +92,14 @@ dag::ValuePtr ForeachExpr::evaluate(EvalContext& ctx) const
 	const ast::Parameter& loopParam = loopParameter();
 	for (const dag::ValuePtr& element : *target->asList())
 	{
-		assert(element->type().isSubtype(loopParameter().type()));
-
 		auto scope(ctx.EnterScope("foreach body"));
 		scope.set(loopParam.getName().name(), element);
 
 		dag::ValuePtr result = body_->evaluate(ctx);
 		assert(result);
-		assert(result->type().isSubtype(body_->type()));
 
 		values.push_back(std::move(result));
 	}
 
-	return dag::ValuePtr(dag::List::of(values, source(), type().context()));
+	return dag::ValuePtr(dag::List::of(values, source(), ctx.types()));
 }

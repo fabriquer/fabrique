@@ -48,7 +48,7 @@ BooleanType::~BooleanType() {}
 
 const Type& BooleanType::get(TypeContext& ctx)
 {
-	const Type& existing = ctx.find(Name, SourceRange::None());
+	const Type& existing = ctx.find(Name);
 	if (existing)
 		return existing;
 

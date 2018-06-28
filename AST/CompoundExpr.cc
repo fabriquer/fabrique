@@ -44,8 +44,7 @@ using namespace fabrique::ast;
 CompoundExpression::CompoundExpression(UniqPtr<Scope>&& scope,
                                        UniqPtr<Expression>& result,
                                        const SourceRange& loc)
-	: Expression(result->type(), loc), Scope(std::move(*scope)),
-	  result_(std::move(result))
+	: Expression(loc), Scope(std::move(*scope)), result_(std::move(result))
 {
 	assert(result_);
 }

@@ -1,6 +1,6 @@
 /** @file AST/ForeachExpr.h    Declaration of @ref fabrique::ast::ForeachExpr. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2013-2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -36,9 +36,6 @@
 #include "AST/Mapping.h"
 
 namespace fabrique {
-
-class Type;
-
 namespace ast {
 
 class Parameter;
@@ -51,8 +48,7 @@ class Value;
 class ForeachExpr : public Expression
 {
 public:
-	ForeachExpr(UniqPtr<Mapping>&, UniqPtr<Expression>& body,
-	            const Type&, const SourceRange&);
+	ForeachExpr(UniqPtr<Mapping>&, UniqPtr<Expression>& body, const SourceRange&);
 
 	const Expression& sourceSequence() const { return mapping_->source(); }
 	const Parameter& loopParameter() const { return mapping_->target(); }

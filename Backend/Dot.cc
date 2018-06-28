@@ -257,5 +257,5 @@ string DotFormatter::Format(const String& s)
 
 string DotFormatter::Format(const TypeReference& t)
 {
-	return t.declaredType().str();
+	return t.referencedType().str();
 }

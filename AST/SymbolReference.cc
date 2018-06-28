@@ -44,8 +44,8 @@ using namespace fabrique::ast;
 using std::string;
 
 
-SymbolReference::SymbolReference(UniqPtr<Node>&& name, const Type& t)
-	: Expression(t, name->source()),
+SymbolReference::SymbolReference(UniqPtr<Node>&& name)
+	: Expression(name->source()),
 	  name_(std::move(name))
 {
 }

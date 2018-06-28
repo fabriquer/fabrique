@@ -1,4 +1,5 @@
 sources = files(
+	ErrorReporter.cc
 	Lexer.cc
 	Parser.cc
 	Token.cc

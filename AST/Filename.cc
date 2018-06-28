@@ -38,6 +38,7 @@
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 #include "Types/FileType.h"
+#include "Types/TypeContext.h"
 
 #include <cassert>
 #include <set>
@@ -48,33 +49,20 @@ using std::string;
 
 
 Filename* Filename::Create(UniqPtr<Expression>& name, UniqPtrVec<Argument>& args,
-                           const FileType& t, const SourceRange& src)
+                           const SourceRange& src)
 {
 	if (args.empty())
-		return new Filename(name, args, t, src);
+		return new Filename(name, args, src);
 
-	Type::TypeMap argTypes;
-	for (const UniqPtr<Argument>& a : args)
-		argTypes.emplace(a->getName().name(), a->type());
-
-	const FileType& incomplete = dynamic_cast<const FileType&>(t);
-	const FileType& complete = incomplete.WithArguments(argTypes);
-
-	return new Filename(name, args, complete, src);
+	return new Filename(name, args, src);
 }
 
 
 Filename::Filename(UniqPtr<Expression>& name, UniqPtrVec<Argument>& args,
-                   const FileType& t, const SourceRange& src)
-	: Expression(t, src), unqualName_(std::move(name)),
+                   const SourceRange& src)
+	: Expression(src), unqualName_(std::move(name)),
 	  args_(std::move(args))
 {
-}
-
-
-const fabrique::FileType& Filename::type() const
-{
-	return dynamic_cast<const FileType&>(Expression::type());
 }
 
 
@@ -116,6 +104,7 @@ dag::ValuePtr Filename::evaluate(EvalContext& ctx) const
 	assert(ctx.Lookup(ast::Subdirectory));
 	string subdirectory = ctx.Lookup(ast::Subdirectory)->str();
 
+	Type::TypeMap argTypes;
 	dag::ValueMap attributes;
 	for (const UniqPtr<ast::Argument>& a : args_)
 	{
@@ -125,6 +114,7 @@ dag::ValuePtr Filename::evaluate(EvalContext& ctx) const
 
 		const string& name = a->getName().name();
 		dag::ValuePtr value = a->getValue().evaluate(ctx);
+		argTypes.emplace(name, value->type());
 
 		if (name == ast::Subdirectory)
 			subdirectory = value->str();
@@ -133,6 +123,6 @@ dag::ValuePtr Filename::evaluate(EvalContext& ctx) const
 			attributes[name] = value;
 	}
 
-	return ctx.builder().File(
-		subdirectory, filename, attributes, type(), source());
+	const FileType& t = ctx.types().fileType().WithArguments(argTypes);
+	return ctx.builder().File(subdirectory, filename, attributes, t, source());
 }

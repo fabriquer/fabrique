@@ -49,7 +49,6 @@ class FileList;
 class ForeachExpr;
 class Function;
 class Identifier;
-class Import;
 class List;
 class Parameter;
 class Record;

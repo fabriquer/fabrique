@@ -43,8 +43,8 @@ using namespace fabrique;
 using namespace fabrique::ast;
 
 
-Record::Record(UniqPtr<Scope>& fields, const RecordType& ty, const SourceRange& loc)
-	: Expression(ty, loc), HasScope(std::move(fields))
+Record::Record(UniqPtr<Scope>& fields, const SourceRange& loc)
+	: Expression(loc), HasScope(std::move(fields))
 {
 }
 
@@ -83,9 +83,8 @@ dag::ValuePtr Record::evaluate(EvalContext& ctx) const
 	auto instantiationScope(ctx.EnterScope("record"));
 
 	dag::ValueMap fields;
-
 	for (auto& field : scope().values())
 		fields[field->name().name()] = field->evaluate(ctx);
 
-	return ctx.builder().Record(fields, type(), source());
+	return ctx.builder().Record(fields, source());
 }

@@ -377,9 +377,11 @@ string EvalContext::PopValueName()
 }
 
 
+#if 0
 ValuePtr EvalContext::Function(const dag::Function::Evaluator fn,
                                const SharedPtrVec<dag::Parameter>& params,
-                               const FunctionType& type, SourceRange source)
+                               SourceRange source)
 {
-	return builder_.Function(fn, CopyCurrentScope(), params, type, source);
+	return builder_.Function(fn, CopyCurrentScope(), params, source);
 }
+#endif

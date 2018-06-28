@@ -179,7 +179,6 @@ public:
 	//! Define a @ref dag::Function.
 	dag::ValuePtr Function(dag::Function::Evaluator,
 	                       const SharedPtrVec<dag::Parameter>&,
-	                       const FunctionType&,
 	                       SourceRange = SourceRange::None());
 
 

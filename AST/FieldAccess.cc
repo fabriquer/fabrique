@@ -44,7 +44,7 @@ using namespace fabrique::ast;
 
 
 FieldAccess::FieldAccess(UniqPtr<Expression>& base, UniqPtr<Identifier>& field)
-	: Expression(field->type(), SourceRange::Over(base, field)),
+	: Expression(SourceRange::Over(base, field)),
 	  base_(std::move(base)), field_(std::move(field))
 {
 }

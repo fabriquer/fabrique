@@ -53,11 +53,10 @@ class Value;
 class Function : public Expression, public HasParameters
 {
 public:
-	Function(UniqPtrVec<Parameter>& params, const FunctionType& ty,
-	         UniqPtr<Expression>& body, const SourceRange& loc);
+	Function(UniqPtrVec<Parameter>& params, UniqPtr<Expression>& body,
+	         const SourceRange& loc);
 
 	const Expression& body() const { return *body_; }
-	virtual const FunctionType& type() const override;
 
 	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 	virtual void Accept(Visitor&) const override;

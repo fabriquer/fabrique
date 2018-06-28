@@ -58,18 +58,14 @@ BinaryOperation* BinaryOperation::Create(UniqPtr<Expression>&& lhs,
 	assert(rhs);
 
 	SourceRange loc = SourceRange::Over(lhs, rhs);
-	const Type& resultType = ResultType(lhs->type(), rhs->type(), op, loc);
-
-	return new BinaryOperation(
-		std::move(lhs), std::move(rhs), op, resultType, loc);
+	return new BinaryOperation(std::move(lhs), std::move(rhs), op, loc);
 }
 
 
 BinaryOperation::BinaryOperation(
 		UniqPtr<Expression>&& lhs, UniqPtr<Expression>&& rhs,
-		enum Operator op, const Type& ty, const SourceRange& src)
-	: Expression(ty, src), lhs_(std::move(lhs)), rhs_(std::move(rhs)),
-	  op_(op)
+		enum Operator op, const SourceRange& src)
+	: Expression(src), lhs_(std::move(lhs)), rhs_(std::move(rhs)), op_(op)
 {
 }
 
@@ -137,6 +133,8 @@ dag::ValuePtr BinaryOperation::evaluate(EvalContext& ctx) const
 	dag::ValuePtr lhs = lhs_->evaluate(ctx);
 	dag::ValuePtr rhs = rhs_->evaluate(ctx);
 	assert(lhs and rhs);
+
+	SourceRange loc = source();
 
 	switch (op_)
 	{

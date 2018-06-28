@@ -1,6 +1,6 @@
 /** @file AST/Filename.h    Declaration of @ref fabrique::ast::Filename. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -47,12 +47,10 @@ class Filename : public Expression
 {
 public:
 	static Filename* Create(UniqPtr<Expression>& name, UniqPtrVec<Argument>& args,
-	                        const FileType& ty, const SourceRange& loc);
+	                        const SourceRange& loc);
 
 	const Expression& name() const { return *unqualName_; }
 	const UniqPtrVec<Argument>& arguments() const { return args_; }
-
-	const FileType& type() const override;
 
 	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 	virtual void Accept(Visitor&) const override;
@@ -61,7 +59,7 @@ public:
 
 private:
 	Filename(UniqPtr<Expression>& name, UniqPtrVec<Argument>& args,
-	         const FileType& ty, const SourceRange& loc);
+	         const SourceRange& loc);
 
 	//! A filename, without qualifiers like "in this subdirectory".
 	const UniqPtr<Expression> unqualName_;

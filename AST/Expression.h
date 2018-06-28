@@ -1,6 +1,6 @@
 /** @file AST/Expression.h    Declaration of @ref fabrique::ast::Expression. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -35,7 +35,6 @@
 #include "ADT/PtrVec.h"
 #include "AST/Node.h"
 #include "DAG/Value.h"
-#include "Types/Typed.h"
 
 namespace fabrique {
 
@@ -46,7 +45,7 @@ class EvalContext;
 /**
  * Base class for expressions that can be evaluated.
  */
-class Expression : public Node, public Typed
+class Expression : public Node
 {
 public:
 	virtual ~Expression() override;
@@ -54,8 +53,8 @@ public:
 	virtual dag::ValuePtr evaluate(EvalContext&) const  = 0;
 
 protected:
-	Expression(const Type& t, const SourceRange& src)
-		: Node(src), Typed(t)
+	Expression(const SourceRange& src)
+		: Node(src)
 	{
 	}
 };

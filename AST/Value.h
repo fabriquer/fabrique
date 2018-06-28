@@ -1,6 +1,6 @@
 /** @file AST/Value.h    Declaration of @ref fabrique::ast::Value. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2016, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -35,6 +35,7 @@
 #include "ADT/UniqPtr.h"
 #include "AST/Expression.h"
 #include "AST/Identifier.h"
+#include "AST/TypeReference.h"
 
 namespace fabrique {
 namespace ast {
@@ -45,7 +46,7 @@ namespace ast {
 class Value : public Expression
 {
 public:
-	Value(UniqPtr<Identifier>&, UniqPtr<Expression>&, const Type& t);
+	Value(UniqPtr<Identifier>, UniqPtr<TypeReference>, UniqPtr<Expression>);
 
 	const Identifier& name() const { return *name_; }
 	const Expression& value() const { return *value_; }
@@ -57,6 +58,7 @@ public:
 
 private:
 	const UniqPtr<Identifier> name_;
+	const UniqPtr<TypeReference> explicitType_;
 	const UniqPtr<Expression> value_;
 };
 

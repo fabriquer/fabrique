@@ -3,7 +3,7 @@
  * Declaration of @ref fabrique::dag::TypeReference.
  */
 /*
- * Copyright (c) 2015 Jonathan Anderson
+ * Copyright (c) 2015, 2017-2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -39,31 +39,27 @@
 
 
 namespace fabrique {
-
-class UserType;
-
 namespace dag {
 
 /**
- * A reference to a file on disk (source or target).
+ * A reference to a type.
  */
 class TypeReference : public Value
 {
 public:
-	static TypeReference* Create(const UserType& declaredType,
-	                             const Type& declarationType, SourceRange);
+	static ValuePtr Create(const Type& t, SourceRange);
 
 	virtual ~TypeReference() override;
 
-	const UserType& declaredType() const;
+	const Type& referencedType() const;
 
 	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 	void Accept(Visitor&) const override;
 
 private:
-	TypeReference(const UserType& declaredType, const Type&, SourceRange);
+	TypeReference(const Type& referencedType, SourceRange);
 
-	const UserType& declaredType_;
+	const Type& referencedType_;
 };
 
 } // namespace dag

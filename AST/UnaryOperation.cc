@@ -34,7 +34,6 @@
 #include "Support/Bytestream.h"
 #include "Support/SourceLocation.h"
 #include "Support/exceptions.h"
-#include "Types/Type.h"
 
 #include <cassert>
 
@@ -48,12 +47,12 @@ UnaryOperation* UnaryOperation::Create(Operator op, const SourceRange& opLoc,
 	assert(e);
 
 	SourceRange loc = SourceRange(opLoc, e->source());
-	return new UnaryOperation(e, op, e->type(), loc);
+	return new UnaryOperation(e, op, loc);
 }
 
 UnaryOperation::UnaryOperation(UniqPtr<Expression>& e, enum Operator op,
-                               const Type& ty, const SourceRange& loc)
-	: Expression(ty, loc), subexpr_(std::move(e)), op_(op)
+                               const SourceRange& loc)
+	: Expression(loc), subexpr_(std::move(e)), op_(op)
 {
 }
 

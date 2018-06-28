@@ -44,8 +44,8 @@ using namespace fabrique;
 using namespace fabrique::ast;
 
 
-SomeValue::SomeValue(const Type& type, UniqPtr<Expression>& init, SourceRange src)
-	: Expression(type, src), initializer_(std::move(init))
+SomeValue::SomeValue(UniqPtr<Expression>& init, SourceRange src)
+	: Expression(src), initializer_(std::move(init))
 {
 }
 
@@ -67,10 +67,8 @@ void SomeValue::Accept(Visitor& v) const
 
 dag::ValuePtr SomeValue::evaluate(EvalContext& ctx) const
 {
-	const Type& t = type();
-
 	dag::ValuePtr exists(
-		new dag::Boolean(true, t.context().booleanType(), source())
+		new dag::Boolean(true, ctx.types().booleanType(), source())
 	);
 
 	dag::ValueMap fields {
@@ -84,5 +82,5 @@ dag::ValuePtr SomeValue::evaluate(EvalContext& ctx) const
 		},
 	};
 
-	return ctx.builder().Record(fields, t, source());
+	return ctx.builder().Record(fields, source());
 }

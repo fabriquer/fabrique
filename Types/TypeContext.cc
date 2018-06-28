@@ -79,8 +79,7 @@ TypeContext::TypeContext()
 }
 
 
-const Type& TypeContext::find(const string& name, const SourceRange& src,
-                             const PtrVec<Type>& params)
+const Type& TypeContext::find(const string& name, const PtrVec<Type>& params)
 {
 	auto i = types.find(QualifiedName(name, params));
 	if (i != types.end())
@@ -92,7 +91,8 @@ const Type& TypeContext::find(const string& name, const SourceRange& src,
 		if (i != types.end())
 		{
 			const Type& unparam = *i->second;
-			Type *parameterised = unparam.Parameterise(params, src);
+			Type *parameterised = unparam.Parameterise(params, 
+			                                           SourceRange::None());
 
 			if (parameterised and *parameterised)
 				Register(parameterised);
@@ -124,16 +124,16 @@ const Type& TypeContext::integerType()
 	return t;
 }
 
-const Type& TypeContext::listOf(const Type& elementTy, const SourceRange& src)
+const Type& TypeContext::listOf(const Type& elementTy, const SourceRange&)
 {
 	PtrVec<Type> params(1, &elementTy);
-	return find(rawSequenceType_->name(), src, params);
+	return find(rawSequenceType_->name(), params);
 }
 
-const Type& TypeContext::maybe(const Type& elementTy, const SourceRange& src)
+const Type& TypeContext::maybe(const Type& elementTy, const SourceRange&)
 {
 	PtrVec<Type> params(1, &elementTy);
-	return find(rawMaybeType_->name(), src, params);
+	return find(rawMaybeType_->name(), params);
 }
 
 const FileType& TypeContext::fileType()
@@ -147,7 +147,7 @@ const FileType& TypeContext::inputFileType()
 {
 	static const Type& in = Register(Type::Create("in", PtrVec<Type>(), *this));
 	static const FileType& ty = dynamic_cast<const FileType&>(
-		find("file", SourceRange::None(), PtrVec<Type>(1, &in)));
+		find("file", PtrVec<Type>(1, &in)));
 
 	return ty;
 }
@@ -156,7 +156,7 @@ const FileType& TypeContext::outputFileType()
 {
 	static const Type& out = Register(Type::Create("out", PtrVec<Type>(), *this));
 	static const FileType& ty = dynamic_cast<const FileType&>(
-		find("file", SourceRange::None(), PtrVec<Type>(1, &out)));
+		find("file", PtrVec<Type>(1, &out)));
 
 	return ty;
 }

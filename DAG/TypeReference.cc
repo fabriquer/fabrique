@@ -3,7 +3,7 @@
  * Definition of @ref fabrique::dag::TypeReference.
  */
 /*
- * Copyright (c) 2015 Jonathan Anderson
+ * Copyright (c) 2015, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -35,55 +35,28 @@
 #include "DAG/TypeReference.h"
 #include "DAG/Visitor.h"
 #include "Support/Bytestream.h"
-#include "Types/UserType.h"
+#include "Types/TypeContext.h"
 using namespace fabrique::dag;
 
 
 TypeReference::~TypeReference() {}
 
 
-TypeReference* TypeReference::Create(const UserType& declaredType,
-                                     const Type& declaration, SourceRange src)
+ValuePtr TypeReference::Create(const Type& t, SourceRange src)
 {
-	return new TypeReference(declaredType, declaration, src);
+	return ValuePtr(new TypeReference(t, src));
 }
 
 
-const fabrique::UserType& TypeReference::declaredType() const
+const fabrique::Type& TypeReference::referencedType() const
 {
-	return declaredType_;
+	return referencedType_;
 }
 
 
 void TypeReference::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
-	out
-		<< Bytestream::Definition << "type"
-		<< Bytestream::Operator << '['
-		;
-
-	auto fields = declaredType_.userType().fields();
-	for (auto i = fields.begin(); i != fields.end(); )
-	{
-		out
-			<< Bytestream::Definition << i->first
-			<< Bytestream::Operator << ':'
-			;
-
-		i->second.PrettyPrint(out, indent);
-
-		i++;
-		if (i != fields.end())
-			out
-				<< Bytestream::Operator << ", "
-				<< Bytestream::Reset
-				;
-	}
-
-	out
-		<< Bytestream::Operator << ']'
-		<< Bytestream::Reset
-		;
+	referencedType_.PrettyPrint(out, indent);
 }
 
 
@@ -93,8 +66,7 @@ void TypeReference::Accept(Visitor& v) const
 }
 
 
-TypeReference::TypeReference(const UserType& declaredType, const Type& t,
-                             SourceRange src)
-	: Value(t, src), declaredType_(declaredType)
+TypeReference::TypeReference(const Type& t, SourceRange src)
+	: Value(t.context().find("type"), src), referencedType_(t)
 {
 }

@@ -81,7 +81,7 @@ public:
 
 private:
 	BinaryOperation(UniqPtr<Expression>&& lhs, UniqPtr<Expression>&& rhs,
-	                enum Operator, const Type&, const SourceRange&);
+	                enum Operator, const SourceRange&);
 
 	static const Type& ResultType(const Type& lhs, const Type& rhs,
                                       Operator, SourceRange&);

@@ -47,18 +47,10 @@ using namespace fabrique::ast;
 using std::dynamic_pointer_cast;
 
 
-Function::Function(UniqPtrVec<Parameter>& params, const FunctionType& ty,
-                   UniqPtr<Expression>& body, const SourceRange& loc)
-	: Expression(ty, loc), HasParameters(params), body_(std::move(body))
+Function::Function(UniqPtrVec<Parameter>& params, UniqPtr<Expression>& body,
+                   const SourceRange& loc)
+	: Expression(loc), HasParameters(params), body_(std::move(body))
 {
-}
-
-
-const FunctionType& Function::type() const
-{
-	// We know that our type is a FunctionType because that's what we
-	// passed to Expression() in the constructor.
-	return dynamic_cast<const FunctionType&>(Expression::type());
 }
 
 
@@ -87,7 +79,6 @@ void Function::PrettyPrint(Bytestream& out, unsigned int indent) const
 	out
 		<< Bytestream::Operator << "): "
 		<< Bytestream::Reset
-		<< dynamic_cast<const FunctionType&>(type()).returnType()
 		<< "\n";
 
 	body_->PrettyPrint(out, indent);
@@ -147,5 +138,5 @@ dag::ValuePtr Function::evaluate(EvalContext& ctx) const
 		return body().evaluate(ctx);
 	};
 
-	return ctx.Function(eval, parameters, type(), source());
+	return ctx.Function(eval, parameters, source());
 }

@@ -44,9 +44,8 @@ using namespace fabrique::ast;
 Conditional::Conditional(const SourceRange& ifLoc,
                          UniqPtr<Expression>& condition,
                          UniqPtr<Expression>& thenResult,
-                         UniqPtr<Expression>& elseResult,
-                         const Type& ty)
-	: Expression(ty, SourceRange(ifLoc.begin, elseResult->source().end)),
+                         UniqPtr<Expression>& elseResult)
+	: Expression(SourceRange(ifLoc.begin, elseResult->source().end)),
 	  condition_(std::move(condition)),
 	  thenClause_(std::move(thenResult)),
 	  elseClause_(std::move(elseResult))
@@ -82,12 +81,12 @@ void Conditional::Accept(Visitor& v) const
 
 dag::ValuePtr Conditional::evaluate(EvalContext& ctx) const
 {
-	std::shared_ptr<dag::Boolean> cond =
-		std::dynamic_pointer_cast<dag::Boolean>(condition_->evaluate(ctx));
+	auto cond = condition_->evaluate(ctx);
+	auto boolean = std::dynamic_pointer_cast<dag::Boolean>(cond);
 
-	if (not cond)
-		throw WrongTypeException("bool", type(), source());
+	if (not boolean)
+		throw WrongTypeException("bool", cond->type(), source());
 
 	// Evaluate either the "then" or the "else" clause.
-	return (cond->value() ? thenClause_ : elseClause_)->evaluate(ctx);
+	return (boolean->value() ? thenClause_ : elseClause_)->evaluate(ctx);
 }

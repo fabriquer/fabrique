@@ -35,6 +35,7 @@
 #include "DAG/Build.h"
 #include "DAG/File.h"
 #include "DAG/List.h"
+#include "DAG/TypeReference.h"
 #include "Support/Bytestream.h"
 #include "Types/Type.h"
 #include "Types/TypeError.h"
@@ -47,13 +48,12 @@ using namespace fabrique::ast;
 using std::string;
 
 
-Value::Value(UniqPtr<Identifier>& id, UniqPtr<Expression>& value, const Type& t)
-	: Expression(t, SourceRange::Over(id, value)),
-	  name_(std::move(id)), value_(std::move(value))
+Value::Value(UniqPtr<Identifier> id, UniqPtr<TypeReference> explicitType,
+             UniqPtr<Expression> value)
+	: Expression(SourceRange::Over(id, value)),
+	  name_(std::move(id)), explicitType_(std::move(explicitType)),
+	  value_(std::move(value))
 {
-	assert(not name_->isTyped() or t.isSubtype(name_->type()));
-	assert(value_->type().isSubtype(t));
-
 	assert(name_);
 	assert(value_);
 }
@@ -63,11 +63,15 @@ void Value::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
 	string tabs(indent, '\t');
 
+	out << tabs << Bytestream::Definition << name_->name();
+
+	if (explicitType_)
+	{
+		out << Bytestream::Operator << ":";
+		explicitType_->PrettyPrint(out, indent);
+	}
+
 	out
-		<< tabs
-		<< Bytestream::Definition << name_->name()
-		<< Bytestream::Operator << ":"
-		<< Bytestream::Type << type()
 		<< Bytestream::Operator << " = "
 		<< Bytestream::Reset << *value_
 		<< Bytestream::Operator << ";"
@@ -109,7 +113,14 @@ dag::ValuePtr Value::evaluate(EvalContext& ctx) const
 		<< "\n"
 		;
 
-	val->type().CheckSubtype(type(), val->source());
+	if (explicitType_)
+	{
+		auto t = explicitType_->evaluate(ctx);
+		auto ref = std::dynamic_pointer_cast<dag::TypeReference>(t);
+		assert(ref);
+
+		val->type().CheckSubtype(ref->referencedType(), val->source());
+	}
 
 	ctx.Define(valueName, val);
 

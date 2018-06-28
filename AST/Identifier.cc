@@ -1,6 +1,6 @@
 /** @file AST/Identifier.cc    Definition of @ref fabrique::ast::Identifier. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -47,9 +47,8 @@ static const char* ReservedNames[] =
 };
 
 
-Identifier::Identifier(const std::string& name, const Type *type,
-                       const SourceRange& src)
-	: Node(src), OptionallyTyped(type), name_(name)
+Identifier::Identifier(std::string name, SourceRange src)
+	: Node(src), name_(name)
 {
 }
 
@@ -66,14 +65,7 @@ bool Identifier::reservedName() const
 
 void Identifier::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
-	out << Bytestream::Reference << name_;
-
-	if (isTyped())
-		out << Bytestream::Operator << ":"
-		<< Bytestream::Type << type()
-		;
-
-	out << Bytestream::Reset;
+	out << Bytestream::Reference << name_ << Bytestream::Reset;
 }
 
 
@@ -82,10 +74,10 @@ void Identifier::Accept(Visitor& v) const { v.Enter(*this); v.Leave(*this); }
 
 bool Identifier::operator == (const Identifier& other) const
 {
-	return name() == other.name() and type() == other.type();
+	return name() == other.name();
 }
 
 bool Identifier::operator < (const Identifier& other) const
 {
-	return name() < other.name() or type().isSubtype(other.type());
+	return name() < other.name();
 }

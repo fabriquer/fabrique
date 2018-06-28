@@ -140,11 +140,7 @@ shared_ptr<Record> SysctlPlugin::Create(DAGBuilder& builder, const ValueMap& arg
 		},
 	};
 
-	auto result = std::dynamic_pointer_cast<Record>(
-		builder.Record(fields, type(), SourceRange::None()));
-
-	assert(result);
-	return result;
+	return builder.Record(fields);
 }
 
 

@@ -40,12 +40,7 @@
 #include "AST/Parameter.h"
 
 namespace fabrique {
-
-class FunctionType;
-class TypeContext;
-
 namespace ast {
-
 
 /**
  * A build action that can transform inputs into outputs.
@@ -64,7 +59,7 @@ public:
 	 */
 	static Action* Create(UniqPtrVec<Argument>&,
 	                      UniqPtr<UniqPtrVec<Parameter>>&,
-	                      const SourceRange&, TypeContext&);
+	                      const SourceRange&);
 
 	const UniqPtrVec<Argument>& arguments() const { return args_; }
 
@@ -74,8 +69,7 @@ public:
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
 private:
-	Action(UniqPtrVec<Argument>&, UniqPtrVec<Parameter>&,
-	       const FunctionType&, const SourceRange&);
+	Action(UniqPtrVec<Argument>&, UniqPtrVec<Parameter>&, const SourceRange&);
 
 	UniqPtrVec<Argument> args_;
 };

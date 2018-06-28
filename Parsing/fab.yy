@@ -135,7 +135,6 @@ expression:
 	| fileList
 	| foreach
 	| function
-	| import
 	| '[' listElements ']'
 	{
 		SourceRange src(*Take($1.token), *Take($3.token));
@@ -404,32 +403,6 @@ functiondecl:
 identifier:
 	name			/* keep result of 'name' production */
 	| name ':' type		{ SetOrDie($$, p->Id(TakeNode<Identifier>($1), $3.type)); }
-	;
-
-import:
-	IMPORT '(' literal ',' argumentList ')'
-	{
-		auto begin = Take($1.token);
-		auto name = TakeNode<StringLiteral>($3);
-		auto args = Take(NodeVec<Argument>($5));
-		auto end = Take($6.token);
-
-		SourceRange src = SourceRange::Over(begin, end);
-
-		SetOrDie($$, p->ImportModule(name, *args, src));
-	}
-	|
-	IMPORT '(' literal ')'
-	{
-		auto begin = Take($1.token);
-		auto name = TakeNode<StringLiteral>($3);
-		auto end = Take($4.token);
-
-		UniqPtrVec<Argument> args;
-		SourceRange src = SourceRange::Over(begin, end);
-
-		SetOrDie($$, p->ImportModule(name, args, src));
-	}
 	;
 
 listElements:

@@ -48,7 +48,7 @@ StringType::~StringType() {}
 
 const Type& StringType::get(TypeContext& ctx)
 {
-	const Type& existing = ctx.find(Name, SourceRange::None());
+	const Type& existing = ctx.find(Name);
 	if (existing)
 		return existing;
 

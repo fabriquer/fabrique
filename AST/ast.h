@@ -56,7 +56,6 @@ namespace ast {}
 #include "Function.h"
 #include "HasScope.h"
 #include "Identifier.h"
-#include "Import.h"
 #include "List.h"
 #include "Mapping.h"
 #include "Parameter.h"

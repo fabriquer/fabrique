@@ -1,11 +1,10 @@
-//! @file Types/OptionallyTyped.cc Definition of @ref fabrique::OptionallyTyped mixin.
+/** @file Parsing/ErrorReporter.cc Definition of @ref fabrique::parser::ErrorReporter. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2016 Jonathan Anderson
  * All rights reserved.
  *
- * This software was developed by SRI International and the University of
- * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * This software was developed at Memorial University of Newfoundland under
+ * the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,7 +28,30 @@
  * SUCH DAMAGE.
  */
 
-#include "Types/OptionallyTyped.h"
-using namespace fabrique;
+#include "Parsing/ErrorReporter.h"
+using namespace fabrique::parser;
+using fabrique::ErrorReport;
 
-OptionallyTyped::~OptionallyTyped() {}
+
+ErrorReporter::ErrorReporter(UniqPtrVec<ErrorReport>& errors)
+	: errors_(errors)
+{
+}
+
+bool ErrorReporter::hasErrors() const
+{
+	return not errors_.empty();
+}
+
+ErrorReport& ErrorReporter::ReportError(const std::string& msg, const SourceRange& src,
+                                        ErrorReport::Severity severity)
+{
+	errors_.emplace_back(ErrorReport::Create(msg, src, severity));
+	return *errors_.back();
+}
+
+ErrorReport& ErrorReporter::ReportError(const std::string& msg, const HasSource& s,
+                                        ErrorReport::Severity severity)
+{
+	return ReportError(msg, s.source(), severity);
+}

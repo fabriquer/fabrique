@@ -1,11 +1,10 @@
-//! @file Types/OptionallyTyped.h Declaration of @ref fabrique::OptionallyTyped mixin.
+/** @file Parsing/ErrorReporter.h Declaration of @ref fabrique::parser::ErrorReporter. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2016 Jonathan Anderson
  * All rights reserved.
  *
- * This software was developed by SRI International and the University of
- * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * This software was developed at Memorial University of Newfoundland under
+ * the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,28 +28,35 @@
  * SUCH DAMAGE.
  */
 
-#ifndef OPTIONALLY_TYPED_H
-#define OPTIONALLY_TYPED_H
+#ifndef ERROR_REPORTER_H
+#define ERROR_REPORTER_H
+
+#include "Support/ErrorReport.h"
+
 
 namespace fabrique {
+namespace parser {
 
-class Type;
-
-
-/** A mixin type for something that may have a @ref Type. */
-class OptionallyTyped
+/**
+ * Sink for error reports related to parsing.
+ */
+class ErrorReporter
 {
-public:
-	OptionallyTyped(const Type *t) : type_(t) {}
-	virtual ~OptionallyTyped();
+	public:
+	ErrorReporter(UniqPtrVec<ErrorReport>&);
 
-	bool isTyped() const { return type_; }
-	const Type& type() const { return *type_; }
+	bool hasErrors() const;
 
-private:
-	const Type *type_;
+	ErrorReport& ReportError(const std::string&, const SourceRange&,
+		ErrorReport::Severity = ErrorReport::Severity::Error);
+	ErrorReport& ReportError(const std::string&, const HasSource&,
+		ErrorReport::Severity = ErrorReport::Severity::Error);
+
+	private:
+	UniqPtrVec<ErrorReport>& errors_;
 };
 
+} // namespace parser
 } // namespace fabrique
 
 #endif

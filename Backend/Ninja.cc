@@ -310,5 +310,5 @@ string NinjaFormatter::Format(const String& s)
 
 string NinjaFormatter::Format(const TypeReference& t)
 {
-	return t.declaredType().str();
+	return t.referencedType().str();
 }

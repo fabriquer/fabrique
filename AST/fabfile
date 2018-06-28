@@ -18,7 +18,6 @@ sources = files(
 	HasParameters.cc
 	HasScope.cc
 	Identifier.cc
-	Import.cc
 	List.cc
 	Mapping.cc
 	Node.cc
@@ -28,6 +27,7 @@ sources = files(
 	SomeValue.cc
 	SymbolReference.cc
 	TypeDeclaration.cc
+	TypeReference.cc
 	UnaryOperation.cc
 	Value.cc
 	Visitor.cc

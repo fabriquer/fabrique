@@ -40,7 +40,7 @@ using namespace fabrique::ast;
 
 
 Argument::Argument(UniqPtr<Identifier>& id, UniqPtr<Expression>& value)
-	: Expression(value->type(), SourceRange::Over(id, value)),
+	: Expression(SourceRange::Over(id, value)),
 	  name_(std::move(id)), value_(std::move(value))
 {
 	assert(value_);

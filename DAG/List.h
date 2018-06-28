@@ -61,8 +61,6 @@ public:
 	static List* of(const SharedPtrVec<Value>&, const SourceRange&,
 	                TypeContext& ctx);
 
-	List(const SharedPtrVec<Value>&, const Type&, const SourceRange&);
-
 	virtual const SequenceType& type() const override;
 
 	typedef SharedPtrVec<Value>::const_iterator iterator;
@@ -84,6 +82,8 @@ public:
 	void Accept(Visitor& v) const override;
 
 private:
+	List(const SharedPtrVec<Value>&, const Type&, const SourceRange&);
+
 	const SharedPtrVec<Value> elements_;
 	const Type& elementType_;
 };

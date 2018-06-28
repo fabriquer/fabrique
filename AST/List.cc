@@ -29,6 +29,7 @@
  * SUCH DAMAGE.
  */
 
+#include "AST/EvalContext.h"
 #include "AST/List.h"
 #include "AST/Visitor.h"
 #include "DAG/List.h"
@@ -67,18 +68,12 @@ void List::Accept(Visitor& v) const
 
 dag::ValuePtr List::evaluate(EvalContext& ctx) const
 {
-	assert(type().isOrdered());
-	assert(type().typeParamCount() == 1);
-
-	const Type& subtype = type()[0];
-
 	SharedPtrVec<dag::Value> values;
 
 	for (auto& e : elements_)
 	{
-		e->type().CheckSubtype(subtype, e->source());
 		values.push_back(e->evaluate(ctx));
 	}
 
-	return dag::ValuePtr(new dag::List(values, type(), source()));
+	return dag::ValuePtr(dag::List::of(values, source(), ctx.types()));
 }

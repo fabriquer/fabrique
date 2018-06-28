@@ -51,9 +51,8 @@ using std::dynamic_pointer_cast;
 using std::shared_ptr;
 
 
-Call::Call(UniqPtr<Expression>& target, UniqPtrVec<Argument>& a,
-           const Type& ty, const SourceRange& src)
-	: Expression(ty, src), target_(std::move(target)), args_(std::move(a))
+Call::Call(UniqPtr<Expression>& target, UniqPtrVec<Argument>& a, const SourceRange& src)
+	: Expression(src), target_(std::move(target)), args_(std::move(a))
 {
 }
 

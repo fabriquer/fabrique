@@ -50,8 +50,7 @@ public:
 	Conditional(const SourceRange& ifLoc,
 	            UniqPtr<Expression>& condition,
 	            UniqPtr<Expression>& thenClause,
-	            UniqPtr<Expression>& elseClause,
-	            const Type& resultTy);
+	            UniqPtr<Expression>& elseClause);
 
 	const Expression& condition() const { return *condition_; }
 	const Expression& thenClause() const { return *thenClause_; }

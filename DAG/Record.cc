@@ -35,6 +35,7 @@
 #include "Support/Bytestream.h"
 #include "Types/RecordType.h"
 #include "Types/Type.h"
+#include "Types/TypeContext.h"
 
 #include <cassert>
 
@@ -43,40 +44,21 @@ using std::string;
 using std::vector;
 
 
-Record* Record::Create(const ValueMap& fields, const Type& t, SourceRange src)
+Record* Record::Create(const ValueMap& fields, TypeContext& types, SourceRange src)
 {
-	assert(fields.size() >= t.fields().size());
-	const RecordType::TypeMap typeFields = t.fields();
-	for (auto value : fields)
-	{
-		const string name = value.first;
-		if (name != ast::Arguments and name != ast::BuildDirectory
-		    and name != ast::Subdirectory)
-			assert(typeFields.find(name) != typeFields.end());
-
-		assert(value.second);
-	}
-
 	if (not src and not fields.empty())
 	{
 		src = SourceRange::Over(fields);
 	}
 
+	RecordType::NamedTypeVec fieldTypes;
+	for (const auto& field : fields)
+	{
+		fieldTypes.emplace_back(field.first, field.second->type());
+	}
+
+	const RecordType& t = types.recordType(fieldTypes);
 	return new Record(fields, t, src);
-}
-
-
-Record* Record::Create(const ValueMap& fields, SourceRange src)
-{
-	RecordType::NamedTypeVec types;
-	for (auto& v : fields)
-		types.emplace_back(v.first, v.second->type());
-
-	assert(not fields.empty());
-	TypeContext& ctx = fields.begin()->second->type().context();
-	const Type& type = *RecordType::Create(types, ctx);
-
-	return Create(fields, type, src);
 }
 
 
