@@ -29,7 +29,6 @@
  */
 
 #include "AST/EvalContext.h"
-#include "AST/Scope.h"
 #include "AST/TypeDeclaration.h"
 #include "AST/TypeReference.h"
 #include "AST/Visitor.h"

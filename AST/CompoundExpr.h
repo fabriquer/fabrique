@@ -32,15 +32,9 @@
 #ifndef COMPOUND_EXPRESSION_H
 #define COMPOUND_EXPRESSION_H
 
-#include "ADT/UniqPtr.h"
-
 #include "AST/Expression.h"
-#include "AST/Scope.h"
 
 namespace fabrique {
-
-class Type;
-
 namespace ast {
 
 class Parameter;
@@ -50,10 +44,10 @@ class Value;
 /**
  * An expression that can contain intermediate values.
  */
-class CompoundExpression : public Expression, public Scope
+class CompoundExpression : public Expression
 {
 public:
-	CompoundExpression(UniqPtr<Scope>&& values, UniqPtr<Expression>& result,
+	CompoundExpression(UniqPtrVec<Value> values, UniqPtr<Expression>& result,
 	                   const SourceRange& loc);
 
 	const Expression& result() const { return *result_; }
@@ -64,6 +58,7 @@ public:
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
 private:
+	const UniqPtrVec<Value> values_;
 	const UniqPtr<Expression> result_;
 };
 

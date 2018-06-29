@@ -33,7 +33,7 @@
 #define FOREACH_H
 
 #include "AST/CompoundExpr.h"
-#include "AST/Mapping.h"
+#include "AST/TypeReference.h"
 
 namespace fabrique {
 namespace ast {

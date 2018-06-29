@@ -58,7 +58,8 @@ class Target;
 }
 
 namespace ast {
-class Scope;
+
+class Value;
 
 
 /**
@@ -77,7 +78,7 @@ public:
 
 	~EvalContext() override {}
 
-	std::vector<dag::DAG::BuildTarget> Evaluate(const ast::Scope&);
+	std::vector<dag::DAG::BuildTarget> Evaluate(const UniqPtrVec<Value>&);
 
 
 	/**

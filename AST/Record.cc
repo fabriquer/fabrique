@@ -33,7 +33,6 @@
  */
 
 #include "AST/EvalContext.h"
-#include "AST/Scope.h"
 #include "AST/Record.h"
 #include "AST/Visitor.h"
 #include "Support/Bytestream.h"
@@ -43,8 +42,8 @@ using namespace fabrique;
 using namespace fabrique::ast;
 
 
-Record::Record(UniqPtr<Scope>& fields, const SourceRange& loc)
-	: Expression(loc), HasScope(std::move(fields))
+Record::Record(UniqPtrVec<Value>& fields, const SourceRange& loc)
+	: Expression(loc), fields_(std::move(fields))
 {
 }
 
@@ -58,9 +57,9 @@ void Record::PrettyPrint(Bytestream& out, unsigned int indent) const
 		;
 
 	const std::string innerTabs(indent + 1, '\t');
-	for (auto& i : scope().values())
+	for (auto& f : fields_)
 	{
-		i->PrettyPrint(out, indent + 1);
+		f->PrettyPrint(out, indent + 1);
 		out << "\n";
 	}
 
@@ -73,7 +72,12 @@ void Record::PrettyPrint(Bytestream& out, unsigned int indent) const
 void Record::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
-		scope().Accept(v);
+	{
+		for (auto& f : fields_)
+		{
+			f->Accept(v);
+		}
+	}
 
 	v.Leave(*this);
 }
@@ -83,7 +87,7 @@ dag::ValuePtr Record::evaluate(EvalContext& ctx) const
 	auto instantiationScope(ctx.EnterScope("record"));
 
 	dag::ValueMap fields;
-	for (auto& field : scope().values())
+	for (auto& field : fields_)
 		fields[field->name().name()] = field->evaluate(ctx);
 
 	return ctx.builder().Record(fields, source());

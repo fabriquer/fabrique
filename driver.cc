@@ -62,9 +62,8 @@ using fabrique::backend::Backend;
 
 static Bytestream& err();
 static void reportError(string message, SourceRange, ErrorReport::Severity);
-static unique_ptr<ast::Scope> Parse(UniqPtr<Parser>& parser, const string& filename,
-                                    const vector<string>& definitions,
-                                    string srcroot, string buildroot, bool printAST);
+static bool Parse(Parser& parser, const string& filename, const vector<string>& defns,
+                  UniqPtrVec<ast::Value>& values, bool printAST);
 
 int main(int argc, char *argv[]) {
 	//
@@ -114,15 +113,13 @@ int main(int argc, char *argv[]) {
 		//
 		// Parse the file, optionally pretty-printing it.
 		//
-		unique_ptr<ast::Parser> parser(
-			new ast::Parser(types, pluginRegistry, pluginLoader, srcroot));
+		ast::Parser parser;
+		UniqPtrVec<ast::Value> values;
 
-		unique_ptr<ast::Scope> ast(
-			Parse(parser, fabfile, args->definitions,
-			      srcroot, buildroot, args->printAST));
-
-		if (not ast)
+		if (not Parse(parser, fabfile, args->definitions, values, args->printAST))
+		{
 			return -1;
+		}
 
 		if (args->parseOnly)
 			return 0;
@@ -147,15 +144,14 @@ int main(int argc, char *argv[]) {
 		// Convert the AST into a build graph.
 		//
 		ast::EvalContext ctx(types, buildroot, srcroot);
-		auto topScope(ctx.Evaluate(*ast));
 
-		// Get the names of the top-level targets:
+		SharedPtrVec<dag::Value> dagValues;
 		vector<string> targets;
-		transform(topScope.begin(), topScope.end(), back_inserter(targets),
-			[](const pair<string,dag::ValuePtr>& i)
-			{
-				return i.first;
-			});
+		for (const auto& v : values)
+		{
+			targets.push_back(v->name().name());
+			dagValues.emplace_back(v->evaluate(ctx));
+		}
 
 		// Add regeneration (if Fabrique files change):
 		if (not outputFiles.empty())
@@ -252,9 +248,8 @@ int main(int argc, char *argv[]) {
 }
 
 
-unique_ptr<ast::Scope> Parse(UniqPtr<Parser>& parser, const string& filename,
-                             const vector<string>& definitions,
-                             string srcroot, string buildroot, bool printAST)
+bool Parse(Parser& parser, const string& filename, const vector<string>& definitions,
+           UniqPtrVec<ast::Value>& values, bool printAST)
 {
 
 	// Parse command-line arguments.
@@ -264,23 +259,15 @@ unique_ptr<ast::Scope> Parse(UniqPtr<Parser>& parser, const string& filename,
 	std::ifstream infile(filename.c_str());
 	assert(infile);
 
-	map<string,string> builtins {
-		std::make_pair("srcroot", srcroot),
-		std::make_pair("buildroot", buildroot),
-	};
-
 	const string absolute =
 		PathIsAbsolute(filename) ? filename : AbsolutePath(filename);
 
-	unique_ptr<ast::Scope> ast(
-		parser->ParseFile(infile, args, absolute, builtins));
-
-	if (not ast)
+	if (not parser.ParseFile(infile, values, filename))
 	{
 		for (auto& error : parser->errors())
 			err() << *error << "\n";
 
-		return ast;
+		return false;
 	}
 	assert(parser->errors().empty());
 
@@ -294,11 +281,11 @@ unique_ptr<ast::Scope> Parse(UniqPtr<Parser>& parser, const string& filename,
 			<< Bytestream::Reset
 			;
 
-		for (auto& val : ast->values())
+		for (auto& val : values)
 			Bytestream::Stdout() << *val << "\n";
 	}
 
-	return ast;
+	return true;
 }
 
 

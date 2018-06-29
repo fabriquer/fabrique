@@ -30,7 +30,6 @@
  */
 
 #include "AST/Builtins.h"
-#include "AST/Scope.h"
 #include "AST/Value.h"
 
 #include "DAG/Build.h"

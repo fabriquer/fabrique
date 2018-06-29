@@ -41,10 +41,10 @@ using namespace fabrique;
 using namespace fabrique::ast;
 
 
-CompoundExpression::CompoundExpression(UniqPtr<Scope>&& scope,
+CompoundExpression::CompoundExpression(UniqPtrVec<Value> values,
                                        UniqPtr<Expression>& result,
                                        const SourceRange& loc)
-	: Expression(loc), Scope(std::move(*scope)), result_(std::move(result))
+	: Expression(loc), values_(std::move(values)), result_(std::move(result))
 {
 	assert(result_);
 }
@@ -56,7 +56,7 @@ void CompoundExpression::PrettyPrint(Bytestream& out, unsigned int indent) const
 	std::string intabs(indent + 1, '\t');
 
 	out << tabs << Bytestream::Operator << "{\n";
-	for (auto& v : values())
+	for (auto& v : values_)
 	{
 		v->PrettyPrint(out, indent + 1);
 		out << "\n";
@@ -75,7 +75,7 @@ void CompoundExpression::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
 	{
-		for (auto& val : values())
+		for (auto& val : values_)
 			val->Accept(v);
 
 		result_->Accept(v);
@@ -88,7 +88,7 @@ dag::ValuePtr CompoundExpression::evaluate(EvalContext& ctx) const
 {
 	auto scope(ctx.EnterScope("CompoundExpression"));
 
-	for (auto& v : values())
+	for (auto& v : values_)
 		v->evaluate(ctx);
 
 	return result_->evaluate(ctx);

@@ -35,7 +35,6 @@
 #ifndef STRUCT_INSTANTIATION_H
 #define STRUCT_INSTANTIATION_H
 
-#include "AST/HasScope.h"
 #include "AST/Value.h"
 
 namespace fabrique {
@@ -47,15 +46,18 @@ namespace ast {
 /**
  * A list of same-typed expressions.
  */
-class Record : public Expression, public HasScope
+class Record : public Expression
 {
 public:
-	Record(UniqPtr<Scope>& fields, const SourceRange&);
+	Record(UniqPtrVec<Value>& fields, const SourceRange&);
 
 	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 	virtual void Accept(Visitor&) const override;
 
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
+
+private:
+	const UniqPtrVec<Value> fields_;
 };
 
 } // namespace ast

@@ -70,7 +70,7 @@ public:
 	VISIT(List)
 	VISIT(Parameter)
 	VISIT(Record)
-	VISIT(Scope)
+	VISIT(SimpleTypeReference)
 	VISIT(SomeValue)
 	VISIT(StringLiteral)
 	VISIT(SymbolReference)

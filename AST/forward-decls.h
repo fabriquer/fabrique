@@ -52,7 +52,7 @@ class Identifier;
 class List;
 class Parameter;
 class Record;
-class Scope;
+class SimpleTypeReference;
 class SomeValue;
 class SymbolReference;
 class TypeDeclaration;

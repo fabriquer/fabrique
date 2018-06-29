@@ -30,12 +30,11 @@
  */
 
 #include "AST/FieldAccess.h"
-#include "AST/HasScope.h"
 #include "AST/Identifier.h"
-#include "AST/Scope.h"
 #include "AST/Visitor.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
+#include "Types/Type.h"
 
 #include <cassert>
 

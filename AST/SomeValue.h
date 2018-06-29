@@ -34,7 +34,6 @@
 
 #include "ADT/UniqPtr.h"
 #include "AST/Expression.h"
-#include "AST/HasScope.h"
 
 namespace fabrique {
 namespace ast {

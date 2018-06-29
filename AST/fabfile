@@ -16,14 +16,12 @@ sources = files(
 	Foreach.cc
 	Function.cc
 	HasParameters.cc
-	HasScope.cc
 	Identifier.cc
 	List.cc
 	Mapping.cc
 	Node.cc
 	Parameter.cc
 	Record.cc
-	Scope.cc
 	SomeValue.cc
 	SymbolReference.cc
 	TypeDeclaration.cc

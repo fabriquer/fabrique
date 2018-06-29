@@ -31,7 +31,6 @@
 
 #include "AST/Builtins.h"
 #include "AST/EvalContext.h"
-#include "AST/Scope.h"
 #include "AST/Value.h"
 
 #include "DAG/Build.h"
@@ -69,12 +68,12 @@ using std::string;
 using std::vector;
 
 
-std::vector<DAG::BuildTarget> EvalContext::Evaluate(const ast::Scope& root)
+std::vector<DAG::BuildTarget> EvalContext::Evaluate(const UniqPtrVec<ast::Value>& values)
 {
 	auto scope(EnterScope("top level scope"));
 	vector<DAG::BuildTarget> topLevelTargets;
 
-	for (const UniqPtr<ast::Value>& v : root.values())
+	for (const UniqPtr<ast::Value>& v : values)
 		topLevelTargets.emplace_back(
 			v->name().name(), v->evaluate(*this));
 

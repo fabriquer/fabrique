@@ -33,7 +33,6 @@
  */
 
 #include "AST/EvalContext.h"
-#include "AST/Scope.h"
 #include "AST/TypeDeclaration.h"
 #include "AST/Visitor.h"
 #include "DAG/TypeReference.h"

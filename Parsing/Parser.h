@@ -64,10 +64,9 @@ public:
 	//! Parse Fabrique fragments defined at, e.g., the command line.
 	const Type& ParseDefinitions(const std::vector<std::string>& defs);
 
-	//! Parse Fabrique input (usually a file) into a @ref Scope.
-	std::unique_ptr<Scope> ParseFile(
-		std::istream& input, const Type& arguments, std::string name = "",
-		StringMap<std::string> builtins = StringMap<std::string>(),
+	//! Parse Fabrique input (usually a file) into @ref Value objects.
+	bool ParseFile(
+		std::istream& input, UniqPtrVec<Value>&, std::string name = "",
 		SourceRange openedFrom = SourceRange::None());
 
 	//! Errors encountered during parsing.
@@ -75,30 +74,6 @@ public:
 
 	//! Input files encountered during parsing.
 	const std::vector<std::string>& files() const { return files_; }
-
-
-	/**
-	 * Enter an AST @ref Scope. Should be called before parsing anything
-	 * that belongs in the scope, e.g. parameters:
-	 *
-	 * [EnterScope] function (x:int [Parameter]) { ... } [ExitScope]
-	 *
-	 * @param  name            a name used to describe the scope (for debugging)
-	 * @param  argumentsType   the type of the arguments (if any) being passed
-	 *                         into the scope: either a @ref RecordType or
-	 *                         else @ref TypeContext::nilType()
-	 * @param  src             the entire extent of the scope in source
-	 */
-	Scope& EnterScope(const std::string& name, const Type& argumentsType,
-	                  SourceRange src = SourceRange::None());
-
-	//! A convenience wrapper around @ref #EnterScope with no 'args' type.
-	Scope& EnterScope(const std::string& name);
-
-	/**
-	 * Take an AST @ref Scope and push it on the stack.
-	 */
-	Scope& EnterScope(Scope&& s);
 
 
 	//! Find or create a @ref Type.
@@ -252,35 +227,10 @@ public:
 
 
 private:
-	Scope& CurrentScope();
-
-	/**
-	 * Leave an AST @ref Scope, returning ownership of that scope
-	 * (and, transitively, everything it contains).
-	 */
-	std::unique_ptr<Scope> ExitScope();
-
-	//! Define a builtin value.
-	bool Builtin(std::string name, UniqPtr<Expression>& value, SourceRange);
-
-	//! Convenience method for the full @ref #Builtin().
-	bool Builtin(std::string name, int value, SourceRange);
-	bool Builtin(std::string name, std::string value, SourceRange);
-	bool Builtin(std::string name, UniqPtr<Scope>& scope, SourceRange);
-
-	//! Add an @ref Argument vector to the current scope.
-	void AddToScope(const PtrVec<Argument>&);
-
 	const ErrorReport& ReportError(const std::string&, const SourceRange&,
 		ErrorReport::Severity = ErrorReport::Severity::Error);
 	const ErrorReport& ReportError(const std::string&, const HasSource&,
 		ErrorReport::Severity = ErrorReport::Severity::Error);
-
-	TypeContext& ctx_;
-	Lexer& lexer_;
-
-	plugin::Registry& pluginRegistry_;
-	plugin::Loader& pluginLoader_;
 
 	//! Pre-defined values (e.g., from the command line).
 	UniqPtr<Scope> definitions_;
@@ -288,13 +238,6 @@ private:
 	//! Input files, in order they were parsed.
 	std::vector<std::string> files_;
 	UniqPtrVec<ErrorReport> errs_;
-	std::stack<std::unique_ptr<Scope>> scopes_;
-
-	//! The root of all source files (where the top-level Fabrique file lives).
-	std::string srcroot_;
-
-	//! The subdirectory that we are currently working from.
-	std::stack<std::string> currentSubdirectory_;
 };
 
 } // namespace ast

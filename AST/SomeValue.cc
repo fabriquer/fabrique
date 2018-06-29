@@ -31,7 +31,6 @@
 
 #include "AST/Builtins.h"
 #include "AST/EvalContext.h"
-#include "AST/Scope.h"
 #include "AST/SomeValue.h"
 #include "AST/Visitor.h"
 #include "DAG/Primitive.h"
