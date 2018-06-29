@@ -32,8 +32,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef STRUCT_INSTANTIATION_H
-#define STRUCT_INSTANTIATION_H
+#ifndef AST_RECORD_H
+#define AST_RECORD_H
 
 #include "AST/Value.h"
 
