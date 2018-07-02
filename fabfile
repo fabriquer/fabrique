@@ -52,9 +52,9 @@ defines =
 includes = foreach dir <- [ srcroot buildroot ] '-I ' + dir;
 
 # Treat vendor headers as system headers (disable warnings).
-vendor = [ '-isystem ' + srcroot + '/vendor' ];
+vendor_flags = [ '-isystem ' + srcroot + '/vendor' ];
 
-common_cxx_flags = cxxoptions + defines + dbgflags + includes + vendor;
+common_cxx_flags = cxxoptions + defines + dbgflags + includes + vendor_flags;
 
 warnings = [
 	# Use lots and lots of warnings.
