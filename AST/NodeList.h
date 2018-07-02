@@ -47,6 +47,11 @@ template<class T>
 class NodeList : public Node
 {
 public:
+	NodeList(SourceRange src = SourceRange::None())
+		: Node(src)
+	{
+	}
+
 	NodeList(NodePtr<T> firstValue, SourceRange src = SourceRange::None())
 		: Node(src)
 	{
