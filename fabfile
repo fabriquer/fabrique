@@ -17,6 +17,10 @@ verbose_tests = args.verbose_tests ? false;
 
 platform = import('share/platform.fab');
 
+cc = import('share/c.fab',
+	colour_diagnostics = colour_output,
+	platform = platform);
+
 cxx = import('share/cxx.fab',
 	compiler = which.executable(compiler),
 	colour_diagnostics = colour_output,
