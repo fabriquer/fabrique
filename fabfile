@@ -6,9 +6,7 @@ which = import('which');
 
 debug = args.debug ? true;
 asserts = args.asserts ? true;
-debug_and_asserts = debug and asserts;
 use_asan = args.asan ? false;
-
 withtests = args.tests ? true;
 
 compiler = args.compiler ? 'c++';
