@@ -7,6 +7,7 @@ which = import('which');
 debug = args.debug ? true;
 asserts = args.asserts ? true;
 debug_and_asserts = debug and asserts;
+use_asan = args.asan ? false;
 
 withtests = args.tests ? true;
 
@@ -39,8 +40,9 @@ shell =
 cxxoptions = [ '-std=c++14' ];
 
 dbgflags =
-	if debug [ '-g' '-ggdb' '-O0' ] else [ '-O2' ]
+	if debug [ '-g' '-O0' ] else [ '-O2' ]
 	+ if asserts [ '' ] else [ '-D NDEBUG' ]
+	+ if use_asan [ '-fsanitize=address' ] else []
 	;
 
 defines =
@@ -102,7 +104,8 @@ plugins = foreach lib <- import('base-plugins').libs
 	shell.copy(lib, file('lib/fabrique') + '/' + lib.filename)
 	;
 
-fab = cxx.link_executable(objects, executable = file('fab', subdir = 'bin'));
+fab = cxx.link_executable(objects, executable = file('fab', subdir = 'bin'),
+                          flags = if use_asan ['-fsanitize=address'] else []);
 
 everything = [ fab ] + plugins + import('tests/manifest.fab').all_files;
 
