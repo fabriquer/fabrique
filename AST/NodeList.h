@@ -1,11 +1,10 @@
-/** @file AST/Node.h    Declaration of @ref fabrique::ast::Node. */
+/** @file AST/NodeList.h    Declaration of @ref fabrique::ast::NodeList. */
 /*
- * Copyright (c) 2014, 2018 Jonathan Anderson
+ * Copyright (c) 2018 Jonathan Anderson
  * All rights reserved.
  *
- * This software was developed by SRI International and the University of
- * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * This software was developed at Memorial University of Newfoundland under
+ * the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,34 +28,72 @@
  * SUCH DAMAGE.
  */
 
-#ifndef AST_NODE_H
-#define AST_NODE_H
+#ifndef AST_NODE_LIST_H
+#define AST_NODE_LIST_H
 
-#include "Support/Printable.h"
-#include "Support/SourceLocation.h"
-#include "Support/Uncopyable.h"
-#include "Support/Visitable.h"
+#include "AST/Node.h"
+#include "Support/Bytestream.h"
+
+#include <cassert>
+#include <list>
 
 namespace fabrique {
 namespace ast {
 
-class Visitor;
-
 /**
- * Base class for expressions that can be evaluated.
+ * A list of same-typed nodes.
  */
-class Node : public HasSource, public Printable, public Visitable<Visitor>,
-             private Uncopyable
+template<class T>
+class NodeList : public Node
 {
 public:
-	virtual ~Node();
+	NodeList(NodePtr<T> firstValue, SourceRange src = SourceRange::None())
+		: Node(src)
+	{
+		nodes_.emplace_back(std::move(firstValue));
+	}
 
-protected:
-	Node(const SourceRange& src) : HasSource(src) {}
+	NodeList(NodeList&& l)
+		: Node(l.source()), nodes_(std::move(l.nodes_))
+	{
+	}
+
+	virtual ~NodeList() override
+	{
+	}
+
+	using ConstIterator = typename std::list<NodePtr<T>>::const_iterator;
+	ConstIterator begin() const { return nodes_.begin(); }
+	ConstIterator end() const { return nodes_.end(); }
+
+	NodeList& prepend(NodePtr<T> n)
+	{
+		nodes_.push_front(std::move(n));
+		return *this;
+	}
+
+	std::list<NodePtr<T>> takeAll()
+	{
+		return std::move(nodes_);
+	}
+
+	virtual void PrettyPrint(Bytestream& out, unsigned int indent = 0) const override
+	{
+		for (const auto &n : nodes_)
+		{
+			n->PrettyPrint(out, indent);
+			out << " ";
+		}
+	}
+
+	virtual void Accept(Visitor&) const override
+	{
+		assert(false && "unreachable: NodeList never present in completed AST");
+	}
+
+private:
+	std::list<NodePtr<T>> nodes_;
 };
-
-template<class T=Node>
-using NodePtr = std::unique_ptr<T>;
 
 } // namespace ast
 } // namespace fabrique
