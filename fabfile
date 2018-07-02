@@ -61,6 +61,9 @@ warnings = [
 
 	# We aren't attempting to preserve an ABI. At least not yet.
 	'-Wno-padded'
+
+	# We are OK with C99 variable-length arrays.
+	'-Wno-vla' '-Wno-vla-extension'
 ];
 
 cxx_flags = common_cxx_flags + warnings;
