@@ -22,16 +22,11 @@ cxx = import('share/cxx.fab',
 	colour_diagnostics = colour_output,
 	platform = platform);
 
-lex = import('share/lex.fab');
-
 # TODO: let modules "pass through" values from other modules
 shell =
 	if platform.posix import('share/shell-posix.fab')
 	else import('share/shell-unimplemented.fab')
 	;
-
-yacc = import('share/yacc.fab', yacc = which.executable('byacc'));
-
 
 
 #
@@ -60,9 +55,6 @@ common_cxx_flags = cxxoptions + defines + dbgflags + includes + vendor;
 warnings = [
 	# Use lots and lots of warnings.
 	'-Weverything'
-
-	# We intentionally hide yyFlexLexer::yylex().
-	'-Wno-overloaded-virtual'
 
 	# We really really don't care about C++98 compatibility.
 	'-Wno-c++98-compat' '-Wno-c++98-compat-pedantic'
@@ -97,17 +89,7 @@ cxx_srcs =
 	;
 
 
-parser_src = yacc.process(file('Parsing/fab.yy'), subdir, 'Parsing/fab.yacc');
-lexer_src = lex.process(
-	src = file('Parsing/fab.lxx'), gen = file('Parsing/fab.lex.cc'),
-	flags = [ '-c++'], header_out = file('Parsing/fab.lex.h')
-);
-
-objects =
-	cxx.compile([ lexer_src ], generated_cxx_flags, deps = [ parser_src ])
-	+ cxx.compile([ parser_src ], generated_cxx_flags)
-	+ cxx.compile(cxx_srcs, cxx_flags)
-	;
+objects = cxx.compile(cxx_srcs, cxx_flags);
 
 plugins = foreach lib <- import('base-plugins').libs
 	shell.copy(lib, file('lib/fabrique') + '/' + lib.filename)

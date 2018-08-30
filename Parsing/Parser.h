@@ -34,7 +34,6 @@
 
 #include "AST/ast.h"
 #include "ADT/UniqPtr.h"
-#include "Parsing/yacc.h"
 #include "Support/ErrorReport.h"
 
 #include <map>
@@ -250,12 +249,6 @@ public:
 	//! Define an unnamed @ref Value in the current scope.
 	bool DefineValue(UniqPtr<Expression>&);
 
-
-	//
-	// Low-level but type-safe getters and setters for the YYSTYPE union:
-	//
-	static Token* ParseToken(YYSTYPE&);
-	static bool Set(YYSTYPE&, Node*);
 
 
 private:

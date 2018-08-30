@@ -153,7 +153,6 @@ all_files = files(
 ./Parsing/simple-build.fab
 ./Parsing/subdir-wrong-type.fab
 ./Parsing/subdir.fab
-./Parsing/tokeniser.fab
 ./Parsing/type-conflict.fab
 ./Parsing/types.fab
 ./Parsing/unnamed-value.fab

@@ -36,7 +36,6 @@
 
 #include "DAG/DAG.h"
 
-#include "Parsing/Lexer.h"
 #include "Parsing/Parser.h"
 
 #include "Plugin/Loader.h"
