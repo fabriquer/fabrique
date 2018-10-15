@@ -1,6 +1,6 @@
 /** @file Parsing/Parser.h    Declaration of @ref fabrique::ast::Parser. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2013-2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -59,15 +59,11 @@ namespace ast {
 class Parser
 {
 public:
-	Parser(TypeContext&, plugin::Registry&, plugin::Loader&, std::string srcroot);
-
 	//! Parse Fabrique fragments defined at, e.g., the command line.
 	const Type& ParseDefinitions(const std::vector<std::string>& defs);
 
 	//! Parse Fabrique input (usually a file) into @ref Value objects.
-	bool ParseFile(
-		std::istream& input, UniqPtrVec<Value>&, std::string name = "",
-		SourceRange openedFrom = SourceRange::None());
+	bool ParseFile(std::istream& input, UniqPtrVec<Value>&, std::string name = "");
 
 	//! Errors encountered during parsing.
 	const UniqPtrVec<ErrorReport>& errors() const { return errs_; }
@@ -76,164 +72,11 @@ public:
 	const std::vector<std::string>& files() const { return files_; }
 
 
-	//! Find or create a @ref Type.
-	const Type& getType(const std::string& name,
-	                    const SourceRange& begin, const SourceRange& end,
-	                    const PtrVec<Type>& params = PtrVec<Type>());
-
-	const Type& getType(UniqPtr<Identifier>&&,
-	                    UniqPtr<const PtrVec<Type>>&& params = nullptr);
-
-	const FunctionType& FnType(const PtrVec<Type>& inputs,
-	                           const Type& output, SourceRange);
-
-	const RecordType* CreateRecordType(UniqPtr<UniqPtrVec<Identifier>>& fields,
-	                                   SourceRange);
-
-
-	//! Define a build @ref Action.
-	Action* DefineAction(UniqPtr<UniqPtrVec<Argument>>& args,
-	                     const SourceRange&,
-	                     UniqPtr<UniqPtrVec<Parameter>>&& params = nullptr);
-
-	//! Parse an @ref Argument to a @ref Function, build @ref Action, etc.
-	Argument* Arg(UniqPtr<Expression>& value,
-	              UniqPtr<Identifier>&& = nullptr);
-
-	//! Create a @ref BinaryOperation (+, ::, ...).
-	BinaryOperation* BinaryOp(BinaryOperation::Operator,
-	                          UniqPtr<Expression>&, UniqPtr<Expression>&);
-
-	//! A call to an @ref Action or @ref Function.
-	Call* CreateCall(UniqPtr<Expression>&, UniqPtr<UniqPtrVec<Argument>>&,
-	                 const SourceRange& end);
-
-	//! An expression that can (optionally) include intermediate values.
-	CompoundExpression* CompoundExpr(UniqPtr<Expression>& result,
-	                                 SourceRange beg = SourceRange::None(),
-	                                 SourceRange end = SourceRange::None());
-
-	//! An expression that indirects into a record.
-	FieldAccess* FieldAccess(UniqPtr<Expression>& record,
-	                         UniqPtr<Identifier>& field);
-
-	//! A test to see if a record contains a field.
-	FieldQuery* FieldQuery(UniqPtr<Expression>& record,
-	                       UniqPtr<Identifier>& field,
-	                       UniqPtr<Expression>& defaultValue,
-	                       SourceRange);
-
-	//! A @ref Filename that is part of the build DAG.
-	Filename* File(UniqPtr<Expression>& name, const SourceRange& src,
-	               UniqPtr<UniqPtrVec<Argument>>&& arguments = nullptr);
-
-	/** Create a list of files, which may have shared arguments. */
-	FileList* Files(const SourceRange&, UniqPtr<UniqPtrVec<Filename>>&,
-	                UniqPtr<UniqPtrVec<Argument>>&& args = nullptr);
-
-
-	/**
-	 * An expression for mapping list elements into another list:
-	 *   foreach x in some_list: x + 1
-	 */
-	ForeachExpr* Foreach(UniqPtr<Mapping>&, UniqPtr<Expression>& body,
-	                     const SourceRange& start);
-
-
-	/**
-	 * A type declaration:
-	 *   `x:type = type[foo:int, bar:string];`
-	 */
-	TypeDeclaration* DeclareType(const RecordType&, SourceRange);
-
-
-	Function* DefineFunction(const SourceRange& begin,
-	                         UniqPtr<UniqPtrVec<Parameter>>& params,
-	                         UniqPtr<Expression>& body,
-	                         const Type *ty = nullptr);
-
-
-	//! An untyped @ref ast::Identifier: just a name.
-	Identifier* Id(UniqPtr<Token>&&);
-
-	//! A typed @ref ast::Identifier.
-	Identifier* Id(UniqPtr<Identifier>&& untyped, const Type*);
-
-	/**
-	 * A conditional if-then-else expression
-	 * (not a statement, an expression).
-	 *
-	 * The expression (if condition foo else bar) evaluates to either
-	 * @a foo or @a bar, depending on @a condition.
-	 * It can also be writen as:
-	 *
-	 * if (condition)
-	 *     foo
-	 * else
-	 *     bar
-	 */
-	Conditional* IfElse(const SourceRange& ifLocation,
-	                    UniqPtr<Expression>& condition,
-	                    UniqPtr<Expression>& thenResult,
-	                    UniqPtr<Expression>& elseResult);
-
-	//! Define a @ref List of expressions.
-	List* ListOf(UniqPtrVec<Expression>&, const SourceRange&);
-
-	//! Define a mapping from a sequence to a name.
-	Mapping* Map(UniqPtr<Expression>& source, UniqPtr<Identifier>& target);
-
-	//! Create a @ref SomeValue (populated maybe object).
-	SomeValue* Some(UniqPtr<Expression>&, SourceRange);
-
-	//! Turn the current scope into a record instantiation.
-	Record* Record(SourceRange);
-
-
-	// literals
-	BoolLiteral* True();
-	BoolLiteral* False();
-	IntLiteral* ParseInt(int);
-	StringLiteral* ParseString(UniqPtr<Token>&&);
-
-
-	//! Parse a function @ref Parameter.
-	Parameter* Param(UniqPtr<Identifier>&& name,
-	                 UniqPtr<Expression>&& defaultValue = nullptr);
-
-
-	//! Reference a @ref Value in scope.
-	SymbolReference* Reference(UniqPtr<Identifier>&&);
-	SymbolReference* Reference(UniqPtr<class FieldAccess>&&);
-
-
-	//! Create a @ref DebugTracePoint.
-	DebugTracePoint* TracePoint(UniqPtr<Expression>&, SourceRange);
-
-
-	//! Create a @ref UnaryOperation (currently just 'not').
-	UnaryOperation* UnaryOp(UnaryOperation::Operator,
-	                        const SourceRange& operatorLocation,
-	                        UniqPtr<Expression>&);
-
-
-	//! Define a @ref Value in the current scope.
-	bool DefineValue(UniqPtr<Identifier>&, UniqPtr<Expression>&,
-	                 bool builtin = false);
-
-	//! Define an unnamed @ref Value in the current scope.
-	bool DefineValue(UniqPtr<Expression>&);
-
-
-
 private:
 	const ErrorReport& ReportError(const std::string&, const SourceRange&,
 		ErrorReport::Severity = ErrorReport::Severity::Error);
 	const ErrorReport& ReportError(const std::string&, const HasSource&,
 		ErrorReport::Severity = ErrorReport::Severity::Error);
-
-	//! Pre-defined values (e.g., from the command line).
-	UniqPtr<Scope> definitions_;
 
 	//! Input files, in order they were parsed.
 	std::vector<std::string> files_;

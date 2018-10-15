@@ -62,7 +62,7 @@ using fabrique::backend::Backend;
 
 static Bytestream& err();
 static void reportError(string message, SourceRange, ErrorReport::Severity);
-static bool Parse(Parser& parser, const string& filename, const vector<string>& defns,
+static bool Parse(Parser& parser, const string& filename,
                   UniqPtrVec<ast::Value>& values, bool printAST);
 
 int main(int argc, char *argv[]) {
@@ -107,8 +107,10 @@ int main(int argc, char *argv[]) {
 		const string srcroot = DirectoryOf(AbsolutePath(fabfile));
 		const string buildroot = AbsoluteDirectory(args->output, true);
 
+		/*
 		plugin::Registry& pluginRegistry = plugin::Registry::get();
 		plugin::Loader pluginLoader(PluginSearchPaths(args->executable));
+		*/
 
 		//
 		// Parse the file, optionally pretty-printing it.
@@ -116,7 +118,7 @@ int main(int argc, char *argv[]) {
 		ast::Parser parser;
 		UniqPtrVec<ast::Value> values;
 
-		if (not Parse(parser, fabfile, args->definitions, values, args->printAST))
+		if (not Parse(parser, fabfile, values, args->printAST))
 		{
 			return -1;
 		}
@@ -156,7 +158,7 @@ int main(int argc, char *argv[]) {
 		// Add regeneration (if Fabrique files change):
 		if (not outputFiles.empty())
 			ctx.builder().AddRegeneration(
-				*args, parser->files(), outputFiles);
+				*args, parser.files(), outputFiles);
 
 		unique_ptr<dag::DAG> dag = ctx.builder().dag(targets);
 		assert(dag);
@@ -248,12 +250,9 @@ int main(int argc, char *argv[]) {
 }
 
 
-bool Parse(Parser& parser, const string& filename, const vector<string>& definitions,
+bool Parse(Parser& parser, const string& filename,
            UniqPtrVec<ast::Value>& values, bool printAST)
 {
-
-	// Parse command-line arguments.
-	const Type& args = parser->ParseDefinitions(definitions);
 
 	// Open and parse the top-level build description.
 	std::ifstream infile(filename.c_str());
@@ -264,12 +263,12 @@ bool Parse(Parser& parser, const string& filename, const vector<string>& definit
 
 	if (not parser.ParseFile(infile, values, filename))
 	{
-		for (auto& error : parser->errors())
+		for (auto& error : parser.errors())
 			err() << *error << "\n";
 
 		return false;
 	}
-	assert(parser->errors().empty());
+	assert(parser.errors().empty());
 
 	if (printAST)
 	{
