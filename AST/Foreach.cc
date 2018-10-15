@@ -44,21 +44,30 @@ using namespace fabrique;
 using namespace fabrique::ast;
 
 
-ForeachExpr::ForeachExpr(UniqPtr<Mapping>& mapping, UniqPtr<Expression>& body,
-                         const SourceRange& source)
-	: Expression(source),
-	  mapping_(std::move(mapping)), body_(std::move(body))
+ForeachExpr::ForeachExpr(UniqPtr<Identifier> loopVarName,
+                         UniqPtr<TypeReference> explicitType,
+                         UniqPtr<Expression> inputValue,
+                         UniqPtr<Expression> body,
+                         SourceRange source)
+	: Expression(source), loopVarName_(std::move(loopVarName)),
+	  explicitType_(std::move(explicitType)), inputValue_(std::move(inputValue)),
+	  body_(std::move(body))
 {
 }
 
 
 void ForeachExpr::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
-	out
-		<< Bytestream::Operator << "foreach "
-		<< *mapping_
-		<< "\n"
-		;
+	out << Bytestream::Operator << "foreach " << Bytestream::Reset;
+	loopVarName_->PrettyPrint(out, indent + 1);
+
+	if (explicitType_)
+	{
+		out << Bytestream::Operator << ": " << Bytestream::Reset;
+		explicitType_->PrettyPrint(out, indent + 1);
+	}
+
+	out << "\n";
 
 	body_->PrettyPrint(out, indent + 1);
 
@@ -70,7 +79,11 @@ void ForeachExpr::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
 	{
-		mapping_->Accept(v);
+		loopVarName_->Accept(v);
+		if (explicitType_)
+		{
+			explicitType_->Accept(v);
+		}
 		body_->Accept(v);
 	}
 
@@ -89,11 +102,11 @@ dag::ValuePtr ForeachExpr::evaluate(EvalContext& ctx) const
 	// For each input element, put its value in scope as the loop parameter
 	// and then evaluate the CompoundExpression.
 	//
-	const ast::Parameter& loopParam = loopParameter();
+	auto loopVarName = loopVarName_->name();
 	for (const dag::ValuePtr& element : *target->asList())
 	{
 		auto scope(ctx.EnterScope("foreach body"));
-		scope.set(loopParam.getName().name(), element);
+		scope.set(loopVarName, element);
 
 		dag::ValuePtr result = body_->evaluate(ctx);
 		assert(result);

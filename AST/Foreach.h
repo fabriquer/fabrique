@@ -48,10 +48,11 @@ class Value;
 class ForeachExpr : public Expression
 {
 public:
-	ForeachExpr(UniqPtr<Mapping>&, UniqPtr<Expression>& body, const SourceRange&);
+	ForeachExpr(UniqPtr<Identifier> loopVarName, UniqPtr<TypeReference> explicitType,
+	            UniqPtr<Expression> inputValue, UniqPtr<Expression> body,
+	            SourceRange);
 
-	const Expression& sourceSequence() const { return mapping_->source(); }
-	const Parameter& loopParameter() const { return mapping_->target(); }
+	const Expression& sourceSequence() const { return *inputValue_; }
 	const Expression& loopBody() const { return *body_; }
 
 	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
@@ -60,7 +61,9 @@ public:
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
 private:
-	const UniqPtr<Mapping> mapping_;
+	const UniqPtr<Identifier> loopVarName_;
+	const UniqPtr<TypeReference> explicitType_;
+	const UniqPtr<Expression> inputValue_;
 	const UniqPtr<Expression> body_;
 };
 
