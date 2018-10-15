@@ -57,7 +57,7 @@ vector<string> fabrique::Split(const std::string& s, const std::string delim)
 	}
 
 	assert(lastDelimiter >= -1);
-	parts.push_back(s.substr(static_cast<size_t>(lastDelimiter + delim.length())));
+	parts.push_back(s.substr(static_cast<size_t>(lastDelimiter) + delim.length()));
 
 	return parts;
 }
