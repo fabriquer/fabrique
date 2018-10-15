@@ -48,8 +48,9 @@ using std::dynamic_pointer_cast;
 
 
 Function::Function(UniqPtrVec<Parameter>& params, UniqPtr<Expression>& body,
-                   const SourceRange& loc)
-	: Expression(loc), HasParameters(params), body_(std::move(body))
+                   const FunctionType& type, SourceRange loc)
+	: Expression(std::move(loc)), HasParameters(params), body_(std::move(body)),
+	  type_(type)
 {
 }
 
@@ -138,5 +139,5 @@ dag::ValuePtr Function::evaluate(EvalContext& ctx) const
 		return body().evaluate(ctx);
 	};
 
-	return ctx.Function(eval, parameters, source());
+	return ctx.Function(eval, parameters, type_, source());
 }

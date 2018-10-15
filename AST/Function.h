@@ -54,9 +54,10 @@ class Function : public Expression, public HasParameters
 {
 public:
 	Function(UniqPtrVec<Parameter>& params, UniqPtr<Expression>& body,
-	         const SourceRange& loc);
+	         const FunctionType&, SourceRange);
 
 	const Expression& body() const { return *body_; }
+	const FunctionType& type() const { return type_; }
 
 	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 	virtual void Accept(Visitor&) const override;
@@ -65,6 +66,7 @@ public:
 
 private:
 	const UniqPtr<Expression> body_;
+	const FunctionType& type_;
 };
 
 } // namespace ast

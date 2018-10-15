@@ -31,6 +31,7 @@
 
 #include "AST/Builtins.h"
 #include "AST/EvalContext.h"
+#include "AST/Parameter.h"
 #include "AST/Value.h"
 
 #include "DAG/Build.h"
@@ -376,11 +377,9 @@ string EvalContext::PopValueName()
 }
 
 
-#if 0
 ValuePtr EvalContext::Function(const dag::Function::Evaluator fn,
                                const SharedPtrVec<dag::Parameter>& params,
-                               SourceRange source)
+                               const FunctionType& type, SourceRange source)
 {
-	return builder_.Function(fn, CopyCurrentScope(), params, source);
+	return builder_.Function(fn, CopyCurrentScope(), params, type, source);
 }
-#endif

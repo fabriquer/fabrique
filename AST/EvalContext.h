@@ -180,7 +180,7 @@ public:
 	//! Define a @ref dag::Function.
 	dag::ValuePtr Function(dag::Function::Evaluator,
 	                       const SharedPtrVec<dag::Parameter>&,
-	                       SourceRange = SourceRange::None());
+	                       const FunctionType&, SourceRange = SourceRange::None());
 
 
 	//! Create a new alias for an existing @ref dag::Target.

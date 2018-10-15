@@ -1,6 +1,6 @@
 /** @file AST/ast.h    Meta-include file for all AST node types. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -52,6 +52,9 @@ class Identifier;
 class List;
 class Parameter;
 class Record;
+class FunctionTypeReference;
+class ParametricTypeReference;
+class RecordTypeReference;
 class SimpleTypeReference;
 class SomeValue;
 class SymbolReference;

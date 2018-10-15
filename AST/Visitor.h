@@ -1,6 +1,6 @@
 /** @file AST/Visitor.h    Declaration of @ref fabrique::ast::Visitor. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -70,6 +70,9 @@ public:
 	VISIT(List)
 	VISIT(Parameter)
 	VISIT(Record)
+	VISIT(FunctionTypeReference)
+	VISIT(ParametricTypeReference)
+	VISIT(RecordTypeReference)
 	VISIT(SimpleTypeReference)
 	VISIT(SomeValue)
 	VISIT(StringLiteral)
