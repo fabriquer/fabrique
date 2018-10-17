@@ -1,6 +1,6 @@
-/** @file AST/ast.h    Meta-include file for all AST node types. */
+/** @file AST/Arguments.cc    Definition of @ref fabrique::ast::Arguments. */
 /*
- * Copyright (c) 2013, 2018 Jonathan Anderson
+ * Copyright (c) 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,44 +29,54 @@
  * SUCH DAMAGE.
  */
 
-#ifndef AST_H
-#define AST_H
+#include "AST/Arguments.h"
+#include "AST/Visitor.h"
+#include "Support/Bytestream.h"
 
-namespace fabrique
+using namespace fabrique;
+using namespace fabrique::ast;
+
+Arguments::Arguments(UniqPtrVec<Expression> positional, UniqPtrVec<Argument> keyword,
+                     SourceRange src)
+	: Node(src), positional_(std::move(positional)), keyword_(std::move(keyword))
 {
-
-//! Representation of the Abstract Syntax Tree for Fabrique source code.
-namespace ast {}
-
 }
 
-#include "Action.h"
-#include "Argument.h"
-#include "Arguments.h"
-#include "BinaryOperation.h"
-#include "Builtins.h"
-#include "Call.h"
-#include "CompoundExpr.h"
-#include "Conditional.h"
-#include "DebugTracePoint.h"
-#include "FieldAccess.h"
-#include "FieldQuery.h"
-#include "Filename.h"
-#include "FileList.h"
-#include "Foreach.h"
-#include "Function.h"
-#include "Identifier.h"
-#include "List.h"
-#include "NameReference.h"
-#include "NodeList.h"
-#include "Parameter.h"
-#include "Record.h"
-#include "SomeValue.h"
-#include "SymbolReference.h"
-#include "TypeDeclaration.h"
-#include "UnaryOperation.h"
-#include "Value.h"
+void Arguments::PrettyPrint(Bytestream &out, unsigned int indent) const
+{
+	for (size_t i = 0; i < positional_.size(); )
+	{
+		positional_[i]->PrettyPrint(out, indent + 1);
+		if (++i < positional_.size() or not keyword_.empty())
+			out
+				<< Bytestream::Operator << ", "
+				<< Bytestream::Reset;
+	}
 
-#include "literals.h"
+	for (size_t i = 0; i < keyword_.size(); )
+	{
+		keyword_[i]->PrettyPrint(out, indent + 1);
+		if (++i < keyword_.size())
+			out
+				<< Bytestream::Operator << ", "
+				<< Bytestream::Reset;
+	}
+}
 
-#endif
+void Arguments::Accept(Visitor &v) const
+{
+	if (v.Enter(*this))
+	{
+		for (auto &p : positional_)
+		{
+			p->Accept(v);
+		}
+
+		for (auto &kwarg : keyword_)
+		{
+			kwarg->Accept(v);
+		}
+	}
+
+	v.Leave(*this);
+}

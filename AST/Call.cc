@@ -51,15 +51,12 @@ using std::dynamic_pointer_cast;
 using std::shared_ptr;
 
 
-Call::Call(UniqPtr<Expression> target, UniqPtrVec<Expression> positionalArgs,
-           UniqPtrVec<Argument> keywordArgs, SourceRange src)
-	: Expression(src), target_(std::move(target)),
-	  positionalArgs_(std::move(positionalArgs)),
-	  keywordArgs_(std::move(keywordArgs))
+Call::Call(UniqPtr<Expression> target, UniqPtr<Arguments> arguments, SourceRange src)
+	: Expression(src), target_(std::move(target)), arguments_(std::move(arguments))
 {
 }
 
-void Call::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
+void Call::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
 	out
 		<< *target_
@@ -67,23 +64,7 @@ void Call::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 		<< Bytestream::Reset
 		;
 
-	for (size_t i = 0; i < positionalArgs_.size(); )
-	{
-		out << *positionalArgs_[i];
-		if (++i < positionalArgs_.size() or not keywordArgs_.empty())
-			out
-				<< Bytestream::Operator << ", "
-				<< Bytestream::Reset;
-	}
-
-	for (size_t i = 0; i < keywordArgs_.size(); )
-	{
-		out << *keywordArgs_[i];
-		if (++i < keywordArgs_.size())
-			out
-				<< Bytestream::Operator << ", "
-				<< Bytestream::Reset;
-	}
+	arguments_->PrettyPrint(out, indent + 1);
 
 	out
 		<< Bytestream::Operator << ")"
@@ -96,12 +77,7 @@ void Call::Accept(Visitor& v) const
 	if (v.Enter(*this))
 	{
 		target_->Accept(v);
-
-		for (auto& a : positionalArgs_)
-			a->Accept(v);
-
-		for (auto& a : keywordArgs_)
-			a->Accept(v);
+		arguments_->Accept(v);
 	}
 
 	v.Leave(*this);
@@ -120,13 +96,13 @@ dag::ValuePtr Call::evaluate(EvalContext& ctx) const
 	//
 	// Check argument legality.
 	//
-	for (auto& a : keywordArgs_)
+	for (auto& a : arguments_->keyword())
 		if (not target->hasParameterNamed(a->getName().name()))
 			throw SemanticException("invalid argument", a->source());
 
 	dag::ValueMap args;
 	StringMap<SourceRange> argLocations;
-	for (auto& i : target->NameArguments(positionalArgs_))
+	for (auto& i : target->NameArguments(arguments_->positional()))
 	{
 		const std::string name = i.first;
 		const ast::Expression& value = *i.second;
@@ -135,7 +111,7 @@ dag::ValuePtr Call::evaluate(EvalContext& ctx) const
 		args[name] = value.evaluate(ctx);
 	}
 
-	for (auto& a : keywordArgs_)
+	for (auto& a : arguments_->keyword())
 	{
 		const std::string name = a->getName().name();
 		const ast::Expression& value = a->getValue();

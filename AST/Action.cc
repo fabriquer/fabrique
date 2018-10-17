@@ -1,6 +1,6 @@
 /** @file AST/Action.cc    Definition of @ref fabrique::ast::Action. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2013-2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -77,42 +77,13 @@ size_t Count(const Values& values, TypePredicate predicate)
 }
 
 
-Action* Action::Create(UniqPtrVec<Argument>& args,
-                       UniqPtr<UniqPtrVec<Parameter>>& params,
-                       const SourceRange& src)
-{
-	UniqPtrVec<Parameter> parameters;
-	if (params)
-	{
-		// Verify that all file parameters are either inputs or outputs.
-		for (auto& p : *params)
-		{
-			const Type& t = p->type();
-			if (t.isFile())
-			{
-				auto& file = dynamic_cast<const FileType&>(t);
-				if (not file.isInputFile()
-				    and not file.isOutputFile())
-					throw WrongTypeException(
-						"file[in|out]", t, p->source());
-			}
-		}
-
-		parameters = std::move(*params);
-	}
-
-	return new Action(args, parameters, src);
-}
-
-
-Action::Action(UniqPtrVec<Argument>& a, UniqPtrVec<Parameter>& params,
-               const SourceRange& loc)
-	: Expression(loc), HasParameters(params), args_(std::move(a))
+Action::Action(UniqPtr<Arguments> args, UniqPtrVec<Parameter> params, SourceRange src)
+	: Expression(src), HasParameters(params), args_(std::move(args))
 {
 }
 
 
-void Action::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
+void Action::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
 	out
 		<< Bytestream::Action << "action"
@@ -120,14 +91,7 @@ void Action::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 		<< Bytestream::Reset
 		;
 
-	for (size_t i = 0; i < args_.size(); )
-	{
-		assert(args_[i] != NULL);
-
-		out << *args_[i];
-		if (++i < args_.size())
-			out << Bytestream::Operator << ", ";
-	}
+	args_->PrettyPrint(out, indent + 1);
 
 	const UniqPtrVec<Parameter>& params = parameters();
 	if (not params.empty())
@@ -153,11 +117,12 @@ void Action::Accept(Visitor& v) const
 {
 	if (v.Enter(*this))
 	{
-		for (auto& a : args_)
-			a->Accept(v);
+		args_->Accept(v);
 
-		for (auto& p : parameters())
+		for (auto &p : parameters())
+		{
 			p->Accept(v);
+		}
 	}
 
 	v.Leave(*this);
@@ -169,42 +134,49 @@ dag::ValuePtr Action::evaluate(EvalContext& ctx) const
 	dag::ValueMap arguments;
 	TypeContext &types = ctx.types();
 
-	if (args_.size() < 1)
+	if (args_->size() < 1)
 		throw SemanticException("Missing action arguments", source());
 
-	for (const UniqPtr<Argument>& arg : args_)
-	{
-		// Evaluate the argument as a string.
-		dag::ValuePtr value = arg->getValue().evaluate(ctx);
+	// The only keyword-less argument to action() is its command.
+	if (args_->positional().size() > 1)
+		throw SemanticException("Build actions only take one positional argument",
+		                        source());
 
-		// The only keyword-less argument to action() is its command.
-		if (not arg->hasName() or arg->getName().name() == "command")
+	for (const UniqPtr<Expression>& arg : args_->positional())
+	{
+		command = arg->evaluate(ctx)->str();
+	}
+
+	for (const UniqPtr<Argument>& arg : args_->keyword())
+	{
+		std::string str = arg->getValue().evaluate(ctx)->str();
+
+		if (arg->getName().name() == "command")
 		{
 			if (not command.empty())
 				throw SemanticException(
 					"Duplicate command", arg->source());
 
-			command = value->str();
-			continue;
+			command = str;
 		}
-
-		dag::ValuePtr v(
-			new dag::String(value->str(),
-			                types.stringType(),
-			                arg->source())
-		);
-		arguments.emplace(arg->getName().name(), v);
+		else
+		{
+			dag::ValuePtr v(
+				new dag::String(str, types.stringType(), arg->source())
+			);
+			arguments.emplace(arg->getName().name(), v);
+		}
 	}
 
 	SharedPtrVec<dag::Parameter> parameters;
 	for (const UniqPtr<Parameter>& p : this->parameters())
 	{
-		// Ensure that files are properly tagged as input or output.
-		FileType::CheckFileTags(p->type(), p->source());
-
 		std::shared_ptr<dag::Parameter> param =
 			std::dynamic_pointer_cast<dag::Parameter>(
 				p->evaluate(ctx));
+
+		// Ensure that files are properly tagged as input or output.
+		FileType::CheckFileTags(param->type(), p->source());
 
 		assert(param);
 		parameters.emplace_back(param);

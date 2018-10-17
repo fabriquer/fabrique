@@ -35,7 +35,7 @@
 #include "ADT/PtrVec.h"
 #include "ADT/UniqPtr.h"
 
-#include "AST/Argument.h"
+#include "AST/Arguments.h"
 #include "AST/Expression.h"
 
 #include <memory>
@@ -50,17 +50,9 @@ namespace ast {
 class Call : public Expression
 {
 public:
-	Call(UniqPtr<Expression> target, UniqPtrVec<Expression> positionalArguments,
-	     UniqPtrVec<Argument> keywordArguments, SourceRange);
+	Call(UniqPtr<Expression> target, UniqPtr<Arguments> arguments, SourceRange);
 
 	const Expression& target() const { return *target_; }
-
-	const UniqPtrVec<Expression>& positionalArguments() const
-	{
-		return positionalArgs_;
-	}
-
-	const UniqPtrVec<Argument>& keywordArguments() const { return keywordArgs_; }
 
 	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 	virtual void Accept(Visitor&) const override;
@@ -69,8 +61,7 @@ public:
 
 private:
 	const UniqPtr<Expression> target_;
-	const UniqPtrVec<Expression> positionalArgs_;
-	const UniqPtrVec<Argument> keywordArgs_;
+	const UniqPtr<Arguments> arguments_;
 };
 
 } // namespace ast

@@ -1,6 +1,7 @@
 sources = files(
 	Action.cc
 	Argument.cc
+	Arguments.cc
 	ASTDump.cc
 	BinaryOperation.cc
 	Call.cc

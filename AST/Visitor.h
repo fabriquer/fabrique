@@ -53,6 +53,7 @@ public:
 
 	VISIT(Action)
 	VISIT(Argument)
+	VISIT(Arguments)
 	VISIT(BinaryOperation)
 	VISIT(BoolLiteral)
 	VISIT(Call)

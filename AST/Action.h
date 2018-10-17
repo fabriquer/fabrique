@@ -1,6 +1,6 @@
 /** @file AST/Action.h    Declaration of @ref fabrique::ast::Action. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2013-2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -34,7 +34,7 @@
 
 #include "ADT/PtrVec.h"
 
-#include "AST/Argument.h"
+#include "AST/Arguments.h"
 #include "AST/Expression.h"
 #include "AST/HasParameters.h"
 #include "AST/Parameter.h"
@@ -48,20 +48,9 @@ namespace ast {
 class Action : public Expression, public HasParameters
 {
 public:
-	/**
-	 * An action definition has both arguments and parameters.
-	 * Arguments define the action itself and parameters declare what
-	 * callers can pass in.
-	 *
-	 * If no explicit 'in' or 'out' parameters are specified, an action
-	 * assumes that the first two parameters are in:list[file] and
-	 * out:list[file].
-	 */
-	static Action* Create(UniqPtrVec<Argument>&,
-	                      UniqPtr<UniqPtrVec<Parameter>>&,
-	                      const SourceRange&);
+	Action(UniqPtr<Arguments>, UniqPtrVec<Parameter>, SourceRange);
 
-	const UniqPtrVec<Argument>& arguments() const { return args_; }
+	const UniqPtr<Arguments>& arguments() const { return args_; }
 
 	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 	virtual void Accept(Visitor&) const override;
@@ -69,9 +58,7 @@ public:
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
 private:
-	Action(UniqPtrVec<Argument>&, UniqPtrVec<Parameter>&, const SourceRange&);
-
-	UniqPtrVec<Argument> args_;
+	UniqPtr<Arguments> args_;
 };
 
 } // namespace ast

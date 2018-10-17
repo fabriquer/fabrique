@@ -1,6 +1,6 @@
-/** @file AST/ast.h    Meta-include file for all AST node types. */
+/** @file AST/Arguments.h    Declaration of @ref fabrique::ast::Arguments. */
 /*
- * Copyright (c) 2013, 2018 Jonathan Anderson
+ * Copyright (c) 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,44 +29,40 @@
  * SUCH DAMAGE.
  */
 
-#ifndef AST_H
-#define AST_H
+#ifndef AST_ARGUMENTS_H
+#define AST_ARGUMENTS_H
 
-namespace fabrique
+#include "ADT/UniqPtr.h"
+#include "AST/Argument.h"
+#include "AST/Node.h"
+
+namespace fabrique {
+namespace ast {
+
+
+/**
+ * Arguments to something Callable: positional arguments followed by keyword arguments.
+ */
+class Arguments : public Node
 {
+public:
+	Arguments(UniqPtrVec<Expression> positional, UniqPtrVec<Argument> keyword,
+	          SourceRange);
 
-//! Representation of the Abstract Syntax Tree for Fabrique source code.
-namespace ast {}
+	const UniqPtrVec<Expression>& positional() const { return positional_; }
+	const UniqPtrVec<Argument>& keyword() const { return keyword_; }
 
-}
+	size_t size() const { return positional_.size() + keyword_.size(); }
 
-#include "Action.h"
-#include "Argument.h"
-#include "Arguments.h"
-#include "BinaryOperation.h"
-#include "Builtins.h"
-#include "Call.h"
-#include "CompoundExpr.h"
-#include "Conditional.h"
-#include "DebugTracePoint.h"
-#include "FieldAccess.h"
-#include "FieldQuery.h"
-#include "Filename.h"
-#include "FileList.h"
-#include "Foreach.h"
-#include "Function.h"
-#include "Identifier.h"
-#include "List.h"
-#include "NameReference.h"
-#include "NodeList.h"
-#include "Parameter.h"
-#include "Record.h"
-#include "SomeValue.h"
-#include "SymbolReference.h"
-#include "TypeDeclaration.h"
-#include "UnaryOperation.h"
-#include "Value.h"
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
+	virtual void Accept(Visitor&) const override;
 
-#include "literals.h"
+private:
+	const UniqPtrVec<Expression> positional_;
+	const UniqPtrVec<Argument> keyword_;
+};
+
+} // namespace ast
+} // namespace fabrique
 
 #endif

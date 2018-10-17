@@ -37,6 +37,7 @@ namespace ast {
 
 class Action;
 class Argument;
+class Arguments;
 class BinaryOperation;
 class Call;
 class CompoundExpression;
