@@ -253,7 +253,6 @@ int main(int argc, char *argv[]) {
 bool Parse(Parser& parser, const string& filename,
            UniqPtrVec<ast::Value>& values, bool printAST)
 {
-
 	// Open and parse the top-level build description.
 	std::ifstream infile(filename.c_str());
 	assert(infile);
