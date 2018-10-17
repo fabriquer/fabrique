@@ -74,18 +74,15 @@ void FieldAccess::Accept(Visitor& v) const
 dag::ValuePtr FieldAccess::evaluate(EvalContext& ctx) const
 {
 	dag::ValuePtr base = base_->evaluate(ctx);
-	if (not base->hasFields())
-		throw AssertionFailure("base->hasFields()",
-			base->type().str() + " (" + typeid(base).name()
-			+ ") should have fields");
+	FAB_ASSERT(base->hasFields(),
+		base->type().str() + " (" + typeid(base).name() + ") should have fields");
 
 	const std::string fieldName(field_->name());
 	dag::ValuePtr field = base->field(fieldName);
 
-	if (not field)
-		throw AssertionFailure("field",
-			base->type().str() + " (" + typeid(base).name()
-			+ ") should have field '" + fieldName + "'");
+	FAB_ASSERT(field,
+		base->type().str() + " (" + typeid(base).name()
+		+ ") should have field '" + fieldName + "'");
 
 	return field;
 }

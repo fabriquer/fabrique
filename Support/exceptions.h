@@ -1,6 +1,6 @@
 /** @file Support/exceptions.h    Declaration of basic Fabrique exceptions. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -38,6 +38,16 @@
 #include <exception>
 #include <memory>
 #include <string>
+
+#define FAB_ASSERT(expr, detail) \
+	do \
+	{ \
+		if (not expr) \
+		{ \
+			throw fabrique::AssertionFailure(#expr, detail); \
+		} \
+	} \
+	while (false)
 
 
 namespace fabrique {
