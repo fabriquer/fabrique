@@ -43,7 +43,7 @@ namespace ast {
 class List : public Expression
 {
 public:
-	List(UniqPtrVec<Expression>& e, const SourceRange& loc)
+	List(UniqPtrVec<Expression> e, SourceRange loc)
 		: Expression(loc), elements_(std::move(e))
 	{
 	}
