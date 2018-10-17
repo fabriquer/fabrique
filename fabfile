@@ -25,11 +25,7 @@ cxx = import('share/cxx.fab',
 	colour_diagnostics = colour_output,
 	platform = platform);
 
-# TODO: let modules "pass through" values from other modules
-shell =
-	if platform.posix import('share/shell-posix.fab')
-	else import('share/shell-unimplemented.fab')
-	;
+shell = import('share/shell.fab').shell;
 
 
 #
