@@ -49,6 +49,16 @@
 	} \
 	while (false)
 
+#define PARSER_ASSERT(expr, src, detail) \
+	do \
+	{ \
+		if (not (expr)) \
+		{ \
+			throw fabrique::ParserError(detail, src); \
+		} \
+	} \
+	while (false)
+
 
 namespace fabrique {
 
@@ -137,6 +147,15 @@ private:
 	std::shared_ptr<ErrorReport> err_;
 };
 
+
+//! A parser assertion failed.
+class ParserError : public SourceCodeException
+{
+public:
+	ParserError(const std::string& message, const SourceRange&);
+	ParserError(const ParserError&);
+	virtual ~ParserError() override;
+};
 
 //! A syntactic error is present in the Fabrique description.
 class SyntaxError : public SourceCodeException

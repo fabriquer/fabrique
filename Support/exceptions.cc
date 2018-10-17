@@ -1,6 +1,6 @@
 /** @file Support/exceptions.cc    Definition of basic Fabrique exceptions. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -127,6 +127,19 @@ void SourceCodeException::PrettyPrint(Bytestream& out, unsigned int indent) cons
 {
 	err_->PrettyPrint(out, indent);
 }
+
+
+ParserError::ParserError(const string& message, const SourceRange& loc)
+	: SourceCodeException(message, loc)
+{
+}
+
+ParserError::ParserError(const ParserError& orig)
+	: SourceCodeException(orig.message(), orig.source())
+{
+}
+
+ParserError::~ParserError() {}
 
 
 SyntaxError::SyntaxError(const string& message, const SourceRange& loc)
