@@ -54,14 +54,14 @@ protected:
 class SimpleTypeReference : public TypeReference
 {
 public:
+	SimpleTypeReference(UniqPtr<Identifier> name, SourceRange);
+
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
 	virtual void Accept(Visitor&) const override;
 	void PrettyPrint(Bytestream&, unsigned int indent) const override;
 
 private:
-	SimpleTypeReference(UniqPtr<Identifier> name, SourceRange);
-
 	UniqPtr<Identifier> name_;
 };
 
@@ -76,15 +76,15 @@ private:
 class ParametricTypeReference : public TypeReference
 {
 public:
+	ParametricTypeReference(UniqPtr<TypeReference> base, SourceRange,
+	                        UniqPtrVec<TypeReference> parameters);
+
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
 	virtual void Accept(Visitor&) const override;
 	void PrettyPrint(Bytestream&, unsigned int indent) const override;
 
 private:
-	ParametricTypeReference(UniqPtr<TypeReference> base, SourceRange,
-	                        UniqPtrVec<TypeReference> parameters);
-
 	UniqPtr<TypeReference> base_;
 	UniqPtrVec<TypeReference> parameters_;
 };
@@ -100,15 +100,15 @@ private:
 class FunctionTypeReference : public TypeReference
 {
 public:
+	FunctionTypeReference(UniqPtrVec<TypeReference> params,
+	                      UniqPtr<TypeReference> result, SourceRange);
+
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
 	virtual void Accept(Visitor&) const override;
 	void PrettyPrint(Bytestream&, unsigned int indent) const override;
 
 private:
-	FunctionTypeReference(UniqPtrVec<TypeReference> params,
-	                      UniqPtr<TypeReference> result, SourceRange);
-
 	UniqPtrVec<TypeReference> parameters_;
 	UniqPtr<TypeReference> resultType_;
 };
@@ -124,14 +124,14 @@ private:
 class RecordTypeReference : public TypeReference
 {
 public:
+	RecordTypeReference(NamedPtrVec<TypeReference>, SourceRange);
+
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
 	virtual void Accept(Visitor&) const override;
 	void PrettyPrint(Bytestream&, unsigned int indent) const override;
 
 private:
-	RecordTypeReference(NamedPtrVec<TypeReference>, SourceRange);
-
 	NamedPtrVec<TypeReference> fieldTypes_;
 };
 
