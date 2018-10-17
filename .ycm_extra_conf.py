@@ -11,7 +11,7 @@ def FlagsForFile(filename, **kwargs):
             '-I%s/build/Debug' % srcroot,
 
             # Treat vendor headers as system headers (ignore warnings)
-            '-isystem %s/vendor' % srcroot,
+            '-isystem', '%s/vendor' % srcroot,
 
             # Provide lots and lots of warnings!
             '-Weverything',
