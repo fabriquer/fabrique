@@ -196,7 +196,7 @@ void FunctionTypeReference::PrettyPrint(Bytestream& out, unsigned int indent) co
 		}
 	}
 
-	out << Bytestream::Operator << ")=>" << Bytestream::Reset;
+	out << Bytestream::Operator << ")->" << Bytestream::Reset;
 	resultType_->PrettyPrint(out, indent);
 }
 
