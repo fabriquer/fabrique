@@ -51,8 +51,11 @@ using std::dynamic_pointer_cast;
 using std::shared_ptr;
 
 
-Call::Call(UniqPtr<Expression>& target, UniqPtrVec<Argument>& a, const SourceRange& src)
-	: Expression(src), target_(std::move(target)), args_(std::move(a))
+Call::Call(UniqPtr<Expression> target, UniqPtrVec<Expression> positionalArgs,
+           UniqPtrVec<Argument> keywordArgs, SourceRange src)
+	: Expression(src), target_(std::move(target)),
+	  positionalArgs_(std::move(positionalArgs)),
+	  keywordArgs_(std::move(keywordArgs))
 {
 }
 
@@ -64,10 +67,19 @@ void Call::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 		<< Bytestream::Reset
 		;
 
-	for (size_t i = 0; i < args_.size(); )
+	for (size_t i = 0; i < positionalArgs_.size(); )
 	{
-		out << *args_[i];
-		if (++i < args_.size())
+		out << *positionalArgs_[i];
+		if (++i < positionalArgs_.size() or not keywordArgs_.empty())
+			out
+				<< Bytestream::Operator << ", "
+				<< Bytestream::Reset;
+	}
+
+	for (size_t i = 0; i < keywordArgs_.size(); )
+	{
+		out << *keywordArgs_[i];
+		if (++i < keywordArgs_.size())
 			out
 				<< Bytestream::Operator << ", "
 				<< Bytestream::Reset;
@@ -84,7 +96,11 @@ void Call::Accept(Visitor& v) const
 	if (v.Enter(*this))
 	{
 		target_->Accept(v);
-		for (auto& a : args_)
+
+		for (auto& a : positionalArgs_)
+			a->Accept(v);
+
+		for (auto& a : keywordArgs_)
 			a->Accept(v);
 	}
 
@@ -94,31 +110,38 @@ void Call::Accept(Visitor& v) const
 dag::ValuePtr Call::evaluate(EvalContext& ctx) const
 {
 	Bytestream& dbg = Bytestream::Debug("eval.call");
-
-	dag::ValuePtr value = target_->evaluate(ctx);
 	dbg << Bytestream::Action << "calling " << *target_ << "\n";
 
-	auto target = dynamic_pointer_cast<dag::Callable>(value);
+	dag::ValuePtr targetValue = target_->evaluate(ctx);
+
+	auto target = dynamic_pointer_cast<dag::Callable>(targetValue);
 	assert(target);
 
 	//
 	// Check argument legality.
 	//
-	for (auto& a : args_)
-		if (a->hasName()
-		    and not target->hasParameterNamed(a->getName().name()))
-			// TODO: argument, not parameter!
-			throw SemanticException("invalid parameter", a->source());
+	for (auto& a : keywordArgs_)
+		if (not target->hasParameterNamed(a->getName().name()))
+			throw SemanticException("invalid argument", a->source());
 
 	dag::ValueMap args;
 	StringMap<SourceRange> argLocations;
-	for (auto& i : target->NameArguments(args_))
+	for (auto& i : target->NameArguments(positionalArgs_))
 	{
 		const std::string name = i.first;
-		const ast::Argument& arg = *i.second;
+		const ast::Expression& value = *i.second;
 
-		argLocations.emplace(name, arg.source());
-		args[name] = arg.evaluate(ctx);
+		argLocations.emplace(name, value.source());
+		args[name] = value.evaluate(ctx);
+	}
+
+	for (auto& a : keywordArgs_)
+	{
+		const std::string name = a->getName().name();
+		const ast::Expression& value = a->getValue();
+
+		argLocations.emplace(name, value.source());
+		args[name] = value.evaluate(ctx);
 	}
 
 	target->CheckArguments(args, argLocations, source());

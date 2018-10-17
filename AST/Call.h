@@ -1,6 +1,6 @@
 /** @file AST/Call.h    Declaration of @ref fabrique::ast::Call. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -50,15 +50,17 @@ namespace ast {
 class Call : public Expression
 {
 public:
-	Call(UniqPtr<Expression>& target, UniqPtrVec<Argument>&, const SourceRange&);
+	Call(UniqPtr<Expression> target, UniqPtrVec<Expression> positionalArguments,
+	     UniqPtrVec<Argument> keywordArguments, SourceRange);
 
 	const Expression& target() const { return *target_; }
 
-	const UniqPtrVec<Argument>& arguments() const { return args_; }
+	const UniqPtrVec<Expression>& positionalArguments() const
+	{
+		return positionalArgs_;
+	}
 
-	using ParamIterator = UniqPtrVec<Argument>::const_iterator;
-	ParamIterator begin() const { return args_.begin(); }
-	ParamIterator end() const { return args_.end(); }
+	const UniqPtrVec<Argument>& keywordArguments() const { return keywordArgs_; }
 
 	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 	virtual void Accept(Visitor&) const override;
@@ -67,7 +69,8 @@ public:
 
 private:
 	const UniqPtr<Expression> target_;
-	const UniqPtrVec<Argument> args_;
+	const UniqPtrVec<Expression> positionalArgs_;
+	const UniqPtrVec<Argument> keywordArgs_;
 };
 
 } // namespace ast

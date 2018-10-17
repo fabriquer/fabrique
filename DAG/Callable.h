@@ -88,8 +88,7 @@ public:
 			if (not begin) begin = src.begin;
 			end = src.end;
 
-			names.push_back(
-				i->hasName() ? i->getName().name() : "");
+			names.push_back("");
 		}
 
 		// Fill in any gaps with knowledge about formal parameters.
