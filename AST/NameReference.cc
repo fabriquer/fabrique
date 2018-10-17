@@ -1,6 +1,6 @@
-/** @file AST/ast.h    Meta-include file for all AST node types. */
+/** @file AST/NameReference.cc    Definition of @ref fabrique::ast::NameReference. */
 /*
- * Copyright (c) 2013, 2018 Jonathan Anderson
+ * Copyright (c) 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,44 +29,33 @@
  * SUCH DAMAGE.
  */
 
-#ifndef AST_FORWARD_DECLS_H
-#define AST_FORWARD_DECLS_H
+#include "AST/EvalContext.h"
+#include "AST/NameReference.h"
+#include "AST/Visitor.h"
+using namespace fabrique::ast;
 
-namespace fabrique {
-namespace ast {
 
-class Action;
-class Argument;
-class BinaryOperation;
-class Call;
-class CompoundExpression;
-class Conditional;
-class DebugTracePoint;
-class FieldAccess;
-class FieldQuery;
-class Filename;
-class FileList;
-class ForeachExpr;
-class Function;
-class Identifier;
-class List;
-class NameReference;
-class Parameter;
-class Record;
-class FunctionTypeReference;
-class ParametricTypeReference;
-class RecordTypeReference;
-class SimpleTypeReference;
-class SomeValue;
-class SymbolReference;
-class TypeDeclaration;
-class UnaryOperation;
-class Value;
+NameReference::NameReference(UniqPtr<Identifier> name)
+	: Expression(name->source()), name_(std::move(name))
+{
+}
 
-} // namespace ast
-} // namespace fabrique
+void NameReference::Accept(Visitor &v) const
+{
+	if (v.Enter(*this))
+	{
+		name_->Accept(v);
+	}
 
-// our use of typedefs means we can't actually forward-declare literals.
-#include "AST/literals.h"
+	v.Leave(*this);
+}
 
-#endif
+void NameReference::PrettyPrint(Bytestream &out, unsigned int indent) const
+{
+	name_->PrettyPrint(out, indent + 1);
+}
+
+fabrique::dag::ValuePtr NameReference::evaluate(EvalContext &ctx) const
+{
+	return ctx.Lookup(name_->name());
+}

@@ -1,6 +1,6 @@
-/** @file AST/ast.h    Meta-include file for all AST node types. */
+/** @file AST/NameReference.h    Declaration of @ref fabrique::ast::NameReference. */
 /*
- * Copyright (c) 2013, 2018 Jonathan Anderson
+ * Copyright (c) 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,44 +29,41 @@
  * SUCH DAMAGE.
  */
 
-#ifndef AST_FORWARD_DECLS_H
-#define AST_FORWARD_DECLS_H
+#ifndef NAME_REFERENCE_H
+#define NAME_REFERENCE_H
+
+#include "ADT/PtrVec.h"
+#include "ADT/UniqPtr.h"
+
+#include "AST/Argument.h"
+#include "AST/Expression.h"
+
+#include <memory>
 
 namespace fabrique {
 namespace ast {
 
-class Action;
-class Argument;
-class BinaryOperation;
-class Call;
-class CompoundExpression;
-class Conditional;
-class DebugTracePoint;
-class FieldAccess;
-class FieldQuery;
-class Filename;
-class FileList;
-class ForeachExpr;
-class Function;
-class Identifier;
-class List;
-class NameReference;
-class Parameter;
-class Record;
-class FunctionTypeReference;
-class ParametricTypeReference;
-class RecordTypeReference;
-class SimpleTypeReference;
-class SomeValue;
-class SymbolReference;
-class TypeDeclaration;
-class UnaryOperation;
-class Value;
+
+/**
+ * A reference to a previously-defined value.
+ */
+class NameReference : public Expression
+{
+public:
+	NameReference(UniqPtr<Identifier> name);
+
+	const Identifier& name() const { return *name_; }
+
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
+	virtual void Accept(Visitor&) const override;
+
+	virtual dag::ValuePtr evaluate(EvalContext&) const override;
+
+private:
+	const UniqPtr<Identifier> name_;
+};
 
 } // namespace ast
 } // namespace fabrique
-
-// our use of typedefs means we can't actually forward-declare literals.
-#include "AST/literals.h"
 
 #endif

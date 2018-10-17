@@ -68,6 +68,7 @@ public:
 	VISIT(Identifier)
 	VISIT(IntLiteral)
 	VISIT(List)
+	VISIT(NameReference)
 	VISIT(Parameter)
 	VISIT(Record)
 	VISIT(FunctionTypeReference)

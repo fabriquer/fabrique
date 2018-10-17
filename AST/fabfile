@@ -19,6 +19,7 @@ sources = files(
 	Identifier.cc
 	List.cc
 	Mapping.cc
+	NameReference.cc
 	Node.cc
 	Parameter.cc
 	Record.cc

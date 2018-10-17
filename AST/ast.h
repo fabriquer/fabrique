@@ -56,6 +56,7 @@ namespace ast {}
 #include "Function.h"
 #include "Identifier.h"
 #include "List.h"
+#include "NameReference.h"
 #include "NodeList.h"
 #include "Parameter.h"
 #include "Record.h"
