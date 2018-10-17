@@ -67,7 +67,7 @@ bool SourceLocation::operator < (const SourceLocation& other) const
 	return *this or not other
 		or filename < other.filename
 		or line < other.line
-		or column < other.column;
+		or (line == other.line and column < other.column);
 }
 
 bool SourceLocation::operator > (const SourceLocation& other) const
@@ -75,7 +75,7 @@ bool SourceLocation::operator > (const SourceLocation& other) const
 	return *this or not other
 		or filename > other.filename
 		or line > other.line
-		or column > other.column;
+		or (line == other.line and column > other.column);
 }
 
 bool SourceLocation::operator == (const SourceLocation& other) const
@@ -178,7 +178,33 @@ bool SourceRange::operator != (const SourceRange& other) const
 
 bool SourceRange::isInside(const SourceRange& other) const
 {
-	return begin >= other.begin and end <= other.end;
+	if (begin.filename != other.begin.filename
+	    or end.filename != other.end.filename)
+	{
+		return false;
+	}
+
+	if (begin.line < other.begin.line)
+	{
+		return false;
+	}
+
+	if (begin.line == other.begin.line and begin.column < other.begin.column)
+	{
+		return false;
+	}
+
+	if (end.line > other.end.line)
+	{
+		return false;
+	}
+
+	if (end.line == other.end.line and end.column > other.end.column)
+	{
+		return false;
+	}
+
+	return true;
 }
 
 
