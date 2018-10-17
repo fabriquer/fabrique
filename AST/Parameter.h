@@ -1,6 +1,6 @@
 /** @file AST/Parameter.h    Declaration of @ref fabrique::ast::Parameter. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -33,7 +33,7 @@
 #define PARAMETER_H
 
 #include "AST/Identifier.h"
-#include "Types/Typed.h"
+#include "AST/TypeReference.h"
 
 #include <memory>
 
@@ -51,11 +51,11 @@ class Expression;
 /**
  * A formal parameter in a @ref fabrique::ast::Function.
  */
-class Parameter : public Node, public Typed
+class Parameter : public Node
 {
 public:
-	Parameter(UniqPtr<Identifier>& id, const Type& resultTy,
-	          UniqPtr<Expression>&& e = nullptr);
+	Parameter(UniqPtr<Identifier> id, UniqPtr<TypeReference> resultTy,
+	          UniqPtr<Expression> e = nullptr);
 
 	const Identifier& getName() const { return *name_; }
 	const UniqPtr<Expression>& defaultValue() const
@@ -70,6 +70,7 @@ public:
 
 private:
 	const UniqPtr<Identifier> name_;
+	const UniqPtr<TypeReference> type_;
 	const UniqPtr<Expression> defaultValue_;
 };
 

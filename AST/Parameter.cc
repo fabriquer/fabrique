@@ -32,6 +32,7 @@
 #include "AST/Parameter.h"
 #include "AST/Visitor.h"
 #include "DAG/Parameter.h"
+#include "DAG/TypeReference.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 
@@ -41,10 +42,11 @@ using namespace fabrique;
 using namespace fabrique::ast;
 
 
-Parameter::Parameter(UniqPtr<Identifier>& name, const Type& resultTy,
-                     UniqPtr<Expression>&& defaultValue)
-	: Node(SourceRange::Over(name, defaultValue)), Typed(resultTy),
-	  name_(std::move(name)), defaultValue_(std::move(defaultValue))
+Parameter::Parameter(UniqPtr<Identifier> name, UniqPtr<TypeReference> type,
+                     UniqPtr<Expression> defaultValue)
+	: Node(SourceRange::Over(name, defaultValue)),
+	  name_(std::move(name)), type_(std::move(type)),
+	  defaultValue_(std::move(defaultValue))
 {
 	if (name_->reservedName())
 		throw SyntaxError("reserved name", name_->source());
@@ -81,7 +83,14 @@ std::shared_ptr<dag::Parameter> Parameter::evaluate(EvalContext& ctx) const
 	if (defaultValue_)
 		defaultValue = defaultValue_->evaluate(ctx);
 
+	dag::ValuePtr t = type_->evaluate(ctx);
+	assert(t && "Parameter::type_->evaluate() return nullptr");
+
+	auto type = std::dynamic_pointer_cast<dag::TypeReference>(t);
+	assert(type && "Parameter type is not a TypeReference");
+
 	return std::shared_ptr<dag::Parameter>(
-		new dag::Parameter(name_->name(), type(), defaultValue, source())
+		new dag::Parameter(name_->name(), type->referencedType(),
+		                   defaultValue, source())
 	);
 }
