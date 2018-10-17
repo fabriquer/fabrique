@@ -1,7 +1,7 @@
 platform_agnostic_sources = files(
 	ABI.cc
-	Arguments.cc
 	Bytestream.cc
+	CLIArguments.cc
 	ErrorReport.cc
 	Join.cc
 	Printable.cc

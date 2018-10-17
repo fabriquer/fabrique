@@ -41,7 +41,7 @@
 
 namespace fabrique {
 
-class Arguments;
+class CLIArguments;
 class FileType;
 class FunctionType;
 class TypeContext;
@@ -89,7 +89,7 @@ public:
 	 * Add the build steps required to regenerate the @ref DAG if
 	 * Fabrique input files change.
 	 */
-	ValuePtr AddRegeneration(const Arguments& commandLineArguments,
+	ValuePtr AddRegeneration(const CLIArguments& commandLineArguments,
                                  const std::vector<std::string>& inputFiles,
                                  const std::vector<std::string>& outputFiles);
 

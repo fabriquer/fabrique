@@ -42,8 +42,8 @@
 #include "DAG/Primitive.h"
 #include "DAG/Rule.h"
 
-#include "Support/Arguments.h"
 #include "Support/Bytestream.h"
+#include "Support/CLIArguments.h"
 #include "Support/Join.h"
 #include "Support/exceptions.h"
 #include "Support/os.h"
@@ -243,7 +243,7 @@ UniqPtr<DAG> DAGBuilder::dag(vector<string> topLevelTargets) const
 }
 
 
-ValuePtr DAGBuilder::AddRegeneration(const Arguments& commandLineArgs,
+ValuePtr DAGBuilder::AddRegeneration(const CLIArguments& commandLineArgs,
                                      const vector<string>& inputFiles,
                                      const vector<string>& outputFiles)
 {
@@ -279,7 +279,7 @@ ValuePtr DAGBuilder::AddRegeneration(const Arguments& commandLineArgs,
 		const string Name = Rule::RegenerationRuleName();
 		const string Command =
 			commandLineArgs.executable
-			+ Arguments::str(commandLineArgs)
+			+ CLIArguments::str(commandLineArgs)
 			+ " ${rootInput}"
 			;
 

@@ -43,8 +43,8 @@
 #include "DAG/Primitive.h"
 #include "DAG/Rule.h"
 
-#include "Support/Arguments.h"
 #include "Support/Bytestream.h"
+#include "Support/CLIArguments.h"
 #include "Support/Join.h"
 #include "Support/exceptions.h"
 #include "Support/os.h"

@@ -1,6 +1,6 @@
-/** @file Support/Arguments.cc    Definition of @ref fabrique::Arguments. */
+/** @file Support/CLIArguments.cc    Definition of @ref fabrique::CLIArguments. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -32,8 +32,8 @@
 // Include Matthias Benkmann's "Lean Mean C++ Option Parser".
 #include "optionparser.h"
 
-#include "Support/Arguments.h"
 #include "Support/Bytestream.h"
+#include "Support/CLIArguments.h"
 #include "Support/String.h"
 #include "Support/os.h"
 
@@ -159,12 +159,12 @@ const option::Descriptor usage[] =
 #pragma clang diagnostic pop
 
 
-void Arguments::PrintUsage(std::ostream& out)
+void CLIArguments::PrintUsage(std::ostream& out)
 {
 	option::printUsage(out, usage);
 }
 
-Arguments* Arguments::Parse(int argc, char *argv[])
+CLIArguments* CLIArguments::Parse(int argc, char *argv[])
 {
 	option::Stats stats(usage, argc - 1, argv + 1);
 	std::vector<option::Option> options(stats.options_max);
@@ -212,7 +212,7 @@ Arguments* Arguments::Parse(int argc, char *argv[])
 		? (options[DebugPattern].arg ? options[DebugPattern].arg : "*")
 		: "none";
 
-	return new Arguments {
+	return new CLIArguments {
 		executable,
 		help,
 		input,
@@ -229,7 +229,7 @@ Arguments* Arguments::Parse(int argc, char *argv[])
 }
 
 
-std::vector<string> Arguments::ArgVector(const Arguments& args)
+std::vector<string> CLIArguments::ArgVector(const CLIArguments& args)
 {
 	std::vector<string> argv;
 
@@ -269,12 +269,12 @@ std::vector<string> Arguments::ArgVector(const Arguments& args)
 
 static Bytestream& operator<< (Bytestream& out, const std::vector<string>&);
 
-void Arguments::Print(const Arguments& args, Bytestream& out)
+void CLIArguments::Print(const CLIArguments& args, Bytestream& out)
 {
 	const string tab(1, '\t');
 
 	out
-		<< Bytestream::Action << "Arguments\n"
+		<< Bytestream::Action << "CLIArguments\n"
 		<< Bytestream::Operator << "{\n"
 		<< ARG(help)
 		<< ARG(input)
@@ -292,11 +292,11 @@ void Arguments::Print(const Arguments& args, Bytestream& out)
 		;
 }
 
-string Arguments::str(const Arguments& args)
+string CLIArguments::str(const CLIArguments& args)
 {
 	std::ostringstream oss;
 
-	for (const string& a : Arguments::ArgVector(args))
+	for (const string& a : CLIArguments::ArgVector(args))
 		oss << " " << a;
 
 	return oss.str();

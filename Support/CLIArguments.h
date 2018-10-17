@@ -1,6 +1,6 @@
-/** @file Support/Arguments.h    Declaration of @ref fabrique::Arguments. */
+/** @file Support/CLIArguments.h    Declaration of @ref fabrique::CLIArguments. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,8 +29,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef ARGUMENTS_H
-#define ARGUMENTS_H
+#ifndef FAB_CLI_ARGUMENTS_H
+#define FAB_CLI_ARGUMENTS_H
 
 #include <string>
 #include <vector>
@@ -50,15 +50,15 @@ enum OutputFormat
 /**
  * Command-line options and arguments after parsing, type-checking, etc.
  */
-class Arguments
+class CLIArguments
 {
 public:
 	static void PrintUsage(std::ostream&);
-	static Arguments* Parse(int argc, char *argv[]);
-	static std::vector<std::string> ArgVector(const Arguments&);
+	static CLIArguments* Parse(int argc, char *argv[]);
+	static std::vector<std::string> ArgVector(const CLIArguments&);
 
-	static void Print(const Arguments&, Bytestream&);
-	static std::string str(const Arguments&);
+	static void Print(const CLIArguments&, Bytestream&);
+	static std::string str(const CLIArguments&);
 
 	//! The currently-running binary.
 	const std::string executable;

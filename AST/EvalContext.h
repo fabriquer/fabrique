@@ -44,7 +44,7 @@
 
 namespace fabrique {
 
-class Arguments;
+class CLIArguments;
 class FileType;
 class FunctionType;
 class TypeContext;

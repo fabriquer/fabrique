@@ -41,8 +41,8 @@
 #include "Plugin/Loader.h"
 #include "Plugin/Registry.h"
 
-#include "Support/Arguments.h"
 #include "Support/Bytestream.h"
+#include "Support/CLIArguments.h"
 #include "Support/exceptions.h"
 #include "Support/os.h"
 
@@ -69,10 +69,10 @@ int main(int argc, char *argv[]) {
 	//
 	// Parse command-line arguments.
 	//
-	unique_ptr<Arguments> args(Arguments::Parse(argc, argv));
+	unique_ptr<CLIArguments> args(CLIArguments::Parse(argc, argv));
 	if (not args or args->help)
 	{
-		Arguments::PrintUsage(cerr);
+		CLIArguments::PrintUsage(cerr);
 		return (args ? 0 : 1);
 	}
 
@@ -83,7 +83,7 @@ int main(int argc, char *argv[]) {
 	Bytestream::SetDebugStream(Bytestream::Stdout());
 
 	Bytestream& argDebug = Bytestream::Debug("cli.args");
-	Arguments::Print(*args, argDebug);
+	CLIArguments::Print(*args, argDebug);
 	argDebug << Bytestream::Reset << "\n";
 
 	//
