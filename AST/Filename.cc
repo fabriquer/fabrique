@@ -101,8 +101,8 @@ dag::ValuePtr Filename::evaluate(EvalContext& ctx) const
 {
 	const string filename = name().evaluate(ctx)->str();
 
-	assert(ctx.Lookup(ast::Subdirectory));
-	string subdirectory = ctx.Lookup(ast::Subdirectory)->str();
+	assert(ctx.Lookup(ast::builtins::Subdirectory));
+	string subdirectory = ctx.Lookup(ast::builtins::Subdirectory)->str();
 
 	Type::TypeMap argTypes;
 	dag::ValueMap attributes;
@@ -116,7 +116,7 @@ dag::ValuePtr Filename::evaluate(EvalContext& ctx) const
 		dag::ValuePtr value = a->getValue().evaluate(ctx);
 		argTypes.emplace(name, value->type());
 
-		if (name == ast::Subdirectory)
+		if (name == ast::builtins::Subdirectory)
 			subdirectory = value->str();
 
 		else

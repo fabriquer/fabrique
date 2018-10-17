@@ -56,8 +56,8 @@ Type::TypeMap MaybeType::fields() const
 	assert(typeParameters().size() == 1);
 
 	return TypeMap {
-		{ ast::MaybeExists,  context().booleanType() },
-		{ ast::MaybeValue,   *typeParameters()[0] },
+		{ ast::builtins::MaybeExists,  context().booleanType() },
+		{ ast::builtins::MaybeValue,   *typeParameters()[0] },
 	};
 }
 

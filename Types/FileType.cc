@@ -97,13 +97,13 @@ FileType::TypeMap FileType::fields() const
 	TypeContext& ctx = context();
 
 	TypeMap map = {
-		{ ast::Basename,      ctx.stringType() },
-		{ ast::Extension,     ctx.stringType() },
-		{ ast::FileName,      ctx.stringType() },
-		{ ast::FullName,      ctx.stringType() },
-		{ ast::Generated,     ctx.booleanType() },
-		{ ast::Name,          ctx.stringType() },
-		{ ast::Subdirectory,  ctx.fileType() },
+		{ ast::builtins::Basename,      ctx.stringType() },
+		{ ast::builtins::Extension,     ctx.stringType() },
+		{ ast::builtins::FileName,      ctx.stringType() },
+		{ ast::builtins::FullName,      ctx.stringType() },
+		{ ast::builtins::Generated,     ctx.booleanType() },
+		{ ast::builtins::Name,          ctx.stringType() },
+		{ ast::builtins::Subdirectory,  ctx.fileType() },
 	};
 
 	for (auto& i : arguments_)

@@ -78,8 +78,8 @@ void FileList::Accept(Visitor& v) const
 
 dag::ValuePtr FileList::evaluate(EvalContext& ctx) const
 {
-	assert(ctx.Lookup(ast::Subdirectory));
-	const string subdir = ctx.Lookup(ast::Subdirectory)->str();
+	assert(ctx.Lookup(ast::builtins::Subdirectory));
+	const string subdir = ctx.Lookup(ast::builtins::Subdirectory)->str();
 
 	auto scope(ctx.EnterScope("files"));
 	SharedPtrVec<dag::Value> files;
@@ -87,7 +87,7 @@ dag::ValuePtr FileList::evaluate(EvalContext& ctx) const
 	for (const UniqPtr<Argument>& arg : arguments())
 	{
 		const string name = arg->getName().name();
-		if (name == ast::Subdirectory)
+		if (name == ast::builtins::Subdirectory)
 		{
 			const string subsubdir =
 				arg->getValue().evaluate(ctx)->str();

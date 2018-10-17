@@ -335,11 +335,11 @@ ValuePtr EvalContext::Lookup(const string& name)
 
 	// If we are looking for 'builddir' or 'subdir' and haven't found it
 	// defined anywhere, provide the top-level build/source subdirectory ('').
-	if (name == ast::BuildDirectory)
+	if (name == ast::builtins::BuildDirectory)
 		return builder_.File("", ValueMap(), ctx_.fileType(),
 		                     SourceRange::None(), true);
 
-	if (name == ast::Subdirectory)
+	if (name == ast::builtins::Subdirectory)
 		return builder_.File("", ValueMap(), ctx_.fileType());
 
 	return nullptr;

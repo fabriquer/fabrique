@@ -72,11 +72,11 @@ dag::ValuePtr SomeValue::evaluate(EvalContext& ctx) const
 
 	dag::ValueMap fields {
 		{
-			ast::MaybeExists,
+			ast::builtins::MaybeExists,
 			exists
 		},
 		{
-			ast::MaybeValue,
+			ast::builtins::MaybeValue,
 			initializer_->evaluate(ctx)
 		},
 	};

@@ -161,27 +161,27 @@ ValuePtr File::field(const string& name) const
 	TypeContext& ctx = type().context();
 	ValuePtr val;
 
-	if (name == ast::Basename)
+	if (name == ast::builtins::Basename)
 		val.reset(new String(BaseName(filename_), ctx.stringType(), source()));
 
-	else if (name == ast::Extension)
+	else if (name == ast::builtins::Extension)
 		val.reset(new String(FileExtension(filename_), ctx.stringType(),
 		                     source()));
 
-	else if (name == ast::FileName)
+	else if (name == ast::builtins::FileName)
 		val.reset(new String(FilenameComponent(filename_), ctx.stringType(),
 		                     source()));
 
-	else if (name == ast::FullName)
+	else if (name == ast::builtins::FullName)
 		val.reset(new String(fullName(), ctx.stringType(), source()));
 
-	else if (name == ast::Generated)
+	else if (name == ast::builtins::Generated)
 		val.reset(new Boolean(generated_, ctx.booleanType(), source()));
 
-	else if (name == ast::Name)
+	else if (name == ast::builtins::Name)
 		val.reset(new String(relativeName(), ctx.stringType(), source()));
 
-	else if (name == ast::Subdirectory)
+	else if (name == ast::builtins::Subdirectory)
 		val.reset(File::Create(subdirectory(), ValueMap(), ctx.fileType(),
 		                       source()));
 

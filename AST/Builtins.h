@@ -37,6 +37,7 @@
 
 namespace fabrique {
 namespace ast {
+namespace builtins {
 
 static const char Arguments[] = "args";
 static const char Basename[] = "basename";
@@ -51,6 +52,7 @@ static const char Name[] = "name";
 static const char Subdirectory[] = "subdir";
 static const char Unnamed[] = "__unnamed";
 
+} // namespace builtins
 } // namespace ast
 } // namespace fabrique
 
