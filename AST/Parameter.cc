@@ -53,15 +53,21 @@ Parameter::Parameter(UniqPtr<Identifier> name, UniqPtr<TypeReference> type,
 }
 
 
-void Parameter::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
+void Parameter::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
-	out << *name_;
+	out
+		<< Bytestream::Definition << *name_
+		<< Bytestream::Operator << ":"
+		<< Bytestream::Reset
+		;
+
+	type_->PrettyPrint(out, indent + 1);
 
 	if (defaultValue_)
-		out
-			<< Bytestream::Operator << " = "
-			<< *defaultValue_
-			;
+	{
+		out << Bytestream::Operator << " = ";
+		defaultValue_->PrettyPrint(out, indent + 1);
+	}
 }
 
 
