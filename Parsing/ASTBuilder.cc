@@ -111,6 +111,20 @@ antlrcpp::Any ASTBuilder::visitFile(FabParser::FileContext *ctx)
 	return visitChildren(ctx);
 }
 
+antlrcpp::Any ASTBuilder::visitKeywordArgument(FabParser::KeywordArgumentContext *ctx)
+{
+	if (not visitChildren(ctx))
+	{
+		return false;
+	}
+
+	string name = ctx->Identifier()->getText();
+	auto id = std::make_unique<Identifier>(name, source(*ctx->Identifier()));
+	auto initializer = pop<Expression>(source(*ctx->expression()));
+
+	return push<Argument>(std::move(id), std::move(initializer));
+}
+
 antlrcpp::Any ASTBuilder::visitList(FabParser::ListContext *ctx)
 {
 	visitChildren(ctx);
