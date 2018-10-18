@@ -180,7 +180,10 @@ antlrcpp::Any ASTBuilder::visitParameter(FabParser::ParameterContext *ctx)
 		defaultArgument = pop<Expression>(source(*def));
 	}
 
-	auto type = pop<TypeReference>(source(*ctx->type()));
+	SourceRange src = source(*ctx->type());
+	auto type = pop<TypeReference>(src);
+	PARSER_ASSERT(type, src, "failed to parse parameter type");
+
 	auto name = ctx->Identifier()->getText();
 	auto id = std::make_unique<Identifier>(name, source(*ctx->Identifier()));
 

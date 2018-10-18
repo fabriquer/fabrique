@@ -144,6 +144,8 @@ private:
 	{
 		std::unique_ptr<Node> top = popNode(range);
 
+		PARSER_ASSERT(top, range, "top of AST-building stack was null");
+
 		PARSER_ASSERT(dynamic_cast<T*>(top.get()), top->source(),
 			"top of stack expected to be " + Demangle(typeid(T))
 			+ " but was a " + TypeName(*top));
