@@ -58,6 +58,9 @@ public:
 	virtual ~ASTBuilder() override;
 	UniqPtrVec<Value> takeValues();
 
+	//
+	// Values and "normal" expressions:
+	//
 	antlrcpp::Any visitArguments(FabParser::ArgumentsContext*) override;
 	antlrcpp::Any visitBuildAction(FabParser::BuildActionContext*) override;
 	antlrcpp::Any visitCall(FabParser::CallContext*) override;
@@ -68,6 +71,9 @@ public:
 	antlrcpp::Any visitParameter(FabParser::ParameterContext*) override;
 	antlrcpp::Any visitValue(FabParser::ValueContext*) override;
 
+	//
+	// Type references:
+	//
 	antlrcpp::Any visitFieldType(FabParser::FieldTypeContext*) override;
 	antlrcpp::Any visitFunctionType(FabParser::FunctionTypeContext*) override;
 	antlrcpp::Any visitParametricType(FabParser::ParametricTypeContext*) override;
@@ -102,18 +108,39 @@ public:
 	antlrcpp::Any defaultResult() override { return true; }
 
 private:
+	/**
+	 * Push an AST node onto the current AST-building stack.
+	 */
+	bool push(std::unique_ptr<ast::Node>);
+
+	/**
+	 * Forward values into a new AST node and push it onto the stack.
+	 */
 	template<class T, typename... Args>
 	bool push(Args... args)
 	{
 		return push(std::make_unique<T>(std::forward<Args>(args)...));
 	}
 
-	bool push(std::unique_ptr<ast::Node>);
 
-	std::unique_ptr<Node> popNode(SourceRange range);
+	/**
+	 * Remove an AST node from the top of the stack _iff_ it falls in a certain range.
+	 *
+	 * @param   range     If not SourceRange::None(), this is the range in which
+	 *                    the value at the top of the stack is expected to be found.
+	 *                    Otherwise, an empty unique_ptr will be returned.
+	 */
+	std::unique_ptr<Node> popNode(SourceRange range = SourceRange::None());
 
+	/**
+	 * Pop an AST node of a specific type from the stack.
+	 *
+	 * @param   range     Works as with `popNode(range)`.
+	 *
+	 * @pre     the top of the stack is of type T
+	 */
 	template<typename T>
-	std::unique_ptr<T> pop(SourceRange range)
+	std::unique_ptr<T> pop(SourceRange range = SourceRange::None())
 	{
 		std::unique_ptr<Node> top = popNode(range);
 
@@ -124,6 +151,15 @@ private:
 		return std::unique_ptr<T>(dynamic_cast<T*>(top.release()));
 	}
 
+	/**
+	 * Pop all of the children at the top of the stack that are found within a
+	 * specific source code range.
+	 *
+	 * @param   range     Works as with `popNode(range)`.
+	 *
+	 * @pre      all nodes on top of the stack that fall within the specified range
+	 *           are of type T
+	 */
 	template<typename T>
 	UniqPtrVec<T> popChildren(SourceRange range = SourceRange::None())
 	{
