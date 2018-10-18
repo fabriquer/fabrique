@@ -30,6 +30,7 @@
  */
 
 #include "AST/ast.h"
+#include "Parsing/ASTBuilder.h"
 #include "Parsing/Parser.h"
 #include "Parsing/Token.h"
 #include "Plugin/Loader.h"
@@ -45,6 +46,13 @@
 #include "Types/TypeContext.h"
 #include "Types/TypeError.h"
 #include "Support/os.h"
+
+#include <generated-grammar/FabLexer.h>
+#include <generated-grammar/FabParser.h>
+#include <generated-grammar/FabParserBaseVisitor.h>
+
+#include <antlr-cxx-runtime/ANTLRFileStream.h>
+#include <antlr-cxx-runtime/CommonTokenStream.h>
 
 #include <cassert>
 #include <fstream>
@@ -68,7 +76,20 @@ bool Parser::ParseFile(std::istream& input, UniqPtrVec<Value>& values, string na
 		<< Bytestream::Operator << "'"
 		;
 
-	return false;
+	antlr4::ANTLRInputStream f(input);
+	FabLexer lexer(&f);
+
+	antlr4::CommonTokenStream tokens(&lexer);
+	FabParser antlrParser(&tokens);
+
+	ASTBuilder visitor(name);
+	if (not visitor.visitFile(antlrParser.file()))
+	{
+		return false;
+	}
+
+	values = visitor.takeValues();
+	return true;
 }
 
 

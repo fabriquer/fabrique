@@ -48,7 +48,10 @@ defines =
 includes = foreach dir <- [ srcroot buildroot ] '-I ' + dir;
 
 # Treat vendor headers as system headers (disable warnings).
-vendor_flags = [ '-isystem ' + srcroot + '/vendor' ];
+vendor_flags = [
+	'-isystem ' + srcroot + '/vendor'
+	'-isystem ' + srcroot + '/vendor/antlr-cxx-runtime'
+];
 
 common_cxx_flags = cxxoptions + defines + dbgflags + includes + vendor_flags;
 
@@ -91,8 +94,14 @@ cxx_srcs =
 	+ import('Types').sources
 	;
 
+generated_srcs =
+	import('vendor/antlr-cxx-runtime').sources
+	+ import('vendor/generated-grammar').sources
+	;
 
-objects = cxx.compile(cxx_srcs, cxx_flags);
+objects = cxx.compile(cxx_srcs, cxx_flags)
+	+ cxx.compile(generated_srcs, generated_cxx_flags);
+
 
 plugins = foreach lib <- import('base-plugins').libs
 	shell.copy(lib, file('lib/fabrique') + '/' + lib.filename)
