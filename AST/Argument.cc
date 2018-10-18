@@ -1,6 +1,6 @@
 /** @file AST/Argument.cc    Definition of @ref fabrique::ast::Argument. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -39,7 +39,7 @@ using namespace fabrique;
 using namespace fabrique::ast;
 
 
-Argument::Argument(UniqPtr<Identifier>& id, UniqPtr<Expression>& value)
+Argument::Argument(UniqPtr<Identifier> id, UniqPtr<Expression> value)
 	: Expression(SourceRange::Over(id, value)),
 	  name_(std::move(id)), value_(std::move(value))
 {

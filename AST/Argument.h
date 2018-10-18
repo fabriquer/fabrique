@@ -1,6 +1,6 @@
 /** @file AST/Argument.h    Declaration of @ref fabrique::ast::Argument. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -48,7 +48,7 @@ namespace ast {
 class Argument : public Expression
 {
 public:
-	Argument(UniqPtr<Identifier>& name, UniqPtr<Expression>& value);
+	Argument(UniqPtr<Identifier> name, UniqPtr<Expression> value);
 
 	bool hasName() const { return static_cast<bool>(name_); }
 	const Identifier& getName() const { return *name_; }
