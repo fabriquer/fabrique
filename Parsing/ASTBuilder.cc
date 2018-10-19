@@ -167,6 +167,23 @@ antlrcpp::Any ASTBuilder::visitForeach(FabParser::ForeachContext *ctx)
 	                         std::move(src), std::move(body), source(*ctx));
 }
 
+antlrcpp::Any ASTBuilder::visitFunction(FabParser::FunctionContext *ctx)
+{
+	ParseChildren(ctx);
+
+	auto body = pop<Expression>(source(*ctx->body));
+
+	UniqPtr<TypeReference> resultType;
+	if (auto *t = ctx->type())
+	{
+		resultType = pop<TypeReference>(source(*t));
+	}
+
+	auto params = popChildren<Parameter>(source(*ctx->parameters()));
+
+	return false;
+}
+
 
 //
 // Terms:
