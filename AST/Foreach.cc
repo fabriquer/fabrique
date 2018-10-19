@@ -1,6 +1,6 @@
 /** @file AST/ForeachExpr.cc    Declaration of @ref fabrique::ast::ForeachExpr. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2013-2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -58,18 +58,24 @@ ForeachExpr::ForeachExpr(UniqPtr<Identifier> loopVarName,
 
 void ForeachExpr::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
+	const std::string tabs(indent, '\t');
+
 	out << Bytestream::Operator << "foreach " << Bytestream::Reset;
 	loopVarName_->PrettyPrint(out, indent + 1);
 
 	if (explicitType_)
 	{
-		out << Bytestream::Operator << ": " << Bytestream::Reset;
+		out << Bytestream::Operator << ":" << Bytestream::Reset;
 		explicitType_->PrettyPrint(out, indent + 1);
 	}
 
-	out << "\n";
+	out << Bytestream::Operator << " <- " << Bytestream::Reset;
 
-	body_->PrettyPrint(out, indent + 1);
+	inputValue_->PrettyPrint(out, indent + 1);
+
+	out << " ";
+
+	body_->PrettyPrint(out, indent);
 
 	out << Bytestream::Reset;
 }
