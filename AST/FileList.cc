@@ -55,17 +55,31 @@ FileList::FileList(UniqPtrVec<FilenameLiteral> f, UniqPtrVec<Argument> a,
 }
 
 
-void FileList::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
+void FileList::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
-	out << Bytestream::Operator << "[" << Bytestream::Reset;
+	out
+		<< Bytestream::Action << "files"
+		<< Bytestream::Operator << "("
+		<< Bytestream::Reset
+		;
 
 	for (auto& file : files_)
-		out << " " << *file;
+	{
+		out << " ";
+		file->PrettyPrint(out, indent + 1);
+	}
 
 	for (auto& arg : args_)
-		out << ", " << *arg;
+	{
+		out
+			<< Bytestream::Operator << ", "
+			<< Bytestream::Reset
+			;
 
-	out << Bytestream::Operator << " ]" << Bytestream::Reset;
+		arg->PrettyPrint(out, indent + 1);
+	}
+
+	out << Bytestream::Operator << " )" << Bytestream::Reset;
 }
 
 
