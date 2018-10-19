@@ -248,11 +248,9 @@ void SourceRange::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 }
 
 
-Bytestream& SourceRange::PrintSource(Bytestream& out, unsigned int indent,
-                                     SourceLocation caret, unsigned int context) const
+Bytestream& SourceRange::PrintSource(Bytestream& out, SourceLocation caret,
+                                     unsigned int context) const
 {
-	const string tabs(indent, '\t');
-
 	/*
 	 * If we are reading a file (rather than stdin), re-read the
 	 * source file to display the line in question.
@@ -278,7 +276,6 @@ Bytestream& SourceRange::PrintSource(Bytestream& out, unsigned int indent,
 			if (i >= firstLine)
 			{
 				out
-					<< tabs
 					<< Bytestream::Line << i << "\t"
 					<< Bytestream::Reset << line << "\n"
 					;
@@ -313,7 +310,7 @@ Bytestream& SourceRange::PrintSource(Bytestream& out, unsigned int indent,
 		assert(postCaretHighlight >= 0);
 
 		out
-			<< tabs << "\t"
+			<< "\t"
 			<< string(firstHighlightColumn - 1, ' ')
 			<< Bytestream::ErrorLoc
 			<< string(preCaretHighlight, '~')

@@ -48,11 +48,9 @@ ErrorReport* ErrorReport::Create(const string& message, const SourceRange& loc,
 }
 
 
-void ErrorReport::PrettyPrint(Bytestream& out, unsigned int indent) const
+void ErrorReport::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
-	const string tabs(indent, '\t');
-
-	out << "\n" << tabs << caret_ << ": ";
+	out << "\n" << caret_ << ": ";
 
 	switch (severity_)
 	{
@@ -75,7 +73,7 @@ void ErrorReport::PrettyPrint(Bytestream& out, unsigned int indent) const
 		<< Bytestream::Reset << "\n"
 		;
 
-	source().PrintSource(out, indent, caret_, contextLines_);
+	source().PrintSource(out, caret_, contextLines_);
 
 	out << Bytestream::Reset;
 }
