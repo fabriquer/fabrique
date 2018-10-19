@@ -359,7 +359,12 @@ antlrcpp::Any ASTBuilder::visitFunctionType(FabParser::FunctionTypeContext *ctx)
 	ParseChildren(ctx);
 
 	auto resultType = pop<TypeReference>(source(*ctx->result));
-	auto paramTypes = popChildren<TypeReference>(source(*ctx->params));
+
+	UniqPtrVec<TypeReference> paramTypes;
+	if (auto *p = ctx->params)
+	{
+		paramTypes = popChildren<TypeReference>(source(*p));
+	}
 
 	return push<FunctionTypeReference>(std::move(paramTypes), std::move(resultType),
 	                                   source(*ctx));
