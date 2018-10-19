@@ -1,6 +1,6 @@
 #
-# RUN: %parse %s > %t
-# RUN: %check %t %s
+# RUN: %fab --parse-only --print-ast %s > %t
+# RUN: FileCheck %s -input-file %t
 #
 
 # CHECK: x = 1 + 2 - 3;
@@ -9,7 +9,7 @@ x = 1 + 2 - 3;
 # CHECK: y = 3 * 2 / 1;
 y = 3 * 2 / 1;
 
-# CHECK: cons = 1 :: 2 :: 3 :: [];
+# CHECK: cons = 1 :: 2 :: 3 :: [ ];
 cons = 1 :: 2 :: 3 :: [];
 
 # CHECK: list_ops = 0 :: [ 1 2 ] + [ 3 4 ];

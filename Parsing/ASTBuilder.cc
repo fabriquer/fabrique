@@ -94,6 +94,53 @@ UniqPtrVec<Value> ASTBuilder::takeValues()
 // Expressions:
 //
 
+antlrcpp::Any ASTBuilder::visitExpression(FabParser::ExpressionContext *ctx)
+{
+	if (not visitChildren(ctx))
+	{
+		return false;
+	}
+
+	auto subexprs = ctx->expression();
+	if (subexprs.empty())
+	{
+		return true;
+	}
+	else if (subexprs.size() == 1)
+	{
+		// TODO
+		return false;
+	}
+
+	SourceRange src = source(*ctx);
+
+	// Otherwise: binary operation
+	PARSER_ASSERT(subexprs.size() == 2, src, "must be a binary operation");
+	auto rhs = pop<Expression>(source(*subexprs[1]));
+	auto lhs = pop<Expression>(source(*subexprs[0]));
+
+	BinaryOperation::Operator op = BinaryOperation::Operator::Invalid;
+
+	if (auto *multOp = ctx->multOp())
+	{
+		op = BinaryOperation::Op(multOp->getText());
+	}
+	else if (auto *addOp = ctx->addOp())
+	{
+		op = BinaryOperation::Op(addOp->getText());
+	}
+	else if (auto *compareOp = ctx->compareOp())
+	{
+		op = BinaryOperation::Op(compareOp->getText());
+	}
+	else if (auto *logicOp = ctx->logicOp())
+	{
+		op = BinaryOperation::Op(logicOp->getText());
+	}
+
+	return push<BinaryOperation>(std::move(lhs), std::move(rhs), op, src);
+}
+
 antlrcpp::Any ASTBuilder::visitCall(FabParser::CallContext *ctx)
 {
 	if (not visitChildren(ctx))
