@@ -282,6 +282,9 @@ Bytestream& SourceRange::PrintSource(Bytestream& out, SourceLocation caret,
 			}
 		}
 
+		const size_t startColumn = std::min(begin.column, end.column);
+		const size_t endColumn = std::max(begin.column, end.column);
+
 		/*
 		 * If the expression starts on a line before the caret point,
 		 * start highlighting with '~' characters from the beginning
@@ -291,19 +294,17 @@ Bytestream& SourceRange::PrintSource(Bytestream& out, SourceLocation caret,
 		 */
 		const size_t firstHighlightColumn =
 			caret
-				? (begin.column < caret.column
-					? caret.column - begin.column
+				? (startColumn < caret.column
+					? caret.column - startColumn
 					: caret.column)
-				: begin.column
+				: startColumn
 				;
 
 		const size_t preCaretHighlight =
 			caret ? (caret.column - firstHighlightColumn) : 0;
 
 		const size_t postCaretHighlight =
-			end.column > caret.column
-			  ? end.column - caret.column - 1
-			  : 0;
+			endColumn - (caret ? caret.column + 1 : startColumn);
 
 		assert(firstHighlightColumn >= 1);
 		assert(preCaretHighlight >= 0);

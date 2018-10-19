@@ -63,6 +63,7 @@ public:
 	VISIT(FieldAccess)
 	VISIT(FieldQuery)
 	VISIT(Filename)
+	VISIT(FilenameLiteral)
 	VISIT(FileList)
 	VISIT(ForeachExpr)
 	VISIT(Function)
