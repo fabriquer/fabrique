@@ -36,8 +36,7 @@
 using namespace fabrique::ast;
 
 
-Mapping::Mapping(UniqPtr<Parameter>& target, UniqPtr<Expression>& source,
-                 const SourceRange& src)
+Mapping::Mapping(UniqPtr<Parameter> target, UniqPtr<Expression> source, SourceRange src)
 	: Node(src), target_(std::move(target)), source_(std::move(source))
 {
 }

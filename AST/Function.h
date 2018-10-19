@@ -53,7 +53,7 @@ class Value;
 class Function : public Expression, public HasParameters
 {
 public:
-	Function(UniqPtrVec<Parameter>& params, UniqPtr<Expression>& body,
+	Function(UniqPtrVec<Parameter> params, UniqPtr<Expression> body,
 	         const FunctionType&, SourceRange);
 
 	const Expression& body() const { return *body_; }

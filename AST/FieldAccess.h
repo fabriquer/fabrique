@@ -48,7 +48,7 @@ class StringLiteral;
 class FieldAccess : public Expression
 {
 public:
-	FieldAccess(UniqPtr<Expression>& base, UniqPtr<Identifier>& field);
+	FieldAccess(UniqPtr<Expression> base, UniqPtr<Identifier> field);
 
 	const Expression& base() const { return *base_; }
 	const Identifier& field() const { return *field_; }

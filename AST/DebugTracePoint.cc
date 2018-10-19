@@ -41,7 +41,7 @@
 using namespace fabrique::ast;
 using namespace fabrique;
 
-DebugTracePoint::DebugTracePoint(UniqPtr<Expression>& e, SourceRange src)
+DebugTracePoint::DebugTracePoint(UniqPtr<Expression> e, SourceRange src)
 	: Expression(src), expr_(std::move(e))
 {
 }

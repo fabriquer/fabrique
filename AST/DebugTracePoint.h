@@ -48,7 +48,7 @@ namespace ast {
 class DebugTracePoint : public Expression
 {
 public:
-	DebugTracePoint(UniqPtr<Expression>&, SourceRange);
+	DebugTracePoint(UniqPtr<Expression>, SourceRange);
 
 	const Expression& expression() const { return *expr_; }
 

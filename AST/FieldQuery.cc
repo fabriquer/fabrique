@@ -42,8 +42,8 @@ using namespace fabrique;
 using namespace fabrique::ast;
 
 
-FieldQuery::FieldQuery(UniqPtr<Expression>& base, UniqPtr<Identifier>& field,
-                       UniqPtr<Expression>& defaultValue, SourceRange src)
+FieldQuery::FieldQuery(UniqPtr<Expression> base, UniqPtr<Identifier> field,
+                       UniqPtr<Expression> defaultValue, SourceRange src)
 	: Expression(src), base_(std::move(base)), field_(std::move(field)),
 	  defaultValue_(std::move(defaultValue))
 {

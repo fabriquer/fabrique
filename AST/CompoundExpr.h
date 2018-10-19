@@ -47,8 +47,8 @@ class Value;
 class CompoundExpression : public Expression
 {
 public:
-	CompoundExpression(UniqPtrVec<Value> values, UniqPtr<Expression>& result,
-	                   const SourceRange& loc);
+	CompoundExpression(UniqPtrVec<Value> values, UniqPtr<Expression> result,
+	                   SourceRange);
 
 	const Expression& result() const { return *result_; }
 

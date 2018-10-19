@@ -42,7 +42,7 @@ using namespace fabrique;
 using namespace fabrique::ast;
 
 
-Record::Record(UniqPtrVec<Value>& fields, const SourceRange& loc)
+Record::Record(UniqPtrVec<Value> fields, SourceRange loc)
 	: Expression(loc), fields_(std::move(fields))
 {
 }

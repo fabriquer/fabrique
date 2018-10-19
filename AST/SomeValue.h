@@ -44,7 +44,7 @@ namespace ast {
 class SomeValue : public Expression
 {
 public:
-	SomeValue(UniqPtr<Expression>& init, SourceRange src);
+	SomeValue(UniqPtr<Expression> init, SourceRange);
 
 	const Expression& initializer() const { return *initializer_; }
 

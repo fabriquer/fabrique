@@ -41,17 +41,7 @@ using namespace fabrique;
 using namespace fabrique::ast;
 
 
-UnaryOperation* UnaryOperation::Create(Operator op, const SourceRange& opLoc,
-                                       UniqPtr<Expression>& e)
-{
-	assert(e);
-
-	SourceRange loc = SourceRange(opLoc, e->source());
-	return new UnaryOperation(e, op, loc);
-}
-
-UnaryOperation::UnaryOperation(UniqPtr<Expression>& e, enum Operator op,
-                               const SourceRange& loc)
+UnaryOperation::UnaryOperation(UniqPtr<Expression> e, enum Operator op, SourceRange loc)
 	: Expression(loc), subexpr_(std::move(e)), op_(op)
 {
 }

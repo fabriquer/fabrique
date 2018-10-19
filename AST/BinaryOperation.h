@@ -64,6 +64,9 @@ public:
 		NotEqual,
 	};
 
+	BinaryOperation(UniqPtr<Expression> lhs, UniqPtr<Expression> rhs,
+	                enum Operator, SourceRange);
+
 	static Operator Op(const std::string&);
 	static std::string OpStr(Operator);
 
@@ -80,9 +83,6 @@ public:
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
 private:
-	BinaryOperation(UniqPtr<Expression>&& lhs, UniqPtr<Expression>&& rhs,
-	                enum Operator, const SourceRange&);
-
 	static const Type& ResultType(const Type& lhs, const Type& rhs,
                                       Operator, SourceRange&);
 

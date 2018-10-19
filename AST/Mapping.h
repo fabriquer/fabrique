@@ -49,8 +49,7 @@ class Parameter;
 class Mapping : public ast::Node
 {
 public:
-	Mapping(UniqPtr<Parameter>& target, UniqPtr<Expression>& source,
-	        const SourceRange& src);
+	Mapping(UniqPtr<Parameter> target, UniqPtr<Expression> source, SourceRange);
 
 	const Parameter& target() const { return *target_; }
 	const Expression& source() const { return *source_; }

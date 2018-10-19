@@ -48,18 +48,7 @@ using namespace fabrique::ast;
 using std::string;
 
 
-Filename* Filename::Create(UniqPtr<Expression>& name, UniqPtrVec<Argument>& args,
-                           const SourceRange& src)
-{
-	if (args.empty())
-		return new Filename(name, args, src);
-
-	return new Filename(name, args, src);
-}
-
-
-Filename::Filename(UniqPtr<Expression>& name, UniqPtrVec<Argument>& args,
-                   const SourceRange& src)
+Filename::Filename(UniqPtr<Expression> name, UniqPtrVec<Argument> args, SourceRange src)
 	: Expression(src), unqualName_(std::move(name)),
 	  args_(std::move(args))
 {

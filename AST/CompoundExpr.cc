@@ -42,8 +42,8 @@ using namespace fabrique::ast;
 
 
 CompoundExpression::CompoundExpression(UniqPtrVec<Value> values,
-                                       UniqPtr<Expression>& result,
-                                       const SourceRange& loc)
+                                       UniqPtr<Expression> result,
+                                       SourceRange loc)
 	: Expression(loc), values_(std::move(values)), result_(std::move(result))
 {
 	assert(result_);

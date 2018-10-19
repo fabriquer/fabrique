@@ -43,7 +43,7 @@ using namespace fabrique;
 using namespace fabrique::ast;
 
 
-SomeValue::SomeValue(UniqPtr<Expression>& init, SourceRange src)
+SomeValue::SomeValue(UniqPtr<Expression> init, SourceRange src)
 	: Expression(src), initializer_(std::move(init))
 {
 }

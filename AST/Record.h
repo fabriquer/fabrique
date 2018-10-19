@@ -49,7 +49,7 @@ namespace ast {
 class Record : public Expression
 {
 public:
-	Record(UniqPtrVec<Value>& fields, const SourceRange&);
+	Record(UniqPtrVec<Value> fields, SourceRange);
 
 	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 	virtual void Accept(Visitor&) const override;
