@@ -293,12 +293,15 @@ Bytestream& SourceRange::PrintSource(Bytestream& out, unsigned int indent,
 		 * Otherwise, start where the source range says to.
 		 */
 		const size_t firstHighlightColumn =
-			begin.column < caret.column
-				? caret.column - begin.column
-				: caret.column;
+			caret
+				? (begin.column < caret.column
+					? caret.column - begin.column
+					: caret.column)
+				: begin.column
+				;
 
 		const size_t preCaretHighlight =
-			caret.column - firstHighlightColumn;
+			caret ? (caret.column - firstHighlightColumn) : 0;
 
 		const size_t postCaretHighlight =
 			end.column > caret.column
@@ -314,7 +317,7 @@ Bytestream& SourceRange::PrintSource(Bytestream& out, unsigned int indent,
 			<< string(firstHighlightColumn - 1, ' ')
 			<< Bytestream::ErrorLoc
 			<< string(preCaretHighlight, '~')
-			<< "^"
+			<< (caret ? "^" : "")
 			<< string(postCaretHighlight, '~')
 			<< Bytestream::Reset << "\n"
 			;
