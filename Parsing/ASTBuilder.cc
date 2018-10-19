@@ -151,6 +151,26 @@ antlrcpp::Any ASTBuilder::visitCall(FabParser::CallContext *ctx)
 	return push<Call>(std::move(target), std::move(args), source(*ctx));
 }
 
+antlrcpp::Any ASTBuilder::visitForeach(FabParser::ForeachContext *ctx)
+{
+	PARSE_CHILDREN(ctx);
+
+	auto body = pop<Expression>(source(*ctx->body));
+	auto src = pop<Expression>(source(*ctx->src));
+
+	UniqPtr<TypeReference> explicitType;
+	if (auto *t = ctx->type())
+	{
+		explicitType = pop<TypeReference>(source(*t));
+	}
+
+	auto loopVarName = std::make_unique<Identifier>(ctx->loopVarName->getText(),
+	                                                source(*ctx->loopVarName));
+
+	return push<ForeachExpr>(std::move(loopVarName), std::move(explicitType),
+	                         std::move(src), std::move(body), source(*ctx));
+}
+
 
 //
 // Terms:
