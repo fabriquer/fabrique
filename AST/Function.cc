@@ -1,6 +1,6 @@
 /** @file AST/Function.cc    Definition of @ref fabrique::ast::Function. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -37,8 +37,11 @@
 #include "AST/Visitor.h"
 #include "DAG/Function.h"
 #include "DAG/Parameter.h"
+#include "DAG/TypeReference.h"
 #include "Support/Bytestream.h"
+#include "Support/exceptions.h"
 #include "Types/FunctionType.h"
+#include "Types/TypeContext.h"
 
 #include <cassert>
 
@@ -47,10 +50,10 @@ using namespace fabrique::ast;
 using std::dynamic_pointer_cast;
 
 
-Function::Function(UniqPtrVec<Parameter> params, UniqPtr<Expression> body,
-                   const FunctionType& type, SourceRange loc)
-	: Expression(std::move(loc)), HasParameters(params), body_(std::move(body)),
-	  type_(type)
+Function::Function(UniqPtrVec<Parameter> params, UniqPtr<TypeReference> resultType,
+                   UniqPtr<Expression> body, SourceRange src)
+	: Expression(std::move(src)), HasParameters(params),
+	  resultType_(std::move(resultType)), body_(std::move(body))
 {
 }
 
@@ -105,8 +108,17 @@ void Function::Accept(Visitor& v) const
 dag::ValuePtr Function::evaluate(EvalContext& ctx) const
 {
 	SharedPtrVec<dag::Parameter> parameters;
+	PtrVec<Type> paramTypes;
 	for (auto& p : this->parameters())
+	{
 		parameters.emplace_back(p->evaluate(ctx));
+		paramTypes.push_back(&parameters.back()->type());
+	}
+
+	auto ret = dynamic_pointer_cast<dag::TypeReference>(resultType_->evaluate(ctx));
+	SemaCheck(ret, resultType_->source(), "resultType_ not a TypeReference");
+
+	auto &type = ctx.types().functionType(paramTypes, ret->referencedType());
 
 	dag::Function::Evaluator eval =
 		[=,&ctx](const dag::ValueMap& scope, const dag::ValueMap args,
@@ -139,5 +151,5 @@ dag::ValuePtr Function::evaluate(EvalContext& ctx) const
 		return body().evaluate(ctx);
 	};
 
-	return ctx.Function(eval, parameters, type_, source());
+	return ctx.Function(eval, parameters, type, source());
 }

@@ -1,6 +1,6 @@
 /** @file AST/Function.h    Declaration of @ref fabrique::ast::Function. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2013-2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -53,11 +53,10 @@ class Value;
 class Function : public Expression, public HasParameters
 {
 public:
-	Function(UniqPtrVec<Parameter> params, UniqPtr<Expression> body,
-	         const FunctionType&, SourceRange);
+	Function(UniqPtrVec<Parameter> params, UniqPtr<TypeReference> resultType,
+	         UniqPtr<Expression> body, SourceRange);
 
 	const Expression& body() const { return *body_; }
-	const FunctionType& type() const { return type_; }
 
 	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 	virtual void Accept(Visitor&) const override;
@@ -65,8 +64,8 @@ public:
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
 private:
+	const UniqPtr<TypeReference> resultType_;
 	const UniqPtr<Expression> body_;
-	const FunctionType& type_;
 };
 
 } // namespace ast
