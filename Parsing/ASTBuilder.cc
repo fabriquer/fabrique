@@ -151,19 +151,6 @@ antlrcpp::Any ASTBuilder::visitCall(FabParser::CallContext *ctx)
 	return push<Call>(std::move(target), std::move(args), source(*ctx));
 }
 
-antlrcpp::Any ASTBuilder::visitCompoundExpr(FabParser::CompoundExprContext *ctx)
-{
-	PARSE_CHILDREN(ctx);
-
-	SourceRange src = source(*ctx->result);
-	auto result = pop<Expression>(src);
-	PARSER_ASSERT(result, src, "compound expression has no result");
-
-	auto values = popChildren<Value>(source(*ctx));
-
-	return push<CompoundExpression>(std::move(values), std::move(result), src);
-}
-
 
 //
 // Terms:
@@ -177,6 +164,19 @@ antlrcpp::Any ASTBuilder::visitBuildAction(FabParser::BuildActionContext *ctx)
 	auto args = pop<Arguments>(source(*ctx->arguments()));
 
 	return push<Action>(std::move(args), std::move(parameters), source(*ctx));
+}
+
+antlrcpp::Any ASTBuilder::visitCompoundExpr(FabParser::CompoundExprContext *ctx)
+{
+	PARSE_CHILDREN(ctx);
+
+	SourceRange src = source(*ctx->result);
+	auto result = pop<Expression>(src);
+	PARSER_ASSERT(result, src, "compound expression has no result");
+
+	auto values = popChildren<Value>(source(*ctx));
+
+	return push<CompoundExpression>(std::move(values), std::move(result), src);
 }
 
 antlrcpp::Any ASTBuilder::visitFileList(FabParser::FileListContext *ctx)
