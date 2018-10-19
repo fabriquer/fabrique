@@ -56,24 +56,36 @@ public:
 
 	ASTBuilder(std::string filename);
 	virtual ~ASTBuilder() override;
+
+	//
+	// Top-level file and values:
+	//
+	antlrcpp::Any visitFile(FabParser::FileContext*) override;
+	antlrcpp::Any visitValue(FabParser::ValueContext*) override;
 	UniqPtrVec<Value> takeValues();
 
 	//
-	// Values and "normal" expressions:
+	// Expressions:
 	//
-	antlrcpp::Any visitArguments(FabParser::ArgumentsContext*) override;
-	antlrcpp::Any visitBuildAction(FabParser::BuildActionContext*) override;
 	antlrcpp::Any visitCall(FabParser::CallContext*) override;
-	antlrcpp::Any visitFile(FabParser::FileContext*) override;
-	antlrcpp::Any visitKeywordArgument(FabParser::KeywordArgumentContext*) override;
+
+	//
+	// Terms:
+	//
+	antlrcpp::Any visitBuildAction(FabParser::BuildActionContext*) override;
 	antlrcpp::Any visitList(FabParser::ListContext*) override;
 	antlrcpp::Any visitLiteral(FabParser::LiteralContext*) override;
 	antlrcpp::Any visitNameReference(FabParser::NameReferenceContext*) override;
-	antlrcpp::Any visitParameter(FabParser::ParameterContext*) override;
-	antlrcpp::Any visitValue(FabParser::ValueContext*) override;
 
 	//
-	// Type references:
+	// Arguments and parameters:
+	//
+	antlrcpp::Any visitArguments(FabParser::ArgumentsContext*) override;
+	antlrcpp::Any visitKeywordArgument(FabParser::KeywordArgumentContext*) override;
+	antlrcpp::Any visitParameter(FabParser::ParameterContext*) override;
+
+	//
+	// Types:
 	//
 	antlrcpp::Any visitFieldType(FabParser::FieldTypeContext*) override;
 	antlrcpp::Any visitFunctionType(FabParser::FunctionTypeContext*) override;

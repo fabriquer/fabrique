@@ -49,6 +49,38 @@ ASTBuilder::~ASTBuilder()
 }
 
 
+//
+// Top-level file and values:
+//
+
+antlrcpp::Any ASTBuilder::visitFile(FabParser::FileContext *ctx)
+{
+	return visitChildren(ctx);
+}
+
+antlrcpp::Any ASTBuilder::visitValue(FabParser::ValueContext *ctx)
+{
+	if (not visitChildren(ctx))
+	{
+		return false;
+	}
+
+	UniqPtr<Identifier> id(new Identifier(ctx->name->getText(), source(*ctx->name)));
+
+	auto e = pop<Expression>(source(*ctx->expression()));
+	assert(e && "Value initializer is null");
+
+	UniqPtr<TypeReference> explicitType;
+	if (auto *t = ctx->type())
+	{
+		SourceRange src = source(*t);
+		explicitType = pop<TypeReference>(src);
+		PARSER_ASSERT(explicitType, src, "failed to parse value type");
+	}
+
+	return push<Value>(std::move(id), std::move(explicitType), std::move(e));
+}
+
 UniqPtrVec<Value> ASTBuilder::takeValues()
 {
 	UniqPtrVec<Value> values = popChildren<Value>();
@@ -58,40 +90,9 @@ UniqPtrVec<Value> ASTBuilder::takeValues()
 }
 
 
-antlrcpp::Any ASTBuilder::visitArguments(FabParser::ArgumentsContext *ctx)
-{
-	if (not visitChildren(ctx))
-	{
-		return false;
-	}
-
-	UniqPtrVec<Argument> kwargs;
-	if (auto *kwctx = ctx->keywordArguments())
-	{
-		kwargs = popChildren<Argument>(source(*kwctx));
-	}
-
-	UniqPtrVec<Expression> positionalArgs;
-	if (auto *posctx = ctx->positionalArguments())
-	{
-		positionalArgs = popChildren<Expression>(source(*posctx));
-	}
-
-	return push<Arguments>(std::move(positionalArgs), std::move(kwargs), source(*ctx));
-}
-
-antlrcpp::Any ASTBuilder::visitBuildAction(FabParser::BuildActionContext *ctx)
-{
-	if (not visitChildren(ctx))
-	{
-		return false;
-	}
-
-	auto parameters = popChildren<Parameter>(source(*ctx->parameters()));
-	auto args = pop<Arguments>(source(*ctx->arguments()));
-
-	return push<Action>(std::move(args), std::move(parameters), source(*ctx));
-}
+//
+// Expressions:
+//
 
 antlrcpp::Any ASTBuilder::visitCall(FabParser::CallContext *ctx)
 {
@@ -106,23 +107,22 @@ antlrcpp::Any ASTBuilder::visitCall(FabParser::CallContext *ctx)
 	return push<Call>(std::move(target), std::move(args), source(*ctx));
 }
 
-antlrcpp::Any ASTBuilder::visitFile(FabParser::FileContext *ctx)
-{
-	return visitChildren(ctx);
-}
 
-antlrcpp::Any ASTBuilder::visitKeywordArgument(FabParser::KeywordArgumentContext *ctx)
+//
+// Terms:
+//
+
+antlrcpp::Any ASTBuilder::visitBuildAction(FabParser::BuildActionContext *ctx)
 {
 	if (not visitChildren(ctx))
 	{
 		return false;
 	}
 
-	string name = ctx->Identifier()->getText();
-	auto id = std::make_unique<Identifier>(name, source(*ctx->Identifier()));
-	auto initializer = pop<Expression>(source(*ctx->expression()));
+	auto parameters = popChildren<Parameter>(source(*ctx->parameters()));
+	auto args = pop<Arguments>(source(*ctx->arguments()));
 
-	return push<Argument>(std::move(id), std::move(initializer));
+	return push<Action>(std::move(args), std::move(parameters), source(*ctx));
 }
 
 antlrcpp::Any ASTBuilder::visitList(FabParser::ListContext *ctx)
@@ -181,6 +181,47 @@ antlrcpp::Any ASTBuilder::visitNameReference(FabParser::NameReferenceContext *ct
 	return push<NameReference>(std::move(id));
 }
 
+
+//
+// Arguments and parameters:
+//
+
+antlrcpp::Any ASTBuilder::visitArguments(FabParser::ArgumentsContext *ctx)
+{
+	if (not visitChildren(ctx))
+	{
+		return false;
+	}
+
+	UniqPtrVec<Argument> kwargs;
+	if (auto *kwctx = ctx->keywordArguments())
+	{
+		kwargs = popChildren<Argument>(source(*kwctx));
+	}
+
+	UniqPtrVec<Expression> positionalArgs;
+	if (auto *posctx = ctx->positionalArguments())
+	{
+		positionalArgs = popChildren<Expression>(source(*posctx));
+	}
+
+	return push<Arguments>(std::move(positionalArgs), std::move(kwargs), source(*ctx));
+}
+
+antlrcpp::Any ASTBuilder::visitKeywordArgument(FabParser::KeywordArgumentContext *ctx)
+{
+	if (not visitChildren(ctx))
+	{
+		return false;
+	}
+
+	string name = ctx->Identifier()->getText();
+	auto id = std::make_unique<Identifier>(name, source(*ctx->Identifier()));
+	auto initializer = pop<Expression>(source(*ctx->expression()));
+
+	return push<Argument>(std::move(id), std::move(initializer));
+}
+
 antlrcpp::Any ASTBuilder::visitParameter(FabParser::ParameterContext *ctx)
 {
 	if (not visitChildren(ctx))
@@ -204,28 +245,10 @@ antlrcpp::Any ASTBuilder::visitParameter(FabParser::ParameterContext *ctx)
 	return push<Parameter>(std::move(id), std::move(type), std::move(defaultArgument));
 }
 
-antlrcpp::Any ASTBuilder::visitValue(FabParser::ValueContext *ctx)
-{
-	if (not visitChildren(ctx))
-	{
-		return false;
-	}
 
-	UniqPtr<Identifier> id(new Identifier(ctx->name->getText(), source(*ctx->name)));
-
-	auto e = pop<Expression>(source(*ctx->expression()));
-	assert(e && "Value initializer is null");
-
-	UniqPtr<TypeReference> explicitType;
-	if (auto *t = ctx->type())
-	{
-		SourceRange src = source(*t);
-		explicitType = pop<TypeReference>(src);
-		PARSER_ASSERT(explicitType, src, "failed to parse value type");
-	}
-
-	return push<Value>(std::move(id), std::move(explicitType), std::move(e));
-}
+//
+// Types:
+//
 
 antlrcpp::Any ASTBuilder::visitFieldType(FabParser::FieldTypeContext *ctx)
 {
