@@ -156,6 +156,22 @@ antlrcpp::Any ASTBuilder::visitCall(FabParser::CallContext *ctx)
 	return push<Call>(std::move(target), std::move(args), source(*ctx));
 }
 
+antlrcpp::Any ASTBuilder::visitCompoundExpr(FabParser::CompoundExprContext *ctx)
+{
+	if (not visitChildren(ctx))
+	{
+		return false;
+	}
+
+	SourceRange src = source(*ctx->result);
+	auto result = pop<Expression>(src);
+	PARSER_ASSERT(result, src, "compound expression has no result");
+
+	auto values = popChildren<Value>(source(*ctx));
+
+	return push<CompoundExpression>(std::move(values), std::move(result), src);
+}
+
 
 //
 // Terms:
