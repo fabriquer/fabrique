@@ -3,18 +3,24 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: src:file = file('Inputs/foo.c');
-src:file = file('Inputs/foo.c');
+# CHECK: cc:(file)=>file =
+# CHECK:     action('cc -c ${src} -o ${obj}' <- src:file[in], obj:file[out]);
+cc = action('cc -c ${src} -o ${obj}' <- src:file[in], obj:file[out]);
 
-# CHECK: cc:(file)->file = action('cc -c $src -o $obj' <- src:file[in], obj:file[out]);
-cc:(file)->file = action('cc -c $src -o $obj' <- src:file[in], obj:file[out]);
+# CHECK: link:(list[file])=>file = action('cc ${objects} -o ${bin}'
+# CHECK:               <- objects:list[file[in]], bin:file[out]);
+link = action('cc ${objects} -o ${bin}'
+              <- objects:list[file[in]], bin:file[out]);
 
-# CHECK: link:(list[file])=>file =
-# CHECK:   action('cc $objects -o $bin' <- objects:list[file], bin:file[out]);
-link = action('cc $objects -o $bin' <- objects:list[file], bin:file[out]);
+# CHECK: srcs:list[file] = [ file('hello.c') file('world.c') ];
+srcs = files(hello.c world.c);
 
-# CHECK: obj:file = cc(src, file('foo.o'));
-obj = cc(src, file('foo.o'));
+# CHECK: objs:list[file] = foreach src:file <- srcs
+# CHECK:   cc(src, obj = src + '.o')
+# CHECK:   ;
+objs = foreach src <- srcs
+	cc(src, obj = src + '.o')
+	;
 
-# CHECK: bin:file = link([ obj ], file('foo'));
-bin = link([ obj ], file('foo'));
+# CHECK: helloworld:file = link(objs, bin = file('hello-world'));
+helloworld = link(objs, bin = file('hello-world'));
