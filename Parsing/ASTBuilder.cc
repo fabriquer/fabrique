@@ -370,6 +370,7 @@ antlrcpp::Any ASTBuilder::visitRecordType(FabParser::RecordTypeContext*)
 bool ASTBuilder::push(std::unique_ptr<Node> node)
 {
 	debug_
+		<< Bytestream::Operator << "<<< "
 		<< Bytestream::Action << "parsed " << node->source()
 		<< Bytestream::Operator << " : "
 		<< Bytestream::Type << TypeName(*node)
@@ -406,9 +407,12 @@ std::unique_ptr<Node> ASTBuilder::popNode(SourceRange range)
 		<< Bytestream::Operator << ">>> "
 		<< Bytestream::Action << "popped "
 		<< Bytestream::Type << TypeName(*node)
-		<< Bytestream::Reset << " " << *node
-		<< "\n"
+		<< Bytestream::Operator << ": "
+		<< Bytestream::Reset << "\n\t"
 		;
+
+	node->PrettyPrint(debug_, 1);
+	debug_ << "\n\n";
 
 	return node;
 }
