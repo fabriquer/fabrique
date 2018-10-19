@@ -3,8 +3,8 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: foo:string = 'Hello, world!';
+# CHECK: foo = 'Hello, world!';
 foo = 'Hello, world!';
 
-# CHECK: __unnamed{{[0-9]+}}:string = foo;
+# CHECK: foo;
 foo;
