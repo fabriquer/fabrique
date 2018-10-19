@@ -116,6 +116,19 @@ public:
 	antlrcpp::Any defaultResult() override { return true; }
 
 private:
+	//! Assert that some parsing condition is true.
+	template<typename T>
+	static void check(const T &condition, SourceRange src, std::string message)
+	{
+		if (not condition)
+		{
+			throw ParserError(message, src);
+		}
+	}
+
+	//! Parse all child AST nodes
+	void ParseChildren(antlr4::ParserRuleContext*);
+
 	/**
 	 * Push an AST node onto the current AST-building stack.
 	 */
@@ -152,9 +165,9 @@ private:
 	{
 		std::unique_ptr<Node> top = popNode(range);
 
-		PARSER_ASSERT(top, range, "top of AST-building stack was null");
+		check(top, range, "top of AST-building stack was null");
 
-		PARSER_ASSERT(dynamic_cast<T*>(top.get()), top->source(),
+		check(dynamic_cast<T*>(top.get()), top->source(),
 			"top of stack expected to be " + Demangle(typeid(T))
 			+ " but was a " + TypeName(*top));
 

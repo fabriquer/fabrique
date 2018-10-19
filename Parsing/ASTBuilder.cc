@@ -39,10 +39,6 @@ using namespace fabrique::ast;
 using std::string;
 
 
-#define PARSE_CHILDREN(ctx) \
-	PARSER_ASSERT(visitChildren(ctx), source(*ctx), "failed to parse child nodes")
-
-
 ASTBuilder::ASTBuilder(std::string filename)
 	: debug_(Bytestream::Debug("ast.parser")),
 	  fullDebug_(Bytestream::Debug("ast.parser.detail")),
@@ -66,7 +62,7 @@ antlrcpp::Any ASTBuilder::visitFile(FabParser::FileContext *ctx)
 
 antlrcpp::Any ASTBuilder::visitValue(FabParser::ValueContext *ctx)
 {
-	PARSE_CHILDREN(ctx);
+	ParseChildren(ctx);
 
 	UniqPtr<Identifier> id(new Identifier(ctx->name->getText(), source(*ctx->name)));
 
@@ -78,7 +74,7 @@ antlrcpp::Any ASTBuilder::visitValue(FabParser::ValueContext *ctx)
 	{
 		SourceRange src = source(*t);
 		explicitType = pop<TypeReference>(src);
-		PARSER_ASSERT(explicitType, src, "failed to parse value type");
+		check(explicitType, src, "failed to parse value type");
 	}
 
 	return push<Value>(std::move(id), std::move(explicitType), std::move(e));
@@ -99,7 +95,7 @@ UniqPtrVec<Value> ASTBuilder::takeValues()
 
 antlrcpp::Any ASTBuilder::visitExpression(FabParser::ExpressionContext *ctx)
 {
-	PARSE_CHILDREN(ctx);
+	ParseChildren(ctx);
 
 	auto subexprs = ctx->expression();
 	if (subexprs.empty())
@@ -115,7 +111,7 @@ antlrcpp::Any ASTBuilder::visitExpression(FabParser::ExpressionContext *ctx)
 	SourceRange src = source(*ctx);
 
 	// Otherwise: binary operation
-	PARSER_ASSERT(subexprs.size() == 2, src, "must be a binary operation");
+	check(subexprs.size() == 2, src, "must be a binary operation");
 	auto rhs = pop<Expression>(source(*subexprs[1]));
 	auto lhs = pop<Expression>(source(*subexprs[0]));
 
@@ -143,7 +139,7 @@ antlrcpp::Any ASTBuilder::visitExpression(FabParser::ExpressionContext *ctx)
 
 antlrcpp::Any ASTBuilder::visitCall(FabParser::CallContext *ctx)
 {
-	PARSE_CHILDREN(ctx);
+	ParseChildren(ctx);
 
 	auto args = pop<Arguments>(source(*ctx->arguments()));
 	auto target = pop<Expression>(source(*ctx->target));
@@ -153,7 +149,7 @@ antlrcpp::Any ASTBuilder::visitCall(FabParser::CallContext *ctx)
 
 antlrcpp::Any ASTBuilder::visitForeach(FabParser::ForeachContext *ctx)
 {
-	PARSE_CHILDREN(ctx);
+	ParseChildren(ctx);
 
 	auto body = pop<Expression>(source(*ctx->body));
 	auto src = pop<Expression>(source(*ctx->src));
@@ -178,7 +174,7 @@ antlrcpp::Any ASTBuilder::visitForeach(FabParser::ForeachContext *ctx)
 
 antlrcpp::Any ASTBuilder::visitBuildAction(FabParser::BuildActionContext *ctx)
 {
-	PARSE_CHILDREN(ctx);
+	ParseChildren(ctx);
 
 	auto parameters = popChildren<Parameter>(source(*ctx->parameters()));
 	auto args = pop<Arguments>(source(*ctx->arguments()));
@@ -188,11 +184,11 @@ antlrcpp::Any ASTBuilder::visitBuildAction(FabParser::BuildActionContext *ctx)
 
 antlrcpp::Any ASTBuilder::visitCompoundExpr(FabParser::CompoundExprContext *ctx)
 {
-	PARSE_CHILDREN(ctx);
+	ParseChildren(ctx);
 
 	SourceRange src = source(*ctx->result);
 	auto result = pop<Expression>(src);
-	PARSER_ASSERT(result, src, "compound expression has no result");
+	check(result, src, "compound expression has no result");
 
 	auto values = popChildren<Value>(source(*ctx));
 
@@ -201,7 +197,7 @@ antlrcpp::Any ASTBuilder::visitCompoundExpr(FabParser::CompoundExprContext *ctx)
 
 antlrcpp::Any ASTBuilder::visitFileList(FabParser::FileListContext *ctx)
 {
-	PARSE_CHILDREN(ctx);
+	ParseChildren(ctx);
 
 	UniqPtrVec<FilenameLiteral> files;
 	for (auto *f : ctx->files)
@@ -236,7 +232,7 @@ antlrcpp::Any ASTBuilder::visitLiteral(FabParser::LiteralContext *ctx)
 	{
 		string text = b->getText();
 
-		PARSER_ASSERT(text == "true" or text == "false", src,
+		check(text == "true" or text == "false", src,
 		              "boolean literal must be 'true' or 'false'");
 
 		bool value = (text == "true");
@@ -251,10 +247,10 @@ antlrcpp::Any ASTBuilder::visitLiteral(FabParser::LiteralContext *ctx)
 	{
 		string quoted = s->getText();
 
-		PARSER_ASSERT(quoted.length() >= 2, src,
+		check(quoted.length() >= 2, src,
 		              "string literal must have at least two characters: quotes");
 
-		PARSER_ASSERT(quoted.front() == quoted.back(), src,
+		check(quoted.front() == quoted.back(), src,
 		              "quotes around string literal must match");
 
 		string value = quoted.substr(1, quoted.length() - 2);
@@ -281,7 +277,7 @@ antlrcpp::Any ASTBuilder::visitNameReference(FabParser::NameReferenceContext *ct
 
 antlrcpp::Any ASTBuilder::visitArguments(FabParser::ArgumentsContext *ctx)
 {
-	PARSE_CHILDREN(ctx);
+	ParseChildren(ctx);
 
 	UniqPtrVec<Argument> kwargs;
 	if (auto *kwctx = ctx->keywordArguments())
@@ -300,7 +296,7 @@ antlrcpp::Any ASTBuilder::visitArguments(FabParser::ArgumentsContext *ctx)
 
 antlrcpp::Any ASTBuilder::visitKeywordArgument(FabParser::KeywordArgumentContext *ctx)
 {
-	PARSE_CHILDREN(ctx);
+	ParseChildren(ctx);
 
 	string name = ctx->Identifier()->getText();
 	auto id = std::make_unique<Identifier>(name, source(*ctx->Identifier()));
@@ -311,7 +307,7 @@ antlrcpp::Any ASTBuilder::visitKeywordArgument(FabParser::KeywordArgumentContext
 
 antlrcpp::Any ASTBuilder::visitParameter(FabParser::ParameterContext *ctx)
 {
-	PARSE_CHILDREN(ctx);
+	ParseChildren(ctx);
 
 	UniqPtr<Expression> defaultArgument;
 	if (auto *def = ctx->defaultArgument)
@@ -321,7 +317,7 @@ antlrcpp::Any ASTBuilder::visitParameter(FabParser::ParameterContext *ctx)
 
 	SourceRange src = source(*ctx->type());
 	auto type = pop<TypeReference>(src);
-	PARSER_ASSERT(type, src, "failed to parse parameter type");
+	check(type, src, "failed to parse parameter type");
 
 	auto name = ctx->Identifier()->getText();
 	auto id = std::make_unique<Identifier>(name, source(*ctx->Identifier()));
@@ -336,12 +332,14 @@ antlrcpp::Any ASTBuilder::visitParameter(FabParser::ParameterContext *ctx)
 
 antlrcpp::Any ASTBuilder::visitFieldType(FabParser::FieldTypeContext *ctx)
 {
+	ParseChildren(ctx);
+
 	return false;
 }
 
 antlrcpp::Any ASTBuilder::visitFunctionType(FabParser::FunctionTypeContext *ctx)
 {
-	PARSE_CHILDREN(ctx);
+	ParseChildren(ctx);
 
 	auto resultType = pop<TypeReference>(source(*ctx->result));
 	auto paramTypes = popChildren<TypeReference>(source(*ctx->params));
@@ -352,13 +350,13 @@ antlrcpp::Any ASTBuilder::visitFunctionType(FabParser::FunctionTypeContext *ctx)
 
 antlrcpp::Any ASTBuilder::visitParametricType(FabParser::ParametricTypeContext *ctx)
 {
-	PARSE_CHILDREN(ctx);
+	ParseChildren(ctx);
 
 	auto params = popChildren<TypeReference>(source(*ctx->params));
 
 	SourceRange baseSource = source(*ctx->base);
 	auto base = pop<TypeReference>(baseSource);
-	PARSER_ASSERT(base, baseSource, "failed to parse parametric type base");
+	check(base, baseSource, "failed to parse parametric type base");
 
 	return push<ParametricTypeReference>(std::move(base), source(*ctx),
 	                                     std::move(params));
@@ -377,6 +375,13 @@ antlrcpp::Any ASTBuilder::visitSimpleType(FabParser::SimpleTypeContext *ctx)
 antlrcpp::Any ASTBuilder::visitRecordType(FabParser::RecordTypeContext*)
 {
 	return false;
+}
+
+
+void ASTBuilder::ParseChildren(antlr4::ParserRuleContext *ctx)
+{
+	check(static_cast<bool>(visitChildren(ctx)), source(*ctx),
+	      "failed to parse at least one child AST node");
 }
 
 
