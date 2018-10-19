@@ -75,6 +75,7 @@ public:
 	//
 	antlrcpp::Any visitBuildAction(FabParser::BuildActionContext*) override;
 	antlrcpp::Any visitCompoundExpr(FabParser::CompoundExprContext*) override;
+	antlrcpp::Any visitFileList(FabParser::FileListContext*) override;
 	antlrcpp::Any visitList(FabParser::ListContext*) override;
 	antlrcpp::Any visitLiteral(FabParser::LiteralContext*) override;
 	antlrcpp::Any visitNameReference(FabParser::NameReferenceContext*) override;
@@ -104,7 +105,6 @@ public:
 	antlrcpp::Any visitUnaryOperation(FabParser::UnaryOperationContext*) override;
 	antlrcpp::Any visitUnaryOperator(FabParser::UnaryOperatorContext*) override;
 	antlrcpp::Any visitTerm(FabParser::TermContext*) override;
-	antlrcpp::Any visitFileList(FabParser::FileListContext*) override;
 	antlrcpp::Any visitParentheticalExpression(FabParser::ParentheticalExpressionContext*) override;
 
 	antlrcpp::Any visitTypeDeclaration(FabParser::TypeDeclarationContext*) override;

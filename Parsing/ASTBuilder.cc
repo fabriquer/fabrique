@@ -179,6 +179,25 @@ antlrcpp::Any ASTBuilder::visitBuildAction(FabParser::BuildActionContext *ctx)
 	return push<Action>(std::move(args), std::move(parameters), source(*ctx));
 }
 
+antlrcpp::Any ASTBuilder::visitFileList(FabParser::FileListContext *ctx)
+{
+	PARSE_CHILDREN(ctx);
+
+	UniqPtrVec<FilenameLiteral> files;
+	for (auto *f : ctx->files)
+	{
+		files.emplace_back(std::make_unique<FilenameLiteral>(f->getText(), source(*f)));
+	}
+
+	UniqPtrVec<Argument> args;
+	if (auto *kwargs = ctx->keywordArguments())
+	{
+		args = popChildren<Argument>(source(*kwargs));
+	}
+
+	return push<FileList>(std::move(files), std::move(args), source(*ctx));
+}
+
 antlrcpp::Any ASTBuilder::visitList(FabParser::ListContext *ctx)
 {
 	visitChildren(ctx);
