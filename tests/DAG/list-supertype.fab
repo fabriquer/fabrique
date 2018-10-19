@@ -1,5 +1,5 @@
 #
-# RUN: %fab --parse-only --print-ast %s > %t
+# RUN: %fab --format=null --print-dag %s > %t
 # RUN: FileCheck %s -input-file %t
 #
 # The type of a list should reflect the common supertype of its elements.

@@ -1,5 +1,5 @@
 #
-# Generated at Thu 18 Oct 2018 16:53:47 PDT by regenerate-manifest.sh
+# Generated at Fri Oct 19 16:27:56 PDT 2018 by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -31,6 +31,7 @@ all_files = files(
 ./DAG/build-with-foreach.fab
 ./DAG/builddir.fab
 ./DAG/builtins.fab
+./DAG/calling-the-uncallable.fab
 ./DAG/compile-arguments.fab
 ./DAG/compile-object.fab
 ./DAG/complex-build.fab
@@ -51,6 +52,7 @@ all_files = files(
 ./DAG/file-explicitly-generated.fab
 ./DAG/file-string-addition.fab
 ./DAG/files.fab
+./DAG/foreach-not-iterable.fab
 ./DAG/foreach.fab
 ./DAG/function-apply.fab
 ./DAG/function-arg-type-mismatch.fab
@@ -63,12 +65,15 @@ all_files = files(
 ./DAG/import-directory.fab
 ./DAG/import-empty.fab
 ./DAG/list-of-lists-of-targets.fab
+./DAG/list-supertype.fab
+./DAG/list-type-mismatch.fab
 ./DAG/lists.fab
 ./DAG/literals.fab
 ./DAG/logical-operators.fab
 ./DAG/maybe.fab
 ./DAG/missing-argument.fab
 ./DAG/modules.fab
+./DAG/multiple-definition.fab
 ./DAG/multiple-outputs.fab
 ./DAG/nested-paths.fab
 ./DAG/operators.fab
@@ -83,6 +88,7 @@ all_files = files(
 ./DAG/simple-build.fab
 ./DAG/string-list.fab
 ./DAG/subdir-within-subdir.fab
+./DAG/subdir-wrong-type.fab
 ./DAG/subdir.fab
 ./DAG/target-filename-conflict.fab
 ./DAG/target-from-record.fab
@@ -90,55 +96,35 @@ all_files = files(
 ./DAG/tool-vs-src-directories.fab
 ./DAG/trace-simple.fab
 ./DAG/trace.fab
+./DAG/type-conflict.fab
 ./DAG/types.fab
 ./DAG/unnamed-values.fab
 ./DAG/value-redefinition.fab
-./Parsing/Inputs/accepts-args.fab
-./Parsing/Inputs/accepts-file.fab
-./Parsing/Inputs/fabfile
-./Parsing/Inputs/requires-args.fab
-./Parsing/Inputs/submodule-with-error.fab
-./Parsing/Inputs/submodule.fab
-./Parsing/Inputs/subsubmodule.fab
 ./Parsing/actions.fab
 ./Parsing/binary-operations.fab
-./Parsing/calling-the-uncallable.fab
 ./Parsing/compound-expr.fab
 ./Parsing/conditionals.fab
 ./Parsing/default-parameters.fab
 ./Parsing/direct-call.fab
 ./Parsing/empty-string.fab
 ./Parsing/equality.fab
-./Parsing/err-column-number.fab
-./Parsing/err-files-lineno.fab
-./Parsing/err-in-submodule.fab
 ./Parsing/field-existence.fab
 ./Parsing/file-attributes.fab
 ./Parsing/file-string-addition.fab
 ./Parsing/files.fab
-./Parsing/foreach-not-iterable.fab
 ./Parsing/foreach.fab
-./Parsing/function-type-inference.fab
 ./Parsing/functions.fab
 ./Parsing/hello-world.fab
 ./Parsing/higher-order-functions.fab
-./Parsing/list-supertype.fab
-./Parsing/list-type-mismatch.fab
 ./Parsing/lists.fab
 ./Parsing/literals.fab
 ./Parsing/logical-operators.fab
 ./Parsing/maybe.fab
 ./Parsing/modules.fab
-./Parsing/multiple-definition.fab
-./Parsing/positional-keyword-after-keyword.fab
 ./Parsing/record-instantiation.fab
 ./Parsing/record-nesting.fab
 ./Parsing/record-types.fab
-./Parsing/scope-mismatch.fab
 ./Parsing/simple-build.fab
-./Parsing/subdir-wrong-type.fab
-./Parsing/subdir.fab
-./Parsing/type-conflict.fab
 ./Parsing/types.fab
 ./Parsing/unnamed-value.fab
 ./backends/dot/compile-arguments.fab
