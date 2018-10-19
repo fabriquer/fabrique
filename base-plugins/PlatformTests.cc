@@ -3,7 +3,7 @@
  * Definition of @ref fabrique::plugins::PlatformTests.
  */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -124,9 +124,8 @@ UniqPtr<Plugin> PlatformTests::Factory::Instantiate(TypeContext& ctx) const
 
 shared_ptr<Record> PlatformTests::Create(DAGBuilder& builder, const ValueMap& args) const
 {
-	if (not args.empty())
-		throw SemanticException("platform plugin does not take arguments",
-		                        SourceRange::Over(args));
+	SemaCheck(args.empty(), SourceRange::Over(args),
+		"platform plugin does not take arguments");
 
 	const ValueMap scope;
 	static const SourceRange src = SourceRange::None();

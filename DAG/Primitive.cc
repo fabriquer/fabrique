@@ -217,8 +217,7 @@ ValuePtr String::Equals(ValuePtr& v) const
 	// Don't trust std::string::compare, it thinks "foo" != "foo\0".
 	const char *x = this->value_.data();
 	const size_t len = strnlen(x, MaxStringLength);
-	if (len == MaxStringLength)
-		throw SemanticException("string too long", source());
+	SemaCheck(len < MaxStringLength, source(), "string too long");
 
 	const char *y = other->value_.data();
 	const bool equal = (strncmp(x, y, len) == 0);

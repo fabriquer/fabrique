@@ -94,15 +94,11 @@ ValuePtr List::Add(ValuePtr& n) const
 	SourceRange loc = SourceRange::Over(this, n.get());
 
 	const List *next = n->asList();
-	if (not next)
-		throw SemanticException(
-			"lists can only be concatenated with lists", loc);
+	SemaCheck(next, loc, "lists can only be concatenated with lists");
 
-	if (not elementType_.isSupertype(next->elementType_)
-	    and not next->elementType_.isSupertype(elementType_))
-		throw SemanticException(
-			"incompatible operands to concatenate (types "
-			+ type().str() + ", " + next->type().str() + ")", loc);
+	SemaCheck(elementType_.isSupertype(next->elementType_)
+		or next->elementType_.isSupertype(elementType_), loc,
+		"cannot concatenate " + type().str() + " and " + next->type().str());
 
 	SharedPtrVec<Value> values(elements_);
 	auto& nextElem = next->elements_;

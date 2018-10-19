@@ -1,6 +1,6 @@
 /** @file AST/SymbolReference.cc    Definition of @ref fabrique::ast::SymbolReference. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -111,12 +111,7 @@ dag::ValuePtr SymbolReference::evaluate(EvalContext& ctx) const
 
 		// Not the last component: must be a record!
 		base = std::dynamic_pointer_cast<dag::Record>(value);
-		if (not base)
-			throw SemanticException(
-				name.substr(0, end)
-				+ " (" + value->type().str()
-				+ ") is not a record",
-				source());
+		SemaCheck(base, source(), value->type().str() + " is not a record");
 	}
 
 	if (not value)

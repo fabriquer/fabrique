@@ -1,6 +1,6 @@
 /** @file AST/Filename.cc    Definition of @ref fabrique::ast::Filename. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -97,9 +97,7 @@ dag::ValuePtr Filename::evaluate(EvalContext& ctx) const
 	dag::ValueMap attributes;
 	for (const UniqPtr<ast::Argument>& a : args_)
 	{
-		if (not a->hasName())
-			throw SemanticException("file arguments must have names",
-			                        a->source());
+		SemaCheck(a->hasName(), a->source(), "file arguments must have names");
 
 		const string& name = a->getName().name();
 		dag::ValuePtr value = a->getValue().evaluate(ctx);

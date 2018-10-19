@@ -134,13 +134,11 @@ dag::ValuePtr Action::evaluate(EvalContext& ctx) const
 	dag::ValueMap arguments;
 	TypeContext &types = ctx.types();
 
-	if (args_->size() < 1)
-		throw SemanticException("Missing action arguments", source());
+	SemaCheck(args_->size() >= 1, source(), "missing action arguments");
 
 	// The only keyword-less argument to action() is its command.
-	if (args_->positional().size() > 1)
-		throw SemanticException("Build actions only take one positional argument",
-		                        source());
+	SemaCheck(args_->positional().size() <= 1, source(),
+		"build actions only take one positional argument");
 
 	for (const UniqPtr<Expression>& arg : args_->positional())
 	{
@@ -153,10 +151,7 @@ dag::ValuePtr Action::evaluate(EvalContext& ctx) const
 
 		if (arg->getName().name() == "command")
 		{
-			if (not command.empty())
-				throw SemanticException(
-					"Duplicate command", arg->source());
-
+			SemaCheck(command.empty(), arg->source(), "duplicate command");
 			command = str;
 		}
 		else

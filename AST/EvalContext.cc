@@ -1,6 +1,6 @@
 /** @file DAG/EvalContext.cc    Definition of @ref fabrique::ast::EvalContext. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -284,9 +284,8 @@ void EvalContext::Define(ScopedValueName& name, ValuePtr v)
 	assert(&name.stack_ == this);
 
 	ValueMap& currentScope = CurrentScope();
-	if (currentScope.find(name.name_) != currentScope.end())
-		throw SemanticException("redefining '" + name.name_ + "'",
-		                        v->source());
+	SemaCheck(currentScope.find(name.name_) == currentScope.end(), v->source(),
+		"redefining '" + name.name_ + "'");
 
 	currentScope.emplace(name.name_, v);
 	builder_.Define(fullyQualifiedName(), v);
