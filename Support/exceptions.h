@@ -49,15 +49,6 @@
 	} \
 	while (false)
 
-#define PARSER_ASSERT(expr, src, detail) \
-	do \
-	{ \
-		if (not (expr)) \
-		{ \
-			throw fabrique::ParserError(detail, src); \
-		} \
-	} \
-	while (false)
 
 
 namespace fabrique {
