@@ -58,7 +58,6 @@ public:
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
 private:
-
 	const UniqPtr<Expression> expr_;
 };
 
