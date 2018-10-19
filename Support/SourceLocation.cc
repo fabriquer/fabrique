@@ -268,16 +268,21 @@ Bytestream& SourceRange::PrintSource(Bytestream& out, unsigned int indent,
 		std::ifstream sourceFile(filename.c_str());
 		assert(sourceFile.good());
 
-		for (size_t i = 1; i <= caret.line; i++) {
+		const size_t firstLine = begin.line > context ? (begin.line - context) : 1;
+
+		for (size_t i = 1; i <= end.line; i++)
+		{
 			string line;
 			getline(sourceFile, line);
 
-			if ((caret.line - i) <= context)
+			if (i >= firstLine)
+			{
 				out
 					<< tabs
 					<< Bytestream::Line << i << "\t"
 					<< Bytestream::Reset << line << "\n"
 					;
+			}
 		}
 
 		/*
