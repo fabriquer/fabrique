@@ -1,5 +1,5 @@
 #
-# Generated at Wed 20 May 2015 19:31:43 NDT by regenerate-manifest.sh
+# Generated at Thu 18 Oct 2018 16:53:47 PDT by regenerate-manifest.sh
 #
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
@@ -76,6 +76,8 @@ all_files = files(
 ./DAG/print-inside-record.fab
 ./DAG/record-instantiation.fab
 ./DAG/record-nesting.fab
+./DAG/record-type-too-many-fields.fab
+./DAG/record-wrong-field-type.fab
 ./DAG/rules.fab
 ./DAG/scopes.fab
 ./DAG/simple-build.fab
@@ -99,20 +101,13 @@ all_files = files(
 ./Parsing/Inputs/submodule.fab
 ./Parsing/Inputs/subsubmodule.fab
 ./Parsing/actions.fab
-./Parsing/add-to-nil-list.fab
-./Parsing/args-at-module-scope.fab
-./Parsing/builddir.fab
-./Parsing/builtins.fab
+./Parsing/binary-operations.fab
 ./Parsing/calling-the-uncallable.fab
 ./Parsing/compound-expr.fab
 ./Parsing/conditionals.fab
-./Parsing/config-cli-optional.fab
-./Parsing/config-cli.fab
 ./Parsing/default-parameters.fab
 ./Parsing/direct-call.fab
-./Parsing/directory.fab
 ./Parsing/empty-string.fab
-./Parsing/empty.fab
 ./Parsing/equality.fab
 ./Parsing/err-column-number.fab
 ./Parsing/err-files-lineno.fab
@@ -127,12 +122,6 @@ all_files = files(
 ./Parsing/functions.fab
 ./Parsing/hello-world.fab
 ./Parsing/higher-order-functions.fab
-./Parsing/import-arguments-mandatory.fab
-./Parsing/import-arguments-missing.fab
-./Parsing/import-arguments-optional.fab
-./Parsing/import-arguments-type-mismatch.fab
-./Parsing/import-arguments-unnamed.fab
-./Parsing/import-directory.fab
 ./Parsing/list-supertype.fab
 ./Parsing/list-type-mismatch.fab
 ./Parsing/lists.fab
@@ -141,14 +130,10 @@ all_files = files(
 ./Parsing/maybe.fab
 ./Parsing/modules.fab
 ./Parsing/multiple-definition.fab
-./Parsing/operators.fab
 ./Parsing/positional-keyword-after-keyword.fab
 ./Parsing/record-instantiation.fab
 ./Parsing/record-nesting.fab
-./Parsing/record-not-a-record.fab
-./Parsing/record-type-too-many-fields.fab
 ./Parsing/record-types.fab
-./Parsing/record-wrong-field-type.fab
 ./Parsing/scope-mismatch.fab
 ./Parsing/simple-build.fab
 ./Parsing/subdir-wrong-type.fab

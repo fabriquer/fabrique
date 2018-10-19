@@ -4,4 +4,4 @@
 #
 
 # CHECK: empty_string:string = '';
-empty_string = '';
+empty_string:string = '';

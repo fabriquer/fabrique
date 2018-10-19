@@ -1,0 +1,22 @@
+#
+# RUN: %parse %s > %t
+# RUN: %check %t %s
+#
+
+# CHECK: x = 1 + 2 - 3;
+x = 1 + 2 - 3;
+
+# CHECK: y = 3 * 2 / 1;
+y = 3 * 2 / 1;
+
+# CHECK: cons = 1 :: 2 :: 3 :: [];
+cons = 1 :: 2 :: 3 :: [];
+
+# CHECK: list_ops = 0 :: [ 1 2 ] + [ 3 4 ];
+list_ops = 0 :: [ 1 2 ] + [ 3 4 ];
+
+# CHECK: p = true xor false;
+p = true xor false;
+
+# CHECK: q = true and false or p;
+q = true and false or p;
