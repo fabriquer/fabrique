@@ -4,13 +4,13 @@
 #
 
 # CHECK: default_cflags:list[string] = [ 'a' 'list' 'of' 'strings' ];
-default_cflags = [ 'a' 'list' 'of' 'strings'];
+default_cflags:list[string] = [ 'a' 'list' 'of' 'strings'];
 
 # CHECK: some_numbers:list[int] = [ 1 2 3 ];
-some_numbers = [ 1 2 3 ];
+some_numbers:list[int] = [ 1 2 3 ];
 
-# CHECK: singleton:list[string] = [ '!' ];
+# CHECK: singleton = [ '!' ];
 singleton = [ '!' ];
 
-# CHECK: nothing:list[nil] = [ ];
+# CHECK: nothing = [ ];
 nothing = [ ];

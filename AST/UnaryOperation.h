@@ -54,11 +54,10 @@ public:
 		Invalid,
 	};
 
+	UnaryOperation(UniqPtr<Expression>, enum Operator op, SourceRange);
+
 	static Operator Op(const std::string&);
 	static std::string OpStr(Operator);
-
-	static UnaryOperation* Create(Operator, const SourceRange& opLoc,
-	                              UniqPtr<Expression>&);
 
 	Operator getOp() const { return op_; }
 	const Expression& getSubExpr() const { return *subexpr_; }
@@ -69,8 +68,6 @@ public:
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
 private:
-	UnaryOperation(UniqPtr<Expression>& e, enum Operator op, const SourceRange&);
-
 	const UniqPtr<Expression> subexpr_;
 	const Operator op_;
 };

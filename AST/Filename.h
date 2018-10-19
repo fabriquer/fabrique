@@ -46,8 +46,7 @@ class Argument;
 class Filename : public Expression
 {
 public:
-	static Filename* Create(UniqPtr<Expression>& name, UniqPtrVec<Argument>& args,
-	                        const SourceRange& loc);
+	Filename(UniqPtr<Expression> name, UniqPtrVec<Argument> args, SourceRange);
 
 	const Expression& name() const { return *unqualName_; }
 	const UniqPtrVec<Argument>& arguments() const { return args_; }
@@ -58,9 +57,6 @@ public:
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
 private:
-	Filename(UniqPtr<Expression>& name, UniqPtrVec<Argument>& args,
-	         const SourceRange& loc);
-
 	//! A filename, without qualifiers like "in this subdirectory".
 	const UniqPtr<Expression> unqualName_;
 

@@ -45,7 +45,7 @@ namespace ast {
 class FileList : public Expression
 {
 public:
-	FileList(UniqPtrVec<Filename>& f, UniqPtrVec<Argument>& a, const SourceRange& loc)
+	FileList(UniqPtrVec<Filename> f, UniqPtrVec<Argument> a, SourceRange loc)
 		: Expression(loc), files_(std::move(f)),
 		  args_(std::move(a))
 	{

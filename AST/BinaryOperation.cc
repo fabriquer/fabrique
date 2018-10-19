@@ -50,21 +50,8 @@ namespace fabrique
 }
 
 
-BinaryOperation* BinaryOperation::Create(UniqPtr<Expression>&& lhs,
-                                         Operator op,
-                                         UniqPtr<Expression>&& rhs)
-{
-	assert(lhs);
-	assert(rhs);
-
-	SourceRange loc = SourceRange::Over(lhs, rhs);
-	return new BinaryOperation(std::move(lhs), std::move(rhs), op, loc);
-}
-
-
-BinaryOperation::BinaryOperation(
-		UniqPtr<Expression>&& lhs, UniqPtr<Expression>&& rhs,
-		enum Operator op, const SourceRange& src)
+BinaryOperation::BinaryOperation(UniqPtr<Expression> lhs, UniqPtr<Expression> rhs,
+                                 enum Operator op, SourceRange src)
 	: Expression(src), lhs_(std::move(lhs)), rhs_(std::move(rhs)), op_(op)
 {
 }

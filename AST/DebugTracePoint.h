@@ -48,7 +48,7 @@ namespace ast {
 class DebugTracePoint : public Expression
 {
 public:
-	DebugTracePoint(UniqPtr<Expression>&, SourceRange);
+	DebugTracePoint(UniqPtr<Expression>, SourceRange);
 
 	const Expression& expression() const { return *expr_; }
 
@@ -58,7 +58,6 @@ public:
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
 private:
-
 	const UniqPtr<Expression> expr_;
 };
 

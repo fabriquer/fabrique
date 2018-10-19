@@ -47,7 +47,7 @@ class Node;
 class SymbolReference : public Expression
 {
 public:
-	SymbolReference(UniqPtr<Node>&& name);
+	SymbolReference(UniqPtr<Node> name);
 
 	const Node& name() const { return *name_; }
 

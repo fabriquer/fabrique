@@ -47,7 +47,7 @@ using namespace fabrique::ast;
 using std::dynamic_pointer_cast;
 
 
-Function::Function(UniqPtrVec<Parameter>& params, UniqPtr<Expression>& body,
+Function::Function(UniqPtrVec<Parameter> params, UniqPtr<Expression> body,
                    const FunctionType& type, SourceRange loc)
 	: Expression(std::move(loc)), HasParameters(params), body_(std::move(body)),
 	  type_(type)
