@@ -1,6 +1,6 @@
 /** @file plugins/SysctlPlugin.cc   Definition of @ref fabrique::plugins::SysctlPlugin. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -120,9 +120,8 @@ UniqPtr<Plugin> SysctlPlugin::Factory::Instantiate(TypeContext& ctx) const
 
 shared_ptr<Record> SysctlPlugin::Create(DAGBuilder& builder, const ValueMap& args) const
 {
-	if (not args.empty())
-		throw SemanticException("sysctl plugin does not take arguments",
-		                        SourceRange::Over(args));
+	SemaCheck(args.empty(), SourceRange::Over(args),
+		"sysctl plugin does not take arguments");
 
 	const ValueMap scope;
 	const SharedPtrVec<Parameter> params = {

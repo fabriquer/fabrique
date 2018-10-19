@@ -1,6 +1,6 @@
 /** @file DAG/File.cc    Definition of @ref fabrique::dag::File. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -146,10 +146,8 @@ string File::fullName() const
 
 void File::setGenerated(bool gen)
 {
-	if (absolute_ and gen)
-		throw SemanticException(
-			"cannot generate a file with absolute path '"
-			+ relativeName() + "'", source());
+	SemaCheck(not (absolute_ and gen), source(),
+		"cannot generate file with absolute path '" + relativeName() + "'");
 
 	generated_ = gen;
 }

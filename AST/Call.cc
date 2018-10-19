@@ -1,6 +1,6 @@
 /** @file AST/Call.cc    Definition of @ref fabrique::ast::Call. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -97,8 +97,8 @@ dag::ValuePtr Call::evaluate(EvalContext& ctx) const
 	// Check argument legality.
 	//
 	for (auto& a : arguments_->keyword())
-		if (not target->hasParameterNamed(a->getName().name()))
-			throw SemanticException("invalid argument", a->source());
+		SemaCheck(target->hasParameterNamed(a->getName().name()), a->source(),
+			"invalid argument");
 
 	dag::ValueMap args;
 	StringMap<SourceRange> argLocations;

@@ -3,7 +3,7 @@
  * Definition of @ref fabrique::ast::HasParameters.
  */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -73,9 +73,8 @@ void HasParameters::CheckArguments(const UniqPtrVec<Argument>& args,
 		if (a->hasName())
 		{
 			const string name(a->getName().name());
-			if (find(names.begin(), names.end(), name) == names.end())
-				throw SemanticException(
-					"invalid parameter", a->source());
+			SemaCheck(find(names.begin(), names.end(), name) != names.end(),
+				a->source(), "invalid parameter");
 		}
 	}
 
@@ -86,9 +85,7 @@ void HasParameters::CheckArguments(const UniqPtrVec<Argument>& args,
 		const string& name = p->getName().name();
 		const Argument *arg = namedArguments[name];
 
-		if (not arg and not p->defaultValue())
-			throw SemanticException(
-				"missing argument to '" + name + "'", src);
+		SemaCheck(arg or p->defaultValue(), src, "missing argument to " + name);
 	}
 }
 

@@ -166,6 +166,15 @@ public:
 	virtual ~SemanticException() override;
 };
 
+template<typename T>
+void SemaCheck(const T &condition, SourceRange src, std::string message)
+{
+	if (not condition)
+	{
+		throw SemanticException(message, src);
+	}
+}
+
 }
 
 #endif
