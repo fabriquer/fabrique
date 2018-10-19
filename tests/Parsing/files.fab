@@ -4,16 +4,16 @@
 #
 
 # CHECK: foo:file = file('Inputs/foo.txt');
-foo = file('Inputs/foo.txt');
+foo:file = file('Inputs/foo.txt');
 
-# CHECK: bar:list[file] = [ file('Inputs/foo.txt') ];
-bar = files(     Inputs/foo.txt     );
+# CHECK: bar:list[file] = files( Inputs/foo.txt );
+bar:list[file] = files(     Inputs/foo.txt     );
 
-# CHECK: baz:list[file] = [ file('Inputs/foo.txt') file('Inputs/baz.txt') ];
+# CHECK: baz = files( Inputs/foo.txt Inputs/baz.txt );
 baz = files(
 	Inputs/foo.txt
 	Inputs/baz.txt
 );
 
-# CHECK: wibble:list[file] = [ file('wibble.txt'), subdir = 'Inputs' ];
+# CHECK: wibble = files( wibble.txt, subdir = 'Inputs' );
 wibble = files(wibble.txt, subdir = 'Inputs');
