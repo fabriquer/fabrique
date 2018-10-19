@@ -1,6 +1,6 @@
 /** @file DAG/Value.cc    Definition of @ref fabrique::dag::Value. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2013-2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -54,6 +54,18 @@ ValuePtr Value::Negate(const SourceRange& opLoc) const
 	);
 }
 
+ValuePtr Value::DivideBy(ValuePtr&) const
+{
+	throw SemanticException(
+		"division unsupported by " + type().name(), source());
+}
+
+ValuePtr Value::MultiplyBy(ValuePtr&) const
+{
+	throw SemanticException(
+		"multiplication unsupported by " + type().name(), source());
+}
+
 ValuePtr Value::Add(ValuePtr&) const
 {
 	throw SemanticException(
@@ -66,10 +78,10 @@ ValuePtr Value::PrefixWith(ValuePtr&) const
 		"prefix operation unsupported by " + type().name(), source());
 }
 
-ValuePtr Value::ScalarAdd(ValuePtr&) const
+ValuePtr Value::Subtract(ValuePtr&) const
 {
 	throw SemanticException(
-		"scalar addition unsupported by " + type().name(), source());
+		"subtraction unsupported by " + type().name(), source());
 }
 
 ValuePtr Value::And(ValuePtr&) const

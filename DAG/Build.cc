@@ -1,6 +1,6 @@
 /** @file DAG/Build.cc    Definition of @ref fabrique::dag::Build. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -128,11 +128,6 @@ ValuePtr Build::Add(ValuePtr& rhs) const
 ValuePtr Build::PrefixWith(ValuePtr& rhs) const
 {
 	return outputValue()->PrefixWith(rhs);
-}
-
-ValuePtr Build::ScalarAdd(ValuePtr& rhs) const
-{
-	return outputValue()->ScalarAdd(rhs);
 }
 
 ValuePtr Build::And(ValuePtr& rhs) const

@@ -1,6 +1,6 @@
 /** @file DAG/Build.h    Declaration of @ref fabrique::dag::Build. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -70,7 +70,6 @@ public:
 	virtual ValuePtr Negate(const SourceRange& loc) const override;
 	virtual ValuePtr Add(ValuePtr&) const override;
 	virtual ValuePtr PrefixWith(ValuePtr&) const override;
-	virtual ValuePtr ScalarAdd(ValuePtr&) const override;
 	virtual ValuePtr And(ValuePtr&) const override;
 	virtual ValuePtr Or(ValuePtr&) const override;
 	virtual ValuePtr Xor(ValuePtr&) const override;

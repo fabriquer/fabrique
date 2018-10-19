@@ -1,6 +1,6 @@
 /** @file DAG/Primitive.cc    Definition of @ref fabrique::dag::Primitive. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2013-2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -132,6 +132,18 @@ ValuePtr Integer::Add(ValuePtr& v) const
 		new Integer(this->value_ + other->value_, type(), loc));
 }
 
+ValuePtr Integer::DivideBy(ValuePtr& v) const
+{
+	SourceRange loc = SourceRange(*this, *v);
+
+	shared_ptr<Integer> other = std::dynamic_pointer_cast<Integer>(v);
+	if (not other)
+		throw WrongTypeException("int", v->type(), v->source());
+
+	return ValuePtr(
+		new Integer(this->value_ / other->value_, type(), loc));
+}
+
 ValuePtr Integer::Equals(ValuePtr& v) const
 {
 	SourceRange loc = SourceRange(*this, *v);
@@ -143,6 +155,30 @@ ValuePtr Integer::Equals(ValuePtr& v) const
 	const bool eq = this->value_ == other->value_;
 	const Type& boolTy = type().context().booleanType();
 	return ValuePtr(new Boolean(eq, boolTy, loc));
+}
+
+ValuePtr Integer::MultiplyBy(ValuePtr& v) const
+{
+	SourceRange loc = SourceRange(*this, *v);
+
+	shared_ptr<Integer> other = std::dynamic_pointer_cast<Integer>(v);
+	if (not other)
+		throw WrongTypeException("int", v->type(), v->source());
+
+	return ValuePtr(
+		new Integer(this->value_ * other->value_, type(), loc));
+}
+
+ValuePtr Integer::Subtract(ValuePtr& v) const
+{
+	SourceRange loc = SourceRange(*this, *v);
+
+	shared_ptr<Integer> other = std::dynamic_pointer_cast<Integer>(v);
+	if (not other)
+		throw WrongTypeException("int", v->type(), v->source());
+
+	return ValuePtr(
+		new Integer(this->value_ - other->value_, type(), loc));
 }
 
 void Integer::Accept(Visitor& v) const

@@ -1,6 +1,6 @@
 /** @file Types/Type.cc    Definition of @ref fabrique::Type. */
 /*
- * Copyright (c) 2013-2015 Jonathan Anderson
+ * Copyright (c) 2013-2015, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -98,6 +98,8 @@ const Type& Type::supertype(const Type& other) const
 
 
 const Type& Type::onAddTo(const Type& t) const { return t.parent_.nilType(); }
+
+const Type& Type::onMultiply(const Type& t) const { return t.parent_.nilType(); }
 
 const Type& Type::onPrefixWith(const Type& t) const { return t.parent_.nilType(); }
 
