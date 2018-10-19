@@ -1,6 +1,6 @@
 /** @file DAG/Primitive.h    Declaration of @ref fabrique::dag::Primitive. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2013-2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -92,7 +92,10 @@ public:
 	std::string str() const override;
 
 	virtual ValuePtr Add(ValuePtr&) const override;
+	virtual ValuePtr DivideBy(ValuePtr&) const override;
 	virtual ValuePtr Equals(ValuePtr&) const override;
+	virtual ValuePtr MultiplyBy(ValuePtr&) const override;
+	virtual ValuePtr Subtract(ValuePtr&) const override;
 
 	void Accept(Visitor& v) const override;
 };

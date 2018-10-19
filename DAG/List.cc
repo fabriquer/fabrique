@@ -1,6 +1,6 @@
 /** @file DAG/List.cc    Definition of @ref fabrique::dag::List. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2013-2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -121,17 +121,6 @@ ValuePtr List::PrefixWith(ValuePtr& prefix) const
 
 	return ValuePtr(
 		new List(values, type(), SourceRange::Over(prefix.get(), this))
-	);
-}
-
-ValuePtr List::ScalarAdd(ValuePtr& scalar) const
-{
-	SharedPtrVec<Value> values;
-	for (const ValuePtr& v : this->elements_)
-		values.push_back(v->Add(scalar));
-
-	return ValuePtr(
-		new List(values, type(), SourceRange::Over(this, scalar.get()))
 	);
 }
 

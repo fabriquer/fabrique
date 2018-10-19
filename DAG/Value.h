@@ -1,6 +1,6 @@
 /** @file DAG/Value.h    Declaration of @ref fabrique::dag::Value. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2013-2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -65,6 +65,20 @@ public:
 	//! Unary 'not' operator.
 	virtual ValuePtr Negate(const SourceRange& loc) const;
 
+	//
+	// Multiplicative operations:
+	//
+
+	//! Divide by aanother value.
+	virtual ValuePtr DivideBy(ValuePtr&) const;
+
+	//! Multiply by aanother value.
+	virtual ValuePtr MultiplyBy(ValuePtr&) const;
+
+	//
+	// Additive operations:
+	//
+
 	/**
 	 * Add this @ref fabrique::dag::Value to a following @ref Value.
 	 *
@@ -76,8 +90,19 @@ public:
 	//! Apply the prefix operation: prefix this value with another value.
 	virtual ValuePtr PrefixWith(ValuePtr&) const;
 
-	//! Add another @ref fabrique::dag::Value scalar-wise across this @ref Value.
-	virtual ValuePtr ScalarAdd(ValuePtr&) const;
+	//! Subtract another value from this one.
+	virtual ValuePtr Subtract(ValuePtr&) const;
+
+	//
+	// Comparison operations:
+	//
+
+	/** Equivalence. */
+	virtual ValuePtr Equals(ValuePtr&) const;
+
+	//
+	// Logical operations:
+	//
 
 	/** Logical and. */
 	virtual ValuePtr And(ValuePtr&) const;
@@ -88,8 +113,6 @@ public:
 	/** Logical xor. */
 	virtual ValuePtr Xor(ValuePtr&) const;
 
-	/** Equivalence. */
-	virtual ValuePtr Equals(ValuePtr&) const;
 
 	//! A list representation of this value (or nullptr).
 	virtual const List* asList() const { return nullptr; }

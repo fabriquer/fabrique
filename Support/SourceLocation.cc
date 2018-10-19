@@ -5,7 +5,7 @@
  * @ref fabrique::SourceRange.
  */
 /*
- * Copyright (c) 2013, 2016 Jonathan Anderson
+ * Copyright (c) 2013, 2016, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -248,11 +248,9 @@ void SourceRange::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 }
 
 
-Bytestream& SourceRange::PrintSource(Bytestream& out, unsigned int indent,
-                                     SourceLocation caret, unsigned int context) const
+Bytestream& SourceRange::PrintSource(Bytestream& out, SourceLocation caret,
+                                     unsigned int context) const
 {
-	const string tabs(indent, '\t');
-
 	/*
 	 * If we are reading a file (rather than stdin), re-read the
 	 * source file to display the line in question.
@@ -268,16 +266,20 @@ Bytestream& SourceRange::PrintSource(Bytestream& out, unsigned int indent,
 		std::ifstream sourceFile(filename.c_str());
 		assert(sourceFile.good());
 
-		for (size_t i = 1; i <= caret.line; i++) {
+		const size_t firstLine = begin.line > context ? (begin.line - context) : 1;
+
+		for (size_t i = 1; i <= end.line; i++)
+		{
 			string line;
 			getline(sourceFile, line);
 
-			if ((caret.line - i) <= context)
+			if (i >= firstLine)
+			{
 				out
-					<< tabs
 					<< Bytestream::Line << i << "\t"
 					<< Bytestream::Reset << line << "\n"
 					;
+			}
 		}
 
 		/*
@@ -288,12 +290,15 @@ Bytestream& SourceRange::PrintSource(Bytestream& out, unsigned int indent,
 		 * Otherwise, start where the source range says to.
 		 */
 		const size_t firstHighlightColumn =
-			begin.column < caret.column
-				? caret.column - begin.column
-				: caret.column;
+			caret
+				? (begin.column < caret.column
+					? caret.column - begin.column
+					: caret.column)
+				: begin.column
+				;
 
 		const size_t preCaretHighlight =
-			caret.column - firstHighlightColumn;
+			caret ? (caret.column - firstHighlightColumn) : 0;
 
 		const size_t postCaretHighlight =
 			end.column > caret.column
@@ -305,17 +310,15 @@ Bytestream& SourceRange::PrintSource(Bytestream& out, unsigned int indent,
 		assert(postCaretHighlight >= 0);
 
 		out
-			<< tabs << "\t"
+			<< "\t"
 			<< string(firstHighlightColumn - 1, ' ')
 			<< Bytestream::ErrorLoc
 			<< string(preCaretHighlight, '~')
-			<< "^"
+			<< (caret ? "^" : "")
 			<< string(postCaretHighlight, '~')
-			<< "\n"
+			<< Bytestream::Reset << "\n"
 			;
 	}
-
-	out << Bytestream::Reset;
 
 	return out;
 }

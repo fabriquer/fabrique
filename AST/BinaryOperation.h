@@ -1,6 +1,6 @@
 /** @file AST/BinaryOperation.h    Declaration of @ref fabrique::ast::BinaryOperation. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2013-2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -51,17 +51,25 @@ class BinaryOperation : public Expression
 public:
 	enum Operator
 	{
+		// multiplication operators:
+		Divide,
+		Multiply,
+
+		// addition operatiors:
 		Add,
 		Prefix,
-		ScalarAdd,
-		Invalid,
+		Subtract,
+
+		// comparison operators:
+		Equal,
+		NotEqual,
 
 		// logical operators:
 		And,
 		Or,
 		Xor,
-		Equal,
-		NotEqual,
+
+		Invalid,
 	};
 
 	BinaryOperation(UniqPtr<Expression> lhs, UniqPtr<Expression> rhs,

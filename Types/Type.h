@@ -1,6 +1,6 @@
 /** @file Types/Type.h    Declaration of @ref fabrique::Type. */
 /*
- * Copyright (c) 2013-2016 Jonathan Anderson
+ * Copyright (c) 2013-2016, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -127,6 +127,7 @@ public:
 	virtual bool canBeNegated() const { return false; }
 
 	virtual const Type& onAddTo(const Type&) const;
+	virtual const Type& onMultiply(const Type&) const;
 	virtual const Type& onPrefixWith(const Type&) const;
 
 

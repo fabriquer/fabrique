@@ -1,6 +1,6 @@
 /** @file AST/BinaryOperation.cc    Definition of @ref fabrique::ast::BinaryOperation. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2013-2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -61,9 +61,20 @@ BinaryOperation::Operator BinaryOperation::Op(const std::string& o)
 {
 	Operator op;
 
-	if (o == "+") op = Add;
+	if (o == "/") op = Divide;
+	else if (o == "*") op = Multiply;
+
+	else if (o == "+") op = Add;
 	else if (o == "::") op = Prefix;
-	else if (o == ".+") op = ScalarAdd;
+	else if (o == "-") op = Subtract;
+
+	else if (o == "==") op = Equal;
+	else if (o == "!=") op = NotEqual;
+
+	else if (o == "and") op = And;
+	else if (o == "or") op = Or;
+	else if (o == "xor") op = Xor;
+
 	else op = Invalid;
 
 	assert(o == OpStr(op));
@@ -75,14 +86,20 @@ std::string BinaryOperation::OpStr(Operator op)
 {
 	switch (op)
 	{
+		case Divide:            return "/";
+		case Multiply:          return "*";
+
 		case Add:               return "+";
 		case Prefix:            return "::";
-		case ScalarAdd:         return ".+";
+		case Subtract:          return "-";
+
+		case Equal:             return "==";
+		case NotEqual:          return "!=";
+
 		case And:               return "and";
 		case Or:                return "or";
 		case Xor:               return "xor";
-		case Equal:             return "==";
-		case NotEqual:          return "!=";
+
 		case Invalid:           assert(false && "op == Invalid");
 	}
 
@@ -125,24 +142,19 @@ dag::ValuePtr BinaryOperation::evaluate(EvalContext& ctx) const
 
 	switch (op_)
 	{
+		case Divide:    return lhs->DivideBy(rhs);
+		case Multiply:  return lhs->MultiplyBy(rhs);
+
 		case Add:       return lhs->Add(rhs);
 		case Prefix:    return rhs->PrefixWith(lhs);
-		case And:       return lhs->And(rhs);
-		case Or:        return lhs->Or(rhs);
-		case Xor:       return lhs->Xor(rhs);
+		case Subtract:  return rhs->Subtract(lhs);
+
 		case Equal:     return lhs->Equals(rhs);
 		case NotEqual:  return lhs->Equals(rhs)->Negate(source());
 
-		case ScalarAdd:
-			if (lhs->canScalarAdd(*rhs))
-				return lhs->ScalarAdd(rhs);
-
-			else if (rhs->canScalarAdd(*lhs))
-				return rhs->ScalarAdd(lhs);
-
-			else
-				throw SemanticException(
-					"invalid types for addition", source());
+		case And:       return lhs->And(rhs);
+		case Or:        return lhs->Or(rhs);
+		case Xor:       return lhs->Xor(rhs);
 
 		case Invalid:
 			throw SemanticException("invalid operation", source());
@@ -166,7 +178,18 @@ const fabrique::Type& BinaryOperation::ResultType(const Type& lhs, const Type& r
 {
 	switch (op)
 	{
+		case Divide:
+		case Multiply:
+			if (auto &t = lhs.onMultiply(rhs))
+				return t;
+
+			if (auto &t = rhs.onMultiply(lhs))
+				return t;
+
+			break;
+
 		case Add:
+		case Subtract:
 			if (auto& t = lhs.onAddTo(rhs))
 				return t;
 
@@ -180,23 +203,6 @@ const fabrique::Type& BinaryOperation::ResultType(const Type& lhs, const Type& r
 				return t;
 
 			break;
-
-		case ScalarAdd:
-		{
-			if (lhs.isOrdered() and lhs.typeParamCount() == 1
-			    and lhs[0].onAddTo(rhs))
-			{
-				return lhs.Map(AddElementTypeTo(rhs), loc);
-			}
-
-			if (rhs.isOrdered() and rhs.typeParamCount() == 1
-			    and rhs[0].onAddTo(lhs))
-			{
-				return rhs.Map(AddElementTypeTo(lhs), loc);
-			}
-
-			break;
-		}
 
 		case And:
 		case Or:
