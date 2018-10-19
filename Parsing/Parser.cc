@@ -66,6 +66,7 @@ bool Parser::ParseFile(std::istream& input, UniqPtrVec<Value>& values, string na
 		<< Bytestream::Operator << " '"
 		<< Bytestream::Literal << name
 		<< Bytestream::Operator << "'"
+		<< Bytestream::Reset << "\n"
 		;
 
 	return false;
