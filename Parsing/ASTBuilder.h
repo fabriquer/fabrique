@@ -194,6 +194,8 @@ private:
 	SourceRange source(const antlr4::Token&);
 
 	Bytestream& debug_;
+	Bytestream& fullDebug_;
+
 	const std::string filename_;
 	std::stack<std::unique_ptr<Node>> nodes_;
 };

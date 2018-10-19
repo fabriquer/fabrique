@@ -40,7 +40,9 @@ using std::string;
 
 
 ASTBuilder::ASTBuilder(std::string filename)
-	: debug_(Bytestream::Debug("ast.parser")), filename_(std::move(filename))
+	: debug_(Bytestream::Debug("ast.parser")),
+	  fullDebug_(Bytestream::Debug("ast.parser.detail")),
+	  filename_(std::move(filename))
 {
 }
 
@@ -352,11 +354,17 @@ antlrcpp::Any ASTBuilder::visitRecordType(FabParser::RecordTypeContext*)
 bool ASTBuilder::push(std::unique_ptr<Node> node)
 {
 	debug_
-		<< Bytestream::Operator << "<<< "
-		<< Bytestream::Action << "parsed "
+		<< Bytestream::Action << "parsed " << node->source()
+		<< Bytestream::Operator << " : "
 		<< Bytestream::Type << TypeName(*node)
-		<< Bytestream::Reset << " " << *node
 		<< "\n"
+		;
+
+	node->source().PrintSource(fullDebug_);
+
+	fullDebug_
+		<< Bytestream::Action << "result: "
+		<< Bytestream::Reset << *node << "\n\n"
 		;
 
 	nodes_.emplace(std::move(node));
