@@ -5,7 +5,7 @@
  * @ref fabrique::SourceRange.
  */
 /*
- * Copyright (c) 2013, 2016 Jonathan Anderson
+ * Copyright (c) 2013, 2016, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -311,11 +311,9 @@ Bytestream& SourceRange::PrintSource(Bytestream& out, unsigned int indent,
 			<< string(preCaretHighlight, '~')
 			<< "^"
 			<< string(postCaretHighlight, '~')
-			<< "\n"
+			<< Bytestream::Reset << "\n"
 			;
 	}
-
-	out << Bytestream::Reset;
 
 	return out;
 }
