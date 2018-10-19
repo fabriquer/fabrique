@@ -1,6 +1,6 @@
 /** @file AST/FileList.cc    Definition of @ref fabrique::ast::FileList. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -46,6 +46,13 @@
 using namespace fabrique;
 using namespace fabrique::ast;
 using std::string;
+
+
+FileList::FileList(UniqPtrVec<FilenameLiteral> f, UniqPtrVec<Argument> a,
+                   SourceRange src)
+	: Expression(src), files_(std::move(f)), args_(std::move(a))
+{
+}
 
 
 void FileList::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
@@ -103,7 +110,7 @@ dag::ValuePtr FileList::evaluate(EvalContext& ctx) const
 			                        arg->source());
 	}
 
-	for (const UniqPtr<Filename>& file : files_)
+	for (const auto &file : files_)
 		files.push_back(
 			std::dynamic_pointer_cast<dag::File>(
 				file->evaluate(ctx)));

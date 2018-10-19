@@ -1,6 +1,6 @@
 /** @file AST/FileList.h    Declaration of @ref fabrique::ast::FileList. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -34,7 +34,7 @@
 
 #include "AST/Argument.h"
 #include "AST/Expression.h"
-#include "AST/Filename.h"
+#include "AST/FilenameLiteral.h"
 
 namespace fabrique {
 namespace ast {
@@ -45,15 +45,11 @@ namespace ast {
 class FileList : public Expression
 {
 public:
-	FileList(UniqPtrVec<Filename> f, UniqPtrVec<Argument> a, SourceRange loc)
-		: Expression(loc), files_(std::move(f)),
-		  args_(std::move(a))
-	{
-	}
+	FileList(UniqPtrVec<FilenameLiteral> f, UniqPtrVec<Argument> a, SourceRange loc);
 
 	const UniqPtrVec<Argument>& arguments() const { return args_; }
 
-	using ConstIterator = UniqPtrVec<Filename>::const_iterator;
+	using ConstIterator = UniqPtrVec<FilenameLiteral>::const_iterator;
 	ConstIterator begin() const { return files_.begin(); }
 	ConstIterator end() const { return files_.end(); }
 
@@ -63,7 +59,7 @@ public:
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
 private:
-	UniqPtrVec<Filename> files_;
+	UniqPtrVec<FilenameLiteral> files_;
 	UniqPtrVec<Argument> args_;
 };
 

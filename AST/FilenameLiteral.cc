@@ -1,6 +1,6 @@
-/** @file AST/ast.h    Meta-include file for all AST node types. */
+/** @file AST/FilenameLiteral.cc    Definition of @ref fabrique::ast::FilenameLiteral. */
 /*
- * Copyright (c) 2013, 2018 Jonathan Anderson
+ * Copyright (c) 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,46 +29,47 @@
  * SUCH DAMAGE.
  */
 
-#ifndef AST_FORWARD_DECLS_H
-#define AST_FORWARD_DECLS_H
+#include "AST/Argument.h"
+#include "AST/Builtins.h"
+#include "AST/EvalContext.h"
+#include "AST/FilenameLiteral.h"
+#include "AST/Visitor.h"
+#include "DAG/File.h"
+#include "Support/Bytestream.h"
+#include "Support/exceptions.h"
+#include "Types/FileType.h"
+#include "Types/TypeContext.h"
 
-namespace fabrique {
-namespace ast {
+#include <cassert>
+#include <set>
 
-class Action;
-class Argument;
-class Arguments;
-class BinaryOperation;
-class Call;
-class CompoundExpression;
-class Conditional;
-class DebugTracePoint;
-class FieldAccess;
-class FieldQuery;
-class Filename;
-class FilenameLiteral;
-class FileList;
-class ForeachExpr;
-class Function;
-class Identifier;
-class List;
-class NameReference;
-class Parameter;
-class Record;
-class FunctionTypeReference;
-class ParametricTypeReference;
-class RecordTypeReference;
-class SimpleTypeReference;
-class SomeValue;
-class SymbolReference;
-class TypeDeclaration;
-class UnaryOperation;
-class Value;
+using namespace fabrique;
+using namespace fabrique::ast;
+using std::string;
 
-} // namespace ast
-} // namespace fabrique
 
-// our use of typedefs means we can't actually forward-declare literals.
-#include "AST/literals.h"
+FilenameLiteral::FilenameLiteral(string name, SourceRange src)
+	: Expression(src), name_(name)
+{
+}
 
-#endif
+
+void FilenameLiteral::PrettyPrint(Bytestream &out, unsigned int /*indent*/) const
+{
+	out << Bytestream::Filename << name_ << Bytestream::Reset;
+}
+
+void FilenameLiteral::Accept(Visitor& v) const
+{
+	v.Enter(*this);
+	v.Leave(*this);
+}
+
+dag::ValuePtr FilenameLiteral::evaluate(EvalContext& ctx) const
+{
+	assert(ctx.Lookup(ast::builtins::Subdirectory));
+	string subdirectory = ctx.Lookup(ast::builtins::Subdirectory)->str();
+
+	const FileType& t = ctx.types().fileType();
+	return ctx.builder().File(subdirectory, name_, {}, t, source());
+}
