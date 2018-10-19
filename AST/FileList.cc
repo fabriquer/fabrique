@@ -118,10 +118,10 @@ dag::ValuePtr FileList::evaluate(EvalContext& ctx) const
 
 			scope.set(name, ctx.builder().String(completeSubdir, src));
 		}
-
 		else
-			throw SemanticException("unexpected argument",
-			                        arg->source());
+		{
+			throw SemanticException("unexpected argument", arg->source());
+		}
 	}
 
 	for (const auto &file : files_)
