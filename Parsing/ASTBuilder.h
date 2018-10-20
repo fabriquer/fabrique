@@ -116,6 +116,9 @@ public:
 	antlrcpp::Any defaultResult() override { return true; }
 
 private:
+	std::unique_ptr<Identifier> identifier(antlr4::Token*);
+	std::unique_ptr<Identifier> identifier(antlr4::tree::TerminalNode*);
+
 	using RuleContext = antlr4::ParserRuleContext;
 
 	//! Assert that some parsing condition is true.

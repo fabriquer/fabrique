@@ -68,7 +68,7 @@ antlrcpp::Any ASTBuilder::visitValue(FabParser::ValueContext *ctx)
 	UniqPtr<Identifier> id;
 	if (auto *name = ctx->name)
 	{
-		id = make_unique<Identifier>(name->getText(), source(*name));
+		id = identifier(name);
 	}
 
 	auto e = pop<Expression>(ctx->expression());
@@ -167,8 +167,7 @@ antlrcpp::Any ASTBuilder::visitForeach(FabParser::ForeachContext *ctx)
 		explicitType = pop<TypeReference>(t);
 	}
 
-	auto loopVarName = make_unique<Identifier>(ctx->loopVarName->getText(),
-	                                           source(*ctx->loopVarName));
+	auto loopVarName = identifier(ctx->loopVarName);
 
 	return push<ForeachExpr>(std::move(loopVarName), std::move(explicitType),
 	                         std::move(src), std::move(body), source(*ctx));
@@ -323,8 +322,7 @@ antlrcpp::Any ASTBuilder::visitKeywordArgument(FabParser::KeywordArgumentContext
 {
 	ParseChildren(ctx);
 
-	string name = ctx->Identifier()->getText();
-	auto id = make_unique<Identifier>(name, source(*ctx->Identifier()));
+	auto id = identifier(ctx->Identifier());
 	auto initializer = pop<Expression>(ctx->expression());
 
 	return push<Argument>(std::move(id), std::move(initializer));
@@ -344,8 +342,7 @@ antlrcpp::Any ASTBuilder::visitParameter(FabParser::ParameterContext *ctx)
 	auto type = pop<TypeReference>(t);
 	check(type, t, "failed to parse parameter type");
 
-	auto name = ctx->Identifier()->getText();
-	auto id = make_unique<Identifier>(name, source(*ctx->Identifier()));
+	auto id = identifier(ctx->Identifier());
 
 	return push<Parameter>(std::move(id), std::move(type), std::move(defaultArgument));
 }
@@ -393,12 +390,7 @@ antlrcpp::Any ASTBuilder::visitParametricType(FabParser::ParametricTypeContext *
 
 antlrcpp::Any ASTBuilder::visitSimpleType(FabParser::SimpleTypeContext *ctx)
 {
-	SourceRange src = source(*ctx);
-
-	const std::string name = ctx->Identifier()->getText();
-	auto id = make_unique<Identifier>(name, src);
-
-	return push<SimpleTypeReference>(std::move(id), src);
+	return push<SimpleTypeReference>(identifier(ctx->Identifier()), source(*ctx));
 }
 
 antlrcpp::Any ASTBuilder::visitRecordType(FabParser::RecordTypeContext*)
@@ -411,6 +403,18 @@ void ASTBuilder::ParseChildren(antlr4::ParserRuleContext *ctx)
 {
 	check(static_cast<bool>(visitChildren(ctx)), source(*ctx),
 	      "failed to parse at least one child AST node");
+}
+
+
+std::unique_ptr<Identifier> ASTBuilder::identifier(antlr4::Token *token)
+{
+	return make_unique<Identifier>(token->getText(), source(*token));
+}
+
+
+std::unique_ptr<Identifier> ASTBuilder::identifier(antlr4::tree::TerminalNode *node)
+{
+	return identifier(node->getSymbol());
 }
 
 
