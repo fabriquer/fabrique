@@ -51,7 +51,9 @@ UnaryOperation::Operator UnaryOperation::Op(const std::string& o)
 {
 	Operator op;
 
-	if (o == "not") op = Negate;
+	if (o == "+") op = Plus;
+	else if (o == "-") op = Minus;
+	else if (o == "not") op = LogicalNot;
 	else op = Invalid;
 
 	assert(o == OpStr(op));
@@ -63,7 +65,9 @@ std::string UnaryOperation::OpStr(Operator op)
 {
 	switch (op)
 	{
-		case Negate:            return "not";
+		case Plus:              return "+";
+		case Minus:             return "-";
+		case LogicalNot:        return "not";
 		case Invalid:           assert(false && "op == Invalid");
 	}
 
@@ -99,8 +103,14 @@ dag::ValuePtr UnaryOperation::evaluate(EvalContext& ctx) const
 
 	switch (op_)
 	{
-		case ast::UnaryOperation::Negate:
+		case ast::UnaryOperation::Plus:
+			return subexpr;
+
+		case ast::UnaryOperation::Minus:
 			return subexpr->Negate(source());
+
+		case ast::UnaryOperation::LogicalNot:
+			return subexpr->Not(source());
 
 		case ast::UnaryOperation::Invalid:
 			throw SemanticException("Invalid operation", source());

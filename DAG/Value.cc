@@ -54,6 +54,14 @@ ValuePtr Value::Negate(const SourceRange& opLoc) const
 	);
 }
 
+ValuePtr Value::Not(const SourceRange& opLoc) const
+{
+	throw SemanticException(
+		"logical `not` unsupported by " + type().name(),
+		SourceRange(opLoc, source())
+	);
+}
+
 ValuePtr Value::DivideBy(ValuePtr&) const
 {
 	throw SemanticException(

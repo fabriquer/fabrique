@@ -74,7 +74,8 @@ public:
 	Boolean(bool, const Type&, SourceRange src = SourceRange::None());
 	std::string str() const override;
 
-	virtual ValuePtr Negate(const SourceRange& src) const override;
+	virtual ValuePtr Not(const SourceRange& src) const override;
+
 	virtual ValuePtr And(ValuePtr&) const override;
 	virtual ValuePtr Or(ValuePtr&) const override;
 	virtual ValuePtr Xor(ValuePtr&) const override;
@@ -90,6 +91,8 @@ class Integer : public Primitive<int>
 public:
 	Integer(int, const Type&, SourceRange src = SourceRange::None());
 	std::string str() const override;
+
+	virtual ValuePtr Negate(const SourceRange& src) const override;
 
 	virtual ValuePtr Add(ValuePtr&) const override;
 	virtual ValuePtr DivideBy(ValuePtr&) const override;

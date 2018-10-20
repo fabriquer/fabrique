@@ -62,8 +62,11 @@ public:
 	virtual bool hasFields() const { return false; }
 	virtual ValuePtr field(const std::string& /*name*/) const { return ValuePtr(); }
 
-	//! Unary 'not' operator.
+	//! Arithmetic negative (`-`) operator.
 	virtual ValuePtr Negate(const SourceRange& loc) const;
+
+	//! Unary `not` operator.
+	virtual ValuePtr Not(const SourceRange& loc) const;
 
 	//
 	// Multiplicative operations:
