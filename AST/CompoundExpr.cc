@@ -1,6 +1,6 @@
 /** @file AST/CompoundExpr.cc    Definition of @ref fabrique::ast::CompoundExpression. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -55,7 +55,7 @@ void CompoundExpression::PrettyPrint(Bytestream& out, unsigned int indent) const
 	std::string tabs(indent, '\t');
 	std::string intabs(indent + 1, '\t');
 
-	out << tabs << Bytestream::Operator << "{\n";
+	out << Bytestream::Operator << "\n" << tabs << "{\n";
 	for (auto& v : values_)
 	{
 		v->PrettyPrint(out, indent + 1);
@@ -65,7 +65,7 @@ void CompoundExpression::PrettyPrint(Bytestream& out, unsigned int indent) const
 	assert(result_);
 	out
 		<< intabs << *result_
-		<< "\n" << Bytestream::Operator << tabs << "}"
+		<< "\n" << Bytestream::Operator << tabs << "}\n"
 		<< Bytestream::Reset
 		;
 }
