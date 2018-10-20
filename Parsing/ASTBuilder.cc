@@ -141,7 +141,12 @@ antlrcpp::Any ASTBuilder::visitCall(FabParser::CallContext *ctx)
 {
 	ParseChildren(ctx);
 
-	auto args = pop<Arguments>(source(*ctx->arguments()));
+	UniqPtr<Arguments> args;
+	if (auto *a = ctx->arguments())
+	{
+		args = pop<Arguments>(source(*a));
+	}
+
 	auto target = pop<Expression>(source(*ctx->target));
 
 	return push<Call>(std::move(target), std::move(args), source(*ctx));
@@ -178,10 +183,12 @@ antlrcpp::Any ASTBuilder::visitFunction(FabParser::FunctionContext *ctx)
 	{
 		resultType = pop<TypeReference>(source(*t));
 	}
+	check(resultType, source(*ctx), "missing result type");
 
 	auto params = popChildren<Parameter>(source(*ctx->parameters()));
 
-	return false;
+	return push<Function>(std::move(params), std::move(resultType), std::move(body),
+	                      source(*ctx));
 }
 
 
@@ -358,6 +365,7 @@ antlrcpp::Any ASTBuilder::visitFunctionType(FabParser::FunctionTypeContext *ctx)
 {
 	ParseChildren(ctx);
 
+	check(ctx->result, source(*ctx), "no result type");
 	auto resultType = pop<TypeReference>(source(*ctx->result));
 
 	UniqPtrVec<TypeReference> paramTypes;
