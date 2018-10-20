@@ -36,6 +36,7 @@
 
 using namespace fabrique;
 using namespace fabrique::ast;
+using std::make_unique;
 using std::string;
 
 
@@ -67,7 +68,7 @@ antlrcpp::Any ASTBuilder::visitValue(FabParser::ValueContext *ctx)
 	UniqPtr<Identifier> id;
 	if (auto *name = ctx->name)
 	{
-		id = std::make_unique<Identifier>(name->getText(), source(*name));
+		id = make_unique<Identifier>(name->getText(), source(*name));
 	}
 
 	auto e = pop<Expression>(ctx->expression());
@@ -166,8 +167,8 @@ antlrcpp::Any ASTBuilder::visitForeach(FabParser::ForeachContext *ctx)
 		explicitType = pop<TypeReference>(t);
 	}
 
-	auto loopVarName = std::make_unique<Identifier>(ctx->loopVarName->getText(),
-	                                                source(*ctx->loopVarName));
+	auto loopVarName = make_unique<Identifier>(ctx->loopVarName->getText(),
+	                                           source(*ctx->loopVarName));
 
 	return push<ForeachExpr>(std::move(loopVarName), std::move(explicitType),
 	                         std::move(src), std::move(body), source(*ctx));
@@ -227,7 +228,7 @@ antlrcpp::Any ASTBuilder::visitFileList(FabParser::FileListContext *ctx)
 	UniqPtrVec<FilenameLiteral> files;
 	for (auto *f : ctx->files)
 	{
-		files.emplace_back(std::make_unique<FilenameLiteral>(f->getText(), source(*f)));
+		files.emplace_back(make_unique<FilenameLiteral>(f->getText(), source(*f)));
 	}
 
 	UniqPtrVec<Argument> args;
@@ -323,7 +324,7 @@ antlrcpp::Any ASTBuilder::visitKeywordArgument(FabParser::KeywordArgumentContext
 	ParseChildren(ctx);
 
 	string name = ctx->Identifier()->getText();
-	auto id = std::make_unique<Identifier>(name, source(*ctx->Identifier()));
+	auto id = make_unique<Identifier>(name, source(*ctx->Identifier()));
 	auto initializer = pop<Expression>(ctx->expression());
 
 	return push<Argument>(std::move(id), std::move(initializer));
@@ -344,7 +345,7 @@ antlrcpp::Any ASTBuilder::visitParameter(FabParser::ParameterContext *ctx)
 	check(type, t, "failed to parse parameter type");
 
 	auto name = ctx->Identifier()->getText();
-	auto id = std::make_unique<Identifier>(name, source(*ctx->Identifier()));
+	auto id = make_unique<Identifier>(name, source(*ctx->Identifier()));
 
 	return push<Parameter>(std::move(id), std::move(type), std::move(defaultArgument));
 }
@@ -395,7 +396,7 @@ antlrcpp::Any ASTBuilder::visitSimpleType(FabParser::SimpleTypeContext *ctx)
 	SourceRange src = source(*ctx);
 
 	const std::string name = ctx->Identifier()->getText();
-	auto id = std::make_unique<Identifier>(name, src);
+	auto id = make_unique<Identifier>(name, src);
 
 	return push<SimpleTypeReference>(std::move(id), src);
 }
