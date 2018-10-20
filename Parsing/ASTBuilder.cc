@@ -154,6 +154,18 @@ antlrcpp::Any ASTBuilder::visitCall(FabParser::CallContext *ctx)
 	return push<Call>(std::move(target), std::move(args), source(*ctx));
 }
 
+antlrcpp::Any ASTBuilder::visitConditional(FabParser::ConditionalContext *ctx)
+{
+	ParseChildren(ctx);
+
+	auto elseClause = pop<Expression>(ctx->elseClause);
+	auto thenClause = pop<Expression>(ctx->thenClause);
+	auto condition = pop<Expression>(ctx->condition);
+
+	return push<Conditional>(std::move(condition), std::move(thenClause),
+	                         std::move(elseClause), source(*ctx));
+}
+
 antlrcpp::Any ASTBuilder::visitForeach(FabParser::ForeachContext *ctx)
 {
 	ParseChildren(ctx);
