@@ -267,6 +267,7 @@ Bytestream& SourceRange::PrintSource(Bytestream& out, SourceLocation caret,
 		assert(sourceFile.good());
 
 		const size_t firstLine = begin.line > context ? (begin.line - context) : 1;
+		size_t endColumn = end.column;
 
 		for (size_t i = 1; i <= end.line; i++)
 		{
@@ -275,15 +276,13 @@ Bytestream& SourceRange::PrintSource(Bytestream& out, SourceLocation caret,
 
 			if (i >= firstLine)
 			{
+				endColumn = std::max(endColumn, line.length());
 				out
 					<< Bytestream::Line << i << "\t"
 					<< Bytestream::Reset << line << "\n"
 					;
 			}
 		}
-
-		const size_t startColumn = std::min(begin.column, end.column);
-		const size_t endColumn = std::max(begin.column, end.column);
 
 		/*
 		 * If the expression starts on a line before the caret point,
@@ -292,27 +291,20 @@ Bytestream& SourceRange::PrintSource(Bytestream& out, SourceLocation caret,
 		 *
 		 * Otherwise, start where the source range says to.
 		 */
-		const size_t firstHighlightColumn =
-			caret
-				? (startColumn < caret.column
-					? caret.column - startColumn
-					: caret.column)
-				: startColumn
-				;
+		const size_t beginColumn = (begin.line == end.line) ? begin.column : 1;
 
 		const size_t preCaretHighlight =
-			caret ? (caret.column - firstHighlightColumn) : 0;
+			caret ? (caret.column - beginColumn) : 0;
 
 		const size_t postCaretHighlight =
-			endColumn - (caret ? caret.column + 1 : startColumn);
+			endColumn - (caret ? caret.column : beginColumn);
 
-		assert(firstHighlightColumn >= 1);
 		assert(preCaretHighlight >= 0);
 		assert(postCaretHighlight >= 0);
 
 		out
 			<< "\t"
-			<< string(firstHighlightColumn - 1, ' ')
+			<< string(beginColumn - 1, ' ')
 			<< Bytestream::ErrorLoc
 			<< string(preCaretHighlight, '~')
 			<< (caret ? "^" : "")
