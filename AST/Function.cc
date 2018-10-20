@@ -80,10 +80,11 @@ void Function::PrettyPrint(Bytestream& out, unsigned int indent) const
 				<< Bytestream::Reset;
 	}
 
-	out
-		<< Bytestream::Operator << "): "
-		<< Bytestream::Reset
-		<< "\n";
+	out << Bytestream::Operator << "): " << Bytestream::Reset;
+
+	resultType_->PrettyPrint(out, indent + 1);
+
+	out << "\n";
 
 	body_->PrettyPrint(out, indent);
 
