@@ -64,7 +64,11 @@ antlrcpp::Any ASTBuilder::visitValue(FabParser::ValueContext *ctx)
 {
 	ParseChildren(ctx);
 
-	UniqPtr<Identifier> id(new Identifier(ctx->name->getText(), source(*ctx->name)));
+	UniqPtr<Identifier> id;
+	if (auto *name = ctx->name)
+	{
+		id = std::make_unique<Identifier>(name->getText(), source(*name));
+	}
 
 	auto e = pop<Expression>(ctx->expression());
 	assert(e && "Value initializer is null");
