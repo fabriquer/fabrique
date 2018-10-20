@@ -6,7 +6,7 @@
 # CHECK: foo = foreach x <- [ 1 2 3 ]
 # CHECK: {
 # CHECK-NEXT:   x
-# CHECK-NEXT: };
+# CHECK-NEXT: }
 foo = foreach x <- [ 1 2 3 ]
 {
 	x
