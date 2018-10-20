@@ -66,15 +66,14 @@ antlrcpp::Any ASTBuilder::visitValue(FabParser::ValueContext *ctx)
 
 	UniqPtr<Identifier> id(new Identifier(ctx->name->getText(), source(*ctx->name)));
 
-	auto e = pop<Expression>(source(*ctx->expression()));
+	auto e = pop<Expression>(ctx->expression());
 	assert(e && "Value initializer is null");
 
 	UniqPtr<TypeReference> explicitType;
 	if (auto *t = ctx->type())
 	{
-		SourceRange src = source(*t);
-		explicitType = pop<TypeReference>(src);
-		check(explicitType, src, "failed to parse value type");
+		explicitType = pop<TypeReference>(t);
+		check(explicitType, source(*t), "failed to parse value type");
 	}
 
 	return push<Value>(std::move(id), std::move(explicitType), std::move(e));
@@ -82,7 +81,7 @@ antlrcpp::Any ASTBuilder::visitValue(FabParser::ValueContext *ctx)
 
 UniqPtrVec<Value> ASTBuilder::takeValues()
 {
-	UniqPtrVec<Value> values = popChildren<Value>();
+	UniqPtrVec<Value> values = popChildren<Value>(nullptr);
 	assert(nodes_.empty());
 
 	return values;
@@ -108,12 +107,10 @@ antlrcpp::Any ASTBuilder::visitExpression(FabParser::ExpressionContext *ctx)
 		return false;
 	}
 
-	SourceRange src = source(*ctx);
-
 	// Otherwise: binary operation
-	check(subexprs.size() == 2, src, "must be a binary operation");
-	auto rhs = pop<Expression>(source(*subexprs[1]));
-	auto lhs = pop<Expression>(source(*subexprs[0]));
+	check(subexprs.size() == 2, ctx, "must be a binary operation");
+	auto rhs = pop<Expression>(subexprs[1]);
+	auto lhs = pop<Expression>(subexprs[0]);
 
 	BinaryOperation::Operator op = BinaryOperation::Operator::Invalid;
 
@@ -134,7 +131,7 @@ antlrcpp::Any ASTBuilder::visitExpression(FabParser::ExpressionContext *ctx)
 		op = BinaryOperation::Op(logicOp->getText());
 	}
 
-	return push<BinaryOperation>(std::move(lhs), std::move(rhs), op, src);
+	return push<BinaryOperation>(std::move(lhs), std::move(rhs), op, source(*ctx));
 }
 
 antlrcpp::Any ASTBuilder::visitCall(FabParser::CallContext *ctx)
@@ -144,10 +141,10 @@ antlrcpp::Any ASTBuilder::visitCall(FabParser::CallContext *ctx)
 	UniqPtr<Arguments> args;
 	if (auto *a = ctx->arguments())
 	{
-		args = pop<Arguments>(source(*a));
+		args = pop<Arguments>(a);
 	}
 
-	auto target = pop<Expression>(source(*ctx->target));
+	auto target = pop<Expression>(ctx->target);
 
 	return push<Call>(std::move(target), std::move(args), source(*ctx));
 }
@@ -156,13 +153,13 @@ antlrcpp::Any ASTBuilder::visitForeach(FabParser::ForeachContext *ctx)
 {
 	ParseChildren(ctx);
 
-	auto body = pop<Expression>(source(*ctx->body));
-	auto src = pop<Expression>(source(*ctx->src));
+	auto body = pop<Expression>(ctx->body);
+	auto src = pop<Expression>(ctx->src);
 
 	UniqPtr<TypeReference> explicitType;
 	if (auto *t = ctx->type())
 	{
-		explicitType = pop<TypeReference>(source(*t));
+		explicitType = pop<TypeReference>(t);
 	}
 
 	auto loopVarName = std::make_unique<Identifier>(ctx->loopVarName->getText(),
@@ -176,16 +173,16 @@ antlrcpp::Any ASTBuilder::visitFunction(FabParser::FunctionContext *ctx)
 {
 	ParseChildren(ctx);
 
-	auto body = pop<Expression>(source(*ctx->body));
+	auto body = pop<Expression>(ctx->body);
 
 	UniqPtr<TypeReference> resultType;
 	if (auto *t = ctx->type())
 	{
-		resultType = pop<TypeReference>(source(*t));
+		resultType = pop<TypeReference>(t);
 	}
 	check(resultType, source(*ctx), "missing result type");
 
-	auto params = popChildren<Parameter>(source(*ctx->parameters()));
+	auto params = popChildren<Parameter>(ctx->parameters());
 
 	return push<Function>(std::move(params), std::move(resultType), std::move(body),
 	                      source(*ctx));
@@ -200,8 +197,8 @@ antlrcpp::Any ASTBuilder::visitBuildAction(FabParser::BuildActionContext *ctx)
 {
 	ParseChildren(ctx);
 
-	auto parameters = popChildren<Parameter>(source(*ctx->parameters()));
-	auto args = pop<Arguments>(source(*ctx->arguments()));
+	auto parameters = popChildren<Parameter>(ctx->parameters());
+	auto args = pop<Arguments>(ctx->arguments());
 
 	return push<Action>(std::move(args), std::move(parameters), source(*ctx));
 }
@@ -210,13 +207,13 @@ antlrcpp::Any ASTBuilder::visitCompoundExpr(FabParser::CompoundExprContext *ctx)
 {
 	ParseChildren(ctx);
 
-	SourceRange src = source(*ctx->result);
-	auto result = pop<Expression>(src);
-	check(result, src, "compound expression has no result");
+	auto result = pop<Expression>(ctx->result);
+	check(result, ctx->result, "compound expression has no result");
 
-	auto values = popChildren<Value>(source(*ctx));
+	auto values = popChildren<Value>(ctx);
 
-	return push<CompoundExpression>(std::move(values), std::move(result), src);
+	return push<CompoundExpression>(std::move(values), std::move(result),
+	                                source(*ctx));
 }
 
 antlrcpp::Any ASTBuilder::visitFileList(FabParser::FileListContext *ctx)
@@ -232,7 +229,7 @@ antlrcpp::Any ASTBuilder::visitFileList(FabParser::FileListContext *ctx)
 	UniqPtrVec<Argument> args;
 	if (auto *kwargs = ctx->keywordArguments())
 	{
-		args = popChildren<Argument>(source(*kwargs));
+		args = popChildren<Argument>(kwargs);
 	}
 
 	return push<FileList>(std::move(files), std::move(args), source(*ctx));
@@ -242,10 +239,9 @@ antlrcpp::Any ASTBuilder::visitList(FabParser::ListContext *ctx)
 {
 	visitChildren(ctx);
 
-	SourceRange src = source(*ctx);
-	UniqPtrVec<Expression> expressions = popChildren<Expression>(src);
+	UniqPtrVec<Expression> expressions = popChildren<Expression>(ctx);
 
-	return push<List>(std::move(expressions), src);
+	return push<List>(std::move(expressions), source(*ctx));
 }
 
 antlrcpp::Any ASTBuilder::visitLiteral(FabParser::LiteralContext *ctx)
@@ -306,13 +302,13 @@ antlrcpp::Any ASTBuilder::visitArguments(FabParser::ArgumentsContext *ctx)
 	UniqPtrVec<Argument> kwargs;
 	if (auto *kwctx = ctx->keywordArguments())
 	{
-		kwargs = popChildren<Argument>(source(*kwctx));
+		kwargs = popChildren<Argument>(kwctx);
 	}
 
 	UniqPtrVec<Expression> positionalArgs;
 	if (auto *posctx = ctx->positionalArguments())
 	{
-		positionalArgs = popChildren<Expression>(source(*posctx));
+		positionalArgs = popChildren<Expression>(posctx);
 	}
 
 	return push<Arguments>(std::move(positionalArgs), std::move(kwargs), source(*ctx));
@@ -324,7 +320,7 @@ antlrcpp::Any ASTBuilder::visitKeywordArgument(FabParser::KeywordArgumentContext
 
 	string name = ctx->Identifier()->getText();
 	auto id = std::make_unique<Identifier>(name, source(*ctx->Identifier()));
-	auto initializer = pop<Expression>(source(*ctx->expression()));
+	auto initializer = pop<Expression>(ctx->expression());
 
 	return push<Argument>(std::move(id), std::move(initializer));
 }
@@ -336,12 +332,12 @@ antlrcpp::Any ASTBuilder::visitParameter(FabParser::ParameterContext *ctx)
 	UniqPtr<Expression> defaultArgument;
 	if (auto *def = ctx->defaultArgument)
 	{
-		defaultArgument = pop<Expression>(source(*def));
+		defaultArgument = pop<Expression>(def);
 	}
 
-	SourceRange src = source(*ctx->type());
-	auto type = pop<TypeReference>(src);
-	check(type, src, "failed to parse parameter type");
+	auto *t = ctx->type();
+	auto type = pop<TypeReference>(t);
+	check(type, t, "failed to parse parameter type");
 
 	auto name = ctx->Identifier()->getText();
 	auto id = std::make_unique<Identifier>(name, source(*ctx->Identifier()));
@@ -366,12 +362,12 @@ antlrcpp::Any ASTBuilder::visitFunctionType(FabParser::FunctionTypeContext *ctx)
 	ParseChildren(ctx);
 
 	check(ctx->result, source(*ctx), "no result type");
-	auto resultType = pop<TypeReference>(source(*ctx->result));
+	auto resultType = pop<TypeReference>(ctx->result);
 
 	UniqPtrVec<TypeReference> paramTypes;
 	if (auto *p = ctx->params)
 	{
-		paramTypes = popChildren<TypeReference>(source(*p));
+		paramTypes = popChildren<TypeReference>(p);
 	}
 
 	return push<FunctionTypeReference>(std::move(paramTypes), std::move(resultType),
@@ -382,11 +378,9 @@ antlrcpp::Any ASTBuilder::visitParametricType(FabParser::ParametricTypeContext *
 {
 	ParseChildren(ctx);
 
-	auto params = popChildren<TypeReference>(source(*ctx->params));
-
-	SourceRange baseSource = source(*ctx->base);
-	auto base = pop<TypeReference>(baseSource);
-	check(base, baseSource, "failed to parse parametric type base");
+	auto params = popChildren<TypeReference>(ctx->params);
+	auto base = pop<TypeReference>(ctx->base);
+	check(base, ctx->base, "failed to parse parametric type base");
 
 	return push<ParametricTypeReference>(std::move(base), source(*ctx),
 	                                     std::move(params));

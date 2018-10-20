@@ -116,14 +116,22 @@ public:
 	antlrcpp::Any defaultResult() override { return true; }
 
 private:
+	using RuleContext = antlr4::ParserRuleContext;
+
 	//! Assert that some parsing condition is true.
 	template<typename T>
 	static void check(const T &condition, SourceRange src, std::string message)
 	{
 		if (not condition)
 		{
-			throw ParserError(message, src);
+			throw ParserError(std::move(message), src);
 		}
+	}
+
+	template<typename T>
+	void check(const T &condition, RuleContext *ctx, std::string message)
+	{
+		check(condition, source(*ctx), std::move(message));
 	}
 
 	//! Parse all child AST nodes
@@ -161,7 +169,7 @@ private:
 	 * @pre     the top of the stack is of type T
 	 */
 	template<typename T>
-	std::unique_ptr<T> pop(SourceRange range = SourceRange::None())
+	std::unique_ptr<T> pop(SourceRange range)
 	{
 		std::unique_ptr<Node> top = popNode(range);
 
@@ -174,24 +182,35 @@ private:
 		return std::unique_ptr<T>(dynamic_cast<T*>(top.release()));
 	}
 
+	template<typename T, typename ToSrc>
+	std::unique_ptr<T> pop(ToSrc *ctx)
+	{
+		return pop<T>(source(*ctx));
+	}
+
 	/**
 	 * Pop all of the children at the top of the stack that are found within a
 	 * specific source code range.
 	 *
-	 * @param   range     Works as with `popNode(range)`.
+	 * @param    ctx     Works as with `popNode(range)`.
 	 *
-	 * @pre      all nodes on top of the stack that fall within the specified range
+	 * @pre      all nodes on top of the stack that fall within the specified context
 	 *           are of type T
 	 */
 	template<typename T>
-	UniqPtrVec<T> popChildren(SourceRange range = SourceRange::None())
+	UniqPtrVec<T> popChildren(RuleContext *ctx)
 	{
 		UniqPtrVec<T> children;
 		while (not nodes_.empty())
 		{
-			if (range and not nodes_.top()->source().isInside(range))
+			SourceRange range = SourceRange::None();
+			if (ctx)
 			{
-				break;
+				range = source(*ctx);
+				if (not nodes_.top()->source().isInside(range))
+				{
+					break;
+				}
 			}
 
 			children.push_back(pop<T>(range));
