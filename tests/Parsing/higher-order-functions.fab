@@ -3,14 +3,14 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: increment:(int)=>int = function(x:int): int
+# CHECK: increment = function(x:int): int
 # CHECK:   x + 1
 increment = function(x:int): int x + 1;
 
-# CHECK: copy:(int)=>int = increment;
-copy = increment;
+# CHECK: copy:(int)->int = increment;
+copy:(int)->int = increment;
 
-# CHECK: apply:((int)=>int,int)=>int = function(fn:(int)=>int, x:int): int
+# CHECK: apply:((int)->int,int)->int = function(fn:(int)->int, x:int): int
 # CHECK:   fn(x)
-apply = function(fn:(int)=>int, x:int): int
+apply:((int)->int,int)->int = function(fn:(int)->int, x:int): int
 	fn(x);
