@@ -50,7 +50,13 @@ class UnaryOperation : public Expression
 public:
 	enum Operator
 	{
-		Negate,
+		// Arithmetic operators:
+		Plus,
+		Minus,
+
+		// Logical operators:
+		LogicalNot,
+
 		Invalid,
 	};
 

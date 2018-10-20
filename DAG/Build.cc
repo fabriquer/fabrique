@@ -115,11 +115,6 @@ ValuePtr Build::field(const std::string& name) const
 	return out_[0]->field(name);
 }
 
-ValuePtr Build::Negate(const SourceRange& loc) const
-{
-	return outputValue()->Negate(loc);
-}
-
 ValuePtr Build::Add(ValuePtr& rhs) const
 {
 	return outputValue()->Add(rhs);

@@ -67,7 +67,6 @@ public:
 	virtual bool hasFields() const override;
 	virtual ValuePtr field(const std::string& name) const override;
 
-	virtual ValuePtr Negate(const SourceRange& loc) const override;
 	virtual ValuePtr Add(ValuePtr&) const override;
 	virtual ValuePtr PrefixWith(ValuePtr&) const override;
 	virtual ValuePtr And(ValuePtr&) const override;

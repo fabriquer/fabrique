@@ -52,7 +52,7 @@ Boolean::Boolean(bool b, const Type& t, SourceRange loc)
 	// TODO: assert(t is a subtype of bool?)
 }
 
-ValuePtr Boolean::Negate(const SourceRange& loc) const
+ValuePtr Boolean::Not(const SourceRange& loc) const
 {
 	return ValuePtr(new Boolean(not value_, type(), loc));
 }
@@ -119,6 +119,12 @@ Integer::Integer(int i, const Type& t, SourceRange loc)
 }
 
 string Integer::str() const { return std::to_string(value_); }
+
+ValuePtr Integer::Negate(const SourceRange& src) const
+{
+	return ValuePtr(
+		new Integer(-this->value_, type(), SourceRange(src, source())));
+}
 
 ValuePtr Integer::Add(ValuePtr& v) const
 {
