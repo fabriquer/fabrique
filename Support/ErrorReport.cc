@@ -50,7 +50,7 @@ ErrorReport* ErrorReport::Create(const string& message, const SourceRange& loc,
 
 void ErrorReport::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
-	out << "\n" << caret_ << ": ";
+	out << "\n" << source() << ": ";
 
 	switch (severity_)
 	{
