@@ -3,27 +3,25 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: foo:bool = true;
+# CHECK: foo = true;
 foo = true;
 
-# CHECK: bar:int = if (true)
-# CHECK-NEXT:   42
-# CHECK-NEXT: else
-# CHECK-NEXT:   31415926
-bar = if true 42 else 31415926;
+# CHECK: bar:int = if true
+# CHECK:   42
+# CHECK: else
+# CHECK:   31415926
+bar:int = if true 42 else 31415926;
 
-# CHECK: baz:string = if (not foo)
-# CHECK-NEXT:   'hello'
-# CHECK-NEXT: else
-# CHECK-NEXT:   'world'
-baz = if not foo "hello" else "world";
+# CHECK: baz = if foo 'hello' else 'world';
+baz = if foo 'hello' else 'world';
 
-# CHECK: wibble:string = if (foo)
-# CHECK-NEXT: {
-# CHECK-NEXT:   'a'
-# CHECK-NEXT: }
-# CHECK-NEXT: else
-# CHECK-NEXT: {
-# CHECK-NEXT:   'b'
-# CHECK-NEXT: };
+# CHECK: wibble = if foo
+# CHECK: {
+# CHECK:   'a'
+# CHECK: }
+# CHECK: else
+# CHECK: {
+# CHECK:   'b'
+# CHECK: }
+# CHECK: ;
 wibble = if foo { 'a' } else { 'b' };

@@ -52,17 +52,14 @@ Conditional::Conditional(UniqPtr<Expression> condition,
 {
 }
 
-void Conditional::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
+void Conditional::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
-	out
-		<< Bytestream::Operator << "if ("
-		<< *condition_
-		<< Bytestream::Operator << ")\n"
-		<< *thenClause_
-		<< Bytestream::Operator << "\nelse\n"
-		<< *elseClause_
-		<< Bytestream::Reset
-		;
+	out << Bytestream::Operator << "if " << Bytestream::Reset;
+	condition_->PrettyPrint(out, indent);
+	out << " ";
+	thenClause_->PrettyPrint(out, indent);
+	out << Bytestream::Operator << " else " << Bytestream::Reset;
+	elseClause_->PrettyPrint(out, indent);
 }
 
 
