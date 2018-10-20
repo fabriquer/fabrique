@@ -54,7 +54,7 @@ Value::Value(UniqPtr<Identifier> id, UniqPtr<TypeReference> explicitType,
 	  name_(std::move(id)), explicitType_(std::move(explicitType)),
 	  value_(std::move(value))
 {
-	assert(name_);
+	assert(not explicitType_ or name_ && "having an explicit type => having a name");
 	assert(value_);
 }
 
@@ -63,16 +63,22 @@ void Value::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
 	string tabs(indent, '\t');
 
-	out << tabs << Bytestream::Definition << name_->name();
+	out << tabs;
 
-	if (explicitType_)
+	if (name_)
 	{
-		out << Bytestream::Operator << ":";
-		explicitType_->PrettyPrint(out, indent);
+		out << Bytestream::Definition << name_->name();
+
+		if (explicitType_)
+		{
+			out << Bytestream::Operator << ":" << Bytestream::Reset;
+			explicitType_->PrettyPrint(out, indent);
+		}
+
+		out << Bytestream::Operator << " = ";
 	}
 
 	out
-		<< Bytestream::Operator << " = "
 		<< Bytestream::Reset << *value_
 		<< Bytestream::Operator << ";"
 		<< Bytestream::Reset
