@@ -204,6 +204,16 @@ antlrcpp::Any ASTBuilder::visitFunction(FabParser::FunctionContext *ctx)
 	                      source(*ctx));
 }
 
+antlrcpp::Any ASTBuilder::visitUnaryOperation(FabParser::UnaryOperationContext *ctx)
+{
+	ParseChildren(ctx);
+
+	auto operation = UnaryOperation::Op(ctx->unaryOperator()->getText());
+	auto subexpr = pop<Expression>(ctx->expression());
+
+	return push<UnaryOperation>(std::move(subexpr), operation, source(*ctx));
+}
+
 
 //
 // Terms:

@@ -72,6 +72,7 @@ public:
 	antlrcpp::Any visitConditional(FabParser::ConditionalContext*) override;
 	antlrcpp::Any visitForeach(FabParser::ForeachContext*) override;
 	antlrcpp::Any visitFunction(FabParser::FunctionContext*) override;
+	antlrcpp::Any visitUnaryOperation(FabParser::UnaryOperationContext*) override;
 
 	//
 	// Terms:
@@ -102,8 +103,6 @@ public:
 	/*
 	antlrcpp::Any visitFieldQuery(FabParser::FieldQueryContext*) override;
 	antlrcpp::Any visitFieldReference(FabParser::FieldReferenceContext*) override;
-	antlrcpp::Any visitUnaryOperation(FabParser::UnaryOperationContext*) override;
-	antlrcpp::Any visitUnaryOperator(FabParser::UnaryOperatorContext*) override;
 	antlrcpp::Any visitTerm(FabParser::TermContext*) override;
 	antlrcpp::Any visitParentheticalExpression(FabParser::ParentheticalExpressionContext*) override;
 
