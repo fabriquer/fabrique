@@ -7,22 +7,22 @@ x = true;
 y = false;
 
 # CHECK: equal:bool = x == y;
-equal = (x == y);
+equal:bool = (x == y);
 
-# CHECK: nequal:bool = x != y;
+# CHECK: nequal = x != y;
 nequal = (x != y);
 
 # CHECK: notequal:bool = not x == y;
-notequal = not x == y;
+notequal:bool = not x == y;
 
 hello = 'Hello';
 world = 'World';
 
-# CHECK: strequal:bool = hello == world;
+# CHECK: strequal = hello == world;
 strequal = (hello == world);
 
-# CHECK: strnequal:bool = hello != world;
+# CHECK: strnequal = hello != world;
 strnequal = (hello != world);
 
-# CHECK: strnotequal:bool = not hello == world;
+# CHECK: strnotequal = not hello == world;
 strnotequal = not hello == world;

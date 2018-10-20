@@ -4,14 +4,14 @@
 #
 
 # CHECK: foo:(list[int])->list[int] = function(ints:list[int]): list[int]
-# CHECK-NEXT: {
+# CHECK:      {
 # CHECK-NEXT:   local_var = 42;
 # CHECK-NEXT:   foreach x <- ints
 # CHECK:        {
 # CHECK-NEXT:     y = x + local_var;
 # CHECK-NEXT:     y + 1
 # CHECK-NEXT:   }
-# CHECK-NEXT: }
+# CHECK:      }
 foo:(list[int])->list[int] = function(ints:list[int]): list[int]
 {
 	local_var = 42;

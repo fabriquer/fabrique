@@ -6,7 +6,8 @@
 # CHECK: foo = function(x:int): int
 # CHECK: {
 # CHECK:     x + 1
-# CHECK: }(1);
+# CHECK: }
+# CHECK: (1);
 foo = (function(x:int): int { x + 1 })(1);
 
 src = file('foo.c');
