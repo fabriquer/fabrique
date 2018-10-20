@@ -3,13 +3,15 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: foo:int = {
-# CHECK-NEXT:   x:int = 1;
-# CHECK-NEXT:   y:int = x + 1;
-# CHECK-NEXT:   z:int = y + 1;
+# CHECK: foo:int =
+# CHECK: {
+# CHECK-NEXT:   x = 1;
+# CHECK-NEXT:   y = x + 1;
+# CHECK-NEXT:   z = y + 1;
 # CHECK-NEXT:   z
-# CHECK-NEXT: };
-foo = {
+# CHECK-NEXT: }
+# CHECK: ;
+foo:int = {
 	x = 1;
 	y = x + 1;
 	z = y + 1;
