@@ -3,20 +3,20 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: increment:(int,int)=>int = function(x:int, increment:int = 1): int
+# CHECK: increment = function(x:int, increment:int = 1): int
 # CHECK-NEXT:   x + increment
 # CHECK:        ;
 increment = function(x:int, increment:int = 1): int
 	x + increment;
 
-# CHECK: no_names:int = increment(1, 1);
+# CHECK: no_names = increment(1, 1);
 no_names = increment(1, 1);
 
-# CHECK: all_names:int = increment(increment = 2, x = 1);
+# CHECK: all_names = increment(increment = 2, x = 1);
 all_names = increment(increment = 2, x = 1);
 
-# CHECK: one_name:int = increment(2, increment = 2);
+# CHECK: one_name = increment(2, increment = 2);
 one_name = increment(2, increment = 2);
 
-# CHECK: using_default:int = increment(4);
+# CHECK: using_default = increment(4);
 using_default = increment(4);
