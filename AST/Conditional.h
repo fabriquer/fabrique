@@ -1,6 +1,6 @@
 /** @file AST/Conditional.h    Declaration of @ref fabrique::ast::Conditional. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2013-2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -47,10 +47,10 @@ class CompoundExpression;
 class Conditional : public Expression
 {
 public:
-	Conditional(const SourceRange& ifLoc,
-	            UniqPtr<Expression>& condition,
-	            UniqPtr<Expression>& thenClause,
-	            UniqPtr<Expression>& elseClause);
+	Conditional(UniqPtr<Expression> condition,
+	            UniqPtr<Expression> thenClause,
+	            UniqPtr<Expression> elseClause,
+	            SourceRange);
 
 	const Expression& condition() const { return *condition_; }
 	const Expression& thenClause() const { return *thenClause_; }

@@ -1,6 +1,6 @@
 /** @file AST/Conditional.cc    Definition of @ref fabrique::ast::Conditional. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2013-2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -41,11 +41,11 @@ using namespace fabrique;
 using namespace fabrique::ast;
 
 
-Conditional::Conditional(const SourceRange& ifLoc,
-                         UniqPtr<Expression>& condition,
-                         UniqPtr<Expression>& thenResult,
-                         UniqPtr<Expression>& elseResult)
-	: Expression(SourceRange(ifLoc.begin, elseResult->source().end)),
+Conditional::Conditional(UniqPtr<Expression> condition,
+                         UniqPtr<Expression> thenResult,
+                         UniqPtr<Expression> elseResult,
+                         SourceRange src)
+	: Expression(src),
 	  condition_(std::move(condition)),
 	  thenClause_(std::move(thenResult)),
 	  elseClause_(std::move(elseResult))
