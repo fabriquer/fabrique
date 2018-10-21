@@ -4,28 +4,28 @@
 #
 
 # CHECK: foo:file = file('foo.c');
-foo = file('foo.c');
+foo:file = file('foo.c');
 
 # CHECK: name:string = foo.name;
-name = foo.name;
+name:string = foo.name;
 
 # CHECK: no_flags:list[string] = foo.cflags ? [ ];
 no_flags:list[string] = foo.cflags ? [];
 
 # CHECK: sub:file = foo.subdir;
-sub = foo.subdir;
+sub:file = foo.subdir;
 
 # CHECK: gen:bool = foo.generated;
-gen = foo.generated;
+gen:bool = foo.generated;
 
-# CHECK: file_with_explicit_subdir:file = file('bar.c', subdir = subdir);
+# CHECK: file_with_explicit_subdir = file('bar.c', subdir = subdir);
 file_with_explicit_subdir = file('bar.c', subdir = subdir);
 
-# CHECK: explicit_subdir:file = file_with_explicit_subdir.subdir;
+# CHECK: explicit_subdir = file_with_explicit_subdir.subdir;
 explicit_subdir = file_with_explicit_subdir.subdir;
 
-# CHECK: file_with_flags:file = file('baz.c', cflags = [ '-D SOMETHING_SPECIAL' ]);
+# CHECK: file_with_flags = file('baz.c', cflags = [ '-D SOMETHING_SPECIAL' ]);
 file_with_flags = file('baz.c', cflags = [ '-D SOMETHING_SPECIAL' ]);
 
-# CHECK: cflags:list[string] = file_with_flags.cflags;
+# CHECK: cflags = file_with_flags.cflags;
 cflags = file_with_flags.cflags;
