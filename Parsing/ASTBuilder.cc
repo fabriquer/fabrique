@@ -119,7 +119,11 @@ antlrcpp::Any ASTBuilder::visitExpression(FabParser::ExpressionContext *ctx)
 
 	BinaryOperation::Operator op = BinaryOperation::Operator::Invalid;
 
-	if (auto *multOp = ctx->multOp())
+	if (auto *consOp = ctx->cons)
+	{
+		op = BinaryOperation::Op(consOp->getText());
+	}
+	else if (auto *multOp = ctx->multOp())
 	{
 		op = BinaryOperation::Op(multOp->getText());
 	}
