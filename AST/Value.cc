@@ -1,6 +1,6 @@
 /** @file AST/Value.cc    Definition of @ref fabrique::ast::Value. */
 /*
- * Copyright (c) 2013-2015 Jonathan Anderson
+ * Copyright (c) 2013-2015, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -78,8 +78,8 @@ void Value::PrettyPrint(Bytestream& out, unsigned int indent) const
 		out << Bytestream::Operator << " = ";
 	}
 
+	value_->PrettyPrint(out, indent);
 	out
-		<< Bytestream::Reset << *value_
 		<< Bytestream::Operator << ";"
 		<< Bytestream::Reset
 		;
