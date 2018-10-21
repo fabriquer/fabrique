@@ -3,7 +3,7 @@
  * Definition of @ref fabrique::ast::Record.
  */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -56,7 +56,6 @@ void Record::PrettyPrint(Bytestream& out, unsigned int indent) const
 		<< Bytestream::Operator << outerTabs << "{\n"
 		;
 
-	const std::string innerTabs(indent + 1, '\t');
 	for (auto& f : fields_)
 	{
 		f->PrettyPrint(out, indent + 1);
