@@ -86,6 +86,7 @@ public:
 	antlrcpp::Any visitLiteral(FabParser::LiteralContext*) override;
 	antlrcpp::Any visitNameReference(FabParser::NameReferenceContext*) override;
 	antlrcpp::Any visitRecord(FabParser::RecordContext*) override;
+	antlrcpp::Any visitTypeDeclaration(FabParser::TypeDeclarationContext*) override;
 
 	//
 	// Arguments and parameters:
@@ -102,10 +103,6 @@ public:
 	antlrcpp::Any visitParametricType(FabParser::ParametricTypeContext*) override;
 	antlrcpp::Any visitSimpleType(FabParser::SimpleTypeContext*) override;
 	antlrcpp::Any visitRecordType(FabParser::RecordTypeContext*) override;
-
-	/*
-	antlrcpp::Any visitTypeDeclaration(FabParser::TypeDeclarationContext*) override;
-	*/
 
 	antlrcpp::Any defaultResult() override { return true; }
 

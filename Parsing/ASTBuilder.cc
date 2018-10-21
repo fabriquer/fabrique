@@ -348,6 +348,12 @@ antlrcpp::Any ASTBuilder::visitRecord(FabParser::RecordContext *ctx)
 	return push<Record>(popChildren<Value>(ctx), source(*ctx));
 }
 
+antlrcpp::Any ASTBuilder::visitTypeDeclaration(FabParser::TypeDeclarationContext *ctx)
+{
+	ParseChildren(ctx);
+	return push<TypeDeclaration>(pop<TypeReference>(ctx->type()), source(*ctx));
+}
+
 
 //
 // Arguments and parameters:
@@ -444,7 +450,10 @@ antlrcpp::Any ASTBuilder::visitParametricType(FabParser::ParametricTypeContext *
 
 antlrcpp::Any ASTBuilder::visitSimpleType(FabParser::SimpleTypeContext *ctx)
 {
-	return push<SimpleTypeReference>(identifier(ctx->Identifier()), source(*ctx));
+	auto *name = ctx->Identifier() ? ctx->Identifier() : ctx->Type();
+	check(name, ctx, "simple type must be Identifier or Type");
+
+	return push<SimpleTypeReference>(identifier(name), source(*ctx));
 }
 
 antlrcpp::Any ASTBuilder::visitRecordType(FabParser::RecordTypeContext *ctx)
