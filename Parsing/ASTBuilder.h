@@ -178,8 +178,8 @@ private:
 		check(top, range, "top of AST-building stack was null");
 
 		check(dynamic_cast<T*>(top.get()), top->source(),
-			"top of stack expected to be " + Demangle(typeid(T))
-			+ " but was a " + TypeName(*top));
+			TypeName(*top) + " is not a " + Demangle(typeid(T))
+			+ " (internal parser error)");
 
 		return std::unique_ptr<T>(dynamic_cast<T*>(top.release()));
 	}
