@@ -79,6 +79,7 @@ public:
 	//
 	antlrcpp::Any visitBuildAction(FabParser::BuildActionContext*) override;
 	antlrcpp::Any visitCompoundExpr(FabParser::CompoundExprContext*) override;
+	antlrcpp::Any visitFieldReference(FabParser::FieldReferenceContext*) override;
 	antlrcpp::Any visitFileList(FabParser::FileListContext*) override;
 	antlrcpp::Any visitList(FabParser::ListContext*) override;
 	antlrcpp::Any visitLiteral(FabParser::LiteralContext*) override;
@@ -103,7 +104,6 @@ public:
 
 	/*
 	antlrcpp::Any visitFieldQuery(FabParser::FieldQueryContext*) override;
-	antlrcpp::Any visitFieldReference(FabParser::FieldReferenceContext*) override;
 	antlrcpp::Any visitTerm(FabParser::TermContext*) override;
 	antlrcpp::Any visitParentheticalExpression(FabParser::ParentheticalExpressionContext*) override;
 

@@ -246,6 +246,16 @@ antlrcpp::Any ASTBuilder::visitCompoundExpr(FabParser::CompoundExprContext *ctx)
 	                                source(*ctx));
 }
 
+antlrcpp::Any ASTBuilder::visitFieldReference(FabParser::FieldReferenceContext *ctx)
+{
+	ParseChildren(ctx);
+
+	auto field = identifier(ctx->field);
+	auto base = pop<Expression>(ctx);
+
+	return push<FieldAccess>(std::move(base), std::move(field));
+}
+
 antlrcpp::Any ASTBuilder::visitFileList(FabParser::FileListContext *ctx)
 {
 	ParseChildren(ctx);
