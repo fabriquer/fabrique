@@ -251,7 +251,7 @@ void RecordTypeReference::PrettyPrint(Bytestream& out, unsigned int indent) cons
 
 		if (i < (length - 1))
 		{
-			out << Bytestream::Operator << ',' << Bytestream::Reset;
+			out << Bytestream::Operator << ", " << Bytestream::Reset;
 		}
 	}
 
