@@ -3,22 +3,22 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: foo:record[foo:string, bar:string] = record
-# CHECK-NEXT: {
-# CHECK-DAG:   foo:string = 'hi';
-# CHECK-DAG:   bar:string = 'world';
+# CHECK: foo = record
+# CHECK: {
+# CHECK:   foo = 'hi';
+# CHECK:   bar = 'world';
 foo = record { foo = 'hi'; bar = 'world'; };
 
-# CHECK: bar:string = foo.bar;
+# CHECK: bar = foo.bar;
 bar = foo.bar;
 
-# CHECK: self_referential:record[def:string, ref:string] = record
+# CHECK: self_referential = record
 # CHECK: {
 self_referential = record
 {
-	# CHECK: def:string = 'Hello, world!';
+	# CHECK: def = 'Hello, world!';
 	def = 'Hello, world!';
 
-	# CHECK: ref:string = def;
+	# CHECK: ref = def;
 	ref = def;
 };
