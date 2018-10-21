@@ -3,11 +3,11 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: foo:type = type[];
-foo = type[];
+# CHECK: foo:type = type int;
+foo:type = type nil;
 
 # CHECK: bar:type = type[x:int, y:string, z:record[wibble:int]];
-bar = type[x:int, y:string, z:record[wibble:int]];
+bar = type record[x:int, y:string, z:record[wibble:int]];
 
 # CHECK: my_foo:record = record
 # CHECK-NEXT: {
