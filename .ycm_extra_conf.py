@@ -12,6 +12,7 @@ def FlagsForFile(filename, **kwargs):
 
             # Treat vendor headers as system headers (ignore warnings)
             '-isystem', '%s/vendor' % srcroot,
+            '-isystem', '%s/vendor/antlr-cxx-runtime' % srcroot,
 
             # Provide lots and lots of warnings!
             '-Weverything',
