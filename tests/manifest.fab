@@ -1,6 +1,4 @@
 #
-# Generated at Sun Oct 21 17:19:55 EDT 2018 by regenerate-manifest.sh
-#
 # WARNING: Do not modify by hand!
 #          Re-run ./regenerate-manifest.sh when adding, removing or renaming tests.
 #
@@ -120,7 +118,6 @@ all_files = files(
 ./Parsing/lists.fab
 ./Parsing/literals.fab
 ./Parsing/logical-operators.fab
-./Parsing/modules.fab
 ./Parsing/record-instantiation.fab
 ./Parsing/record-nesting.fab
 ./Parsing/record-types.fab

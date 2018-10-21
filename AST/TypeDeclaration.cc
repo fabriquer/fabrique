@@ -3,7 +3,7 @@
  * Definition of @ref fabrique::ast::TypeDeclaration.
  */
 /*
- * Copyright (c) 2015 Jonathan Anderson
+ * Copyright (c) 2015, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -37,47 +37,22 @@
 #include "AST/Visitor.h"
 #include "DAG/TypeReference.h"
 #include "Support/Bytestream.h"
+#include "Support/exceptions.h"
 #include "Types/UserType.h"
 
 using namespace fabrique;
 using namespace fabrique::ast;
 
 
-#if 0
-TypeDeclaration::TypeDeclaration(const UserType& t, const SourceRange& loc)
-	: Expression(t, loc), declaredType_(t)
+TypeDeclaration::TypeDeclaration(UniqPtr<TypeReference> t, SourceRange src)
+	: Expression(src), declaredType_(std::move(t))
 {
 }
 
 void TypeDeclaration::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
-	out
-		<< Bytestream::Definition << "type"
-		<< Bytestream::Operator << '['
-		;
-
-	auto fields = declaredType_.userType().fields();
-	for (auto i = fields.begin(); i != fields.end(); )
-	{
-		out
-			<< Bytestream::Definition << i->first
-			<< Bytestream::Operator << ':'
-			;
-
-		i->second.PrettyPrint(out, indent);
-
-		i++;
-		if (i != fields.end())
-			out
-				<< Bytestream::Operator << ", "
-				<< Bytestream::Reset
-				;
-	}
-
-	out
-		<< Bytestream::Operator << ']'
-		<< Bytestream::Reset
-		;
+	out << Bytestream::Definition << "type " << Bytestream::Reset;
+	declaredType_->PrettyPrint(out, indent + 1);
 }
 
 void TypeDeclaration::Accept(Visitor& v) const
@@ -86,9 +61,11 @@ void TypeDeclaration::Accept(Visitor& v) const
 	v.Leave(*this);
 }
 
-dag::ValuePtr TypeDeclaration::evaluate(EvalContext&) const
+dag::ValuePtr TypeDeclaration::evaluate(EvalContext &ctx) const
 {
-	return dag::ValuePtr(
-		dag::TypeReference::Create(declaredType_, type(), source()));
+	auto t = declaredType_->evaluate(ctx);
+	auto typeRef = std::dynamic_pointer_cast<dag::TypeReference>(t);
+	SemaCheck(typeRef, declaredType_->source(), "declared type not a TypeReference");
+
+	return typeRef;
 }
-#endif
