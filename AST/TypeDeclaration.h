@@ -1,9 +1,6 @@
-/**
- * @file AST/TypeDeclaration.h
- * Declaration of @ref fabrique::ast::TypeDeclaration.
- */
+//! @file AST/TypeDeclaration.h    Declaration of @ref fabrique::ast::TypeDeclaration.
 /*
- * Copyright (c) 2015 Jonathan Anderson
+ * Copyright (c) 2015, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -36,11 +33,9 @@
 #define TYPE_DECLARATION_H
 
 #include "AST/Expression.h"
+#include "AST/TypeReference.h"
 
 namespace fabrique {
-
-class UserType;
-
 namespace ast {
 
 /**
@@ -49,11 +44,7 @@ namespace ast {
 class TypeDeclaration : public Expression
 {
 public:
-	/**
-	 * @param   declared      the type that we are declaring
-	 * @param   src           location of the declaration
-	 */
-	TypeDeclaration(const UserType& declared, const SourceRange& src);
+	TypeDeclaration(UniqPtr<TypeReference> type, SourceRange);
 
 	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 	virtual void Accept(Visitor&) const override;
@@ -61,7 +52,7 @@ public:
 	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
 private:
-	const UserType& declaredType_;
+	const UniqPtr<TypeReference> declaredType_;
 };
 
 } // namespace ast
