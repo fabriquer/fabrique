@@ -104,13 +104,7 @@ public:
 	antlrcpp::Any visitRecordType(FabParser::RecordTypeContext*) override;
 
 	/*
-	antlrcpp::Any visitTerm(FabParser::TermContext*) override;
-	antlrcpp::Any visitParentheticalExpression(FabParser::ParentheticalExpressionContext*) override;
-
 	antlrcpp::Any visitTypeDeclaration(FabParser::TypeDeclarationContext*) override;
-	antlrcpp::Any visitPositionalArguments(FabParser::PositionalArgumentsContext*) override;
-	antlrcpp::Any visitType(FabParser::TypeContext*) override;
-	antlrcpp::Any visitType_list(FabParser::Type_listContext*) override;
 	*/
 
 	antlrcpp::Any defaultResult() override { return true; }
