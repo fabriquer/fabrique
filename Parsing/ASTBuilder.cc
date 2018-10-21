@@ -320,6 +320,12 @@ antlrcpp::Any ASTBuilder::visitNameReference(FabParser::NameReferenceContext *ct
 	return push<NameReference>(std::move(id));
 }
 
+antlrcpp::Any ASTBuilder::visitRecord(FabParser::RecordContext *ctx)
+{
+	ParseChildren(ctx);
+	return push<Record>(popChildren<Value>(ctx), source(*ctx));
+}
+
 
 //
 // Arguments and parameters:
@@ -419,9 +425,25 @@ antlrcpp::Any ASTBuilder::visitSimpleType(FabParser::SimpleTypeContext *ctx)
 	return push<SimpleTypeReference>(identifier(ctx->Identifier()), source(*ctx));
 }
 
-antlrcpp::Any ASTBuilder::visitRecordType(FabParser::RecordTypeContext*)
+antlrcpp::Any ASTBuilder::visitRecordType(FabParser::RecordTypeContext *ctx)
 {
-	return false;
+	ParseChildren(ctx);
+
+	// Parse field types in reverse order since they're stored on a stack.
+	auto fieldTypes = ctx->fieldType();
+	std::reverse(fieldTypes.begin(), fieldTypes.end());
+
+	NamedPtrVec<TypeReference> fields;
+	for (auto *f : fieldTypes)
+	{
+		auto name = identifier(f->Identifier());
+		fields.emplace_back(std::move(name), pop<TypeReference>(f->type()));
+	}
+
+	// Put the field types back in the correct order
+	std::reverse(fields.begin(), fields.end());
+
+	return push<RecordTypeReference>(std::move(fields), source(*ctx));
 }
 
 

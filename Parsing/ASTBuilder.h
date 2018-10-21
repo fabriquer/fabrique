@@ -83,6 +83,7 @@ public:
 	antlrcpp::Any visitList(FabParser::ListContext*) override;
 	antlrcpp::Any visitLiteral(FabParser::LiteralContext*) override;
 	antlrcpp::Any visitNameReference(FabParser::NameReferenceContext*) override;
+	antlrcpp::Any visitRecord(FabParser::RecordContext*) override;
 
 	//
 	// Arguments and parameters:
