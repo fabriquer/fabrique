@@ -143,21 +143,6 @@ antlrcpp::Any ASTBuilder::visitExpression(FabParser::ExpressionContext *ctx)
 	return push<BinaryOperation>(std::move(lhs), std::move(rhs), op, source(*ctx));
 }
 
-antlrcpp::Any ASTBuilder::visitCall(FabParser::CallContext *ctx)
-{
-	ParseChildren(ctx);
-
-	UniqPtr<Arguments> args;
-	if (auto *a = ctx->arguments())
-	{
-		args = pop<Arguments>(a);
-	}
-
-	auto target = pop<Expression>(ctx->target);
-
-	return push<Call>(std::move(target), std::move(args), source(*ctx));
-}
-
 antlrcpp::Any ASTBuilder::visitConditional(FabParser::ConditionalContext *ctx)
 {
 	ParseChildren(ctx);
@@ -223,6 +208,29 @@ antlrcpp::Any ASTBuilder::visitUnaryOperation(FabParser::UnaryOperationContext *
 // Terms:
 //
 
+antlrcpp::Any ASTBuilder::visitTerm(FabParser::TermContext *ctx)
+{
+	ParseChildren(ctx);
+
+	if (auto *target = ctx->callTarget)
+	{
+		UniqPtr<Arguments> args;
+		if (auto *a = ctx->arguments())
+		{
+			args = pop<Arguments>(a);
+		}
+
+		return push<Call>(pop<Expression>(target), std::move(args), source(*ctx));
+	}
+	else if (auto *base = ctx->base)
+	{
+		auto field = identifier(ctx->field);
+		return push<FieldAccess>(pop<Expression>(base), std::move(field));
+	}
+
+	return true;
+}
+
 antlrcpp::Any ASTBuilder::visitBuildAction(FabParser::BuildActionContext *ctx)
 {
 	ParseChildren(ctx);
@@ -256,16 +264,6 @@ antlrcpp::Any ASTBuilder::visitFieldQuery(FabParser::FieldQueryContext *ctx)
 
 	return push<FieldQuery>(std::move(base), std::move(field),
 	                        std::move(defaultValue), source(*ctx));
-}
-
-antlrcpp::Any ASTBuilder::visitFieldReference(FabParser::FieldReferenceContext *ctx)
-{
-	ParseChildren(ctx);
-
-	auto field = identifier(ctx->field);
-	auto base = pop<Expression>(ctx);
-
-	return push<FieldAccess>(std::move(base), std::move(field));
 }
 
 antlrcpp::Any ASTBuilder::visitFileList(FabParser::FileListContext *ctx)
