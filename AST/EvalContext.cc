@@ -69,6 +69,11 @@ using std::string;
 using std::vector;
 
 
+EvalContext::EvalContext(TypeContext& ctx, string buildroot, string srcroot)
+	: ctx_(ctx), builder_(*this), buildroot_(buildroot), srcroot_(srcroot)
+{
+}
+
 std::vector<DAG::BuildTarget> EvalContext::Evaluate(const UniqPtrVec<ast::Value>& values)
 {
 	auto scope(EnterScope("top level scope"));

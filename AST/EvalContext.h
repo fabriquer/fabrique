@@ -1,6 +1,6 @@
 /** @file AST/EvalContext.h    Declaration of @ref fabrique::ast::EvalContext. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -70,12 +70,7 @@ class Value;
 class EvalContext : public dag::DAGBuilder::Context
 {
 public:
-	EvalContext(TypeContext& ctx, std::string buildroot, std::string srcroot)
-		: ctx_(ctx), builder_(*this),
-		  buildroot_(buildroot), srcroot_(srcroot)
-	{
-	}
-
+	EvalContext(TypeContext& ctx, std::string buildroot, std::string srcroot);
 	~EvalContext() override {}
 
 	std::vector<dag::DAG::BuildTarget> Evaluate(const UniqPtrVec<Value>&);
