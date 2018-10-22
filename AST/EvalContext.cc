@@ -72,11 +72,12 @@ using std::vector;
 EvalContext::EvalContext(TypeContext& ctx, string buildroot, string srcroot)
 	: ctx_(ctx), builder_(*this), buildroot_(buildroot), srcroot_(srcroot)
 {
+	// Create top-level scope
+	scopes_.emplace_back();
 }
 
 std::vector<DAG::BuildTarget> EvalContext::Evaluate(const UniqPtrVec<ast::Value>& values)
 {
-	auto scope(EnterScope("top level scope"));
 	vector<DAG::BuildTarget> topLevelTargets;
 
 	for (const UniqPtr<ast::Value>& v : values)
