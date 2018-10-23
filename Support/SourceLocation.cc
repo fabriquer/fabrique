@@ -301,7 +301,7 @@ Bytestream& SourceRange::PrintSource(Bytestream& out, SourceLocation caret,
 			caret ? (caret.column - beginColumn) : 0;
 
 		const size_t postCaretHighlight =
-			endColumn - (caret ? caret.column : beginColumn);
+			endColumn - (caret ? caret.column + 1 : beginColumn);
 
 		assert(preCaretHighlight >= 0);
 		assert(postCaretHighlight >= 0);
