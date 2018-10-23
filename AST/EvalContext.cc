@@ -314,7 +314,7 @@ ValuePtr EvalContext::Lookup(const string& name)
 		auto value = scope.find(name);
 		if (value != scope.end())
 		{
-			assert(value->second);
+			FAB_ASSERT(value->second, "value-less value found in scope");
 
 			dbg
 				<< Bytestream::Action << "  found "
