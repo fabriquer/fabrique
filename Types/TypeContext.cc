@@ -1,6 +1,6 @@
 /** @file TypeContext.cc    Definition of fabrique::TypeContext. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -37,7 +37,6 @@
 #include "Types/RecordType.h"
 #include "Types/SequenceType.h"
 #include "Types/StringType.h"
-#include "Types/UserType.h"
 #include "Support/Bytestream.h"
 #include "Support/SourceLocation.h"
 #include "TypeContext.h"

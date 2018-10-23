@@ -11,5 +11,4 @@ sources = files(
 	TypeContext.cc
 	TypeError.cc
 	Typed.cc
-	UserType.cc
 );

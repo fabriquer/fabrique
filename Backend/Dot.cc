@@ -1,6 +1,6 @@
 /** @file Backend/Dot.cc    Definition of fabrique::backend::DotBackend. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -44,7 +44,6 @@
 #include "Support/Join.h"
 
 #include "Types/FileType.h"
-#include "Types/UserType.h"
 
 #include <cassert>
 

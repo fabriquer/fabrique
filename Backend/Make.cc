@@ -1,6 +1,6 @@
 /** @file Backend/Make.cc    Definition of fabrique::backend::MakeBackend. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -44,8 +44,6 @@
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
 #include "Support/os.h"
-
-#include "Types/UserType.h"
 
 #include <cassert>
 #include <set>
