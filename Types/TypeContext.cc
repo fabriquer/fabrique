@@ -198,10 +198,11 @@ TypeContext::recordType(const Type::NamedTypeVec& fields)
 	return *t;
 }
 
-const UserType&
-TypeContext::userType(const Type& t)
+const Type&
+TypeContext::typeType()
 {
-	return *new UserType(t);
+	static const Type& t = Register(new Type("type", PtrVec<Type>(), *this));
+	return t;
 }
 
 const Type&
