@@ -3,8 +3,8 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK-DAG: foo:type = type[]
-foo = type[];
+# CHECK-DAG: foo:type = int
+foo = type int;
 
-# CHECK-DAG: bar:type = type[x:int, y:string, z:record[wibble:int]]
-bar = type[x:int, y:string, z:record[wibble:int]];
+# CHECK-DAG: bar:type = record[x:int, y:string, z:record[wibble:int]]
+bar = type record[x:int, y:string, z:record[wibble:int]];
