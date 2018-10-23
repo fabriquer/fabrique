@@ -89,9 +89,10 @@ dag::ValuePtr Call::evaluate(EvalContext& ctx) const
 	dbg << Bytestream::Action << "calling " << *target_ << "\n";
 
 	dag::ValuePtr targetValue = target_->evaluate(ctx);
+	SemaCheck(targetValue, target_->source(), "call target does not exist");
 
 	auto target = dynamic_pointer_cast<dag::Callable>(targetValue);
-	assert(target);
+	SemaCheck(target, targetValue->source(), "call target not callable");
 
 	//
 	// Check argument legality.
