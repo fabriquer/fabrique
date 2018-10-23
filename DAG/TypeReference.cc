@@ -67,6 +67,6 @@ void TypeReference::Accept(Visitor& v) const
 
 
 TypeReference::TypeReference(const Type& t, SourceRange src)
-	: Value(t.context().find("type"), src), referencedType_(t)
+	: Value(t.context().typeType(), src), referencedType_(t)
 {
 }

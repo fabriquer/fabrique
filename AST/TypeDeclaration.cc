@@ -38,7 +38,6 @@
 #include "DAG/TypeReference.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
-#include "Types/UserType.h"
 
 using namespace fabrique;
 using namespace fabrique::ast;

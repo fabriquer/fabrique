@@ -1,6 +1,6 @@
 /** @file Backend/Ninja.cc    Definition of fabrique::backend::NinjaBackend. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -44,8 +44,6 @@
 
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
-
-#include "Types/UserType.h"
 
 #include <cassert>
 

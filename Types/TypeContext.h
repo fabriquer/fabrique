@@ -1,6 +1,6 @@
 /** @file TypeContext.h    Declaration of fabrique::TypeContext. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -98,7 +98,7 @@ public:
 	const Type& stringType();
 
 	//! A type that represents a type.
-	const UserType& userType(const Type&);
+	const Type& typeType();
 
 
 	/**
