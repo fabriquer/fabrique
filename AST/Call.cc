@@ -47,7 +47,6 @@
 
 using namespace fabrique;
 using namespace fabrique::ast;
-using std::dynamic_pointer_cast;
 using std::shared_ptr;
 
 
@@ -88,11 +87,7 @@ dag::ValuePtr Call::evaluate(EvalContext& ctx) const
 	Bytestream& dbg = Bytestream::Debug("eval.call");
 	dbg << Bytestream::Action << "calling " << *target_ << "\n";
 
-	dag::ValuePtr targetValue = target_->evaluate(ctx);
-	SemaCheck(targetValue, target_->source(), "call target does not exist");
-
-	auto target = dynamic_pointer_cast<dag::Callable>(targetValue);
-	SemaCheck(target, targetValue->source(), "call target not callable");
+	auto target = target_->evaluateAs<dag::Callable>(ctx);
 
 	//
 	// Check argument legality.

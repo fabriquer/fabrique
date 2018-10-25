@@ -35,6 +35,8 @@
 #include "ADT/PtrVec.h"
 #include "AST/Node.h"
 #include "DAG/Value.h"
+#include "Support/ABI.h"
+#include "Support/exceptions.h"
 
 namespace fabrique {
 
@@ -51,6 +53,18 @@ public:
 	virtual ~Expression() override;
 
 	virtual dag::ValuePtr evaluate(EvalContext&) const  = 0;
+
+	template<class T>
+	std::shared_ptr<T> evaluateAs(EvalContext &ctx)
+	{
+		auto plainValue = evaluate(ctx);
+		SemaCheck(plainValue, source(), "failed to evaluate");
+
+		auto asSubtype = std::dynamic_pointer_cast<T>(plainValue);
+		SemaCheck(asSubtype, plainValue->source(), "not a " + Demangle(typeid(T)));
+
+		return asSubtype;
+	}
 
 protected:
 	Expression(const SourceRange& src)
