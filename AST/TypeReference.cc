@@ -36,13 +36,13 @@
 #include "Parsing/ErrorReporter.h"
 #include "Support/ABI.h"
 #include "Support/Bytestream.h"
+#include "Support/exceptions.h"
 #include "Types/FunctionType.h"
 #include "Types/RecordType.h"
 #include "Types/Type.h"
 #include "Types/TypeContext.h"
 
 using namespace fabrique::ast;
-using std::dynamic_pointer_cast;
 using std::string;
 
 
@@ -88,15 +88,15 @@ void SimpleTypeReference::PrettyPrint(Bytestream& out, unsigned int indent) cons
 
 fabrique::dag::ValuePtr ParametricTypeReference::evaluate(EvalContext& ctx) const
 {
-	dag::ValuePtr base = base_->evaluate(ctx);
-	auto baseRef = dynamic_pointer_cast<dag::TypeReference>(base);
-	const string baseName = baseRef->referencedType().name();
+	auto baseTypeRef = base_->evaluateAs<dag::TypeReference>(ctx);
+	const string baseName = baseTypeRef->referencedType().name();
 
 	PtrVec<Type> paramTypes;
 	assert(not parameters_.empty());
 	for (auto &p : parameters_)
 	{
-		paramTypes.emplace_back(&p->evaluate(ctx)->type());
+		auto paramTypeRef = p->evaluateAs<dag::TypeReference>(ctx);
+		paramTypes.emplace_back(&paramTypeRef->referencedType());
 	}
 
 	return dag::TypeReference::Create(
@@ -146,14 +146,12 @@ fabrique::dag::ValuePtr FunctionTypeReference::evaluate(EvalContext& ctx) const
 	PtrVec<Type> paramTypes;
 	for (auto &p : parameters_)
 	{
-		auto tr = dynamic_pointer_cast<dag::TypeReference>(p->evaluate(ctx));
-		assert(tr);
-		paramTypes.emplace_back(&tr->referencedType());
+		auto paramTypeRef = p->evaluateAs<dag::TypeReference>(ctx);
+		paramTypes.emplace_back(&paramTypeRef->referencedType());
 	}
 
-	auto tr = dynamic_pointer_cast<dag::TypeReference>(resultType_->evaluate(ctx));
-	assert(tr);
-	const Type& resultType = tr->referencedType();
+	auto resultTypeRef = resultType_->evaluateAs<dag::TypeReference>(ctx);
+	const Type& resultType = resultTypeRef->referencedType();
 
 	return dag::TypeReference::Create(
 		ctx.types().functionType(paramTypes, resultType),
@@ -206,11 +204,9 @@ fabrique::dag::ValuePtr RecordTypeReference::evaluate(EvalContext& ctx) const
 	for (auto& f : fieldTypes_)
 	{
 		const string& name = f.first->name();
+		auto typeRef = f.second->evaluateAs<dag::TypeReference>(ctx);
 
-		dag::ValuePtr v = f.second->evaluate(ctx);
-		auto tr = dynamic_pointer_cast<dag::TypeReference>(v);
-
-		fieldTypes.emplace_back(name, tr->referencedType());
+		fieldTypes.emplace_back(name, typeRef->referencedType());
 	}
 
 	return dag::TypeReference::Create(ctx.types().recordType(fieldTypes), source());

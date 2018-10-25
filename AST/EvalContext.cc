@@ -63,7 +63,6 @@ using fabrique::dag::DAG;
 using fabrique::dag::ValueMap;
 using fabrique::dag::ValuePtr;
 
-using std::dynamic_pointer_cast;
 using std::shared_ptr;
 using std::string;
 using std::vector;
