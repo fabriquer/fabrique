@@ -70,21 +70,16 @@ namespace {
 class ImmutableDAG : public DAG
 {
 public:
-	ImmutableDAG(string buildroot, string srcroot,
-	             const SharedPtrVec<File>& files,
+	ImmutableDAG(const SharedPtrVec<File>& files,
 	             const SharedPtrVec<Build>& builds,
 	             const SharedPtrMap<Rule>& rules,
 	             const SharedPtrMap<Value>& variables,
 	             const SharedPtrMap<Value>& targets,
 	             vector<BuildTarget>& topLevelTargets)
-		: buildroot_(buildroot), srcroot_(srcroot),
-		  files_(files), builds_(builds), rules_(rules), vars_(variables),
+		: files_(files), builds_(builds), rules_(rules), vars_(variables),
 		  targets_(targets), topLevelTargets_(topLevelTargets)
 	{
 	}
-
-	const string& buildroot() const override { return buildroot_; }
-	const string& srcroot() const override { return srcroot_; }
 
 	const SharedPtrVec<File>& files() const override { return files_; }
 	const SharedPtrVec<Build>& builds() const override { return builds_; }
@@ -101,9 +96,6 @@ public:
 	}
 
 private:
-	const string buildroot_;
-	const string srcroot_;
-
 	const SharedPtrVec<File> files_;
 	const SharedPtrVec<Build> builds_;
 	const SharedPtrMap<Rule> rules_;
@@ -238,8 +230,8 @@ UniqPtr<DAG> DAGBuilder::dag(vector<string> topLevelTargets) const
 	}
 
 
-	return UniqPtr<DAG>(new ImmutableDAG(ctx_.buildroot(), ctx_.srcroot(),
-		files, builds, rules, variables_, targets_, top));
+	return UniqPtr<DAG>(
+		new ImmutableDAG(files, builds, rules, variables_, targets_, top));
 }
 
 

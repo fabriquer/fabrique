@@ -70,7 +70,7 @@ class Value;
 class EvalContext : public dag::DAGBuilder::Context
 {
 public:
-	EvalContext(TypeContext& ctx, std::string buildroot, std::string srcroot);
+	EvalContext(TypeContext& ctx);
 	~EvalContext() override {}
 
 	std::vector<dag::DAG::BuildTarget> Evaluate(const UniqPtrVec<Value>&);
@@ -158,9 +158,6 @@ public:
 
 	dag::DAGBuilder& builder() { return builder_; }
 
-	virtual std::string buildroot() const override { return buildroot_; }
-	virtual std::string srcroot() const override { return srcroot_; }
-
 	virtual std::string currentValueName() const override;
 	virtual TypeContext& types() const override { return ctx_; }
 
@@ -211,9 +208,6 @@ private:
 	std::deque<std::string> currentValueName_;
 
 	dag::DAGBuilder builder_;
-
-	const std::string buildroot_;
-	const std::string srcroot_;
 };
 
 } // namespace dag

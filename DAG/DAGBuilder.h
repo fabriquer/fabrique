@@ -65,9 +65,6 @@ public:
 		public:
 		virtual ~Context();
 
-		virtual std::string buildroot() const = 0;
-		virtual std::string srcroot() const = 0;
-
 		virtual std::string currentValueName() const = 0;
 		virtual TypeContext& types() const = 0;
 	};
