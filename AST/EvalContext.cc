@@ -69,8 +69,8 @@ using std::string;
 using std::vector;
 
 
-EvalContext::EvalContext(TypeContext& ctx, string buildroot, string srcroot)
-	: ctx_(ctx), builder_(*this), buildroot_(buildroot), srcroot_(srcroot)
+EvalContext::EvalContext(TypeContext& ctx)
+	: ctx_(ctx), builder_(*this)
 {
 	// Create top-level scope
 	scopes_.emplace_back();

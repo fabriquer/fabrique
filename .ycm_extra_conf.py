@@ -5,6 +5,8 @@ srcroot = os.path.abspath(os.path.dirname(__file__))
 def FlagsForFile(filename, **kwargs):
     return {
         'flags': [
+            '-x', 'c++',
+
             # Include files rooted in the current source tree
             '-I%s' % srcroot,
             '-I%s/build' % srcroot,

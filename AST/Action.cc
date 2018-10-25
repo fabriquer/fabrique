@@ -166,9 +166,11 @@ dag::ValuePtr Action::evaluate(EvalContext& ctx) const
 	SharedPtrVec<dag::Parameter> parameters;
 	for (const UniqPtr<Parameter>& p : this->parameters())
 	{
-		std::shared_ptr<dag::Parameter> param =
-			std::dynamic_pointer_cast<dag::Parameter>(
-				p->evaluate(ctx));
+		auto v = p->evaluate(ctx);
+		SemaCheck(v, p->source(), "invalid value");
+
+		auto param = std::dynamic_pointer_cast<dag::Parameter>(v);
+		SemaCheck(param, v->source(), "not a parameter");
 
 		// Ensure that files are properly tagged as input or output.
 		FileType::CheckFileTags(param->type(), p->source());
