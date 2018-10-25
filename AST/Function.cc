@@ -47,7 +47,6 @@
 
 using namespace fabrique;
 using namespace fabrique::ast;
-using std::dynamic_pointer_cast;
 
 
 Function::Function(UniqPtrVec<Parameter> params, UniqPtr<TypeReference> resultType,
@@ -116,9 +115,7 @@ dag::ValuePtr Function::evaluate(EvalContext& ctx) const
 		paramTypes.push_back(&parameters.back()->type());
 	}
 
-	auto ret = dynamic_pointer_cast<dag::TypeReference>(resultType_->evaluate(ctx));
-	SemaCheck(ret, resultType_->source(), "resultType_ not a TypeReference");
-
+	auto ret = resultType_->evaluateAs<dag::TypeReference>(ctx);
 	auto &type = ctx.types().functionType(paramTypes, ret->referencedType());
 
 	dag::Function::Evaluator eval =

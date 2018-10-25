@@ -126,9 +126,7 @@ dag::ValuePtr FileList::evaluate(EvalContext& ctx) const
 
 	for (const auto &file : files_)
 	{
-		auto v = file->evaluate(ctx);
-		files.push_back(std::dynamic_pointer_cast<dag::File>(v));
-		FAB_ASSERT(files.back(), "file value is not a dag::File");
+		files.push_back(file->evaluateAs<dag::File>(ctx));
 	}
 
 	scope.leave();

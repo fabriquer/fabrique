@@ -80,9 +80,7 @@ void FieldQuery::Accept(Visitor& v) const
 
 dag::ValuePtr FieldQuery::evaluate(EvalContext& ctx) const
 {
-	std::shared_ptr<dag::Record> base =
-		std::dynamic_pointer_cast<dag::Record>(base_->evaluate(ctx));
-	assert(base);
+	auto base = base_->evaluateAs<dag::Record>(ctx);
 
 	if (auto result = base->field(field_->name()))
 	{

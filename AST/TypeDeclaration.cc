@@ -62,9 +62,5 @@ void TypeDeclaration::Accept(Visitor& v) const
 
 dag::ValuePtr TypeDeclaration::evaluate(EvalContext &ctx) const
 {
-	auto t = declaredType_->evaluate(ctx);
-	auto typeRef = std::dynamic_pointer_cast<dag::TypeReference>(t);
-	SemaCheck(typeRef, declaredType_->source(), "declared type not a TypeReference");
-
-	return typeRef;
+	return declaredType_->evaluateAs<dag::TypeReference>(ctx);
 }

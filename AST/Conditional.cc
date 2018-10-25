@@ -78,12 +78,8 @@ void Conditional::Accept(Visitor& v) const
 
 dag::ValuePtr Conditional::evaluate(EvalContext& ctx) const
 {
-	auto cond = condition_->evaluate(ctx);
-	auto boolean = std::dynamic_pointer_cast<dag::Boolean>(cond);
-
-	if (not boolean)
-		throw WrongTypeException("bool", cond->type(), source());
+	auto condition = condition_->evaluateAs<dag::Boolean>(ctx);
 
 	// Evaluate either the "then" or the "else" clause.
-	return (boolean->value() ? thenClause_ : elseClause_)->evaluate(ctx);
+	return (condition->value() ? thenClause_ : elseClause_)->evaluate(ctx);
 }

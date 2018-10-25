@@ -121,11 +121,8 @@ dag::ValuePtr Value::evaluate(EvalContext& ctx) const
 
 	if (explicitType_)
 	{
-		auto t = explicitType_->evaluate(ctx);
-		auto ref = std::dynamic_pointer_cast<dag::TypeReference>(t);
-		assert(ref);
-
-		val->type().CheckSubtype(ref->referencedType(), val->source());
+		auto typeRef = explicitType_->evaluateAs<dag::TypeReference>(ctx);
+		val->type().CheckSubtype(typeRef->referencedType(), val->source());
 	}
 
 	ctx.Define(valueName, val);
