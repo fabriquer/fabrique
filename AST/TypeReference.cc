@@ -36,6 +36,7 @@
 #include "Parsing/ErrorReporter.h"
 #include "Support/ABI.h"
 #include "Support/Bytestream.h"
+#include "Support/exceptions.h"
 #include "Types/FunctionType.h"
 #include "Types/RecordType.h"
 #include "Types/Type.h"
@@ -89,14 +90,24 @@ void SimpleTypeReference::PrettyPrint(Bytestream& out, unsigned int indent) cons
 fabrique::dag::ValuePtr ParametricTypeReference::evaluate(EvalContext& ctx) const
 {
 	dag::ValuePtr base = base_->evaluate(ctx);
+	SemaCheck(base, base_->source(), "failed to evaluate type");
+
 	auto baseRef = dynamic_pointer_cast<dag::TypeReference>(base);
+	SemaCheck(baseRef, base->source(), "not a type reference");
+
 	const string baseName = baseRef->referencedType().name();
 
 	PtrVec<Type> paramTypes;
 	assert(not parameters_.empty());
 	for (auto &p : parameters_)
 	{
-		paramTypes.emplace_back(&p->evaluate(ctx)->type());
+		auto v = p->evaluate(ctx);
+		SemaCheck(v, p->source(), "failed to evaluate type parameter");
+
+		auto pt = dynamic_pointer_cast<dag::TypeReference>(v);
+		SemaCheck(pt, v->source(), "type parameter not a type reference");
+
+		paramTypes.emplace_back(&pt->referencedType());
 	}
 
 	return dag::TypeReference::Create(
