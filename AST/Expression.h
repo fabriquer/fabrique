@@ -57,11 +57,15 @@ public:
 	template<class T>
 	std::shared_ptr<T> evaluateAs(EvalContext &ctx)
 	{
+		const std::string typeName = TypeName(*this);
+
 		auto plainValue = evaluate(ctx);
-		SemaCheck(plainValue, source(), "failed to evaluate");
+		SemaCheck(plainValue, source(), "error evaluating " + typeName);
 
 		auto asSubtype = std::dynamic_pointer_cast<T>(plainValue);
-		SemaCheck(asSubtype, plainValue->source(), "not a " + Demangle(typeid(T)));
+		SemaCheck(asSubtype, plainValue->source(),
+			TypeName(*plainValue) + " (evaluated from + " + typeName
+			+ ") is not a " + Demangle(typeid(T)));
 
 		return asSubtype;
 	}
