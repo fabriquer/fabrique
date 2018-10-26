@@ -87,7 +87,12 @@ dag::ValuePtr Record::evaluate(EvalContext& ctx) const
 
 	dag::ValueMap fields;
 	for (auto& field : fields_)
-		fields[field->name().name()] = field->evaluate(ctx);
+	{
+		auto &name = field->name();
+		SemaCheck(name, field->source(), "record fields must have names");
+
+		fields[name->name()] = field->evaluate(ctx);
+	}
 
 	return ctx.builder().Record(fields, source());
 }

@@ -99,21 +99,22 @@ void Value::Accept(Visitor& v) const
 
 dag::ValuePtr Value::evaluate(EvalContext& ctx) const
 {
-	const string name(name_->name());
 	Bytestream& dbg = Bytestream::Debug("eval.value");
 	dbg
 		<< Bytestream::Action << "Evaluating "
-		<< *name_
+		<< *this
 		<< Bytestream::Operator << "..."
 		<< "\n"
 		;
 
+	const string name = name_ ? name_->name() : "";
 	auto valueName(ctx.evaluating(name));
+
 	dag::ValuePtr val(value_->evaluate(ctx));
 	assert(val);
 
 	dbg
-		<< *name_
+		<< name
 		<< Bytestream::Operator << " == "
 		<< *val
 		<< "\n"
@@ -125,7 +126,10 @@ dag::ValuePtr Value::evaluate(EvalContext& ctx) const
 		val->type().CheckSubtype(typeRef->referencedType(), val->source());
 	}
 
-	ctx.Define(valueName, val);
+	if (name != "")
+	{
+		ctx.Define(valueName, val);
+	}
 
 	return val;
 }

@@ -80,8 +80,12 @@ std::vector<DAG::BuildTarget> EvalContext::Evaluate(const UniqPtrVec<ast::Value>
 	vector<DAG::BuildTarget> topLevelTargets;
 
 	for (const UniqPtr<ast::Value>& v : values)
-		topLevelTargets.emplace_back(
-			v->name().name(), v->evaluate(*this));
+	{
+		if (auto &name = v->name())
+		{
+			topLevelTargets.emplace_back(name->name(), v->evaluate(*this));
+		}
+	}
 
 	return topLevelTargets;
 }
@@ -178,12 +182,6 @@ EvalContext::ScopedValueName::ScopedValueName(ScopedValueName&& other)
 }
 
 EvalContext::ScopedValueName::~ScopedValueName()
-{
-	if (not name_.empty())
-		done();
-}
-
-void EvalContext::ScopedValueName::done()
 {
 	string poppedName = stack_.PopValueName();
 	assert(poppedName == name_);

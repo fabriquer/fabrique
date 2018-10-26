@@ -151,8 +151,11 @@ int main(int argc, char *argv[]) {
 		vector<string> targets;
 		for (const auto& v : values)
 		{
-			targets.push_back(v->name().name());
 			dagValues.emplace_back(v->evaluate(ctx));
+			if (auto &name = v->name())
+			{
+				targets.push_back(name->name());
+			}
 		}
 
 		// Add regeneration (if Fabrique files change):

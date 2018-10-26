@@ -9,8 +9,8 @@ foo = 'Hello, world!';
 # CHECK-DAG: bar:int = 42
 bar = 42;
 
-# CHECK-DAG: __unnamed{{[0-9]+}}:string = 'Hello, world!'
+# CHECK-NOT:'Hello, world!'
 foo;
 
-# CHECK-DAG: __unnamed{{[0-9]+}}:int = 42
+# CHECK-NOT: 42
 bar;
