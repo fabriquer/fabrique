@@ -48,7 +48,7 @@ class Value : public Expression
 public:
 	Value(UniqPtr<Identifier>, UniqPtr<TypeReference>, UniqPtr<Expression>);
 
-	const Identifier& name() const { return *name_; }
+	const UniqPtr<Identifier>& name() const { return name_; }
 	const Expression& value() const { return *value_; }
 
 	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
