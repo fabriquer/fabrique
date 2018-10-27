@@ -5,7 +5,8 @@
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -383,5 +384,5 @@ ValuePtr EvalContext::Function(const dag::Function::Evaluator fn,
                                const SharedPtrVec<dag::Parameter>& params,
                                const FunctionType& type, SourceRange source)
 {
-	return builder_.Function(fn, CopyCurrentScope(), params, type, source);
+	return builder_.Function(fn, params, type, source);
 }

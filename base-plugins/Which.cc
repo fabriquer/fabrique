@@ -1,7 +1,12 @@
 /** @file plugins/Which.cc   Definition of @ref fabrique::plugins::Which. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
+ *
+ * This software was developed by SRI International and the University of
+ * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -87,12 +92,10 @@ class Which : public plugin::Plugin
 	{
 	}
 
-	ValuePtr FindExecutable(const ValueMap& /*scope*/, const ValueMap& args,
-	                        vector<string> extraPaths, DAGBuilder& builder,
-	                        SourceRange src) const;
+	ValuePtr FindExecutable(const ValueMap& args, DAGBuilder &builder,
+	                        vector<string> extraPaths) const;
 
-	ValuePtr FindFile(const ValueMap& /*scope*/, const ValueMap& args,
-	                  DAGBuilder& builder, SourceRange src) const;
+	ValuePtr FindFile(const ValueMap& args, DAGBuilder& builder) const;
 
 	const Type& string_;
 	const FileType& file_;
@@ -169,14 +172,14 @@ shared_ptr<Record> Which::Create(DAGBuilder& builder, const ValueMap& args) cons
 			ExecutableFnName,
 			builder.Function(
 				std::bind(&Which::FindExecutable,
-				          this, _1, _2, extraPaths, _3, _4),
-				scope, name, executable_)
+				          this, _1, _2, extraPaths),
+				name, executable_)
 		},
 		{
 			GenericFnName,
 			builder.Function(
-				std::bind(&Which::FindFile, this, _1, _2, _3, _4),
-				scope, nameAndDirectories, generic_)
+				std::bind(&Which::FindFile, this, _1, _2),
+				nameAndDirectories, generic_)
 		},
 	};
 
@@ -184,8 +187,7 @@ shared_ptr<Record> Which::Create(DAGBuilder& builder, const ValueMap& args) cons
 }
 
 
-ValuePtr Which::FindFile(const ValueMap& /*scope*/, const ValueMap& args,
-                         DAGBuilder& builder, SourceRange src) const
+ValuePtr Which::FindFile(const ValueMap& args, DAGBuilder &builder) const
 {
 	assert(args.size() == 2);
 	const string filename = args.find(FileName)->second->str();
@@ -203,18 +205,17 @@ ValuePtr Which::FindFile(const ValueMap& /*scope*/, const ValueMap& args,
 	}
 
 	const string fullName = ::FindFile(filename, directories);
-	return builder.File(fullName, ValueMap(), file_, src);
+	return builder.File(fullName, ValueMap(), file_);
 }
 
 
-ValuePtr Which::FindExecutable(const ValueMap& /*scope*/, const ValueMap& args,
-                               vector<string> extraPaths, DAGBuilder& builder,
-                               SourceRange src) const
+ValuePtr Which::FindExecutable(const ValueMap& args, DAGBuilder& builder,
+                               vector<string> extraPaths) const
 {
 	const string filename = args.find(FileName)->second->str();
 
 	return builder.File(fabrique::FindExecutable(filename, extraPaths),
-	                    ValueMap(), file_, src);
+	                    ValueMap(), file_);
 }
 
 

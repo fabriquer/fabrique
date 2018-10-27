@@ -5,7 +5,8 @@
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -37,11 +38,10 @@ using namespace fabrique::dag;
 using namespace std::placeholders;
 
 
-Function* Function::Create(Evaluator fnEval, const ValueMap& scope,
-                           const SharedPtrVec<Parameter>& params,
+Function* Function::Create(Evaluator fnEval, const SharedPtrVec<Parameter>& params,
                            const FunctionType& type, SourceRange source)
 {
-	Callable::Evaluator eval = std::bind(fnEval, scope, _1, _2, _3);
+	Callable::Evaluator eval = std::bind(fnEval, _1, _2);
 	return new Function(eval, params, type, source);
 }
 
