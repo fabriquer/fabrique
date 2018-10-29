@@ -85,10 +85,8 @@ class Which : public plugin::Plugin
 
 	private:
 	Which(const Factory& factory, const RecordType& type,
-	      const Type& string, const FileType& file, const Type& files,
-	      const FunctionType& executable, const FunctionType& generic)
-		: Plugin(type, factory), string_(string), file_(file), fileList_(files),
-		  executable_(executable), generic_(generic)
+	      const Type& string, const FileType& file, const Type& files)
+		: Plugin(type, factory), string_(string), file_(file), fileList_(files)
 	{
 	}
 
@@ -100,8 +98,6 @@ class Which : public plugin::Plugin
 	const Type& string_;
 	const FileType& file_;
 	const Type& fileList_;
-	const FunctionType& executable_;
-	const FunctionType& generic_;
 };
 
 static const char Directories[] = "directories";
@@ -126,8 +122,7 @@ UniqPtr<Plugin> Which::Factory::Instantiate(TypeContext& ctx) const
 		{ GenericFnName, generic },
 	});
 
-	return UniqPtr<Plugin>(
-		new Which(*this, type, string, file, files, executable, generic));
+	return UniqPtr<Plugin>(new Which(*this, type, string, file, files));
 }
 
 
@@ -173,13 +168,13 @@ shared_ptr<Record> Which::Create(DAGBuilder& builder, const ValueMap& args) cons
 			builder.Function(
 				std::bind(&Which::FindExecutable,
 				          this, _1, _2, extraPaths),
-				name, executable_)
+				file_, name)
 		},
 		{
 			GenericFnName,
 			builder.Function(
 				std::bind(&Which::FindFile, this, _1, _2),
-				nameAndDirectories, generic_)
+				file_, nameAndDirectories)
 		},
 	};
 
@@ -205,7 +200,7 @@ ValuePtr Which::FindFile(const ValueMap& args, DAGBuilder &builder) const
 	}
 
 	const string fullName = ::FindFile(filename, directories);
-	return builder.File(fullName, ValueMap(), file_);
+	return builder.File(fullName);
 }
 
 
@@ -214,8 +209,7 @@ ValuePtr Which::FindExecutable(const ValueMap& args, DAGBuilder& builder,
 {
 	const string filename = args.find(FileName)->second->str();
 
-	return builder.File(fabrique::FindExecutable(filename, extraPaths),
-	                    ValueMap(), file_);
+	return builder.File(fabrique::FindExecutable(filename, extraPaths));
 }
 
 

@@ -63,12 +63,17 @@ SimpleTypeReference::SimpleTypeReference(UniqPtr<Identifier> name, SourceRange s
 
 fabrique::dag::ValuePtr SimpleTypeReference::evaluate(EvalContext& ctx) const
 {
-	if (auto userDefined = ctx.Lookup(name_->name()))
+	// Some type names (e.g., `file` and `list` are special)
+	if (name_->reservedName())
 	{
-		return userDefined;
+		auto &t = ctx.types().find(name_->name());
+		SemaCheck(t, source(), "invalid type");
+
+		return dag::TypeReference::Create(t, source());
 	}
 
-	return dag::TypeReference::Create(ctx.types().find(name_->name()), source());
+	// Other type names must be user-defined syntactically
+	return ctx.Lookup(name_->name(), source());
 }
 
 void SimpleTypeReference::Accept(Visitor& v) const

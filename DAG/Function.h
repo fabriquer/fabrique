@@ -52,10 +52,7 @@ namespace dag {
 class Function : public Callable, public Value
 {
 public:
-	typedef std::function<ValuePtr (const ValueMap&, DAGBuilder&)> Evaluator;
-
-	static Function* Create(Evaluator, const SharedPtrVec<Parameter>&,
-	                        const FunctionType&,
+	static Function* Create(Evaluator, const Type &resultType, SharedPtrVec<Parameter>,
 	                        SourceRange source = SourceRange::None());
 
 	virtual ~Function() override;

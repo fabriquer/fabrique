@@ -41,9 +41,12 @@ static const char* ReservedNames[] =
 {
 	"args",
 	"buildroot",
+	"file",
 	"in",
+	"list",
 	"out",
 	"srcroot",
+	"type",
 };
 
 

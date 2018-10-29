@@ -129,7 +129,7 @@ dag::ValuePtr Function::evaluate(EvalContext& ctx) const
 	//auto fnScope(ctx.ChangeScopeStack(scope));
 
 	dag::Function::Evaluator eval =
-		[=,&ctx](const dag::ValueMap args, dag::DAGBuilder& /*builder*/)
+		[=,&ctx](const dag::ValueMap args, dag::DAGBuilder&, SourceRange)
 	{
 		//
 		// We evaluate the function with the given arguments by

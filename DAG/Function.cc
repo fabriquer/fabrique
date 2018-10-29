@@ -1,6 +1,6 @@
 /** @file DAG/Function.cc    Definition of @ref fabrique::dag::Function. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -31,18 +31,27 @@
  */
 
 #include "DAG/Function.h"
+#include "DAG/Parameter.h"
 #include "DAG/Visitor.h"
 #include "Support/Bytestream.h"
 #include "Types/FunctionType.h"
+#include "Types/TypeContext.h"
 using namespace fabrique::dag;
 using namespace std::placeholders;
 
 
-Function* Function::Create(Evaluator fnEval, const SharedPtrVec<Parameter>& params,
-                           const FunctionType& type, SourceRange source)
+Function* Function::Create(Evaluator fnEval, const Type &resultType,
+                           SharedPtrVec<Parameter> parameters, SourceRange source)
 {
-	Callable::Evaluator eval = std::bind(fnEval, _1, _2);
-	return new Function(eval, params, type, source);
+	PtrVec<Type> paramTypes;
+	for (auto &p : parameters)
+	{
+		paramTypes.push_back(&p->type());
+	}
+
+	auto &type = resultType.context().functionType(paramTypes, resultType);
+
+	return new Function(fnEval, parameters, type, source);
 }
 
 Function::Function(Callable::Evaluator evaluator,

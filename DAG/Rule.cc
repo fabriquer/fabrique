@@ -85,12 +85,12 @@ Rule::Rule(const string& name, const string& command, const string& description,
 }
 
 
-ValuePtr Rule::Call(const ValueMap& args, DAGBuilder& build, SourceRange loc) const
+ValuePtr Rule::Call(ValueMap args, DAGBuilder& build, SourceRange src) const
 {
 	std::shared_ptr<Rule> rule = self_.lock();
 	assert(rule);
 
-	return build.Build(rule, args, loc);
+	return build.Build(rule, args, src);
 }
 
 

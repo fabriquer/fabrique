@@ -57,5 +57,5 @@ void NameReference::PrettyPrint(Bytestream &out, unsigned int indent) const
 
 fabrique::dag::ValuePtr NameReference::evaluate(EvalContext &ctx) const
 {
-	return ctx.Lookup(name_->name());
+	return ctx.Lookup(name_->name(), source());
 }

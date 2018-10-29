@@ -79,24 +79,19 @@ class SysctlPlugin : public plugin::Plugin
 
 	private:
 	SysctlPlugin(const Factory& factory, const RecordType& type,
-	             const Type& stringType,
-	             const FunctionType& stringSysctlType,
-		     const FunctionType& intSysctlType)
-		: Plugin(type, factory), stringType_(stringType),
-		  stringSysctlType_(stringSysctlType), intSysctlType_(intSysctlType)
+	             const Type& stringType, const Type& intType)
+		: Plugin(type, factory), intType_(intType), stringType_(stringType)
 	{
 	}
 
+	const Type& intType_;
 	const Type& stringType_;
-
-	const FunctionType& stringSysctlType_;
-	const FunctionType& intSysctlType_;
 };
 
 
-static string SysctlName(const ValueMap& args);
-static ValuePtr StringSysctl(const ValueMap& args, DAGBuilder& builder);
-static ValuePtr IntegerSysctl(const ValueMap& args, DAGBuilder& builder);
+static string SysctlName(ValueMap args);
+static ValuePtr StringSysctl(ValueMap args, DAGBuilder& builder, SourceRange);
+static ValuePtr IntegerSysctl(ValueMap args, DAGBuilder& builder, SourceRange);
 
 
 UniqPtr<Plugin> SysctlPlugin::Factory::Instantiate(TypeContext& ctx) const
@@ -113,7 +108,7 @@ UniqPtr<Plugin> SysctlPlugin::Factory::Instantiate(TypeContext& ctx) const
 	});
 
 	return UniqPtr<Plugin>(
-		new SysctlPlugin(*this, type, stringType, string, integer));
+		new SysctlPlugin(*this, type, stringType, integer));
 }
 
 
@@ -129,11 +124,11 @@ shared_ptr<Record> SysctlPlugin::Create(DAGBuilder& builder, const ValueMap& arg
 	ValueMap fields = {
 		{
 			"string",
-			builder.Function(StringSysctl, params, stringSysctlType_)
+			builder.Function(StringSysctl, stringType_, params)
 		},
 		{
 			"int",
-			builder.Function(IntegerSysctl, params, intSysctlType_)
+			builder.Function(IntegerSysctl, intType_, params)
 		},
 	};
 
@@ -141,7 +136,7 @@ shared_ptr<Record> SysctlPlugin::Create(DAGBuilder& builder, const ValueMap& arg
 }
 
 
-static string SysctlName(const ValueMap& args)
+static string SysctlName(ValueMap args)
 {
 	// If the user didn't pass a 'name' argument of type string,
 	// dag::Callable ought to have caught it.
@@ -155,7 +150,7 @@ static string SysctlName(const ValueMap& args)
 }
 
 
-static ValuePtr StringSysctl(const ValueMap& args, DAGBuilder& builder)
+static ValuePtr StringSysctl(ValueMap args, DAGBuilder& builder, SourceRange src)
 {
 #if !defined (OS_POSIX)
 	throw UserError(name() + " functions are only useful on POSIX platforms");
@@ -174,11 +169,11 @@ static ValuePtr StringSysctl(const ValueMap& args, DAGBuilder& builder)
 		throw PosixError(
 			"error retrieving '" + name + "' via sysctlbyname()");
 
-	return builder.String(buffer.get());
+	return builder.String(buffer.get(), src);
 }
 
 
-static ValuePtr IntegerSysctl(const ValueMap& args, DAGBuilder& builder)
+static ValuePtr IntegerSysctl(ValueMap args, DAGBuilder& builder, SourceRange src)
 {
 #if !defined (OS_POSIX)
 	throw UserError(name() + " functions are only useful on POSIX platforms");
@@ -193,7 +188,7 @@ static ValuePtr IntegerSysctl(const ValueMap& args, DAGBuilder& builder)
 		throw PosixError(
 			"error retrieving '" + name + "' via sysctlbyname()");
 
-	return builder.Integer(value, SourceRange::None());
+	return builder.Integer(value, src);
 }
 
 
