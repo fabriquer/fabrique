@@ -58,7 +58,6 @@ namespace ast {}
 #include "Identifier.h"
 #include "List.h"
 #include "NameReference.h"
-#include "NodeList.h"
 #include "Parameter.h"
 #include "Record.h"
 #include "SymbolReference.h"
