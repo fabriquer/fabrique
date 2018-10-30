@@ -43,5 +43,5 @@ bin = link(objs, file('foo'));
 # CHECK-DAG: build: lex { foo.yy => foo.c }( classname = 'FooClass' )
 # CHECK-DAG: build: cc { foo.c => foo.c.o }
 # CHECK-DAG: build: cc { bar.c => bar.c.o }
-# CHECK-DAG: build: cc { bar.c => bar.c.o }
+# CHECK-DAG: build: cc { baz.c => baz.c.o }
 # CHECK-DAG: build: link { foo.c.o bar.c.o baz.c.o => foo }
