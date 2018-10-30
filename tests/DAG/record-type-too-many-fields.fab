@@ -1,8 +1,7 @@
 #
-# RUN: %fab --format=null --print-dag %s > %t
+# RUN: %fab --format=null %s 2> %t || true
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: assigning record[foo:string, bar:string]
-# CHECK: to identifier of type record[foo:string, bar:string, baz:string]
+# CHECK: expected record[foo:string, bar:string, baz:string]
 foo:record[foo:string, bar:string, baz:string] = record { foo = 'hi'; bar = 'world'; };
