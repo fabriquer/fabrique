@@ -102,7 +102,8 @@ dag::ValuePtr ForeachExpr::evaluate(EvalContext& ctx) const
 	SharedPtrVec<dag::Value> values;
 
 	auto target = sourceSequence().evaluate(ctx);
-	assert(target->asList());
+	SemaCheck(target->asList(), target->source(),
+	          "cannot iterate over " + target->type().str());
 
 	//
 	// For each input element, put its value in scope as the loop parameter
