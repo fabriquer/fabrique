@@ -18,4 +18,4 @@ foo = function(ints:list[int]): list[int]
 bar = foo(42);
 
 # CHECK: [[line]] bar = foo(42);
-# CHECK-NEXT:               ^~
+# CHECK-NEXT:               ~~

@@ -32,9 +32,9 @@ objs = cc_all(srcs);
 bin = link(objs, file('foo'));
 
 
-# CHECK-DAG: cc:(file)=>file = cc -c $src -o $obj
-# CHECK-DAG: link:(list[file])=>file = cc $objects -o $bin
-# CHECK-DAG: lex:(file)=>file = $LEX -c++ --yyclass=$classname --outfile=$gen $src
+# CHECK-DAG: cc:(file)->file = cc -c $src -o $obj
+# CHECK-DAG: link:(list[file])->file = cc $objects -o $bin
+# CHECK-DAG: lex:(file)->file = $LEX -c++ --yyclass=$classname --outfile=$gen $src
 #
 # CHECK-DAG: gen:file = lex { foo.yy => foo.c }
 # CHECK-DAG: objs:list[file] = [ foo.c.o bar.c.o baz.c.o ]

@@ -109,15 +109,12 @@ void Function::Accept(Visitor& v) const
 dag::ValuePtr Function::evaluate(EvalContext& ctx) const
 {
 	SharedPtrVec<dag::Parameter> parameters;
-	PtrVec<Type> paramTypes;
 	for (auto& p : this->parameters())
 	{
 		parameters.emplace_back(p->evaluate(ctx));
-		paramTypes.push_back(&parameters.back()->type());
 	}
 
 	auto ret = resultType_->evaluateAs<dag::TypeReference>(ctx);
-	auto &type = ctx.types().functionType(paramTypes, ret->referencedType());
 
 	//
 	// When executing a function, we don't use symbols in scope
@@ -148,5 +145,5 @@ dag::ValuePtr Function::evaluate(EvalContext& ctx) const
 		return body().evaluate(ctx);
 	};
 
-	return ctx.Function(eval, parameters, type, source());
+	return ctx.Function(eval, parameters, ret->referencedType(), source());
 }

@@ -6,8 +6,8 @@
 increment = function(x:int): int x + 1;
 incr_copy = increment;
 
-# CHECK-DAG: apply:((int)=>int,int)=>int =
-apply = function(fn:(int)=>int,x:int): int
+# CHECK-DAG: apply:((int)->int,int)->int =
+apply = function(fn:(int)->int,x:int): int
 	fn(x);
 
 # CHECK-DAG: foo:int = 2

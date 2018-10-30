@@ -65,9 +65,11 @@ Function::Function(Callable::Evaluator evaluator,
 Function::~Function() {}
 
 
-void Function::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
+void Function::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
-	out << Bytestream::Action << "a function" << Bytestream::Reset;
+	out << Bytestream::Action << "function " << Bytestream::Reset;
+	type().PrettyPrint(out, indent);
+	out << "\n";
 }
 
 void Function::Accept(Visitor& v) const
