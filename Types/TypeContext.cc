@@ -33,7 +33,6 @@
 #include "Types/FileType.h"
 #include "Types/FunctionType.h"
 #include "Types/IntegerType.h"
-#include "Types/MaybeType.h"
 #include "Types/RecordType.h"
 #include "Types/SequenceType.h"
 #include "Types/StringType.h"
@@ -73,7 +72,6 @@ TypeContext::TypeContext()
 	stringType();
 
 	// Bare types required to build list[foo], maybe[foo], etc.
-	Register(rawMaybeType_ = new RawMaybeType(*this));
 	Register(rawSequenceType_ = new RawSequenceType(*this));
 }
 
@@ -127,12 +125,6 @@ const Type& TypeContext::listOf(const Type& elementTy, const SourceRange&)
 {
 	PtrVec<Type> params(1, &elementTy);
 	return find(rawSequenceType_->name(), params);
-}
-
-const Type& TypeContext::maybe(const Type& elementTy, const SourceRange&)
-{
-	PtrVec<Type> params(1, &elementTy);
-	return find(rawMaybeType_->name(), params);
 }
 
 const FileType& TypeContext::fileType()

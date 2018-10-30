@@ -39,7 +39,6 @@
 #include "ADT/StringMap.h"
 
 #include "AST/Parameter.h"
-#include "AST/SymbolReference.h"
 
 #include <memory>
 #include <set>

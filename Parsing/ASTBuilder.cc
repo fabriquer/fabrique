@@ -31,6 +31,7 @@
 
 #include "AST/ast.h"
 #include "Parsing/ASTBuilder.h"
+#include "Support/Bytestream.h"
 
 #include <cassert>
 

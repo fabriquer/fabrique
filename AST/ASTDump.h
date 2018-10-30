@@ -56,7 +56,6 @@ public:
 	VISIT(Call)
 	VISIT(CompoundExpression)
 	VISIT(Conditional)
-	VISIT(Filename)
 	VISIT(FileList)
 	VISIT(ForeachExpr)
 	VISIT(Function)
@@ -65,7 +64,6 @@ public:
 	VISIT(List)
 	VISIT(Parameter)
 	VISIT(StringLiteral)
-	VISIT(SymbolReference)
 	VISIT(Type)
 	VISIT(Value)
 
