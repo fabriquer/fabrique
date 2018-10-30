@@ -80,7 +80,7 @@ void FieldQuery::Accept(Visitor& v) const
 
 dag::ValuePtr FieldQuery::evaluate(EvalContext& ctx) const
 {
-	auto base = base_->evaluateAs<dag::Record>(ctx);
+	auto base = base_->evaluateAs<dag::Record>(ctx, source());
 
 	if (auto result = base->field(field_->name()))
 	{

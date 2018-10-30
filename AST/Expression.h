@@ -55,15 +55,20 @@ public:
 	virtual dag::ValuePtr evaluate(EvalContext&) const  = 0;
 
 	template<class T>
-	std::shared_ptr<T> evaluateAs(EvalContext &ctx)
+	std::shared_ptr<T> evaluateAs(EvalContext &ctx,
+	                              SourceRange src = SourceRange::None())
 	{
 		const std::string typeName = TypeName(*this);
+		if (not src)
+		{
+			src = source();
+		}
 
 		auto plainValue = evaluate(ctx);
-		SemaCheck(plainValue, source(), "error evaluating " + typeName);
+		SemaCheck(plainValue, src, "error evaluating " + typeName);
 
 		auto asSubtype = std::dynamic_pointer_cast<T>(plainValue);
-		SemaCheck(asSubtype, plainValue->source(),
+		SemaCheck(asSubtype, src,
 			TypeName(*plainValue) + " (evaluated from + " + typeName
 			+ ") is not a " + Demangle(typeid(T)));
 
