@@ -71,7 +71,7 @@ class Value;
 class EvalContext : public dag::DAGBuilder::Context
 {
 public:
-	EvalContext(TypeContext& ctx);
+	EvalContext(TypeContext& ctx, dag::ValueMap builtins = {});
 	~EvalContext() override {}
 
 	std::vector<dag::DAG::BuildTarget> Evaluate(const UniqPtrVec<Value>&);
@@ -209,6 +209,9 @@ private:
 	std::deque<std::string> currentValueName_;
 
 	dag::DAGBuilder builder_;
+
+	//! Pre-defined values like `srcroot` and `file`.
+	dag::ValueMap builtins_;
 };
 
 } // namespace dag
