@@ -3,5 +3,5 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: 7:{{[0-9]+}}: error: calling an uncallable expression
+# CHECK: 7:{{[0-9]+}}-{{[0-9]+}}: error: {{.*}} is not {{.*}}Callable
 result = [ 'hello' 'world' ]('argument');
