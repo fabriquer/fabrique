@@ -69,7 +69,7 @@ public:
 
 		auto asSubtype = std::dynamic_pointer_cast<T>(plainValue);
 		SemaCheck(asSubtype, src,
-			TypeName(*plainValue) + " (evaluated from + " + typeName
+			TypeName(*plainValue) + " (evaluated from " + typeName
 			+ ") is not a " + Demangle(typeid(T)));
 
 		return asSubtype;
