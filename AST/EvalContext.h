@@ -164,7 +164,7 @@ public:
 
 
 	//! Define a named @ref dag::Value in the current scope.
-	void Define(ScopedValueName& name, dag::ValuePtr value);
+	void Define(ScopedValueName& name, dag::ValuePtr value, SourceRange);
 
 	//! Look up a named value from the current scope or a parent scope.
 	dag::ValuePtr Lookup(const std::string& name, SourceRange = SourceRange::None());

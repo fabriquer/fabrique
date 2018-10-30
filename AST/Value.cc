@@ -128,7 +128,7 @@ dag::ValuePtr Value::evaluate(EvalContext& ctx) const
 
 	if (name != "")
 	{
-		ctx.Define(valueName, val);
+		ctx.Define(valueName, val, source());
 	}
 
 	return val;
