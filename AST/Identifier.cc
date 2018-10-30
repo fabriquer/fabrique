@@ -40,6 +40,7 @@ using namespace fabrique::ast;
 static const char* ReservedNames[] =
 {
 	"args",
+	"bool",
 	"buildroot",
 	"file",
 	"in",
