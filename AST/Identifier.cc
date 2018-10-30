@@ -43,6 +43,7 @@ static const char* ReservedNames[] =
 	"buildroot",
 	"file",
 	"in",
+	"int",
 	"list",
 	"out",
 	"srcroot",
