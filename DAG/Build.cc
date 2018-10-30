@@ -79,7 +79,7 @@ Build* Build::Create(shared_ptr<Rule>& rule, SharedPtrMap<Value>& arguments,
 			AppendFiles(arg, outputs, true);
 	}
 
-	assert(not outputs.empty());
+	SemaCheck(not outputs.empty(), src, "build does not produce any output files");
 
 	// Also include unspecified default parameters.
 	for (const shared_ptr<Parameter>& p : rule->parameters())

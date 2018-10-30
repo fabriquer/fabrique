@@ -46,6 +46,7 @@ static const char* ReservedNames[] =
 	"list",
 	"out",
 	"srcroot",
+	"string",
 	"type",
 };
 

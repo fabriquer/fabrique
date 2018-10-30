@@ -9,5 +9,5 @@
 
 echo = action('echo ${text}' <- text:string);
 
-# CHECK: action does not produce any output files
+# CHECK: build does not produce any output files
 echo('something');
