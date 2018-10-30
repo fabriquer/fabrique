@@ -99,23 +99,19 @@ void UserError::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 }
 
 
-SourceCodeException::SourceCodeException(const string& m, const SourceRange& l)
-	: HasSource(l), err_(ErrorReport::Create(m, l))
-{
-}
-
-SourceCodeException::SourceCodeException(const SourceCodeException& orig)
-	: HasSource(orig.source()), err_(orig.err_)
-{
-}
-
-SourceCodeException::~SourceCodeException()
+SourceCodeException::SourceCodeException(string m, SourceRange l, string detail)
+	: HasSource(l), err_(m, l, ErrorReport::Severity::Error, detail)
 {
 }
 
 const string& SourceCodeException::message() const
 {
-	return err_->getMessage();
+	return err_.getMessage();
+}
+
+const string& SourceCodeException::detail() const
+{
+	return err_.getDetails();
 }
 
 const char* SourceCodeException::what() const noexcept
@@ -125,37 +121,37 @@ const char* SourceCodeException::what() const noexcept
 
 void SourceCodeException::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
-	err_->PrettyPrint(out, indent);
+	err_.PrettyPrint(out, indent);
 }
 
 
-ParserError::ParserError(const string& message, const SourceRange& loc)
-	: SourceCodeException(message, loc)
+ParserError::ParserError(string message, SourceRange loc, string detail)
+	: SourceCodeException(message, loc, detail)
 {
 }
 
 ParserError::ParserError(const ParserError& orig)
-	: SourceCodeException(orig.message(), orig.source())
+	: SourceCodeException(orig.message(), orig.source(), orig.detail())
 {
 }
 
 ParserError::~ParserError() {}
 
 
-SyntaxError::SyntaxError(const string& message, const SourceRange& loc)
-	: SourceCodeException(message, loc)
+SyntaxError::SyntaxError(string message, SourceRange loc, string detail)
+	: SourceCodeException(message, loc, detail)
 {
 }
 
 SyntaxError::SyntaxError(const SyntaxError& orig)
-	: SourceCodeException(orig.message(), orig.source())
+	: SourceCodeException(orig.message(), orig.source(), orig.detail())
 {
 }
 
 SyntaxError::~SyntaxError() {}
 
-SemanticException::SemanticException(const string& m, const SourceRange& loc)
-	: SourceCodeException(m, loc)
+SemanticException::SemanticException(string m, SourceRange loc, string detail)
+	: SourceCodeException(m, loc, detail)
 {
 }
 

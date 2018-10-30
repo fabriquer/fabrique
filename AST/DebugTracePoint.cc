@@ -75,10 +75,9 @@ dag::ValuePtr DebugTracePoint::evaluate(EvalContext& ctx) const
 {
 	fabrique::dag::ValuePtr value = expr_->evaluate(ctx);
 
-	UniqPtr<ErrorReport> report(
-		ErrorReport::Create("debug trace point", source(),
-		                    ErrorReport::Severity::Message, 1)
-	);
+	auto report = std::make_unique<ErrorReport>(
+		"debug trace point", source(), ErrorReport::Severity::Message, "",
+		SourceLocation(), 1);
 
 	Bytestream::Debug("trace") << *report << "value: ";
 	Bytestream& out = Bytestream::Stdout();

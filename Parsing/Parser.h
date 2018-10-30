@@ -5,7 +5,8 @@
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -66,7 +67,7 @@ public:
 	bool ParseFile(std::istream& input, UniqPtrVec<Value>&, std::string name = "");
 
 	//! Errors encountered during parsing.
-	const UniqPtrVec<ErrorReport>& errors() const { return errs_; }
+	const std::vector<ErrorReport>& errors() const { return errs_; }
 
 	//! Input files encountered during parsing.
 	const std::vector<std::string>& files() const { return files_; }
@@ -80,7 +81,7 @@ private:
 
 	//! Input files, in order they were parsed.
 	std::vector<std::string> files_;
-	UniqPtrVec<ErrorReport> errs_;
+	std::vector<ErrorReport> errs_;
 };
 
 } // namespace ast

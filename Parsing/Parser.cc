@@ -83,9 +83,6 @@ const ErrorReport& Parser::ReportError(const string& message,
                                        const SourceRange& location,
                                        ErrorReport::Severity severity)
 {
-	errs_.push_back(
-		unique_ptr<ErrorReport>(ErrorReport::Create(message, location, severity))
-	);
-
-	return *errs_.back();
+	errs_.emplace_back(message, location, severity);
+	return errs_.back();
 }

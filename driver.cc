@@ -64,7 +64,7 @@ using fabrique::backend::Backend;
 
 
 static Bytestream& err();
-static void reportError(string message, SourceRange, ErrorReport::Severity);
+static void reportError(string message, SourceRange, ErrorReport::Severity, string detail);
 static bool Parse(Parser& parser, const string& filename,
                   UniqPtrVec<ast::Value>& values, bool printAST);
 
@@ -230,17 +230,9 @@ int main(int argc, char *argv[]) {
 			<< Bytestream::ErrorMessage << e.description()
 			;
 	}
-	catch (const SemanticException& e)
-	{
-		err() << e;
-	}
 	catch (const SourceCodeException& e)
 	{
-		err()
-			<< Bytestream::Error << "Parse error"
-			<< Bytestream::Reset << ": "
-			<< Bytestream::ErrorMessage << e
-			;
+		err() << e;
 	}
 #ifdef NDEBUG
 	// In debug mode, let uncaught exceptions propagate to ease debugging.
@@ -272,7 +264,7 @@ bool Parse(Parser& parser, const string& filename,
 	if (not parser.ParseFile(infile, values, filename))
 	{
 		for (auto& error : parser.errors())
-			err() << *error << "\n";
+			err() << error << "\n";
 
 		return false;
 	}
@@ -335,8 +327,8 @@ static Bytestream& err()
 }
 
 
-static void reportError(string message, SourceRange src, ErrorReport::Severity severity)
+static void reportError(string message, SourceRange src, ErrorReport::Severity severity,
+                        string detail)
 {
-	UniqPtr<ErrorReport> warning { ErrorReport::Create(message, src, severity) };
-	err() << *warning << Bytestream::Reset << "\n";
+	err() << ErrorReport(message, src, severity, detail) << Bytestream::Reset << "\n";
 }

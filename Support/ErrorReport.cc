@@ -1,11 +1,12 @@
 /** @file Support/ErrorReport.cc    Definition of @ref fabrique::ErrorReport. */
 /*
- * Copyright (c) 2013, 2016 Jonathan Anderson
+ * Copyright (c) 2013, 2016, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -41,10 +42,11 @@ using namespace fabrique;
 using std::string;
 
 
-ErrorReport* ErrorReport::Create(const string& message, const SourceRange& loc,
-                                 Severity severity, unsigned int contextLines)
+ErrorReport::ErrorReport(string message, SourceRange range, Severity severity,
+                         string detail, SourceLocation loc, unsigned int lines)
+	: HasSource(range), severity_(severity), message_(message),
+	  detail_(detail), caret_(loc), contextLines_(lines)
 {
-	return new ErrorReport(message, loc, loc.begin, severity, contextLines);
 }
 
 
@@ -76,4 +78,11 @@ void ErrorReport::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 	source().PrintSource(out, caret_, contextLines_);
 
 	out << Bytestream::Reset;
+
+	if (not detail_.empty())
+	{
+		out
+			<< Bytestream::Info << "\t" << detail_
+			<< Bytestream::Reset << "\n";
+	}
 }

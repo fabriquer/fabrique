@@ -317,10 +317,11 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out, ErrorReport::Rep
 			{
 				case Flavour::POSIX: // fall through
 				case Flavour::BSD:
-					err("dependency files currently only supported"
-					    " for GNU makefiles (--format=gmake)",
+					err("unsupported feature",
 					    build.source(),
-					    ErrorReport::Severity::Warning);
+					    ErrorReport::Severity::Warning,
+					    "dependency files are currently supported"
+					    " only for GNU makefiles (--format=gmake)");
 					break;
 
 				case Flavour::GNU:

@@ -1,11 +1,12 @@
 /** @file Support/ErrorReport.h    Declaration of @ref fabrique::ErrorReport. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -52,29 +53,21 @@ public:
 		Message,
 	};
 
-	typedef std::function<void (std::string, SourceRange, Severity)> Report;
+	typedef std::function<void (std::string, SourceRange, Severity, std::string)>
+		Report;
 
-	static ErrorReport*
-	Create(const std::string& message,
-	       const SourceRange& loc = SourceRange::None(),
-	       Severity severity = Severity::Error,
-	       unsigned int contextLines = 3);
-
-	virtual ~ErrorReport() override {}
+	ErrorReport(std::string message, SourceRange, Severity = Severity::Error,
+		    std::string detail = "", SourceLocation loc = SourceLocation(),
+	            unsigned int contextLines = 3);
 
 	const std::string& getMessage() const { return message_; }
+	const std::string& getDetails() const { return detail_; }
 	void PrettyPrint(Bytestream& out, unsigned int indent = 0) const override;
 
 private:
-	ErrorReport(const std::string& message, const SourceRange& range,
-	            const SourceLocation& loc, Severity severity, unsigned int lines)
-		: HasSource(range), severity_(severity), message_(message),
-		  caret_(loc), contextLines_(lines)
-	{
-	}
-
 	const Severity severity_;
 	const std::string message_;
+	const std::string detail_;
 	const SourceLocation caret_;
 	const unsigned int contextLines_;
 };

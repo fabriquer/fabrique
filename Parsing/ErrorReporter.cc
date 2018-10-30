@@ -31,9 +31,10 @@
 #include "Parsing/ErrorReporter.h"
 using namespace fabrique::parser;
 using fabrique::ErrorReport;
+using std::string;
 
 
-ErrorReporter::ErrorReporter(UniqPtrVec<ErrorReport>& errors)
+ErrorReporter::ErrorReporter(std::vector<ErrorReport>& errors)
 	: errors_(errors)
 {
 }
@@ -43,15 +44,15 @@ bool ErrorReporter::hasErrors() const
 	return not errors_.empty();
 }
 
-ErrorReport& ErrorReporter::ReportError(const std::string& msg, const SourceRange& src,
-                                        ErrorReport::Severity severity)
+ErrorReport& ErrorReporter::ReportError(std::string msg, SourceRange src,
+                                        ErrorReport::Severity severity, string detail)
 {
-	errors_.emplace_back(ErrorReport::Create(msg, src, severity));
-	return *errors_.back();
+	errors_.emplace_back(msg, src, severity, detail);
+	return errors_.back();
 }
 
-ErrorReport& ErrorReporter::ReportError(const std::string& msg, const HasSource& s,
-                                        ErrorReport::Severity severity)
+ErrorReport& ErrorReporter::ReportError(std::string msg, const HasSource& s,
+                                        ErrorReport::Severity severity, string detail)
 {
-	return ReportError(msg, s.source(), severity);
+	return ReportError(msg, s.source(), severity, detail);
 }
