@@ -60,7 +60,6 @@ namespace ast {}
 #include "NameReference.h"
 #include "Parameter.h"
 #include "Record.h"
-#include "SymbolReference.h"
 #include "TypeDeclaration.h"
 #include "UnaryOperation.h"
 #include "Value.h"

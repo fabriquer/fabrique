@@ -65,7 +65,6 @@ DUMP_NODE(IntLiteral)
 DUMP_NODE(List)
 DUMP_NODE(Parameter)
 DUMP_NODE(StringLiteral)
-DUMP_NODE(SymbolReference)
 DUMP_NODE(Type)
 DUMP_NODE(Value)
 

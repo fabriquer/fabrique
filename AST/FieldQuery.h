@@ -39,7 +39,6 @@ namespace fabrique {
 namespace ast {
 
 class Identifier;
-class SymbolReference;
 
 
 /**

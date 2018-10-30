@@ -77,7 +77,6 @@ public:
 	VISIT(RecordTypeReference)
 	VISIT(SimpleTypeReference)
 	VISIT(StringLiteral)
-	VISIT(SymbolReference)
 	VISIT(Type)
 	VISIT(TypeDeclaration)
 	VISIT(UnaryOperation)

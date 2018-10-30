@@ -58,7 +58,6 @@ class FunctionTypeReference;
 class ParametricTypeReference;
 class RecordTypeReference;
 class SimpleTypeReference;
-class SymbolReference;
 class TypeDeclaration;
 class UnaryOperation;
 class Value;
