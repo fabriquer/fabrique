@@ -3,10 +3,10 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK-DAG: cc:(file)=>file = cc -c ${src} -o ${obj}
+# CHECK-DAG: cc:(file)->file = cc -c ${src} -o ${obj}
 cc = action('cc -c ${src} -o ${obj}' <- src:file[in], obj:file[out]);
 
-# CHECK-DAG: link:(list[file])=>file = cc ${objects} -o ${bin}
+# CHECK-DAG: link:(list[file])->file = cc ${objects} -o ${bin}
 link = action('cc ${objects} -o ${bin}'
               <- objects:list[file[in]], bin:file[out]);
 

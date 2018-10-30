@@ -66,9 +66,9 @@ bool FunctionType::isSubtype(const Type& other) const
 	// Functions are covariant in their return types
 	// and contravariant in their argument types.
 	//
-	// x:(special_int)=>special_int = ...
-	// y:(special_int)=>int = x        # this is ok
-	// z:(int)=>special_int = x        # this is not ok
+	// x:(special_int)->special_int = ...
+	// y:(special_int)->int = x        # this is ok
+	// z:(int)->special_int = x        # this is not ok
 	//
 
 	if (t.typeParameters().size() != typeParameters().size())
@@ -92,7 +92,7 @@ void FunctionType::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 	out
 		<< Bytestream::Operator << "("
 		<< Join<Type>(",", paramTypes_)    // don't use csv with spaces
-		<< Bytestream::Operator << ")=>"
+		<< Bytestream::Operator << ")->"
 		<< retTy_
 		<< Bytestream::Reset
 		;

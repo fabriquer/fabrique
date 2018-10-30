@@ -3,7 +3,7 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK-DAG: cc:(file)=>file = ${CC} -c
+# CHECK-DAG: cc:(file)->file = ${CC} -c
 c = import('Inputs/tools/c.fab');
 
 # CHECK-DAG: build: c.cc { Inputs/sources/foo.c => Inputs/sources/foo.c.o }

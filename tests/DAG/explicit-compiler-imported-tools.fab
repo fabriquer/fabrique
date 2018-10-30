@@ -3,8 +3,8 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK-DAG: compile_one:(list[file])=>list[file] = ${CC} -c ${flags}{{.*}}<-{{.*}} CC:file[in] = /usr/bin/cc
-# CHECK-DAG: link_executable:(list[file])=>file = ${CC} -o ${executable}{{.*}}<-{{.*}} CC:file[in] = /usr/bin/cc
+# CHECK-DAG: compile_one:(list[file])->list[file] = ${CC} -c ${flags}{{.*}}<-{{.*}} CC:file[in] = /usr/bin/cc
+# CHECK-DAG: link_executable:(list[file])->file = ${CC} -o ${executable}{{.*}}<-{{.*}} CC:file[in] = /usr/bin/cc
 cc = import('Inputs/cc.fab', compiler = file('/usr/bin/cc'));
 
 # CHECK-DAG: build: cc.compile_one { Inputs/foo.c =>{{.*}} Inputs/foo.c.o

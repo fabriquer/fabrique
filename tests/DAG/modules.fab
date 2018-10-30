@@ -3,7 +3,7 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK-DAG: submodule:record[foo:string, bar:(file)=>file, baz:(int)=>int, wibble:(int)=>int, f:file] = {
+# CHECK-DAG: submodule:record[foo:string, bar:(file)->file, baz:(int)->int, wibble:(int)->int, f:file] = {
 # CHECK-DAG: f:file = Inputs/f.txt
 submodule = import('Inputs/submodule.fab');
 
@@ -13,10 +13,10 @@ foo = submodule.foo;
 # CHECK-DAG: foo2:string = 'Hello, world!'
 foo2 = foo;
 
-# CHECK-DAG: bar:(file)=>file = ${BAR} ${src} -o ${dest}
+# CHECK-DAG: bar:(file)->file = ${BAR} ${src} -o ${dest}
 bar = submodule.bar;
 
-# CHECK-DAG: another_bar:(file)=>file = ${BAR} ${src} -o ${dest}
+# CHECK-DAG: another_bar:(file)->file = ${BAR} ${src} -o ${dest}
 another_bar = submodule.bar;
 
 # CHECK-DAG: bazzed:int = 2
