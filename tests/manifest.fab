@@ -68,7 +68,6 @@ all_files = files(
 ./DAG/lists.fab
 ./DAG/literals.fab
 ./DAG/logical-operators.fab
-./DAG/maybe.fab
 ./DAG/missing-argument.fab
 ./DAG/modules.fab
 ./DAG/multiple-definition.fab
@@ -92,8 +91,6 @@ all_files = files(
 ./DAG/target-from-record.fab
 ./DAG/target-operations.fab
 ./DAG/tool-vs-src-directories.fab
-./DAG/trace-simple.fab
-./DAG/trace.fab
 ./DAG/type-conflict.fab
 ./DAG/types.fab
 ./DAG/unnamed-values.fab
@@ -106,6 +103,7 @@ all_files = files(
 ./Parsing/direct-call.fab
 ./Parsing/empty-string.fab
 ./Parsing/equality.fab
+./Parsing/field-call.fab
 ./Parsing/field-existence.fab
 ./Parsing/field-query.fab
 ./Parsing/field-reference.fab
