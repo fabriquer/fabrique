@@ -151,7 +151,7 @@ int main(int argc, char *argv[]) {
 		//
 		// Convert the AST into a build graph.
 		//
-		ast::EvalContext ctx(types);
+		ast::EvalContext ctx(types, builtins(types, srcroot, buildroot));
 
 		SharedPtrVec<dag::Value> dagValues;
 		vector<string> targets;
