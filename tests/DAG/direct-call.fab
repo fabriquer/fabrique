@@ -4,7 +4,7 @@
 #
 
 # CHECK-DAG: foo:int = 2
-foo = (function(x:int) { x + 1 })(1);
+foo = (function(x:int): int { x + 1 })(1);
 
 # CHECK-DAG: src:file = foo.c
 src = file('foo.c');
