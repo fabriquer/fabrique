@@ -299,8 +299,8 @@ bool Parse(Parser& parser, const string& filename,
 static dag::ValueMap builtins(TypeContext &types, string srcroot, string buildroot)
 {
 	dag::ValueMap builtins;
-	builtins.emplace("srcroot", dag::File::Create(srcroot, types.inputFileType()));
-	builtins.emplace("buildroot", dag::File::Create(buildroot, types.inputFileType()));
+	builtins.emplace("srcroot", dag::File::Create(srcroot, types.fileType()));
+	builtins.emplace("buildroot", dag::File::Create(buildroot, types.fileType()));
 
 	dag::Function::Evaluator openFile =
 		[](dag::ValueMap arguments, dag::DAGBuilder &b, SourceRange src)
