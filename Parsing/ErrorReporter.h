@@ -1,6 +1,6 @@
 /** @file Parsing/ErrorReporter.h Declaration of @ref fabrique::parser::ErrorReporter. */
 /*
- * Copyright (c) 2016 Jonathan Anderson
+ * Copyright (c) 2016, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed at Memorial University of Newfoundland under
@@ -43,17 +43,19 @@ namespace parser {
 class ErrorReporter
 {
 	public:
-	ErrorReporter(UniqPtrVec<ErrorReport>&);
+	ErrorReporter(std::vector<ErrorReport>&);
 
 	bool hasErrors() const;
 
-	ErrorReport& ReportError(const std::string&, const SourceRange&,
-		ErrorReport::Severity = ErrorReport::Severity::Error);
-	ErrorReport& ReportError(const std::string&, const HasSource&,
-		ErrorReport::Severity = ErrorReport::Severity::Error);
+	ErrorReport& ReportError(std::string, SourceRange,
+		ErrorReport::Severity = ErrorReport::Severity::Error,
+		std::string detail = "");
+	ErrorReport& ReportError(std::string, const HasSource&,
+		ErrorReport::Severity = ErrorReport::Severity::Error,
+		std::string detail = "");
 
 	private:
-	UniqPtrVec<ErrorReport>& errors_;
+	std::vector<ErrorReport>& errors_;
 };
 
 } // namespace parser

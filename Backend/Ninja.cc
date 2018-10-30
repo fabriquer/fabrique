@@ -171,7 +171,8 @@ void NinjaBackend::Process(const dag::DAG& dag, Bytestream& out,
 			{
 				if (strcmp(p->name().c_str(), a) == 0)
 					ReportError("name has reserved meaning in Ninja",
-					            p->source(), ErrorReport::Severity::Warning);
+					            p->source(),
+					            ErrorReport::Severity::Warning, "");
 			}
 
 		}

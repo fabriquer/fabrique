@@ -32,8 +32,7 @@
 #ifndef EXCEPTIONS_H
 #define EXCEPTIONS_H
 
-#include "Support/Printable.h"
-#include "Support/SourceLocation.h"
+#include "Support/ErrorReport.h"
 
 #include <exception>
 #include <memory>
@@ -119,23 +118,20 @@ private:
 class ErrorReport;
 
 //! Base class for exceptions related to invalid source code.
-class SourceCodeException
-	: public std::exception, public HasSource, public Printable
+class SourceCodeException : public std::exception, public HasSource, public Printable
 {
 public:
-	virtual ~SourceCodeException() override;
-
 	const std::string& message() const;
+	const std::string& detail() const;
 	virtual const char* what() const noexcept override;
 
 	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 
 protected:
-	SourceCodeException(const std::string& message, const SourceRange&);
-	SourceCodeException(const SourceCodeException&);
+	SourceCodeException(std::string message, SourceRange, std::string detail);
 
 private:
-	std::shared_ptr<ErrorReport> err_;
+	ErrorReport err_;
 };
 
 
@@ -143,7 +139,7 @@ private:
 class ParserError : public SourceCodeException
 {
 public:
-	ParserError(const std::string& message, const SourceRange&);
+	ParserError(std::string message, SourceRange, std::string detail = "");
 	ParserError(const ParserError&);
 	virtual ~ParserError() override;
 };
@@ -152,7 +148,7 @@ public:
 class SyntaxError : public SourceCodeException
 {
 public:
-	SyntaxError(const std::string& message, const SourceRange&);
+	SyntaxError(std::string message, SourceRange, std::string detail = "");
 	SyntaxError(const SyntaxError&);
 	virtual ~SyntaxError() override;
 };
@@ -161,7 +157,7 @@ public:
 class SemanticException : public SourceCodeException
 {
 public:
-	SemanticException(const std::string& message, const SourceRange&);
+	SemanticException(std::string message, SourceRange, std::string detail = "");
 	SemanticException(const SemanticException&);
 	virtual ~SemanticException() override;
 };
