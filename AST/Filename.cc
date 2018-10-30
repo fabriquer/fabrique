@@ -110,6 +110,5 @@ dag::ValuePtr Filename::evaluate(EvalContext& ctx) const
 			attributes[name] = value;
 	}
 
-	const FileType& t = ctx.types().fileType().WithArguments(argTypes);
-	return ctx.builder().File(subdirectory, filename, attributes, t, source());
+	return ctx.builder().File(subdirectory, filename, attributes, source());
 }

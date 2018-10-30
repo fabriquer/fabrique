@@ -99,7 +99,7 @@ dag::ValuePtr SymbolReference::evaluate(EvalContext& ctx) const
 
 		value = base
 			? base->field(component)
-			: ctx.Lookup(component);
+			: ctx.Lookup(component, source());
 
 		if (not value)
 			throw dag::UndefinedValueException(

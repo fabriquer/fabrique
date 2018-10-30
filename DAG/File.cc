@@ -46,17 +46,17 @@ using std::shared_ptr;
 using std::string;
 
 
-File* File::Create(string fullPath, ValueMap attrs, const FileType& t,
+File* File::Create(string fullPath, const FileType& t, ValueMap attrs,
                    SourceRange src, bool generated)
 {
 	const string filename(FilenameComponent(fullPath));
 	const string subdir(DirectoryOf(fullPath));
 
-	return Create(subdir, filename, attrs, t, src, generated);
+	return Create(subdir, filename, t, attrs, src, generated);
 }
 
-File* File::Create(string dir, string path, ValueMap attrs,
-                   const FileType& type, SourceRange src, bool generated)
+File* File::Create(string dir, string path, const FileType& type,
+                   ValueMap attrs, SourceRange src, bool generated)
 {
 	const string filename(FilenameComponent(path));
 	const string subdir(DirectoryOf(path));
@@ -180,8 +180,7 @@ ValuePtr File::field(const string& name) const
 		val.reset(new String(relativeName(), ctx.stringType(), source()));
 
 	else if (name == ast::builtins::Subdirectory)
-		val.reset(File::Create(subdirectory(), ValueMap(), ctx.fileType(),
-		                       source()));
+		val.reset(File::Create(subdirectory(), ctx.fileType()));
 
 	else
 	{

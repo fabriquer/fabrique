@@ -5,7 +5,8 @@
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -78,26 +79,19 @@ class SysctlPlugin : public plugin::Plugin
 
 	private:
 	SysctlPlugin(const Factory& factory, const RecordType& type,
-	             const Type& stringType,
-	             const FunctionType& stringSysctlType,
-		     const FunctionType& intSysctlType)
-		: Plugin(type, factory), stringType_(stringType),
-		  stringSysctlType_(stringSysctlType), intSysctlType_(intSysctlType)
+	             const Type& stringType, const Type& intType)
+		: Plugin(type, factory), intType_(intType), stringType_(stringType)
 	{
 	}
 
+	const Type& intType_;
 	const Type& stringType_;
-
-	const FunctionType& stringSysctlType_;
-	const FunctionType& intSysctlType_;
 };
 
 
-static string SysctlName(const ValueMap& args);
-static ValuePtr StringSysctl(const ValueMap& /*scope*/, const ValueMap& args,
-                             DAGBuilder& builder, SourceRange src);
-static ValuePtr IntegerSysctl(const ValueMap& /*scope*/, const ValueMap& args,
-                              DAGBuilder& builder, SourceRange src);
+static string SysctlName(ValueMap args);
+static ValuePtr StringSysctl(ValueMap args, DAGBuilder& builder, SourceRange);
+static ValuePtr IntegerSysctl(ValueMap args, DAGBuilder& builder, SourceRange);
 
 
 UniqPtr<Plugin> SysctlPlugin::Factory::Instantiate(TypeContext& ctx) const
@@ -114,7 +108,7 @@ UniqPtr<Plugin> SysctlPlugin::Factory::Instantiate(TypeContext& ctx) const
 	});
 
 	return UniqPtr<Plugin>(
-		new SysctlPlugin(*this, type, stringType, string, integer));
+		new SysctlPlugin(*this, type, stringType, integer));
 }
 
 
@@ -123,7 +117,6 @@ shared_ptr<Record> SysctlPlugin::Create(DAGBuilder& builder, const ValueMap& arg
 	SemaCheck(args.empty(), SourceRange::Over(args),
 		"sysctl plugin does not take arguments");
 
-	const ValueMap scope;
 	const SharedPtrVec<Parameter> params = {
 		std::make_shared<Parameter>("name", stringType_, ValuePtr()),
 	};
@@ -131,11 +124,11 @@ shared_ptr<Record> SysctlPlugin::Create(DAGBuilder& builder, const ValueMap& arg
 	ValueMap fields = {
 		{
 			"string",
-			builder.Function(StringSysctl, scope, params, stringSysctlType_)
+			builder.Function(StringSysctl, stringType_, params)
 		},
 		{
 			"int",
-			builder.Function(IntegerSysctl, scope, params, intSysctlType_)
+			builder.Function(IntegerSysctl, intType_, params)
 		},
 	};
 
@@ -143,7 +136,7 @@ shared_ptr<Record> SysctlPlugin::Create(DAGBuilder& builder, const ValueMap& arg
 }
 
 
-static string SysctlName(const ValueMap& args)
+static string SysctlName(ValueMap args)
 {
 	// If the user didn't pass a 'name' argument of type string,
 	// dag::Callable ought to have caught it.
@@ -157,8 +150,7 @@ static string SysctlName(const ValueMap& args)
 }
 
 
-static ValuePtr StringSysctl(const ValueMap& /*scope*/, const ValueMap& args,
-                             DAGBuilder& builder, SourceRange src)
+static ValuePtr StringSysctl(ValueMap args, DAGBuilder& builder, SourceRange src)
 {
 #if !defined (OS_POSIX)
 	throw UserError(name() + " functions are only useful on POSIX platforms");
@@ -181,8 +173,7 @@ static ValuePtr StringSysctl(const ValueMap& /*scope*/, const ValueMap& args,
 }
 
 
-static ValuePtr IntegerSysctl(const ValueMap& /*scope*/, const ValueMap& args,
-                              DAGBuilder& builder, SourceRange src)
+static ValuePtr IntegerSysctl(ValueMap args, DAGBuilder& builder, SourceRange src)
 {
 #if !defined (OS_POSIX)
 	throw UserError(name() + " functions are only useful on POSIX platforms");

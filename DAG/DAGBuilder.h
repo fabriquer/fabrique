@@ -1,11 +1,12 @@
 /** @file DAG/DAGBuilder.h    Declaration of @ref fabrique::dag::DAGBuilder. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -98,43 +99,38 @@ public:
 	Build(std::shared_ptr<class Rule>, ValueMap, SourceRange);
 
 	//! Create a @ref dag::File from a path.
-	ValuePtr File(std::string fullPath, const ValueMap& attributes,
-	              const FileType&, const SourceRange& src = SourceRange::None(),
-	              bool generated = false);
+	ValuePtr File(std::string fullPath, ValueMap attributes = {},
+	              SourceRange src = SourceRange::None(), bool generated = false);
 
 	//! Create a @ref dag::File from a subdirectory and a filename.
-	ValuePtr File(std::string subdir, std::string filename,
-	              const ValueMap& attributes, const FileType&,
-	              const SourceRange& src = SourceRange::None(),
-	              bool generated = false);
+	ValuePtr File(std::string subdir, std::string filename, ValueMap attributes = {},
+	              SourceRange src = SourceRange::None(), bool generated = false);
 
 	//! Define a @ref dag::Function.
-	ValuePtr Function(const Function::Evaluator, ValueMap scope,
-	                  const SharedPtrVec<Parameter>&,
-	                  const FunctionType&, SourceRange = SourceRange::None());
+	ValuePtr Function(const Function::Evaluator, const Type &resultType,
+	                  SharedPtrVec<Parameter>, SourceRange = SourceRange::None());
 
 	//! Create a @ref dag::Integer.
 	ValuePtr Integer(int, SourceRange);
 
-	//! Create a @ref dag::Rule in the current scope.
-	ValuePtr Rule(std::string command, const ValueMap& arguments,
-	              const SharedPtrVec<Parameter>& parameters, const Type&,
-	              const SourceRange& from = SourceRange::None());
+	//! Create a @ref dag::Rule.
+	ValuePtr Rule(std::string command, const Type&, ValueMap arguments,
+	              SharedPtrVec<Parameter> parameters,
+	              SourceRange src = SourceRange::None());
 
 	//! Create a @ref dag::String.
-	ValuePtr String(const std::string&, SourceRange = SourceRange::None());
+	ValuePtr String(std::string, SourceRange = SourceRange::None());
 
 	//! Create a @ref dag::Record.
-	std::shared_ptr<Record> Record(const ValueMap&, SourceRange = SourceRange::None());
+	std::shared_ptr<Record> Record(ValueMap, SourceRange = SourceRange::None());
 
 
 protected:
 	std::shared_ptr<class Rule> MakeDirectory() const;
 
-	ValuePtr Rule(std::string name, std::string command,
-	              const ValueMap& arguments,
-	              const SharedPtrVec<Parameter>& parameters, const Type&,
-	              const SourceRange& from = SourceRange::None());
+	ValuePtr Rule(std::string name, std::string command, const Type&,
+	              ValueMap arguments, SharedPtrVec<Parameter> parameters,
+	              SourceRange = SourceRange::None());
 
 	Context& ctx_;
 

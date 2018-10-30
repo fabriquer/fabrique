@@ -5,7 +5,8 @@
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -68,8 +69,8 @@ using std::string;
 using std::vector;
 
 
-EvalContext::EvalContext(TypeContext& ctx)
-	: ctx_(ctx), builder_(*this)
+EvalContext::EvalContext(TypeContext& ctx, ValueMap builtins)
+	: ctx_(ctx), builder_(*this), builtins_(std::move(builtins))
 {
 	// Create top-level scope
 	scopes_.emplace_back();
@@ -295,7 +296,7 @@ void EvalContext::Define(ScopedValueName& name, ValuePtr v)
 }
 
 
-ValuePtr EvalContext::Lookup(const string& name)
+ValuePtr EvalContext::Lookup(const string& name, SourceRange src)
 {
 	Bytestream& dbg = Bytestream::Debug("dag.lookup");
 	dbg
@@ -304,6 +305,14 @@ ValuePtr EvalContext::Lookup(const string& name)
 		<< Bytestream::Reset << "\n"
 		;
 
+	// Try builtins first:
+	auto b = builtins_.find(name);
+	if (b != builtins_.end())
+	{
+		return b->second;
+	}
+
+	// Next, look for lexically-defined names:
 	for (auto i = scopes_.rbegin(); i != scopes_.rend(); i++)
 	{
 		const ValueMap& scope = *i;
@@ -338,13 +347,12 @@ ValuePtr EvalContext::Lookup(const string& name)
 	// If we are looking for 'builddir' or 'subdir' and haven't found it
 	// defined anywhere, provide the top-level build/source subdirectory ('').
 	if (name == ast::builtins::BuildDirectory)
-		return builder_.File("", ValueMap(), ctx_.fileType(),
-		                     SourceRange::None(), true);
+		return builder_.File("", ValueMap(), SourceRange::None(), true);
 
 	if (name == ast::builtins::Subdirectory)
-		return builder_.File("", ValueMap(), ctx_.fileType());
+		return builder_.File("");
 
-	return nullptr;
+	throw SemanticException("reference to undefined name", src);
 }
 
 
@@ -381,7 +389,7 @@ string EvalContext::PopValueName()
 
 ValuePtr EvalContext::Function(const dag::Function::Evaluator fn,
                                const SharedPtrVec<dag::Parameter>& params,
-                               const FunctionType& type, SourceRange source)
+                               const Type& resultType, SourceRange source)
 {
-	return builder_.Function(fn, CopyCurrentScope(), params, type, source);
+	return builder_.Function(fn, resultType, params, source);
 }

@@ -1,11 +1,12 @@
 /** @file DAG/DAGBuilder.cc    Definition of @ref fabrique::dag::DAGBuilder. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -156,8 +157,7 @@ UniqPtr<DAG> DAGBuilder::dag(vector<string> topLevelTargets) const
 			if (not dir)
 			{
 				dir.reset(
-					File::Create(dirname, ValueMap(),
-					             ctx_.types().fileType(),
+					File::Create(dirname, ctx_.types().fileType(), {},
 					             SourceRange::None(), true));
 
 				directories[dirname] = dir;
@@ -275,7 +275,7 @@ ValuePtr DAGBuilder::AddRegeneration(const CLIArguments& commandLineArgs,
 			+ " ${rootInput}"
 			;
 
-		ValuePtr r = Rule(Name, Command, ruleArgs, params, buildType);
+		ValuePtr r = Rule(Name, Command, buildType, ruleArgs, params);
 		rule = dynamic_pointer_cast<class Rule>(r);
 	}
 	assert(rule);
@@ -289,8 +289,7 @@ ValuePtr DAGBuilder::AddRegeneration(const CLIArguments& commandLineArgs,
 	SharedPtrVec<dag::File> otherInputs;
 	for (const string& name : inputFiles)
 	{
-		shared_ptr<dag::File> file = dynamic_pointer_cast<class File>(
-			File(name, ValueMap(), inputFileType, Nowhere));
+		shared_ptr<dag::File> file = dynamic_pointer_cast<class File>(File(name));
 
 		assert(file);
 
@@ -302,7 +301,7 @@ ValuePtr DAGBuilder::AddRegeneration(const CLIArguments& commandLineArgs,
 
 	SharedPtrVec<Value> outputs;
 	for (const string& output : outputFiles)
-		outputs.push_back(File(output, ValueMap(), outputType));
+		outputs.push_back(File(output));
 
 	ValueMap args;
 	args["rootInput"] = rootInput;
@@ -337,27 +336,27 @@ DAGBuilder::Build(shared_ptr<class Rule> rule, ValueMap arguments,
 }
 
 
-ValuePtr DAGBuilder::File(string fullPath, const ValueMap& attributes,
-                         const FileType& t, const SourceRange& src, bool generated)
+ValuePtr DAGBuilder::File(string fullPath, ValueMap attributes, SourceRange src,
+                          bool generated)
 {
-	files_.emplace_back(File::Create(fullPath, attributes, t, src, generated));
+	const FileType& t = typeContext().fileType();
+	files_.emplace_back(File::Create(fullPath, t, attributes, src, generated));
 	return files_.back();
 }
 
-ValuePtr DAGBuilder::File(string subdir, string name, const ValueMap& attributes,
-                          const FileType& t, const SourceRange& src, bool generated)
+ValuePtr DAGBuilder::File(string subdir, string name, ValueMap attributes,
+                          SourceRange src, bool generated)
 {
-	files_.emplace_back(File::Create(subdir, name, attributes, t, src, generated));
+	const FileType& t = typeContext().fileType();
+	files_.emplace_back(File::Create(subdir, name, t, attributes, src, generated));
 	return files_.back();
 }
 
 
-ValuePtr DAGBuilder::Function(const Function::Evaluator fn, ValueMap scope,
-                              const SharedPtrVec<Parameter>& params,
-                              const FunctionType& type, SourceRange source)
+ValuePtr DAGBuilder::Function(const Function::Evaluator fn, const Type& resultType,
+                              SharedPtrVec<Parameter> params, SourceRange source)
 {
-	return ValuePtr(
-		Function::Create(fn, std::move(scope), params, type, source));
+	return ValuePtr(Function::Create(fn, resultType, params, source));
 }
 
 
@@ -368,9 +367,9 @@ ValuePtr DAGBuilder::Integer(int i, SourceRange src)
 
 
 
-ValuePtr DAGBuilder::Rule(string name, string command, const ValueMap& arguments,
-                         const SharedPtrVec<Parameter>& parameters,
-                         const Type& type, const SourceRange& source)
+ValuePtr DAGBuilder::Rule(string name, string command, const Type& type,
+                          ValueMap arguments, SharedPtrVec<Parameter> parameters,
+                          SourceRange source)
 {
 	shared_ptr<class Rule> r(
 		Rule::Create(name, command, arguments, parameters,
@@ -385,22 +384,20 @@ ValuePtr DAGBuilder::Rule(string name, string command, const ValueMap& arguments
 
 
 
-ValuePtr DAGBuilder::Rule(string command, const ValueMap& arguments,
-                         const SharedPtrVec<Parameter>& parameters,
-                         const Type& type, const SourceRange& source)
+ValuePtr DAGBuilder::Rule(string command, const Type& type, ValueMap arguments,
+                          SharedPtrVec<Parameter> parameters, SourceRange src)
 {
-	return Rule(ctx_.currentValueName(), command, arguments, parameters,
-	            type, source);
+	return Rule(ctx_.currentValueName(), command, type, arguments, parameters, src);
 }
 
 
-ValuePtr DAGBuilder::String(const string& s, SourceRange src)
+ValuePtr DAGBuilder::String(string s, SourceRange src)
 {
 	return ValuePtr(new class String(s, ctx_.types().stringType(), src));
 }
 
 
-std::shared_ptr<Record> DAGBuilder::Record(const ValueMap& fields, SourceRange source)
+std::shared_ptr<Record> DAGBuilder::Record(ValueMap fields, SourceRange source)
 {
 	return std::shared_ptr<class Record>(Record::Create(fields, ctx_.types(), source));
 }

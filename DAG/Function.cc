@@ -1,11 +1,12 @@
 /** @file DAG/Function.cc    Definition of @ref fabrique::dag::Function. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,19 +31,27 @@
  */
 
 #include "DAG/Function.h"
+#include "DAG/Parameter.h"
 #include "DAG/Visitor.h"
 #include "Support/Bytestream.h"
 #include "Types/FunctionType.h"
+#include "Types/TypeContext.h"
 using namespace fabrique::dag;
 using namespace std::placeholders;
 
 
-Function* Function::Create(Evaluator fnEval, const ValueMap& scope,
-                           const SharedPtrVec<Parameter>& params,
-                           const FunctionType& type, SourceRange source)
+Function* Function::Create(Evaluator fnEval, const Type &resultType,
+                           SharedPtrVec<Parameter> parameters, SourceRange source)
 {
-	Callable::Evaluator eval = std::bind(fnEval, scope, _1, _2, _3);
-	return new Function(eval, params, type, source);
+	PtrVec<Type> paramTypes;
+	for (auto &p : parameters)
+	{
+		paramTypes.push_back(&p->type());
+	}
+
+	auto &type = resultType.context().functionType(paramTypes, resultType);
+
+	return new Function(fnEval, parameters, type, source);
 }
 
 Function::Function(Callable::Evaluator evaluator,

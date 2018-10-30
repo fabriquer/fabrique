@@ -183,5 +183,5 @@ dag::ValuePtr Action::evaluate(EvalContext& ctx) const
 		Count(parameters, FileType::isInput) == 1 ? file : fileList,
 		Count(parameters, FileType::isOutput) == 1 ? file : fileList);
 
-	return ctx.builder().Rule(command, arguments, parameters, type, source());
+	return ctx.builder().Rule(command, type, arguments, parameters, source());
 }

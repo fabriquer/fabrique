@@ -5,7 +5,8 @@
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -70,7 +71,7 @@ class Value;
 class EvalContext : public dag::DAGBuilder::Context
 {
 public:
-	EvalContext(TypeContext& ctx);
+	EvalContext(TypeContext& ctx, dag::ValueMap builtins = {});
 	~EvalContext() override {}
 
 	std::vector<dag::DAG::BuildTarget> Evaluate(const UniqPtrVec<Value>&);
@@ -166,13 +167,13 @@ public:
 	void Define(ScopedValueName& name, dag::ValuePtr value);
 
 	//! Look up a named value from the current scope or a parent scope.
-	dag::ValuePtr Lookup(const std::string& name);
+	dag::ValuePtr Lookup(const std::string& name, SourceRange = SourceRange::None());
 
 
 	//! Define a @ref dag::Function.
 	dag::ValuePtr Function(dag::Function::Evaluator,
-	                       const SharedPtrVec<dag::Parameter>&,
-	                       const FunctionType&, SourceRange = SourceRange::None());
+	                       const SharedPtrVec<dag::Parameter>&, const Type& resultTy,
+	                       SourceRange = SourceRange::None());
 
 
 	//! Create a new alias for an existing @ref dag::Target.
@@ -208,6 +209,9 @@ private:
 	std::deque<std::string> currentValueName_;
 
 	dag::DAGBuilder builder_;
+
+	//! Pre-defined values like `srcroot` and `file`.
+	dag::ValueMap builtins_;
 };
 
 } // namespace dag

@@ -37,7 +37,6 @@
 #include "DAG/File.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
-#include "Types/FileType.h"
 #include "Types/TypeContext.h"
 
 #include <cassert>
@@ -70,6 +69,5 @@ dag::ValuePtr FilenameLiteral::evaluate(EvalContext& ctx) const
 	assert(ctx.Lookup(ast::builtins::Subdirectory));
 	string subdirectory = ctx.Lookup(ast::builtins::Subdirectory)->str();
 
-	const FileType& t = ctx.types().fileType();
-	return ctx.builder().File(subdirectory, name_, {}, t, source());
+	return ctx.builder().File(subdirectory, name_, {}, source());
 }

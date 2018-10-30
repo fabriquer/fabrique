@@ -5,7 +5,8 @@
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Bytestream::Actionistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -118,20 +119,18 @@ dag::ValuePtr Function::evaluate(EvalContext& ctx) const
 	auto ret = resultType_->evaluateAs<dag::TypeReference>(ctx);
 	auto &type = ctx.types().functionType(paramTypes, ret->referencedType());
 
-	dag::Function::Evaluator eval =
-		[=,&ctx](const dag::ValueMap& scope, const dag::ValueMap args,
-	                 dag::DAGBuilder& /*builder*/, SourceRange)
-	{
-		//
-		// When executing a function, we don't use symbols in scope
-		// at the call site, only those in scope at the function
-		// definition site.
-		//
-		// We will return to the original stack when the
-		// `fnScope` object goes out of scope.
-		//
-		auto fnScope(ctx.ChangeScopeStack(scope));
+	//
+	// When executing a function, we don't use symbols in scope
+	// at the call site, only those in scope at the function
+	// definition site.
+	//
+	// TODO: make scoping work again!
+	//
+	//auto fnScope(ctx.ChangeScopeStack(scope));
 
+	dag::Function::Evaluator eval =
+		[=,&ctx](const dag::ValueMap args, dag::DAGBuilder&, SourceRange)
+	{
 		//
 		// We evaluate the function with the given arguments by
 		// putting default paramters and arguments into the local scope
