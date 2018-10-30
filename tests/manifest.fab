@@ -75,7 +75,6 @@ all_files = files(
 ./DAG/nested-paths.fab
 ./DAG/operators.fab
 ./DAG/param-default-values.fab
-./DAG/print-inside-record.fab
 ./DAG/record-instantiation.fab
 ./DAG/record-nesting.fab
 ./DAG/record-type-too-many-fields.fab
