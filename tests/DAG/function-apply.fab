@@ -13,7 +13,7 @@ incremented = increment(0);
 #
 # Functions should act as closures:
 #
-makeClosure = function(x:int): (int)=>int
+makeClosure = function(x:int): (int)->int
 {
 	function(y:int): int
 		x + y
@@ -27,7 +27,7 @@ bar = foo(1);
 #
 # Functions can take default arguments:
 #
-baz = function(x:int = 1)
+baz = function(x:int = 1): int
 	increment(x)
 	;
 
