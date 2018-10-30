@@ -22,11 +22,11 @@ all_files = files(
 ./DAG/action-list-of-outputs.fab
 ./DAG/action-missing-input.fab
 ./DAG/action-missing-output.fab
-./DAG/action-no-output.fab
 ./DAG/action-param-types.fab
 ./DAG/argument-type-error-location.fab
 ./DAG/build-attributes.fab
 ./DAG/build-with-foreach.fab
+./DAG/build-without-output.fab
 ./DAG/builddir.fab
 ./DAG/builtins.fab
 ./DAG/calling-the-uncallable.fab
