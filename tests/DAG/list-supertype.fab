@@ -5,10 +5,10 @@
 # The type of a list should reflect the common supertype of its elements.
 #
 
-# CHECK: foo:list[nil] = [ ];
+# CHECK-DAG: foo:list[nil] = [ ]
 foo = [];
 
-# CHECK: bar:list[record[x:int]] =
+# CHECK-DAG: bar:list[record[x:int]] =
 bar =
 [
 	record { x = 42; y = 0; }

@@ -52,13 +52,13 @@ using std::vector;
 List* List::of(const SharedPtrVec<Value>& values, const SourceRange& src,
                TypeContext& ctx)
 {
-	const Type& elementTy =
-		values.empty()
-			? ctx.nilType()
-			: values.front()->type()
-		;
+	const Type *elementType = &ctx.nilType();
+	for (auto &v : values)
+	{
+		elementType = &elementType->supertype(v->type());
+	}
 
-	return new List(values, Type::ListOf(elementTy, src), src);
+	return new List(values, Type::ListOf(*elementType, src), src);
 }
 
 
