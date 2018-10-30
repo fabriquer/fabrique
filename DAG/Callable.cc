@@ -82,6 +82,13 @@ void Callable::CheckArguments(const ValueMap& args,
                               const StringMap<SourceRange>& argLocations,
                               const SourceRange& callLocation) const
 {
+	for (auto a : args)
+	{
+		const std::string &name = a.first;
+		SemaCheck(this->hasParameterNamed(name), argLocations.find(name)->second,
+			"invalid argument");
+	}
+
 	for (auto& p : parameters_)
 	{
 		const string& name = p->name();
