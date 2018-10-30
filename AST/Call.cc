@@ -89,13 +89,6 @@ dag::ValuePtr Call::evaluate(EvalContext& ctx) const
 
 	auto target = target_->evaluateAs<dag::Callable>(ctx);
 
-	//
-	// Check argument legality.
-	//
-	for (auto& a : arguments_->keyword())
-		SemaCheck(target->hasParameterNamed(a->getName().name()), a->source(),
-			"invalid argument");
-
 	dag::ValueMap args;
 	StringMap<SourceRange> argLocations;
 	for (auto& i : target->NameArguments(arguments_->positional()))
@@ -112,7 +105,7 @@ dag::ValuePtr Call::evaluate(EvalContext& ctx) const
 		const std::string name = a->getName().name();
 		const ast::Expression& value = a->getValue();
 
-		argLocations.emplace(name, value.source());
+		argLocations.emplace(name, SourceRange::Over(a, &value));
 		args[name] = value.evaluate(ctx);
 	}
 

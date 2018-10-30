@@ -41,7 +41,8 @@ using namespace std::placeholders;
 
 
 Function* Function::Create(Evaluator fnEval, const Type &resultType,
-                           SharedPtrVec<Parameter> parameters, SourceRange source)
+                           SharedPtrVec<Parameter> parameters, SourceRange source,
+                           bool acceptExtraArguments)
 {
 	PtrVec<Type> paramTypes;
 	for (auto &p : parameters)
@@ -51,13 +52,13 @@ Function* Function::Create(Evaluator fnEval, const Type &resultType,
 
 	auto &type = resultType.context().functionType(paramTypes, resultType);
 
-	return new Function(fnEval, parameters, type, source);
+	return new Function(fnEval, parameters, acceptExtraArguments, type, source);
 }
 
 Function::Function(Callable::Evaluator evaluator,
-                   const SharedPtrVec<Parameter>& parameters,
+                   const SharedPtrVec<Parameter>& parameters, bool acceptExtraArguments,
                    const FunctionType& type, SourceRange source)
-	: Callable(parameters, evaluator), Value(type, source)
+	: Callable(parameters, acceptExtraArguments, evaluator), Value(type, source)
 {
 }
 

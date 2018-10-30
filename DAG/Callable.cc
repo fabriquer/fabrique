@@ -44,8 +44,8 @@ using std::string;
 using std::vector;
 
 
-Callable::Callable(const SharedPtrVec<Parameter>& p, Evaluator e)
-	: parameters_(p), evaluator_(e)
+Callable::Callable(const SharedPtrVec<Parameter>& p, bool acceptExtra, Evaluator e)
+	: parameters_(p), acceptExtraArguments_(acceptExtra), evaluator_(e)
 {
 }
 
@@ -82,6 +82,16 @@ void Callable::CheckArguments(const ValueMap& args,
                               const StringMap<SourceRange>& argLocations,
                               const SourceRange& callLocation) const
 {
+	if (not acceptExtraArguments_)
+	{
+		for (auto a : args)
+		{
+			const std::string &name = a.first;
+			SemaCheck(hasParameterNamed(name), argLocations.find(name)->second,
+			          "invalid argument");
+		}
+	}
+
 	for (auto& p : parameters_)
 	{
 		const string& name = p->name();

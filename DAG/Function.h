@@ -53,7 +53,8 @@ class Function : public Callable, public Value
 {
 public:
 	static Function* Create(Evaluator, const Type &resultType, SharedPtrVec<Parameter>,
-	                        SourceRange source = SourceRange::None());
+	                        SourceRange source = SourceRange::None(),
+	                        bool acceptExtraArguments = false);
 
 	virtual ~Function() override;
 
@@ -61,7 +62,7 @@ public:
 	void Accept(Visitor&) const override;
 
 private:
-	Function(Callable::Evaluator, const SharedPtrVec<Parameter>&,
+	Function(Callable::Evaluator, const SharedPtrVec<Parameter>&, bool acceptExtra,
 	         const FunctionType&, SourceRange source);
 
 	const Evaluator evaluator_;
