@@ -22,7 +22,7 @@ self_referential = record
 # CHECK-DAG: value2:string = 'Hello, world!'
 value2 = self_referential.ref;
 
-# CHECK-DAG: subset:record[foo:int, bar:int] =
+# CHECK-DAG: subset:record[{{.*}}] = {
 # CHECK-DAG:       foo:int = 42
 # CHECK-DAG:       bar:int = 99
 subset:record[foo:int] = record
