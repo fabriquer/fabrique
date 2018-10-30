@@ -61,7 +61,6 @@ namespace ast {}
 #include "NodeList.h"
 #include "Parameter.h"
 #include "Record.h"
-#include "SomeValue.h"
 #include "SymbolReference.h"
 #include "TypeDeclaration.h"
 #include "UnaryOperation.h"

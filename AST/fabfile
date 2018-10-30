@@ -23,7 +23,6 @@ sources = files(
 	Node.cc
 	Parameter.cc
 	Record.cc
-	SomeValue.cc
 	SymbolReference.cc
 	TypeDeclaration.cc
 	TypeReference.cc

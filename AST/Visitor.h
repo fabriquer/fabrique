@@ -76,7 +76,6 @@ public:
 	VISIT(ParametricTypeReference)
 	VISIT(RecordTypeReference)
 	VISIT(SimpleTypeReference)
-	VISIT(SomeValue)
 	VISIT(StringLiteral)
 	VISIT(SymbolReference)
 	VISIT(Type)
