@@ -8,7 +8,7 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-join = function(x:string, y:string)
+join = function(x:string, y:string): string
 	if (x == '') y
 	else if (y == '') x
 	else x + ', ' + y
