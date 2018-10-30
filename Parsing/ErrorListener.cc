@@ -67,6 +67,10 @@ void ErrorListener::syntaxError(antlr4::Recognizer *r, Token *t, size_t line, si
 	{
 		FAB_ASSERT(false, "unhandled exception of type " + TypeName(e));
 	}
+	catch (...)
+	{
+		FAB_ASSERT(false, "unhandled exception of unknown type");
+	}
 
 	SourceRange src = SourceRange::Span(filename_, line, col + 1, col + 2);
 	throw SyntaxError(message, src, detail);
