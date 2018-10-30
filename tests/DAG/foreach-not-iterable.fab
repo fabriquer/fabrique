@@ -3,7 +3,7 @@
 # RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: 7:{{[0-9]+}}: error: cannot iterate over int
+# CHECK: 7:{{[0-9\-]+}}: error: cannot iterate over int
 foo = foreach x <- 42
 {
 	x
