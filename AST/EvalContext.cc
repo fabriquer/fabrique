@@ -283,12 +283,12 @@ ValueMap EvalContext::CopyCurrentScope()
 }
 
 
-void EvalContext::Define(ScopedValueName& name, ValuePtr v)
+void EvalContext::Define(ScopedValueName& name, ValuePtr v, SourceRange src)
 {
 	assert(&name.stack_ == this);
 
 	ValueMap& currentScope = CurrentScope();
-	SemaCheck(currentScope.find(name.name_) == currentScope.end(), v->source(),
+	SemaCheck(currentScope.find(name.name_) == currentScope.end(), src,
 		"redefining '" + name.name_ + "'");
 
 	currentScope.emplace(name.name_, v);

@@ -5,5 +5,5 @@
 
 foo = 42;
 
-# CHECK: {{.*}}/value-redefinition.fab:[[LINE:[0-9]+]]:1: error: redefining value
+# CHECK: {{.*}}/value-redefinition.fab:9:1-8: error: redefining 'foo'
 foo = 43;

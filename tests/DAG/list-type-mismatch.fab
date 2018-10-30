@@ -1,7 +1,7 @@
 #
-# RUN: %fab --format=null %s 2> %t.err || true
-# RUN: FileCheck %s -input-file %t.err
+# RUN: %fab --format=null --print-dag %s > %t
+# RUN: FileCheck %s -input-file %t
 #
 
-# CHECK: list element's type (string) != list subtype (int)
+# CHECK: foo:list[nil] = [ 1 2 '3' ]
 foo = [ 1 2 '3' ];

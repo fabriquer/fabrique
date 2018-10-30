@@ -7,10 +7,10 @@
 addition = 2 + 2;
 
 # CHECK-DAG: scalar_add:list[int] = [ 2 3 ]
-scalar_add = [ 1 2 ] .+ 1;
+scalar_add = 2 :: [ 3 ];
 
 # CHECK-DAG: integers:list[int] = [ 1 2 3 4 5 ]
-integers = 1 :: [ 2 3 ] + [ 2 3 ] .+ 2;
+integers = 1 :: [ 2 3 ] + [ 4 5 ];
 
 # CHECK-DAG: strings:list[string] = [ 'hello' 'world' '!' ]
 strings = 'hello' :: [ 'world' ] + [ '!' ];
