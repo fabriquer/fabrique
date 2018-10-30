@@ -54,7 +54,10 @@ void ErrorListener::syntaxError(antlr4::Recognizer *r, Token *t, size_t line, si
 
 	try
 	{
-		std::rethrow_exception(e);
+		if (e)
+		{
+			std::rethrow_exception(e);
+		}
 	}
 	catch (antlr4::RecognitionException &e)
 	{
