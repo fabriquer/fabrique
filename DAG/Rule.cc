@@ -78,7 +78,7 @@ Rule* Rule::Create(string name, string command, const ValueMap& arguments,
 Rule::Rule(const string& name, const string& command, const string& description,
 	   const ValueMap& args, const SharedPtrVec<Parameter>& parameters,
 	   const Type& t, SourceRange location)
-	: Callable(parameters, std::bind(&Rule::Call, this, _1, _2, _3)),
+	: Callable(parameters, false, std::bind(&Rule::Call, this, _1, _2, _3)),
 	  Value(t, location), ruleName_(name),
 	  command_(command), description_(description), arguments_(args)
 {

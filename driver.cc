@@ -314,7 +314,8 @@ static dag::ValueMap builtins(TypeContext &types, string srcroot, string buildro
 	params.emplace_back(new dag::Parameter("name", types.stringType()));
 
 	builtins.emplace("file",
-		dag::Function::Create(openFile, types.fileType(), params));
+		dag::Function::Create(openFile, types.fileType(), params,
+		                      SourceRange::None(), true));
 
 	return builtins;
 }

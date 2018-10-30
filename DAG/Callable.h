@@ -106,13 +106,14 @@ public:
 	}
 
 protected:
-	Callable(const SharedPtrVec<Parameter>&, Evaluator);
+	Callable(const SharedPtrVec<Parameter>&, bool acceptExtraArguments, Evaluator);
 
 private:
 	std::vector<std::string>
 	NameArguments(const std::vector<std::string>&, SourceRange src) const;
 
 	const SharedPtrVec<Parameter> parameters_;
+	const bool acceptExtraArguments_;
 	const Evaluator evaluator_;
 };
 
