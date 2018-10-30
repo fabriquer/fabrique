@@ -19,7 +19,6 @@ sources = files(
 	HasParameters.cc
 	Identifier.cc
 	List.cc
-	Mapping.cc
 	NameReference.cc
 	Node.cc
 	Parameter.cc
