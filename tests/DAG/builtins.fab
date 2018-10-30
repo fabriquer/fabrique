@@ -9,8 +9,8 @@
 # RUN: FileCheck %s -input-file %t.output
 #
 
-# CHECK-DAG: src:string = '<<SOURCE DIRECTORY>>'
+# CHECK-DAG: src:file = <<SOURCE DIRECTORY>>
 src = srcroot;
 
-# CHECK-DAG: build:string = '<<OUTPUT DIRECTORY>>'
+# CHECK-DAG: build:file = <<OUTPUT DIRECTORY>>
 build = buildroot;
