@@ -266,12 +266,13 @@ Bytestream& SourceRange::PrintSource(Bytestream& out, SourceLocation caret,
 		std::ifstream sourceFile(filename.c_str());
 		assert(sourceFile.good());
 
+		string line;   // the last-read line
+
 		const size_t firstLine = begin.line > context ? (begin.line - context) : 1;
 		size_t endColumn = end.column;
 
 		for (size_t i = 1; i <= end.line; i++)
 		{
-			string line;
 			getline(sourceFile, line);
 
 			if (i >= firstLine)
@@ -306,9 +307,14 @@ Bytestream& SourceRange::PrintSource(Bytestream& out, SourceLocation caret,
 		assert(preCaretHighlight >= 0);
 		assert(postCaretHighlight >= 0);
 
+		out << "\t";
+
+		for (size_t i = 0; i < beginColumn - 1; i++)
+		{
+			out << ((line.length() > i and line[i] == '\t') ? '\t' : ' ');
+		}
+
 		out
-			<< "\t"
-			<< string(beginColumn - 1, ' ')
 			<< Bytestream::ErrorLoc
 			<< string(preCaretHighlight, '~')
 			<< (caret ? "^" : "")
