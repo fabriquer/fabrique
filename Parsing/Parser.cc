@@ -31,6 +31,7 @@
 
 #include "AST/ast.h"
 #include "Parsing/ASTBuilder.h"
+#include "Parsing/ErrorListener.h"
 #include "Parsing/Parser.h"
 #include "Parsing/Token.h"
 #include "Plugin/Loader.h"
@@ -82,6 +83,11 @@ bool Parser::ParseFile(std::istream& input, UniqPtrVec<Value>& values, string na
 
 	antlr4::CommonTokenStream tokens(&lexer);
 	FabParser antlrParser(&tokens);
+
+	ErrorListener errorListener(name);
+	auto &errorProxy = antlrParser.getErrorListenerDispatch();
+	errorProxy.removeErrorListeners();
+	errorProxy.addErrorListener(&errorListener);
 
 	ASTBuilder visitor(name);
 	if (not visitor.visitFile(antlrParser.file()))

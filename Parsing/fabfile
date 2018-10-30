@@ -1,5 +1,6 @@
 sources = files(
 	ASTBuilder.cc
+	ErrorListener.cc
 	ErrorReporter.cc
 	Parser.cc
 	Token.cc
