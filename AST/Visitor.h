@@ -62,7 +62,6 @@ public:
 	VISIT(DebugTracePoint)
 	VISIT(FieldAccess)
 	VISIT(FieldQuery)
-	VISIT(Filename)
 	VISIT(FilenameLiteral)
 	VISIT(FileList)
 	VISIT(ForeachExpr)

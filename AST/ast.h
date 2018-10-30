@@ -51,7 +51,6 @@ namespace ast {}
 #include "DebugTracePoint.h"
 #include "FieldAccess.h"
 #include "FieldQuery.h"
-#include "Filename.h"
 #include "FilenameLiteral.h"
 #include "FileList.h"
 #include "Foreach.h"

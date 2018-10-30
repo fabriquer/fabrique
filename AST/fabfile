@@ -12,7 +12,6 @@ sources = files(
 	Expression.cc
 	FieldAccess.cc
 	FieldQuery.cc
-	Filename.cc
 	FilenameLiteral.cc
 	FileList.cc
 	Foreach.cc

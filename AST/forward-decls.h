@@ -45,7 +45,6 @@ class Conditional;
 class DebugTracePoint;
 class FieldAccess;
 class FieldQuery;
-class Filename;
 class FilenameLiteral;
 class FileList;
 class ForeachExpr;
