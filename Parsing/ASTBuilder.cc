@@ -37,6 +37,7 @@
 
 using namespace fabrique;
 using namespace fabrique::ast;
+using namespace fabrique::parsing;
 using std::make_unique;
 using std::string;
 

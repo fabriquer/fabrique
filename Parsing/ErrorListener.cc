@@ -36,7 +36,7 @@
 #include "Support/exceptions.h"
 
 using namespace fabrique;
-using namespace fabrique::ast;
+using namespace fabrique::parsing;
 using namespace antlr4;
 using std::string;
 

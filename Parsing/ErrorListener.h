@@ -39,7 +39,7 @@
 #include <antlr-cxx-runtime/ANTLRErrorListener.h>
 
 namespace fabrique {
-namespace ast {
+namespace parsing {
 
 class ErrorListener : public antlr4::BaseErrorListener
 {
@@ -63,7 +63,7 @@ private:
 	const std::string filename_;
 };
 
-} // namespace ast
+} // namespace parsing
 } // namespace fabrique
 
 #endif /* PARSING_ERROR_LISTENER_H_ */

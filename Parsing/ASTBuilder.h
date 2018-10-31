@@ -44,7 +44,7 @@ namespace fabrique {
 
 class Bytestream;
 
-namespace ast {
+namespace parsing {
 
 /**
  * A parse tree builder that can be used to generate an AST.
@@ -62,7 +62,7 @@ public:
 	//
 	antlrcpp::Any visitFile(FabParser::FileContext*) override;
 	antlrcpp::Any visitValue(FabParser::ValueContext*) override;
-	UniqPtrVec<Value> takeValues();
+	UniqPtrVec<ast::Value> takeValues();
 
 	//
 	// Expressions:
@@ -106,8 +106,8 @@ public:
 	antlrcpp::Any defaultResult() override { return true; }
 
 private:
-	std::unique_ptr<Identifier> identifier(antlr4::Token*);
-	std::unique_ptr<Identifier> identifier(antlr4::tree::TerminalNode*);
+	std::unique_ptr<ast::Identifier> identifier(antlr4::Token*);
+	std::unique_ptr<ast::Identifier> identifier(antlr4::tree::TerminalNode*);
 
 	using RuleContext = antlr4::ParserRuleContext;
 
@@ -152,7 +152,7 @@ private:
 	 *                    the value at the top of the stack is expected to be found.
 	 *                    Otherwise, an empty unique_ptr will be returned.
 	 */
-	std::unique_ptr<Node> popNode(SourceRange range = SourceRange::None());
+	std::unique_ptr<ast::Node> popNode(SourceRange range = SourceRange::None());
 
 	/**
 	 * Pop an AST node of a specific type from the stack.
@@ -164,7 +164,7 @@ private:
 	template<typename T>
 	std::unique_ptr<T> pop(SourceRange range)
 	{
-		std::unique_ptr<Node> top = popNode(range);
+		std::unique_ptr<ast::Node> top = popNode(range);
 
 		check(top, range, "top of AST-building stack was null");
 
@@ -222,10 +222,10 @@ private:
 	Bytestream& fullDebug_;
 
 	const std::string filename_;
-	std::stack<std::unique_ptr<Node>> nodes_;
+	std::stack<std::unique_ptr<ast::Node>> nodes_;
 };
 
-} // namespace ast
+} // namespace parsing
 } // namespace fabrique
 
 #endif
