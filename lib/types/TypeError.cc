@@ -1,4 +1,4 @@
-/** @file Types/FunctionType.h    Declaration of @ref fabrique::FunctionType. */
+/** @file Types/TypeError.cc    Definition of @ref fabrique::TypeError. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -29,47 +29,50 @@
  * SUCH DAMAGE.
  */
 
-#ifndef FUNCTION_TYPE_H
-#define FUNCTION_TYPE_H
+#include <fabrique/types/Type.hh>
+#include <fabrique/types/TypeError.hh>
 
-#include "Types/Type.h"
+using namespace fabrique;
+using std::string;
 
-namespace fabrique {
 
-
-/**
- * A type that represents an ordered sequence.
- */
-class FunctionType : public Type
+TypeError::TypeError(const string& message, const SourceRange& src)
+	: SemanticException("type error: " + message, src)
 {
-public:
-	const std::string name() const override;
-	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
+}
 
-	const PtrVec<Type>& parameterTypes() const { return paramTypes_; }
-	const Type& returnType() const { return retTy_; }
+TypeError::TypeError(const TypeError& orig)
+	: SemanticException(orig.message(), orig.source())
+{
+}
 
-	virtual bool isSubtype(const Type&) const override;
+TypeError::~TypeError()
+{
+}
 
-	virtual bool isFunction() const override { return true; }
+WrongTypeException::WrongTypeException(const Type& want, const Type& got,
+                                       const SourceRange& src)
+	: WrongTypeException(want.str(), got.str(), src)
+{
+}
 
-private:
-	static FunctionType* Create(const PtrVec<Type>& parameterTypes,
-	                            const Type& retTy);
+WrongTypeException::WrongTypeException(const string& want, const Type& got,
+                                       const SourceRange& src)
+	: WrongTypeException(want, got.str(), src)
+{
+}
 
-	FunctionType(const PtrVec<Type>& params, const Type& ret,
-		     const PtrVec<Type>& sig)
-		: Type("function", sig, ret.context()),
-		  paramTypes_(params), retTy_(ret)
-	{
-	}
+WrongTypeException::WrongTypeException(const string& want, const string& got,
+                                       const SourceRange& src)
+	: TypeError("expected " + want + ", got " + got, src)
+{
+}
 
-	const PtrVec<Type> paramTypes_;
-	const Type& retTy_;
+WrongTypeException::WrongTypeException(const WrongTypeException& orig)
+	: TypeError(orig.message(), orig.source())
+{
+}
 
-	friend class TypeContext;
-};
-
-} // namespace fabrique
-
-#endif
+WrongTypeException::~WrongTypeException()
+{
+}

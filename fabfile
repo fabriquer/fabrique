@@ -77,7 +77,6 @@ cxx_srcs =
 	+ import('Parsing').sources
 	+ import('Plugin').sources
 	+ import('Support').sources
-	+ import('Types').sources
 	+ files(driver.cc)
 	;
 

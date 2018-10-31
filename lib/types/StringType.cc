@@ -29,8 +29,8 @@
  * SUCH DAMAGE.
  */
 
-#include "Types/StringType.h"
-#include "Types/TypeContext.h"
+#include <fabrique/types/StringType.hh>
+#include <fabrique/types/TypeContext.hh>
 #include "Support/SourceLocation.h"
 using namespace fabrique;
 

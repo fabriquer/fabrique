@@ -36,7 +36,7 @@
 #include "Support/Printable.h"
 #include "Support/SourceLocation.h"
 #include "Support/Uncopyable.h"
-#include "Types/Typed.h"
+#include <fabrique/types/Typed.hh>
 
 #include <memory>
 #include <string>

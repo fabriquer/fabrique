@@ -1,4 +1,4 @@
-/** @file Types/BooleanType.h    Declaration of @ref fabrique::BooleanType. */
+/** @file Types/FunctionType.h    Declaration of @ref fabrique::FunctionType. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -29,37 +29,47 @@
  * SUCH DAMAGE.
  */
 
-#include "Types/BooleanType.h"
-#include "Types/TypeContext.h"
-#include "Support/SourceLocation.h"
-using namespace fabrique;
+#ifndef FUNCTION_TYPE_H
+#define FUNCTION_TYPE_H
+
+#include <fabrique/types/Type.hh>
+
+namespace fabrique {
 
 
-static const char *Name = "bool";
-
-
-BooleanType::BooleanType(TypeContext& ctx)
-	: Type(Name, PtrVec<Type>(), ctx)
+/**
+ * A type that represents an ordered sequence.
+ */
+class FunctionType : public Type
 {
-}
+public:
+	const std::string name() const override;
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 
-BooleanType::~BooleanType() {}
+	const PtrVec<Type>& parameterTypes() const { return paramTypes_; }
+	const Type& returnType() const { return retTy_; }
 
+	virtual bool isSubtype(const Type&) const override;
 
-const Type& BooleanType::get(TypeContext& ctx)
-{
-	const Type& existing = ctx.find(Name);
-	if (existing)
-		return existing;
+	virtual bool isFunction() const override { return true; }
 
-	return *new BooleanType(ctx);
-}
+private:
+	static FunctionType* Create(const PtrVec<Type>& parameterTypes,
+	                            const Type& retTy);
 
+	FunctionType(const PtrVec<Type>& params, const Type& ret,
+		     const PtrVec<Type>& sig)
+		: Type("function", sig, ret.context()),
+		  paramTypes_(params), retTy_(ret)
+	{
+	}
 
-const Type& BooleanType::onAddTo(const Type& other) const
-{
-	if (other.isSubtype(*this))
-		return *this;
+	const PtrVec<Type> paramTypes_;
+	const Type& retTy_;
 
-	return context().nilType();
-}
+	friend class TypeContext;
+};
+
+} // namespace fabrique
+
+#endif

@@ -32,7 +32,7 @@
 #ifndef STRING_TYPE_H
 #define STRING_TYPE_H
 
-#include "Types/Type.h"
+#include <fabrique/types/Type.hh>
 
 namespace fabrique {
 

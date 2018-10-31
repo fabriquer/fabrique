@@ -40,9 +40,9 @@
 #include "Support/Join.h"
 #include "Support/exceptions.h"
 
-#include "Types/FileType.h"
-#include "Types/FunctionType.h"
-#include "Types/TypeError.h"
+#include <fabrique/types/FileType.hh>
+#include <fabrique/types/FunctionType.hh>
+#include <fabrique/types/TypeError.hh>
 
 #include <cassert>
 

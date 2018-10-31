@@ -34,9 +34,8 @@
 #include <fabrique/dag/Visitor.hh>
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
-#include "Types/Type.h"
-#include "Types/TypeContext.h"
-#include "Types/TypeError.h"
+#include <fabrique/types/TypeContext.hh>
+#include <fabrique/types/TypeError.hh>
 
 #include <cassert>
 

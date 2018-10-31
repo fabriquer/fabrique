@@ -1,4 +1,4 @@
-/** @file Types/SequenceType.h    Declaration of @ref fabrique::SequenceType. */
+/** @file Types/Typed.cc    Definition of @ref fabrique::Typed mixin. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -29,57 +29,6 @@
  * SUCH DAMAGE.
  */
 
-#ifndef SEQUENCE_TYPE_H
-#define SEQUENCE_TYPE_H
+#include <fabrique/types/Typed.hh>
 
-#include "Types/Type.h"
-
-namespace fabrique {
-
-
-/**
- * A type that represents an ordered sequence.
- */
-class SequenceType : public Type
-{
-public:
-	virtual ~SequenceType() override;
-	const Type& elementType() const { return elementType_; }
-
-	virtual bool isSubtype(const Type&) const override;
-
-	virtual bool hasFiles() const override;
-	virtual bool hasOutput() const override;
-	virtual bool isOrdered() const override { return true; }
-
-	virtual const Type& onAddTo(const Type&) const override;
-	virtual const Type& onPrefixWith(const Type&) const override;
-
-protected:
-	SequenceType(const Type& elementTy);
-
-private:
-	const Type& elementType_;
-	friend class TypeContext;
-	friend class RawSequenceType;
-};
-
-
-/**
- * An unparameterised sequence (e.g., `list`):
- * used to generate parameterised sequences (e.g., `list[foo]`).
- */
-class RawSequenceType : public Type
-{
-public:
-	virtual Type* Parameterise(
-		const PtrVec<Type>&, const SourceRange&) const override;
-
-protected:
-	RawSequenceType(TypeContext&);
-	friend class TypeContext;
-};
-
-} // namespace fabrique
-
-#endif
+fabrique::Typed::~Typed() {}

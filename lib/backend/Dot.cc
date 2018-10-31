@@ -44,7 +44,7 @@
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
 
-#include "Types/FileType.h"
+#include <fabrique/types/FileType.hh>
 
 #include <cassert>
 

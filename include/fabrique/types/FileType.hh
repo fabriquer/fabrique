@@ -1,4 +1,4 @@
-/** @file Types/Typed.cc    Definition of @ref fabrique::Typed mixin. */
+/** @file Types/FileType.h    Declaration of @ref fabrique::FileType. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -29,6 +29,66 @@
  * SUCH DAMAGE.
  */
 
-#include "Types/Typed.h"
+#ifndef FILE_TYPE_H
+#define FILE_TYPE_H
 
-fabrique::Typed::~Typed() {}
+#include <fabrique/types/Type.hh>
+
+namespace fabrique {
+
+class SourceRange;
+
+
+/**
+ * A type that represents an ordered sequence.
+ */
+class FileType : public Type
+{
+public:
+	static bool isInput(const Type&);
+	static bool isOutput(const Type&);
+	static bool isFileOrFiles(const Type&);
+	static void CheckFileTags(const Type&, SourceRange);
+
+	virtual TypeMap fields() const override;
+	FileType& WithArguments(const TypeMap&) const;
+
+	virtual bool hasFields() const override { return true; }
+	virtual bool hasFiles() const override { return true; }
+	virtual bool hasOutput() const override { return isOutputFile(); }
+	virtual bool isSubtype(const Type&) const override;
+	virtual bool isFile() const override { return true; }
+
+	virtual bool isInputFile() const;
+	virtual bool isOutputFile() const;
+
+	virtual const Type& onAddTo(const Type&) const override;
+	virtual const Type& onPrefixWith(const Type&) const override;
+
+protected:
+	virtual Type* Parameterise(
+		const PtrVec<Type>&, const SourceRange&) const override;
+
+private:
+	enum class Tag
+	{
+		None,
+		Input,
+		Output,
+		Invalid,
+	};
+
+	static FileType* Create(TypeContext&);
+
+	FileType(Tag tag, const PtrVec<Type>&, TypeMap args, TypeContext&);
+
+	const Tag tag_;
+	const TypeMap arguments_;
+
+	friend class TypeContext;
+};
+
+} // namespace fabrique
+
+#endif
+

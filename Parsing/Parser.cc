@@ -37,13 +37,7 @@
 #include "Plugin/Registry.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
-#include "Types/BooleanType.h"
-#include "Types/FunctionType.h"
-#include "Types/IntegerType.h"
-#include "Types/RecordType.h"
-#include "Types/StringType.h"
-#include "Types/TypeContext.h"
-#include "Types/TypeError.h"
+#include <fabrique/types/TypeContext.hh>
 #include "Support/os.h"
 
 #include <cassert>

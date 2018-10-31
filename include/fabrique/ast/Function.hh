@@ -34,13 +34,8 @@
 
 #include <fabrique/ast/Expression.hh>
 #include <fabrique/ast/HasParameters.hh>
-#include "Types/FunctionType.h"
 
 namespace fabrique {
-
-class FunctionType;
-class Type;
-
 namespace ast {
 
 class Parameter;

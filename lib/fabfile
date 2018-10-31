@@ -11,4 +11,5 @@ sources =
 	import('ast').sources
 	+ import('backend').sources
 	+ import('dag').sources
+	+ import('types').sources
 	;

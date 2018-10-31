@@ -1,6 +1,6 @@
 /** @file Types/IntegerType.h    Declaration of @ref fabrique::IntegerType. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2016 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,38 +29,35 @@
  * SUCH DAMAGE.
  */
 
-#include "Types/IntegerType.h"
-#include "Types/TypeContext.h"
-#include "Support/SourceLocation.h"
-using namespace fabrique;
+#ifndef INTEGER_TYPE_H
+#define INTEGER_TYPE_H
+
+#include <fabrique/types/Type.hh>
+
+namespace fabrique {
+
+class TypeContext;
 
 
-static const char *Name = "int";
-
-
-IntegerType::IntegerType(TypeContext& ctx)
-	: Type(Name, PtrVec<Type>(), ctx)
+/**
+ * A type that represents an ordered sequence.
+ */
+class IntegerType : public Type
 {
-}
+public:
+	virtual ~IntegerType() override;
+	static const Type& get(TypeContext&);
 
-IntegerType::~IntegerType() {}
+	virtual const Type& onAddTo(const Type&) const override;
+	bool isNumeric() const override { return true; }
 
+protected:
+	IntegerType(TypeContext&);
 
-const Type& IntegerType::get(TypeContext& ctx)
-{
-	const Type& existing = ctx.find(Name);
-	if (existing)
-		return existing;
+private:
+	friend class TypeContext;
+};
 
-	return *new IntegerType(ctx);
-}
+} // namespace fabrique
 
-
-const Type& IntegerType::onAddTo(const Type& other) const
-{
-	// The type of `int + specialInt` is `int`.
-	if (other.isSubtype(*this))
-		return *this;
-
-	return context().nilType();
-}
+#endif

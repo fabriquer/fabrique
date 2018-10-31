@@ -34,7 +34,7 @@
 
 #include <fabrique/UniqPtr.h>
 #include <fabrique/dag/Record.hh>
-#include "Types/Typed.h"
+#include <fabrique/types/Typed.hh>
 
 
 namespace fabrique {

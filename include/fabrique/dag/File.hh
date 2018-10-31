@@ -33,7 +33,7 @@
 #define DAG_FILE_H
 
 #include <fabrique/dag/Value.hh>
-#include "Types/FileType.h"
+#include <fabrique/types/FileType.hh>
 
 #include <string>
 

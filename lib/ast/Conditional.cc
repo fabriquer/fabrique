@@ -34,7 +34,6 @@
 #include <fabrique/ast/Visitor.hh>
 #include <fabrique/dag/Primitive.hh>
 #include "Support/Bytestream.h"
-#include "Types/TypeError.h"
 
 using namespace fabrique;
 using namespace fabrique::ast;

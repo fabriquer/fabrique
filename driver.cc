@@ -49,7 +49,7 @@
 #include "Support/exceptions.h"
 #include "Support/os.h"
 
-#include "Types/TypeContext.h"
+#include <fabrique/types/TypeContext.hh>
 
 #include <cassert>
 #include <cstdio>

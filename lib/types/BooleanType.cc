@@ -1,4 +1,4 @@
-/** @file Types/SequenceType.cc    Definition of @ref fabrique::SequenceType. */
+/** @file Types/BooleanType.h    Declaration of @ref fabrique::BooleanType. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -29,95 +29,37 @@
  * SUCH DAMAGE.
  */
 
-#include "Types/SequenceType.h"
-#include "Types/TypeContext.h"
-#include <cassert>
+#include <fabrique/types/BooleanType.hh>
+#include <fabrique/types/TypeContext.hh>
+#include "Support/SourceLocation.h"
 using namespace fabrique;
 
 
-static const char* Name = "list";
+static const char *Name = "bool";
 
 
-SequenceType::SequenceType(const Type& elementTy)
-	: Type(Name, PtrVec<Type>(1, &elementTy), elementTy.context()),
-	  elementType_(elementTy)
-{
-}
-
-
-SequenceType::~SequenceType()
-{
-}
-
-
-bool SequenceType::hasFiles() const
-{
-	for (const Type *t : typeParameters())
-	{
-		if (t->hasFiles())
-			return true;
-	}
-
-	return false;
-}
-
-
-bool SequenceType::hasOutput() const
-{
-	for (const Type *t : typeParameters())
-	{
-		if (t->hasOutput())
-			return true;
-	}
-
-	return false;
-}
-
-
-bool SequenceType::isSubtype(const Type& other) const
-{
-	if (not other.isOrdered())
-		return false;
-
-	auto& t = dynamic_cast<const SequenceType&>(other);
-	assert(t.typeParamCount() == t.typeParamCount());
-
-	// Sequences are covariant: list[subtype] is a subtype of list[super].
-	if (elementType().isSubtype(t.elementType()))
-		return true;
-
-	return false;
-}
-
-
-const Type& SequenceType::onAddTo(const Type& t) const
-{
-	if (isSupertype(t))
-		return *this;
-
-	if (t.isSupertype(*this))
-		return t;
-
-	return context().nilType();
-}
-
-const Type& SequenceType::onPrefixWith(const Type& t) const
-{
-	if (t == elementType_)
-		return *this;
-
-	return context().nilType();
-}
-
-
-RawSequenceType::RawSequenceType(TypeContext& ctx)
+BooleanType::BooleanType(TypeContext& ctx)
 	: Type(Name, PtrVec<Type>(), ctx)
 {
 }
 
+BooleanType::~BooleanType() {}
 
-Type* RawSequenceType::Parameterise(const PtrVec<Type>& t, const SourceRange&) const
+
+const Type& BooleanType::get(TypeContext& ctx)
 {
-	assert(t.size() == 1);
-	return new SequenceType(*t.front());
+	const Type& existing = ctx.find(Name);
+	if (existing)
+		return existing;
+
+	return *new BooleanType(ctx);
+}
+
+
+const Type& BooleanType::onAddTo(const Type& other) const
+{
+	if (other.isSubtype(*this))
+		return *this;
+
+	return context().nilType();
 }

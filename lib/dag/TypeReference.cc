@@ -35,7 +35,7 @@
 #include <fabrique/dag/TypeReference.hh>
 #include <fabrique/dag/Visitor.hh>
 #include "Support/Bytestream.h"
-#include "Types/TypeContext.h"
+#include <fabrique/types/TypeContext.hh>
 using namespace fabrique::dag;
 
 

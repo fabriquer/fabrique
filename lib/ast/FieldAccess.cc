@@ -34,7 +34,6 @@
 #include <fabrique/ast/Visitor.hh>
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
-#include "Types/Type.h"
 
 #include <cassert>
 
@@ -74,15 +73,11 @@ void FieldAccess::Accept(Visitor& v) const
 dag::ValuePtr FieldAccess::evaluate(EvalContext& ctx) const
 {
 	dag::ValuePtr base = base_->evaluate(ctx);
-	FAB_ASSERT(base->hasFields(),
-		base->type().str() + " (" + typeid(base).name() + ") should have fields");
+	SemaCheck(base->hasFields(), base_->source(), TypeName(base) + " has no fields");
 
 	const std::string fieldName(field_->name());
 	dag::ValuePtr field = base->field(fieldName);
-
-	FAB_ASSERT(field,
-		base->type().str() + " (" + typeid(base).name()
-		+ ") should have field '" + fieldName + "'");
+	SemaCheck(field, source(), "no field " + fieldName + " within " + TypeName(base));
 
 	return field;
 }

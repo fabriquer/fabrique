@@ -1,4 +1,4 @@
-/** @file Types/BooleanType.h    Declaration of @ref fabrique::BooleanType. */
+/** @file Types/IntegerType.h    Declaration of @ref fabrique::IntegerType. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -29,34 +29,38 @@
  * SUCH DAMAGE.
  */
 
-#ifndef BOOLEAN_TYPE_H
-#define BOOLEAN_TYPE_H
-
-#include "Types/Type.h"
-
-namespace fabrique {
-
-class TypeContext;
+#include <fabrique/types/IntegerType.hh>
+#include <fabrique/types/TypeContext.hh>
+#include "Support/SourceLocation.h"
+using namespace fabrique;
 
 
-/**
- * A type that represents an ordered sequence.
- */
-class BooleanType : public Type
+static const char *Name = "int";
+
+
+IntegerType::IntegerType(TypeContext& ctx)
+	: Type(Name, PtrVec<Type>(), ctx)
 {
-public:
-	virtual ~BooleanType() override;
-	static const Type& get(TypeContext&);
+}
 
-	virtual const Type& onAddTo(const Type&) const override;
+IntegerType::~IntegerType() {}
 
-protected:
-	BooleanType(TypeContext&);
 
-private:
-	friend class TypeContext;
-};
+const Type& IntegerType::get(TypeContext& ctx)
+{
+	const Type& existing = ctx.find(Name);
+	if (existing)
+		return existing;
 
-} // namespace fabrique
+	return *new IntegerType(ctx);
+}
 
-#endif
+
+const Type& IntegerType::onAddTo(const Type& other) const
+{
+	// The type of `int + specialInt` is `int`.
+	if (other.isSubtype(*this))
+		return *this;
+
+	return context().nilType();
+}

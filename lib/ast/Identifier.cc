@@ -32,7 +32,6 @@
 #include <fabrique/ast/Identifier.hh>
 #include <fabrique/ast/Visitor.hh>
 #include "Support/Bytestream.h"
-#include "Types/Type.h"
 
 using namespace fabrique::ast;
 

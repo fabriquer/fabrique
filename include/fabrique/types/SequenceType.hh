@@ -1,4 +1,4 @@
-/** @file Types/FileType.h    Declaration of @ref fabrique::FileType. */
+/** @file Types/SequenceType.h    Declaration of @ref fabrique::SequenceType. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -29,66 +29,57 @@
  * SUCH DAMAGE.
  */
 
-#ifndef FILE_TYPE_H
-#define FILE_TYPE_H
+#ifndef SEQUENCE_TYPE_H
+#define SEQUENCE_TYPE_H
 
-#include "Types/Type.h"
+#include <fabrique/types/Type.hh>
 
 namespace fabrique {
-
-class SourceRange;
 
 
 /**
  * A type that represents an ordered sequence.
  */
-class FileType : public Type
+class SequenceType : public Type
 {
 public:
-	static bool isInput(const Type&);
-	static bool isOutput(const Type&);
-	static bool isFileOrFiles(const Type&);
-	static void CheckFileTags(const Type&, SourceRange);
+	virtual ~SequenceType() override;
+	const Type& elementType() const { return elementType_; }
 
-	virtual TypeMap fields() const override;
-	FileType& WithArguments(const TypeMap&) const;
-
-	virtual bool hasFields() const override { return true; }
-	virtual bool hasFiles() const override { return true; }
-	virtual bool hasOutput() const override { return isOutputFile(); }
 	virtual bool isSubtype(const Type&) const override;
-	virtual bool isFile() const override { return true; }
 
-	virtual bool isInputFile() const;
-	virtual bool isOutputFile() const;
+	virtual bool hasFiles() const override;
+	virtual bool hasOutput() const override;
+	virtual bool isOrdered() const override { return true; }
 
 	virtual const Type& onAddTo(const Type&) const override;
 	virtual const Type& onPrefixWith(const Type&) const override;
 
 protected:
+	SequenceType(const Type& elementTy);
+
+private:
+	const Type& elementType_;
+	friend class TypeContext;
+	friend class RawSequenceType;
+};
+
+
+/**
+ * An unparameterised sequence (e.g., `list`):
+ * used to generate parameterised sequences (e.g., `list[foo]`).
+ */
+class RawSequenceType : public Type
+{
+public:
 	virtual Type* Parameterise(
 		const PtrVec<Type>&, const SourceRange&) const override;
 
-private:
-	enum class Tag
-	{
-		None,
-		Input,
-		Output,
-		Invalid,
-	};
-
-	static FileType* Create(TypeContext&);
-
-	FileType(Tag tag, const PtrVec<Type>&, TypeMap args, TypeContext&);
-
-	const Tag tag_;
-	const TypeMap arguments_;
-
+protected:
+	RawSequenceType(TypeContext&);
 	friend class TypeContext;
 };
 
 } // namespace fabrique
 
 #endif
-

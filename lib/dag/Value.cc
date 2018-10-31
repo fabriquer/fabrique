@@ -33,7 +33,6 @@
 #include <fabrique/dag/File.hh>
 #include <fabrique/dag/Rule.hh>
 #include "Support/exceptions.h"
-#include "Types/Type.h"
 
 using namespace fabrique::dag;
 using std::string;

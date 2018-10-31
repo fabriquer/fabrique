@@ -37,7 +37,7 @@
 #include "Support/Bytestream.h"
 #include "Support/SourceLocation.h"
 #include "Support/exceptions.h"
-#include "Types/FunctionType.h"
+#include <fabrique/types/FunctionType.hh>
 
 #include <cassert>
 

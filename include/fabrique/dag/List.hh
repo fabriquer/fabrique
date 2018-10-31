@@ -33,7 +33,7 @@
 #define DAG_LIST_H
 
 #include <fabrique/dag/Value.hh>
-#include "Types/SequenceType.h"
+#include <fabrique/types/SequenceType.hh>
 
 #include <memory>
 #include <vector>

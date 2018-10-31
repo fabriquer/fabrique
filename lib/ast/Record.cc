@@ -36,7 +36,6 @@
 #include <fabrique/ast/Record.hh>
 #include <fabrique/ast/Visitor.hh>
 #include "Support/Bytestream.h"
-#include "Types/RecordType.h"
 
 using namespace fabrique;
 using namespace fabrique::ast;

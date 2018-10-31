@@ -30,7 +30,7 @@
  */
 
 #include "Plugin/Plugin.h"
-#include "Types/TypeContext.h"
+#include <fabrique/types/TypeContext.hh>
 using namespace fabrique;
 using namespace fabrique::plugin;
 

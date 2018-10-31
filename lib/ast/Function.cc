@@ -41,8 +41,8 @@
 #include <fabrique/dag/TypeReference.hh>
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
-#include "Types/FunctionType.h"
-#include "Types/TypeContext.h"
+#include <fabrique/types/FunctionType.hh>
+#include <fabrique/types/TypeContext.hh>
 
 #include <cassert>
 

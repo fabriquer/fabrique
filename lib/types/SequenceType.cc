@@ -1,4 +1,4 @@
-/** @file Types/TypeError.cc    Definition of @ref fabrique::TypeError. */
+/** @file Types/SequenceType.cc    Definition of @ref fabrique::SequenceType. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -29,50 +29,97 @@
  * SUCH DAMAGE.
  */
 
-#include "Types/Type.h"
-#include "Types/TypeError.h"
+#include <fabrique/types/SequenceType.hh>
+#include <fabrique/types/TypeContext.hh>
+
+#include <cassert>
 
 using namespace fabrique;
-using std::string;
 
 
-TypeError::TypeError(const string& message, const SourceRange& src)
-	: SemanticException("type error: " + message, src)
+static const char* Name = "list";
+
+
+SequenceType::SequenceType(const Type& elementTy)
+	: Type(Name, PtrVec<Type>(1, &elementTy), elementTy.context()),
+	  elementType_(elementTy)
 {
 }
 
-TypeError::TypeError(const TypeError& orig)
-	: SemanticException(orig.message(), orig.source())
+
+SequenceType::~SequenceType()
 {
 }
 
-TypeError::~TypeError()
+
+bool SequenceType::hasFiles() const
+{
+	for (const Type *t : typeParameters())
+	{
+		if (t->hasFiles())
+			return true;
+	}
+
+	return false;
+}
+
+
+bool SequenceType::hasOutput() const
+{
+	for (const Type *t : typeParameters())
+	{
+		if (t->hasOutput())
+			return true;
+	}
+
+	return false;
+}
+
+
+bool SequenceType::isSubtype(const Type& other) const
+{
+	if (not other.isOrdered())
+		return false;
+
+	auto& t = dynamic_cast<const SequenceType&>(other);
+	assert(t.typeParamCount() == t.typeParamCount());
+
+	// Sequences are covariant: list[subtype] is a subtype of list[super].
+	if (elementType().isSubtype(t.elementType()))
+		return true;
+
+	return false;
+}
+
+
+const Type& SequenceType::onAddTo(const Type& t) const
+{
+	if (isSupertype(t))
+		return *this;
+
+	if (t.isSupertype(*this))
+		return t;
+
+	return context().nilType();
+}
+
+const Type& SequenceType::onPrefixWith(const Type& t) const
+{
+	if (t == elementType_)
+		return *this;
+
+	return context().nilType();
+}
+
+
+RawSequenceType::RawSequenceType(TypeContext& ctx)
+	: Type(Name, PtrVec<Type>(), ctx)
 {
 }
 
-WrongTypeException::WrongTypeException(const Type& want, const Type& got,
-                                       const SourceRange& src)
-	: WrongTypeException(want.str(), got.str(), src)
-{
-}
 
-WrongTypeException::WrongTypeException(const string& want, const Type& got,
-                                       const SourceRange& src)
-	: WrongTypeException(want, got.str(), src)
+Type* RawSequenceType::Parameterise(const PtrVec<Type>& t, const SourceRange&) const
 {
-}
-
-WrongTypeException::WrongTypeException(const string& want, const string& got,
-                                       const SourceRange& src)
-	: TypeError("expected " + want + ", got " + got, src)
-{
-}
-
-WrongTypeException::WrongTypeException(const WrongTypeException& orig)
-	: TypeError(orig.message(), orig.source())
-{
-}
-
-WrongTypeException::~WrongTypeException()
-{
+	assert(t.size() == 1);
+	return new SequenceType(*t.front());
 }

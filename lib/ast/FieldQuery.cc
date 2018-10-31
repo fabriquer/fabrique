@@ -35,7 +35,6 @@
 #include <fabrique/ast/Visitor.hh>
 #include <fabrique/dag/Record.hh>
 #include "Support/Bytestream.h"
-#include "Types/Type.h"
 
 #include <cassert>
 

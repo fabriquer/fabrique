@@ -46,11 +46,8 @@
 #include "Support/exceptions.h"
 #include "Support/os.h"
 
-#include "Types/FileType.h"
-#include "Types/FunctionType.h"
-#include "Types/Type.h"
-#include "Types/TypeContext.h"
-#include "Types/TypeError.h"
+#include <fabrique/types/FunctionType.hh>
+#include <fabrique/types/TypeContext.hh>
 
 #include <cassert>
 #include <set>

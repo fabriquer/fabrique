@@ -33,9 +33,8 @@
 #include <fabrique/dag/Record.hh>
 #include <fabrique/dag/Visitor.hh>
 #include "Support/Bytestream.h"
-#include "Types/RecordType.h"
-#include "Types/Type.h"
-#include "Types/TypeContext.h"
+#include <fabrique/types/RecordType.hh>
+#include <fabrique/types/TypeContext.hh>
 
 #include <cassert>
 

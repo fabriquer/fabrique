@@ -32,7 +32,7 @@
 #include <fabrique/dag/Parameter.hh>
 #include <fabrique/dag/Value.hh>
 #include "Support/Bytestream.h"
-#include "Types/Type.h"
+#include <fabrique/types/Type.hh>
 
 using namespace fabrique::dag;
 using std::shared_ptr;

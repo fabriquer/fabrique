@@ -1,4 +1,4 @@
-/** @file Types/FunctionType.cc    Definition of @ref fabrique::FunctionType. */
+/** @file Types/RecordType.h    Declaration of @ref fabrique::RecordType. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -29,71 +29,52 @@
  * SUCH DAMAGE.
  */
 
-#include "Types/FunctionType.h"
-#include "Support/Bytestream.h"
-#include "Support/Join.h"
+#ifndef STRUCTURE_TYPE_H
+#define STRUCTURE_TYPE_H
 
-#include <memory>
+#include <fabrique/StringMap.h>
+#include <fabrique/types/Type.hh>
+#include <vector>
 
-using namespace fabrique;
+namespace fabrique {
 
-
-FunctionType*
-FunctionType::Create(const PtrVec<Type>& parameterTypes, const Type& retTy)
+/**
+ * The type of a record, which contains named, typed, immutable fields.
+ */
+class RecordType : public Type
 {
-	PtrVec<Type> signature(parameterTypes);
-	signature.push_back(&retTy);
+public:
+	static RecordType* Create(const NamedTypeVec&, TypeContext&);
 
-	return new FunctionType(parameterTypes, retTy, signature);
-}
+	virtual ~RecordType() override;
+	TypeMap fields() const override { return fieldTypes_; }
 
+	virtual bool hasFields() const override { return true; }
+	virtual bool hasFiles() const override;
+	virtual bool hasOutput() const override;
+	virtual bool isSubtype(const Type&) const override;
+	virtual const Type& supertype(const Type&) const override;
 
-const std::string FunctionType::name() const
-{
-	static const char* name = "function";
-	return name;
-}
+	virtual void PrettyPrint(Bytestream&, unsigned int indent) const override;
 
+private:
+	RecordType(const StringMap<const Type&>& fields,
+	           const std::vector<std::string>& fieldNames, TypeContext&);
 
-bool FunctionType::isSubtype(const Type& other) const
-{
-	if (not other.isFunction())
-		return false;
+	//! The types of fields within the record.
+	StringMap<const Type&> fieldTypes_;
 
-	auto& t = dynamic_cast<const FunctionType&>(other);
+	/**
+	 * Ordered sequence of field names.
+	 *
+	 * This isn't semantically relevant, but it's nice to output field names
+	 * in the same order as their definition.
+	 */
+	std::vector<std::string> fieldNames_;
 
-	//
-	// Functions are covariant in their return types
-	// and contravariant in their argument types.
-	//
-	// x:(special_int)->special_int = ...
-	// y:(special_int)->int = x        # this is ok
-	// z:(int)->special_int = x        # this is not ok
-	//
+	friend class TypeContext;
+};
 
-	if (t.typeParameters().size() != typeParameters().size())
-		return false;
+} // namespace fabrique
 
-	for (size_t i = 0; i < typeParameters().size(); i++)
-	{
-		const Type& mine = *typeParameters()[i];
-		const Type& theirs = *t.typeParameters()[i];
-
-		if (not theirs.isSubtype(mine))
-			return false;
-	}
-
-	return retTy_.isSubtype(t.retTy_);
-}
-
-
-void FunctionType::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
-{
-	out
-		<< Bytestream::Operator << "("
-		<< Join<Type>(",", paramTypes_)    // don't use csv with spaces
-		<< Bytestream::Operator << ")->"
-		<< retTy_
-		<< Bytestream::Reset
-		;
-}
+#endif

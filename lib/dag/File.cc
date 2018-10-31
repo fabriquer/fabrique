@@ -36,8 +36,8 @@
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 #include "Support/os.h"
-#include "Types/FileType.h"
-#include "Types/TypeContext.h"
+#include <fabrique/types/FileType.hh>
+#include <fabrique/types/TypeContext.hh>
 
 #include <cassert>
 

@@ -33,8 +33,7 @@
 #include <fabrique/ast/Visitor.hh>
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
-#include "Types/SequenceType.h"
-#include "Types/TypeContext.h"
+#include <fabrique/types/TypeContext.hh>
 
 #include <cassert>
 

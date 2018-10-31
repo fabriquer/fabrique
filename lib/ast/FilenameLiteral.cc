@@ -37,7 +37,6 @@
 #include <fabrique/dag/File.hh>
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
-#include "Types/TypeContext.h"
 
 #include <cassert>
 #include <set>

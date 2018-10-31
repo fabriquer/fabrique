@@ -34,8 +34,9 @@
 #include <fabrique/dag/Parameter.hh>
 #include <fabrique/dag/Visitor.hh>
 #include "Support/Bytestream.h"
-#include "Types/FunctionType.h"
-#include "Types/TypeContext.h"
+#include <fabrique/types/FunctionType.hh>
+#include <fabrique/types/TypeContext.hh>
+
 using namespace fabrique::dag;
 using namespace std::placeholders;
 

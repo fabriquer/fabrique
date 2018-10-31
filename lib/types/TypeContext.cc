@@ -29,16 +29,16 @@
  * SUCH DAMAGE.
  */
 
-#include "Types/BooleanType.h"
-#include "Types/FileType.h"
-#include "Types/FunctionType.h"
-#include "Types/IntegerType.h"
-#include "Types/RecordType.h"
-#include "Types/SequenceType.h"
-#include "Types/StringType.h"
+#include <fabrique/types/BooleanType.hh>
+#include <fabrique/types/FileType.hh>
+#include <fabrique/types/FunctionType.hh>
+#include <fabrique/types/IntegerType.hh>
+#include <fabrique/types/RecordType.hh>
+#include <fabrique/types/SequenceType.hh>
+#include <fabrique/types/StringType.hh>
+#include <fabrique/types/TypeContext.hh>
 #include "Support/Bytestream.h"
 #include "Support/SourceLocation.h"
-#include "TypeContext.h"
 
 #include <cassert>
 

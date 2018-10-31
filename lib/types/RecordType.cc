@@ -31,8 +31,8 @@
 
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
-#include "Types/RecordType.h"
-#include "Types/TypeContext.h"
+#include <fabrique/types/RecordType.hh>
+#include <fabrique/types/TypeContext.hh>
 
 #include <cassert>
 

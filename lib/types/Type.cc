@@ -31,9 +31,8 @@
 
 #include "Support/Bytestream.h"
 #include "Support/SourceLocation.h"
-#include "Types/Type.h"
-#include "Types/TypeContext.h"
-#include "Types/TypeError.h"
+#include <fabrique/types/TypeContext.hh>
+#include <fabrique/types/TypeError.hh>
 
 #include <cassert>
 

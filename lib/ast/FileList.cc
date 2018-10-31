@@ -39,7 +39,6 @@
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 #include "Support/os.h"
-#include "Types/TypeContext.h"
 
 #include <cassert>
 

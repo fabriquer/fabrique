@@ -37,10 +37,9 @@
 #include "Support/ABI.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
-#include "Types/FunctionType.h"
-#include "Types/RecordType.h"
-#include "Types/Type.h"
-#include "Types/TypeContext.h"
+#include <fabrique/types/FunctionType.hh>
+#include <fabrique/types/RecordType.hh>
+#include <fabrique/types/TypeContext.hh>
 
 using namespace fabrique::ast;
 using std::string;

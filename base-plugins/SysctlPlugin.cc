@@ -36,9 +36,9 @@
 #include <fabrique/dag/DAGBuilder.hh>
 #include <fabrique/dag/Parameter.hh>
 #include "Plugin/Registry.h"
-#include "Types/FunctionType.h"
-#include "Types/RecordType.h"
-#include "Types/TypeContext.h"
+#include <fabrique/types/FunctionType.hh>
+#include <fabrique/types/RecordType.hh>
+#include <fabrique/types/TypeContext.hh>
 #include "Support/PosixError.h"
 #include "Support/exceptions.h"
 

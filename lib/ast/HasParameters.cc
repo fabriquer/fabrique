@@ -36,8 +36,6 @@
 #include <fabrique/ast/HasParameters.hh>
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
-#include "Types/Type.h"
-#include "Types/TypeError.h"
 
 using namespace fabrique;
 using namespace fabrique::ast;

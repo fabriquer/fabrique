@@ -30,10 +30,10 @@
  */
 
 #include <fabrique/ast/Builtins.hh>
-#include "Types/FileType.h"
-#include "Types/SequenceType.h"
-#include "Types/TypeContext.h"
-#include "Types/TypeError.h"
+#include <fabrique/types/FileType.hh>
+#include <fabrique/types/SequenceType.hh>
+#include <fabrique/types/TypeContext.hh>
+#include <fabrique/types/TypeError.hh>
 #include "Support/exceptions.h"
 
 #include <cassert>

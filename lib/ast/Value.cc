@@ -37,8 +37,7 @@
 #include <fabrique/dag/List.hh>
 #include <fabrique/dag/TypeReference.hh>
 #include "Support/Bytestream.h"
-#include "Types/Type.h"
-#include "Types/TypeError.h"
+#include <fabrique/types/Type.hh>
 
 #include <cassert>
 #include <iomanip>

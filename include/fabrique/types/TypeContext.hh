@@ -33,8 +33,8 @@
 #ifndef TYPE_CONTEXT_H
 #define TYPE_CONTEXT_H
 
-#include "fabrique/PtrVec.h"
-#include "Types/Type.h"
+#include <fabrique/PtrVec.h>
+#include <fabrique/types/Type.hh>
 
 #include <map>
 #include <memory>

@@ -33,10 +33,8 @@
 #include <fabrique/dag/List.hh>
 #include <fabrique/dag/Parameter.hh>
 #include "Plugin/Registry.h"
-#include "Types/FileType.h"
-#include "Types/FunctionType.h"
-#include "Types/RecordType.h"
-#include "Types/TypeContext.h"
+#include <fabrique/types/RecordType.hh>
+#include <fabrique/types/TypeContext.hh>
 #include "Support/Platform.h"
 #include "Support/exceptions.h"
 
