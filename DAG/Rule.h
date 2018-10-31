@@ -33,7 +33,7 @@
 #ifndef DAG_ACTION_H
 #define DAG_ACTION_H
 
-#include "ADT/StringMap.h"
+#include "fabrique/StringMap.h"
 #include "DAG/Callable.h"
 #include "DAG/DAG.h"
 #include "DAG/Value.h"

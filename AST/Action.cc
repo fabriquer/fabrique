@@ -29,7 +29,7 @@
  * SUCH DAMAGE.
  */
 
-#include "ADT/UniqPtr.h"
+#include "fabrique/UniqPtr.h"
 #include "AST/Action.h"
 #include "AST/EvalContext.h"
 #include "AST/Visitor.h"

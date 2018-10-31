@@ -35,7 +35,7 @@
 #ifndef TRACE_POINT_H
 #define TRACE_POINT_H
 
-#include "ADT/UniqPtr.h"
+#include "fabrique/UniqPtr.h"
 #include "AST/Expression.h"
 
 

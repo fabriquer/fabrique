@@ -32,7 +32,7 @@
 #ifndef EXPRESSION_H
 #define EXPRESSION_H
 
-#include "ADT/PtrVec.h"
+#include "fabrique/PtrVec.h"
 #include "AST/Node.h"
 #include "DAG/Value.h"
 #include "Support/ABI.h"

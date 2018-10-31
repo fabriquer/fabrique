@@ -32,7 +32,7 @@
 #ifndef FIELD_QUERY_H
 #define FIELD_QUERY_H
 
-#include "ADT/UniqPtr.h"
+#include "fabrique/UniqPtr.h"
 #include "AST/Expression.h"
 
 namespace fabrique {

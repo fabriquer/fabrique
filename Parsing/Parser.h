@@ -33,8 +33,8 @@
 #ifndef PARSER_H
 #define PARSER_H
 
+#include "fabrique/UniqPtr.h"
 #include "AST/ast.h"
-#include "ADT/UniqPtr.h"
 #include "Support/ErrorReport.h"
 
 #include <map>

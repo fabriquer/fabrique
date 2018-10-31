@@ -1,4 +1,4 @@
-/** @file ADT/PtrVec.h    Declaration of @ref fabrique::PtrVec. */
+/** @file fabrique/PtrVec.h    Declaration of @ref fabrique::PtrVec. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -32,7 +32,7 @@
 #ifndef PTRVEC_H
 #define PTRVEC_H
 
-#include "ADT/UniqPtr.h"
+#include <fabrique/UniqPtr.h>
 #include <vector>
 
 namespace fabrique {

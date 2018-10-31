@@ -45,7 +45,7 @@ defines =
 	+ (if platform.windows [ '-D OS_WINDOWS' ] else [])
 	;
 
-includes = foreach dir <- [ srcroot buildroot ] '-I ' + dir;
+includes = foreach dir <- [ srcroot srcroot + '/include' buildroot ] '-I ' + dir;
 
 # Treat vendor headers as system headers (disable warnings).
 vendor_flags = [ '-isystem ' + srcroot + '/vendor' ];

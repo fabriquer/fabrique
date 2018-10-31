@@ -35,8 +35,8 @@
 #ifndef CALLABLE_H
 #define CALLABLE_H
 
-#include "ADT/PtrVec.h"
-#include "ADT/StringMap.h"
+#include "fabrique/PtrVec.h"
+#include "fabrique/StringMap.h"
 
 #include "AST/Parameter.h"
 

@@ -32,7 +32,7 @@
 #ifndef AST_VALUE_H
 #define AST_VALUE_H
 
-#include "ADT/UniqPtr.h"
+#include "fabrique/UniqPtr.h"
 #include "AST/Expression.h"
 #include "AST/Identifier.h"
 #include "AST/TypeReference.h"

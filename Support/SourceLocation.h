@@ -38,7 +38,7 @@
 #ifndef LOCATION_H
 #define LOCATION_H
 
-#include "ADT/UniqPtr.h"
+#include "fabrique/UniqPtr.h"
 #include "Support/Printable.h"
 
 #include <string>

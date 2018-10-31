@@ -32,7 +32,7 @@
 #ifndef DAG_VALUE_H
 #define DAG_VALUE_H
 
-#include "ADT/StringMap.h"
+#include "fabrique/StringMap.h"
 #include "Support/Printable.h"
 #include "Support/SourceLocation.h"
 #include "Support/Uncopyable.h"

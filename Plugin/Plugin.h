@@ -32,7 +32,7 @@
 #ifndef PLUGIN_H
 #define PLUGIN_H
 
-#include "ADT/UniqPtr.h"
+#include "fabrique/UniqPtr.h"
 #include "DAG/Record.h"
 #include "Types/Typed.h"
 

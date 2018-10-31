@@ -33,8 +33,8 @@
 #ifndef DAG_CALLABLE_H
 #define DAG_CALLABLE_H
 
-#include "ADT/PtrVec.h"
-#include "ADT/StringMap.h"
+#include "fabrique/PtrVec.h"
+#include "fabrique/StringMap.h"
 #include "DAG/Value.h"
 #include "Support/SourceLocation.h"
 

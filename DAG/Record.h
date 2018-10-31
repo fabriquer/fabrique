@@ -32,7 +32,7 @@
 #ifndef DAG_STRUCTURE_H
 #define DAG_STRUCTURE_H
 
-#include "ADT/StringMap.h"
+#include "fabrique/StringMap.h"
 #include "DAG/Value.h"
 
 #include <memory>

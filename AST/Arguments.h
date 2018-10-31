@@ -32,7 +32,7 @@
 #ifndef AST_ARGUMENTS_H
 #define AST_ARGUMENTS_H
 
-#include "ADT/UniqPtr.h"
+#include "fabrique/UniqPtr.h"
 #include "AST/Argument.h"
 #include "AST/Node.h"
 

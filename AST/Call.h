@@ -32,8 +32,8 @@
 #ifndef CALL_H
 #define CALL_H
 
-#include "ADT/PtrVec.h"
-#include "ADT/UniqPtr.h"
+#include "fabrique/PtrVec.h"
+#include "fabrique/UniqPtr.h"
 
 #include "AST/Arguments.h"
 #include "AST/Expression.h"

@@ -32,7 +32,7 @@
 #ifndef BINARY_OPERATOR_H
 #define BINARY_OPERATOR_H
 
-#include "ADT/UniqPtr.h"
+#include "fabrique/UniqPtr.h"
 #include "AST/Expression.h"
 
 #include <memory>

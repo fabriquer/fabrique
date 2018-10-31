@@ -32,7 +32,7 @@
 #ifndef PLUGIN_REGISTRY_H
 #define PLUGIN_REGISTRY_H
 
-#include "ADT/UniqPtr.h"
+#include "fabrique/UniqPtr.h"
 #include "Plugin/Plugin.h"
 
 

@@ -34,8 +34,8 @@
 
 #include <functional>
 
-#include "ADT/PtrVec.h"
-#include "ADT/StringMap.h"
+#include "fabrique/PtrVec.h"
+#include "fabrique/StringMap.h"
 #include "Support/Printable.h"
 #include "Support/Uncopyable.h"
 

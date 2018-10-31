@@ -32,7 +32,7 @@
 #ifndef FIELD_ACCESS_H
 #define FIELD_ACCESS_H
 
-#include "ADT/UniqPtr.h"
+#include "fabrique/UniqPtr.h"
 #include "AST/Expression.h"
 
 namespace fabrique {

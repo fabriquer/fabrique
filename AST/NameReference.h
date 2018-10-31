@@ -32,8 +32,8 @@
 #ifndef NAME_REFERENCE_H
 #define NAME_REFERENCE_H
 
-#include "ADT/PtrVec.h"
-#include "ADT/UniqPtr.h"
+#include "fabrique/PtrVec.h"
+#include "fabrique/UniqPtr.h"
 
 #include "AST/Argument.h"
 #include "AST/Expression.h"

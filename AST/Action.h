@@ -32,7 +32,7 @@
 #ifndef ACTION_H
 #define ACTION_H
 
-#include "ADT/PtrVec.h"
+#include "fabrique/PtrVec.h"
 
 #include "AST/Arguments.h"
 #include "AST/Expression.h"

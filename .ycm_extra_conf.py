@@ -9,6 +9,7 @@ def FlagsForFile(filename, **kwargs):
 
             # Include files rooted in the current source tree
             '-I%s' % srcroot,
+            '-I%s/include' % srcroot,
             '-I%s/build' % srcroot,
             '-I%s/build/Debug' % srcroot,
 

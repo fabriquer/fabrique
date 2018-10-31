@@ -32,7 +32,7 @@
 #ifndef CONDITIONAL_H
 #define CONDITIONAL_H
 
-#include "ADT/UniqPtr.h"
+#include "fabrique/UniqPtr.h"
 #include "AST/Expression.h"
 
 namespace fabrique {

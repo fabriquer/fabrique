@@ -32,7 +32,7 @@
 #ifndef ARGUMENT_H
 #define ARGUMENT_H
 
-#include "ADT/UniqPtr.h"
+#include "fabrique/UniqPtr.h"
 #include "AST/Expression.h"
 #include "AST/Identifier.h"
 
