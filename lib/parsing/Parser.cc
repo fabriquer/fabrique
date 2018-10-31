@@ -68,7 +68,30 @@ UniqPtr<ast::Value> Parser::Parse(std::string s, SourceRange src)
 		<< Bytestream::Reset << "\n"
 		;
 
-	return nullptr;
+	antlr4::ANTLRInputStream f(s);
+	FabLexer lexer(&f);
+
+	antlr4::CommonTokenStream tokens(&lexer);
+	FabParser antlrParser(&tokens);
+
+	const string name = src.filename();
+
+	ErrorListener errorListener(name);
+	auto &errorProxy = antlrParser.getErrorListenerDispatch();
+	errorProxy.removeErrorListeners();
+	errorProxy.addErrorListener(&errorListener);
+
+	ASTBuilder visitor(name);
+	if (not visitor.visitValue(antlrParser.value()))
+	{
+		return nullptr;
+	}
+
+	auto values = visitor.takeValues();
+	SemaCheck(not values.empty(), src, "no value in '" + s + "'");
+	SemaCheck(values.size() == 1, src, "multiple values in '" + s + "'");
+
+	return std::move(values.front());
 }
 
 bool Parser::ParseFile(std::istream& input, UniqPtrVec<ast::Value>& values, string name)
