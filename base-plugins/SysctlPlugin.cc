@@ -33,12 +33,12 @@
 #include <sys/types.h>
 #include <sys/sysctl.h>
 
-#include "DAG/DAGBuilder.h"
-#include "DAG/Parameter.h"
-#include "Plugin/Registry.h"
-#include "Types/FunctionType.h"
-#include "Types/RecordType.h"
-#include "Types/TypeContext.h"
+#include <fabrique/dag/DAGBuilder.hh>
+#include <fabrique/dag/Parameter.hh>
+#include <fabrique/plugin/Registry.hh>
+#include <fabrique/types/FunctionType.hh>
+#include <fabrique/types/RecordType.hh>
+#include <fabrique/types/TypeContext.hh>
 #include "Support/PosixError.h"
 #include "Support/exceptions.h"
 

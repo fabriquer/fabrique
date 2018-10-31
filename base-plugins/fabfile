@@ -18,6 +18,7 @@ plugins = [
 cxxflags = [
 	'-std=c++11'
 	'-I' srcroot
+	'-I' srcroot + '/include'
 	'-Wall'
 ] + defines;
 

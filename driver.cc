@@ -30,26 +30,26 @@
  * SUCH DAMAGE.
  */
 
-#include "AST/ASTDump.h"
-#include "AST/EvalContext.h"
+#include <fabrique/ast/ASTDump.hh>
+#include <fabrique/ast/EvalContext.hh>
 
-#include "Backend/Backend.h"
+#include <fabrique/backend/Backend.hh>
 
-#include "DAG/DAG.h"
-#include "DAG/File.h"
-#include "DAG/Parameter.h"
+#include <fabrique/dag/DAG.hh>
+#include <fabrique/dag/File.hh>
+#include <fabrique/dag/Parameter.hh>
 
-#include "Parsing/Parser.h"
+#include <fabrique/parsing/Parser.hh>
 
-#include "Plugin/Loader.h"
-#include "Plugin/Registry.h"
+#include <fabrique/plugin/Loader.hh>
+#include <fabrique/plugin/Registry.hh>
 
 #include "Support/Bytestream.h"
 #include "Support/CLIArguments.h"
 #include "Support/exceptions.h"
 #include "Support/os.h"
 
-#include "Types/TypeContext.h"
+#include <fabrique/types/TypeContext.hh>
 
 #include <cassert>
 #include <cstdio>

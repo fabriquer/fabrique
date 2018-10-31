@@ -36,7 +36,7 @@
 #ifndef JOIN_H
 #define JOIN_H
 
-#include "ADT/PtrVec.h"
+#include "fabrique/PtrVec.h"
 #include "Support/Printable.h"
 
 #include <functional>

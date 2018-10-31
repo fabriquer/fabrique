@@ -45,7 +45,7 @@ defines =
 	+ (if platform.windows [ '-D OS_WINDOWS' ] else [])
 	;
 
-includes = foreach dir <- [ srcroot buildroot ] '-I ' + dir;
+includes = foreach dir <- [ srcroot srcroot + '/include' buildroot ] '-I ' + dir;
 
 # Treat vendor headers as system headers (disable warnings).
 vendor_flags = [
@@ -75,23 +75,10 @@ generated_cxx_flags =
 	+ if debug [ '-D' 'YYDEBUG' ] else [];
 
 
-#
-# TODO: allow 'for module in [ ast backends dag ]
-# (or even better, foreach dir in [ 'AST' 'Backend' ... ]
-#   {
-#     module = import(dir + '/' + dir + '.fab');
-#     module.sources
-#   }
-#
 cxx_srcs =
-	files(driver.cc)
-	+ import('AST').sources
-	+ import('Backend').sources
-	+ import('DAG').sources
-	+ import('Parsing').sources
-	+ import('Plugin').sources
+	import('lib').sources
 	+ import('Support').sources
-	+ import('Types').sources
+	+ files(driver.cc)
 	;
 
 generated_srcs =
