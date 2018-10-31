@@ -268,7 +268,10 @@ Bytestream& SourceRange::PrintSource(Bytestream& out, SourceLocation caret,
 	if (!filename.empty())
 	{
 		std::ifstream sourceFile(filename.c_str());
-		assert(sourceFile.good());
+		if (not sourceFile.good())
+		{
+			return out;
+		}
 
 		string line;   // the last-read line
 
