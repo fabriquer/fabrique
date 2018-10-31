@@ -1,4 +1,4 @@
-/** @file Parsing/Parser.cc    Definition of @ref fabrique::ast::Parser. */
+/** @file AST/Conditional.cc    Definition of @ref fabrique::ast::Conditional. */
 /*
  * Copyright (c) 2013-2014, 2018 Jonathan Anderson
  * All rights reserved.
@@ -29,60 +29,56 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/ast/ast.hh>
-#include "Parsing/Parser.h"
-#include "Parsing/Token.h"
-#include "Plugin/Loader.h"
-#include "Plugin/Plugin.h"
-#include "Plugin/Registry.h"
+#include <fabrique/ast/Conditional.hh>
+#include <fabrique/ast/Value.hh>
+#include <fabrique/ast/Visitor.hh>
+#include "DAG/Primitive.h"
 #include "Support/Bytestream.h"
-#include "Support/exceptions.h"
-#include "Types/BooleanType.h"
-#include "Types/FunctionType.h"
-#include "Types/IntegerType.h"
-#include "Types/RecordType.h"
-#include "Types/StringType.h"
-#include "Types/TypeContext.h"
 #include "Types/TypeError.h"
-#include "Support/os.h"
-
-#include <cassert>
-#include <fstream>
-#include <sstream>
 
 using namespace fabrique;
-using namespace fabrique::parsing;
-
-using std::string;
-using std::unique_ptr;
+using namespace fabrique::ast;
 
 
-bool Parser::ParseFile(std::istream& input, UniqPtrVec<ast::Value>& values, string name)
+Conditional::Conditional(UniqPtr<Expression> condition,
+                         UniqPtr<Expression> thenResult,
+                         UniqPtr<Expression> elseResult,
+                         SourceRange src)
+	: Expression(src),
+	  condition_(std::move(condition)),
+	  thenClause_(std::move(thenResult)),
+	  elseClause_(std::move(elseResult))
 {
-	Bytestream& dbg = Bytestream::Debug("parser.file");
-	dbg
-		<< Bytestream::Action << "Parsing"
-		<< Bytestream::Type << " file"
-		<< Bytestream::Operator << " '"
-		<< Bytestream::Literal << name
-		<< Bytestream::Operator << "'"
-		<< Bytestream::Reset << "\n"
-		;
+}
 
-	return false;
+void Conditional::PrettyPrint(Bytestream& out, unsigned int indent) const
+{
+	out << Bytestream::Operator << "if " << Bytestream::Reset;
+	condition_->PrettyPrint(out, indent);
+	out << " ";
+	thenClause_->PrettyPrint(out, indent);
+	out << Bytestream::Operator << " else " << Bytestream::Reset;
+	elseClause_->PrettyPrint(out, indent);
 }
 
 
-const ErrorReport& Parser::ReportError(const string& msg, const HasSource& s,
-                                       ErrorReport::Severity severity)
+void Conditional::Accept(Visitor& v) const
 {
-	return ReportError(msg, s.source(), severity);
+	if (v.Enter(*this))
+	{
+		condition_->Accept(v);
+		thenClause_->Accept(v);
+		elseClause_->Accept(v);
+	}
+
+	v.Leave(*this);
 }
 
-const ErrorReport& Parser::ReportError(const string& message,
-                                       const SourceRange& location,
-                                       ErrorReport::Severity severity)
+
+dag::ValuePtr Conditional::evaluate(EvalContext& ctx) const
 {
-	errs_.emplace_back(message, location, severity);
-	return errs_.back();
+	auto condition = condition_->evaluateAs<dag::Boolean>(ctx);
+
+	// Evaluate either the "then" or the "else" clause.
+	return (condition->value() ? thenClause_ : elseClause_)->evaluate(ctx);
 }

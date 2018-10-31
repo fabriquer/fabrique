@@ -1,4 +1,4 @@
-/** @file Parsing/Parser.cc    Definition of @ref fabrique::ast::Parser. */
+/** @file AST/BinaryOperation.h    Declaration of @ref fabrique::ast::BinaryOperation. */
 /*
  * Copyright (c) 2013-2014, 2018 Jonathan Anderson
  * All rights reserved.
@@ -29,60 +29,79 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/ast/ast.hh>
-#include "Parsing/Parser.h"
-#include "Parsing/Token.h"
-#include "Plugin/Loader.h"
-#include "Plugin/Plugin.h"
-#include "Plugin/Registry.h"
-#include "Support/Bytestream.h"
-#include "Support/exceptions.h"
-#include "Types/BooleanType.h"
-#include "Types/FunctionType.h"
-#include "Types/IntegerType.h"
-#include "Types/RecordType.h"
-#include "Types/StringType.h"
-#include "Types/TypeContext.h"
-#include "Types/TypeError.h"
-#include "Support/os.h"
+#ifndef BINARY_OPERATOR_H
+#define BINARY_OPERATOR_H
 
-#include <cassert>
-#include <fstream>
-#include <sstream>
+#include <fabrique/ast/Expression.hh>
 
-using namespace fabrique;
-using namespace fabrique::parsing;
+#include <memory>
 
-using std::string;
-using std::unique_ptr;
+namespace fabrique {
 
+class Bytestream;
 
-bool Parser::ParseFile(std::istream& input, UniqPtrVec<ast::Value>& values, string name)
+namespace ast {
+
+/**
+ * An operation with two operands.
+ */
+class BinaryOperation : public Expression
 {
-	Bytestream& dbg = Bytestream::Debug("parser.file");
-	dbg
-		<< Bytestream::Action << "Parsing"
-		<< Bytestream::Type << " file"
-		<< Bytestream::Operator << " '"
-		<< Bytestream::Literal << name
-		<< Bytestream::Operator << "'"
-		<< Bytestream::Reset << "\n"
-		;
+public:
+	enum Operator
+	{
+		// multiplication operators:
+		Divide,
+		Multiply,
 
-	return false;
-}
+		// addition operatiors:
+		Add,
+		Prefix,
+		Subtract,
 
+		// comparison operators:
+		Equal,
+		NotEqual,
 
-const ErrorReport& Parser::ReportError(const string& msg, const HasSource& s,
-                                       ErrorReport::Severity severity)
-{
-	return ReportError(msg, s.source(), severity);
-}
+		// logical operators:
+		And,
+		Or,
+		Xor,
 
-const ErrorReport& Parser::ReportError(const string& message,
-                                       const SourceRange& location,
-                                       ErrorReport::Severity severity)
-{
-	errs_.emplace_back(message, location, severity);
-	return errs_.back();
-}
+		Invalid,
+	};
+
+	BinaryOperation(UniqPtr<Expression> lhs, UniqPtr<Expression> rhs,
+	                enum Operator, SourceRange);
+
+	static Operator Op(const std::string&);
+	static std::string OpStr(Operator);
+
+	static BinaryOperation* Create(
+		UniqPtr<Expression>&&, Operator, UniqPtr<Expression>&&);
+
+	Operator getOp() const { return op_; }
+	const Expression& getLHS() const { return *lhs_; }
+	const Expression& getRHS() const { return *rhs_; }
+
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
+	virtual void Accept(Visitor&) const override;
+
+	virtual dag::ValuePtr evaluate(EvalContext&) const override;
+
+private:
+	static const Type& ResultType(const Type& lhs, const Type& rhs,
+                                      Operator, SourceRange&);
+
+	const std::unique_ptr<Expression> lhs_;
+	const std::unique_ptr<Expression> rhs_;
+	const Operator op_;
+};
+
+} // namespace ast
+
+Bytestream& operator << (Bytestream&, enum ast::BinaryOperation::Operator);
+
+} // namespace fabrique
+
+#endif

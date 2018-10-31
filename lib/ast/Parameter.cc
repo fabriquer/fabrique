@@ -1,6 +1,6 @@
-/** @file Parsing/Parser.cc    Definition of @ref fabrique::ast::Parser. */
+/** @file AST/Parameter.cc    Definition of @ref fabrique::ast::Parameter. */
 /*
- * Copyright (c) 2013-2014, 2018 Jonathan Anderson
+ * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,60 +29,68 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/ast/ast.hh>
-#include "Parsing/Parser.h"
-#include "Parsing/Token.h"
-#include "Plugin/Loader.h"
-#include "Plugin/Plugin.h"
-#include "Plugin/Registry.h"
+#include <fabrique/ast/Parameter.hh>
+#include <fabrique/ast/Visitor.hh>
+#include "DAG/Parameter.h"
+#include "DAG/TypeReference.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
-#include "Types/BooleanType.h"
-#include "Types/FunctionType.h"
-#include "Types/IntegerType.h"
-#include "Types/RecordType.h"
-#include "Types/StringType.h"
-#include "Types/TypeContext.h"
-#include "Types/TypeError.h"
-#include "Support/os.h"
 
-#include <cassert>
-#include <fstream>
-#include <sstream>
+#include <memory>
 
 using namespace fabrique;
-using namespace fabrique::parsing;
-
-using std::string;
-using std::unique_ptr;
+using namespace fabrique::ast;
 
 
-bool Parser::ParseFile(std::istream& input, UniqPtrVec<ast::Value>& values, string name)
+Parameter::Parameter(UniqPtr<Identifier> name, UniqPtr<TypeReference> type,
+                     UniqPtr<Expression> defaultValue)
+	: Node(SourceRange::Over(name, defaultValue)),
+	  name_(std::move(name)), type_(std::move(type)),
+	  defaultValue_(std::move(defaultValue))
 {
-	Bytestream& dbg = Bytestream::Debug("parser.file");
-	dbg
-		<< Bytestream::Action << "Parsing"
-		<< Bytestream::Type << " file"
-		<< Bytestream::Operator << " '"
-		<< Bytestream::Literal << name
-		<< Bytestream::Operator << "'"
-		<< Bytestream::Reset << "\n"
+	if (name_->reservedName())
+		throw SyntaxError("reserved name", name_->source());
+}
+
+
+void Parameter::PrettyPrint(Bytestream& out, unsigned int indent) const
+{
+	out
+		<< Bytestream::Definition << *name_
+		<< Bytestream::Operator << ":"
+		<< Bytestream::Reset
 		;
 
-	return false;
+	type_->PrettyPrint(out, indent + 1);
+
+	if (defaultValue_)
+	{
+		out << Bytestream::Operator << " = ";
+		defaultValue_->PrettyPrint(out, indent + 1);
+	}
 }
 
 
-const ErrorReport& Parser::ReportError(const string& msg, const HasSource& s,
-                                       ErrorReport::Severity severity)
+void Parameter::Accept(Visitor& v) const
 {
-	return ReportError(msg, s.source(), severity);
+	if (v.Enter(*this))
+	{
+		name_->Accept(v);
+		if (defaultValue_)
+			defaultValue_->Accept(v);
+	}
+
+	v.Leave(*this);
 }
 
-const ErrorReport& Parser::ReportError(const string& message,
-                                       const SourceRange& location,
-                                       ErrorReport::Severity severity)
+std::shared_ptr<dag::Parameter> Parameter::evaluate(EvalContext& ctx) const
 {
-	errs_.emplace_back(message, location, severity);
-	return errs_.back();
+	dag::ValuePtr defaultValue;
+	if (defaultValue_)
+		defaultValue = defaultValue_->evaluate(ctx);
+
+	auto &type = type_->evaluateAs<dag::TypeReference>(ctx)->referencedType();
+
+	return std::shared_ptr<dag::Parameter>(
+		new dag::Parameter(name_->name(), type, defaultValue, source()));
 }

@@ -1,4 +1,4 @@
-/** @file Parsing/Parser.cc    Definition of @ref fabrique::ast::Parser. */
+/** @file AST/Function.h    Declaration of @ref fabrique::ast::Function. */
 /*
  * Copyright (c) 2013-2014, 2018 Jonathan Anderson
  * All rights reserved.
@@ -29,60 +29,46 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/ast/ast.hh>
-#include "Parsing/Parser.h"
-#include "Parsing/Token.h"
-#include "Plugin/Loader.h"
-#include "Plugin/Plugin.h"
-#include "Plugin/Registry.h"
-#include "Support/Bytestream.h"
-#include "Support/exceptions.h"
-#include "Types/BooleanType.h"
+#ifndef FUNCTION_H
+#define FUNCTION_H
+
+#include <fabrique/ast/Expression.hh>
+#include <fabrique/ast/HasParameters.hh>
 #include "Types/FunctionType.h"
-#include "Types/IntegerType.h"
-#include "Types/RecordType.h"
-#include "Types/StringType.h"
-#include "Types/TypeContext.h"
-#include "Types/TypeError.h"
-#include "Support/os.h"
 
-#include <cassert>
-#include <fstream>
-#include <sstream>
+namespace fabrique {
 
-using namespace fabrique;
-using namespace fabrique::parsing;
+class FunctionType;
+class Type;
 
-using std::string;
-using std::unique_ptr;
+namespace ast {
+
+class Parameter;
+class Value;
 
 
-bool Parser::ParseFile(std::istream& input, UniqPtrVec<ast::Value>& values, string name)
+/**
+ * A function allows users to create build abstractions.
+ */
+class Function : public Expression, public HasParameters
 {
-	Bytestream& dbg = Bytestream::Debug("parser.file");
-	dbg
-		<< Bytestream::Action << "Parsing"
-		<< Bytestream::Type << " file"
-		<< Bytestream::Operator << " '"
-		<< Bytestream::Literal << name
-		<< Bytestream::Operator << "'"
-		<< Bytestream::Reset << "\n"
-		;
+public:
+	Function(UniqPtrVec<Parameter> params, UniqPtr<TypeReference> resultType,
+	         UniqPtr<Expression> body, SourceRange);
 
-	return false;
-}
+	const Expression& body() const { return *body_; }
 
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
+	virtual void Accept(Visitor&) const override;
 
-const ErrorReport& Parser::ReportError(const string& msg, const HasSource& s,
-                                       ErrorReport::Severity severity)
-{
-	return ReportError(msg, s.source(), severity);
-}
+	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
-const ErrorReport& Parser::ReportError(const string& message,
-                                       const SourceRange& location,
-                                       ErrorReport::Severity severity)
-{
-	errs_.emplace_back(message, location, severity);
-	return errs_.back();
-}
+private:
+	const UniqPtr<TypeReference> resultType_;
+	const UniqPtr<Expression> body_;
+};
+
+} // namespace ast
+} // namespace fabrique
+
+#endif

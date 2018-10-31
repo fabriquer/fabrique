@@ -1,6 +1,9 @@
-/** @file Parsing/Parser.cc    Definition of @ref fabrique::ast::Parser. */
+/**
+ * @file AST/Record.cc
+ * Definition of @ref fabrique::ast::Record.
+ */
 /*
- * Copyright (c) 2013-2014, 2018 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,60 +32,67 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/ast/ast.hh>
-#include "Parsing/Parser.h"
-#include "Parsing/Token.h"
-#include "Plugin/Loader.h"
-#include "Plugin/Plugin.h"
-#include "Plugin/Registry.h"
+#include <fabrique/ast/EvalContext.hh>
+#include <fabrique/ast/Record.hh>
+#include <fabrique/ast/Visitor.hh>
 #include "Support/Bytestream.h"
-#include "Support/exceptions.h"
-#include "Types/BooleanType.h"
-#include "Types/FunctionType.h"
-#include "Types/IntegerType.h"
 #include "Types/RecordType.h"
-#include "Types/StringType.h"
-#include "Types/TypeContext.h"
-#include "Types/TypeError.h"
-#include "Support/os.h"
-
-#include <cassert>
-#include <fstream>
-#include <sstream>
 
 using namespace fabrique;
-using namespace fabrique::parsing;
-
-using std::string;
-using std::unique_ptr;
+using namespace fabrique::ast;
 
 
-bool Parser::ParseFile(std::istream& input, UniqPtrVec<ast::Value>& values, string name)
+Record::Record(UniqPtrVec<Value> fields, SourceRange loc)
+	: Expression(loc), fields_(std::move(fields))
 {
-	Bytestream& dbg = Bytestream::Debug("parser.file");
-	dbg
-		<< Bytestream::Action << "Parsing"
-		<< Bytestream::Type << " file"
-		<< Bytestream::Operator << " '"
-		<< Bytestream::Literal << name
-		<< Bytestream::Operator << "'"
-		<< Bytestream::Reset << "\n"
+}
+
+void Record::PrettyPrint(Bytestream& out, unsigned int indent) const
+{
+	const std::string outerTabs(indent, '\t');
+
+	out
+		<< Bytestream::Definition << "record\n"
+		<< Bytestream::Operator << outerTabs << "{\n"
 		;
 
-	return false;
+	for (auto& f : fields_)
+	{
+		f->PrettyPrint(out, indent + 1);
+		out << "\n";
+	}
+
+	out
+		<< Bytestream::Operator << outerTabs << "}"
+		<< Bytestream::Reset
+		;
 }
 
-
-const ErrorReport& Parser::ReportError(const string& msg, const HasSource& s,
-                                       ErrorReport::Severity severity)
+void Record::Accept(Visitor& v) const
 {
-	return ReportError(msg, s.source(), severity);
+	if (v.Enter(*this))
+	{
+		for (auto& f : fields_)
+		{
+			f->Accept(v);
+		}
+	}
+
+	v.Leave(*this);
 }
 
-const ErrorReport& Parser::ReportError(const string& message,
-                                       const SourceRange& location,
-                                       ErrorReport::Severity severity)
+dag::ValuePtr Record::evaluate(EvalContext& ctx) const
 {
-	errs_.emplace_back(message, location, severity);
-	return errs_.back();
+	auto instantiationScope(ctx.EnterScope("record"));
+
+	dag::ValueMap fields;
+	for (auto& field : fields_)
+	{
+		auto &name = field->name();
+		SemaCheck(name, field->source(), "record fields must have names");
+
+		fields[name->name()] = field->evaluate(ctx);
+	}
+
+	return ctx.builder().Record(fields, source());
 }

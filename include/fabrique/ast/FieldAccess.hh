@@ -1,12 +1,11 @@
-/** @file Parsing/Parser.h    Declaration of @ref fabrique::ast::Parser. */
+/** @file AST/FieldAccess.h    Declaration of @ref fabrique::ast::FieldAccess. */
 /*
- * Copyright (c) 2013-2014, 2018 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
- * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
+ * ("CTSRD"), as part of the DARPA CRASH research programme.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,61 +29,41 @@
  * SUCH DAMAGE.
  */
 
-#ifndef PARSER_H
-#define PARSER_H
+#ifndef FIELD_ACCESS_H
+#define FIELD_ACCESS_H
 
 #include <fabrique/UniqPtr.h>
-#include <fabrique/ast/ast.hh>
-#include "Support/ErrorReport.h"
-
-#include <map>
-#include <stack>
+#include <fabrique/ast/Expression.hh>
 
 namespace fabrique {
+namespace ast {
 
-class TypeContext;
-class Lexer;
-class Token;
-
-namespace plugin {
-class Loader;
-class Registry;
-}
-
-namespace parsing {
+class Identifier;
+class StringLiteral;
 
 
 /**
- * Parses Fabrique files as driven by flex/byacc.
+ * An expression that imports a Fabrique module.
  */
-class Parser
+class FieldAccess : public Expression
 {
 public:
-	//! Parse Fabrique fragments defined at, e.g., the command line.
-	const Type& ParseDefinitions(const std::vector<std::string>& defs);
+	FieldAccess(UniqPtr<Expression> base, UniqPtr<Identifier> field);
 
-	//! Parse Fabrique input (usually a file) into @ref Value objects.
-	bool ParseFile(std::istream&, UniqPtrVec<ast::Value>&, std::string name = "");
+	const Expression& base() const { return *base_; }
+	const Identifier& field() const { return *field_; }
 
-	//! Errors encountered during parsing.
-	const std::vector<ErrorReport>& errors() const { return errs_; }
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
+	virtual void Accept(Visitor&) const override;
 
-	//! Input files encountered during parsing.
-	const std::vector<std::string>& files() const { return files_; }
-
+	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
 private:
-	const ErrorReport& ReportError(const std::string&, const SourceRange&,
-		ErrorReport::Severity = ErrorReport::Severity::Error);
-	const ErrorReport& ReportError(const std::string&, const HasSource&,
-		ErrorReport::Severity = ErrorReport::Severity::Error);
-
-	//! Input files, in order they were parsed.
-	std::vector<std::string> files_;
-	std::vector<ErrorReport> errs_;
+	const UniqPtr<Expression> base_;
+	const UniqPtr<Identifier> field_;
 };
 
-} // namespace parsing
+} // namespace ast
 } // namespace fabrique
 
 #endif

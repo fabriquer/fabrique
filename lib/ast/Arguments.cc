@@ -1,6 +1,6 @@
-/** @file Parsing/Parser.cc    Definition of @ref fabrique::ast::Parser. */
+/** @file AST/Arguments.cc    Definition of @ref fabrique::ast::Arguments. */
 /*
- * Copyright (c) 2013-2014, 2018 Jonathan Anderson
+ * Copyright (c) 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,60 +29,54 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/ast/ast.hh>
-#include "Parsing/Parser.h"
-#include "Parsing/Token.h"
-#include "Plugin/Loader.h"
-#include "Plugin/Plugin.h"
-#include "Plugin/Registry.h"
+#include <fabrique/ast/Arguments.hh>
+#include <fabrique/ast/Visitor.hh>
 #include "Support/Bytestream.h"
-#include "Support/exceptions.h"
-#include "Types/BooleanType.h"
-#include "Types/FunctionType.h"
-#include "Types/IntegerType.h"
-#include "Types/RecordType.h"
-#include "Types/StringType.h"
-#include "Types/TypeContext.h"
-#include "Types/TypeError.h"
-#include "Support/os.h"
-
-#include <cassert>
-#include <fstream>
-#include <sstream>
 
 using namespace fabrique;
-using namespace fabrique::parsing;
+using namespace fabrique::ast;
 
-using std::string;
-using std::unique_ptr;
-
-
-bool Parser::ParseFile(std::istream& input, UniqPtrVec<ast::Value>& values, string name)
+Arguments::Arguments(UniqPtrVec<Expression> positional, UniqPtrVec<Argument> keyword,
+                     SourceRange src)
+	: Node(src), positional_(std::move(positional)), keyword_(std::move(keyword))
 {
-	Bytestream& dbg = Bytestream::Debug("parser.file");
-	dbg
-		<< Bytestream::Action << "Parsing"
-		<< Bytestream::Type << " file"
-		<< Bytestream::Operator << " '"
-		<< Bytestream::Literal << name
-		<< Bytestream::Operator << "'"
-		<< Bytestream::Reset << "\n"
-		;
-
-	return false;
 }
 
-
-const ErrorReport& Parser::ReportError(const string& msg, const HasSource& s,
-                                       ErrorReport::Severity severity)
+void Arguments::PrettyPrint(Bytestream &out, unsigned int indent) const
 {
-	return ReportError(msg, s.source(), severity);
+	for (size_t i = 0; i < positional_.size(); )
+	{
+		positional_[i]->PrettyPrint(out, indent + 1);
+		if (++i < positional_.size() or not keyword_.empty())
+			out
+				<< Bytestream::Operator << ", "
+				<< Bytestream::Reset;
+	}
+
+	for (size_t i = 0; i < keyword_.size(); )
+	{
+		keyword_[i]->PrettyPrint(out, indent + 1);
+		if (++i < keyword_.size())
+			out
+				<< Bytestream::Operator << ", "
+				<< Bytestream::Reset;
+	}
 }
 
-const ErrorReport& Parser::ReportError(const string& message,
-                                       const SourceRange& location,
-                                       ErrorReport::Severity severity)
+void Arguments::Accept(Visitor &v) const
 {
-	errs_.emplace_back(message, location, severity);
-	return errs_.back();
+	if (v.Enter(*this))
+	{
+		for (auto &p : positional_)
+		{
+			p->Accept(v);
+		}
+
+		for (auto &kwarg : keyword_)
+		{
+			kwarg->Accept(v);
+		}
+	}
+
+	v.Leave(*this);
 }

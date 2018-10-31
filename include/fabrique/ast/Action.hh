@@ -1,4 +1,4 @@
-/** @file Parsing/Parser.cc    Definition of @ref fabrique::ast::Parser. */
+/** @file AST/Action.h    Declaration of @ref fabrique::ast::Action. */
 /*
  * Copyright (c) 2013-2014, 2018 Jonathan Anderson
  * All rights reserved.
@@ -29,60 +29,39 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/ast/ast.hh>
-#include "Parsing/Parser.h"
-#include "Parsing/Token.h"
-#include "Plugin/Loader.h"
-#include "Plugin/Plugin.h"
-#include "Plugin/Registry.h"
-#include "Support/Bytestream.h"
-#include "Support/exceptions.h"
-#include "Types/BooleanType.h"
-#include "Types/FunctionType.h"
-#include "Types/IntegerType.h"
-#include "Types/RecordType.h"
-#include "Types/StringType.h"
-#include "Types/TypeContext.h"
-#include "Types/TypeError.h"
-#include "Support/os.h"
+#ifndef ACTION_H
+#define ACTION_H
 
-#include <cassert>
-#include <fstream>
-#include <sstream>
+#include <fabrique/PtrVec.h>
 
-using namespace fabrique;
-using namespace fabrique::parsing;
+#include <fabrique/ast/Arguments.hh>
+#include <fabrique/ast/Expression.hh>
+#include <fabrique/ast/HasParameters.hh>
+#include <fabrique/ast/Parameter.hh>
 
-using std::string;
-using std::unique_ptr;
+namespace fabrique {
+namespace ast {
 
-
-bool Parser::ParseFile(std::istream& input, UniqPtrVec<ast::Value>& values, string name)
+/**
+ * A build action that can transform inputs into outputs.
+ */
+class Action : public Expression, public HasParameters
 {
-	Bytestream& dbg = Bytestream::Debug("parser.file");
-	dbg
-		<< Bytestream::Action << "Parsing"
-		<< Bytestream::Type << " file"
-		<< Bytestream::Operator << " '"
-		<< Bytestream::Literal << name
-		<< Bytestream::Operator << "'"
-		<< Bytestream::Reset << "\n"
-		;
+public:
+	Action(UniqPtr<Arguments>, UniqPtrVec<Parameter>, SourceRange);
 
-	return false;
-}
+	const UniqPtr<Arguments>& arguments() const { return args_; }
 
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
+	virtual void Accept(Visitor&) const override;
 
-const ErrorReport& Parser::ReportError(const string& msg, const HasSource& s,
-                                       ErrorReport::Severity severity)
-{
-	return ReportError(msg, s.source(), severity);
-}
+	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
-const ErrorReport& Parser::ReportError(const string& message,
-                                       const SourceRange& location,
-                                       ErrorReport::Severity severity)
-{
-	errs_.emplace_back(message, location, severity);
-	return errs_.back();
-}
+private:
+	UniqPtr<Arguments> args_;
+};
+
+} // namespace ast
+} // namespace fabrique
+
+#endif

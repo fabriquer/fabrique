@@ -1,6 +1,6 @@
-/** @file Parsing/Parser.cc    Definition of @ref fabrique::ast::Parser. */
+/** @file AST/CompoundExpr.cc    Definition of @ref fabrique::ast::CompoundExpression. */
 /*
- * Copyright (c) 2013-2014, 2018 Jonathan Anderson
+ * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,60 +29,67 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/ast/ast.hh>
-#include "Parsing/Parser.h"
-#include "Parsing/Token.h"
-#include "Plugin/Loader.h"
-#include "Plugin/Plugin.h"
-#include "Plugin/Registry.h"
+#include <fabrique/ast/CompoundExpr.hh>
+#include <fabrique/ast/EvalContext.hh>
+#include <fabrique/ast/Value.hh>
+#include <fabrique/ast/Visitor.hh>
 #include "Support/Bytestream.h"
-#include "Support/exceptions.h"
-#include "Types/BooleanType.h"
-#include "Types/FunctionType.h"
-#include "Types/IntegerType.h"
-#include "Types/RecordType.h"
-#include "Types/StringType.h"
-#include "Types/TypeContext.h"
-#include "Types/TypeError.h"
-#include "Support/os.h"
 
 #include <cassert>
-#include <fstream>
-#include <sstream>
 
 using namespace fabrique;
-using namespace fabrique::parsing;
-
-using std::string;
-using std::unique_ptr;
+using namespace fabrique::ast;
 
 
-bool Parser::ParseFile(std::istream& input, UniqPtrVec<ast::Value>& values, string name)
+CompoundExpression::CompoundExpression(UniqPtrVec<Value> values,
+                                       UniqPtr<Expression> result,
+                                       SourceRange loc)
+	: Expression(loc), values_(std::move(values)), result_(std::move(result))
 {
-	Bytestream& dbg = Bytestream::Debug("parser.file");
-	dbg
-		<< Bytestream::Action << "Parsing"
-		<< Bytestream::Type << " file"
-		<< Bytestream::Operator << " '"
-		<< Bytestream::Literal << name
-		<< Bytestream::Operator << "'"
-		<< Bytestream::Reset << "\n"
+	assert(result_);
+}
+
+
+void CompoundExpression::PrettyPrint(Bytestream& out, unsigned int indent) const
+{
+	std::string tabs(indent, '\t');
+	std::string intabs(indent + 1, '\t');
+
+	out << Bytestream::Operator << "\n" << tabs << "{\n";
+	for (auto& v : values_)
+	{
+		v->PrettyPrint(out, indent + 1);
+		out << "\n";
+	}
+
+	assert(result_);
+	out
+		<< intabs << *result_
+		<< "\n" << Bytestream::Operator << tabs << "}\n"
+		<< Bytestream::Reset
 		;
-
-	return false;
 }
 
 
-const ErrorReport& Parser::ReportError(const string& msg, const HasSource& s,
-                                       ErrorReport::Severity severity)
+void CompoundExpression::Accept(Visitor& v) const
 {
-	return ReportError(msg, s.source(), severity);
+	if (v.Enter(*this))
+	{
+		for (auto& val : values_)
+			val->Accept(v);
+
+		result_->Accept(v);
+	}
+
+	v.Leave(*this);
 }
 
-const ErrorReport& Parser::ReportError(const string& message,
-                                       const SourceRange& location,
-                                       ErrorReport::Severity severity)
+dag::ValuePtr CompoundExpression::evaluate(EvalContext& ctx) const
 {
-	errs_.emplace_back(message, location, severity);
-	return errs_.back();
+	auto scope(ctx.EnterScope("CompoundExpression"));
+
+	for (auto& v : values_)
+		v->evaluate(ctx);
+
+	return result_->evaluate(ctx);
 }

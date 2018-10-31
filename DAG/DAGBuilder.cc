@@ -30,8 +30,8 @@
  * SUCH DAMAGE.
  */
 
-#include "AST/Builtins.h"
-#include "AST/Value.h"
+#include <fabrique/ast/Builtins.hh>
+#include <fabrique/ast/Value.hh>
 
 #include "DAG/Build.h"
 #include "DAG/DAG.h"

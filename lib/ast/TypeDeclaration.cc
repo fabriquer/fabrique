@@ -1,6 +1,9 @@
-/** @file Parsing/Parser.cc    Definition of @ref fabrique::ast::Parser. */
+/**
+ * @file AST/TypeDeclaration.cc
+ * Definition of @ref fabrique::ast::TypeDeclaration.
+ */
 /*
- * Copyright (c) 2013-2014, 2018 Jonathan Anderson
+ * Copyright (c) 2015, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,60 +32,35 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/ast/ast.hh>
-#include "Parsing/Parser.h"
-#include "Parsing/Token.h"
-#include "Plugin/Loader.h"
-#include "Plugin/Plugin.h"
-#include "Plugin/Registry.h"
+#include <fabrique/ast/EvalContext.hh>
+#include <fabrique/ast/TypeDeclaration.hh>
+#include <fabrique/ast/Visitor.hh>
+#include "DAG/TypeReference.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
-#include "Types/BooleanType.h"
-#include "Types/FunctionType.h"
-#include "Types/IntegerType.h"
-#include "Types/RecordType.h"
-#include "Types/StringType.h"
-#include "Types/TypeContext.h"
-#include "Types/TypeError.h"
-#include "Support/os.h"
-
-#include <cassert>
-#include <fstream>
-#include <sstream>
 
 using namespace fabrique;
-using namespace fabrique::parsing;
-
-using std::string;
-using std::unique_ptr;
+using namespace fabrique::ast;
 
 
-bool Parser::ParseFile(std::istream& input, UniqPtrVec<ast::Value>& values, string name)
+TypeDeclaration::TypeDeclaration(UniqPtr<TypeReference> t, SourceRange src)
+	: Expression(src), declaredType_(std::move(t))
 {
-	Bytestream& dbg = Bytestream::Debug("parser.file");
-	dbg
-		<< Bytestream::Action << "Parsing"
-		<< Bytestream::Type << " file"
-		<< Bytestream::Operator << " '"
-		<< Bytestream::Literal << name
-		<< Bytestream::Operator << "'"
-		<< Bytestream::Reset << "\n"
-		;
-
-	return false;
 }
 
-
-const ErrorReport& Parser::ReportError(const string& msg, const HasSource& s,
-                                       ErrorReport::Severity severity)
+void TypeDeclaration::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
-	return ReportError(msg, s.source(), severity);
+	out << Bytestream::Definition << "type " << Bytestream::Reset;
+	declaredType_->PrettyPrint(out, indent + 1);
 }
 
-const ErrorReport& Parser::ReportError(const string& message,
-                                       const SourceRange& location,
-                                       ErrorReport::Severity severity)
+void TypeDeclaration::Accept(Visitor& v) const
 {
-	errs_.emplace_back(message, location, severity);
-	return errs_.back();
+	v.Enter(*this);
+	v.Leave(*this);
+}
+
+dag::ValuePtr TypeDeclaration::evaluate(EvalContext &ctx) const
+{
+	return declaredType_->evaluateAs<dag::TypeReference>(ctx);
 }

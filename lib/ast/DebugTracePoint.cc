@@ -1,6 +1,9 @@
-/** @file Parsing/Parser.cc    Definition of @ref fabrique::ast::Parser. */
+/**
+ * @file AST/DebugTracePoint.h
+ * Definition of @ref fabrique::ast::DebugTracePoint.
+ */
 /*
- * Copyright (c) 2013-2014, 2018 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,60 +32,62 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/ast/ast.hh>
-#include "Parsing/Parser.h"
-#include "Parsing/Token.h"
-#include "Plugin/Loader.h"
-#include "Plugin/Plugin.h"
-#include "Plugin/Registry.h"
+#include <fabrique/ast/DebugTracePoint.hh>
+#include <fabrique/ast/Visitor.hh>
+#include "DAG/Primitive.h"
 #include "Support/Bytestream.h"
-#include "Support/exceptions.h"
-#include "Types/BooleanType.h"
-#include "Types/FunctionType.h"
-#include "Types/IntegerType.h"
-#include "Types/RecordType.h"
-#include "Types/StringType.h"
-#include "Types/TypeContext.h"
-#include "Types/TypeError.h"
-#include "Support/os.h"
+#include "Support/ErrorReport.h"
 
-#include <cassert>
-#include <fstream>
-#include <sstream>
-
+using namespace fabrique::ast;
 using namespace fabrique;
-using namespace fabrique::parsing;
 
-using std::string;
-using std::unique_ptr;
-
-
-bool Parser::ParseFile(std::istream& input, UniqPtrVec<ast::Value>& values, string name)
+DebugTracePoint::DebugTracePoint(UniqPtr<Expression> e, SourceRange src)
+	: Expression(src), expr_(std::move(e))
 {
-	Bytestream& dbg = Bytestream::Debug("parser.file");
-	dbg
-		<< Bytestream::Action << "Parsing"
-		<< Bytestream::Type << " file"
-		<< Bytestream::Operator << " '"
-		<< Bytestream::Literal << name
-		<< Bytestream::Operator << "'"
-		<< Bytestream::Reset << "\n"
+}
+
+
+void DebugTracePoint::PrettyPrint(Bytestream& out, unsigned int indent) const
+{
+	out
+		<< Bytestream::Action << "trace"
+		<< Bytestream::Operator << "("
 		;
 
-	return false;
+	expr_->PrettyPrint(out, indent);
+
+	out
+		<< Bytestream::Operator << ")"
+		;
 }
 
 
-const ErrorReport& Parser::ReportError(const string& msg, const HasSource& s,
-                                       ErrorReport::Severity severity)
+void DebugTracePoint::Accept(Visitor& v) const
 {
-	return ReportError(msg, s.source(), severity);
+	if (v.Enter(*this))
+		expr_->Accept(v);
+
+	v.Leave(*this);
 }
 
-const ErrorReport& Parser::ReportError(const string& message,
-                                       const SourceRange& location,
-                                       ErrorReport::Severity severity)
+
+dag::ValuePtr DebugTracePoint::evaluate(EvalContext& ctx) const
 {
-	errs_.emplace_back(message, location, severity);
-	return errs_.back();
+	fabrique::dag::ValuePtr value = expr_->evaluate(ctx);
+
+	auto report = std::make_unique<ErrorReport>(
+		"debug trace point", source(), ErrorReport::Severity::Message, "",
+		SourceLocation(), 1);
+
+	Bytestream::Debug("trace") << *report << "value: ";
+	Bytestream& out = Bytestream::Stdout();
+
+	// Special case: output string primitives just as they are.
+	if (auto s = std::dynamic_pointer_cast<const dag::String>(value))
+		out << s->str() << "\n";
+
+	else
+		out << *value << "\n";
+
+	return value;
 }

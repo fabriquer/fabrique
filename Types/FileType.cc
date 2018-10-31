@@ -29,7 +29,7 @@
  * SUCH DAMAGE.
  */
 
-#include "AST/Builtins.h"
+#include <fabrique/ast/Builtins.hh>
 #include "Types/FileType.h"
 #include "Types/SequenceType.h"
 #include "Types/TypeContext.h"

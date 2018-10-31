@@ -1,6 +1,6 @@
-/** @file Parsing/Parser.cc    Definition of @ref fabrique::ast::Parser. */
+/** @file AST/ASTDump.cc    Definition of @ref fabrique::ast::ASTDump. */
 /*
- * Copyright (c) 2013-2014, 2018 Jonathan Anderson
+ * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,60 +29,54 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/ast/ast.hh>
-#include "Parsing/Parser.h"
-#include "Parsing/Token.h"
-#include "Plugin/Loader.h"
-#include "Plugin/Plugin.h"
-#include "Plugin/Registry.h"
+#include <fabrique/ast/ASTDump.hh>
 #include "Support/Bytestream.h"
-#include "Support/exceptions.h"
-#include "Types/BooleanType.h"
-#include "Types/FunctionType.h"
-#include "Types/IntegerType.h"
-#include "Types/RecordType.h"
-#include "Types/StringType.h"
-#include "Types/TypeContext.h"
-#include "Types/TypeError.h"
-#include "Support/os.h"
 
-#include <cassert>
-#include <fstream>
-#include <sstream>
+#include <iomanip>
 
-using namespace fabrique;
-using namespace fabrique::parsing;
-
+using namespace fabrique::ast;
 using std::string;
-using std::unique_ptr;
 
 
-bool Parser::ParseFile(std::istream& input, UniqPtrVec<ast::Value>& values, string name)
+ASTDump* ASTDump::Create(fabrique::Bytestream& out)
 {
-	Bytestream& dbg = Bytestream::Debug("parser.file");
-	dbg
-		<< Bytestream::Action << "Parsing"
-		<< Bytestream::Type << " file"
-		<< Bytestream::Operator << " '"
-		<< Bytestream::Literal << name
-		<< Bytestream::Operator << "'"
-		<< Bytestream::Reset << "\n"
+	return new ASTDump(out);
+}
+
+#define DUMP_NODE(type)                                                      \
+bool ASTDump::Enter(const type& n)                                           \
+{                                                                            \
+	Write(#type, &n); indent_++; return true;                             \
+}                                                                            \
+void ASTDump::Leave(const type&) { indent_--; }
+
+DUMP_NODE(Action)
+DUMP_NODE(Argument)
+DUMP_NODE(BinaryOperation)
+DUMP_NODE(BoolLiteral)
+DUMP_NODE(Call)
+DUMP_NODE(CompoundExpression)
+DUMP_NODE(Conditional)
+DUMP_NODE(FileList)
+DUMP_NODE(ForeachExpr)
+DUMP_NODE(Function)
+DUMP_NODE(Identifier)
+DUMP_NODE(IntLiteral)
+DUMP_NODE(List)
+DUMP_NODE(Parameter)
+DUMP_NODE(StringLiteral)
+DUMP_NODE(Type)
+DUMP_NODE(Value)
+
+void ASTDump::Write(const string& s, const void *ptr)
+{
+	const unsigned int indentLen = 2 * this->indent_;
+	std::vector<char> indentChars(indentLen, ' ');
+	string indent(indentChars.data(), indentLen);
+
+	out_
+		<< static_cast<unsigned long>(indent_) << s
+		<< " @ " << reinterpret_cast<unsigned long>(ptr)
+		<< "\n"
 		;
-
-	return false;
-}
-
-
-const ErrorReport& Parser::ReportError(const string& msg, const HasSource& s,
-                                       ErrorReport::Severity severity)
-{
-	return ReportError(msg, s.source(), severity);
-}
-
-const ErrorReport& Parser::ReportError(const string& message,
-                                       const SourceRange& location,
-                                       ErrorReport::Severity severity)
-{
-	errs_.emplace_back(message, location, severity);
-	return errs_.back();
 }

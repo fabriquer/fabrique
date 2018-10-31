@@ -1,12 +1,11 @@
-/** @file Parsing/Parser.h    Declaration of @ref fabrique::ast::Parser. */
+/** @file AST/Identifier.h    Declaration of @ref fabrique::ast::Identifier. */
 /*
- * Copyright (c) 2013-2014, 2018 Jonathan Anderson
+ * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
- * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
+ * ("CTSRD"), as part of the DARPA CRASH research programme.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,61 +29,45 @@
  * SUCH DAMAGE.
  */
 
-#ifndef PARSER_H
-#define PARSER_H
+#ifndef IDENTIFIER_H
+#define IDENTIFIER_H
 
-#include <fabrique/UniqPtr.h>
-#include <fabrique/ast/ast.hh>
-#include "Support/ErrorReport.h"
+#include <fabrique/ast/Node.hh>
 
-#include <map>
-#include <stack>
+#include <string>
 
 namespace fabrique {
+namespace ast {
 
-class TypeContext;
-class Lexer;
-class Token;
-
-namespace plugin {
-class Loader;
-class Registry;
-}
-
-namespace parsing {
+class Visitor;
 
 
 /**
- * Parses Fabrique files as driven by flex/byacc.
+ * The name of a value, function, parameter or argument.
  */
-class Parser
+class Identifier : public Node
 {
 public:
-	//! Parse Fabrique fragments defined at, e.g., the command line.
-	const Type& ParseDefinitions(const std::vector<std::string>& defs);
+	Identifier(std::string name, SourceRange src = SourceRange::None());
 
-	//! Parse Fabrique input (usually a file) into @ref Value objects.
-	bool ParseFile(std::istream&, UniqPtrVec<ast::Value>&, std::string name = "");
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
+	const std::string& name() const { return name_; }
 
-	//! Errors encountered during parsing.
-	const std::vector<ErrorReport>& errors() const { return errs_; }
+	bool reservedName() const;
 
-	//! Input files encountered during parsing.
-	const std::vector<std::string>& files() const { return files_; }
+	bool operator == (const Identifier&) const;
+	bool operator < (const Identifier&) const;
 
+	virtual void Accept(Visitor&) const override;
 
 private:
-	const ErrorReport& ReportError(const std::string&, const SourceRange&,
-		ErrorReport::Severity = ErrorReport::Severity::Error);
-	const ErrorReport& ReportError(const std::string&, const HasSource&,
-		ErrorReport::Severity = ErrorReport::Severity::Error);
-
-	//! Input files, in order they were parsed.
-	std::vector<std::string> files_;
-	std::vector<ErrorReport> errs_;
+	const std::string name_;
 };
 
-} // namespace parsing
+template<class T>
+using NamedPtrVec = std::vector<std::pair<UniqPtr<Identifier>, UniqPtr<T>>>;
+
+} // namespace ast
 } // namespace fabrique
 
 #endif

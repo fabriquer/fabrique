@@ -1,4 +1,4 @@
-/** @file Parsing/Parser.cc    Definition of @ref fabrique::ast::Parser. */
+/** @file AST/Conditional.h    Declaration of @ref fabrique::ast::Conditional. */
 /*
  * Copyright (c) 2013-2014, 2018 Jonathan Anderson
  * All rights reserved.
@@ -29,60 +29,45 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/ast/ast.hh>
-#include "Parsing/Parser.h"
-#include "Parsing/Token.h"
-#include "Plugin/Loader.h"
-#include "Plugin/Plugin.h"
-#include "Plugin/Registry.h"
-#include "Support/Bytestream.h"
-#include "Support/exceptions.h"
-#include "Types/BooleanType.h"
-#include "Types/FunctionType.h"
-#include "Types/IntegerType.h"
-#include "Types/RecordType.h"
-#include "Types/StringType.h"
-#include "Types/TypeContext.h"
-#include "Types/TypeError.h"
-#include "Support/os.h"
+#ifndef CONDITIONAL_H
+#define CONDITIONAL_H
 
-#include <cassert>
-#include <fstream>
-#include <sstream>
+#include <fabrique/UniqPtr.h>
+#include <fabrique/ast/Expression.hh>
 
-using namespace fabrique;
-using namespace fabrique::parsing;
+namespace fabrique {
+namespace ast {
 
-using std::string;
-using std::unique_ptr;
+class CompoundExpression;
 
 
-bool Parser::ParseFile(std::istream& input, UniqPtrVec<ast::Value>& values, string name)
+/**
+ * A function allows users to create build abstractions.
+ */
+class Conditional : public Expression
 {
-	Bytestream& dbg = Bytestream::Debug("parser.file");
-	dbg
-		<< Bytestream::Action << "Parsing"
-		<< Bytestream::Type << " file"
-		<< Bytestream::Operator << " '"
-		<< Bytestream::Literal << name
-		<< Bytestream::Operator << "'"
-		<< Bytestream::Reset << "\n"
-		;
+public:
+	Conditional(UniqPtr<Expression> condition,
+	            UniqPtr<Expression> thenClause,
+	            UniqPtr<Expression> elseClause,
+	            SourceRange);
 
-	return false;
-}
+	const Expression& condition() const { return *condition_; }
+	const Expression& thenClause() const { return *thenClause_; }
+	const Expression& elseClause() const { return *elseClause_; }
 
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
+	virtual void Accept(Visitor&) const override;
 
-const ErrorReport& Parser::ReportError(const string& msg, const HasSource& s,
-                                       ErrorReport::Severity severity)
-{
-	return ReportError(msg, s.source(), severity);
-}
+	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
-const ErrorReport& Parser::ReportError(const string& message,
-                                       const SourceRange& location,
-                                       ErrorReport::Severity severity)
-{
-	errs_.emplace_back(message, location, severity);
-	return errs_.back();
-}
+private:
+	const std::unique_ptr<Expression> condition_;
+	const std::unique_ptr<Expression> thenClause_;
+	const std::unique_ptr<Expression> elseClause_;
+};
+
+} // namespace ast
+} // namespace fabrique
+
+#endif

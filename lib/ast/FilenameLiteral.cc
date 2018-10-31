@@ -1,6 +1,6 @@
-/** @file Parsing/Parser.cc    Definition of @ref fabrique::ast::Parser. */
+/** @file AST/FilenameLiteral.cc    Definition of @ref fabrique::ast::FilenameLiteral. */
 /*
- * Copyright (c) 2013-2014, 2018 Jonathan Anderson
+ * Copyright (c) 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,60 +29,45 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/ast/ast.hh>
-#include "Parsing/Parser.h"
-#include "Parsing/Token.h"
-#include "Plugin/Loader.h"
-#include "Plugin/Plugin.h"
-#include "Plugin/Registry.h"
+#include <fabrique/ast/Argument.hh>
+#include <fabrique/ast/Builtins.hh>
+#include <fabrique/ast/EvalContext.hh>
+#include <fabrique/ast/FilenameLiteral.hh>
+#include <fabrique/ast/Visitor.hh>
+#include "DAG/File.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
-#include "Types/BooleanType.h"
-#include "Types/FunctionType.h"
-#include "Types/IntegerType.h"
-#include "Types/RecordType.h"
-#include "Types/StringType.h"
 #include "Types/TypeContext.h"
-#include "Types/TypeError.h"
-#include "Support/os.h"
 
 #include <cassert>
-#include <fstream>
-#include <sstream>
+#include <set>
 
 using namespace fabrique;
-using namespace fabrique::parsing;
-
+using namespace fabrique::ast;
 using std::string;
-using std::unique_ptr;
 
 
-bool Parser::ParseFile(std::istream& input, UniqPtrVec<ast::Value>& values, string name)
+FilenameLiteral::FilenameLiteral(string name, SourceRange src)
+	: Expression(src), name_(name)
 {
-	Bytestream& dbg = Bytestream::Debug("parser.file");
-	dbg
-		<< Bytestream::Action << "Parsing"
-		<< Bytestream::Type << " file"
-		<< Bytestream::Operator << " '"
-		<< Bytestream::Literal << name
-		<< Bytestream::Operator << "'"
-		<< Bytestream::Reset << "\n"
-		;
-
-	return false;
 }
 
 
-const ErrorReport& Parser::ReportError(const string& msg, const HasSource& s,
-                                       ErrorReport::Severity severity)
+void FilenameLiteral::PrettyPrint(Bytestream &out, unsigned int /*indent*/) const
 {
-	return ReportError(msg, s.source(), severity);
+	out << Bytestream::Filename << name_ << Bytestream::Reset;
 }
 
-const ErrorReport& Parser::ReportError(const string& message,
-                                       const SourceRange& location,
-                                       ErrorReport::Severity severity)
+void FilenameLiteral::Accept(Visitor& v) const
 {
-	errs_.emplace_back(message, location, severity);
-	return errs_.back();
+	v.Enter(*this);
+	v.Leave(*this);
+}
+
+dag::ValuePtr FilenameLiteral::evaluate(EvalContext& ctx) const
+{
+	assert(ctx.Lookup(ast::builtins::Subdirectory));
+	string subdirectory = ctx.Lookup(ast::builtins::Subdirectory)->str();
+
+	return ctx.builder().File(subdirectory, name_, {}, source());
 }

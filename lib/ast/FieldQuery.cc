@@ -1,11 +1,12 @@
-/** @file Parsing/Parser.cc    Definition of @ref fabrique::ast::Parser. */
+/** @file AST/FieldQuery.cc    Definition of @ref fabrique::ast::FieldQuery. */
 /*
- * Copyright (c) 2013-2014, 2018 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,60 +30,64 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/ast/ast.hh>
-#include "Parsing/Parser.h"
-#include "Parsing/Token.h"
-#include "Plugin/Loader.h"
-#include "Plugin/Plugin.h"
-#include "Plugin/Registry.h"
+#include <fabrique/ast/FieldQuery.hh>
+#include <fabrique/ast/Identifier.hh>
+#include <fabrique/ast/Visitor.hh>
+#include "DAG/Record.h"
 #include "Support/Bytestream.h"
-#include "Support/exceptions.h"
-#include "Types/BooleanType.h"
-#include "Types/FunctionType.h"
-#include "Types/IntegerType.h"
-#include "Types/RecordType.h"
-#include "Types/StringType.h"
-#include "Types/TypeContext.h"
-#include "Types/TypeError.h"
-#include "Support/os.h"
+#include "Types/Type.h"
 
 #include <cassert>
-#include <fstream>
-#include <sstream>
 
 using namespace fabrique;
-using namespace fabrique::parsing;
-
-using std::string;
-using std::unique_ptr;
+using namespace fabrique::ast;
 
 
-bool Parser::ParseFile(std::istream& input, UniqPtrVec<ast::Value>& values, string name)
+FieldQuery::FieldQuery(UniqPtr<Expression> base, UniqPtr<Identifier> field,
+                       UniqPtr<Expression> defaultValue, SourceRange src)
+	: Expression(src), base_(std::move(base)), field_(std::move(field)),
+	  defaultValue_(std::move(defaultValue))
 {
-	Bytestream& dbg = Bytestream::Debug("parser.file");
-	dbg
-		<< Bytestream::Action << "Parsing"
-		<< Bytestream::Type << " file"
-		<< Bytestream::Operator << " '"
-		<< Bytestream::Literal << name
-		<< Bytestream::Operator << "'"
-		<< Bytestream::Reset << "\n"
+	assert(base_);
+	assert(field_);
+	assert(defaultValue_);
+}
+
+
+void FieldQuery::PrettyPrint(Bytestream& out, unsigned int indent) const
+{
+	out
+		<< *base_
+		<< Bytestream::Operator << "."
+		<< Bytestream::Reference << field_->name()
+		<< Bytestream::Operator << " ? "
 		;
 
-	return false;
+	defaultValue_->PrettyPrint(out, indent + 1);
 }
 
 
-const ErrorReport& Parser::ReportError(const string& msg, const HasSource& s,
-                                       ErrorReport::Severity severity)
+void FieldQuery::Accept(Visitor& v) const
 {
-	return ReportError(msg, s.source(), severity);
+	if (v.Enter(*this))
+	{
+		base_->Accept(v);
+		field_->Accept(v);
+	}
+
+	v.Leave(*this);
 }
 
-const ErrorReport& Parser::ReportError(const string& message,
-                                       const SourceRange& location,
-                                       ErrorReport::Severity severity)
+
+dag::ValuePtr FieldQuery::evaluate(EvalContext& ctx) const
 {
-	errs_.emplace_back(message, location, severity);
-	return errs_.back();
+	auto base = base_->evaluate(ctx);
+	SemaCheck(base->hasFields(), source(), TypeName(*base_) + " has no fields");
+
+	if (auto result = base->field(field_->name()))
+	{
+		return result;
+	}
+
+	return defaultValue().evaluate(ctx);
 }

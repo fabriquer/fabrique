@@ -1,0 +1,12 @@
+#
+# TODO: allow 'for module in [ ast backends dag ]
+# (or even better, foreach dir in [ 'ast' 'backend' ... ]
+#   {
+#     module = import(dir + '/' + dir + '.fab');
+#     module.sources
+#   }
+#
+
+sources =
+	import('ast').sources
+	;

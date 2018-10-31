@@ -1,4 +1,4 @@
-/** @file Parsing/Parser.cc    Definition of @ref fabrique::ast::Parser. */
+/** @file AST/ForeachExpr.h    Declaration of @ref fabrique::ast::ForeachExpr. */
 /*
  * Copyright (c) 2013-2014, 2018 Jonathan Anderson
  * All rights reserved.
@@ -29,60 +29,45 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/ast/ast.hh>
-#include "Parsing/Parser.h"
-#include "Parsing/Token.h"
-#include "Plugin/Loader.h"
-#include "Plugin/Plugin.h"
-#include "Plugin/Registry.h"
-#include "Support/Bytestream.h"
-#include "Support/exceptions.h"
-#include "Types/BooleanType.h"
-#include "Types/FunctionType.h"
-#include "Types/IntegerType.h"
-#include "Types/RecordType.h"
-#include "Types/StringType.h"
-#include "Types/TypeContext.h"
-#include "Types/TypeError.h"
-#include "Support/os.h"
+#ifndef FOREACH_H
+#define FOREACH_H
 
-#include <cassert>
-#include <fstream>
-#include <sstream>
+#include <fabrique/ast/CompoundExpr.hh>
+#include <fabrique/ast/TypeReference.hh>
 
-using namespace fabrique;
-using namespace fabrique::parsing;
+namespace fabrique {
+namespace ast {
 
-using std::string;
-using std::unique_ptr;
+class Parameter;
+class Value;
 
 
-bool Parser::ParseFile(std::istream& input, UniqPtrVec<ast::Value>& values, string name)
+/**
+ * An expression that maps list elements into another list.
+ */
+class ForeachExpr : public Expression
 {
-	Bytestream& dbg = Bytestream::Debug("parser.file");
-	dbg
-		<< Bytestream::Action << "Parsing"
-		<< Bytestream::Type << " file"
-		<< Bytestream::Operator << " '"
-		<< Bytestream::Literal << name
-		<< Bytestream::Operator << "'"
-		<< Bytestream::Reset << "\n"
-		;
+public:
+	ForeachExpr(UniqPtr<Identifier> loopVarName, UniqPtr<TypeReference> explicitType,
+	            UniqPtr<Expression> inputValue, UniqPtr<Expression> body,
+	            SourceRange);
 
-	return false;
-}
+	const Expression& sourceSequence() const { return *inputValue_; }
+	const Expression& loopBody() const { return *body_; }
 
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
+	virtual void Accept(Visitor&) const override;
 
-const ErrorReport& Parser::ReportError(const string& msg, const HasSource& s,
-                                       ErrorReport::Severity severity)
-{
-	return ReportError(msg, s.source(), severity);
-}
+	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
-const ErrorReport& Parser::ReportError(const string& message,
-                                       const SourceRange& location,
-                                       ErrorReport::Severity severity)
-{
-	errs_.emplace_back(message, location, severity);
-	return errs_.back();
-}
+private:
+	const UniqPtr<Identifier> loopVarName_;
+	const UniqPtr<TypeReference> explicitType_;
+	const UniqPtr<Expression> inputValue_;
+	const UniqPtr<Expression> body_;
+};
+
+} // namespace ast
+} // namespace fabrique
+
+#endif

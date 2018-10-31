@@ -29,7 +29,7 @@
  * SUCH DAMAGE.
  */
 
-#include "AST/Builtins.h"
+#include <fabrique/ast/Builtins.hh>
 #include "DAG/Record.h"
 #include "DAG/Visitor.h"
 #include "Support/Bytestream.h"

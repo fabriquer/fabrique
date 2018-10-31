@@ -1,12 +1,11 @@
-/** @file Parsing/Parser.h    Declaration of @ref fabrique::ast::Parser. */
+/** @file AST/Parameter.h    Declaration of @ref fabrique::ast::Parameter. */
 /*
- * Copyright (c) 2013-2014, 2018 Jonathan Anderson
+ * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
- * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
+ * ("CTSRD"), as part of the DARPA CRASH research programme.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,61 +29,52 @@
  * SUCH DAMAGE.
  */
 
-#ifndef PARSER_H
-#define PARSER_H
+#ifndef PARAMETER_H
+#define PARAMETER_H
 
-#include <fabrique/UniqPtr.h>
-#include <fabrique/ast/ast.hh>
-#include "Support/ErrorReport.h"
+#include <fabrique/ast/Identifier.hh>
+#include <fabrique/ast/TypeReference.hh>
 
-#include <map>
-#include <stack>
+#include <memory>
 
 namespace fabrique {
 
-class TypeContext;
-class Lexer;
-class Token;
-
-namespace plugin {
-class Loader;
-class Registry;
+namespace dag {
+class Parameter;
 }
 
-namespace parsing {
+namespace ast {
 
+class EvalContext;
+class Expression;
 
 /**
- * Parses Fabrique files as driven by flex/byacc.
+ * A formal parameter in a @ref fabrique::ast::Function.
  */
-class Parser
+class Parameter : public Node
 {
 public:
-	//! Parse Fabrique fragments defined at, e.g., the command line.
-	const Type& ParseDefinitions(const std::vector<std::string>& defs);
+	Parameter(UniqPtr<Identifier> id, UniqPtr<TypeReference> resultTy,
+	          UniqPtr<Expression> e = nullptr);
 
-	//! Parse Fabrique input (usually a file) into @ref Value objects.
-	bool ParseFile(std::istream&, UniqPtrVec<ast::Value>&, std::string name = "");
+	const Identifier& getName() const { return *name_; }
+	const UniqPtr<Expression>& defaultValue() const
+	{
+		return defaultValue_;
+	}
 
-	//! Errors encountered during parsing.
-	const std::vector<ErrorReport>& errors() const { return errs_; }
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
+	virtual void Accept(Visitor&) const override;
 
-	//! Input files encountered during parsing.
-	const std::vector<std::string>& files() const { return files_; }
-
+	virtual std::shared_ptr<dag::Parameter> evaluate(EvalContext&) const;
 
 private:
-	const ErrorReport& ReportError(const std::string&, const SourceRange&,
-		ErrorReport::Severity = ErrorReport::Severity::Error);
-	const ErrorReport& ReportError(const std::string&, const HasSource&,
-		ErrorReport::Severity = ErrorReport::Severity::Error);
-
-	//! Input files, in order they were parsed.
-	std::vector<std::string> files_;
-	std::vector<ErrorReport> errs_;
+	const UniqPtr<Identifier> name_;
+	const UniqPtr<TypeReference> type_;
+	const UniqPtr<Expression> defaultValue_;
 };
 
-} // namespace parsing
+} // namespace ast
 } // namespace fabrique
 
 #endif

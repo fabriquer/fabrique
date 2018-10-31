@@ -30,8 +30,8 @@
  * SUCH DAMAGE.
  */
 
-#include "AST/ASTDump.h"
-#include "AST/EvalContext.h"
+#include <fabrique/ast/ASTDump.hh>
+#include <fabrique/ast/EvalContext.hh>
 
 #include "Backend/Backend.h"
 

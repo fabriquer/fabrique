@@ -1,12 +1,14 @@
-/** @file Parsing/Parser.h    Declaration of @ref fabrique::ast::Parser. */
+/**
+ * @file AST/DebugTracePoint.h
+ * Declaration of @ref fabrique::ast::DebugTracePoint.
+ */
 /*
- * Copyright (c) 2013-2014, 2018 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
- * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
+ * ("CTSRD"), as part of the DARPA CRASH research programme.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,61 +32,36 @@
  * SUCH DAMAGE.
  */
 
-#ifndef PARSER_H
-#define PARSER_H
+#ifndef TRACE_POINT_H
+#define TRACE_POINT_H
 
 #include <fabrique/UniqPtr.h>
-#include <fabrique/ast/ast.hh>
-#include "Support/ErrorReport.h"
+#include <fabrique/ast/Expression.hh>
 
-#include <map>
-#include <stack>
 
 namespace fabrique {
-
-class TypeContext;
-class Lexer;
-class Token;
-
-namespace plugin {
-class Loader;
-class Registry;
-}
-
-namespace parsing {
-
+namespace ast {
 
 /**
- * Parses Fabrique files as driven by flex/byacc.
+ * An operation with two operands.
  */
-class Parser
+class DebugTracePoint : public Expression
 {
 public:
-	//! Parse Fabrique fragments defined at, e.g., the command line.
-	const Type& ParseDefinitions(const std::vector<std::string>& defs);
+	DebugTracePoint(UniqPtr<Expression>, SourceRange);
 
-	//! Parse Fabrique input (usually a file) into @ref Value objects.
-	bool ParseFile(std::istream&, UniqPtrVec<ast::Value>&, std::string name = "");
+	const Expression& expression() const { return *expr_; }
 
-	//! Errors encountered during parsing.
-	const std::vector<ErrorReport>& errors() const { return errs_; }
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
+	virtual void Accept(Visitor&) const override;
 
-	//! Input files encountered during parsing.
-	const std::vector<std::string>& files() const { return files_; }
-
+	virtual dag::ValuePtr evaluate(EvalContext&) const override;
 
 private:
-	const ErrorReport& ReportError(const std::string&, const SourceRange&,
-		ErrorReport::Severity = ErrorReport::Severity::Error);
-	const ErrorReport& ReportError(const std::string&, const HasSource&,
-		ErrorReport::Severity = ErrorReport::Severity::Error);
-
-	//! Input files, in order they were parsed.
-	std::vector<std::string> files_;
-	std::vector<ErrorReport> errs_;
+	const UniqPtr<Expression> expr_;
 };
 
-} // namespace parsing
+} // namespace ast
 } // namespace fabrique
 
 #endif

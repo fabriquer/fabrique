@@ -1,12 +1,11 @@
-/** @file Parsing/Parser.h    Declaration of @ref fabrique::ast::Parser. */
+/** @file AST/Visitor.h    Declaration of @ref fabrique::ast::Visitor. */
 /*
- * Copyright (c) 2013-2014, 2018 Jonathan Anderson
+ * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
- * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
+ * ("CTSRD"), as part of the DARPA CRASH research programme.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,61 +29,66 @@
  * SUCH DAMAGE.
  */
 
-#ifndef PARSER_H
-#define PARSER_H
+#ifndef VISITOR_H
+#define VISITOR_H
 
-#include <fabrique/UniqPtr.h>
-#include <fabrique/ast/ast.hh>
-#include "Support/ErrorReport.h"
-
-#include <map>
-#include <stack>
+#include <fabrique/ast/forward-decls.hh>
 
 namespace fabrique {
+namespace ast {
 
-class TypeContext;
-class Lexer;
-class Token;
-
-namespace plugin {
-class Loader;
-class Registry;
-}
-
-namespace parsing {
+//! Define entry (which returns true to continue descent) and exit methods.
+#define VISIT(type) \
+	virtual bool Enter(const type&) { return true; } \
+	virtual void Leave(const type&) {}
 
 
 /**
- * Parses Fabrique files as driven by flex/byacc.
+ * Interface for visitors that walk the AST.
  */
-class Parser
+class Visitor
 {
 public:
-	//! Parse Fabrique fragments defined at, e.g., the command line.
-	const Type& ParseDefinitions(const std::vector<std::string>& defs);
+	virtual ~Visitor();
 
-	//! Parse Fabrique input (usually a file) into @ref Value objects.
-	bool ParseFile(std::istream&, UniqPtrVec<ast::Value>&, std::string name = "");
-
-	//! Errors encountered during parsing.
-	const std::vector<ErrorReport>& errors() const { return errs_; }
-
-	//! Input files encountered during parsing.
-	const std::vector<std::string>& files() const { return files_; }
-
-
-private:
-	const ErrorReport& ReportError(const std::string&, const SourceRange&,
-		ErrorReport::Severity = ErrorReport::Severity::Error);
-	const ErrorReport& ReportError(const std::string&, const HasSource&,
-		ErrorReport::Severity = ErrorReport::Severity::Error);
-
-	//! Input files, in order they were parsed.
-	std::vector<std::string> files_;
-	std::vector<ErrorReport> errs_;
+	VISIT(Action)
+	VISIT(Argument)
+	VISIT(Arguments)
+	VISIT(BinaryOperation)
+	VISIT(BoolLiteral)
+	VISIT(Call)
+	VISIT(CompoundExpression)
+	VISIT(Conditional)
+	VISIT(DebugTracePoint)
+	VISIT(FieldAccess)
+	VISIT(FieldQuery)
+	VISIT(FilenameLiteral)
+	VISIT(FileList)
+	VISIT(ForeachExpr)
+	VISIT(Function)
+	VISIT(Identifier)
+	VISIT(IntLiteral)
+	VISIT(List)
+	VISIT(NameReference)
+	VISIT(Parameter)
+	VISIT(Record)
+	VISIT(FunctionTypeReference)
+	VISIT(ParametricTypeReference)
+	VISIT(RecordTypeReference)
+	VISIT(SimpleTypeReference)
+	VISIT(StringLiteral)
+	VISIT(Type)
+	VISIT(TypeDeclaration)
+	VISIT(UnaryOperation)
+	VISIT(Value)
 };
 
-} // namespace parsing
+#undef VISIT
+#define VISIT(type) \
+	virtual bool Enter(const type&); \
+	virtual void Leave(const type&);
+
+} // namespace ast
 } // namespace fabrique
 
 #endif
