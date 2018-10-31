@@ -40,9 +40,10 @@ string fabrique::DemangleABIName(const string& name)
 {
 	int status = 0;
 
-	unique_ptr<char> demangled {
-		abi::__cxa_demangle(name.c_str(), nullptr, nullptr, &status)
-	};
+	unique_ptr<char, void(*)(void*)> demangled(
+		abi::__cxa_demangle(name.c_str(), nullptr, nullptr, &status),
+		free
+	);
 
 	return (status == 0) ? string(demangled.get()) : name;
 }
