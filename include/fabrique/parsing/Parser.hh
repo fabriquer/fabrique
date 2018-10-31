@@ -60,8 +60,8 @@ namespace parsing {
 class Parser
 {
 public:
-	//! Parse Fabrique fragments defined at, e.g., the command line.
-	const Type& ParseDefinitions(const std::vector<std::string>& defs);
+	//! Parse a single value (e.g., a command-line definition)
+	UniqPtr<ast::Value> Parse(std::string, SourceRange = SourceRange::None());
 
 	//! Parse Fabrique input (usually a file) into @ref Value objects.
 	bool ParseFile(std::istream&, UniqPtrVec<ast::Value>&, std::string name = "");
