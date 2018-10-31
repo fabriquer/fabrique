@@ -78,57 +78,68 @@ public:
 
 
 	/**
-	 * An object to represent descending in a call stack. Will push and
-	 * pop scopes names appropriately when initialized and destructed.
+	 * A collection of named values that came from a lexical scope.
+	 *
+	 * These values have been evaluated, having originally come from the same lexical
+	 * scope. We can look up values within a scope; if a named value is not found
+	 * within it, the parent scope (if there is one) is consulted.
+	 *
+	 * This class is designed to outlast the EvalContext that creates it, and it
+	 * keeps its parent Scope around via shared pointer as long as it exists. This
+	 * allows us to retain a Scope for evaluating functions and build actions, both
+	 * of which can capture values from their lexical scope.
+	 */
+	class ScopedValues : public Printable
+	{
+	public:
+		ScopedValues(std::string name, std::shared_ptr<ScopedValues> parent);
+		ScopedValues(const ScopedValues&) = delete;
+
+		//! Is the given name defined in this scope?
+		bool contains(const std::string &name) const;
+
+		//! Define a name within a scope
+		ScopedValues& Define(const std::string &name, dag::ValuePtr,
+		                     SourceRange = SourceRange::None());
+
+		//! Look up a given name in this scope or its parents
+		dag::ValuePtr Lookup(const std::string &name) const;
+
+		virtual void PrettyPrint(Bytestream&, unsigned int) const override;
+
+	private:
+		const std::string name_;
+		const std::shared_ptr<ScopedValues> parent_;
+		dag::ValueMap values_;
+	};
+
+	/**
+	 * A lexical scope that is currently being defined.
 	 */
 	class Scope
 	{
-		public:
+	public:
+		Scope(std::shared_ptr<ScopedValues>, EvalContext&);
 		Scope(const Scope&) = delete;
 		Scope(Scope&&);
 		~Scope();
 
-		bool contains(const std::string& name);
-		void set(std::string name, dag::ValuePtr);
+		//! Define a name within a scope
+		Scope& Define(const std::string &name, dag::ValuePtr,
+		              SourceRange = SourceRange::None());
 
-		dag::ValueMap leave();
+	private:
+		EvalContext &ctx_;
+		std::shared_ptr<ScopedValues> values_;
 
-		private:
-		Scope(EvalContext& stack, std::string name, dag::ValueMap&);
-
-		EvalContext& stack_;
-		std::string name_;
-		dag::ValueMap& symbols_;
-
-		friend class EvalContext;
+		/**
+		 * This scope is "live", i.e., when we destruct we should pop the current
+		 * ScopedValues from the stack.
+		 */
+		bool live_;
 	};
 
 	Scope EnterScope(const std::string& name);
-
-
-	/**
-	 * An object that represents the use of an alternative scope stack and
-	 * that will restore the original stack on destruction.
-	 *
-	 * For instance, when calling a function, we need to switch to the
-	 * function definition's stack rather than the 
-	 */
-	class AlternateScoping
-	{
-		public:
-		AlternateScoping(AlternateScoping&&);
-		~AlternateScoping();
-
-		private:
-		AlternateScoping(EvalContext&, std::deque<dag::ValueMap>&&);
-
-		EvalContext& stack_;
-		std::deque<dag::ValueMap> originalScopes_;
-
-		friend class EvalContext;
-	};
-
-	AlternateScoping ChangeScopeStack(const dag::ValueMap& alternativeScope);
 
 
 	/**
@@ -180,11 +191,8 @@ public:
 	void Alias(const std::shared_ptr<dag::Target>&);
 
 protected:
-	dag::ValueMap& CurrentScope();
-	dag::ValueMap PopScope();
-
-	//! Make a deep copy of the current scope and all of its parents.
-	dag::ValueMap CopyCurrentScope();
+	ScopedValues& CurrentScope();
+	std::shared_ptr<ScopedValues> PopScope();
 
 	void DumpScope();
 
@@ -202,7 +210,7 @@ protected:
 	std::deque<std::string> scopeName_;
 
 	//! Symbols defined in this scope (or the one up from it, or up...).
-	std::deque<dag::ValueMap> scopes_;
+	std::deque<std::shared_ptr<ScopedValues>> scopes_;
 
 private:
 	/** The name of the value we are currently processing. */
