@@ -60,13 +60,13 @@
 #include <sstream>
 
 using namespace fabrique;
-using namespace fabrique::ast;
+using namespace fabrique::parsing;
 
 using std::string;
 using std::unique_ptr;
 
 
-bool Parser::ParseFile(std::istream& input, UniqPtrVec<Value>& values, string name)
+bool Parser::ParseFile(std::istream& input, UniqPtrVec<ast::Value>& values, string name)
 {
 	Bytestream& dbg = Bytestream::Debug("parser.file");
 	dbg

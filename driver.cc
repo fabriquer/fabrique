@@ -59,13 +59,12 @@
 
 using namespace fabrique;
 using namespace std;
-using fabrique::ast::Parser;
 using fabrique::backend::Backend;
 
 
 static Bytestream& err();
 static void reportError(string message, SourceRange, ErrorReport::Severity, string detail);
-static bool Parse(Parser& parser, const string& filename,
+static bool Parse(parsing::Parser& parser, const string& filename,
                   UniqPtrVec<ast::Value>& values, bool printAST);
 
 static dag::ValueMap builtins(TypeContext &types, string srcroot, string buildroot);
@@ -121,7 +120,7 @@ int main(int argc, char *argv[]) {
 		//
 		// Parse the file, optionally pretty-printing it.
 		//
-		ast::Parser parser;
+		parsing::Parser parser;
 		UniqPtrVec<ast::Value> values;
 
 		if (not Parse(parser, fabfile, values, args->printAST))
@@ -251,7 +250,7 @@ int main(int argc, char *argv[]) {
 }
 
 
-bool Parse(Parser& parser, const string& filename,
+bool Parse(parsing::Parser& parser, const string& filename,
            UniqPtrVec<ast::Value>& values, bool printAST)
 {
 	// Open and parse the top-level build description.
