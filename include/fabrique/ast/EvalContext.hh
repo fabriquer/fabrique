@@ -139,7 +139,19 @@ public:
 		bool live_;
 	};
 
-	Scope EnterScope(const std::string& name);
+	std::shared_ptr<ScopedValues> CurrentScope();
+
+	/**
+	 * Enter a new lexical scope, optionally specifying the parent scope that
+	 * should be used in name resolution.
+	 *
+	 * Normally, the parent scope is the scope that surrounds the code being
+	 * evaluated. In the case of function calls, however, we need to use the
+	 * scope surrounding the function definition rather than the call if we
+	 * want the function to be able to capture values (like a lambda function).
+	 */
+	Scope EnterScope(const std::string& name,
+	                 std::shared_ptr<ScopedValues> parentScope = nullptr);
 
 
 	/**
@@ -191,7 +203,6 @@ public:
 	void Alias(const std::shared_ptr<dag::Target>&);
 
 protected:
-	ScopedValues& CurrentScope();
 	std::shared_ptr<ScopedValues> PopScope();
 
 	void DumpScope();

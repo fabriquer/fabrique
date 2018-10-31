@@ -194,7 +194,14 @@ EvalContext::Scope::Define(const string &name, dag::ValuePtr v, SourceRange src)
 }
 
 
-EvalContext::Scope EvalContext::EnterScope(const string& name)
+shared_ptr<EvalContext::ScopedValues> EvalContext::CurrentScope()
+{
+	assert(not scopes_.empty());
+	return scopes_.back();
+}
+
+EvalContext::Scope
+EvalContext::EnterScope(const string& name, shared_ptr<ScopedValues> parent)
 {
 	Bytestream::Debug("eval.scope")
 		<< string(scopes_.size(), ' ')
@@ -204,8 +211,7 @@ EvalContext::Scope EvalContext::EnterScope(const string& name)
 		<< Bytestream::Reset << "\n"
 		;
 
-	shared_ptr<ScopedValues> parent;
-	if (not scopes_.empty())
+	if (not parent and not scopes_.empty())
 	{
 		parent = scopes_.back();
 	}
@@ -252,12 +258,6 @@ std::shared_ptr<EvalContext::ScopedValues> EvalContext::PopScope()
 	return s;
 }
 
-EvalContext::ScopedValues& EvalContext::CurrentScope()
-{
-	assert(not scopes_.empty());
-	return *scopes_.back();
-}
-
 void EvalContext::DumpScope()
 {
 	Bytestream& out = Bytestream::Debug("dag.scope");
@@ -286,7 +286,7 @@ void EvalContext::Define(ScopedValueName& name, ValuePtr v, SourceRange src)
 {
 	assert(&name.stack_ == this);
 
-	CurrentScope().Define(name.name_, v, src);
+	CurrentScope()->Define(name.name_, v, src);
 	builder_.Define(fullyQualifiedName(), v);
 }
 

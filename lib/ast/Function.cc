@@ -117,13 +117,10 @@ dag::ValuePtr Function::evaluate(EvalContext& ctx) const
 	auto ret = resultType_->evaluateAs<dag::TypeReference>(ctx);
 
 	//
-	// When executing a function, we don't use symbols in scope
-	// at the call site, only those in scope at the function
-	// definition site.
+	// Take a reference to the function's lexical scope in order to
+	// capture values from the surrounding code.
 	//
-	// TODO: make scoping work again!
-	//
-	//auto fnScope(ctx.ChangeScopeStack(scope));
+	auto scope = ctx.CurrentScope();
 
 	dag::Function::Evaluator eval =
 		[=,&ctx](const dag::ValueMap args, dag::DAGBuilder&, SourceRange)
@@ -133,7 +130,7 @@ dag::ValuePtr Function::evaluate(EvalContext& ctx) const
 		// putting default paramters and arguments into the local scope
 		// and then evalating the function's CompoundExpr.
 		//
-		auto evalScope(ctx.EnterScope("function call evaluation"));
+		auto evalScope(ctx.EnterScope("function call evaluation", scope));
 
 		for (auto& p : parameters)
 		{
