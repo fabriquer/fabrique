@@ -34,9 +34,9 @@ shell = import('share/shell.fab').shell;
 cxxoptions = [ '-std=c++14' ];
 
 dbgflags =
-	if debug [ '-g' '-O0' ] else [ '-O2' ]
-	+ if asserts [ '' ] else [ '-D NDEBUG' ]
-	+ if use_asan [ '-fsanitize=address' ] else []
+	(if debug [ '-g' '-O0' ] else [ '-O2' ])
+	+ (if asserts [ '' ] else [ '-D NDEBUG' ])
+	+ (if use_asan [ '-fsanitize=address' ] else [])
 	;
 
 defines =
