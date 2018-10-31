@@ -38,7 +38,6 @@
 #include <fabrique/dag/DAGBuilder.hh>
 
 #include "Support/Bytestream.h"
-#include "Support/CLIArguments.h"
 #include "Support/Join.h"
 #include "Support/exceptions.h"
 #include "Support/os.h"
