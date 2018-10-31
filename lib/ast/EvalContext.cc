@@ -178,6 +178,12 @@ EvalContext::Scope::~Scope()
 	}
 }
 
+bool EvalContext::Scope::contains(const string &name) const
+{
+	FAB_ASSERT(values_, "scope has no values_!");
+	return values_->contains(name);
+}
+
 EvalContext::Scope&
 EvalContext::Scope::Define(const string &name, dag::ValuePtr v, SourceRange src)
 {
