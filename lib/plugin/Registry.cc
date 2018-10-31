@@ -1,4 +1,4 @@
-/** @file Plugin/Plugin.cc    Definition of @ref fabrique::plugin::Plugin. */
+/** @file Plugin/Registry.cc    Definition of @ref fabrique::plugin::Registry. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -29,45 +29,57 @@
  * SUCH DAMAGE.
  */
 
-#include "Plugin/Plugin.h"
-#include <fabrique/types/TypeContext.hh>
+#include <fabrique/plugin/Registry.hh>
+
+#include <cassert>
+
 using namespace fabrique;
 using namespace fabrique::plugin;
 
 
-namespace {
-
-class NullPlugin : public Plugin::Descriptor
+Registry::Initializer::Initializer(Plugin::Descriptor *descriptor)
+	: registry_(Registry::get()), plugin_(descriptor)
 {
-	public:
-	std::string name() const override { return "null"; }
-	virtual UniqPtr<Plugin> Instantiate(TypeContext&) const override
-	{
-		return UniqPtr<Plugin>();
-	}
-};
-
-} // anonymous namespace
-
-
-Plugin::~Plugin()
-{
+	assert(plugin_);
+	registry_.Register(plugin_);
 }
 
 
-Plugin::Descriptor::~Descriptor()
+Registry::Initializer::~Initializer()
 {
+	registry_.Deregister(plugin_->name());
 }
 
 
-Plugin::Plugin(const Type& t, const Descriptor& descriptor)
-	: Typed(t), descriptor_(descriptor)
+Registry& Registry::get()
 {
+	static Registry& instance = *new Registry();
+	return instance;
 }
 
 
-Plugin::Descriptor& Plugin::nullPlugin()
+Registry& Registry::Register(std::weak_ptr<Plugin::Descriptor> plugin)
 {
-	static Descriptor& nullPlugin = *new NullPlugin();
-	return nullPlugin;
+	const std::string name = plugin.lock()->name();
+	assert(plugins_.find(name) == plugins_.end());
+
+	plugins_.emplace(name, plugin);
+	return *this;
+}
+
+
+void Registry::Deregister(std::string name)
+{
+	assert(plugins_.find(name) != plugins_.end());
+	plugins_.erase(name);
+}
+
+
+std::weak_ptr<Plugin::Descriptor> Registry::lookup(std::string name) const
+{
+	auto i = plugins_.find(name);
+	if (i == plugins_.end())
+		return std::weak_ptr<Plugin::Descriptor>();
+
+	return i->second;
 }

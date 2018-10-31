@@ -12,5 +12,6 @@ sources =
 	+ import('backend').sources
 	+ import('dag').sources
 	+ import('parsing').sources
+	+ import('plugin').sources
 	+ import('types').sources
 	;

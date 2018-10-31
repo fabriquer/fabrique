@@ -1,4 +1,4 @@
-/** @file Plugin/Registry.h    Declaration of @ref fabrique::plugin::Registry. */
+/** @file Plugin/Plugin.cc    Definition of @ref fabrique::plugin::Plugin. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -29,49 +29,45 @@
  * SUCH DAMAGE.
  */
 
-#ifndef PLUGIN_REGISTRY_H
-#define PLUGIN_REGISTRY_H
+#include <fabrique/plugin/Plugin.hh>
+#include <fabrique/types/TypeContext.hh>
+using namespace fabrique;
+using namespace fabrique::plugin;
 
-#include "fabrique/UniqPtr.h"
-#include "Plugin/Plugin.h"
 
+namespace {
 
-namespace fabrique {
-namespace plugin {
-
-//! A registry for naming Fabrique @ref Plugin objects.
-class Registry
+class NullPlugin : public Plugin::Descriptor
 {
 	public:
-	/**
-	 * A RAII type for owning @ref Plugin::Descriptor objects
-	 * and registering them in the @ref Plugin::Registry.
-	 */
-	class Initializer
+	std::string name() const override { return "null"; }
+	virtual UniqPtr<Plugin> Instantiate(TypeContext&) const override
 	{
-		public:
-		Initializer(Plugin::Descriptor *descriptor);
-		~Initializer();
-
-		private:
-		Registry& registry_;
-		std::shared_ptr<Plugin::Descriptor> plugin_;
-	};
-
-	static Registry& get();
-
-	Registry& Register(std::weak_ptr<Plugin::Descriptor>);
-	void Deregister(std::string pluginName);
-
-	std::weak_ptr<Plugin::Descriptor> lookup(std::string) const;
-
-	private:
-	Registry() {}
-
-	StringMap<std::weak_ptr<Plugin::Descriptor>> plugins_;
+		return UniqPtr<Plugin>();
+	}
 };
 
-} // namespace plugin
-} // namespace fabrique
+} // anonymous namespace
 
-#endif
+
+Plugin::~Plugin()
+{
+}
+
+
+Plugin::Descriptor::~Descriptor()
+{
+}
+
+
+Plugin::Plugin(const Type& t, const Descriptor& descriptor)
+	: Typed(t), descriptor_(descriptor)
+{
+}
+
+
+Plugin::Descriptor& Plugin::nullPlugin()
+{
+	static Descriptor& nullPlugin = *new NullPlugin();
+	return nullPlugin;
+}

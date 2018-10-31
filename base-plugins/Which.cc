@@ -34,7 +34,7 @@
 #include <fabrique/dag/File.hh>
 #include <fabrique/dag/List.hh>
 #include <fabrique/dag/Parameter.hh>
-#include "Plugin/Registry.h"
+#include <fabrique/plugin/Registry.hh>
 #include <fabrique/types/FileType.hh>
 #include <fabrique/types/FunctionType.hh>
 #include <fabrique/types/RecordType.hh>

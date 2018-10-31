@@ -1,4 +1,4 @@
-/** @file Plugin/Registry.cc    Definition of @ref fabrique::plugin::Registry. */
+/** @file Plugin/Loader.cc    Definition of @ref fabrique::plugin::Loader. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -29,58 +29,59 @@
  * SUCH DAMAGE.
  */
 
-#include "Plugin/Plugin.h"
-#include "Plugin/Registry.h"
-
-#include <cassert>
+#include <fabrique/plugin/Loader.hh>
+#include <fabrique/plugin/Registry.hh>
+#include "Support/Bytestream.h"
+#include "Support/Join.h"
+#include "Support/SharedLibrary.h"
+#include "Support/os.h"
 
 using namespace fabrique;
 using namespace fabrique::plugin;
+using std::string;
+using std::vector;
 
 
-Registry::Initializer::Initializer(Plugin::Descriptor *descriptor)
-	: registry_(Registry::get()), plugin_(descriptor)
+Loader::Loader(const vector<string>& paths)
+	: paths_(paths)
 {
-	assert(plugin_);
-	registry_.Register(plugin_);
 }
 
 
-Registry::Initializer::~Initializer()
+std::weak_ptr<Plugin::Descriptor> Loader::Load(string name)
 {
-	registry_.Deregister(plugin_->name());
-}
+	const string libname = LibraryFilename(name);
 
+	Bytestream& dbg = Bytestream::Debug("plugin.loader");
+	dbg
+		<< Bytestream::Action << "searching"
+		<< Bytestream::Reset << " for "
+		<< Bytestream::Type << "plugin "
+		<< Bytestream::Literal << name
+		<< Bytestream::Operator << " ("
+		<< Bytestream::Literal << libname
+		<< Bytestream::Operator << ")"
+		<< Bytestream::Reset << " in paths "
+		<< Bytestream::Operator << "["
+		<< Bytestream::Reset << " "
+		<< Bytestream::Literal << join(paths_, " ")
+		<< Bytestream::Operator << " ]"
+		<< Bytestream::Reset << "\n"
+		;
 
-Registry& Registry::get()
-{
-	static Registry& instance = *new Registry();
-	return instance;
-}
+	const string filename = FindFile(libname, paths_,
+	                                 FileIsSharedLibrary, DefaultFilename(""));
 
-
-Registry& Registry::Register(std::weak_ptr<Plugin::Descriptor> plugin)
-{
-	const std::string name = plugin.lock()->name();
-	assert(plugins_.find(name) == plugins_.end());
-
-	plugins_.emplace(name, plugin);
-	return *this;
-}
-
-
-void Registry::Deregister(std::string name)
-{
-	assert(plugins_.find(name) != plugins_.end());
-	plugins_.erase(name);
-}
-
-
-std::weak_ptr<Plugin::Descriptor> Registry::lookup(std::string name) const
-{
-	auto i = plugins_.find(name);
-	if (i == plugins_.end())
+	dbg
+		<< Bytestream::Reset << "found "
+		<< Bytestream::Operator << "'"
+		<< Bytestream::Literal << filename
+		<< Bytestream::Operator << "'"
+		<< Bytestream::Reset << "\n"
+		;
+	if (filename.empty())
 		return std::weak_ptr<Plugin::Descriptor>();
 
-	return i->second;
+	libraries_.emplace_back(SharedLibrary::Load(filename));
+	return Registry::get().lookup(name);
 }

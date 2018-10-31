@@ -32,7 +32,7 @@
 #ifndef PLUGIN_LOADER_H
 #define PLUGIN_LOADER_H
 
-#include "Plugin/Plugin.h"
+#include <fabrique/plugin/Plugin.hh>
 
 #include <string>
 #include <vector>
@@ -43,9 +43,6 @@ namespace fabrique {
 class SharedLibrary;
 
 namespace plugin {
-
-class Plugin;
-
 
 //! Support for loading plugins from shared libraries.
 class Loader

@@ -35,7 +35,7 @@
 
 #include <fabrique/dag/DAGBuilder.hh>
 #include <fabrique/dag/Parameter.hh>
-#include "Plugin/Registry.h"
+#include <fabrique/plugin/Registry.hh>
 #include <fabrique/types/FunctionType.hh>
 #include <fabrique/types/RecordType.hh>
 #include <fabrique/types/TypeContext.hh>

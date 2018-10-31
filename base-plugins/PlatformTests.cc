@@ -32,7 +32,7 @@
 #include <fabrique/dag/File.hh>
 #include <fabrique/dag/List.hh>
 #include <fabrique/dag/Parameter.hh>
-#include "Plugin/Registry.h"
+#include <fabrique/plugin/Registry.hh>
 #include <fabrique/types/RecordType.hh>
 #include <fabrique/types/TypeContext.hh>
 #include "Support/Platform.h"

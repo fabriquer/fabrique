@@ -41,8 +41,8 @@
 
 #include <fabrique/parsing/Parser.hh>
 
-#include "Plugin/Loader.h"
-#include "Plugin/Registry.h"
+#include <fabrique/plugin/Loader.hh>
+#include <fabrique/plugin/Registry.hh>
 
 #include "Support/Bytestream.h"
 #include "Support/CLIArguments.h"

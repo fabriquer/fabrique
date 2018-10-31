@@ -31,9 +31,6 @@
 
 #include <fabrique/ast/ast.hh>
 #include <fabrique/parsing/Parser.hh>
-#include "Plugin/Loader.h"
-#include "Plugin/Plugin.h"
-#include "Plugin/Registry.h"
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 #include <fabrique/types/TypeContext.hh>
