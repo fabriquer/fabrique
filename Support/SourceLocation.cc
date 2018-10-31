@@ -207,6 +207,10 @@ bool SourceRange::isInside(const SourceRange& other) const
 	return true;
 }
 
+string SourceRange::filename() const
+{
+	return begin.filename;
+}
 
 void SourceRange::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
@@ -264,7 +268,10 @@ Bytestream& SourceRange::PrintSource(Bytestream& out, SourceLocation caret,
 	if (!filename.empty())
 	{
 		std::ifstream sourceFile(filename.c_str());
-		assert(sourceFile.good());
+		if (not sourceFile.good())
+		{
+			return out;
+		}
 
 		string line;   // the last-read line
 

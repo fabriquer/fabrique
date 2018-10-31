@@ -56,6 +56,21 @@ using std::string;
 using std::unique_ptr;
 
 
+UniqPtr<ast::Value> Parser::Parse(std::string s, SourceRange src)
+{
+	Bytestream& dbg = Bytestream::Debug("parser");
+	dbg
+		<< Bytestream::Action << "Parsing"
+		<< Bytestream::Type << " string"
+		<< Bytestream::Operator << " '"
+		<< Bytestream::Literal << s
+		<< Bytestream::Operator << "'"
+		<< Bytestream::Reset << "\n"
+		;
+
+	return nullptr;
+}
+
 bool Parser::ParseFile(std::istream& input, UniqPtrVec<ast::Value>& values, string name)
 {
 	Bytestream& dbg = Bytestream::Debug("parser.file");
