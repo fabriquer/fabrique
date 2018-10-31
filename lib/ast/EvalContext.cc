@@ -60,10 +60,10 @@ using std::vector;
 
 
 EvalContext::EvalContext(TypeContext& ctx, ValueMap builtins)
-	: ctx_(ctx), builder_(*this), builtins_(std::move(builtins))
+	: ctx_(ctx), builder_(*this), builtins_(builtins)
 {
 	// Create top-level scope
-	scopes_.emplace_back();
+	scopes_.emplace_back(std::make_shared<ScopedValues>("top", nullptr));
 }
 
 std::vector<DAG::BuildTarget> EvalContext::Evaluate(const UniqPtrVec<ast::Value>& values)
@@ -82,40 +82,115 @@ std::vector<DAG::BuildTarget> EvalContext::Evaluate(const UniqPtrVec<ast::Value>
 }
 
 
-EvalContext::Scope::Scope(EvalContext& stack, string name, ValueMap& symbols)
-	: stack_(stack), name_(name), symbols_(symbols)
+EvalContext::ScopedValues::ScopedValues(string name, shared_ptr<ScopedValues> parent)
+	: name_(name), parent_(parent)
 {
 }
 
-EvalContext::Scope::Scope(Scope&& other)
-	: stack_(other.stack_),
-	  name_(std::move(other.name_)),
-	  symbols_(other.symbols_)
+bool EvalContext::ScopedValues::contains(const string& name) const
 {
+	return (values_.find(name) != values_.end());
+}
+
+EvalContext::ScopedValues&
+EvalContext::ScopedValues::Define(const string &name, ValuePtr v, SourceRange src)
+{
+	if (not src)
+	{
+		src = v->source();
+	}
+
+	SemaCheck(not name.empty(), src, "defining an unnamed value");
+	SemaCheck(v, src, "defining a null value");
+	SemaCheck(values_.find(name) == values_.end(), src, "redefining " + name);
+
+	values_.emplace(name, v);
+
+	return *this;
+}
+
+ValuePtr EvalContext::ScopedValues::Lookup(const string& name) const
+{
+	auto i = values_.find(name);
+	if (i != values_.end())
+	{
+		Bytestream::Debug("ast.scope.lookup")
+			<< Bytestream::Action << "  found "
+			<< Bytestream::Literal << "'" << name << "'"
+			<< Bytestream::Operator << ": "
+			<< *i->second
+			<< Bytestream::Reset << "\n"
+			;
+
+		return i->second;
+	}
+
+	if (parent_)
+	{
+		return parent_->Lookup(name);
+	}
+
+	return nullptr;
+}
+
+void EvalContext::ScopedValues::PrettyPrint(Bytestream &out, unsigned int indent) const
+{
+	const string tabs(indent + 1, '\t');
+
+	out
+		<< Bytestream::Type << "scope"
+		<< Bytestream::Operator << " '"
+		<< Bytestream::Definition << name_
+		<< Bytestream::Operator << "':"
+		<< Bytestream::Reset << "\n"
+		;
+
+	for (const auto& i : values_)
+	{
+		out
+			<< tabs
+			<< Bytestream::Definition << i.first
+			<< Bytestream::Operator << " = "
+			<< Bytestream::Reset
+			;
+
+		i.second->PrettyPrint(out, indent + 1);
+	}
+}
+
+
+EvalContext::Scope::Scope(shared_ptr<ScopedValues> values, EvalContext &ctx)
+	: ctx_(ctx), values_(values), live_(true)
+{
+}
+
+EvalContext::Scope::Scope(Scope &&orig)
+	: ctx_(orig.ctx_), values_(orig.values_), live_(true)
+{
+	orig.live_ = false;
 }
 
 EvalContext::Scope::~Scope()
 {
-	if (name_.empty())
-		return;
-
-	stack_.PopScope();
+	if (live_)
+	{
+		ctx_.PopScope();
+	}
 }
 
-void EvalContext::Scope::set(string name, ValuePtr v)
+EvalContext::Scope&
+EvalContext::Scope::Define(const string &name, dag::ValuePtr v, SourceRange src)
 {
-	stack_.CurrentScope()[name] = v;
-}
+	SemaCheck(live_, src, "defining a value in a dead scope");
+	assert(values_);
 
-bool EvalContext::Scope::contains(const string& name)
-{
-	return (symbols_.find(name) != symbols_.end());
-}
+	if (not src)
+	{
+		src = v->source();
+	}
 
-ValueMap EvalContext::Scope::leave()
-{
-	name_ = "";
-	return stack_.PopScope();
+	values_->Define(name, v, src);
+	return *this;
 }
 
 
@@ -129,35 +204,15 @@ EvalContext::Scope EvalContext::EnterScope(const string& name)
 		<< Bytestream::Reset << "\n"
 		;
 
-	scopes_.push_back(ValueMap());
-	return Scope(*this, name, CurrentScope());
-}
+	shared_ptr<ScopedValues> parent;
+	if (not scopes_.empty())
+	{
+		parent = scopes_.back();
+	}
 
-
-EvalContext::AlternateScoping::AlternateScoping(EvalContext& stack,
-                                              std::deque<ValueMap>&& scopes)
-	: stack_(stack), originalScopes_(scopes)
-{
-}
-
-EvalContext::AlternateScoping::AlternateScoping(AlternateScoping&& other)
-	: stack_(other.stack_), originalScopes_(std::move(other.originalScopes_))
-{
-}
-
-EvalContext::AlternateScoping::~AlternateScoping()
-{
-	if (not originalScopes_.empty())
-		stack_.scopes_ = std::move(originalScopes_);
-}
-
-
-EvalContext::AlternateScoping EvalContext::ChangeScopeStack(const ValueMap& altScope)
-{
-	std::deque<ValueMap> originalScopes = std::move(scopes_);
-	scopes_.push_back(altScope);
-
-	return AlternateScoping(*this, std::move(originalScopes));
+	auto s = std::make_shared<ScopedValues>(name, parent);
+	scopes_.push_back(s);
+	return Scope(s, *this);
 }
 
 
@@ -185,39 +240,27 @@ EvalContext::ScopedValueName EvalContext::evaluating(const string& name)
 }
 
 
-ValueMap EvalContext::PopScope()
+std::shared_ptr<EvalContext::ScopedValues> EvalContext::PopScope()
 {
 	assert(not scopes_.empty());
 
-	ValueMap values = std::move(CurrentScope());
+	auto s = std::move(scopes_.back());
 	scopes_.pop_back();
 
-	Bytestream& dbg = Bytestream::Debug("parser.scope");
-	dbg
-		<< string(scopes_.size(), ' ')
-		<< Bytestream::Operator << " << "
-		<< Bytestream::Type << "scope"
-		<< Bytestream::Operator << ":"
-		;
+	Bytestream::Debug("ast.eval.scope") << *s << "\n";
 
-	for (auto& i : values)
-		dbg << " " << i.first;
-
-	dbg << Bytestream::Reset << "\n";
-
-	return values;
+	return s;
 }
 
-ValueMap& EvalContext::CurrentScope()
+EvalContext::ScopedValues& EvalContext::CurrentScope()
 {
 	assert(not scopes_.empty());
-	return scopes_.back();
+	return *scopes_.back();
 }
 
 void EvalContext::DumpScope()
 {
 	Bytestream& out = Bytestream::Debug("dag.scope");
-	size_t depth = 0;
 
 	out
 		<< Bytestream::Operator << "---------------------------\n"
@@ -225,24 +268,11 @@ void EvalContext::DumpScope()
 		<< Bytestream::Operator << "---------------------------\n"
 		;
 
-	for (auto scope = scopes_.begin(); scope != scopes_.end(); scope++)
+	unsigned int indent = 0;
+	for (auto s : scopes_)
 	{
-		const string indent("  ", depth);
-		for (auto i : *scope)
-		{
-			const string name(i.first);
-			const ValuePtr value(i.second);
-
-			out << indent
-				<< Bytestream::Operator << "- "
-				<< Bytestream::Definition << name
-				<< Bytestream::Operator << ": "
-				<< *value
-				<< Bytestream::Reset << "\n"
-				;
-		}
-
-		depth++;
+		s->PrettyPrint(out, indent);
+		indent++;
 	}
 
 	out
@@ -251,37 +281,12 @@ void EvalContext::DumpScope()
 		;
 }
 
-ValueMap EvalContext::CopyCurrentScope()
-{
-	ValueMap copy;
-
-	for (auto i = scopes_.rbegin(); i != scopes_.rend(); i++)
-	{
-		// Unfortunately, std::copy() doesn't work here because
-		// it wants to copy *into* the string part of a const
-		// pair<string,SharedPtr<Value>>.
-		for (auto j : *i)
-		{
-			string name = j.first;
-			ValuePtr value = j.second;
-
-			copy.emplace(name, value);
-		}
-	}
-
-	return copy;
-}
-
 
 void EvalContext::Define(ScopedValueName& name, ValuePtr v, SourceRange src)
 {
 	assert(&name.stack_ == this);
 
-	ValueMap& currentScope = CurrentScope();
-	SemaCheck(currentScope.find(name.name_) == currentScope.end(), src,
-		"redefining '" + name.name_ + "'");
-
-	currentScope.emplace(name.name_, v);
+	CurrentScope().Define(name.name_, v, src);
 	builder_.Define(fullyQualifiedName(), v);
 }
 
@@ -303,35 +308,13 @@ ValuePtr EvalContext::Lookup(const string& name, SourceRange src)
 	}
 
 	// Next, look for lexically-defined names:
-	for (auto i = scopes_.rbegin(); i != scopes_.rend(); i++)
+	assert(not scopes_.empty());
+	auto s = scopes_.back();
+	assert(s);
+
+	if (auto v = s->Lookup(name))
 	{
-		const ValueMap& scope = *i;
-
-		auto value = scope.find(name);
-		if (value != scope.end())
-		{
-			FAB_ASSERT(value->second, "value-less value found in scope");
-
-			dbg
-				<< Bytestream::Action << "  found "
-				<< Bytestream::Literal << "'" << name << "'"
-				<< Bytestream::Operator << ": "
-				<< *value->second
-				<< Bytestream::Reset << "\n"
-				;
-			return value->second;
-		}
-
-		dbg
-			<< "  no "
-			<< Bytestream::Literal << "'" << name << "'"
-			<< Bytestream::Operator << ":"
-			;
-
-		for (auto& j : scope)
-			dbg << " " << Bytestream::Definition << j.first;
-
-		dbg << Bytestream::Reset << "\n";
+		return v;
 	}
 
 	// If we are looking for 'builddir' or 'subdir' and haven't found it

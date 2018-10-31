@@ -112,7 +112,7 @@ dag::ValuePtr ForeachExpr::evaluate(EvalContext& ctx) const
 	for (const dag::ValuePtr& element : *target->asList())
 	{
 		auto scope(ctx.EnterScope("foreach body"));
-		scope.set(loopVarName, element);
+		scope.Define(loopVarName, element, SourceRange(*loopVarName_, *element));
 
 		dag::ValuePtr result = body_->evaluate(ctx);
 		assert(result);
