@@ -51,7 +51,7 @@ class Loader;
 class Registry;
 }
 
-namespace ast {
+namespace parsing {
 
 
 /**
@@ -64,7 +64,7 @@ public:
 	const Type& ParseDefinitions(const std::vector<std::string>& defs);
 
 	//! Parse Fabrique input (usually a file) into @ref Value objects.
-	bool ParseFile(std::istream& input, UniqPtrVec<Value>&, std::string name = "");
+	bool ParseFile(std::istream&, UniqPtrVec<ast::Value>&, std::string name = "");
 
 	//! Errors encountered during parsing.
 	const std::vector<ErrorReport>& errors() const { return errs_; }
@@ -84,7 +84,7 @@ private:
 	std::vector<ErrorReport> errs_;
 };
 
-} // namespace ast
+} // namespace parsing
 } // namespace fabrique
 
 #endif
