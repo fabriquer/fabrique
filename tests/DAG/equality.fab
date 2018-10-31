@@ -31,11 +31,11 @@ strnotequal = not hello == world;
 m = 42;
 n = 42;
 
-# CHECK-DAG: iequal:bool = true
-iequal = m == n;
+# CHECK-DAG: int_is_equal:bool = true
+int_is_equal = m == n;
 
-# CHECK-DAG: inequal:bool = false
-inequal = m != n;
+# CHECK-DAG: int_not_equal:bool = false
+int_not_equal = m != n;
 
-# CHECK-DAG: inotequal:bool = false
-inotequal = not m == n;
+# CHECK-DAG: not_int_equal:bool = false
+not_int_equal = not m == n;
