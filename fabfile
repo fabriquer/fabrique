@@ -73,9 +73,9 @@ generated_cxx_flags =
 
 
 cxx_srcs =
-	import('lib').sources
+	import('bin').sources
+	+ import('lib').sources
 	+ import('Support').sources
-	+ files(driver.cc)
 	;
 
 
