@@ -32,7 +32,7 @@
 #ifndef PRIMITIVE_H
 #define PRIMITIVE_H
 
-#include "DAG/Value.h"
+#include <fabrique/dag/Value.hh>
 #include "Support/Bytestream.h"
 #include "Support/Printable.h"
 #include "Support/SourceLocation.h"

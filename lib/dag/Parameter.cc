@@ -1,4 +1,4 @@
-/** @file DAG/Record.h    Declaration of @ref fabrique::dag::Record. */
+/** @file DAG/Parameter.cc    Definition of @ref fabrique::dag::Parameter. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -29,95 +29,35 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/ast/Builtins.hh>
-#include "DAG/Record.h"
-#include "DAG/Visitor.h"
+#include <fabrique/dag/Parameter.hh>
+#include <fabrique/dag/Value.hh>
 #include "Support/Bytestream.h"
-#include "Types/RecordType.h"
 #include "Types/Type.h"
-#include "Types/TypeContext.h"
-
-#include <cassert>
 
 using namespace fabrique::dag;
+using std::shared_ptr;
 using std::string;
-using std::vector;
 
-
-Record* Record::Create(const ValueMap& fields, TypeContext& types, SourceRange src)
-{
-	if (not src and not fields.empty())
-	{
-		src = SourceRange::Over(fields);
-	}
-
-	RecordType::NamedTypeVec fieldTypes;
-	for (const auto& field : fields)
-	{
-		fieldTypes.emplace_back(field.first, field.second->type());
-	}
-
-	const RecordType& t = types.recordType(fieldTypes);
-	return new Record(fields, t, src);
-}
-
-
-Record::Record(const ValueMap& fields, const Type& t, SourceRange src)
-	: Value(t, src), fields_(fields)
+Parameter::Parameter(string name, const Type& t, ValuePtr v, const SourceRange& src)
+	: HasSource(src), Typed(t), name_(name), defaultValue_(v)
 {
 }
 
-
-Record::~Record() {}
-
-
-ValuePtr Record::field(const std::string& name) const
+Parameter::~Parameter()
 {
-	for (auto& i : fields_)
-	{
-		if (i.first == name)
-			return i.second;
-	}
-
-	return ValuePtr();
 }
 
-
-void Record::PrettyPrint(Bytestream& out, unsigned int indent) const
+void Parameter::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
-	const string tab(indent, '\t');
-	const string innerTab(indent + 1, '\t');
-
-	out << Bytestream::Operator << "{\n"
-		;
-
-	for (auto& i : fields_)
-	{
-		out
-			<< innerTab
-			<< Bytestream::Definition << i.first
-			<< Bytestream::Operator << ":"
-			<< Bytestream::Reset << i.second->type()
-			<< Bytestream::Operator << " = "
-			;
-
-		i.second->PrettyPrint(out, indent + 1);
-
-		out
-			<< Bytestream::Reset << "\n"
-			;
-	}
-
 	out
-		<< Bytestream::Operator << tab << "}"
-		<< Bytestream::Reset
+		<< Bytestream::Definition << name_
+		<< Bytestream::Operator << ":"
+		<< type()
 		;
-}
 
-
-void Record::Accept(Visitor& v) const
-{
-	if (v.Visit(*this))
-		for (auto& i : fields_)
-			i.second->Accept(v);
+	if (defaultValue_)
+		out
+			<< Bytestream::Operator << " = "
+			<< *defaultValue_
+			;
 }

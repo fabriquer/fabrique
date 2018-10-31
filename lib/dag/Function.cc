@@ -1,14 +1,12 @@
-/**
- * @file AST/TypeDeclaration.cc
- * Definition of @ref fabrique::ast::TypeDeclaration.
- */
+/** @file DAG/Function.cc    Definition of @ref fabrique::dag::Function. */
 /*
- * Copyright (c) 2015, 2018 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -32,35 +30,49 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/ast/EvalContext.hh>
-#include <fabrique/ast/TypeDeclaration.hh>
-#include <fabrique/ast/Visitor.hh>
-#include <fabrique/dag/TypeReference.hh>
+#include <fabrique/dag/Function.hh>
+#include <fabrique/dag/Parameter.hh>
+#include <fabrique/dag/Visitor.hh>
 #include "Support/Bytestream.h"
-#include "Support/exceptions.h"
+#include "Types/FunctionType.h"
+#include "Types/TypeContext.h"
+using namespace fabrique::dag;
+using namespace std::placeholders;
 
-using namespace fabrique;
-using namespace fabrique::ast;
 
+Function* Function::Create(Evaluator fnEval, const Type &resultType,
+                           SharedPtrVec<Parameter> parameters, SourceRange source,
+                           bool acceptExtraArguments)
+{
+	PtrVec<Type> paramTypes;
+	for (auto &p : parameters)
+	{
+		paramTypes.push_back(&p->type());
+	}
 
-TypeDeclaration::TypeDeclaration(UniqPtr<TypeReference> t, SourceRange src)
-	: Expression(src), declaredType_(std::move(t))
+	auto &type = resultType.context().functionType(paramTypes, resultType);
+
+	return new Function(fnEval, parameters, acceptExtraArguments, type, source);
+}
+
+Function::Function(Callable::Evaluator evaluator,
+                   const SharedPtrVec<Parameter>& parameters, bool acceptExtraArguments,
+                   const FunctionType& type, SourceRange source)
+	: Callable(parameters, acceptExtraArguments, evaluator), Value(type, source)
 {
 }
 
-void TypeDeclaration::PrettyPrint(Bytestream& out, unsigned int indent) const
+Function::~Function() {}
+
+
+void Function::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
-	out << Bytestream::Definition << "type " << Bytestream::Reset;
-	declaredType_->PrettyPrint(out, indent + 1);
+	out << Bytestream::Action << "function " << Bytestream::Reset;
+	type().PrettyPrint(out, indent);
+	out << "\n";
 }
 
-void TypeDeclaration::Accept(Visitor& v) const
+void Function::Accept(Visitor& v) const
 {
-	v.Enter(*this);
-	v.Leave(*this);
-}
-
-dag::ValuePtr TypeDeclaration::evaluate(EvalContext &ctx) const
-{
-	return declaredType_->evaluateAs<dag::TypeReference>(ctx);
+	v.Visit(*this);
 }

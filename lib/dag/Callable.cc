@@ -29,8 +29,8 @@
  * SUCH DAMAGE.
  */
 
-#include "DAG/Callable.h"
-#include "DAG/Parameter.h"
+#include <fabrique/dag/Callable.hh>
+#include <fabrique/dag/Parameter.hh>
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 #include "Types/Type.h"

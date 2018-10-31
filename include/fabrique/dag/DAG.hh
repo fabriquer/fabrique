@@ -1,9 +1,6 @@
-/**
- * @file DAG/TypeReference.cc
- * Definition of @ref fabrique::dag::TypeReference.
- */
+/** @file DAG/DAG.h    Declaration of @ref fabrique::dag::DAG. */
 /*
- * Copyright (c) 2015, 2018 Jonathan Anderson
+ * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -32,41 +29,46 @@
  * SUCH DAMAGE.
  */
 
-#include "DAG/TypeReference.h"
-#include "DAG/Visitor.h"
-#include "Support/Bytestream.h"
-#include "Types/TypeContext.h"
-using namespace fabrique::dag;
+#ifndef DAG_H
+#define DAG_H
+
+#include <fabrique/dag/Value.hh>
+#include "Support/Printable.h"
+
+#include <string>
 
 
-TypeReference::~TypeReference() {}
+namespace fabrique {
+
+//! Representations of nodes (files, build rules, etc.) in the build graph.
+namespace dag {
+
+class Build;
+class File;
+class Rule;
 
 
-ValuePtr TypeReference::Create(const Type& t, SourceRange src)
+/**
+ * A directed acyclic graph of build actions.
+ */
+class DAG : public Printable
 {
-	return ValuePtr(new TypeReference(t, src));
-}
+public:
+	virtual const SharedPtrVec<File>& files() const = 0;
+	virtual const SharedPtrVec<Build>& builds() const = 0;
+	virtual const SharedPtrMap<Rule>& rules() const = 0;
+	virtual const SharedPtrMap<Value>& variables() const = 0;
+	virtual const SharedPtrMap<Value>& targets() const = 0;
 
+	typedef std::pair<std::string,ValuePtr> BuildTarget;
 
-const fabrique::Type& TypeReference::referencedType() const
-{
-	return referencedType_;
-}
+	//! A file's top-level targets, in order of original definition.
+	virtual const std::vector<BuildTarget>& topLevelTargets() const = 0;
 
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
+};
 
-void TypeReference::PrettyPrint(Bytestream& out, unsigned int indent) const
-{
-	referencedType_.PrettyPrint(out, indent);
-}
+} // namespace dag
+} // namespace fabrique
 
-
-void TypeReference::Accept(Visitor& v) const
-{
-	v.Visit(*this);
-}
-
-
-TypeReference::TypeReference(const Type& t, SourceRange src)
-	: Value(t.context().typeType(), src), referencedType_(t)
-{
-}
+#endif

@@ -36,9 +36,9 @@
 #include <fabrique/ast/Parameter.hh>
 #include <fabrique/ast/Value.hh>
 #include <fabrique/ast/Visitor.hh>
-#include "DAG/Function.h"
-#include "DAG/Parameter.h"
-#include "DAG/TypeReference.h"
+#include <fabrique/dag/Function.hh>
+#include <fabrique/dag/Parameter.hh>
+#include <fabrique/dag/TypeReference.hh>
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 #include "Types/FunctionType.h"

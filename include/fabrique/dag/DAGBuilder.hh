@@ -33,11 +33,11 @@
 #ifndef DAG_BUILDER_H
 #define DAG_BUILDER_H
 
-#include <string>
+#include <fabrique/dag/Function.hh>
+#include <fabrique/dag/Record.hh>
+#include <fabrique/dag/Value.hh>
 
-#include "DAG/Function.h"
-#include "DAG/Record.h"
-#include "DAG/Value.h"
+#include <string>
 
 
 namespace fabrique {

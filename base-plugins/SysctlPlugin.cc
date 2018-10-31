@@ -33,8 +33,8 @@
 #include <sys/types.h>
 #include <sys/sysctl.h>
 
-#include "DAG/DAGBuilder.h"
-#include "DAG/Parameter.h"
+#include <fabrique/dag/DAGBuilder.hh>
+#include <fabrique/dag/Parameter.hh>
 #include "Plugin/Registry.h"
 #include "Types/FunctionType.h"
 #include "Types/RecordType.h"

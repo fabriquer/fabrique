@@ -33,11 +33,7 @@
 #include <fabrique/ast/EvalContext.hh>
 #include <fabrique/ast/Function.hh>
 #include <fabrique/ast/Visitor.hh>
-#include "DAG/Build.h"
-#include "DAG/Callable.h"
-#include "DAG/Function.h"
-#include "DAG/Parameter.h"
-#include "DAG/Rule.h"
+#include <fabrique/dag/Callable.hh>
 #include "Support/Bytestream.h"
 #include "Support/SourceLocation.h"
 #include "Support/exceptions.h"

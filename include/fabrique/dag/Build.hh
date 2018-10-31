@@ -1,6 +1,6 @@
-/** @file DAG/DAG.h    Declaration of @ref fabrique::dag::DAG. */
+/** @file DAG/Build.h    Declaration of @ref fabrique::dag::Build. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,43 +29,71 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DAG_H
-#define DAG_H
+#ifndef DAG_BUILD_H
+#define DAG_BUILD_H
 
-#include "DAG/Value.h"
-#include "Support/Printable.h"
+#include <fabrique/dag/DAG.hh>
+#include <fabrique/dag/File.hh>
+#include <fabrique/dag/Value.hh>
 
-#include <string>
+#include <memory>
+#include <vector>
 
 
 namespace fabrique {
-
-//! Representations of nodes (files, build rules, etc.) in the build graph.
 namespace dag {
 
-class Build;
-class File;
 class Rule;
 
 
 /**
- * A directed acyclic graph of build actions.
+ * An application of a @ref fabrique::dag::Rule to transform @ref File objects.
  */
-class DAG : public Printable
+class Build : public Value
 {
 public:
-	virtual const SharedPtrVec<File>& files() const = 0;
-	virtual const SharedPtrVec<Build>& builds() const = 0;
-	virtual const SharedPtrMap<Rule>& rules() const = 0;
-	virtual const SharedPtrMap<Value>& variables() const = 0;
-	virtual const SharedPtrMap<Value>& targets() const = 0;
+	static Build* Create(std::shared_ptr<Rule>&, SharedPtrMap<Value>& args,
+	                     const SourceRange&);
 
-	typedef std::pair<std::string,ValuePtr> BuildTarget;
+	virtual ~Build() override {}
 
-	//! A file's top-level targets, in order of original definition.
-	virtual const std::vector<BuildTarget>& topLevelTargets() const = 0;
+	const Rule& buildRule() const { return *rule_; }
+
+	const FileVec inputs() const { return in_; }
+	const FileVec outputs() const { return out_; }
+
+	const ValueMap& arguments() const { return args_; }
+
+	virtual bool hasFields() const override;
+	virtual ValuePtr field(const std::string& name) const override;
+
+	virtual ValuePtr Add(ValuePtr&) const override;
+	virtual ValuePtr PrefixWith(ValuePtr&) const override;
+	virtual ValuePtr And(ValuePtr&) const override;
+	virtual ValuePtr Or(ValuePtr&) const override;
+	virtual ValuePtr Xor(ValuePtr&) const override;
+	virtual ValuePtr Equals(ValuePtr&) const override;
 
 	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
+	void Accept(Visitor& v) const override;
+
+private:
+	Build(std::shared_ptr<Rule>&,
+	      SharedPtrVec<File>& inputs,
+	      SharedPtrVec<File>& outputs,
+	      const ValueMap& arguments,
+	      const Type&,
+	      SourceRange);
+
+	static void AppendFiles(const ValuePtr& in, SharedPtrVec<File>& out,
+	                        bool generated = false);
+
+	ValuePtr outputValue() const;
+
+	std::shared_ptr<Rule> rule_;
+	SharedPtrVec<File> in_;
+	SharedPtrVec<File> out_;
+	ValueMap args_;
 };
 
 } // namespace dag

@@ -32,8 +32,8 @@
 #ifndef PLUGIN_H
 #define PLUGIN_H
 
-#include "fabrique/UniqPtr.h"
-#include "DAG/Record.h"
+#include <fabrique/UniqPtr.h>
+#include <fabrique/dag/Record.hh>
 #include "Types/Typed.h"
 
 

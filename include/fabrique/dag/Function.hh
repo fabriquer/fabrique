@@ -1,6 +1,6 @@
-/** @file DAG/Rule.h    Declaration of @ref fabrique::dag::Rule. */
+/** @file DAG/Function.h    Declaration of @ref fabrique::dag::Function. */
 /*
- * Copyright (c) 2013, 2016, 2018 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -30,71 +30,42 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DAG_ACTION_H
-#define DAG_ACTION_H
+#ifndef DAG_FUNCTION_H
+#define DAG_FUNCTION_H
 
-#include "fabrique/StringMap.h"
-#include "DAG/Callable.h"
-#include "DAG/DAG.h"
-#include "DAG/Value.h"
-#include "Support/Printable.h"
+#include <fabrique/PtrVec.h>
+#include <fabrique/dag/Callable.hh>
+#include <fabrique/dag/Value.hh>
 
-#include <string>
+#include <functional>
 
 
 namespace fabrique {
+
+class FunctionType;
+
 namespace dag {
 
-class File;
-
-
 /**
- * An action that transforms files into other files.
+ * A reference to a user- or plugin-defined function.
  */
-class Rule : public Callable, public Value
+class Function : public Callable, public Value
 {
 public:
-	static const std::string& RegenerationRuleName();
+	static Function* Create(Evaluator, const Type &resultType, SharedPtrVec<Parameter>,
+	                        SourceRange source = SourceRange::None(),
+	                        bool acceptExtraArguments = false);
 
-	static Rule* Create(std::string name, std::string command,
-	                    const ValueMap& arguments,
-	                    const SharedPtrVec<Parameter>& parameters,
-	                    const Type&,
-	                    const SourceRange& from = SourceRange::None());
-
-	virtual ~Rule() override {}
-
-	ValuePtr Call(ValueMap, DAGBuilder&, SourceRange) const override;
-
-	const std::string& name() const { return ruleName_; }
-	const std::string& command() const { return command_; }
-
-	bool hasDescription() const { return not description_.empty(); }
-	const std::string& description() const { return description_; }
-
-	//! Arguments define the action (e.g., command = 'cc').
-	const ValueMap& arguments() const { return arguments_; }
-
-	std::string str() const override { return command_; }
-
-	void setSelf(std::weak_ptr<Rule>);
+	virtual ~Function() override;
 
 	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
-	void Accept(Visitor& v) const override;
+	void Accept(Visitor&) const override;
 
 private:
-	Rule(const std::string& name, const std::string& command,
-	     const std::string& description, const ValueMap& args,
-	     const SharedPtrVec<Parameter>& parameters,
-	     const Type&, SourceRange location);
+	Function(Callable::Evaluator, const SharedPtrVec<Parameter>&, bool acceptExtra,
+	         const FunctionType&, SourceRange source);
 
-	const std::string ruleName_;
-	const std::string command_;
-	const std::string description_;
-	const ValueMap arguments_;
-
-	//! We need something to pass to @ref Build constructors.
-	std::weak_ptr<Rule> self_;
+	const Evaluator evaluator_;
 };
 
 } // namespace dag

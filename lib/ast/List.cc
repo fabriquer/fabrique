@@ -32,7 +32,7 @@
 #include <fabrique/ast/EvalContext.hh>
 #include <fabrique/ast/List.hh>
 #include <fabrique/ast/Visitor.hh>
-#include "DAG/List.h"
+#include <fabrique/dag/List.hh>
 #include "Support/Bytestream.h"
 #include "Types/Type.h"
 #include "Types/TypeError.h"

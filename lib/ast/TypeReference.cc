@@ -32,7 +32,7 @@
 #include <fabrique/ast/TypeDeclaration.hh>
 #include <fabrique/ast/TypeReference.hh>
 #include <fabrique/ast/Visitor.hh>
-#include "DAG/TypeReference.h"
+#include <fabrique/dag/TypeReference.hh>
 #include "Parsing/ErrorReporter.h"
 #include "Support/ABI.h"
 #include "Support/Bytestream.h"

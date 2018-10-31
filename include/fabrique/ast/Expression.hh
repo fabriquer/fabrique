@@ -34,7 +34,7 @@
 
 #include <fabrique/PtrVec.h>
 #include <fabrique/ast/Node.hh>
-#include "DAG/Value.h"
+#include <fabrique/dag/Value.hh>
 #include "Support/ABI.h"
 #include "Support/exceptions.h"
 

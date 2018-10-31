@@ -1,12 +1,11 @@
-/** @file DAG/Function.h    Declaration of @ref fabrique::dag::Function. */
+/** @file DAG/Visitor.h    Declaration of @ref fabrique::dag::Visitor. */
 /*
- * Copyright (c) 2014, 2018 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
- * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
+ * ("CTSRD"), as part of the DARPA CRASH research programme.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,42 +29,49 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DAG_FUNCTION_H
-#define DAG_FUNCTION_H
+#ifndef DAG_FORMATTER_H
+#define DAG_FORMATTER_H
 
-#include "fabrique/PtrVec.h"
-#include "DAG/Callable.h"
-#include "DAG/Value.h"
+#include <fabrique/dag/Visitor.hh>
 
-#include <functional>
-
+#include <stack>
+#include <string>
 
 namespace fabrique {
-
-class FunctionType;
-
 namespace dag {
 
-/**
- * A reference to a user- or plugin-defined function.
- */
-class Function : public Callable, public Value
+class Value;
+
+//! An object that converts DAG nodes into strings.
+class Formatter : public Visitor
 {
 public:
-	static Function* Create(Evaluator, const Type &resultType, SharedPtrVec<Parameter>,
-	                        SourceRange source = SourceRange::None(),
-	                        bool acceptExtraArguments = false);
+	std::string Format(const Value&);
 
-	virtual ~Function() override;
+	virtual std::string Format(const Boolean&) = 0;
+	virtual std::string Format(const Build&) = 0;
+	virtual std::string Format(const File&) = 0;
+	virtual std::string Format(const Function&) = 0;
+	virtual std::string Format(const Integer&) = 0;
+	virtual std::string Format(const List&) = 0;
+	virtual std::string Format(const Record&) = 0;
+	virtual std::string Format(const Rule&) = 0;
+	virtual std::string Format(const String&) = 0;
+	virtual std::string Format(const TypeReference&) = 0;
 
-	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
-	void Accept(Visitor&) const override;
+	bool Visit(const Boolean&);
+	bool Visit(const Build&);
+	bool Visit(const File&);
+	bool Visit(const Function&);
+	bool Visit(const Integer&);
+	bool Visit(const List&);
+	bool Visit(const Record&);
+	bool Visit(const Rule&);
+	bool Visit(const String&);
+	bool Visit(const TypeReference&);
 
 private:
-	Function(Callable::Evaluator, const SharedPtrVec<Parameter>&, bool acceptExtra,
-	         const FunctionType&, SourceRange source);
-
-	const Evaluator evaluator_;
+	std::stack<std::string> values_;
 };
 
 } // namespace dag

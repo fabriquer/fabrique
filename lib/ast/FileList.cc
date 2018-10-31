@@ -33,9 +33,9 @@
 #include <fabrique/ast/EvalContext.hh>
 #include <fabrique/ast/FileList.hh>
 #include <fabrique/ast/Visitor.hh>
-#include "DAG/File.h"
-#include "DAG/List.h"
-#include "DAG/Primitive.h"
+#include <fabrique/dag/File.hh>
+#include <fabrique/dag/List.hh>
+#include <fabrique/dag/Primitive.hh>
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 #include "Support/os.h"

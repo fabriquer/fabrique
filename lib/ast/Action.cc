@@ -33,8 +33,8 @@
 #include <fabrique/ast/Action.hh>
 #include <fabrique/ast/EvalContext.hh>
 #include <fabrique/ast/Visitor.hh>
-#include "DAG/Parameter.h"
-#include "DAG/Primitive.h"
+#include <fabrique/dag/Parameter.hh>
+#include <fabrique/dag/Primitive.hh>
 #include "Support/Bytestream.h"
 #include "Types/FileType.h"
 #include "Types/FunctionType.h"

@@ -29,12 +29,12 @@
  * SUCH DAMAGE.
  */
 
-#include "DAG/Build.h"
-#include "DAG/File.h"
-#include "DAG/List.h"
-#include "DAG/Parameter.h"
-#include "DAG/Rule.h"
-#include "DAG/Visitor.h"
+#include <fabrique/dag/Build.hh>
+#include <fabrique/dag/File.hh>
+#include <fabrique/dag/List.hh>
+#include <fabrique/dag/Parameter.hh>
+#include <fabrique/dag/Rule.hh>
+#include <fabrique/dag/Visitor.hh>
 
 #include "Support/Bytestream.h"
 #include "Support/Join.h"

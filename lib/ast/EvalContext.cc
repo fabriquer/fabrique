@@ -35,14 +35,7 @@
 #include <fabrique/ast/Parameter.hh>
 #include <fabrique/ast/Value.hh>
 
-#include "DAG/Build.h"
-#include "DAG/DAG.h"
-#include "DAG/File.h"
-#include "DAG/Function.h"
-#include "DAG/List.h"
-#include "DAG/Parameter.h"
-#include "DAG/Primitive.h"
-#include "DAG/Rule.h"
+#include <fabrique/dag/DAGBuilder.hh>
 
 #include "Support/Bytestream.h"
 #include "Support/CLIArguments.h"

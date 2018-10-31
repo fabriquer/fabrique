@@ -32,7 +32,7 @@
 #include <fabrique/ast/EvalContext.hh>
 #include <fabrique/ast/literals.hh>
 #include <fabrique/ast/Visitor.hh>
-#include "DAG/Primitive.h"
+#include <fabrique/dag/Primitive.hh>
 #include "Support/Bytestream.h"
 
 using namespace fabrique;

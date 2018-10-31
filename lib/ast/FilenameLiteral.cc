@@ -34,7 +34,7 @@
 #include <fabrique/ast/EvalContext.hh>
 #include <fabrique/ast/FilenameLiteral.hh>
 #include <fabrique/ast/Visitor.hh>
-#include "DAG/File.h"
+#include <fabrique/dag/File.hh>
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 #include "Types/TypeContext.h"

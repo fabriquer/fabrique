@@ -29,50 +29,95 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DAG_STRUCTURE_H
-#define DAG_STRUCTURE_H
+#include <fabrique/ast/Builtins.hh>
+#include <fabrique/dag/Record.hh>
+#include <fabrique/dag/Visitor.hh>
+#include "Support/Bytestream.h"
+#include "Types/RecordType.h"
+#include "Types/Type.h"
+#include "Types/TypeContext.h"
 
-#include "fabrique/StringMap.h"
-#include "DAG/Value.h"
+#include <cassert>
 
-#include <memory>
+using namespace fabrique::dag;
+using std::string;
+using std::vector;
 
 
-namespace fabrique {
-
-class TypeContext;
-
-namespace dag {
-
-/**
- * A reference to a file on disk (source or target).
- */
-class Record : public Value
+Record* Record::Create(const ValueMap& fields, TypeContext& types, SourceRange src)
 {
-public:
-	//! Create a record from an (optionally empty) vector of fields.
-	static Record* Create(const ValueMap&, TypeContext&, SourceRange);
-
-	virtual ~Record() override;
-
-	virtual bool hasFields() const override { return true; }
-	ValueMap fields() const { return fields_; }
-	virtual ValuePtr field(const std::string& name) const override;
-	ValuePtr operator[] (const std::string& name) const
+	if (not src and not fields.empty())
 	{
-		return field(name);
+		src = SourceRange::Over(fields);
 	}
 
-	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
-	void Accept(Visitor&) const override;
+	RecordType::NamedTypeVec fieldTypes;
+	for (const auto& field : fields)
+	{
+		fieldTypes.emplace_back(field.first, field.second->type());
+	}
 
-private:
-	Record(const ValueMap&, const Type&, SourceRange);
+	const RecordType& t = types.recordType(fieldTypes);
+	return new Record(fields, t, src);
+}
 
-	const ValueMap fields_;
-};
 
-} // namespace dag
-} // namespace fabrique
+Record::Record(const ValueMap& fields, const Type& t, SourceRange src)
+	: Value(t, src), fields_(fields)
+{
+}
 
-#endif
+
+Record::~Record() {}
+
+
+ValuePtr Record::field(const std::string& name) const
+{
+	for (auto& i : fields_)
+	{
+		if (i.first == name)
+			return i.second;
+	}
+
+	return ValuePtr();
+}
+
+
+void Record::PrettyPrint(Bytestream& out, unsigned int indent) const
+{
+	const string tab(indent, '\t');
+	const string innerTab(indent + 1, '\t');
+
+	out << Bytestream::Operator << "{\n"
+		;
+
+	for (auto& i : fields_)
+	{
+		out
+			<< innerTab
+			<< Bytestream::Definition << i.first
+			<< Bytestream::Operator << ":"
+			<< Bytestream::Reset << i.second->type()
+			<< Bytestream::Operator << " = "
+			;
+
+		i.second->PrettyPrint(out, indent + 1);
+
+		out
+			<< Bytestream::Reset << "\n"
+			;
+	}
+
+	out
+		<< Bytestream::Operator << tab << "}"
+		<< Bytestream::Reset
+		;
+}
+
+
+void Record::Accept(Visitor& v) const
+{
+	if (v.Visit(*this))
+		for (auto& i : fields_)
+			i.second->Accept(v);
+}

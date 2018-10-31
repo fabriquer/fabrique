@@ -1,6 +1,6 @@
-/** @file DAG/Formatter.cc    Definition of @ref fabrique::dag::Formatter. */
+/** @file DAG/UndefinedValueException.cc  Definition of @ref fabrique::dag::UndefinedValueException. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,40 +29,24 @@
  * SUCH DAMAGE.
  */
 
-#include "DAG/Formatter.h"
-#include "DAG/Value.h"
+#include <fabrique/dag/UndefinedValueException.hh>
 
-#include <cassert>
-
-using namespace fabrique::dag;
+using namespace fabrique;
 using std::string;
 
 
-string Formatter::Format(const Value& v)
+dag::UndefinedValueException::UndefinedValueException(const string& name,
+                                                      const SourceRange& loc)
+	: SemanticException("undefined value '" + name + "'", loc), name_(name)
 {
-	v.Accept(*this);
-	assert(not values_.empty());
-
-	string value = values_.top();
-	values_.pop();
-
-	return value;
 }
 
-#define FORMAT_VISIT(T) \
-	bool Formatter::Visit(const T& x) \
-	{ \
-		values_.push(Format(x)); \
-		return false; \
-	}
+dag::UndefinedValueException::UndefinedValueException(
+	const UndefinedValueException& orig)
+	: SemanticException(orig.message(), orig.source()), name_(orig.name_)
+{
+}
 
-FORMAT_VISIT(Boolean)
-FORMAT_VISIT(Build)
-FORMAT_VISIT(File)
-FORMAT_VISIT(Function)
-FORMAT_VISIT(Integer)
-FORMAT_VISIT(List)
-FORMAT_VISIT(Record)
-FORMAT_VISIT(Rule)
-FORMAT_VISIT(String)
-FORMAT_VISIT(TypeReference)
+dag::UndefinedValueException::~UndefinedValueException()
+{
+}

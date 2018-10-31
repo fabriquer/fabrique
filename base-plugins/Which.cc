@@ -30,10 +30,10 @@
  * SUCH DAMAGE.
  */
 
-#include "DAG/DAGBuilder.h"
-#include "DAG/File.h"
-#include "DAG/List.h"
-#include "DAG/Parameter.h"
+#include <fabrique/dag/DAGBuilder.hh>
+#include <fabrique/dag/File.hh>
+#include <fabrique/dag/List.hh>
+#include <fabrique/dag/Parameter.hh>
 #include "Plugin/Registry.h"
 #include "Types/FileType.h"
 #include "Types/FunctionType.h"

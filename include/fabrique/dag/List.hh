@@ -1,6 +1,6 @@
-/** @file DAG/Visitor.h    Declaration of @ref fabrique::dag::Visitor. */
+/** @file DAG/List.h    Declaration of @ref fabrique::dag::List. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2013-2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,52 +29,65 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DAG_FORMATTER_H
-#define DAG_FORMATTER_H
+#ifndef DAG_LIST_H
+#define DAG_LIST_H
 
-#include "DAG/Visitor.h"
+#include <fabrique/dag/Value.hh>
+#include "Types/SequenceType.h"
 
-#include <stack>
-#include <string>
+#include <memory>
+#include <vector>
+
 
 namespace fabrique {
 namespace dag {
 
-class Value;
 
-//! An object that converts DAG nodes into strings.
-class Formatter : public Visitor
+//! The result of evaluating an expression.
+class List : public Value
 {
 public:
-	std::string Format(const Value&);
+	template<class T>
+	static List* of(const SharedPtrVec<T>& values, const SourceRange& src,
+	                TypeContext& ctx)
+	{
+		SharedPtrVec<Value> v;
+		for (const std::shared_ptr<T>& x : values)
+			v.push_back(x);
 
-	virtual std::string Format(const Boolean&) = 0;
-	virtual std::string Format(const Build&) = 0;
-	virtual std::string Format(const File&) = 0;
-	virtual std::string Format(const Function&) = 0;
-	virtual std::string Format(const Integer&) = 0;
-	virtual std::string Format(const List&) = 0;
-	virtual std::string Format(const Record&) = 0;
-	virtual std::string Format(const Rule&) = 0;
-	virtual std::string Format(const String&) = 0;
-	virtual std::string Format(const TypeReference&) = 0;
+		return List::of(v, src, ctx);
+	}
 
-	bool Visit(const Boolean&);
-	bool Visit(const Build&);
-	bool Visit(const File&);
-	bool Visit(const Function&);
-	bool Visit(const Integer&);
-	bool Visit(const List&);
-	bool Visit(const Record&);
-	bool Visit(const Rule&);
-	bool Visit(const String&);
-	bool Visit(const TypeReference&);
+	static List* of(const SharedPtrVec<Value>&, const SourceRange&,
+	                TypeContext& ctx);
+
+	virtual const SequenceType& type() const override;
+
+	typedef SharedPtrVec<Value>::const_iterator iterator;
+
+	iterator begin() const;
+	iterator end() const;
+	const SharedPtrVec<Value>& elements() const { return elements_; }
+	size_t size() const;
+	const Value& operator [] (size_t) const;
+
+	//! List addition is concatenation.
+	virtual ValuePtr Add(ValuePtr&) const override;
+	virtual ValuePtr PrefixWith(ValuePtr&) const override;
+	virtual const List* asList() const override { return this; }
+	virtual bool canScalarAdd(const Value&) const override;
+
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
+	void Accept(Visitor& v) const override;
 
 private:
-	std::stack<std::string> values_;
+	List(const SharedPtrVec<Value>&, const Type&, const SourceRange&);
+
+	const SharedPtrVec<Value> elements_;
+	const Type& elementType_;
 };
 
 } // namespace dag
 } // namespace fabrique
 
-#endif
+#endif // !DAG_LIST_H

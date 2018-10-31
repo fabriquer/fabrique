@@ -35,9 +35,9 @@
 
 #include "Backend/Backend.h"
 
-#include "DAG/DAG.h"
-#include "DAG/File.h"
-#include "DAG/Parameter.h"
+#include <fabrique/dag/DAG.hh>
+#include <fabrique/dag/File.hh>
+#include <fabrique/dag/Parameter.hh>
 
 #include "Parsing/Parser.h"
 

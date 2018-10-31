@@ -29,8 +29,8 @@
  * SUCH DAMAGE.
  */
 
-#include "DAG/List.h"
-#include "DAG/Visitor.h"
+#include <fabrique/dag/List.hh>
+#include <fabrique/dag/Visitor.hh>
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
 #include "Support/SourceLocation.h"

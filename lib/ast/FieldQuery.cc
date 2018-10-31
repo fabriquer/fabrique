@@ -33,7 +33,7 @@
 #include <fabrique/ast/FieldQuery.hh>
 #include <fabrique/ast/Identifier.hh>
 #include <fabrique/ast/Visitor.hh>
-#include "DAG/Record.h"
+#include <fabrique/dag/Record.hh>
 #include "Support/Bytestream.h"
 #include "Types/Type.h"
 

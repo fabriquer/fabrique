@@ -1,6 +1,9 @@
-/** @file DAG/UndefinedValueException.cc  Definition of @ref fabrique::dag::UndefinedValueException. */
+/**
+ * @file DAG/TypeReference.h
+ * Declaration of @ref fabrique::dag::TypeReference.
+ */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2015, 2017-2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,24 +32,37 @@
  * SUCH DAMAGE.
  */
 
-#include "DAG/UndefinedValueException.h"
+#ifndef DAG_TYPE_REFERENCE_H
+#define DAG_TYPE_REFERENCE_H
 
-using namespace fabrique;
-using std::string;
+#include <fabrique/dag/Value.hh>
 
 
-dag::UndefinedValueException::UndefinedValueException(const string& name,
-                                                      const SourceRange& loc)
-	: SemanticException("undefined value '" + name + "'", loc), name_(name)
+namespace fabrique {
+namespace dag {
+
+/**
+ * A reference to a type.
+ */
+class TypeReference : public Value
 {
-}
+public:
+	static ValuePtr Create(const Type& t, SourceRange);
 
-dag::UndefinedValueException::UndefinedValueException(
-	const UndefinedValueException& orig)
-	: SemanticException(orig.message(), orig.source()), name_(orig.name_)
-{
-}
+	virtual ~TypeReference() override;
 
-dag::UndefinedValueException::~UndefinedValueException()
-{
-}
+	const Type& referencedType() const;
+
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
+	void Accept(Visitor&) const override;
+
+private:
+	TypeReference(const Type& referencedType, SourceRange);
+
+	const Type& referencedType_;
+};
+
+} // namespace dag
+} // namespace fabrique
+
+#endif

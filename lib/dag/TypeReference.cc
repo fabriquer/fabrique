@@ -1,12 +1,14 @@
-/** @file DAG/Function.cc    Definition of @ref fabrique::dag::Function. */
+/**
+ * @file DAG/TypeReference.cc
+ * Definition of @ref fabrique::dag::TypeReference.
+ */
 /*
- * Copyright (c) 2014, 2018 Jonathan Anderson
+ * Copyright (c) 2015, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
- * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
+ * ("CTSRD"), as part of the DARPA CRASH research programme.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,49 +32,41 @@
  * SUCH DAMAGE.
  */
 
-#include "DAG/Function.h"
-#include "DAG/Parameter.h"
-#include "DAG/Visitor.h"
+#include <fabrique/dag/TypeReference.hh>
+#include <fabrique/dag/Visitor.hh>
 #include "Support/Bytestream.h"
-#include "Types/FunctionType.h"
 #include "Types/TypeContext.h"
 using namespace fabrique::dag;
-using namespace std::placeholders;
 
 
-Function* Function::Create(Evaluator fnEval, const Type &resultType,
-                           SharedPtrVec<Parameter> parameters, SourceRange source,
-                           bool acceptExtraArguments)
+TypeReference::~TypeReference() {}
+
+
+ValuePtr TypeReference::Create(const Type& t, SourceRange src)
 {
-	PtrVec<Type> paramTypes;
-	for (auto &p : parameters)
-	{
-		paramTypes.push_back(&p->type());
-	}
-
-	auto &type = resultType.context().functionType(paramTypes, resultType);
-
-	return new Function(fnEval, parameters, acceptExtraArguments, type, source);
+	return ValuePtr(new TypeReference(t, src));
 }
 
-Function::Function(Callable::Evaluator evaluator,
-                   const SharedPtrVec<Parameter>& parameters, bool acceptExtraArguments,
-                   const FunctionType& type, SourceRange source)
-	: Callable(parameters, acceptExtraArguments, evaluator), Value(type, source)
+
+const fabrique::Type& TypeReference::referencedType() const
 {
+	return referencedType_;
 }
 
-Function::~Function() {}
 
-
-void Function::PrettyPrint(Bytestream& out, unsigned int indent) const
+void TypeReference::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
-	out << Bytestream::Action << "function " << Bytestream::Reset;
-	type().PrettyPrint(out, indent);
-	out << "\n";
+	referencedType_.PrettyPrint(out, indent);
 }
 
-void Function::Accept(Visitor& v) const
+
+void TypeReference::Accept(Visitor& v) const
 {
 	v.Visit(*this);
+}
+
+
+TypeReference::TypeReference(const Type& t, SourceRange src)
+	: Value(t.context().typeType(), src), referencedType_(t)
+{
 }

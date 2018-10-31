@@ -31,16 +31,16 @@
 
 #include "Backend/Ninja.h"
 
-#include "DAG/Build.h"
-#include "DAG/DAG.h"
-#include "DAG/File.h"
-#include "DAG/Formatter.h"
-#include "DAG/List.h"
-#include "DAG/Parameter.h"
-#include "DAG/Primitive.h"
-#include "DAG/Record.h"
-#include "DAG/Rule.h"
-#include "DAG/TypeReference.h"
+#include <fabrique/dag/Build.hh>
+#include <fabrique/dag/DAG.hh>
+#include <fabrique/dag/File.hh>
+#include <fabrique/dag/Formatter.hh>
+#include <fabrique/dag/List.hh>
+#include <fabrique/dag/Parameter.hh>
+#include <fabrique/dag/Primitive.hh>
+#include <fabrique/dag/Record.hh>
+#include <fabrique/dag/Rule.hh>
+#include <fabrique/dag/TypeReference.hh>
 
 #include "Support/Bytestream.h"
 #include "Support/Join.h"

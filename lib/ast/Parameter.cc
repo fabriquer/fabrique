@@ -31,8 +31,8 @@
 
 #include <fabrique/ast/Parameter.hh>
 #include <fabrique/ast/Visitor.hh>
-#include "DAG/Parameter.h"
-#include "DAG/TypeReference.h"
+#include <fabrique/dag/Parameter.hh>
+#include <fabrique/dag/TypeReference.hh>
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 

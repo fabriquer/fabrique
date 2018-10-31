@@ -1,6 +1,6 @@
-/** @file DAG/File.h    Declaration of @ref fabrique::dag::File. */
+/** @file DAG/Record.h    Declaration of @ref fabrique::dag::Record. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,79 +29,48 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DAG_FILE_H
-#define DAG_FILE_H
+#ifndef DAG_STRUCTURE_H
+#define DAG_STRUCTURE_H
 
-#include "DAG/Value.h"
-#include "Types/FileType.h"
+#include <fabrique/StringMap.h>
+#include <fabrique/dag/Value.hh>
 
-#include <string>
+#include <memory>
 
 
 namespace fabrique {
+
+class TypeContext;
+
 namespace dag {
 
 /**
  * A reference to a file on disk (source or target).
  */
-class File : public Value
+class Record : public Value
 {
 public:
-	static File* Create(std::string fullPath, const FileType&,
-	                    ValueMap attributes = {}, SourceRange = SourceRange::None(),
-	                    bool generated = false);
-	static File* Create(std::string directory, std::string filename,
-	                    const FileType&, ValueMap attributes = {},
-	                    SourceRange = SourceRange::None(), bool generated = false);
+	//! Create a record from an (optionally empty) vector of fields.
+	static Record* Create(const ValueMap&, TypeContext&, SourceRange);
 
-	static bool Equals(const std::shared_ptr<File>&, const std::shared_ptr<File>&);
-	static bool LessThan(const std::shared_ptr<File>&, const std::shared_ptr<File>&);
-
-	virtual ~File() override {}
-
-	virtual std::string filename() const;
-	virtual std::string relativeName() const;
-	virtual std::string fullName() const;
-
-	//! This file refers to an absolute path.
-	bool absolute() const { return absolute_; }
-
-	bool generated() const { return generated_; }
-	void setGenerated(bool);
-
-	//! Absolute path to the directory this file is in.
-	std::string directory(bool relativeBuildDirectories = true) const;
-	std::string subdirectory() const { return subdirectory_; }
-	void appendSubdirectory(std::string subdir);
+	virtual ~Record() override;
 
 	virtual bool hasFields() const override { return true; }
+	ValueMap fields() const { return fields_; }
 	virtual ValuePtr field(const std::string& name) const override;
-
-	//! Name a file with my name + a suffix.
-	virtual ValuePtr Add(ValuePtr&) const override;
-
-	//! Name a file with a prefix + my name.
-	virtual ValuePtr PrefixWith(ValuePtr&) const override;
-
-	//! Our type is always a @ref FileType.
-	const FileType& type() const override;
+	ValuePtr operator[] (const std::string& name) const
+	{
+		return field(name);
+	}
 
 	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 	void Accept(Visitor&) const override;
 
 private:
-	File(std::string name, std::string subdirectory, bool absolute,
-	     const ValueMap& attributes, const FileType&, SourceRange,
-	     bool generated);
+	Record(const ValueMap&, const Type&, SourceRange);
 
-	const std::string filename_;
-	std::string subdirectory_;
-	const bool absolute_;
-	bool generated_;
-	ValueMap attributes_;
+	const ValueMap fields_;
 };
-
-typedef std::vector<std::shared_ptr<File>> FileVec;
 
 } // namespace dag
 } // namespace fabrique

@@ -29,9 +29,9 @@
  * SUCH DAMAGE.
  */
 
-#include "DAG/Value.h"
-#include "DAG/File.h"
-#include "DAG/Rule.h"
+#include <fabrique/dag/Value.hh>
+#include <fabrique/dag/File.hh>
+#include <fabrique/dag/Rule.hh>
 #include "Support/exceptions.h"
 #include "Types/Type.h"
 

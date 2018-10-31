@@ -32,7 +32,7 @@
 #include <fabrique/ast/Conditional.hh>
 #include <fabrique/ast/Value.hh>
 #include <fabrique/ast/Visitor.hh>
-#include "DAG/Primitive.h"
+#include <fabrique/dag/Primitive.hh>
 #include "Support/Bytestream.h"
 #include "Types/TypeError.h"
 

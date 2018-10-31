@@ -34,7 +34,7 @@
 
 #include <fabrique/ast/DebugTracePoint.hh>
 #include <fabrique/ast/Visitor.hh>
-#include "DAG/Primitive.h"
+#include <fabrique/dag/Primitive.hh>
 #include "Support/Bytestream.h"
 #include "Support/ErrorReport.h"
 

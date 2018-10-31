@@ -33,14 +33,14 @@
 #ifndef EVAL_CONTEXT_H
 #define EVAL_CONTEXT_H
 
+#include <fabrique/dag/DAG.hh>
+#include <fabrique/dag/DAGBuilder.hh>
+#include <fabrique/dag/Record.hh>
+#include <fabrique/dag/Value.hh>
+
 #include <deque>
 #include <stack>
 #include <string>
-
-#include "DAG/DAG.h"
-#include "DAG/DAGBuilder.h"
-#include "DAG/Record.h"
-#include "DAG/Value.h"
 
 
 namespace fabrique {

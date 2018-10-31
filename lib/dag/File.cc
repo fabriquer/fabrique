@@ -30,9 +30,9 @@
  */
 
 #include <fabrique/ast/Builtins.hh>
-#include "DAG/File.h"
-#include "DAG/Primitive.h"
-#include "DAG/Visitor.h"
+#include <fabrique/dag/File.hh>
+#include <fabrique/dag/Primitive.hh>
+#include <fabrique/dag/Visitor.hh>
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 #include "Support/os.h"

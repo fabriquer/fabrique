@@ -1,4 +1,4 @@
-/** @file DAG/Parameter.cc    Definition of @ref fabrique::dag::Parameter. */
+/** @file DAG/Formatter.cc    Definition of @ref fabrique::dag::Formatter. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -29,35 +29,40 @@
  * SUCH DAMAGE.
  */
 
-#include "DAG/Parameter.h"
-#include "DAG/Value.h"
-#include "Support/Bytestream.h"
-#include "Types/Type.h"
+#include <fabrique/dag/Formatter.hh>
+#include <fabrique/dag/Value.hh>
+
+#include <cassert>
 
 using namespace fabrique::dag;
-using std::shared_ptr;
 using std::string;
 
-Parameter::Parameter(string name, const Type& t, ValuePtr v, const SourceRange& src)
-	: HasSource(src), Typed(t), name_(name), defaultValue_(v)
+
+string Formatter::Format(const Value& v)
 {
+	v.Accept(*this);
+	assert(not values_.empty());
+
+	string value = values_.top();
+	values_.pop();
+
+	return value;
 }
 
-Parameter::~Parameter()
-{
-}
+#define FORMAT_VISIT(T) \
+	bool Formatter::Visit(const T& x) \
+	{ \
+		values_.push(Format(x)); \
+		return false; \
+	}
 
-void Parameter::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
-{
-	out
-		<< Bytestream::Definition << name_
-		<< Bytestream::Operator << ":"
-		<< type()
-		;
-
-	if (defaultValue_)
-		out
-			<< Bytestream::Operator << " = "
-			<< *defaultValue_
-			;
-}
+FORMAT_VISIT(Boolean)
+FORMAT_VISIT(Build)
+FORMAT_VISIT(File)
+FORMAT_VISIT(Function)
+FORMAT_VISIT(Integer)
+FORMAT_VISIT(List)
+FORMAT_VISIT(Record)
+FORMAT_VISIT(Rule)
+FORMAT_VISIT(String)
+FORMAT_VISIT(TypeReference)

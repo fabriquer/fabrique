@@ -9,4 +9,5 @@
 
 sources =
 	import('ast').sources
+	+ import('dag').sources
 	;

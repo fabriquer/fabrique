@@ -29,9 +29,9 @@
  * SUCH DAMAGE.
  */
 
-#include "DAG/constants.h"
-#include "DAG/Primitive.h"
-#include "DAG/Visitor.h"
+#include <fabrique/dag/constants.hh>
+#include <fabrique/dag/Primitive.hh>
+#include <fabrique/dag/Visitor.hh>
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 #include "Types/Type.h"
