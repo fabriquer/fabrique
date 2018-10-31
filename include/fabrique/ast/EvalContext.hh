@@ -124,6 +124,9 @@ public:
 		Scope(Scope&&);
 		~Scope();
 
+		//! Is the given name defined in this scope?
+		bool contains(const std::string &name) const;
+
 		//! Define a name within a scope
 		Scope& Define(const std::string &name, dag::ValuePtr,
 		              SourceRange = SourceRange::None());

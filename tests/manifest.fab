@@ -146,12 +146,14 @@ all_files = files(
 ./parsing/field-existence.fab
 ./parsing/field-query.fab
 ./parsing/field-reference.fab
+./parsing/fields-of-fields.fab
 ./parsing/file-attributes.fab
 ./parsing/files.fab
 ./parsing/foreach.fab
 ./parsing/functions.fab
 ./parsing/hello-world.fab
 ./parsing/higher-order-functions.fab
+./parsing/indirect-call.fab
 ./parsing/lists.fab
 ./parsing/literals.fab
 ./parsing/logical-operators.fab

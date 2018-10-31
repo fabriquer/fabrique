@@ -132,17 +132,21 @@ dag::ValuePtr Function::evaluate(EvalContext& ctx) const
 		//
 		auto evalScope(ctx.EnterScope("function call evaluation", scope));
 
+		for (auto& i : args)
+		{
+			evalScope.Define(i.first, i.second);
+		}
+
 		for (auto& p : parameters)
 		{
 			if (dag::ValuePtr v = p->defaultValue())
 			{
-				evalScope.Define(p->name(), v, p->source());
+				const std::string &name = p->name();
+				if (not evalScope.contains(name))
+				{
+					evalScope.Define(name, v, p->source());
+				}
 			}
-		}
-
-		for (auto& i : args)
-		{
-			evalScope.Define(i.first, i.second);
 		}
 
 		return body().evaluate(ctx);
