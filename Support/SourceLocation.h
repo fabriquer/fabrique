@@ -133,6 +133,8 @@ public:
 
 	bool isInside(const SourceRange&) const;
 
+	std::string filename() const;
+
 	Bytestream& PrintSource(Bytestream&, SourceLocation caret = SourceLocation(),
 	                        unsigned int contextLines = 3) const;
 	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;

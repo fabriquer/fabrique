@@ -207,6 +207,10 @@ bool SourceRange::isInside(const SourceRange& other) const
 	return true;
 }
 
+string SourceRange::filename() const
+{
+	return begin.filename;
+}
 
 void SourceRange::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
