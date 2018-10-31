@@ -96,13 +96,11 @@ ValuePtr Boolean::Xor(ValuePtr& v) const
 ValuePtr Boolean::Equals(ValuePtr& v) const
 {
 	auto other = dynamic_pointer_cast<Boolean>(v);
-	assert(other);
+	SemaCheck(other, v->source(), "not a boolean");
 
-	return ValuePtr(
-		new Boolean(value_ == other->value_,
-			type().supertype(other->type()),
-			SourceRange(*this, *other))
-	);
+	return ValuePtr(new Boolean(value_ == other->value_,
+	                            type().supertype(other->type()),
+	                            SourceRange(*this, *other)));
 }
 
 string Boolean::str() const { return value_ ? "true" : "false"; }

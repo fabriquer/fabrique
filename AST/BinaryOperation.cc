@@ -150,7 +150,7 @@ dag::ValuePtr BinaryOperation::evaluate(EvalContext& ctx) const
 		case Subtract:  return rhs->Subtract(lhs);
 
 		case Equal:     return lhs->Equals(rhs);
-		case NotEqual:  return lhs->Equals(rhs)->Negate(source());
+		case NotEqual:  return lhs->Equals(rhs)->Not(source());
 
 		case And:       return lhs->And(rhs);
 		case Or:        return lhs->Or(rhs);

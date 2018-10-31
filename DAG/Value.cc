@@ -46,12 +46,9 @@ Value::Value(const Type& t, const SourceRange& loc)
 }
 
 
-ValuePtr Value::Negate(const SourceRange& opLoc) const
+ValuePtr Value::Negate(const SourceRange& src) const
 {
-	throw SemanticException(
-		"negation unsupported by " + type().name(),
-		SourceRange(opLoc, source())
-	);
+	throw SemanticException("negation unsupported by " + type().name(), src);
 }
 
 ValuePtr Value::Not(const SourceRange& opLoc) const
