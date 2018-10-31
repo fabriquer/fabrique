@@ -39,10 +39,6 @@ namespace fabrique {
 /** A shorter spelling of std::unique_ptr. */
 template<class T> using UniqPtr = std::unique_ptr<T>;
 
-/** Take ownership of a pointer. */
-template<class T>
-std::unique_ptr<T> Take(T *val) { return std::unique_ptr<T>(val); }
-
 } // namespace fabrique
 
 #endif
