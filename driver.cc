@@ -39,7 +39,7 @@
 #include <fabrique/dag/File.hh>
 #include <fabrique/dag/Parameter.hh>
 
-#include "Parsing/Parser.h"
+#include <fabrique/parsing/Parser.hh>
 
 #include "Plugin/Loader.h"
 #include "Plugin/Registry.h"

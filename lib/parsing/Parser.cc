@@ -30,8 +30,7 @@
  */
 
 #include <fabrique/ast/ast.hh>
-#include "Parsing/Parser.h"
-#include "Parsing/Token.h"
+#include <fabrique/parsing/Parser.hh>
 #include "Plugin/Loader.h"
 #include "Plugin/Plugin.h"
 #include "Plugin/Registry.h"

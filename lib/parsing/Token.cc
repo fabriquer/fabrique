@@ -1,10 +1,11 @@
-/** @file Parsing/ErrorReporter.cc Definition of @ref fabrique::parser::ErrorReporter. */
+/** @file Parsing/Token.cc    Definition of @ref fabrique::Token. */
 /*
- * Copyright (c) 2016 Jonathan Anderson
+ * Copyright (c) 2013-2014 Jonathan Anderson
  * All rights reserved.
  *
- * This software was developed at Memorial University of Newfoundland under
- * the NSERC Discovery program (RGPIN-2015-06048).
+ * This software was developed by SRI International and the University of
+ * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
+ * ("CTSRD"), as part of the DARPA CRASH research programme.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -28,31 +29,33 @@
  * SUCH DAMAGE.
  */
 
-#include "Parsing/ErrorReporter.h"
-using namespace fabrique::parser;
-using fabrique::ErrorReport;
+#include <fabrique/parsing/Token.hh>
+#include "Support/Bytestream.h"
+using namespace fabrique;
 using std::string;
 
 
-ErrorReporter::ErrorReporter(std::vector<ErrorReport>& errors)
-	: errors_(errors)
+Token::Token()
+	: HasSource(SourceRange::None()), str_("")
 {
 }
 
-bool ErrorReporter::hasErrors() const
+Token::Token(const std::string& s, const SourceRange& src)
+	: HasSource(src), str_(s)
 {
-	return not errors_.empty();
 }
 
-ErrorReport& ErrorReporter::ReportError(std::string msg, SourceRange src,
-                                        ErrorReport::Severity severity, string detail)
+Token::Token(const char *begin, size_t len, const SourceRange& src)
+	: HasSource(src), str_(begin, 0, len)
 {
-	errors_.emplace_back(msg, src, severity, detail);
-	return errors_.back();
 }
 
-ErrorReport& ErrorReporter::ReportError(std::string msg, const HasSource& s,
-                                        ErrorReport::Severity severity, string detail)
+
+void Token::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
-	return ReportError(msg, s.source(), severity, detail);
+	out
+		<< Bytestream::Literal << "'" << str_ << "'"
+		<< Bytestream::Operator << " @ " << source()
+		<< Bytestream::Reset
+		;
 }

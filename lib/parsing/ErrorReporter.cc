@@ -1,11 +1,10 @@
-/** @file Parsing/Token.cc    Definition of @ref fabrique::Token. */
+/** @file Parsing/ErrorReporter.cc Definition of @ref fabrique::parser::ErrorReporter. */
 /*
- * Copyright (c) 2013-2014 Jonathan Anderson
+ * Copyright (c) 2016 Jonathan Anderson
  * All rights reserved.
  *
- * This software was developed by SRI International and the University of
- * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * This software was developed at Memorial University of Newfoundland under
+ * the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,33 +28,31 @@
  * SUCH DAMAGE.
  */
 
-#include "Parsing/Token.h"
-#include "Support/Bytestream.h"
-using namespace fabrique;
+#include <fabrique/parsing/ErrorReporter.hh>
+using namespace fabrique::parser;
+using fabrique::ErrorReport;
 using std::string;
 
 
-Token::Token()
-	: HasSource(SourceRange::None()), str_("")
+ErrorReporter::ErrorReporter(std::vector<ErrorReport>& errors)
+	: errors_(errors)
 {
 }
 
-Token::Token(const std::string& s, const SourceRange& src)
-	: HasSource(src), str_(s)
+bool ErrorReporter::hasErrors() const
 {
+	return not errors_.empty();
 }
 
-Token::Token(const char *begin, size_t len, const SourceRange& src)
-	: HasSource(src), str_(begin, 0, len)
+ErrorReport& ErrorReporter::ReportError(std::string msg, SourceRange src,
+                                        ErrorReport::Severity severity, string detail)
 {
+	errors_.emplace_back(msg, src, severity, detail);
+	return errors_.back();
 }
 
-
-void Token::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
+ErrorReport& ErrorReporter::ReportError(std::string msg, const HasSource& s,
+                                        ErrorReport::Severity severity, string detail)
 {
-	out
-		<< Bytestream::Literal << "'" << str_ << "'"
-		<< Bytestream::Operator << " @ " << source()
-		<< Bytestream::Reset
-		;
+	return ReportError(msg, s.source(), severity, detail);
 }
