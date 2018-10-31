@@ -1,6 +1,6 @@
-/** @file Backend/Dot.h    Declaration of fabrique::backend::DotBackend. */
+/** @file Backend/Ninja.h    Declaration of fabrique::backend::NinjaBackend. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,10 +29,10 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DOT_BACKEND_H
-#define DOT_BACKEND_H
+#ifndef NINJA_BACKEND_H
+#define NINJA_BACKEND_H
 
-#include "Backend/Backend.h"
+#include <fabrique/backend/Backend.hh>
 
 #include <string>
 
@@ -44,20 +44,20 @@ class Bytestream;
 namespace backend {
 
 /**
- * A backend that produces GraphViz .dot files.
+ * A backend that produces Ninja files.
  *
- * @sa http://www.graphviz.org/
+ * @sa http://martine.github.io/ninja
  */
-class DotBackend : public Backend
+class NinjaBackend : public Backend
 {
 public:
-	static DotBackend* Create();
+	static NinjaBackend* Create();
 
-	std::string DefaultFilename() const { return "build.dot"; }
+	std::string DefaultFilename() const { return "build.ninja"; }
 	void Process(const dag::DAG&, Bytestream&, ErrorReport::Report);
 
 private:
-	DotBackend();
+	NinjaBackend();
 	const std::string indent_;
 };
 

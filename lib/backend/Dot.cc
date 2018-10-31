@@ -29,7 +29,8 @@
  * SUCH DAMAGE.
  */
 
-#include "Backend/Dot.h"
+#include <fabrique/backend/Dot.hh>
+
 #include <fabrique/dag/Build.hh>
 #include <fabrique/dag/File.hh>
 #include <fabrique/dag/Formatter.hh>

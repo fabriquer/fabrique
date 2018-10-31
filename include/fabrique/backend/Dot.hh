@@ -1,4 +1,4 @@
-/** @file Backend/Make.h    Declaration of fabrique::backend::MakeBackend. */
+/** @file Backend/Dot.h    Declaration of fabrique::backend::DotBackend. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -29,10 +29,10 @@
  * SUCH DAMAGE.
  */
 
-#ifndef MAKE_BACKEND_H
-#define MAKE_BACKEND_H
+#ifndef DOT_BACKEND_H
+#define DOT_BACKEND_H
 
-#include "Backend/Backend.h"
+#include <fabrique/backend/Backend.hh>
 
 #include <string>
 
@@ -44,31 +44,20 @@ class Bytestream;
 namespace backend {
 
 /**
- * A backend that produces POSIX make files (no BSD or GNU extensions).
+ * A backend that produces GraphViz .dot files.
  *
- * @sa http://pubs.opengroup.org/onlinepubs/009695399/utilities/make.html
+ * @sa http://www.graphviz.org/
  */
-class MakeBackend : public Backend
+class DotBackend : public Backend
 {
 public:
-	enum class Flavour
-	{
-		POSIX,
-		BSD,
-		GNU,
-	};
+	static DotBackend* Create();
 
-	static MakeBackend* Create(Flavour);
-
-	Flavour flavour() const { return flavour_; }
-
-	std::string DefaultFilename() const;
+	std::string DefaultFilename() const { return "build.dot"; }
 	void Process(const dag::DAG&, Bytestream&, ErrorReport::Report);
 
 private:
-	MakeBackend(Flavour);
-
-	const Flavour flavour_;
+	DotBackend();
 	const std::string indent_;
 };
 

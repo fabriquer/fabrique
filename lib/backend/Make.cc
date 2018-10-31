@@ -29,7 +29,7 @@
  * SUCH DAMAGE.
  */
 
-#include "Backend/Make.h"
+#include <fabrique/backend/Make.hh>
 
 #include <fabrique/dag/Build.hh>
 #include <fabrique/dag/DAG.hh>

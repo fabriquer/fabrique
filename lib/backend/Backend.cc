@@ -29,11 +29,11 @@
  * SUCH DAMAGE.
  */
 
-#include "Backend/Backend.h"
-#include "Backend/Dot.h"
-#include "Backend/Make.h"
-#include "Backend/Ninja.h"
-#include "Backend/Null.h"
+#include <fabrique/backend/Backend.hh>
+#include <fabrique/backend/Dot.hh>
+#include <fabrique/backend/Make.hh>
+#include <fabrique/backend/Ninja.hh>
+#include <fabrique/backend/Null.hh>
 #include "Support/exceptions.h"
 using namespace fabrique::backend;
 using std::unique_ptr;

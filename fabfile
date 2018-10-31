@@ -74,7 +74,6 @@ generated_cxx_flags =
 
 cxx_srcs =
 	import('lib').sources
-	+ import('Backend').sources
 	+ import('Parsing').sources
 	+ import('Plugin').sources
 	+ import('Support').sources

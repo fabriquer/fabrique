@@ -1,4 +1,4 @@
-/** @file Backend/Ninja.h    Declaration of fabrique::backend::NinjaBackend. */
+/** @file Backend/Null.h    Declaration of fabrique::backend::NullBackend. */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.
@@ -29,10 +29,10 @@
  * SUCH DAMAGE.
  */
 
-#ifndef NINJA_BACKEND_H
-#define NINJA_BACKEND_H
+#ifndef NULL_BACKEND_H
+#define NULL_BACKEND_H
 
-#include "Backend/Backend.h"
+#include <fabrique/backend/Backend.hh>
 
 #include <string>
 
@@ -44,21 +44,15 @@ class Bytestream;
 namespace backend {
 
 /**
- * A backend that produces Ninja files.
- *
- * @sa http://martine.github.io/ninja
+ * A backend that does nothing.
  */
-class NinjaBackend : public Backend
+class NullBackend : public Backend
 {
 public:
-	static NinjaBackend* Create();
+	virtual ~NullBackend() override;
 
-	std::string DefaultFilename() const { return "build.ninja"; }
-	void Process(const dag::DAG&, Bytestream&, ErrorReport::Report);
-
-private:
-	NinjaBackend();
-	const std::string indent_;
+	std::string DefaultFilename() const override { return ""; }
+	void Process(const dag::DAG&, Bytestream&, ErrorReport::Report) override {}
 };
 
 } // namespace backend

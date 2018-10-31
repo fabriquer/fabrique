@@ -33,7 +33,7 @@
 #include <fabrique/ast/ASTDump.hh>
 #include <fabrique/ast/EvalContext.hh>
 
-#include "Backend/Backend.h"
+#include <fabrique/backend/Backend.hh>
 
 #include <fabrique/dag/DAG.hh>
 #include <fabrique/dag/File.hh>

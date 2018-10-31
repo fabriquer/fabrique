@@ -1,6 +1,6 @@
-/** @file Backend/Null.h    Declaration of fabrique::backend::NullBackend. */
+/** @file Backend/Make.h    Declaration of fabrique::backend::MakeBackend. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,10 +29,10 @@
  * SUCH DAMAGE.
  */
 
-#ifndef NULL_BACKEND_H
-#define NULL_BACKEND_H
+#ifndef MAKE_BACKEND_H
+#define MAKE_BACKEND_H
 
-#include "Backend/Backend.h"
+#include <fabrique/backend/Backend.hh>
 
 #include <string>
 
@@ -44,15 +44,32 @@ class Bytestream;
 namespace backend {
 
 /**
- * A backend that does nothing.
+ * A backend that produces POSIX make files (no BSD or GNU extensions).
+ *
+ * @sa http://pubs.opengroup.org/onlinepubs/009695399/utilities/make.html
  */
-class NullBackend : public Backend
+class MakeBackend : public Backend
 {
 public:
-	virtual ~NullBackend() override;
+	enum class Flavour
+	{
+		POSIX,
+		BSD,
+		GNU,
+	};
 
-	std::string DefaultFilename() const override { return ""; }
-	void Process(const dag::DAG&, Bytestream&, ErrorReport::Report) override {}
+	static MakeBackend* Create(Flavour);
+
+	Flavour flavour() const { return flavour_; }
+
+	std::string DefaultFilename() const;
+	void Process(const dag::DAG&, Bytestream&, ErrorReport::Report);
+
+private:
+	MakeBackend(Flavour);
+
+	const Flavour flavour_;
+	const std::string indent_;
 };
 
 } // namespace backend

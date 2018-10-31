@@ -29,7 +29,7 @@
  * SUCH DAMAGE.
  */
 
-#include "Backend/Null.h"
+#include <fabrique/backend/Null.hh>
 using namespace fabrique;
 
 

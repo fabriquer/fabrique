@@ -29,7 +29,7 @@
  * SUCH DAMAGE.
  */
 
-#include "Backend/Ninja.h"
+#include <fabrique/backend/Ninja.hh>
 
 #include <fabrique/dag/Build.hh>
 #include <fabrique/dag/DAG.hh>
