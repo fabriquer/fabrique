@@ -44,7 +44,8 @@
 #include "Support/CLIArguments.h"
 #include "Support/Join.h"
 #include "Support/exceptions.h"
-#include "Support/os.h"
+
+#include <fabrique/platform/files.hh>
 
 #include <fabrique/types/FunctionType.hh>
 #include <fabrique/types/TypeContext.hh>
@@ -408,6 +409,6 @@ shared_ptr<class Rule> DAGBuilder::MakeDirectory() const
 	parameters.emplace_back(new class Parameter("directory", file, ValuePtr()));
 
 	return shared_ptr<class Rule>(
-		Rule::Create("mkdir", CreateDirCommand("${directory}"),
+		Rule::Create("mkdir", platform::CreateDirCommand("${directory}"),
 			arguments, parameters, type));
 }

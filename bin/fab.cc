@@ -41,13 +41,14 @@
 
 #include <fabrique/parsing/Parser.hh>
 
+#include <fabrique/platform/files.hh>
+
 #include <fabrique/plugin/Loader.hh>
 #include <fabrique/plugin/Registry.hh>
 
 #include "Support/Bytestream.h"
 #include "Support/CLIArguments.h"
 #include "Support/exceptions.h"
-#include "Support/os.h"
 
 #include <fabrique/types/TypeContext.hh>
 
@@ -58,6 +59,7 @@
 #include <memory>
 
 using namespace fabrique;
+using namespace fabrique::platform;
 using namespace std;
 using fabrique::backend::Backend;
 

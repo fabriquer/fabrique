@@ -34,7 +34,6 @@
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 #include <fabrique/types/TypeContext.hh>
-#include "Support/os.h"
 
 #include <cassert>
 #include <fstream>

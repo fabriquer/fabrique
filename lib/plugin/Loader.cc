@@ -29,12 +29,12 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/platform/files.hh>
 #include <fabrique/plugin/Loader.hh>
 #include <fabrique/plugin/Registry.hh>
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
 #include "Support/SharedLibrary.h"
-#include "Support/os.h"
 
 using namespace fabrique;
 using namespace fabrique::plugin;
@@ -50,7 +50,7 @@ Loader::Loader(const vector<string>& paths)
 
 std::weak_ptr<Plugin::Descriptor> Loader::Load(string name)
 {
-	const string libname = LibraryFilename(name);
+	const string libname = platform::LibraryFilename(name);
 
 	Bytestream& dbg = Bytestream::Debug("plugin.loader");
 	dbg
@@ -69,8 +69,9 @@ std::weak_ptr<Plugin::Descriptor> Loader::Load(string name)
 		<< Bytestream::Reset << "\n"
 		;
 
-	const string filename = FindFile(libname, paths_,
-	                                 FileIsSharedLibrary, DefaultFilename(""));
+	const string filename =
+		platform::FindFile(libname, paths_, platform::FileIsSharedLibrary,
+		                   platform::DefaultFilename(""));
 
 	dbg
 		<< Bytestream::Reset << "found "

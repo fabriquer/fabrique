@@ -32,10 +32,11 @@
 // Include Matthias Benkmann's "Lean Mean C++ Option Parser".
 #include "optionparser.h"
 
+#include <fabrique/platform/files.hh>
+
 #include "Support/Bytestream.h"
 #include "Support/CLIArguments.h"
 #include "Support/String.h"
-#include "Support/os.h"
 
 #include <iostream>
 #include <sstream>
@@ -176,9 +177,9 @@ CLIArguments* CLIArguments::Parse(int argc, char *argv[])
 		return nullptr;
 
 	const string executable =
-		PathIsFile(argv[0])
-		? AbsolutePath(argv[0])
-		: FindExecutable(argv[0])
+		platform::PathIsFile(argv[0])
+		? platform::AbsolutePath(argv[0])
+		: platform::FindExecutable(argv[0])
 		;
 
 	const bool help = options[Help];
@@ -253,7 +254,7 @@ std::vector<string> CLIArguments::ArgVector(const CLIArguments& args)
 	if (args.printOutput)
 		argv.push_back("--stdout");
 	else
-		argv.push_back("--output=" + AbsoluteDirectory(args.output));
+		argv.push_back("--output=" + platform::AbsoluteDirectory(args.output));
 
 	for (const string& d : args.definitions)
 		argv.push_back("-D '" + d + "'");

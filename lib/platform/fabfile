@@ -1,0 +1,13 @@
+# TODO: actually check for POSIX-ness once plugins, etc., work again
+posix = true;
+
+sources =
+	if posix
+	{
+		import('posix').sources
+	}
+	else
+	{
+		[]
+	}
+	;

@@ -17,7 +17,6 @@ platform_specific_sources =
 	if posix files(
 		PosixError.cc
 		PosixSharedLibrary.cc
-		os-posix.cc
 	)
 	else []
 	;

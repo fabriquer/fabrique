@@ -33,15 +33,16 @@
 #include <fabrique/dag/File.hh>
 #include <fabrique/dag/Primitive.hh>
 #include <fabrique/dag/Visitor.hh>
+#include <fabrique/platform/files.hh>
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
-#include "Support/os.h"
 #include <fabrique/types/FileType.hh>
 #include <fabrique/types/TypeContext.hh>
 
 #include <cassert>
 
 using namespace fabrique::dag;
+using namespace fabrique::platform;
 using std::shared_ptr;
 using std::string;
 
