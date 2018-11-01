@@ -37,6 +37,7 @@
 #include <fabrique/dag/TypeReference.hh>
 
 #include "Support/Bytestream.h"
+#include "Support/exceptions.h"
 
 #include <cassert>
 
@@ -59,7 +60,7 @@ void DAG::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 		const string& name = i.first;
 		const ValuePtr& v = i.second;
 
-		assert(v);
+		FAB_ASSERT(v, "DAG contains null value '" + name + "'");
 
 		out
 			<< Bytestream::Definition << name

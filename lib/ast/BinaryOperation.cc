@@ -76,7 +76,8 @@ BinaryOperation::Operator BinaryOperation::Op(const std::string& o)
 
 	else op = Invalid;
 
-	assert(o == OpStr(op));
+	FAB_ASSERT(o == OpStr(op), "symmetric binary operation check failed: '"
+		+ o + "' vs '" + OpStr(op) + "'");
 
 	return op;
 }
@@ -99,11 +100,10 @@ std::string BinaryOperation::OpStr(Operator op)
 		case Or:                return "or";
 		case Xor:               return "xor";
 
-		case Invalid:           assert(false && "op == Invalid");
+		case Invalid:           FAB_ASSERT(false, "unreachable Invalid binary op");
 	}
 
-	assert(false && "unhandled Operator type");
-	return "";
+	FAB_ASSERT(false, "unreachable: invalid operator " + std::to_string(op));
 }
 
 

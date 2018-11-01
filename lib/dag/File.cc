@@ -73,7 +73,7 @@ File* File::Create(string dir, string path, const FileType& type,
 		t.CheckSubtype(t.context().booleanType(), gen->source());
 
 		auto b = std::dynamic_pointer_cast<Boolean>(gen);
-		assert(b);
+		SemaCheck(b, gen->source(), "'generated' field not boolean");
 		generated = b->value();
 
 		attrs.erase(i);

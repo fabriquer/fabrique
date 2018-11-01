@@ -43,7 +43,7 @@ Argument::Argument(UniqPtr<Identifier> id, UniqPtr<Expression> value)
 	: Expression(SourceRange::Over(id, value)),
 	  name_(std::move(id)), value_(std::move(value))
 {
-	assert(value_);
+	SemaCheck(value_, source(), "no argument value defined");
 }
 
 
@@ -55,7 +55,6 @@ void Argument::PrettyPrint(Bytestream& out, unsigned int indent) const
 			<< Bytestream::Operator << " = "
 			;
 
-	assert(this->value_);
 	value_->PrettyPrint(out, indent);
 }
 

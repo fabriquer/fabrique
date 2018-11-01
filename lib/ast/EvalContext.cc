@@ -188,7 +188,7 @@ EvalContext::Scope&
 EvalContext::Scope::Define(const string &name, dag::ValuePtr v, SourceRange src)
 {
 	SemaCheck(live_, src, "defining a value in a dead scope");
-	assert(values_);
+	FAB_ASSERT(values_, "Scope has null values_");
 
 	if (not src)
 	{
@@ -202,7 +202,7 @@ EvalContext::Scope::Define(const string &name, dag::ValuePtr v, SourceRange src)
 
 shared_ptr<EvalContext::ScopedValues> EvalContext::CurrentScope()
 {
-	assert(not scopes_.empty());
+	FAB_ASSERT(not scopes_.empty(), "no scopes in EvalContext");
 	return scopes_.back();
 }
 
@@ -254,7 +254,7 @@ EvalContext::ScopedValueName EvalContext::evaluating(const string& name)
 
 std::shared_ptr<EvalContext::ScopedValues> EvalContext::PopScope()
 {
-	assert(not scopes_.empty());
+	FAB_ASSERT(not scopes_.empty(), "popping from empty stack");
 
 	auto s = std::move(scopes_.back());
 	scopes_.pop_back();
@@ -290,7 +290,7 @@ void EvalContext::DumpScope()
 
 void EvalContext::Define(ScopedValueName& name, ValuePtr v, SourceRange src)
 {
-	assert(&name.stack_ == this);
+	SemaCheck(&name.stack_ == this, src, "mismatched name stack");
 
 	CurrentScope()->Define(name.name_, v, src);
 	builder_.Define(fullyQualifiedName(), v);
@@ -314,9 +314,9 @@ ValuePtr EvalContext::Lookup(const string& name, SourceRange src)
 	}
 
 	// Next, look for lexically-defined names:
-	assert(not scopes_.empty());
+	SemaCheck(not scopes_.empty(), src, "no scopes to lookup in");
 	auto s = scopes_.back();
-	assert(s);
+	FAB_ASSERT(s, "top of scopes_ stack is null");
 
 	if (auto v = s->Lookup(name))
 	{

@@ -31,6 +31,7 @@
 
 #include <fabrique/dag/Formatter.hh>
 #include <fabrique/dag/Value.hh>
+#include "Support/exceptions.h"
 
 #include <cassert>
 
@@ -41,7 +42,7 @@ using std::string;
 string Formatter::Format(const Value& v)
 {
 	v.Accept(*this);
-	assert(not values_.empty());
+	SemaCheck(not values_.empty(), v.source(), "formatter found no values");
 
 	string value = values_.top();
 	values_.pop();

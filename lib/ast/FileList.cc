@@ -98,8 +98,8 @@ void FileList::Accept(Visitor& v) const
 
 dag::ValuePtr FileList::evaluate(EvalContext& ctx) const
 {
-	assert(ctx.Lookup(ast::builtins::Subdirectory));
-	const string subdir = ctx.Lookup(ast::builtins::Subdirectory)->str();
+	auto subdir = ctx.Lookup(ast::builtins::Subdirectory);
+	SemaCheck(subdir, source(), "no subdir defined");
 
 	auto scope(ctx.EnterScope("files"));
 	SharedPtrVec<dag::Value> files;
@@ -112,7 +112,7 @@ dag::ValuePtr FileList::evaluate(EvalContext& ctx) const
 			const string subsubdir =
 				arg->getValue().evaluate(ctx)->str();
 
-			const string completeSubdir = JoinPath(subdir, subsubdir);
+			const string completeSubdir = JoinPath(subdir->str(), subsubdir);
 			const SourceRange& src = arg->getValue().source();
 
 			scope.Define(name, ctx.builder().String(completeSubdir, src));

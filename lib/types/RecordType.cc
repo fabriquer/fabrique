@@ -31,6 +31,8 @@
 
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
+#include "Support/SourceLocation.h"
+#include "Support/exceptions.h"
 #include <fabrique/types/RecordType.hh>
 #include <fabrique/types/TypeContext.hh>
 
@@ -67,7 +69,8 @@ RecordType::RecordType(const StringMap<const Type&>& fieldTypes,
 {
 #ifndef NDEBUG
 	for (const string& name : fieldNames_)
-		assert(fieldTypes_.find(name) != fieldTypes_.end());
+		FAB_ASSERT(fieldTypes_.find(name) != fieldTypes_.end(),
+		           "field type '" + name + "' doesn't exist");
 #endif
 }
 
@@ -161,8 +164,8 @@ const Type& RecordType::supertype(const Type& t) const
 		if (i == rt->fieldTypes_.end())
 			continue;
 
-		assert(i->first == name);
-		assert(i->second);
+		FAB_ASSERT(i->first == name, "found name (" + i->first + ") != " + name);
+		FAB_ASSERT(i->second, "field type (" + name + ") is null");
 
 		const Type& supertype = fieldType.supertype(i->second);
 		if (supertype)
@@ -191,7 +194,7 @@ void RecordType::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 		first = false;
 
 		auto i = fieldTypes_.find(name);
-		assert(i != fieldTypes_.end());
+		FAB_ASSERT(i != fieldTypes_.end(), "no such type " + name);
 
 		const Type& type = i->second;
 		out

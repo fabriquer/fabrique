@@ -65,7 +65,9 @@ List::List(const SharedPtrVec<Value>& v, const Type& t, const SourceRange& src)
 {
 #ifndef NDEBUG
 	for (auto& value : v)
-		assert(value);
+	{
+		SemaCheck(value, src, "passed null value to List");
+	}
 #endif
 }
 
@@ -122,7 +124,8 @@ bool List::canScalarAdd(const Value& other) const
 {
 	const Type& t = type();
 
-	assert(t.typeParamCount() == 1);
+	FAB_ASSERT(t.typeParamCount() == 1, "lists only have one type parameter, not "
+		+ std::to_string(t.typeParamCount()));
 	const Type& elementTy = t[0];
 
 	return elementTy.onAddTo(other.type());

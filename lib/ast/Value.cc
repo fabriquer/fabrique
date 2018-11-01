@@ -53,8 +53,7 @@ Value::Value(UniqPtr<Identifier> id, UniqPtr<TypeReference> explicitType,
 	  name_(std::move(id)), explicitType_(std::move(explicitType)),
 	  value_(std::move(value))
 {
-	assert(not explicitType_ or name_ && "having an explicit type => having a name");
-	assert(value_);
+	SemaCheck(not explicitType_ or name_, source(), "explicit type requires a name");
 }
 
 
@@ -110,7 +109,7 @@ dag::ValuePtr Value::evaluate(EvalContext& ctx) const
 	auto valueName(ctx.evaluating(name));
 
 	dag::ValuePtr val(value_->evaluate(ctx));
-	assert(val);
+	SemaCheck(val, value_->source(), "evaluation returned null");
 
 	dbg
 		<< name

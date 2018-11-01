@@ -108,7 +108,7 @@ void Callable::CheckArguments(const ValueMap& args,
 		}
 
 		const ValuePtr& arg = i->second;
-		assert(arg);
+		SemaCheck(arg, callLocation, "null argument to Callable");
 
 		arg->type().CheckSubtype(t, argLocations.find(name)->second);
 	}
@@ -129,7 +129,7 @@ Callable::NameArguments(const vector<string>& args, SourceRange src) const
 	dbg << "\n to parameters:\n ";
 	for (auto& p : parameters_)
 	{
-		assert(p);
+		SemaCheck(p, src, "Callable has null parameter");
 		dbg << " "
 			<< Bytestream::Definition << p->name()
 			<< Bytestream::Operator << ":"

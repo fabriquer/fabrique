@@ -48,7 +48,9 @@ using std::string;
 Boolean::Boolean(bool b, const Type& t, SourceRange loc)
 	: Primitive(t, b, loc)
 {
-	// TODO: assert(t is a subtype of bool?)
+#ifndef NDEBUG
+	SemaCheck(t.isSubtype(t.context().booleanType()), loc, "not boolean type");
+#endif
 }
 
 ValuePtr Boolean::Not(const SourceRange& loc) const
@@ -59,7 +61,7 @@ ValuePtr Boolean::Not(const SourceRange& loc) const
 ValuePtr Boolean::And(ValuePtr& v) const
 {
 	auto other = dynamic_pointer_cast<Boolean>(v);
-	assert(other);
+	SemaCheck(other, v->source(), "not boolean");
 
 	return ValuePtr(
 		new Boolean(value_ and other->value_,
@@ -71,7 +73,7 @@ ValuePtr Boolean::And(ValuePtr& v) const
 ValuePtr Boolean::Or(ValuePtr& v) const
 {
 	auto other = dynamic_pointer_cast<Boolean>(v);
-	assert(other);
+	SemaCheck(other, v->source(), "not boolean");
 
 	return ValuePtr(
 		new Boolean(value_ or other->value_,
@@ -83,7 +85,7 @@ ValuePtr Boolean::Or(ValuePtr& v) const
 ValuePtr Boolean::Xor(ValuePtr& v) const
 {
 	auto other = dynamic_pointer_cast<Boolean>(v);
-	assert(other);
+	SemaCheck(other, v->source(), "not boolean");
 
 	return ValuePtr(
 		new Boolean(value_ xor other->value_,
