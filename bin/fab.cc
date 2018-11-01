@@ -124,6 +124,7 @@ int main(int argc, char *argv[]) {
 		//
 		parsing::Parser parser;
 		UniqPtrVec<ast::Value> values;
+		vector<string> allFiles = { fabfile };
 
 		if (not Parse(parser, fabfile, values, args->printAST))
 		{
@@ -168,7 +169,7 @@ int main(int argc, char *argv[]) {
 		// Add regeneration (if Fabrique files change):
 		if (not outputFiles.empty())
 			ctx.builder().AddRegeneration(
-				*args, parser.files(), outputFiles);
+				*args, allFiles, outputFiles);
 
 		unique_ptr<dag::DAG> dag = ctx.builder().dag(targets);
 		assert(dag);
