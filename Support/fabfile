@@ -1,4 +1,4 @@
-platform_agnostic_sources = files(
+sources = files(
 	ABI.cc
 	Bytestream.cc
 	CLIArguments.cc
@@ -8,16 +8,3 @@ platform_agnostic_sources = files(
 	String.cc
 	exceptions.cc
 );
-
-# TODO: actually check for POSIX-ness once plugins, etc., work.
-posix = true;
-
-platform_specific_sources =
-	if posix files(
-		PosixError.cc
-	)
-	else []
-	;
-
-
-sources = platform_agnostic_sources + platform_specific_sources;

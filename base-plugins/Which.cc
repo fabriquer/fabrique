@@ -40,7 +40,6 @@
 #include <fabrique/types/FunctionType.hh>
 #include <fabrique/types/RecordType.hh>
 #include <fabrique/types/TypeContext.hh>
-#include "Support/PosixError.h"
 #include "Support/String.h"
 #include "Support/exceptions.h"
 

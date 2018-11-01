@@ -1,11 +1,12 @@
-/** @file Support/PosixError.cc    Definition of @ref fabrique::PosixError. */
+//! @file platform/posix/PosixError.cc    Definition of @ref platform::PosixError
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,10 +30,11 @@
  * SUCH DAMAGE.
  */
 
-#include "Support/PosixError.h"
+#include <fabrique/platform/PosixError.hh>
+
 #include <errno.h>
 
-using namespace fabrique;
+using namespace fabrique::platform;
 
 PosixError::PosixError(std::string message)
 	: OSError(message, strerror(errno))

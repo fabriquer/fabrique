@@ -30,11 +30,11 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/platform/PosixError.hh>
 #include <fabrique/platform/files.hh>
 
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
-#include "Support/PosixError.h"
 #include "Support/String.h"
 #include "Support/exceptions.h"
 
@@ -61,7 +61,7 @@ bool FileExists(const string& filename, bool directory = false)
 	if (errno == ENOENT)
 		return false;
 
-	throw fabrique::PosixError("error examining " + filename);
+	throw fabrique::platform::PosixError("error examining " + filename);
 }
 
 

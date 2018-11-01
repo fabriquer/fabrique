@@ -25,10 +25,11 @@
  * SUCH DAMAGE.
  */
 
-#include "Support/exceptions.h"
-
-#include "PosixOnly.h"
 #include "PosixSharedLibrary.hh"
+
+#include <fabrique/platform/PosixError.hh>
+
+#include "Support/exceptions.h"
 
 #include <string>
 
