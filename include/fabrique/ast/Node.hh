@@ -33,9 +33,9 @@
 #define AST_NODE_H
 
 #include <fabrique/Uncopyable.hh>
+#include <fabrique/Visitable.hh>
 #include "Support/Printable.h"
 #include "Support/SourceLocation.h"
-#include "Support/Visitable.h"
 
 namespace fabrique {
 namespace ast {
