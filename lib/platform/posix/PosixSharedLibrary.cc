@@ -26,14 +26,15 @@
  */
 
 #include "Support/PosixOnly.h"
-#include "Support/PosixSharedLibrary.h"
 #include "Support/exceptions.h"
+
+#include "PosixSharedLibrary.hh"
 
 #include <string>
 
 #include <dlfcn.h>
 
-using namespace fabrique;
+using namespace fabrique::platform;
 
 
 PosixSharedLibrary::PosixSharedLibrary(void *handle)

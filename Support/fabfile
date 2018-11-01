@@ -4,7 +4,6 @@ platform_agnostic_sources = files(
 	CLIArguments.cc
 	ErrorReport.cc
 	Join.cc
-	SharedLibrary.cc
 	SourceLocation.cc
 	String.cc
 	exceptions.cc
@@ -16,7 +15,6 @@ posix = true;
 platform_specific_sources =
 	if posix files(
 		PosixError.cc
-		PosixSharedLibrary.cc
 	)
 	else []
 	;

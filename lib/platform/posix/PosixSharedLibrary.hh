@@ -25,13 +25,14 @@
  * SUCH DAMAGE.
  */
 
-#ifndef POSIX_SHARED_LIBRARY_H
-#define POSIX_SHARED_LIBRARY_H
+#ifndef FAB_POSIX_SHARED_LIBRARY_H_
+#define FAB_POSIX_SHARED_LIBRARY_H_
 
-#include "Support/SharedLibrary.h"
+#include <fabrique/platform/SharedLibrary.hh>
 
 
 namespace fabrique {
+namespace platform {
 
 /**
  * Platform-agnostic superclass for a shared library.
@@ -48,6 +49,7 @@ class PosixSharedLibrary : public SharedLibrary
 	void *libHandle_;
 };
 
+} // namespace platform
 } // namespace fabrique
 
 #endif

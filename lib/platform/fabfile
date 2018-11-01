@@ -2,6 +2,10 @@
 posix = true;
 
 sources =
+	files(
+		SharedLibrary.cc
+	)
+	+
 	if posix
 	{
 		import('posix').sources

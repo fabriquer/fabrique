@@ -29,8 +29,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef PLUGIN_LOADER_H
-#define PLUGIN_LOADER_H
+#ifndef FAB_PLUGIN_LOADER_H_
+#define FAB_PLUGIN_LOADER_H_
 
 #include <fabrique/plugin/Plugin.hh>
 
@@ -40,7 +40,9 @@
 
 namespace fabrique {
 
+namespace platform {
 class SharedLibrary;
+}
 
 namespace plugin {
 
@@ -60,7 +62,7 @@ class Loader
 
 	private:
 	std::vector<std::string> paths_;
-	std::vector<std::shared_ptr<SharedLibrary>> libraries_;
+	std::vector<std::shared_ptr<platform::SharedLibrary>> libraries_;
 };
 
 } // namespace plugin
