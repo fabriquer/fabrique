@@ -5,7 +5,7 @@
 # bar:file = foo;    # error highlight should be shown here, not the line above
 #
 # RUN: %fab --format=null %s 2> %t || true
-# RUN: FileCheck %s -input-file %t
+# RUN: %check %s -input-file %t
 #
 
 join = function(x:string, y:string): string

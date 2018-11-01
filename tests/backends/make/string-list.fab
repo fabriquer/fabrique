@@ -1,6 +1,6 @@
 #
 # RUN: %fab --format=make --output=%t %s
-# RUN: FileCheck %s -input-file %t/Makefile
+# RUN: %check %s -input-file %t/Makefile
 #
 
 # CHECK-DAG: foo=	a string literal

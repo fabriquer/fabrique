@@ -1,6 +1,6 @@
 #
 # RUN: %fab --format=ninja --output=%t %s
-# RUN: FileCheck %s -input-file %t/build.ninja
+# RUN: %check %s -input-file %t/build.ninja
 #
 
 # CHECK: rule lex

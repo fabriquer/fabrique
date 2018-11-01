@@ -1,6 +1,6 @@
 #
 # RUN: %fab --format=null %s 2> %t || true
-# RUN: FileCheck %s -input-file %t
+# RUN: %check %s -input-file %t
 #
 
 cc = action('$CC -c $src -o $obj' <- src:file[in], obj:file[out]);
