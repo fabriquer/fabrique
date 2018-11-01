@@ -33,7 +33,7 @@
 #ifndef ERROR_REPORT_H
 #define ERROR_REPORT_H
 
-#include "Support/Printable.h"
+#include <fabrique/Printable.hh>
 #include "Support/SourceLocation.h"
 
 #include <functional>

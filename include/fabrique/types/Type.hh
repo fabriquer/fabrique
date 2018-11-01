@@ -34,10 +34,10 @@
 
 #include <functional>
 
+#include <fabrique/Printable.hh>
+#include <fabrique/PtrVec.h>
+#include <fabrique/StringMap.h>
 #include <fabrique/Uncopyable.hh>
-#include "fabrique/PtrVec.h"
-#include "fabrique/StringMap.h"
-#include "Support/Printable.h"
 
 #include <string>
 

@@ -37,7 +37,6 @@
 #include <fabrique/dag/Callable.hh>
 #include <fabrique/dag/DAG.hh>
 #include <fabrique/dag/Value.hh>
-#include "Support/Printable.h"
 
 #include <string>
 

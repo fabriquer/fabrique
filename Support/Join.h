@@ -36,8 +36,8 @@
 #ifndef JOIN_H
 #define JOIN_H
 
-#include "fabrique/PtrVec.h"
-#include "Support/Printable.h"
+#include <fabrique/Printable.hh>
+#include <fabrique/PtrVec.h>
 
 #include <functional>
 #include <sstream>

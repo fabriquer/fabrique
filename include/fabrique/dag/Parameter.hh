@@ -33,8 +33,8 @@
 #ifndef DAG_PARAMETER_H
 #define DAG_PARAMETER_H
 
+#include <fabrique/Printable.hh>
 #include <fabrique/Uncopyable.hh>
-#include "Support/Printable.h"
 #include "Support/SourceLocation.h"
 #include <fabrique/types/Typed.hh>
 
