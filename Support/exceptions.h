@@ -41,7 +41,7 @@
 #define FAB_ASSERT(expr, detail) \
 	do \
 	{ \
-		if (not expr) \
+		if (not (expr)) \
 		{ \
 			throw fabrique::AssertionFailure(#expr, detail); \
 		} \
