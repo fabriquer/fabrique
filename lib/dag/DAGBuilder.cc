@@ -234,6 +234,8 @@ ValuePtr DAGBuilder::AddRegeneration(const CLIArguments& commandLineArgs,
                                      const vector<string>& inputFiles,
                                      const vector<string>& outputFiles)
 {
+	FAB_ASSERT(not inputFiles.empty(), "adding regeneration with no input files");
+
 	shared_ptr<Value> Nothing;
 	const SourceRange& Nowhere = SourceRange::None();
 

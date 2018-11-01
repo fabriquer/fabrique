@@ -69,9 +69,6 @@ public:
 	//! Errors encountered during parsing.
 	const std::vector<ErrorReport>& errors() const { return errs_; }
 
-	//! Input files encountered during parsing.
-	const std::vector<std::string>& files() const { return files_; }
-
 
 private:
 	const ErrorReport& ReportError(const std::string&, const SourceRange&,

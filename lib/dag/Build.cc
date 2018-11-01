@@ -69,7 +69,9 @@ Build* Build::Create(shared_ptr<Rule>& rule, SharedPtrMap<Value>& arguments,
 	{
 		const std::string& name = i.first;
 		ValuePtr& arg = i.second;
-		const Type& argType = i.second->type();
+		SemaCheck(arg, src, "argument '" + name + "' has no value");
+
+		const Type& argType = arg->type();
 		const Type& paramType = *paramTypes[name];
 
 		argType.CheckSubtype(paramType, arg->source());
