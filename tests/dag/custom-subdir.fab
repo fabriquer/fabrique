@@ -11,9 +11,3 @@ bar = file('bar.c', subdir = 'custom-subdir');
 
 # CHECK-DAG: baz:list[file] = [ custom2/baz1.c custom2/baz2.c ]
 baz = files(baz1.c baz2.c, subdir = 'custom2');
-
-# CHECK-DAG: wibble:file = custom3/wibble.c
-wibble = {
-	subdir = file('custom3');
-	file('wibble.c')
-};
