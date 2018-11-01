@@ -193,9 +193,11 @@ string DotFormatter::Format(const Build& b)
 	substrings.push_back("}");
 
 	vector<pair<string,ValuePtr>> arguments;
-	for (auto& i : b.arguments())  // TODO: why does std::copy_if segfault?
-		if (not fabrique::FileType::isFileOrFiles(i.second->type()))
-			arguments.push_back(i);
+	copy_if(b.arguments().begin(), b.arguments().end(), back_inserter(arguments),
+		[](pair<string, ValuePtr> i)
+		{
+			return not fabrique::FileType::isFileOrFiles(i.second->type());
+		});
 
 	if (not arguments.empty())
 	{
