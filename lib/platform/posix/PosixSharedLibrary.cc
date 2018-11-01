@@ -25,9 +25,9 @@
  * SUCH DAMAGE.
  */
 
-#include "Support/PosixOnly.h"
 #include "Support/exceptions.h"
 
+#include "PosixOnly.h"
 #include "PosixSharedLibrary.hh"
 
 #include <string>
