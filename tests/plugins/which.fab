@@ -1,6 +1,6 @@
 #
 # RUN: %fab --format=null --print-dag %s > %t.out
-# RUN: FileCheck %s -input-file %t.out
+# RUN: %check %s -input-file %t.out
 #
 
 which = import('which');

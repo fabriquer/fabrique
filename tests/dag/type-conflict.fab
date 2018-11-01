@@ -1,6 +1,6 @@
 #
 # RUN: %fab --format=null %s 2> %t.err || true
-# RUN: FileCheck %s -input-file %t.err
+# RUN: %check %s -input-file %t.err
 #
 
 # CHECK: {{/.*}}.fab:{{.*}}error: expected string, got int

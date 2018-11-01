@@ -1,6 +1,6 @@
 #
 # RUN: %fab --format=gmake --output=%t %s
-# RUN: FileCheck %s -input-file %t/GNUmakefile
+# RUN: %check %s -input-file %t/GNUmakefile
 #
 
 cc = action('cc -c ${source} -o ${object} -MD -MF ${object}.d', depfile = '${object}.d'

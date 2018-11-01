@@ -1,6 +1,6 @@
 #
 # RUN: %fab --parse-only --print-ast %s > %t
-# RUN: FileCheck %s -input-file %t
+# RUN: %check %s -input-file %t
 #
 
 # CHECK: x = foo.bar.baz.wibble;
