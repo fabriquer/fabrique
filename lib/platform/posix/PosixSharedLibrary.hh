@@ -1,11 +1,7 @@
-/** @file Support/PosixError.cc    Definition of @ref fabrique::PosixError. */
+/** @file Support/PosixSharedLibrary.h Declaration of @ref fabrique::PosixSharedLibrary. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
- *
- * This software was developed by SRI International and the University of
- * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,19 +25,32 @@
  * SUCH DAMAGE.
  */
 
-#include "Support/PosixError.h"
-#include <errno.h>
+#ifndef FAB_POSIX_SHARED_LIBRARY_H_
+#define FAB_POSIX_SHARED_LIBRARY_H_
 
-using namespace fabrique;
+#include <fabrique/platform/SharedLibrary.hh>
 
-PosixError::PosixError(std::string message)
-	: OSError(message, strerror(errno))
+
+namespace fabrique {
+namespace platform {
+
+/**
+ * Platform-agnostic superclass for a shared library.
+ *
+ * The library will be unloaded when this object is destructed.
+ */
+class PosixSharedLibrary : public SharedLibrary
 {
-}
+	public:
+	PosixSharedLibrary(void*);
+	virtual ~PosixSharedLibrary() override;
 
-PosixError::PosixError(PosixError&& e)
-	: OSError(e)
-{
-}
+	private:
+	void *libHandle_;
+};
 
-PosixError::~PosixError() {}
+} // namespace platform
+} // namespace fabrique
+
+#endif
+

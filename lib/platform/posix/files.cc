@@ -1,11 +1,12 @@
-/** @file Support/os-posix.cc    POSIX definitions of OS abstractions. */
+//! @file platform/posix/files.cc    POSIX definitions of OS file abstractions
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,12 +30,13 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/platform/PosixError.hh>
+#include <fabrique/platform/files.hh>
+
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
-#include "Support/PosixError.h"
 #include "Support/String.h"
 #include "Support/exceptions.h"
-#include "Support/os.h"
 
 #include <fstream>
 
@@ -59,7 +61,7 @@ bool FileExists(const string& filename, bool directory = false)
 	if (errno == ENOENT)
 		return false;
 
-	throw fabrique::PosixError("error examining " + filename);
+	throw fabrique::platform::PosixError("error examining " + filename);
 }
 
 
@@ -68,13 +70,17 @@ static const char PathDelimiter = ':';
 }
 
 
-bool fabrique::PathIsAbsolute(const string& path)
+namespace fabrique {
+namespace platform {
+
+
+bool PathIsAbsolute(const string& path)
 {
 	return (not path.empty() and path[0] == '/');
 }
 
 
-string fabrique::AbsoluteDirectory(string name, bool createIfMissing)
+string AbsoluteDirectory(string name, bool createIfMissing)
 {
 	const char *cname = name.c_str();
 
@@ -94,7 +100,7 @@ string fabrique::AbsoluteDirectory(string name, bool createIfMissing)
 }
 
 
-string fabrique::AbsolutePath(string name)
+string AbsolutePath(string name)
 {
 	char *absolutePath = realpath(name.c_str(), nullptr);
 	if (not absolutePath)
@@ -110,26 +116,27 @@ string fabrique::AbsolutePath(string name)
 }
 
 
-string fabrique::BaseName(string path)
+string BaseName(string path)
 {
 	const string filename = FilenameComponent(path);
 	return filename.substr(0, filename.rfind('.'));
 }
 
 
-string fabrique::CreateDirCommand(string dir)
+string CreateDirCommand(string dir)
 {
 	return "if [ ! -e \"" + dir + "\" ]; then mkdir -p \"" + dir + "\"; fi";
 }
 
 
-fabrique::MissingFileReporter fabrique::DefaultFilename(std::string name)
+MissingFileReporter
+DefaultFilename(std::string name)
 {
 	return [name](string, const vector<string>&) { return name; };
 }
 
 
-string fabrique::DirectoryOf(string filename, bool absolute)
+string DirectoryOf(string filename, bool absolute)
 {
 	// Allocate space for an extra byte in case `filename` isn't null-terminated
 	const size_t NameLength = filename.length() + 1;
@@ -157,7 +164,7 @@ string fabrique::DirectoryOf(string filename, bool absolute)
 }
 
 
-string fabrique::FileExtension(string path)
+string FileExtension(string path)
 {
 	const string filename = FilenameComponent(path);
 
@@ -170,7 +177,7 @@ string fabrique::FileExtension(string path)
 }
 
 
-bool fabrique::FileIsExecutable(string path)
+bool FileIsExecutable(string path)
 {
 	struct stat s;
 	if (stat(path.c_str(), &s) != 0)
@@ -183,7 +190,7 @@ bool fabrique::FileIsExecutable(string path)
 }
 
 
-bool fabrique::FileIsSharedLibrary(string path)
+bool FileIsSharedLibrary(string path)
 {
 	//
 	// For now, just check that a file exists and is executable.
@@ -200,7 +207,7 @@ bool fabrique::FileIsSharedLibrary(string path)
 }
 
 
-string fabrique::FilenameComponent(string pathIncludingDirectory)
+string FilenameComponent(string pathIncludingDirectory)
 {
 	if (pathIncludingDirectory.empty())
 		return "";
@@ -210,7 +217,7 @@ string fabrique::FilenameComponent(string pathIncludingDirectory)
 }
 
 
-string fabrique::FileNotFound(string name, const vector<string>& searchPaths)
+string FileNotFound(string name, const vector<string>& searchPaths)
 {
 	std::ostringstream oss;
 	oss << "no file '" << name << "' in directories [";
@@ -224,8 +231,7 @@ string fabrique::FileNotFound(string name, const vector<string>& searchPaths)
 }
 
 
-string fabrique::FindExecutable(string name, vector<string> paths,
-                                MissingFileReporter report)
+string FindExecutable(string name, vector<string> paths, MissingFileReporter report)
 {
 	const char *path = getenv("PATH");
 	if (not path)
@@ -238,9 +244,9 @@ string fabrique::FindExecutable(string name, vector<string> paths,
 }
 
 
-string fabrique::FindFile(string filename, const vector<string>& directories,
-                          std::function<bool (const string&)> test,
-                          MissingFileReporter fileNotFound)
+string FindFile(string filename, const vector<string>& directories,
+                std::function<bool (const string&)> test,
+                MissingFileReporter fileNotFound)
 {
 	for (const string& directory : directories)
 	{
@@ -253,7 +259,7 @@ string fabrique::FindFile(string filename, const vector<string>& directories,
 }
 
 
-string fabrique::FindModule(string srcroot, string subdir, string name)
+string FindModule(string srcroot, string subdir, string name)
 {
 	const string relativeName = JoinPath(subdir, name);
 
@@ -299,7 +305,7 @@ string fabrique::FindModule(string srcroot, string subdir, string name)
 }
 
 
-string fabrique::JoinPath(const string& x, const string& y)
+string JoinPath(const string& x, const string& y)
 {
 	if (x.empty() or x == ".")
 		return y;
@@ -310,13 +316,13 @@ string fabrique::JoinPath(const string& x, const string& y)
 	return x + "/" + y;
 }
 
-string fabrique::JoinPath(const vector<string>& components)
+string JoinPath(const vector<string>& components)
 {
 	return join(components, "/");
 }
 
 
-string fabrique::LibraryFilename(string name)
+string LibraryFilename(string name)
 {
 	static constexpr char Extension[] =
 #if defined(OS_DARWIN)
@@ -330,7 +336,7 @@ string fabrique::LibraryFilename(string name)
 }
 
 
-vector<string> fabrique::PluginSearchPaths(string binary)
+vector<string> PluginSearchPaths(string binary)
 {
 	const string prefix = DirectoryOf(DirectoryOf(binary));
 	return {
@@ -341,12 +347,15 @@ vector<string> fabrique::PluginSearchPaths(string binary)
 }
 
 
-bool fabrique::PathIsDirectory(string path)
+bool PathIsDirectory(string path)
 {
 	return FileExists(path, true);
 }
 
-bool fabrique::PathIsFile(string path)
+bool PathIsFile(string path)
 {
 	return FileExists(path, false);
 }
+
+} // namespace platform
+} // namespace fabrique

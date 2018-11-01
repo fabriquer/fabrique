@@ -40,7 +40,6 @@
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
 #include "Support/exceptions.h"
-#include "Support/os.h"
 
 #include <fabrique/types/FileType.hh>
 #include <fabrique/types/FunctionType.hh>

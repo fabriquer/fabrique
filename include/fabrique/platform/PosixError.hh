@@ -1,7 +1,12 @@
-/** @file Support/PosixOnly.h    Include guard for POSIX sources. */
+//! @file platform/posix/PosixError.h     Declaration of @ref platform::PosixError
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
+ *
+ * This software was developed by SRI International and the University of
+ * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -25,6 +30,30 @@
  * SUCH DAMAGE.
  */
 
-#if !defined(OS_POSIX)
-#error Compiling POSIX-only sources in a non-POSIX build
+#ifndef FAB_POSIX_ERROR_H_
+#define FAB_POSIX_ERROR_H_
+
+#include <fabrique/platform/PosixOnly.hh>
+
+#include "Support/exceptions.h"
+
+namespace fabrique {
+namespace platform {
+
+//! An OS error that has an errno or equivalent output.
+class PosixError : public OSError
+{
+public:
+	explicit PosixError(std::string message);
+	PosixError(PosixError&&);
+
+	virtual ~PosixError() override;
+
+private:
+	PosixError(const PosixError&) = delete;
+};
+
+} // namespace platform
+} // namespace fabrique
+
 #endif

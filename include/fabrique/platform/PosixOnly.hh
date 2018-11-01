@@ -1,7 +1,12 @@
-/** @file Support/PosixSharedLibrary.cc Definition of @ref fabrique::PosixSharedLibrary. */
+//! @file Support/PosixOnly.h    Include guard for POSIX sources
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
+ *
+ * This software was developed by SRI International and the University of
+ * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -25,34 +30,6 @@
  * SUCH DAMAGE.
  */
 
-#include "Support/PosixOnly.h"
-#include "Support/PosixSharedLibrary.h"
-#include "Support/exceptions.h"
-
-#include <string>
-
-#include <dlfcn.h>
-
-using namespace fabrique;
-
-
-PosixSharedLibrary::PosixSharedLibrary(void *handle)
-	: libHandle_(handle)
-{
-}
-
-
-PosixSharedLibrary::~PosixSharedLibrary()
-{
-	dlclose(libHandle_);
-}
-
-
-std::shared_ptr<SharedLibrary> SharedLibrary::Load(std::string path)
-{
-	void *handle = dlopen(path.c_str(), RTLD_LAZY | RTLD_GLOBAL);
-	if (not handle)
-		throw OSError("unable to dlopen '" + path + "'", dlerror());
-
-	return std::make_shared<PosixSharedLibrary>(handle);
-}
+#if !defined(OS_POSIX)
+#error Compiling POSIX-only sources in a non-POSIX build
+#endif

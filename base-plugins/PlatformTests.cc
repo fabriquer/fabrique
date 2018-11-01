@@ -32,10 +32,10 @@
 #include <fabrique/dag/File.hh>
 #include <fabrique/dag/List.hh>
 #include <fabrique/dag/Parameter.hh>
+#include <fabrique/platform/naming.hh>
 #include <fabrique/plugin/Registry.hh>
 #include <fabrique/types/RecordType.hh>
 #include <fabrique/types/TypeContext.hh>
-#include "Support/Platform.h"
 #include "Support/exceptions.h"
 
 #include <cassert>

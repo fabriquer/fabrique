@@ -36,9 +36,9 @@
 #include <fabrique/dag/File.hh>
 #include <fabrique/dag/List.hh>
 #include <fabrique/dag/Primitive.hh>
+#include <fabrique/platform/files.hh>
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
-#include "Support/os.h"
 
 #include <cassert>
 
@@ -112,7 +112,8 @@ dag::ValuePtr FileList::evaluate(EvalContext& ctx) const
 			const string subsubdir =
 				arg->getValue().evaluate(ctx)->str();
 
-			const string completeSubdir = JoinPath(subdir->str(), subsubdir);
+			const string completeSubdir =
+				platform::JoinPath(subdir->str(), subsubdir);
 			const SourceRange& src = arg->getValue().source();
 
 			scope.Define(name, ctx.builder().String(completeSubdir, src));

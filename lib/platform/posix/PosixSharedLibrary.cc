@@ -1,4 +1,4 @@
-/** @file Support/PosixSharedLibrary.h Declaration of @ref fabrique::PosixSharedLibrary. */
+/** @file Support/PosixSharedLibrary.cc Definition of @ref fabrique::PosixSharedLibrary. */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.
@@ -25,30 +25,36 @@
  * SUCH DAMAGE.
  */
 
-#ifndef POSIX_SHARED_LIBRARY_H
-#define POSIX_SHARED_LIBRARY_H
+#include "PosixSharedLibrary.hh"
 
-#include "Support/SharedLibrary.h"
+#include <fabrique/platform/PosixError.hh>
+
+#include "Support/exceptions.h"
+
+#include <string>
+
+#include <dlfcn.h>
+
+using namespace fabrique::platform;
 
 
-namespace fabrique {
-
-/**
- * Platform-agnostic superclass for a shared library.
- *
- * The library will be unloaded when this object is destructed.
- */
-class PosixSharedLibrary : public SharedLibrary
+PosixSharedLibrary::PosixSharedLibrary(void *handle)
+	: libHandle_(handle)
 {
-	public:
-	PosixSharedLibrary(void*);
-	virtual ~PosixSharedLibrary() override;
+}
 
-	private:
-	void *libHandle_;
-};
 
-} // namespace fabrique
+PosixSharedLibrary::~PosixSharedLibrary()
+{
+	dlclose(libHandle_);
+}
 
-#endif
 
+std::shared_ptr<SharedLibrary> SharedLibrary::Load(std::string path)
+{
+	void *handle = dlopen(path.c_str(), RTLD_LAZY | RTLD_GLOBAL);
+	if (not handle)
+		throw OSError("unable to dlopen '" + path + "'", dlerror());
+
+	return std::make_shared<PosixSharedLibrary>(handle);
+}

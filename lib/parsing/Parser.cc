@@ -35,7 +35,6 @@
 #include <fabrique/parsing/Parser.hh>
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
-#include "Support/os.h"
 #include <fabrique/types/TypeContext.hh>
 
 #include <generated-grammar/FabLexer.h>

@@ -1,7 +1,12 @@
-/** @file Support/SharedLibrary.cc      Definition of @ref fabrique::SharedLibrary. */
+//! @file platform/SharedLibrary.hh  Declaration of @ref fabrique::platform::SharedLibrary
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
+ *
+ * This software was developed by SRI International and the University of
+ * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -25,10 +30,32 @@
  * SUCH DAMAGE.
  */
 
-#include "Support/SharedLibrary.h"
-using namespace fabrique;
+#ifndef FAB_SHARED_LIBRARY_H_
+#define FAB_SHARED_LIBRARY_H_
+
+#include <memory>
 
 
-SharedLibrary::~SharedLibrary()
+namespace fabrique {
+namespace platform {
+
+/**
+ * Platform-agnostic superclass for a shared library.
+ *
+ * The library will be unloaded when this object is destructed.
+ */
+class SharedLibrary
 {
-}
+	public:
+	static std::shared_ptr<SharedLibrary> Load(std::string path);
+
+	virtual ~SharedLibrary();
+
+	protected:
+	SharedLibrary() {}
+};
+
+} // namespace platform
+} // namespace fabrique
+
+#endif

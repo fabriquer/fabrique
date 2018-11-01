@@ -35,11 +35,11 @@
 
 #include <fabrique/dag/DAGBuilder.hh>
 #include <fabrique/dag/Parameter.hh>
+#include <fabrique/platform/PosixError.hh>
 #include <fabrique/plugin/Registry.hh>
 #include <fabrique/types/FunctionType.hh>
 #include <fabrique/types/RecordType.hh>
 #include <fabrique/types/TypeContext.hh>
-#include "Support/PosixError.h"
 #include "Support/exceptions.h"
 
 #include <cassert>
@@ -48,6 +48,7 @@
 
 using namespace fabrique;
 using namespace fabrique::dag;
+using fabrique::platform::PosixError;
 using fabrique::plugin::Plugin;
 using std::shared_ptr;
 using std::string;

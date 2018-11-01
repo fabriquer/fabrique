@@ -34,15 +34,14 @@
 #include <fabrique/dag/File.hh>
 #include <fabrique/dag/List.hh>
 #include <fabrique/dag/Parameter.hh>
+#include <fabrique/platform/files.hh>
 #include <fabrique/plugin/Registry.hh>
 #include <fabrique/types/FileType.hh>
 #include <fabrique/types/FunctionType.hh>
 #include <fabrique/types/RecordType.hh>
 #include <fabrique/types/TypeContext.hh>
-#include "Support/PosixError.h"
 #include "Support/String.h"
 #include "Support/exceptions.h"
-#include "Support/os.h"
 
 #include <cassert>
 #include <sstream>
@@ -199,7 +198,7 @@ ValuePtr Which::FindFile(const ValueMap& args, DAGBuilder &builder) const
 		directories.push_back(file->fullName());
 	}
 
-	const string fullName = ::FindFile(filename, directories);
+	const string fullName = platform::FindFile(filename, directories);
 	return builder.File(fullName);
 }
 
@@ -209,7 +208,7 @@ ValuePtr Which::FindExecutable(const ValueMap& args, DAGBuilder& builder,
 {
 	const string filename = args.find(FileName)->second->str();
 
-	return builder.File(fabrique::FindExecutable(filename, extraPaths));
+	return builder.File(platform::FindExecutable(filename, extraPaths));
 }
 
 

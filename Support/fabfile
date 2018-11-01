@@ -1,26 +1,10 @@
-platform_agnostic_sources = files(
+sources = files(
 	ABI.cc
 	Bytestream.cc
 	CLIArguments.cc
 	ErrorReport.cc
 	Join.cc
-	SharedLibrary.cc
 	SourceLocation.cc
 	String.cc
 	exceptions.cc
 );
-
-# TODO: actually check for POSIX-ness once plugins, etc., work.
-posix = true;
-
-platform_specific_sources =
-	if posix files(
-		PosixError.cc
-		PosixSharedLibrary.cc
-		os-posix.cc
-	)
-	else []
-	;
-
-
-sources = platform_agnostic_sources + platform_specific_sources;
