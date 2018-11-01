@@ -33,9 +33,9 @@
 #ifndef DAG_PARAMETER_H
 #define DAG_PARAMETER_H
 
+#include <fabrique/Uncopyable.hh>
 #include "Support/Printable.h"
 #include "Support/SourceLocation.h"
-#include "Support/Uncopyable.h"
 #include <fabrique/types/Typed.hh>
 
 #include <memory>

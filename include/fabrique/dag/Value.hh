@@ -33,9 +33,9 @@
 #define DAG_VALUE_H
 
 #include <fabrique/StringMap.h>
+#include <fabrique/Uncopyable.hh>
 #include "Support/Printable.h"
 #include "Support/SourceLocation.h"
-#include "Support/Uncopyable.h"
 #include <fabrique/types/Typed.hh>
 
 #include <string>
