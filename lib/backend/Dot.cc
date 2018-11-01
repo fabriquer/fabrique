@@ -49,10 +49,9 @@
 #include <cassert>
 
 using namespace fabrique::dag;
+using namespace std;
+
 using fabrique::backend::DotBackend;
-using std::dynamic_pointer_cast;
-using std::shared_ptr;
-using std::string;
 
 namespace {
 
@@ -127,7 +126,7 @@ void DotBackend::Process(const DAG& dag, Bytestream& out, ErrorReport::Report)
 	for (auto& i : dag.builds())
 	{
 		const dag::Build& build = *i;
-		const std::string name = formatter.Format(build);
+		const string name = formatter.Format(build);
 
 		out
 			<< indent_
@@ -176,25 +175,25 @@ string DotFormatter::Format(const Boolean& b)
 	return b.value() ? "true" : "false";
 }
 
-string DotFormatter::Format(const Build& build)
+string DotFormatter::Format(const Build& b)
 {
-	std::vector<string> substrings;
+	vector<string> substrings;
 
-	substrings.push_back(build.buildRule().name());
+	substrings.push_back(b.buildRule().name());
 	substrings.push_back("{");
 
-	for (auto& i : build.inputs())
+	for (auto& i : b.inputs())
 		substrings.push_back(Format(*i));
 
 	substrings.push_back("=>");
 
-	for (auto& i : build.outputs())
+	for (auto& i : b.outputs())
 		substrings.push_back(Format(*i));
 
 	substrings.push_back("}");
 
-	std::vector<std::pair<string,shared_ptr<Value>>> arguments;
-	for (auto& i : build.arguments())  // TODO: why does std::copy_if segfault?
+	vector<pair<string,ValuePtr>> arguments;
+	for (auto& i : b.arguments())  // TODO: why does std::copy_if segfault?
 		if (not fabrique::FileType::isFileOrFiles(i.second->type()))
 			arguments.push_back(i);
 
@@ -227,12 +226,12 @@ string DotFormatter::Format(const Function&)
 
 string DotFormatter::Format(const Integer& i)
 {
-	return std::to_string(i.value());
+	return to_string(i.value());
 }
 
 string DotFormatter::Format(const List& l)
 {
-	std::vector<string> substrings;
+	vector<string> substrings;
 
 	for (const shared_ptr<Value>& element : l)
 		substrings.push_back(Format(*element));
