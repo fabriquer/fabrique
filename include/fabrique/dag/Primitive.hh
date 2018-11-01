@@ -34,7 +34,6 @@
 
 #include <fabrique/dag/Value.hh>
 #include "Support/Bytestream.h"
-#include "Support/Printable.h"
 #include "Support/SourceLocation.h"
 
 #include <string>

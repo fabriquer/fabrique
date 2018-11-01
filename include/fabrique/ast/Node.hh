@@ -32,10 +32,10 @@
 #ifndef AST_NODE_H
 #define AST_NODE_H
 
-#include "Support/Printable.h"
+#include <fabrique/Printable.hh>
+#include <fabrique/Uncopyable.hh>
+#include <fabrique/Visitable.hh>
 #include "Support/SourceLocation.h"
-#include "Support/Uncopyable.h"
-#include "Support/Visitable.h"
 
 namespace fabrique {
 namespace ast {

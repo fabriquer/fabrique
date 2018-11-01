@@ -38,8 +38,8 @@
 #ifndef LOCATION_H
 #define LOCATION_H
 
-#include "fabrique/UniqPtr.h"
-#include "Support/Printable.h"
+#include <fabrique/Printable.hh>
+#include <fabrique/UniqPtr.h>
 
 #include <string>
 

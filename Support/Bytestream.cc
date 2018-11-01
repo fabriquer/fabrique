@@ -29,8 +29,8 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/Printable.hh>
 #include "Support/Bytestream.h"
-#include "Support/Printable.h"
 
 #include <cassert>
 #include <fstream>

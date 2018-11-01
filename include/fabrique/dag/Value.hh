@@ -32,10 +32,10 @@
 #ifndef DAG_VALUE_H
 #define DAG_VALUE_H
 
+#include <fabrique/Printable.hh>
 #include <fabrique/StringMap.h>
-#include "Support/Printable.h"
+#include <fabrique/Uncopyable.hh>
 #include "Support/SourceLocation.h"
-#include "Support/Uncopyable.h"
 #include <fabrique/types/Typed.hh>
 
 #include <string>

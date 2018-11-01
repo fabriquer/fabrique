@@ -8,7 +8,10 @@
 #
 
 sources =
-	import('ast').sources
+	files(
+		Printable.cc
+	)
+	+ import('ast').sources
 	+ import('backend').sources
 	+ import('dag').sources
 	+ import('parsing').sources

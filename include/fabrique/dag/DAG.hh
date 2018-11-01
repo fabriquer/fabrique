@@ -32,8 +32,8 @@
 #ifndef DAG_H
 #define DAG_H
 
+#include <fabrique/Printable.hh>
 #include <fabrique/dag/Value.hh>
-#include "Support/Printable.h"
 
 #include <string>
 
