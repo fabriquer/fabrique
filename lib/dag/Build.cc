@@ -55,6 +55,8 @@ using std::vector;
 Build* Build::Create(shared_ptr<Rule>& rule, SharedPtrMap<Value>& arguments,
                      const SourceRange& src)
 {
+	SemaCheck(rule, src, "Build::Create() passed null Rule");
+
 	// Builds need the parameter types, not just the argument types.
 	ConstPtrMap<Type> paramTypes;
 	for (auto& p : rule->parameters())
@@ -108,9 +110,11 @@ bool Build::hasFields() const
 
 ValuePtr Build::field(const std::string& name) const
 {
-	assert(hasFields());
-	assert(out_.size() == 1);
-	assert(out_[0]->hasFields());
+	FAB_ASSERT(hasFields(), "accessing field of field-less Build");
+	FAB_ASSERT(out_.size() == 1,
+		"Build::Field only works with single-output builds (have"
+		+ std::to_string(out_.size()) + " output files)");
+	FAB_ASSERT(out_[0]->hasFields(), "output file has no fields");
 
 	return out_[0]->field(name);
 }
@@ -149,7 +153,10 @@ ValuePtr Build::outputValue() const
 {
 	if (type().isFile())
 	{
-		assert(out_.size() == 1);
+		SemaCheck(out_.size() == 1, source(),
+			"build of type " + type().str() + " should have one output, not "
+			+ std::to_string(out_.size()));
+
 		return out_[0];
 	}
 
@@ -169,13 +176,17 @@ Build::Build(shared_ptr<Rule>& rule,
 {
 #ifndef NDEBUG
 	for (auto& f : in_)
-		assert(f);
+	{
+		SemaCheck(f, location, "null input fule");
+	}
 
 	for (auto& f : out_)
-		assert(f);
-
-	assert(t.hasFiles());
+	{
+		SemaCheck(f, location, "null output file");
+	}
 #endif
+
+	SemaCheck(t.hasFiles(), location, "no files in type " + t.str());
 }
 
 
@@ -239,7 +250,7 @@ void Build::Accept(Visitor& v) const
 void Build::AppendFiles(const ValuePtr& in,
                         vector<shared_ptr<File>>& out, bool generated)
 {
-	assert(in);
+	FAB_ASSERT(in, "called Build::AppendFiles with null input");
 
 	if (const shared_ptr<File>& file = dynamic_pointer_cast<File>(in))
 	{
@@ -260,6 +271,8 @@ void Build::AppendFiles(const ValuePtr& in,
 
 #ifndef NDEBUG
 	for (auto& f : out)
-		assert(f);
+	{
+		FAB_ASSERT(f, "null output file after Build::AppendFiles()");
+	}
 #endif
 }

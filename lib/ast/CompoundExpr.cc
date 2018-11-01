@@ -46,7 +46,7 @@ CompoundExpression::CompoundExpression(UniqPtrVec<Value> values,
                                        SourceRange loc)
 	: Expression(loc), values_(std::move(values)), result_(std::move(result))
 {
-	assert(result_);
+	SemaCheck(result_, loc, "invalid CompoundExpression result");
 }
 
 
@@ -62,7 +62,6 @@ void CompoundExpression::PrettyPrint(Bytestream& out, unsigned int indent) const
 		out << "\n";
 	}
 
-	assert(result_);
 	out
 		<< intabs << *result_
 		<< "\n" << Bytestream::Operator << tabs << "}\n"

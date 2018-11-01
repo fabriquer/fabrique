@@ -39,6 +39,7 @@
 #include <fabrique/types/TypeContext.hh>
 #include "Support/Bytestream.h"
 #include "Support/SourceLocation.h"
+#include "Support/exceptions.h"
 
 #include <cassert>
 
@@ -200,7 +201,7 @@ const Type&
 TypeContext::Register(Type *t)
 {
 	auto fullName(QualifiedName(t->name(), t->parameters_));
-	assert(types.find(fullName) == types.end());
+	FAB_ASSERT(types.find(fullName) == types.end(), "redefining type");
 
 	types[fullName].reset(t);
 	return *t;

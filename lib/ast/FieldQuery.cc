@@ -47,9 +47,9 @@ FieldQuery::FieldQuery(UniqPtr<Expression> base, UniqPtr<Identifier> field,
 	: Expression(src), base_(std::move(base)), field_(std::move(field)),
 	  defaultValue_(std::move(defaultValue))
 {
-	assert(base_);
-	assert(field_);
-	assert(defaultValue_);
+	SemaCheck(base_, src, "invalid base");
+	SemaCheck(field_, src, "invalid field");
+	SemaCheck(defaultValue_, src, "invalid default value");
 }
 
 

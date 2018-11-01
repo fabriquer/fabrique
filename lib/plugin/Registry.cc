@@ -30,6 +30,7 @@
  */
 
 #include <fabrique/plugin/Registry.hh>
+#include "Support/exceptions.h"
 
 #include <cassert>
 
@@ -40,7 +41,7 @@ using namespace fabrique::plugin;
 Registry::Initializer::Initializer(Plugin::Descriptor *descriptor)
 	: registry_(Registry::get()), plugin_(descriptor)
 {
-	assert(plugin_);
+	FAB_ASSERT(plugin_, "null plugin descriptor");
 	registry_.Register(plugin_);
 }
 
@@ -61,7 +62,7 @@ Registry& Registry::get()
 Registry& Registry::Register(std::weak_ptr<Plugin::Descriptor> plugin)
 {
 	const std::string name = plugin.lock()->name();
-	assert(plugins_.find(name) == plugins_.end());
+	FAB_ASSERT(plugins_.find(name) == plugins_.end(), "redefining plugin " + name);
 
 	plugins_.emplace(name, plugin);
 	return *this;
@@ -70,7 +71,7 @@ Registry& Registry::Register(std::weak_ptr<Plugin::Descriptor> plugin)
 
 void Registry::Deregister(std::string name)
 {
-	assert(plugins_.find(name) != plugins_.end());
+	FAB_ASSERT(plugins_.find(name) != plugins_.end(), "no such plugin: " + name);
 	plugins_.erase(name);
 }
 

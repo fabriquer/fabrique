@@ -60,7 +60,7 @@ Type::Type(const std::string& name, const PtrVec<Type>& params,
            TypeContext& parent)
 	: parent_(parent), typeName_(name), parameters_(params)
 {
-	assert(not typeName_.empty());
+	FAB_ASSERT(not typeName_.empty(), "empty type name");
 }
 
 
@@ -79,7 +79,7 @@ void Type::CheckSubtype(const Type& t, SourceRange src) const
 
 Type::operator bool() const
 {
-	assert(this);
+	FAB_ASSERT(this, "invalid Type");
 	return this->valid();
 }
 
@@ -118,13 +118,16 @@ bool Type::operator == (const Type& t) const
 
 const Type& Type::operator [] (size_t i) const
 {
-	assert(parameters_.size() > i);
+	FAB_ASSERT(parameters_.size() > i,
+		"index out of bounds: have " + std::to_string(parameters_.size())
+		+ " type parameters, accessing index " + std::to_string(i));
+
 	return *parameters_[i];
 }
 
 Type* Type::Parameterise(const PtrVec<Type>&, const SourceRange&) const
 {
-	assert(false && "called Type::Parameterise()");
+	FAB_ASSERT(false, "Type::Parameterise() not implemented");
 	return nullptr;
 }
 

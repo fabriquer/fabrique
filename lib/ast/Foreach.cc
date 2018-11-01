@@ -115,7 +115,7 @@ dag::ValuePtr ForeachExpr::evaluate(EvalContext& ctx) const
 		scope.Define(loopVarName, element, SourceRange(*loopVarName_, *element));
 
 		dag::ValuePtr result = body_->evaluate(ctx);
-		assert(result);
+		SemaCheck(result, source(), "invalid foreach body");
 
 		values.push_back(std::move(result));
 	}

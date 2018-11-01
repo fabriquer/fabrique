@@ -88,7 +88,7 @@ Rule::Rule(const string& name, const string& command, const string& description,
 ValuePtr Rule::Call(ValueMap args, DAGBuilder& build, SourceRange src) const
 {
 	std::shared_ptr<Rule> rule = self_.lock();
-	assert(rule);
+	FAB_ASSERT(rule, "failed to lock Rule::self_");
 
 	return build.Build(rule, args, src);
 }
@@ -96,7 +96,7 @@ ValuePtr Rule::Call(ValueMap args, DAGBuilder& build, SourceRange src) const
 
 void Rule::setSelf(std::weak_ptr<Rule> r)
 {
-	assert(r.lock().get() == this);
+	FAB_ASSERT(r.lock().get() == this, "r.lock().get() did not yield `this`");
 	self_ = r;
 }
 

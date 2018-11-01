@@ -195,8 +195,8 @@ FileType* FileType::Create(TypeContext& ctx)
 
 Type* FileType::Parameterise(const PtrVec<Type>& params, const SourceRange& src) const
 {
-	assert(tag_ == Tag::None);
-	assert(params.size() == 1);
+	SemaCheck(tag_ == Tag::None, src, "parameterizing already tagged type: " + str());
+	SemaCheck(params.size() == 1, src, "file type only takes one parameter");
 
 	const std::string name = params[0]->name();
 

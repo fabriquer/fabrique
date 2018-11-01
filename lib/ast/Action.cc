@@ -171,7 +171,6 @@ dag::ValuePtr Action::evaluate(EvalContext& ctx) const
 		// Ensure that files are properly tagged as input or output.
 		FileType::CheckFileTags(param->type(), p->source());
 
-		assert(param);
 		parameters.emplace_back(param);
 	}
 

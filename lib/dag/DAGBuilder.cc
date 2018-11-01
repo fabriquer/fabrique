@@ -139,7 +139,7 @@ UniqPtr<DAG> DAGBuilder::dag(vector<string> topLevelTargets) const
 
 	for (auto& file : files_)
 	{
-		assert(file);
+		FAB_ASSERT(file, "DAGBuilder contains null file");
 
 		if (not file->generated())
 			continue;
@@ -272,8 +272,6 @@ ValuePtr DAGBuilder::AddRegeneration(const CLIArguments& commandLineArgs,
 		ValuePtr r = Rule(Name, Command, buildType, ruleArgs, params);
 		rule = dynamic_pointer_cast<class Rule>(r);
 	}
-	assert(rule);
-
 
 	//
 	// Now, construct the build step that drives the rule above in order
@@ -284,8 +282,7 @@ ValuePtr DAGBuilder::AddRegeneration(const CLIArguments& commandLineArgs,
 	for (const string& name : inputFiles)
 	{
 		shared_ptr<dag::File> file = dynamic_pointer_cast<class File>(File(name));
-
-		assert(file);
+		FAB_ASSERT(file, "File() returned a non-File");
 
 		if (rootInput)
 			otherInputs.push_back(file);

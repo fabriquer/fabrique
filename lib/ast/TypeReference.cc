@@ -95,7 +95,8 @@ fabrique::dag::ValuePtr ParametricTypeReference::evaluate(EvalContext& ctx) cons
 	const string baseName = baseTypeRef->referencedType().name();
 
 	PtrVec<Type> paramTypes;
-	assert(not parameters_.empty());
+	SemaCheck(not parameters_.empty(), source(), "no type parameters");
+
 	for (auto &p : parameters_)
 	{
 		auto paramTypeRef = p->evaluateAs<dag::TypeReference>(ctx);

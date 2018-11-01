@@ -31,6 +31,7 @@
 
 #include <fabrique/types/SequenceType.hh>
 #include <fabrique/types/TypeContext.hh>
+#include "Support/exceptions.h"
 
 #include <cassert>
 
@@ -82,7 +83,6 @@ bool SequenceType::isSubtype(const Type& other) const
 		return false;
 
 	auto& t = dynamic_cast<const SequenceType&>(other);
-	assert(t.typeParamCount() == t.typeParamCount());
 
 	// Sequences are covariant: list[subtype] is a subtype of list[super].
 	if (elementType().isSubtype(t.elementType()))
@@ -118,8 +118,8 @@ RawSequenceType::RawSequenceType(TypeContext& ctx)
 }
 
 
-Type* RawSequenceType::Parameterise(const PtrVec<Type>& t, const SourceRange&) const
+Type* RawSequenceType::Parameterise(const PtrVec<Type>& t, const SourceRange &src) const
 {
-	assert(t.size() == 1);
+	SemaCheck(t.size() == 1, src, "sequences only take one type parameter");
 	return new SequenceType(*t.front());
 }

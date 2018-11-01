@@ -56,7 +56,7 @@ UnaryOperation::Operator UnaryOperation::Op(const std::string& o)
 	else if (o == "not") op = LogicalNot;
 	else op = Invalid;
 
-	assert(o == OpStr(op));
+	FAB_ASSERT(o == OpStr(op), "symmetric unary operation check failed");
 
 	return op;
 }
@@ -68,11 +68,10 @@ std::string UnaryOperation::OpStr(Operator op)
 		case Plus:              return "+";
 		case Minus:             return "-";
 		case LogicalNot:        return "not";
-		case Invalid:           assert(false && "op == Invalid");
+		case Invalid:           FAB_ASSERT(false, "unreachable Invalid unary op");
 	}
 
-	assert(false && "unhandled Operator type");
-	return "";
+	FAB_ASSERT(false, "unreachable: invalid operator " + std::to_string(op));
 }
 
 
@@ -99,7 +98,7 @@ void UnaryOperation::Accept(Visitor& v) const
 dag::ValuePtr UnaryOperation::evaluate(EvalContext& ctx) const
 {
 	dag::ValuePtr subexpr = subexpr_->evaluate(ctx);
-	assert(subexpr);
+	SemaCheck(subexpr, subexpr_->source(), "invalid subexpression");
 
 	switch (op_)
 	{
@@ -116,7 +115,7 @@ dag::ValuePtr UnaryOperation::evaluate(EvalContext& ctx) const
 			throw SemanticException("Invalid operation", source());
 	}
 
-	assert(false && "unreachable");
+	FAB_ASSERT(false, "unreachable: invalid operator " + std::to_string(op_));
 }
 
 
