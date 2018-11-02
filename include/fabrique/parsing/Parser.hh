@@ -60,25 +60,26 @@ namespace parsing {
 class Parser
 {
 public:
+	template<typename T>
+	struct Result
+	{
+		T result;
+		std::vector<ErrorReport> errors;
+
+		operator bool () const { return result; }
+
+		static Result Ok(T value) { return { std::move(value), {} }; }
+		static Result Err(std::vector<ErrorReport> errs) { return { {}, errs }; }
+	};
+
+	using ValueResult = Result<UniqPtr<ast::Value>>;
+	using FileResult = Result<UniqPtrVec<ast::Value>>;
+
 	//! Parse a single value (e.g., a command-line definition)
-	UniqPtr<ast::Value> Parse(std::string, SourceRange = SourceRange::None());
+	ValueResult Parse(std::string, SourceRange = SourceRange::None());
 
 	//! Parse Fabrique input (usually a file) into @ref Value objects.
-	bool ParseFile(std::istream&, UniqPtrVec<ast::Value>&, std::string name = "");
-
-	//! Errors encountered during parsing.
-	const std::vector<ErrorReport>& errors() const { return errs_; }
-
-
-private:
-	const ErrorReport& ReportError(const std::string&, const SourceRange&,
-		ErrorReport::Severity = ErrorReport::Severity::Error);
-	const ErrorReport& ReportError(const std::string&, const HasSource&,
-		ErrorReport::Severity = ErrorReport::Severity::Error);
-
-	//! Input files, in order they were parsed.
-	std::vector<std::string> files_;
-	std::vector<ErrorReport> errs_;
+	FileResult ParseFile(std::istream&, std::string name = "");
 };
 
 } // namespace parsing

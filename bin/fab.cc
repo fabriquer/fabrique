@@ -263,16 +263,19 @@ bool Parse(parsing::Parser& parser, const string& filename,
 	const string absolute =
 		PathIsAbsolute(filename) ? filename : AbsolutePath(filename);
 
-	if (not parser.ParseFile(infile, values, filename))
+	auto result = parser.ParseFile(infile, filename);
+	FAB_ASSERT(result.result.empty() xor result.errors.empty(),
+	           "cannot have parsing results and parsing errors");
+
+	for (auto &err : result.errors)
 	{
-		for (auto& error : parser.errors())
-			err() << error << "\n";
-
-		return false;
+		Bytestream::Stderr() << err << "\n";
 	}
-	assert(parser.errors().empty());
 
-	if (printAST)
+	const bool success = result.errors.empty();
+	values = std::move(result.result);
+
+	if (success and printAST)
 	{
 		Bytestream::Stdout()
 			<< Bytestream::Comment
@@ -286,7 +289,7 @@ bool Parse(parsing::Parser& parser, const string& filename,
 			Bytestream::Stdout() << *val << "\n";
 	}
 
-	return true;
+	return success;
 }
 
 

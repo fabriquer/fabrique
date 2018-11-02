@@ -55,7 +55,7 @@ using std::string;
 using std::unique_ptr;
 
 
-UniqPtr<ast::Value> Parser::Parse(std::string s, SourceRange src)
+Parser::ValueResult Parser::Parse(std::string s, SourceRange src)
 {
 	Bytestream& dbg = Bytestream::Debug("parser");
 	dbg
@@ -83,17 +83,17 @@ UniqPtr<ast::Value> Parser::Parse(std::string s, SourceRange src)
 	ASTBuilder visitor(name);
 	if (not visitor.visitValue(antlrParser.value()))
 	{
-		return nullptr;
+		return ValueResult::Err({});
 	}
 
 	auto values = visitor.takeValues();
 	SemaCheck(not values.empty(), src, "no value in '" + s + "'");
 	SemaCheck(values.size() == 1, src, "multiple values in '" + s + "'");
 
-	return std::move(values.front());
+	return ValueResult::Ok(std::move(values.front()));
 }
 
-bool Parser::ParseFile(std::istream& input, UniqPtrVec<ast::Value>& values, string name)
+Parser::FileResult Parser::ParseFile(std::istream& input, string name)
 {
 	Bytestream& dbg = Bytestream::Debug("parser.file");
 	dbg
@@ -119,24 +119,8 @@ bool Parser::ParseFile(std::istream& input, UniqPtrVec<ast::Value>& values, stri
 	ASTBuilder visitor(name);
 	if (not visitor.visitFile(antlrParser.file()))
 	{
-		return false;
+		return FileResult::Err({});
 	}
 
-	values = visitor.takeValues();
-	return true;
-}
-
-
-const ErrorReport& Parser::ReportError(const string& msg, const HasSource& s,
-                                       ErrorReport::Severity severity)
-{
-	return ReportError(msg, s.source(), severity);
-}
-
-const ErrorReport& Parser::ReportError(const string& message,
-                                       const SourceRange& location,
-                                       ErrorReport::Severity severity)
-{
-	errs_.emplace_back(message, location, severity);
-	return errs_.back();
+	return FileResult::Ok(visitor.takeValues());
 }
