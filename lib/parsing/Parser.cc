@@ -46,47 +46,12 @@ using std::string;
 using std::unique_ptr;
 
 
-UniqPtr<ast::Value> Parser::Parse(std::string s, SourceRange src)
+Parser::ValueResult Parser::Parse(std::string s, SourceRange src)
 {
-	Bytestream& dbg = Bytestream::Debug("parser");
-	dbg
-		<< Bytestream::Action << "Parsing"
-		<< Bytestream::Type << " string"
-		<< Bytestream::Operator << " '"
-		<< Bytestream::Literal << s
-		<< Bytestream::Operator << "'"
-		<< Bytestream::Reset << "\n"
-		;
-
-	return nullptr;
+	return ValueResult::Err({});
 }
 
-bool Parser::ParseFile(std::istream& input, UniqPtrVec<ast::Value>& values, string name)
+Parser::FileResult Parser::ParseFile(std::istream& input, string name)
 {
-	Bytestream& dbg = Bytestream::Debug("parser.file");
-	dbg
-		<< Bytestream::Action << "Parsing"
-		<< Bytestream::Type << " file"
-		<< Bytestream::Operator << " '"
-		<< Bytestream::Literal << name
-		<< Bytestream::Operator << "'"
-		<< Bytestream::Reset << "\n"
-		;
-
-	return false;
-}
-
-
-const ErrorReport& Parser::ReportError(const string& msg, const HasSource& s,
-                                       ErrorReport::Severity severity)
-{
-	return ReportError(msg, s.source(), severity);
-}
-
-const ErrorReport& Parser::ReportError(const string& message,
-                                       const SourceRange& location,
-                                       ErrorReport::Severity severity)
-{
-	errs_.emplace_back(message, location, severity);
-	return errs_.back();
+	return FileResult::Err({});
 }
