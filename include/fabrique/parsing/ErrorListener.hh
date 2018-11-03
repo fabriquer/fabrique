@@ -1,7 +1,4 @@
-﻿/**
- * @file Parsing/ParseErrorStrategy.h
- * Declaration of @ref fabrique::ast::ParseErrorStrategy.
- */
+﻿//! @file parsing/ErrorListener.hh    Declaration of @ref parsing::ErrorListener
 /*
  * Copyright (c) 2018 Jonathan Anderson
  * All rights reserved.
@@ -33,8 +30,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef PARSING_ERROR_LISTENER_H_
-#define PARSING_ERROR_LISTENER_H_
+#ifndef FAB_PARSING_ERROR_LISTENER_H_
+#define FAB_PARSING_ERROR_LISTENER_H_
 
 #include <antlr-cxx-runtime/BaseErrorListener.h>
 
