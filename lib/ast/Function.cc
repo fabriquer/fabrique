@@ -152,5 +152,5 @@ dag::ValuePtr Function::evaluate(EvalContext& ctx) const
 		return body().evaluate(ctx);
 	};
 
-	return ctx.Function(eval, parameters, ret->referencedType(), source());
+	return ctx.builder().Function(eval, ret->referencedType(), parameters, source());
 }
