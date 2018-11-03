@@ -251,7 +251,10 @@ UniqPtrVec<ast::Value> Parse(const string& filename, bool printAST)
 {
 	// Open and parse the top-level build description.
 	std::ifstream infile(filename.c_str());
-	assert(infile);
+	if (not infile)
+	{
+		throw UserError("failed to open '" + filename + "'");
+	}
 
 	const string absolute =
 		PathIsAbsolute(filename) ? filename : AbsolutePath(filename);
