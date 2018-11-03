@@ -320,14 +320,6 @@ string EvalContext::fullyQualifiedName() const
 	return join(currentValueName_, ".");
 }
 
-string EvalContext::qualifyName(string name) const
-{
-	std::deque<string> copy(currentValueName_);
-	copy.push_back(name);
-
-	return join(copy, ".");
-}
-
 void EvalContext::PushValueName(const string& name)
 {
 	currentValueName_.push_back(name);

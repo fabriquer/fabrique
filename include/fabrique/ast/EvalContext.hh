@@ -207,8 +207,6 @@ private:
 	//! The fully-qualified name of the value currently being defined.
 	std::string fullyQualifiedName() const;
 
-	std::string qualifyName(std::string name) const;
-
 	TypeContext& ctx_;
 
 	//! The components of the current scope's fully-qualified name.
