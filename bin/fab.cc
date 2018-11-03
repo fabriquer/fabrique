@@ -66,8 +66,7 @@ using fabrique::backend::Backend;
 
 static Bytestream& err();
 static void reportError(string message, SourceRange, ErrorReport::Severity, string detail);
-static bool Parse(parsing::Parser& parser, const string& filename,
-                  UniqPtrVec<ast::Value>& values, bool printAST);
+static bool Parse(const string& filename, UniqPtrVec<ast::Value>& values, bool printAST);
 
 static dag::ValueMap builtins(TypeContext &types, string srcroot, string buildroot);
 
@@ -94,65 +93,73 @@ int main(int argc, char *argv[]) {
 	argDebug << Bytestream::Reset << "\n";
 
 	//
-	// Parse the file, build the DAG and pass it to the backend.
+	// Locate input file, source root and build root.
+	//
+	const string fabfile =
+		PathIsDirectory(args->input)
+		? JoinPath(args->input, "fabfile")
+		: args->input
+		;
+
+	if (not PathIsFile(fabfile))
+	{
+		err()
+			<< Bytestream::Error << "Error"
+			<< Bytestream::Reset << ": "
+			<< Bytestream::ErrorMessage << "no such file: "
+			<< Bytestream::Literal << "'" << fabfile << "'"
+			<< Bytestream::Reset << "\n"
+			;
+
+		return 1;
+	}
+
+	const string srcroot = DirectoryOf(AbsolutePath(fabfile));
+	const string buildroot = AbsoluteDirectory(args->output, true);
+
+	vector<string> inputFiles = { fabfile };
+	vector<string> outputFiles;
+
+	//
+	// Prepare backends to receive the build graph.
+	//
+	UniqPtrVec<Backend> backends;
+	for (const string& format : args->outputFormats)
+	{
+		backends.emplace_back(Backend::Create(format));
+
+		const string filename = backends.back()->DefaultFilename();
+		if (not filename.empty())
+			outputFiles.push_back(filename);
+	}
+
+	//
+	// Parse the file, build the DAG and pass it to the backend(s).
 	// These operations can report errors with exceptions, so put them in
 	// a `try` block.
 	//
 	try
 	{
-		TypeContext types;
-
-		const string fabfile =
-			PathIsDirectory(args->input)
-			? JoinPath(args->input, "fabfile")
-			: args->input
-			;
-
-		if (not PathIsFile(fabfile))
-			throw UserError("no such file: '" + fabfile + "'");
-
-		const string srcroot = DirectoryOf(AbsolutePath(fabfile));
-		const string buildroot = AbsoluteDirectory(args->output, true);
-
-		/*
-		plugin::Registry& pluginRegistry = plugin::Registry::get();
-		plugin::Loader pluginLoader(PluginSearchPaths(args->executable));
-		*/
-
 		//
 		// Parse the file, optionally pretty-printing it.
 		//
-		parsing::Parser parser;
 		UniqPtrVec<ast::Value> values;
-		vector<string> allFiles = { fabfile };
-
-		if (not Parse(parser, fabfile, values, args->printAST))
+		if (not Parse(fabfile, values, args->printAST))
 		{
 			return -1;
 		}
 
 		if (args->parseOnly)
-			return 0;
-
-
-		//
-		// Prepare backends to receive the build graph.
-		//
-		UniqPtrVec<Backend> backends;
-		vector<string> outputFiles;
-		for (const string& format : args->outputFormats)
 		{
-			backends.emplace_back(Backend::Create(format));
-
-			const string filename = backends.back()->DefaultFilename();
-			if (not filename.empty())
-				outputFiles.push_back(filename);
+			return 0;
 		}
 
 
 		//
 		// Convert the AST into a build graph.
 		//
+		TypeContext types;
+		plugin::Loader pluginLoader(PluginSearchPaths(args->executable));
 		ast::EvalContext ctx(types, builtins(types, srcroot, buildroot));
 
 		SharedPtrVec<dag::Value> dagValues;
@@ -169,22 +176,14 @@ int main(int argc, char *argv[]) {
 		// Add regeneration (if Fabrique files change):
 		if (not outputFiles.empty())
 			ctx.builder().AddRegeneration(
-				*args, allFiles, outputFiles);
+				*args, inputFiles, outputFiles);
 
 		unique_ptr<dag::DAG> dag = ctx.builder().dag(targets);
-		assert(dag);
+		FAB_ASSERT(dag, "null DAG");
 
 		if (args->printDAG)
 		{
-			Bytestream::Stdout()
-				<< Bytestream::Comment
-				<< "#\n"
-				<< "# DAG pretty-printed from '"
-				<< fabfile << "'\n"
-				<< "#\n"
-				<< Bytestream::Reset
-				<< *dag
-				;
+			dag->PrettyPrint(Bytestream::Stdout());
 		}
 
 
@@ -253,8 +252,7 @@ int main(int argc, char *argv[]) {
 }
 
 
-bool Parse(parsing::Parser& parser, const string& filename,
-           UniqPtrVec<ast::Value>& values, bool printAST)
+bool Parse(const string& filename, UniqPtrVec<ast::Value>& values, bool printAST)
 {
 	// Open and parse the top-level build description.
 	std::ifstream infile(filename.c_str());
@@ -263,6 +261,7 @@ bool Parse(parsing::Parser& parser, const string& filename,
 	const string absolute =
 		PathIsAbsolute(filename) ? filename : AbsolutePath(filename);
 
+	parsing::Parser parser;
 	auto result = parser.ParseFile(infile, filename);
 	FAB_ASSERT(result.result.empty() xor result.errors.empty(),
 	           "cannot have parsing results and parsing errors");
