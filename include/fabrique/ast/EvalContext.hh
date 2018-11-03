@@ -198,7 +198,7 @@ public:
 	//! Create a new alias for an existing @ref dag::Target.
 	void Alias(const std::shared_ptr<dag::Target>&);
 
-protected:
+private:
 	std::shared_ptr<ScopedValues> PopScope();
 
 	void PushValueName(const std::string&);
@@ -217,7 +217,6 @@ protected:
 	//! Symbols defined in this scope (or the one up from it, or up...).
 	std::deque<std::shared_ptr<ScopedValues>> scopes_;
 
-private:
 	/** The name of the value we are currently processing. */
 	std::deque<std::string> currentValueName_;
 
