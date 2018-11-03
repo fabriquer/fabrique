@@ -50,6 +50,14 @@ using std::string;
 
 void DAG::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
+	out
+		<< Bytestream::Comment
+		<< "#\n"
+		<< "# Pretty-printed DAG:"
+		<< "#\n"
+		<< Bytestream::Reset
+		;
+
 	SharedPtrMap<Value> namedValues;
 	for (auto& i : rules()) namedValues.emplace(i);
 	for (auto& i : targets()) namedValues.emplace(i);
