@@ -29,9 +29,11 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/ast/Builtins.hh>
 #include <fabrique/ast/Call.hh>
 #include <fabrique/ast/EvalContext.hh>
 #include <fabrique/ast/Function.hh>
+#include <fabrique/ast/NameReference.hh>
 #include <fabrique/ast/Visitor.hh>
 #include <fabrique/dag/Callable.hh>
 #include "Support/Bytestream.h"
@@ -87,6 +89,23 @@ dag::ValuePtr Call::evaluate(EvalContext& ctx) const
 
 	dag::ValueMap args;
 	StringMap<SourceRange> argLocations;
+
+	//
+	// Calls to import() are special: they implicitly get access to the current
+	// `subdir` value
+	//
+	if (auto *n = dynamic_cast<NameReference*>(target_.get()))
+	{
+		const std::string &name = n->name().name();
+		if (name == "import")
+		{
+			using ast::builtins::Subdirectory;
+
+			args[Subdirectory] = ctx.Lookup(Subdirectory, source());
+			argLocations.emplace(Subdirectory, source());
+		}
+	}
+
 	for (auto& i : target->NameArguments(arguments_->positional()))
 	{
 		const std::string name = i.first;
