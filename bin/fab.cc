@@ -66,7 +66,7 @@ using fabrique::backend::Backend;
 
 static Bytestream& err();
 static void reportError(string message, SourceRange, ErrorReport::Severity, string detail);
-static bool Parse(const string& filename, UniqPtrVec<ast::Value>& values, bool printAST);
+static UniqPtrVec<ast::Value> Parse(const string& filename, bool printAST);
 
 static dag::ValueMap builtins(TypeContext &types, string srcroot, string buildroot);
 
@@ -143,12 +143,7 @@ int main(int argc, char *argv[]) {
 		//
 		// Parse the file, optionally pretty-printing it.
 		//
-		UniqPtrVec<ast::Value> values;
-		if (not Parse(fabfile, values, args->printAST))
-		{
-			return -1;
-		}
-
+		UniqPtrVec<ast::Value> values = Parse(fabfile, args->printAST);
 		if (args->parseOnly)
 		{
 			return 0;
@@ -252,7 +247,7 @@ int main(int argc, char *argv[]) {
 }
 
 
-bool Parse(const string& filename, UniqPtrVec<ast::Value>& values, bool printAST)
+UniqPtrVec<ast::Value> Parse(const string& filename, bool printAST)
 {
 	// Open and parse the top-level build description.
 	std::ifstream infile(filename.c_str());
@@ -271,10 +266,13 @@ bool Parse(const string& filename, UniqPtrVec<ast::Value>& values, bool printAST
 		Bytestream::Stderr() << err << "\n";
 	}
 
-	const bool success = result.errors.empty();
-	values = std::move(result.result);
+	if (not result.errors.empty())
+	{
+		throw UserError("failed to parse '" + filename + "'");
+	}
 
-	if (success and printAST)
+	auto values = std::move(result.result);
+	if (printAST)
 	{
 		Bytestream::Stdout()
 			<< Bytestream::Comment
@@ -288,7 +286,7 @@ bool Parse(const string& filename, UniqPtrVec<ast::Value>& values, bool printAST
 			Bytestream::Stdout() << *val << "\n";
 	}
 
-	return success;
+	return values;
 }
 
 
