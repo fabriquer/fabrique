@@ -209,9 +209,6 @@ private:
 
 	TypeContext& ctx_;
 
-	//! The components of the current scope's fully-qualified name.
-	std::deque<std::string> scopeName_;
-
 	//! Symbols defined in this scope (or the one up from it, or up...).
 	std::deque<std::shared_ptr<ScopedValues>> scopes_;
 
