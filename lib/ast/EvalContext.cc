@@ -263,30 +263,6 @@ std::shared_ptr<EvalContext::ScopedValues> EvalContext::PopScope()
 	return s;
 }
 
-void EvalContext::DumpScope()
-{
-	Bytestream& out = Bytestream::Debug("dag.scope");
-
-	out
-		<< Bytestream::Operator << "---------------------------\n"
-		<< Bytestream::Definition << "Scopes (parent -> current):\n"
-		<< Bytestream::Operator << "---------------------------\n"
-		;
-
-	unsigned int indent = 0;
-	for (auto s : scopes_)
-	{
-		s->PrettyPrint(out, indent);
-		indent++;
-	}
-
-	out
-		<< Bytestream::Operator << "---------------------------\n"
-		<< Bytestream::Reset
-		;
-}
-
-
 void EvalContext::Define(ScopedValueName& name, ValuePtr v, SourceRange src)
 {
 	SemaCheck(&name.stack_ == this, src, "mismatched name stack");

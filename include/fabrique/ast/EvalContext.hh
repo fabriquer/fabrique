@@ -201,8 +201,6 @@ public:
 protected:
 	std::shared_ptr<ScopedValues> PopScope();
 
-	void DumpScope();
-
 	void PushValueName(const std::string&);
 	std::string PopValueName();
 
