@@ -55,6 +55,43 @@ using std::string;
 using std::unique_ptr;
 
 
+//! Internal ANTLR state
+struct ParserState
+{
+	ParserState(antlr4::ANTLRInputStream i, string name)
+		: input(i), lexer(&input), tokens(&lexer), parser(&tokens),
+		  errorListener(name), ast(name)
+	{
+		auto &errorProxy = parser.getErrorListenerDispatch();
+		errorProxy.removeErrorListeners();
+		errorProxy.addErrorListener(&errorListener);
+	}
+
+	ParserState(string s, string name)
+		: ParserState(antlr4::ANTLRInputStream(s), name)
+	{
+	}
+
+	ParserState(std::istream& i, string name)
+		: ParserState(antlr4::ANTLRInputStream(i), name)
+	{
+	}
+
+	std::vector<ErrorReport> errors() const
+	{
+		return errorListener.errors();
+	}
+
+	antlr4::ANTLRInputStream input;
+	FabLexer lexer;
+	antlr4::CommonTokenStream tokens;
+	FabParser parser;
+
+	ErrorListener errorListener;
+	ASTBuilder ast;
+};
+
+
 Parser::ValueResult Parser::Parse(std::string s, SourceRange src)
 {
 	Bytestream& dbg = Bytestream::Debug("parser");
@@ -67,26 +104,13 @@ Parser::ValueResult Parser::Parse(std::string s, SourceRange src)
 		<< Bytestream::Reset << "\n"
 		;
 
-	antlr4::ANTLRInputStream f(s);
-	FabLexer lexer(&f);
-
-	antlr4::CommonTokenStream tokens(&lexer);
-	FabParser antlrParser(&tokens);
-
-	const string name = src.filename();
-
-	ErrorListener errorListener(name);
-	auto &errorProxy = antlrParser.getErrorListenerDispatch();
-	errorProxy.removeErrorListeners();
-	errorProxy.addErrorListener(&errorListener);
-
-	ASTBuilder visitor(name);
-	if (not visitor.visitValue(antlrParser.value()))
+	ParserState state(s, src.filename());
+	if (not state.ast.visitValue(state.parser.value()))
 	{
-		return ValueResult::Err(errorListener.errors());
+		return ValueResult::Err(state.errors());
 	}
 
-	auto values = visitor.takeValues();
+	auto values = state.ast.takeValues();
 	SemaCheck(not values.empty(), src, "no value in '" + s + "'");
 	SemaCheck(values.size() == 1, src, "multiple values in '" + s + "'");
 
@@ -105,22 +129,11 @@ Parser::FileResult Parser::ParseFile(std::istream& input, string name)
 		<< Bytestream::Reset << "\n"
 		;
 
-	antlr4::ANTLRInputStream f(input);
-	FabLexer lexer(&f);
-
-	antlr4::CommonTokenStream tokens(&lexer);
-	FabParser antlrParser(&tokens);
-
-	ErrorListener errorListener(name);
-	auto &errorProxy = antlrParser.getErrorListenerDispatch();
-	errorProxy.removeErrorListeners();
-	errorProxy.addErrorListener(&errorListener);
-
-	ASTBuilder visitor(name);
-	if (not visitor.visitFile(antlrParser.file()))
+	ParserState state(input, name);
+	if (not state.ast.visitFile(state.parser.file()))
 	{
-		return FileResult::Err(errorListener.errors());
+		return FileResult::Err(state.errors());
 	}
 
-	return FileResult::Ok(visitor.takeValues());
+	return FileResult::Ok(state.ast.takeValues());
 }
