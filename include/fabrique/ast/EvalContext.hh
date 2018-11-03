@@ -195,13 +195,6 @@ public:
 	//! Look up a named value from the current scope or a parent scope.
 	dag::ValuePtr Lookup(const std::string& name, SourceRange = SourceRange::None());
 
-
-	//! Define a @ref dag::Function.
-	dag::ValuePtr Function(dag::Function::Evaluator,
-	                       const SharedPtrVec<dag::Parameter>&, const Type& resultTy,
-	                       SourceRange = SourceRange::None());
-
-
 	//! Create a new alias for an existing @ref dag::Target.
 	void Alias(const std::shared_ptr<dag::Target>&);
 

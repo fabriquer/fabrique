@@ -363,11 +363,3 @@ string EvalContext::PopValueName()
 	currentValueName_.pop_back();
 	return name;
 }
-
-
-ValuePtr EvalContext::Function(const dag::Function::Evaluator fn,
-                               const SharedPtrVec<dag::Parameter>& params,
-                               const Type& resultType, SourceRange source)
-{
-	return builder_.Function(fn, resultType, params, source);
-}
