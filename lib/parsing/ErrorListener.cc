@@ -46,6 +46,11 @@ ErrorListener::ErrorListener(string filename)
 {
 }
 
+std::vector<ErrorReport> ErrorListener::errors() const
+{
+	return errors_;
+}
+
 void ErrorListener::syntaxError(antlr4::Recognizer *r, Token *t, size_t line, size_t col,
                                 const string &msg, std::exception_ptr e)
 {
@@ -76,5 +81,5 @@ void ErrorListener::syntaxError(antlr4::Recognizer *r, Token *t, size_t line, si
 	}
 
 	SourceRange src = SourceRange::Span(filename_, line, col + 1, col + 2);
-	throw SyntaxError(message, src, detail);
+	errors_.emplace_back(message, src, ErrorReport::Severity::Error, detail);
 }

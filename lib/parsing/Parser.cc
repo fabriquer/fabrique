@@ -83,7 +83,7 @@ Parser::ValueResult Parser::Parse(std::string s, SourceRange src)
 	ASTBuilder visitor(name);
 	if (not visitor.visitValue(antlrParser.value()))
 	{
-		return ValueResult::Err({});
+		return ValueResult::Err(errorListener.errors());
 	}
 
 	auto values = visitor.takeValues();
@@ -119,7 +119,7 @@ Parser::FileResult Parser::ParseFile(std::istream& input, string name)
 	ASTBuilder visitor(name);
 	if (not visitor.visitFile(antlrParser.file()))
 	{
-		return FileResult::Err({});
+		return FileResult::Err(errorListener.errors());
 	}
 
 	return FileResult::Ok(visitor.takeValues());

@@ -38,6 +38,8 @@
 
 #include <antlr-cxx-runtime/BaseErrorListener.h>
 
+#include "Support/ErrorReport.h"
+
 namespace fabrique {
 namespace parsing {
 
@@ -52,6 +54,8 @@ public:
 	 */
 	ErrorListener(std::string filename);
 
+	std::vector<ErrorReport> errors() const;
+
 	//
 	// ANTLRErrorListener implementation:
 	//
@@ -61,6 +65,8 @@ public:
 
 private:
 	const std::string filename_;
+
+	std::vector<ErrorReport> errors_;
 };
 
 } // namespace parsing
