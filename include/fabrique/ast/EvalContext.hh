@@ -55,7 +55,6 @@ class Build;
 class File;
 class Parameter;
 class Rule;
-class Target;
 }
 
 namespace ast {
@@ -194,9 +193,6 @@ public:
 
 	//! Look up a named value from the current scope or a parent scope.
 	dag::ValuePtr Lookup(const std::string& name, SourceRange = SourceRange::None());
-
-	//! Create a new alias for an existing @ref dag::Target.
-	void Alias(const std::shared_ptr<dag::Target>&);
 
 private:
 	std::shared_ptr<ScopedValues> PopScope();
