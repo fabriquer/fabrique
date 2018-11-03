@@ -66,8 +66,6 @@ public:
 		T result;
 		std::vector<ErrorReport> errors;
 
-		operator bool () const { return result; }
-
 		static Result Ok(T value) { return { std::move(value), {} }; }
 		static Result Err(std::vector<ErrorReport> errs) { return { {}, errs }; }
 	};
