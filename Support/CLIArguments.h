@@ -73,6 +73,7 @@ public:
 	const std::vector<std::string> outputFormats;
 	const bool parseOnly;
 	const bool printAST;
+	const bool dumpAST;
 	const bool printDAG;
 	const bool printOutput;
 
