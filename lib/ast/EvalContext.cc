@@ -246,6 +246,26 @@ std::shared_ptr<EvalContext::ScopedValues> EvalContext::PopScope()
 	return s;
 }
 
+dag::ValuePtr EvalContext::DefineBuiltin(string name, dag::ValuePtr value)
+{
+	SemaCheck(ast::Identifier::reservedName(name), value->source(),
+	          "invalid builtin name: '" + name + "'");
+	SemaCheck(value, value->source(), "defining null value");
+
+	CurrentScope()->Define(name, value, value->source(), true);
+	builder_.Define(fullyQualifiedName(), value);
+
+	Bytestream::Debug("ast.eval.define")
+		<< Bytestream::Action << "Defined "
+		<< Bytestream::Literal << "'" << name << "'"
+		<< Bytestream::Operator << " as "
+		<< *value
+		<< "\n"
+		;
+
+	return value;
+}
+
 dag::ValuePtr EvalContext::Define(const ast::Value &v)
 {
 	Bytestream &dbg = Bytestream::Debug("ast.eval.define");
@@ -278,8 +298,7 @@ dag::ValuePtr EvalContext::Define(const ast::Value &v)
 
 	if (name != "")
 	{
-		CurrentScope()->Define(name, value);
-		builder_.Define(fullyQualifiedName(), value);
+		Define(name, value);
 
 		FAB_ASSERT(not currentValueName_.empty(), "empty value name stack");
 		FAB_ASSERT(currentValueName_.back() == name,
@@ -290,6 +309,25 @@ dag::ValuePtr EvalContext::Define(const ast::Value &v)
 	}
 
 	dbg
+		<< Bytestream::Action << "Defined "
+		<< Bytestream::Literal << "'" << name << "'"
+		<< Bytestream::Operator << " as "
+		<< *value
+		<< "\n"
+		;
+
+	return value;
+}
+
+dag::ValuePtr EvalContext::Define(string name, dag::ValuePtr value)
+{
+	SemaCheck(not name.empty(), value->source(), "defining unnamed value");
+	SemaCheck(value, value->source(), "defining null value");
+
+	CurrentScope()->Define(name, value);
+	builder_.Define(fullyQualifiedName(), value);
+
+	Bytestream::Debug("ast.eval.define")
 		<< Bytestream::Action << "Defined "
 		<< Bytestream::Literal << "'" << name << "'"
 		<< Bytestream::Operator << " as "

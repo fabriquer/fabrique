@@ -161,13 +161,19 @@ public:
 	virtual std::string currentValueName() const override;
 	virtual TypeContext& types() const override { return ctx_; }
 
-	//! Define a named value in the current scope
+	//! Define a builtin value in the current scope
+	dag::ValuePtr DefineBuiltin(std::string, dag::ValuePtr);
+
+	//! Define an ast::Value in the current scope
 	dag::ValuePtr Define(const Value&);
 
 	//! Look up a named value from the current scope or a parent scope.
 	dag::ValuePtr Lookup(const std::string& name, SourceRange = SourceRange::None());
 
 private:
+	//! Define a named value in the current scope
+	dag::ValuePtr Define(std::string, dag::ValuePtr);
+
 	std::shared_ptr<ScopedValues> PopScope();
 
 	void PushValueName(const std::string&);
