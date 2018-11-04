@@ -66,7 +66,7 @@ using fabrique::backend::Backend;
 
 static Bytestream& err();
 static void reportError(string message, SourceRange, ErrorReport::Severity, string detail);
-static UniqPtrVec<ast::Value> Parse(const string& filename, bool printAST);
+static UniqPtrVec<ast::Value> Parse(const string& filename, bool printAST, bool dumpAST);
 
 static dag::ValueMap builtins(TypeContext &types, string srcroot, string buildroot);
 
@@ -143,7 +143,9 @@ int main(int argc, char *argv[]) {
 		//
 		// Parse the file, optionally pretty-printing it.
 		//
-		UniqPtrVec<ast::Value> values = Parse(fabfile, args->printAST);
+		UniqPtrVec<ast::Value> values =
+			Parse(fabfile, args->printAST, args->dumpAST);
+
 		if (args->parseOnly)
 		{
 			return 0;
@@ -161,7 +163,7 @@ int main(int argc, char *argv[]) {
 		vector<string> targets;
 		for (const auto& v : values)
 		{
-			dagValues.emplace_back(v->evaluate(ctx));
+			ctx.Define(*v);
 			if (auto &name = v->name())
 			{
 				targets.push_back(name->name());
@@ -247,7 +249,7 @@ int main(int argc, char *argv[]) {
 }
 
 
-UniqPtrVec<ast::Value> Parse(const string& filename, bool printAST)
+UniqPtrVec<ast::Value> Parse(const string& filename, bool printAST, bool dumpAST)
 {
 	// Open and parse the top-level build description.
 	std::ifstream infile(filename.c_str());
@@ -287,6 +289,15 @@ UniqPtrVec<ast::Value> Parse(const string& filename, bool printAST)
 
 		for (auto& val : values)
 			Bytestream::Stdout() << *val << "\n";
+	}
+
+	if (dumpAST)
+	{
+		ast::ASTDump dumper(Bytestream::Stdout());
+		for (auto &val : values)
+		{
+			val->Accept(dumper);
+		}
 	}
 
 	return values;

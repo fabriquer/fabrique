@@ -57,6 +57,7 @@ enum optionNames
 	OutputDirectory,
 	ParseOnly,
 	PrettyPrintAST,
+	DumpAST,
 	PrettyPrintDAG,
 	PrintOutput,
 	DebugPattern,
@@ -143,6 +144,10 @@ const option::Descriptor usage[] =
 		"  --print-ast      Pretty-print the AST"
 	},
 	{
+		DumpAST, Enable, "", "dump-ast", option::Arg::None,
+		"  --dump-ast       Dump the AST (not pretty but unambiguous)"
+	},
+	{
 		PrettyPrintDAG, Enable, "", "print-dag", option::Arg::None,
 		"  --print-dag      Pretty-print the AST"
 	},
@@ -223,6 +228,7 @@ CLIArguments* CLIArguments::Parse(int argc, char *argv[])
 		formats,
 		options[ParseOnly],
 		options[PrettyPrintAST],
+		options[DumpAST],
 		options[PrettyPrintDAG],
 		options[PrintOutput],
 		debugPattern
@@ -247,6 +253,9 @@ std::vector<string> CLIArguments::ArgVector(const CLIArguments& args)
 
 	if (args.printAST)
 		argv.push_back("--print-ast");
+
+	if (args.dumpAST)
+		argv.push_back("--dump-ast");
 
 	if (args.printDAG)
 		argv.push_back("--print-dag");
@@ -285,6 +294,7 @@ void CLIArguments::Print(const CLIArguments& args, Bytestream& out)
 		<< ARG(definitions)
 		<< ARG(parseOnly)
 		<< ARG(printAST)
+		<< ARG(dumpAST)
 		<< ARG(printDAG)
 		<< ARG(printOutput)
 		<< ARG(debugPattern)

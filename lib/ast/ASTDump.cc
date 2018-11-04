@@ -1,11 +1,12 @@
 /** @file AST/ASTDump.cc    Definition of @ref fabrique::ast::ASTDump. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -38,10 +39,11 @@ using namespace fabrique::ast;
 using std::string;
 
 
-ASTDump* ASTDump::Create(fabrique::Bytestream& out)
+ASTDump::ASTDump(Bytestream &o)
+	: out_(o), indent_(1)
 {
-	return new ASTDump(out);
 }
+
 
 #define DUMP_NODE(type)                                                      \
 bool ASTDump::Enter(const type& n)                                           \
@@ -71,12 +73,13 @@ DUMP_NODE(Value)
 void ASTDump::Write(const string& s, const void *ptr)
 {
 	const unsigned int indentLen = 2 * this->indent_;
-	std::vector<char> indentChars(indentLen, ' ');
-	string indent(indentChars.data(), indentLen);
+	string indent(indentLen, ' ');
 
 	out_
-		<< static_cast<unsigned long>(indent_) << s
-		<< " @ " << reinterpret_cast<unsigned long>(ptr)
+		<< Bytestream::Line << static_cast<unsigned long>(indent_) << indent
+		<< Bytestream::Type << s
+		<< Bytestream::Operator << " @ "
+		<< Bytestream::Literal << reinterpret_cast<unsigned long>(ptr)
 		<< "\n"
 		;
 }
