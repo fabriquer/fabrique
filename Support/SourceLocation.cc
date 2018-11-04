@@ -284,7 +284,7 @@ Bytestream& SourceRange::PrintSource(Bytestream& out, SourceLocation caret,
 
 			if (i >= firstLine)
 			{
-				if (begin.line != end.line)
+				if (i >= begin.line and begin.line != end.line)
 				{
 					endColumn = std::max(endColumn, line.length());
 				}
