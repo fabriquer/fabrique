@@ -36,6 +36,7 @@
 #include <fabrique/ast/Value.hh>
 
 #include <fabrique/dag/DAGBuilder.hh>
+#include <fabrique/dag/TypeReference.hh>
 
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
@@ -226,31 +227,6 @@ EvalContext::EnterScope(const string& name, shared_ptr<ScopedValues> parent)
 	return Scope(s, *this);
 }
 
-
-EvalContext::ScopedValueName::ScopedValueName(EvalContext& stack, string name)
-	: stack_(stack), name_(name)
-{
-	stack_.PushValueName(name_);
-}
-
-EvalContext::ScopedValueName::ScopedValueName(ScopedValueName&& other)
-	: stack_(other.stack_), name_(std::move(other.name_))
-{
-}
-
-EvalContext::ScopedValueName::~ScopedValueName()
-{
-	string poppedName = stack_.PopValueName();
-	assert(poppedName == name_);
-}
-
-
-EvalContext::ScopedValueName EvalContext::evaluating(const string& name)
-{
-	return ScopedValueName(*this, name);
-}
-
-
 std::shared_ptr<EvalContext::ScopedValues> EvalContext::PopScope()
 {
 	FAB_ASSERT(not scopes_.empty(), "popping from empty stack");
@@ -263,12 +239,58 @@ std::shared_ptr<EvalContext::ScopedValues> EvalContext::PopScope()
 	return s;
 }
 
-void EvalContext::Define(ScopedValueName& name, ValuePtr v, SourceRange src)
+dag::ValuePtr EvalContext::Define(const ast::Value &v)
 {
-	SemaCheck(&name.stack_ == this, src, "mismatched name stack");
+	Bytestream &dbg = Bytestream::Debug("ast.eval.define");
+	dbg
+		<< Bytestream::Action << "Defining "
+		<< Bytestream::Type << "Value "
+		<< Bytestream::Reset << v
+		<< "\n"
+		;
 
-	CurrentScope()->Define(name.name_, v, src);
-	builder_.Define(fullyQualifiedName(), v);
+	v.source().PrintSource(dbg);
+	dbg << "\n";
+
+	const string name = v.name() ? v.name()->name() : "";
+	const bool named = not name.empty();
+
+	if (named)
+	{
+		currentValueName_.push_back(name);
+	}
+
+	dag::ValuePtr value = v.value().evaluate(*this);
+	SemaCheck(value, v.source(), "evaluation returned null");
+
+	if (auto &t = v.explicitType())
+	{
+		auto typeRef = t->evaluateAs<dag::TypeReference>(*this);
+		value->type().CheckSubtype(typeRef->referencedType(), v.source());
+	}
+
+	if (name != "")
+	{
+		CurrentScope()->Define(name, value);
+		builder_.Define(fullyQualifiedName(), value);
+
+		FAB_ASSERT(not currentValueName_.empty(), "empty value name stack");
+		FAB_ASSERT(currentValueName_.back() == name,
+			"value name stack mismatch: expected '" + name
+			+ "', got '" + currentValueName_.back() + "'");
+
+		currentValueName_.pop_back();
+	}
+
+	dbg
+		<< Bytestream::Action << "Defined "
+		<< Bytestream::Literal << "'" << name << "'"
+		<< Bytestream::Operator << " as "
+		<< *value
+		<< "\n"
+		;
+
+	return value;
 }
 
 

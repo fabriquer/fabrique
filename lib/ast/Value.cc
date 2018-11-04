@@ -97,37 +97,5 @@ void Value::Accept(Visitor& v) const
 
 dag::ValuePtr Value::evaluate(EvalContext& ctx) const
 {
-	Bytestream& dbg = Bytestream::Debug("eval.value");
-	dbg
-		<< Bytestream::Action << "Evaluating "
-		<< *this
-		<< Bytestream::Operator << "..."
-		<< "\n"
-		;
-
-	const string name = name_ ? name_->name() : "";
-	auto valueName(ctx.evaluating(name));
-
-	dag::ValuePtr val(value_->evaluate(ctx));
-	SemaCheck(val, value_->source(), "evaluation returned null");
-
-	dbg
-		<< name
-		<< Bytestream::Operator << " == "
-		<< *val
-		<< "\n"
-		;
-
-	if (explicitType_)
-	{
-		auto typeRef = explicitType_->evaluateAs<dag::TypeReference>(ctx);
-		val->type().CheckSubtype(typeRef->referencedType(), val->source());
-	}
-
-	if (name != "")
-	{
-		ctx.Define(valueName, val, source());
-	}
-
-	return val;
+	return ctx.Define(*this);
 }

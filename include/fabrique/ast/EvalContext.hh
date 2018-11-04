@@ -155,41 +155,13 @@ public:
 	Scope EnterScope(const std::string& name,
 	                 std::shared_ptr<ScopedValues> parentScope = nullptr);
 
-
-	/**
-	 * An object for declaring the name of the value whose initializer
-	 * we are currently evaluating. Will push and pop names appropriately
-	 * when initialized and destructed.
-	 */
-	class ScopedValueName
-	{
-		public:
-		ScopedValueName(const ScopedValueName&) = delete;
-		ScopedValueName(ScopedValueName&&);
-		~ScopedValueName();
-
-		void done();
-
-		private:
-		ScopedValueName(EvalContext& stack, std::string name);
-
-		EvalContext& stack_;
-		std::string name_;
-
-		friend class EvalContext;
-	};
-
-	ScopedValueName evaluating(const std::string& name);
-
-
 	dag::DAGBuilder& builder() { return builder_; }
 
 	virtual std::string currentValueName() const override;
 	virtual TypeContext& types() const override { return ctx_; }
 
-
-	//! Define a named @ref dag::Value in the current scope.
-	void Define(ScopedValueName& name, dag::ValuePtr value, SourceRange);
+	//! Define a named value in the current scope
+	dag::ValuePtr Define(const Value&);
 
 	//! Look up a named value from the current scope or a parent scope.
 	dag::ValuePtr Lookup(const std::string& name, SourceRange = SourceRange::None());

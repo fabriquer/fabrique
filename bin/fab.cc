@@ -163,7 +163,7 @@ int main(int argc, char *argv[]) {
 		vector<string> targets;
 		for (const auto& v : values)
 		{
-			dagValues.emplace_back(v->evaluate(ctx));
+			ctx.Define(*v);
 			if (auto &name = v->name())
 			{
 				targets.push_back(name->name());
