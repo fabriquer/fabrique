@@ -108,7 +108,8 @@ public:
 
 	//! Define a @ref dag::Function.
 	ValuePtr Function(const Function::Evaluator, const Type &resultType,
-	                  SharedPtrVec<Parameter>, SourceRange = SourceRange::None());
+	                  SharedPtrVec<Parameter>, SourceRange = SourceRange::None(),
+	                  bool allowAdditionalArguments = false);
 
 	//! Create a @ref dag::Integer.
 	ValuePtr Integer(int, SourceRange);

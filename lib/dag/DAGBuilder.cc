@@ -348,9 +348,10 @@ ValuePtr DAGBuilder::File(string subdir, string name, ValueMap attributes,
 
 
 ValuePtr DAGBuilder::Function(const Function::Evaluator fn, const Type& resultType,
-                              SharedPtrVec<Parameter> params, SourceRange source)
+                              SharedPtrVec<Parameter> params, SourceRange source,
+                              bool allowExtraArgs)
 {
-	return ValuePtr(Function::Create(fn, resultType, params, source));
+	return ValuePtr(Function::Create(fn, resultType, params, source, allowExtraArgs));
 }
 
 
