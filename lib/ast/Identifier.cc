@@ -58,13 +58,18 @@ Identifier::Identifier(std::string name, SourceRange src)
 }
 
 
-bool Identifier::reservedName() const
+bool Identifier::reservedName(const std::string &name)
 {
 	for (const char *reserved : ReservedNames)
-		if (name_ == reserved)
+		if (name == reserved)
 			return true;
 
 	return false;
+}
+
+bool Identifier::reservedName() const
+{
+	return reservedName(name_);
 }
 
 

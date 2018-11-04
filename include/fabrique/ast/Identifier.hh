@@ -54,6 +54,7 @@ public:
 	const std::string& name() const { return name_; }
 
 	bool reservedName() const;
+	static bool reservedName(const std::string&);
 
 	bool operator == (const Identifier&) const;
 	bool operator < (const Identifier&) const;
