@@ -99,7 +99,8 @@ public:
 
 		//! Define a name within a scope
 		ScopedValues& Define(const std::string &name, dag::ValuePtr,
-		                     SourceRange = SourceRange::None());
+		                     SourceRange = SourceRange::None(),
+		                     bool allowReservedName = false);
 
 		//! Look up a given name in this scope or its parents
 		dag::ValuePtr Lookup(const std::string &name) const;
