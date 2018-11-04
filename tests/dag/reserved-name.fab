@@ -1,0 +1,7 @@
+#
+# RUN: %fab --print-dag --format=null %s 2> %t || true
+# RUN: %check %s -input-file %t
+#
+
+# CHECK: 7:{{.*}}: error: {{.*}} reserved name
+file = 'try to redefine file';

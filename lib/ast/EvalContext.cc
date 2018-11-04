@@ -101,6 +101,7 @@ EvalContext::ScopedValues::Define(const string &name, ValuePtr v, SourceRange sr
 	}
 
 	SemaCheck(not name.empty(), src, "defining an unnamed value");
+	SemaCheck(not Identifier::reservedName(name), src, "cannot define reserved name");
 	SemaCheck(v, src, "defining a null value");
 	SemaCheck(values_.find(name) == values_.end(), src, "redefining " + name);
 
