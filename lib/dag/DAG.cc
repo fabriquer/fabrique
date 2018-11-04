@@ -53,7 +53,7 @@ void DAG::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 	out
 		<< Bytestream::Comment
 		<< "#\n"
-		<< "# Pretty-printed DAG:"
+		<< "# Pretty-printed DAG:\n"
 		<< "#\n"
 		<< Bytestream::Reset
 		;
