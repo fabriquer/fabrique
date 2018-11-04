@@ -209,7 +209,7 @@ shared_ptr<EvalContext::ScopedValues> EvalContext::CurrentScope()
 EvalContext::Scope
 EvalContext::EnterScope(const string& name, shared_ptr<ScopedValues> parent)
 {
-	Bytestream::Debug("eval.scope")
+	Bytestream::Debug("ast.eval.scope")
 		<< string(scopes_.size(), ' ')
 		<< Bytestream::Operator << " >> "
 		<< Bytestream::Type << "scope"
@@ -296,7 +296,7 @@ dag::ValuePtr EvalContext::Define(const ast::Value &v)
 
 ValuePtr EvalContext::Lookup(const string& name, SourceRange src)
 {
-	Bytestream& dbg = Bytestream::Debug("dag.lookup");
+	Bytestream& dbg = Bytestream::Debug("ast.lookup");
 	dbg
 		<< Bytestream::Action << "lookup "
 		<< Bytestream::Literal << "'" << name << "'"
