@@ -47,7 +47,10 @@ namespace ast {
 class ASTDump : public Visitor
 {
 public:
-	static ASTDump* Create(Bytestream&);
+	ASTDump(Bytestream& o)
+		: out_(o), indent_(0)
+	{
+	}
 
 	VISIT(Action)
 	VISIT(Argument)
@@ -68,11 +71,6 @@ public:
 	VISIT(Value)
 
 private:
-	ASTDump(Bytestream& o)
-		: out_(o), indent_(0)
-	{
-	}
-
 	void Write(const std::string& message, const void *ptr);
 
 	Bytestream& out_;

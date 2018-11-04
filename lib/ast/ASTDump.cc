@@ -38,11 +38,6 @@ using namespace fabrique::ast;
 using std::string;
 
 
-ASTDump* ASTDump::Create(fabrique::Bytestream& out)
-{
-	return new ASTDump(out);
-}
-
 #define DUMP_NODE(type)                                                      \
 bool ASTDump::Enter(const type& n)                                           \
 {                                                                            \
