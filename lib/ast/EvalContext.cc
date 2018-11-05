@@ -247,9 +247,9 @@ std::shared_ptr<EvalContext::ScopedValues> EvalContext::PopScope()
 
 dag::ValuePtr EvalContext::DefineBuiltin(string name, dag::ValuePtr value)
 {
+	SemaCheck(value, SourceRange::None(), "defining '" + name + "' as null");
 	SemaCheck(builtins::reservedName(name), value->source(),
 	          "invalid builtin name: '" + name + "'");
-	SemaCheck(value, value->source(), "defining null value");
 
 	CurrentScope()->Define(name, value, value->source(), true);
 	builder_.Define(fullyQualifiedName(), value);
