@@ -54,10 +54,30 @@ Parser::Parser(bool prettyPrint, bool dump)
 
 Parser::ValueResult Parser::Parse(std::string s, SourceRange src)
 {
+	Bytestream& dbg = Bytestream::Debug("parser");
+	dbg
+		<< Bytestream::Action << "Parsing"
+		<< Bytestream::Type << " string"
+		<< Bytestream::Operator << " '"
+		<< Bytestream::Literal << s
+		<< Bytestream::Operator << "'"
+		<< Bytestream::Reset << "\n"
+		;
+
 	return ValueResult::Err({});
 }
 
 Parser::FileResult Parser::ParseFile(std::istream& input, string name)
 {
+	Bytestream& dbg = Bytestream::Debug("parser.file");
+	dbg
+		<< Bytestream::Action << "Parsing"
+		<< Bytestream::Type << " file"
+		<< Bytestream::Operator << " '"
+		<< Bytestream::Literal << name
+		<< Bytestream::Operator << "'"
+		<< Bytestream::Reset << "\n"
+		;
+
 	return FileResult::Err({});
 }
