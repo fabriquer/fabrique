@@ -78,7 +78,7 @@ fabrique::dag::ValuePtr fabrique::builtins::OpenFile(fabrique::dag::DAGBuilder &
 }
 
 
-static SharedPtrVec<dag::Value>
+static ValueMap
 ImportFile(string filename, SourceRange src, parsing::Parser &p, ast::EvalContext &eval,
            Bytestream &dbg)
 {
@@ -102,10 +102,14 @@ ImportFile(string filename, SourceRange src, parsing::Parser &p, ast::EvalContex
 
 	SemaCheck(parse.errors.empty(), src, "failed to import '" + filename + "'");
 
-	SharedPtrVec<dag::Value> values;
+	ValueMap values;
 	for (auto &v : parse.result)
 	{
-		values.push_back(eval.Define(*v));
+		auto val = eval.Define(*v);
+		if (auto &name = v->name())
+		{
+			values[name->name()] = val;
+		}
 	}
 
 	return values;
@@ -153,21 +157,21 @@ fabrique::builtins::Import(parsing::Parser &p, string srcroot, ast::EvalContext 
 			: JoinPath({ srcroot, currentSubdir->str(), name })
 			;
 
+		ValueMap values;
 		if (PathIsFile(filename))
 		{
-			auto values = ImportFile(filename, src, p, eval, dbg);
+			values = ImportFile(filename, src, p, eval, dbg);
 		}
-
-		if (PathIsDirectory(filename))
+		else if (PathIsDirectory(filename))
 		{
 			const string fabfile = JoinPath(filename, "fabfile");
 			if (PathIsFile(fabfile))
 			{
-				auto values = ImportFile(fabfile, src, p, eval, dbg);
+				values = ImportFile(fabfile, src, p, eval, dbg);
 			}
 		}
 
-		return nullptr;
+		return b.Record(values, src);
 	};
 
 	return b.Function(import, types.nilType(), params,
