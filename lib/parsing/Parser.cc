@@ -58,23 +58,53 @@ using std::unique_ptr;
 //! Internal ANTLR state
 struct ParserState
 {
-	ParserState(antlr4::ANTLRInputStream i, string name)
-		: input(i), lexer(&input), tokens(&lexer), parser(&tokens),
-		  errorListener(name), ast(name)
+	ParserState(antlr4::ANTLRInputStream i, string name, bool prettyPrint, bool dump)
+		: input(i), name_(name), lexer(&input), tokens(&lexer), parser(&tokens),
+		  errorListener(name), ast(name), prettyPrint_(prettyPrint), dump_(dump)
 	{
 		auto &errorProxy = parser.getErrorListenerDispatch();
 		errorProxy.removeErrorListeners();
 		errorProxy.addErrorListener(&errorListener);
 	}
 
-	ParserState(string s, string name)
-		: ParserState(antlr4::ANTLRInputStream(s), name)
+	ParserState(string s, string name, bool prettyPrint, bool dump)
+		: ParserState(antlr4::ANTLRInputStream(s), name, prettyPrint, dump)
 	{
 	}
 
-	ParserState(std::istream& i, string name)
-		: ParserState(antlr4::ANTLRInputStream(i), name)
+	ParserState(std::istream& i, string name, bool prettyPrint, bool dump)
+		: ParserState(antlr4::ANTLRInputStream(i), name, prettyPrint, dump)
 	{
+	}
+
+	UniqPtrVec<ast::Value> takeValues()
+	{
+		auto values = ast.takeValues();
+
+		if (prettyPrint_)
+		{
+			Bytestream::Stdout()
+				<< Bytestream::Comment
+				<< "#\n"
+				<< "# AST pretty-printed from '" << name_ << "'\n"
+				<< "#\n"
+				<< Bytestream::Reset
+				;
+
+			for (auto& val : values)
+				Bytestream::Stdout() << *val << "\n";
+		}
+
+		if (dump_)
+		{
+			ast::ASTDump dumper(Bytestream::Stdout());
+			for (auto &val : values)
+			{
+				val->Accept(dumper);
+			}
+		}
+
+		return values;
 	}
 
 	std::vector<ErrorReport> errors() const
@@ -83,12 +113,15 @@ struct ParserState
 	}
 
 	antlr4::ANTLRInputStream input;
+	string name_;
 	FabLexer lexer;
 	antlr4::CommonTokenStream tokens;
 	FabParser parser;
 
 	ErrorListener errorListener;
 	ASTBuilder ast;
+	const bool prettyPrint_;
+	const bool dump_;
 };
 
 
@@ -110,7 +143,7 @@ Parser::ValueResult Parser::Parse(std::string s, SourceRange src)
 		<< Bytestream::Reset << "\n"
 		;
 
-	ParserState state(s, src.filename());
+	ParserState state(s, src.filename(), prettyPrint_, dump_);
 	if (not state.ast.visitValue(state.parser.value()))
 	{
 		return ValueResult::Err(state.errors());
@@ -135,11 +168,36 @@ Parser::FileResult Parser::ParseFile(std::istream& input, string name)
 		<< Bytestream::Reset << "\n"
 		;
 
-	ParserState state(input, name);
+	ParserState state(input, name, prettyPrint_, dump_);
 	if (not state.ast.visitFile(state.parser.file()))
 	{
 		return FileResult::Err(state.errors());
 	}
 
-	return FileResult::Ok(state.ast.takeValues());
+	auto values = state.ast.takeValues();
+
+	if (prettyPrint_)
+	{
+		Bytestream::Stdout()
+			<< Bytestream::Comment
+			<< "#\n"
+			<< "# AST pretty-printed from '" << name << "'\n"
+			<< "#\n"
+			<< Bytestream::Reset
+			;
+
+		for (auto& val : values)
+			Bytestream::Stdout() << *val << "\n";
+	}
+
+	if (dump_)
+	{
+		ast::ASTDump dumper(Bytestream::Stdout());
+		for (auto &val : values)
+		{
+			val->Accept(dumper);
+		}
+	}
+
+	return FileResult::Ok(std::move(values));
 }
