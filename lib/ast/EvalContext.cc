@@ -30,7 +30,7 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/ast/Builtins.hh>
+#include <fabrique/names.hh>
 #include <fabrique/ast/EvalContext.hh>
 #include <fabrique/ast/Parameter.hh>
 #include <fabrique/ast/Value.hh>
@@ -107,8 +107,7 @@ EvalContext::ScopedValues::Define(const string &name, ValuePtr v, SourceRange sr
 
 	if (not allowReservedName)
 	{
-		SemaCheck(not Identifier::reservedName(name), src,
-		          "defining reserved name");
+		SemaCheck(not builtins::reservedName(name), src, "defining reserved name");
 	}
 
 	values_.emplace(name, v);
@@ -248,7 +247,7 @@ std::shared_ptr<EvalContext::ScopedValues> EvalContext::PopScope()
 
 dag::ValuePtr EvalContext::DefineBuiltin(string name, dag::ValuePtr value)
 {
-	SemaCheck(ast::Identifier::reservedName(name), value->source(),
+	SemaCheck(builtins::reservedName(name), value->source(),
 	          "invalid builtin name: '" + name + "'");
 	SemaCheck(value, value->source(), "defining null value");
 
@@ -367,10 +366,10 @@ ValuePtr EvalContext::Lookup(const string& name, SourceRange src)
 
 	// If we are looking for 'builddir' or 'subdir' and haven't found it
 	// defined anywhere, provide the top-level build/source subdirectory ('').
-	if (name == ast::builtins::BuildDirectory)
+	if (name == builtins::BuildDirectory)
 		return builder_.File("", ValueMap(), SourceRange::None(), true);
 
-	if (name == ast::builtins::Subdirectory)
+	if (name == builtins::Subdirectory)
 		return builder_.File("");
 
 	throw SemanticException("reference to undefined name", src);

@@ -29,7 +29,7 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/ast/Builtins.hh>
+#include <fabrique/names.hh>
 #include <fabrique/types/FileType.hh>
 #include <fabrique/types/SequenceType.hh>
 #include <fabrique/types/TypeContext.hh>
@@ -97,13 +97,13 @@ FileType::TypeMap FileType::fields() const
 	TypeContext& ctx = context();
 
 	TypeMap map = {
-		{ ast::builtins::Basename,      ctx.stringType() },
-		{ ast::builtins::Extension,     ctx.stringType() },
-		{ ast::builtins::FileName,      ctx.stringType() },
-		{ ast::builtins::FullName,      ctx.stringType() },
-		{ ast::builtins::Generated,     ctx.booleanType() },
-		{ ast::builtins::Name,          ctx.stringType() },
-		{ ast::builtins::Subdirectory,  ctx.fileType() },
+		{ builtins::Basename,      ctx.stringType() },
+		{ builtins::Extension,     ctx.stringType() },
+		{ builtins::FileName,      ctx.stringType() },
+		{ builtins::FullName,      ctx.stringType() },
+		{ builtins::Generated,     ctx.booleanType() },
+		{ builtins::Name,          ctx.stringType() },
+		{ builtins::Subdirectory,  ctx.fileType() },
 	};
 
 	for (auto& i : arguments_)

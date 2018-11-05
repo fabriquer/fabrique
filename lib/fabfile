@@ -10,6 +10,7 @@
 sources =
 	files(
 		Printable.cc
+		names.cc
 	)
 	+ import('ast').sources
 	+ import('backend').sources

@@ -44,7 +44,6 @@ namespace ast {}
 #include <fabrique/ast/Argument.hh>
 #include <fabrique/ast/Arguments.hh>
 #include <fabrique/ast/BinaryOperation.hh>
-#include <fabrique/ast/Builtins.hh>
 #include <fabrique/ast/Call.hh>
 #include <fabrique/ast/CompoundExpr.hh>
 #include <fabrique/ast/Conditional.hh>

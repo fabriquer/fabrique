@@ -1,11 +1,10 @@
-/** @file AST/Builtins.h    Declaration of some builtin constants. */
+//! @file  names.cc    Definitions of name-related functions
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2018 Jonathan Anderson
  * All rights reserved.
  *
- * This software was developed by SRI International and the University of
- * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * This software was developed at Memorial University of Newfoundland
+ * under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,29 +28,30 @@
  * SUCH DAMAGE.
  */
 
-#ifndef BUILTINS_H
-#define BUILTINS_H
-
-#include <string>
+#include <fabrique/names.hh>
 
 
-namespace fabrique {
-namespace ast {
-namespace builtins {
+static const char* ReservedNames[] =
+{
+	"args",
+	"bool",
+	"buildroot",
+	"file",
+	"in",
+	"int",
+	"list",
+	"out",
+	"srcroot",
+	"string",
+	"type",
+};
 
-static const char Arguments[] = "args";
-static const char Basename[] = "basename";
-static const char BuildDirectory[] = "builddir";
-static const char Extension[] = "extension";
-static const char FileName[] = "filename";
-static const char FullName[] = "fullname";
-static const char Generated[] = "generated";
-static const char Name[] = "name";
-static const char Subdirectory[] = "subdir";
-static const char Unnamed[] = "__unnamed";
 
-} // namespace builtins
-} // namespace ast
-} // namespace fabrique
+bool fabrique::builtins::reservedName(const std::string &name)
+{
+	for (const char *reserved : ReservedNames)
+		if (name == reserved)
+			return true;
 
-#endif
+	return false;
+}

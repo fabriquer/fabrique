@@ -1,11 +1,10 @@
-/** @file AST/FilenameLiteral.cc    Definition of @ref fabrique::ast::FilenameLiteral. */
+//! @file  names.hh    Names defined or reserved by the Fabrique language
 /*
  * Copyright (c) 2018 Jonathan Anderson
  * All rights reserved.
  *
- * This software was developed by SRI International and the University of
- * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * This software was developed at Memorial University of Newfoundland
+ * under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,44 +28,32 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/names.hh>
-#include <fabrique/ast/Argument.hh>
-#include <fabrique/ast/EvalContext.hh>
-#include <fabrique/ast/FilenameLiteral.hh>
-#include <fabrique/ast/Visitor.hh>
-#include <fabrique/dag/File.hh>
-#include "Support/Bytestream.h"
-#include "Support/exceptions.h"
+#ifndef FAB_RESERVED_NAMES_H_
+#define FAB_RESERVED_NAMES_H_
 
-#include <cassert>
-#include <set>
+#include <string>
 
-using namespace fabrique;
-using namespace fabrique::ast;
-using std::string;
+namespace fabrique {
+namespace builtins {
+
+static const char Arguments[] = "args";
+static const char Basename[] = "basename";
+static const char BuildDirectory[] = "builddir";
+static const char BuildRoot[] = "buildroot";
+static const char Extension[] = "extension";
+static const char Generated[] = "generated";
+static const char File[] = "file";
+static const char FileName[] = "filename";
+static const char FullName[] = "fullname";
+static const char Name[] = "name";
+static const char SourceRoot[] = "sourceroot";
+static const char Subdirectory[] = "subdir";
+
+bool reservedName(const std::string&);
 
 
-FilenameLiteral::FilenameLiteral(string name, SourceRange src)
-	: Expression(src), name_(name)
-{
-}
+} // namespace builtins
+} // namespace fabrique
 
+#endif  // FAB_RESERVED_NAMES_H_
 
-void FilenameLiteral::PrettyPrint(Bytestream &out, unsigned int /*indent*/) const
-{
-	out << Bytestream::Filename << name_ << Bytestream::Reset;
-}
-
-void FilenameLiteral::Accept(Visitor& v) const
-{
-	v.Enter(*this);
-	v.Leave(*this);
-}
-
-dag::ValuePtr FilenameLiteral::evaluate(EvalContext& ctx) const
-{
-	SemaCheck(ctx.Lookup(builtins::Subdirectory), source(), "subdir not defined");
-	string subdirectory = ctx.Lookup(builtins::Subdirectory)->str();
-
-	return ctx.builder().File(subdirectory, name_, {}, source());
-}

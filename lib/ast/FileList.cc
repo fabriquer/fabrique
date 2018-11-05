@@ -29,7 +29,7 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/ast/Builtins.hh>
+#include <fabrique/names.hh>
 #include <fabrique/ast/EvalContext.hh>
 #include <fabrique/ast/FileList.hh>
 #include <fabrique/ast/Visitor.hh>
@@ -98,7 +98,7 @@ void FileList::Accept(Visitor& v) const
 
 dag::ValuePtr FileList::evaluate(EvalContext& ctx) const
 {
-	auto subdir = ctx.Lookup(ast::builtins::Subdirectory);
+	auto subdir = ctx.Lookup(builtins::Subdirectory);
 	SemaCheck(subdir, source(), "no subdir defined");
 
 	auto scope(ctx.EnterScope("files"));
@@ -107,7 +107,7 @@ dag::ValuePtr FileList::evaluate(EvalContext& ctx) const
 	for (const UniqPtr<Argument>& arg : arguments())
 	{
 		const string name = arg->getName().name();
-		if (name == ast::builtins::Subdirectory)
+		if (name == builtins::Subdirectory)
 		{
 			const string subsubdir =
 				arg->getValue().evaluate(ctx)->str();

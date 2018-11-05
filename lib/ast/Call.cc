@@ -29,7 +29,7 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/ast/Builtins.hh>
+#include <fabrique/names.hh>
 #include <fabrique/ast/Call.hh>
 #include <fabrique/ast/EvalContext.hh>
 #include <fabrique/ast/Function.hh>
@@ -99,7 +99,7 @@ dag::ValuePtr Call::evaluate(EvalContext& ctx) const
 		const std::string &name = n->name().name();
 		if (name == "import")
 		{
-			using ast::builtins::Subdirectory;
+			using builtins::Subdirectory;
 
 			args[Subdirectory] = ctx.Lookup(Subdirectory, source());
 			argLocations.emplace(Subdirectory, source());

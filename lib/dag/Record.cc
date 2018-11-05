@@ -29,7 +29,6 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/ast/Builtins.hh>
 #include <fabrique/dag/Record.hh>
 #include <fabrique/dag/Visitor.hh>
 #include "Support/Bytestream.h"

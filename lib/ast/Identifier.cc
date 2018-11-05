@@ -29,27 +29,12 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/names.hh>
 #include <fabrique/ast/Identifier.hh>
 #include <fabrique/ast/Visitor.hh>
 #include "Support/Bytestream.h"
 
 using namespace fabrique::ast;
-
-
-static const char* ReservedNames[] =
-{
-	"args",
-	"bool",
-	"buildroot",
-	"file",
-	"in",
-	"int",
-	"list",
-	"out",
-	"srcroot",
-	"string",
-	"type",
-};
 
 
 Identifier::Identifier(std::string name, SourceRange src)
@@ -58,20 +43,10 @@ Identifier::Identifier(std::string name, SourceRange src)
 }
 
 
-bool Identifier::reservedName(const std::string &name)
-{
-	for (const char *reserved : ReservedNames)
-		if (name == reserved)
-			return true;
-
-	return false;
-}
-
 bool Identifier::reservedName() const
 {
-	return reservedName(name_);
+	return builtins::reservedName(name_);
 }
-
 
 void Identifier::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {

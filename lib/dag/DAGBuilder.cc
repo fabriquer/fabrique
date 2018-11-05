@@ -30,7 +30,6 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/ast/Builtins.hh>
 #include <fabrique/ast/Value.hh>
 
 #include <fabrique/dag/Build.hh>
