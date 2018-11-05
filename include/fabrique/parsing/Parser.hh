@@ -60,6 +60,14 @@ namespace parsing {
 class Parser
 {
 public:
+	/**
+	 * Constructor.
+	 *
+	 * @param    prettyPrint      pretty-print values or files as they are parsed
+	 * @param    dump             dump values as they are parsed
+	 */
+	Parser(bool prettyPrint, bool dump);
+
 	template<typename T>
 	struct Result
 	{
@@ -78,6 +86,10 @@ public:
 
 	//! Parse Fabrique input (usually a file) into @ref Value objects.
 	FileResult ParseFile(std::istream&, std::string name = "");
+
+private:
+	const bool prettyPrint_;
+	const bool dump_;
 };
 
 } // namespace parsing

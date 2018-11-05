@@ -29,7 +29,7 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/ast/ast.hh>
+#include <fabrique/ast/ASTDump.hh>
 #include <fabrique/parsing/Parser.hh>
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
@@ -44,6 +44,12 @@ using namespace fabrique::parsing;
 
 using std::string;
 using std::unique_ptr;
+
+
+Parser::Parser(bool prettyPrint, bool dump)
+	: prettyPrint_(prettyPrint), dump_(dump)
+{
+}
 
 
 Parser::ValueResult Parser::Parse(std::string s, SourceRange src)

@@ -67,7 +67,6 @@ using fabrique::backend::Backend;
 
 static Bytestream& err();
 static void reportError(string message, SourceRange, ErrorReport::Severity, string detail);
-static UniqPtrVec<ast::Value> Parse(const string& filename, bool printAST, bool dumpAST);
 
 
 int main(int argc, char *argv[]) {
@@ -113,7 +112,8 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
-	const string srcroot = DirectoryOf(AbsolutePath(fabfile));
+	const string abspath = PathIsAbsolute(fabfile) ? fabfile : AbsolutePath(fabfile);
+	const string srcroot = DirectoryOf(abspath);
 	const string buildroot = AbsoluteDirectory(args->output, true);
 
 	vector<string> inputFiles = { fabfile };
@@ -142,13 +142,30 @@ int main(int argc, char *argv[]) {
 		//
 		// Parse the file, optionally pretty-printing it.
 		//
-		UniqPtrVec<ast::Value> values =
-			Parse(fabfile, args->printAST, args->dumpAST);
+		std::ifstream infile(fabfile.c_str());
+		if (not infile)
+		{
+			throw UserError("failed to open '" + fabfile + "'");
+		}
+
+		parsing::Parser parser(args->printAST, args->dumpAST);
+		auto parseResult = parser.ParseFile(infile, fabfile);
+
+		if (not parseResult.errors.empty())
+		{
+			for (auto &err : parseResult.errors)
+			{
+				Bytestream::Stderr() << err << "\n";
+			}
+			return 1;
+		}
 
 		if (args->parseOnly)
 		{
 			return 0;
 		}
+
+		auto values = std::move(parseResult.result);
 
 
 		//
@@ -251,61 +268,6 @@ int main(int argc, char *argv[]) {
 
 	err() << Bytestream::Reset << "\n";
 	return 1;
-}
-
-
-UniqPtrVec<ast::Value> Parse(const string& filename, bool printAST, bool dumpAST)
-{
-	// Open and parse the top-level build description.
-	std::ifstream infile(filename.c_str());
-	if (not infile)
-	{
-		throw UserError("failed to open '" + filename + "'");
-	}
-
-	const string absolute =
-		PathIsAbsolute(filename) ? filename : AbsolutePath(filename);
-
-	parsing::Parser parser;
-	auto result = parser.ParseFile(infile, filename);
-	FAB_ASSERT(result.result.empty() xor result.errors.empty(),
-	           "cannot have parsing results and parsing errors");
-
-	for (auto &err : result.errors)
-	{
-		Bytestream::Stderr() << err << "\n";
-	}
-
-	if (not result.errors.empty())
-	{
-		throw UserError("failed to parse '" + filename + "'");
-	}
-
-	auto values = std::move(result.result);
-	if (printAST)
-	{
-		Bytestream::Stdout()
-			<< Bytestream::Comment
-			<< "#\n"
-			<< "# AST pretty-printed from '" << filename << "'\n"
-			<< "#\n"
-			<< Bytestream::Reset
-			;
-
-		for (auto& val : values)
-			Bytestream::Stdout() << *val << "\n";
-	}
-
-	if (dumpAST)
-	{
-		ast::ASTDump dumper(Bytestream::Stdout());
-		for (auto &val : values)
-		{
-			val->Accept(dumper);
-		}
-	}
-
-	return values;
 }
 
 
