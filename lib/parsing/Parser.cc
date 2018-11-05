@@ -29,7 +29,7 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/ast/ast.hh>
+#include <fabrique/ast/ASTDump.hh>
 #include <fabrique/parsing/ASTBuilder.hh>
 #include <fabrique/parsing/ErrorListener.hh>
 #include <fabrique/parsing/Parser.hh>
@@ -90,6 +90,12 @@ struct ParserState
 	ErrorListener errorListener;
 	ASTBuilder ast;
 };
+
+
+Parser::Parser(bool prettyPrint, bool dump)
+	: prettyPrint_(prettyPrint), dump_(dump)
+{
+}
 
 
 Parser::ValueResult Parser::Parse(std::string s, SourceRange src)
