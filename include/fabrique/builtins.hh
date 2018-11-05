@@ -33,13 +33,33 @@
 
 #include <fabrique/dag/DAGBuilder.hh>
 
+#include <string>
+
 namespace fabrique {
+
+namespace ast {
+class EvalContext;
+}
+
+namespace parsing {
+class Parser;
+}
+
 namespace builtins {
 
 /**
  * Create implementation of Fabrique `file()` function
  */
 dag::ValuePtr OpenFile(dag::DAGBuilder&);
+
+/**
+ * Create `import()` builtin function.
+ *
+ * @param     parser       parser to use when importing Fabrique files
+ *                         (lifetime must exceed the value returned by this function)
+ * @param     srcroot      root directory containing all source files (absolute path)
+ */
+dag::ValuePtr Import(parsing::Parser &parser, std::string srcroot, ast::EvalContext&);
 
 } // namespace builtins
 } // namespace fabrique
