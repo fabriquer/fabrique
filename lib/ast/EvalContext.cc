@@ -59,8 +59,8 @@ using std::string;
 using std::vector;
 
 
-EvalContext::EvalContext(TypeContext& ctx, ValueMap builtins)
-	: ctx_(ctx), builder_(*this), builtins_(builtins)
+EvalContext::EvalContext(TypeContext& ctx)
+	: ctx_(ctx), builder_(*this)
 {
 	// Create top-level scope
 	scopes_.emplace_back(std::make_shared<ScopedValues>("top", nullptr));
@@ -346,13 +346,6 @@ ValuePtr EvalContext::Lookup(const string& name, SourceRange src)
 		<< Bytestream::Literal << "'" << name << "'"
 		<< Bytestream::Reset << "\n"
 		;
-
-	// Try builtins first:
-	auto b = builtins_.find(name);
-	if (b != builtins_.end())
-	{
-		return b->second;
-	}
 
 	// Next, look for lexically-defined names:
 	SemaCheck(not scopes_.empty(), src, "no scopes to lookup in");
