@@ -1,11 +1,10 @@
-/** @file AST/FilenameLiteral.cc    Definition of @ref fabrique::ast::FilenameLiteral. */
+//! @file  builtins.cc    Definitions of builtin functions
 /*
  * Copyright (c) 2018 Jonathan Anderson
  * All rights reserved.
  *
- * This software was developed by SRI International and the University of
- * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * This software was developed at Memorial University of Newfoundland
+ * under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,44 +28,43 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/builtins.hh>
 #include <fabrique/names.hh>
-#include <fabrique/ast/Argument.hh>
-#include <fabrique/ast/EvalContext.hh>
-#include <fabrique/ast/FilenameLiteral.hh>
-#include <fabrique/ast/Visitor.hh>
-#include <fabrique/dag/File.hh>
-#include "Support/Bytestream.h"
+#include <fabrique/dag/DAGBuilder.hh>
+#include <fabrique/dag/Parameter.hh>
+#include <fabrique/types/FileType.hh>
+#include <fabrique/types/TypeContext.hh>
+
 #include "Support/exceptions.h"
 
-#include <cassert>
-#include <set>
-
 using namespace fabrique;
-using namespace fabrique::ast;
-using std::string;
+using namespace fabrique::builtins;
+using namespace fabrique::dag;
 
 
-FilenameLiteral::FilenameLiteral(string name, SourceRange src)
-	: Expression(src), name_(name)
+static ValuePtr OpenFileImpl(ValueMap arguments, DAGBuilder &b, SourceRange src)
 {
+	auto filename = arguments["name"];
+	SemaCheck(filename, src, "missing filename");
+
+	// TODO: look up subdirectory in the call context?
+	std::string subdir;
+	if (auto s = arguments[builtins::Subdirectory])
+	{
+		subdir = s->str();
+	}
+
+	return b.File(subdir, filename->str(), arguments, src);
 }
 
 
-void FilenameLiteral::PrettyPrint(Bytestream &out, unsigned int /*indent*/) const
+fabrique::dag::ValuePtr fabrique::builtins::OpenFile(fabrique::dag::DAGBuilder &b)
 {
-	out << Bytestream::Filename << name_ << Bytestream::Reset;
-}
+	TypeContext &types = b.typeContext();
 
-void FilenameLiteral::Accept(Visitor& v) const
-{
-	v.Enter(*this);
-	v.Leave(*this);
-}
+	SharedPtrVec<dag::Parameter> params;
+	params.emplace_back(new Parameter("name", types.stringType()));
 
-dag::ValuePtr FilenameLiteral::evaluate(EvalContext& ctx) const
-{
-	SemaCheck(ctx.Lookup(builtins::Subdirectory), source(), "subdir not defined");
-	string subdirectory = ctx.Lookup(builtins::Subdirectory)->str();
-
-	return ctx.builder().File(subdirectory, name_, {}, source());
+	return b.Function(OpenFileImpl, types.fileType(), params,
+	                  SourceRange::None(), true);
 }

@@ -29,7 +29,7 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/ast/Builtins.hh>
+#include <fabrique/names.hh>
 #include <fabrique/dag/File.hh>
 #include <fabrique/dag/Primitive.hh>
 #include <fabrique/dag/Visitor.hh>
@@ -160,27 +160,27 @@ ValuePtr File::field(const string& name) const
 	TypeContext& ctx = type().context();
 	ValuePtr val;
 
-	if (name == ast::builtins::Basename)
+	if (name == builtins::Basename)
 		val.reset(new String(BaseName(filename_), ctx.stringType(), source()));
 
-	else if (name == ast::builtins::Extension)
+	else if (name == builtins::Extension)
 		val.reset(new String(FileExtension(filename_), ctx.stringType(),
 		                     source()));
 
-	else if (name == ast::builtins::FileName)
+	else if (name == builtins::FileName)
 		val.reset(new String(FilenameComponent(filename_), ctx.stringType(),
 		                     source()));
 
-	else if (name == ast::builtins::FullName)
+	else if (name == builtins::FullName)
 		val.reset(new String(fullName(), ctx.stringType(), source()));
 
-	else if (name == ast::builtins::Generated)
+	else if (name == builtins::Generated)
 		val.reset(new Boolean(generated_, ctx.booleanType(), source()));
 
-	else if (name == ast::builtins::Name)
+	else if (name == builtins::Name)
 		val.reset(new String(relativeName(), ctx.stringType(), source()));
 
-	else if (name == ast::builtins::Subdirectory)
+	else if (name == builtins::Subdirectory)
 		val.reset(File::Create(subdirectory(), ctx.fileType()));
 
 	else

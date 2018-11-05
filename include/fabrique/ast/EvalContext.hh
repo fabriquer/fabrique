@@ -70,7 +70,7 @@ class Value;
 class EvalContext : public dag::DAGBuilder::Context
 {
 public:
-	EvalContext(TypeContext& ctx, dag::ValueMap builtins = {});
+	EvalContext(TypeContext& ctx);
 	~EvalContext() override {}
 
 	std::vector<dag::DAG::BuildTarget> Evaluate(const UniqPtrVec<Value>&);
@@ -99,7 +99,8 @@ public:
 
 		//! Define a name within a scope
 		ScopedValues& Define(const std::string &name, dag::ValuePtr,
-		                     SourceRange = SourceRange::None());
+		                     SourceRange = SourceRange::None(),
+		                     bool allowReservedName = false);
 
 		//! Look up a given name in this scope or its parents
 		dag::ValuePtr Lookup(const std::string &name) const;
@@ -160,13 +161,19 @@ public:
 	virtual std::string currentValueName() const override;
 	virtual TypeContext& types() const override { return ctx_; }
 
-	//! Define a named value in the current scope
+	//! Define a builtin value in the current scope
+	dag::ValuePtr DefineBuiltin(std::string, dag::ValuePtr);
+
+	//! Define an ast::Value in the current scope
 	dag::ValuePtr Define(const Value&);
 
 	//! Look up a named value from the current scope or a parent scope.
 	dag::ValuePtr Lookup(const std::string& name, SourceRange = SourceRange::None());
 
 private:
+	//! Define a named value in the current scope
+	dag::ValuePtr Define(std::string, dag::ValuePtr);
+
 	std::shared_ptr<ScopedValues> PopScope();
 
 	void PushValueName(const std::string&);
@@ -184,9 +191,6 @@ private:
 	std::deque<std::string> currentValueName_;
 
 	dag::DAGBuilder builder_;
-
-	//! Pre-defined values like `srcroot` and `file`.
-	dag::ValueMap builtins_;
 };
 
 } // namespace dag

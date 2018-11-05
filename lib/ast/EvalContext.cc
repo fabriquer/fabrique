@@ -30,7 +30,7 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/ast/Builtins.hh>
+#include <fabrique/names.hh>
 #include <fabrique/ast/EvalContext.hh>
 #include <fabrique/ast/Parameter.hh>
 #include <fabrique/ast/Value.hh>
@@ -59,8 +59,8 @@ using std::string;
 using std::vector;
 
 
-EvalContext::EvalContext(TypeContext& ctx, ValueMap builtins)
-	: ctx_(ctx), builder_(*this), builtins_(builtins)
+EvalContext::EvalContext(TypeContext& ctx)
+	: ctx_(ctx), builder_(*this)
 {
 	// Create top-level scope
 	scopes_.emplace_back(std::make_shared<ScopedValues>("top", nullptr));
@@ -93,7 +93,8 @@ bool EvalContext::ScopedValues::contains(const string& name) const
 }
 
 EvalContext::ScopedValues&
-EvalContext::ScopedValues::Define(const string &name, ValuePtr v, SourceRange src)
+EvalContext::ScopedValues::Define(const string &name, ValuePtr v, SourceRange src,
+                                  bool allowReservedName)
 {
 	if (not src)
 	{
@@ -101,9 +102,13 @@ EvalContext::ScopedValues::Define(const string &name, ValuePtr v, SourceRange sr
 	}
 
 	SemaCheck(not name.empty(), src, "defining an unnamed value");
-	SemaCheck(not Identifier::reservedName(name), src, "cannot define reserved name");
 	SemaCheck(v, src, "defining a null value");
 	SemaCheck(values_.find(name) == values_.end(), src, "redefining " + name);
+
+	if (not allowReservedName)
+	{
+		SemaCheck(not builtins::reservedName(name), src, "defining reserved name");
+	}
 
 	values_.emplace(name, v);
 
@@ -240,6 +245,26 @@ std::shared_ptr<EvalContext::ScopedValues> EvalContext::PopScope()
 	return s;
 }
 
+dag::ValuePtr EvalContext::DefineBuiltin(string name, dag::ValuePtr value)
+{
+	SemaCheck(builtins::reservedName(name), value->source(),
+	          "invalid builtin name: '" + name + "'");
+	SemaCheck(value, value->source(), "defining null value");
+
+	CurrentScope()->Define(name, value, value->source(), true);
+	builder_.Define(fullyQualifiedName(), value);
+
+	Bytestream::Debug("ast.eval.define")
+		<< Bytestream::Action << "Defined "
+		<< Bytestream::Literal << "'" << name << "'"
+		<< Bytestream::Operator << " as "
+		<< *value
+		<< "\n"
+		;
+
+	return value;
+}
+
 dag::ValuePtr EvalContext::Define(const ast::Value &v)
 {
 	Bytestream &dbg = Bytestream::Debug("ast.eval.define");
@@ -272,8 +297,7 @@ dag::ValuePtr EvalContext::Define(const ast::Value &v)
 
 	if (name != "")
 	{
-		CurrentScope()->Define(name, value);
-		builder_.Define(fullyQualifiedName(), value);
+		Define(name, value);
 
 		FAB_ASSERT(not currentValueName_.empty(), "empty value name stack");
 		FAB_ASSERT(currentValueName_.back() == name,
@@ -294,6 +318,25 @@ dag::ValuePtr EvalContext::Define(const ast::Value &v)
 	return value;
 }
 
+dag::ValuePtr EvalContext::Define(string name, dag::ValuePtr value)
+{
+	SemaCheck(not name.empty(), value->source(), "defining unnamed value");
+	SemaCheck(value, value->source(), "defining null value");
+
+	CurrentScope()->Define(name, value);
+	builder_.Define(fullyQualifiedName(), value);
+
+	Bytestream::Debug("ast.eval.define")
+		<< Bytestream::Action << "Defined "
+		<< Bytestream::Literal << "'" << name << "'"
+		<< Bytestream::Operator << " as "
+		<< *value
+		<< "\n"
+		;
+
+	return value;
+}
+
 
 ValuePtr EvalContext::Lookup(const string& name, SourceRange src)
 {
@@ -303,13 +346,6 @@ ValuePtr EvalContext::Lookup(const string& name, SourceRange src)
 		<< Bytestream::Literal << "'" << name << "'"
 		<< Bytestream::Reset << "\n"
 		;
-
-	// Try builtins first:
-	auto b = builtins_.find(name);
-	if (b != builtins_.end())
-	{
-		return b->second;
-	}
 
 	// Next, look for lexically-defined names:
 	SemaCheck(not scopes_.empty(), src, "no scopes to lookup in");
@@ -323,10 +359,10 @@ ValuePtr EvalContext::Lookup(const string& name, SourceRange src)
 
 	// If we are looking for 'builddir' or 'subdir' and haven't found it
 	// defined anywhere, provide the top-level build/source subdirectory ('').
-	if (name == ast::builtins::BuildDirectory)
+	if (name == builtins::BuildDirectory)
 		return builder_.File("", ValueMap(), SourceRange::None(), true);
 
-	if (name == ast::builtins::Subdirectory)
+	if (name == builtins::Subdirectory)
 		return builder_.File("");
 
 	throw SemanticException("reference to undefined name", src);

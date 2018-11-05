@@ -30,13 +30,14 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/builtins.hh>
+
 #include <fabrique/ast/ASTDump.hh>
 #include <fabrique/ast/EvalContext.hh>
 
 #include <fabrique/backend/Backend.hh>
 
 #include <fabrique/dag/DAG.hh>
-#include <fabrique/dag/File.hh>
 #include <fabrique/dag/Parameter.hh>
 
 #include <fabrique/parsing/Parser.hh>
@@ -67,8 +68,6 @@ using fabrique::backend::Backend;
 static Bytestream& err();
 static void reportError(string message, SourceRange, ErrorReport::Severity, string detail);
 static UniqPtrVec<ast::Value> Parse(const string& filename, bool printAST, bool dumpAST);
-
-static dag::ValueMap builtins(TypeContext &types, string srcroot, string buildroot);
 
 
 int main(int argc, char *argv[]) {
@@ -157,7 +156,13 @@ int main(int argc, char *argv[]) {
 		//
 		TypeContext types;
 		plugin::Loader pluginLoader(PluginSearchPaths(args->executable));
-		ast::EvalContext ctx(types, builtins(types, srcroot, buildroot));
+		ast::EvalContext ctx(types);
+		//builtins(types, srcroot, args->printAST, args->dumpAST));
+
+		dag::DAGBuilder &builder = ctx.builder();
+		ctx.DefineBuiltin("srcroot", builder.File(srcroot));
+		ctx.DefineBuiltin("buildroot", builder.File(buildroot));
+		ctx.DefineBuiltin("file", builtins::OpenFile(builder));
 
 		SharedPtrVec<dag::Value> dagValues;
 		vector<string> targets;
@@ -301,39 +306,6 @@ UniqPtrVec<ast::Value> Parse(const string& filename, bool printAST, bool dumpAST
 	}
 
 	return values;
-}
-
-
-static dag::ValueMap builtins(TypeContext &types, string srcroot, string buildroot)
-{
-	dag::ValueMap builtins;
-	builtins.emplace("srcroot", dag::File::Create(srcroot, types.fileType()));
-	builtins.emplace("buildroot", dag::File::Create(buildroot, types.fileType()));
-
-	dag::Function::Evaluator openFile =
-		[](dag::ValueMap arguments, dag::DAGBuilder &b, SourceRange src)
-	{
-		auto filename = arguments["name"];
-		SemaCheck(filename, src, "missing filename");
-
-		// TODO: look up subdirectory in the call context?
-		string subdir;
-		if (auto s = arguments[ast::builtins::Subdirectory])
-		{
-			subdir = s->str();
-		}
-
-		return b.File(subdir, filename->str(), arguments, src);
-	};
-
-	SharedPtrVec<dag::Parameter> params;
-	params.emplace_back(new dag::Parameter("name", types.stringType()));
-
-	builtins.emplace("file",
-		dag::Function::Create(openFile, types.fileType(), params,
-		                      SourceRange::None(), true));
-
-	return builtins;
 }
 
 
