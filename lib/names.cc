@@ -37,6 +37,7 @@ static const char* ReservedNames[] =
 	"bool",
 	"buildroot",
 	"file",
+	"import",
 	"in",
 	"int",
 	"list",

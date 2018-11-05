@@ -30,16 +30,24 @@
 
 #include <fabrique/builtins.hh>
 #include <fabrique/names.hh>
+#include <fabrique/ast/EvalContext.hh>
 #include <fabrique/dag/DAGBuilder.hh>
 #include <fabrique/dag/Parameter.hh>
+#include <fabrique/parsing/Parser.hh>
+#include <fabrique/platform/files.hh>
 #include <fabrique/types/FileType.hh>
 #include <fabrique/types/TypeContext.hh>
 
+#include "Support/Bytestream.h"
 #include "Support/exceptions.h"
+
+#include <fstream>
 
 using namespace fabrique;
 using namespace fabrique::builtins;
 using namespace fabrique::dag;
+using namespace fabrique::platform;
+using std::string;
 
 
 static ValuePtr OpenFileImpl(ValueMap arguments, DAGBuilder &b, SourceRange src)
@@ -48,7 +56,7 @@ static ValuePtr OpenFileImpl(ValueMap arguments, DAGBuilder &b, SourceRange src)
 	SemaCheck(filename, src, "missing filename");
 
 	// TODO: look up subdirectory in the call context?
-	std::string subdir;
+	string subdir;
 	if (auto s = arguments[builtins::Subdirectory])
 	{
 		subdir = s->str();
@@ -66,5 +74,102 @@ fabrique::dag::ValuePtr fabrique::builtins::OpenFile(fabrique::dag::DAGBuilder &
 	params.emplace_back(new Parameter("name", types.stringType()));
 
 	return b.Function(OpenFileImpl, types.fileType(), params,
+	                  SourceRange::None(), true);
+}
+
+
+static SharedPtrVec<dag::Value>
+ImportFile(string filename, SourceRange src, parsing::Parser &p, ast::EvalContext &eval,
+           Bytestream &dbg)
+{
+	dbg
+		<< Bytestream::Action << "importing "
+		<< Bytestream::Type << "file"
+		<< Bytestream::Operator << "'"
+		<< Bytestream::Literal << filename
+		<< Bytestream::Operator << "'"
+		<< Bytestream::Reset << "\n"
+		;
+
+	std::ifstream infile(filename.c_str());
+	SemaCheck(infile, src, "failed to open '" + filename + "'");
+
+	auto parse = p.ParseFile(infile, filename);
+	for (auto &e : parse.errors)
+	{
+		Bytestream::Stderr() << e << "\n";
+	}
+
+	SemaCheck(parse.errors.empty(), src, "failed to import '" + filename + "'");
+
+	SharedPtrVec<dag::Value> values;
+	for (auto &v : parse.result)
+	{
+		values.push_back(eval.Define(*v));
+	}
+
+	return values;
+}
+
+
+ValuePtr
+fabrique::builtins::Import(parsing::Parser &p, string srcroot, ast::EvalContext &eval)
+{
+	FAB_ASSERT(PathIsAbsolute(srcroot), "srcroot must be an absolute path");
+
+	DAGBuilder &b = eval.builder();
+	TypeContext &types = b.typeContext();
+
+	SharedPtrVec<dag::Parameter> params;
+	params.emplace_back(new Parameter("name", types.stringType()));
+
+	//plugin::Registry& pluginRegistry = plugin::Registry::get();
+
+	dag::Function::Evaluator import =
+		[&p, &eval, srcroot]
+		(dag::ValueMap arguments, dag::DAGBuilder&, SourceRange src)
+	{
+		Bytestream &dbg = Bytestream::Debug("module.import");
+
+		auto n = arguments["name"];
+		SemaCheck(n, src, "missing module or file name");
+		const string name = n->str();
+
+		auto currentSubdir = arguments[Subdirectory];
+		SemaCheck(currentSubdir, src, "missing subdir");
+
+		dbg
+			<< Bytestream::Action << "importing "
+			<< Bytestream::Operator << "'"
+			<< Bytestream::Literal << name
+			<< Bytestream::Operator << "'"
+			<< Bytestream::Reset << " from subdir '"
+			<< Bytestream::Literal << *currentSubdir
+			<< Bytestream::Reset << "'...\n"
+			;
+
+		const string filename = PathIsAbsolute(name)
+			? name
+			: JoinPath({ srcroot, currentSubdir->str(), name })
+			;
+
+		if (PathIsFile(filename))
+		{
+			auto values = ImportFile(filename, src, p, eval, dbg);
+		}
+
+		if (PathIsDirectory(filename))
+		{
+			const string fabfile = JoinPath(filename, "fabfile");
+			if (PathIsFile(fabfile))
+			{
+				auto values = ImportFile(fabfile, src, p, eval, dbg);
+			}
+		}
+
+		return nullptr;
+	};
+
+	return b.Function(import, types.nilType(), params,
 	                  SourceRange::None(), true);
 }
