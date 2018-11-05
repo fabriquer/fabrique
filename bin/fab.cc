@@ -38,7 +38,6 @@
 #include <fabrique/backend/Backend.hh>
 
 #include <fabrique/dag/DAG.hh>
-#include <fabrique/dag/Parameter.hh>
 
 #include <fabrique/parsing/Parser.hh>
 
