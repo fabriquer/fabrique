@@ -91,8 +91,8 @@ fabrique::dag::ValuePtr fabrique::builtins::OpenFile(fabrique::dag::DAGBuilder &
 
 
 static ValueMap
-ImportFile(string filename, SourceRange src, parsing::Parser &p, ast::EvalContext &eval,
-           Bytestream &dbg)
+ImportFile(string filename, string subdir, SourceRange src, parsing::Parser &p,
+           ast::EvalContext &eval, Bytestream &dbg)
 {
 	dbg
 		<< Bytestream::Action << "importing "
@@ -102,6 +102,11 @@ ImportFile(string filename, SourceRange src, parsing::Parser &p, ast::EvalContex
 		<< Bytestream::Operator << "'"
 		<< Bytestream::Reset << "\n"
 		;
+
+	DAGBuilder &b = eval.builder();
+
+	auto scope = eval.EnterScope(filename);
+	scope.Define("subdir", b.String(subdir));
 
 	std::ifstream infile(filename.c_str());
 	SemaCheck(infile, src, "failed to open '" + filename + "'");
@@ -174,14 +179,19 @@ fabrique::builtins::Import(parsing::Parser &p, string srcroot, ast::EvalContext 
 		ValueMap values;
 		if (PathIsFile(filename))
 		{
-			values = ImportFile(filename, src, p, eval, dbg);
+			const string subdir =
+				JoinPath(currentSubdir->str(), DirectoryOf(filename));
+
+			values = ImportFile(filename, subdir, src, p, eval, dbg);
 		}
 		else if (PathIsDirectory(filename))
 		{
+			const string subdir = JoinPath(currentSubdir->str(), filename);
 			const string fabfile = JoinPath(filename, "fabfile");
+
 			if (PathIsFile(fabfile))
 			{
-				values = ImportFile(fabfile, src, p, eval, dbg);
+				values = ImportFile(fabfile, subdir, src, p, eval, dbg);
 			}
 		}
 
