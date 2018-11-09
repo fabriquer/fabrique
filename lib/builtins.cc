@@ -184,7 +184,7 @@ fabrique::builtins::Import(parsing::Parser &p, string srcroot, ast::EvalContext 
 		if (PathIsFile(filename))
 		{
 			const string subdir =
-				JoinPath(currentSubdir->str(), DirectoryOf(filename));
+				JoinPath(currentSubdir->str(), DirectoryOf(name));
 
 			values = ImportFile(filename, subdir, src, p, eval, dbg);
 		}
