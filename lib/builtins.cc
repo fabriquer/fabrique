@@ -145,7 +145,7 @@ fabrique::builtins::Import(parsing::Parser &p, string srcroot, ast::EvalContext 
 
 	dag::Function::Evaluator import =
 		[&p, &eval, srcroot]
-		(dag::ValueMap arguments, dag::DAGBuilder&, SourceRange src)
+		(dag::ValueMap arguments, dag::DAGBuilder &builder, SourceRange src)
 	{
 		Bytestream &dbg = Bytestream::Debug("module.import");
 
@@ -185,7 +185,7 @@ fabrique::builtins::Import(parsing::Parser &p, string srcroot, ast::EvalContext 
 			}
 		}
 
-		return b.Record(values, src);
+		return builder.Record(values, src);
 	};
 
 	return b.Function(import, types.nilType(), params,
