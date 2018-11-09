@@ -50,6 +50,18 @@ using namespace fabrique::platform;
 using std::string;
 
 
+/**
+ * XXX: this is a big, dirty hack that must be eliminated ASAP.
+ *
+ * For the moment, `ast::Function::evaluate()` produces a function
+ * that references the `ast::Function`, so we can't allow values
+ * to be de-allocated... ever. This is obviously Not A Good Idea,
+ * but until it's fixed, use this vector to keep all imported
+ * ASTs in memory forever.
+ */
+static std::vector<UniqPtrVec<ast::Value>> importedASTs;
+
+
 static ValuePtr OpenFileImpl(ValueMap arguments, DAGBuilder &b, SourceRange src)
 {
 	auto filename = arguments["name"];
@@ -111,6 +123,8 @@ ImportFile(string filename, SourceRange src, parsing::Parser &p, ast::EvalContex
 			values[name->name()] = val;
 		}
 	}
+
+	importedASTs.emplace_back(std::move(parse.result));
 
 	return values;
 }
