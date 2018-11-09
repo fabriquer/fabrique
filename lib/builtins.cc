@@ -50,6 +50,18 @@ using namespace fabrique::platform;
 using std::string;
 
 
+/**
+ * XXX: this is a big, dirty hack that must be eliminated ASAP.
+ *
+ * For the moment, `ast::Function::evaluate()` produces a function
+ * that references the `ast::Function`, so we can't allow values
+ * to be de-allocated... ever. This is obviously Not A Good Idea,
+ * but until it's fixed, use this vector to keep all imported
+ * ASTs in memory forever.
+ */
+static std::vector<UniqPtrVec<ast::Value>> importedASTs;
+
+
 static ValuePtr OpenFileImpl(ValueMap arguments, DAGBuilder &b, SourceRange src)
 {
 	auto filename = arguments["name"];
@@ -79,8 +91,8 @@ fabrique::dag::ValuePtr fabrique::builtins::OpenFile(fabrique::dag::DAGBuilder &
 
 
 static ValueMap
-ImportFile(string filename, SourceRange src, parsing::Parser &p, ast::EvalContext &eval,
-           Bytestream &dbg)
+ImportFile(string filename, string subdir, SourceRange src, parsing::Parser &p,
+           ast::EvalContext &eval, Bytestream &dbg)
 {
 	dbg
 		<< Bytestream::Action << "importing "
@@ -90,6 +102,11 @@ ImportFile(string filename, SourceRange src, parsing::Parser &p, ast::EvalContex
 		<< Bytestream::Operator << "'"
 		<< Bytestream::Reset << "\n"
 		;
+
+	DAGBuilder &b = eval.builder();
+
+	auto scope = eval.EnterScope(filename);
+	scope.Define("subdir", b.String(subdir));
 
 	std::ifstream infile(filename.c_str());
 	SemaCheck(infile, src, "failed to open '" + filename + "'");
@@ -111,6 +128,8 @@ ImportFile(string filename, SourceRange src, parsing::Parser &p, ast::EvalContex
 			values[name->name()] = val;
 		}
 	}
+
+	importedASTs.emplace_back(std::move(parse.result));
 
 	return values;
 }
@@ -160,14 +179,19 @@ fabrique::builtins::Import(parsing::Parser &p, string srcroot, ast::EvalContext 
 		ValueMap values;
 		if (PathIsFile(filename))
 		{
-			values = ImportFile(filename, src, p, eval, dbg);
+			const string subdir =
+				JoinPath(currentSubdir->str(), DirectoryOf(filename));
+
+			values = ImportFile(filename, subdir, src, p, eval, dbg);
 		}
 		else if (PathIsDirectory(filename))
 		{
+			const string subdir = JoinPath(currentSubdir->str(), filename);
 			const string fabfile = JoinPath(filename, "fabfile");
+
 			if (PathIsFile(fabfile))
 			{
-				values = ImportFile(fabfile, src, p, eval, dbg);
+				values = ImportFile(fabfile, subdir, src, p, eval, dbg);
 			}
 		}
 
