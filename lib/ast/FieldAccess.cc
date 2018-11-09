@@ -73,7 +73,7 @@ void FieldAccess::Accept(Visitor& v) const
 dag::ValuePtr FieldAccess::evaluate(EvalContext& ctx) const
 {
 	dag::ValuePtr base = base_->evaluate(ctx);
-	SemaCheck(base->hasFields(), base_->source(), TypeName(base) + " has no fields");
+	SemaCheck(base->hasFields(), base_->source(), TypeName(*base) + " has no fields");
 
 	const std::string fieldName(field_->name());
 	dag::ValuePtr field = base->field(fieldName);
