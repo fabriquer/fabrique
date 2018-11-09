@@ -32,6 +32,7 @@
 #include <fabrique/names.hh>
 #include <fabrique/ast/EvalContext.hh>
 #include <fabrique/dag/DAGBuilder.hh>
+#include <fabrique/dag/File.hh>
 #include <fabrique/dag/Parameter.hh>
 #include <fabrique/parsing/Parser.hh>
 #include <fabrique/platform/files.hh>
@@ -106,7 +107,7 @@ ImportFile(string filename, string subdir, SourceRange src, parsing::Parser &p,
 	DAGBuilder &b = eval.builder();
 
 	auto scope = eval.EnterScope(filename);
-	scope.Define("subdir", b.String(subdir));
+	scope.Define("subdir", b.File(subdir));
 
 	std::ifstream infile(filename.c_str());
 	SemaCheck(infile, src, "failed to open '" + filename + "'");
@@ -158,8 +159,11 @@ fabrique::builtins::Import(parsing::Parser &p, string srcroot, ast::EvalContext 
 		SemaCheck(n, src, "missing module or file name");
 		const string name = n->str();
 
-		auto currentSubdir = arguments[Subdirectory];
-		SemaCheck(currentSubdir, src, "missing subdir");
+		auto s = arguments[Subdirectory];
+		SemaCheck(s, src, "missing subdir");
+
+		auto currentSubdir = std::dynamic_pointer_cast<dag::File>(s);
+		SemaCheck(currentSubdir, src, "subdir is not a File");
 
 		dbg
 			<< Bytestream::Action << "importing "
