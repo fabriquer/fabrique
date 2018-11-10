@@ -3,7 +3,6 @@
 # RUN: %check %s -input-file %t
 #
 
-# CHECK-DAG: submodule:record[foo:string, bar:(file)->file, baz:(int)->int, wibble:(int)->int, f:file] = {
 # CHECK-DAG: f:file = Inputs/f.txt
 submodule = import('Inputs/submodule.fab');
 
