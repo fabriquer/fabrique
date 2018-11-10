@@ -91,7 +91,7 @@ fabrique::dag::ValuePtr fabrique::builtins::OpenFile(fabrique::dag::DAGBuilder &
 }
 
 
-static ValueMap
+static std::shared_ptr<Record>
 ImportFile(string filename, string subdir, ValueMap arguments, SourceRange src,
            parsing::Parser &p, ast::EvalContext &eval, Bytestream &dbg)
 {
@@ -136,7 +136,7 @@ ImportFile(string filename, string subdir, ValueMap arguments, SourceRange src,
 
 	importedASTs.emplace_back(std::move(parse.result));
 
-	return values;
+	return b.Record(values, src);
 }
 
 
@@ -155,7 +155,7 @@ fabrique::builtins::Import(parsing::Parser &p, string srcroot, ast::EvalContext 
 
 	dag::Function::Evaluator import =
 		[&p, &eval, srcroot]
-		(dag::ValueMap arguments, dag::DAGBuilder &builder, SourceRange src)
+		(dag::ValueMap arguments, dag::DAGBuilder&, SourceRange src)
 	{
 		Bytestream &dbg = Bytestream::Debug("module.import");
 
@@ -184,32 +184,28 @@ fabrique::builtins::Import(parsing::Parser &p, string srcroot, ast::EvalContext 
 			: JoinPath({ srcroot, currentSubdir->str(), name })
 			;
 
-		ValueMap values;
 		if (PathIsFile(filename))
 		{
 			const string subdir =
 				JoinPath(currentSubdir->str(), DirectoryOf(name));
 
-			values = ImportFile(filename, subdir, arguments, src, p, eval, dbg);
+			return ImportFile(filename, subdir, arguments, src, p, eval, dbg);
 		}
-		else if (PathIsDirectory(filename))
+
+		if (PathIsDirectory(filename))
 		{
 			const string subdir = JoinPath(currentSubdir->str(), name);
 			const string fabfile = JoinPath(filename, "fabfile");
 
 			if (PathIsFile(fabfile))
 			{
-				values = ImportFile(fabfile, subdir, arguments, src, p,
-				                    eval, dbg);
+				return ImportFile(fabfile, subdir, arguments, src, p,
+				                  eval, dbg);
 			}
 		}
-		else
-		{
-			throw SemanticException(
-				"no such file or plugin '" + filename + "'", n->source());
-		}
 
-		return builder.Record(values, src);
+		throw SemanticException(
+			"no such file or plugin '" + filename + "'", n->source());
 	};
 
 	return b.Function(import, types.nilType(), params,
