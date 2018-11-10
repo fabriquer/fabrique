@@ -116,7 +116,7 @@ dag::ValuePtr FileList::evaluate(EvalContext& ctx) const
 				platform::JoinPath(subdir->str(), subsubdir);
 			const SourceRange& src = arg->getValue().source();
 
-			scope.Define(name, ctx.builder().String(completeSubdir, src));
+			scope.Define(name, ctx.builder().File(completeSubdir, {}, src));
 		}
 		else
 		{
