@@ -87,7 +87,7 @@ int main(int argc, char *argv[]) {
 	Bytestream::SetDebugStream(Bytestream::Stdout());
 
 	Bytestream& argDebug = Bytestream::Debug("cli.args");
-	CLIArguments::Print(*args, argDebug);
+	args->Print(argDebug);
 	argDebug << Bytestream::Reset << "\n";
 
 	//
@@ -196,7 +196,7 @@ int main(int argc, char *argv[]) {
 		}
 
 		// Add regeneration (if Fabrique files change):
-		string regenerationCommand = args->executable + CLIArguments::str(*args);
+		string regenerationCommand = args->executable + args->str();
 		if (not outputFiles.empty())
 			ctx.builder().AddRegeneration(
 				regenerationCommand, inputFiles, outputFiles);
