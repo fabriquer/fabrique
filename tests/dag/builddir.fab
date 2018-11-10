@@ -12,6 +12,5 @@ bar = builddir.name;
 # CHECK-DAG: y:file = Inputs
 sub = import('Inputs/subdir-test.fab');
 
-# CHECK-DAG: baz:string = 'Inputs/foo.c'
 # CHECK-NOT: baz:string = '${srcroot}/Inputs/foo.c'
 baz = (sub.y + '/foo.c').fullname;
