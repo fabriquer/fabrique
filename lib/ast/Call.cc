@@ -91,15 +91,15 @@ dag::ValuePtr Call::evaluate(EvalContext& ctx) const
 	StringMap<SourceRange> argLocations;
 
 	//
-	// Calls to import() are special: they implicitly get access to the current
-	// `subdir` value
+	// Calls to file() and import() are special: they implicitly get access to the
+	// current `subdir` value
 	//
 	if (auto *n = dynamic_cast<NameReference*>(target_.get()))
 	{
 		const std::string &name = n->name().name();
 		using builtins::Subdirectory;
 
-		if (name == "import" and not args[Subdirectory])
+		if ((name == "file" or name == "import") and not args[Subdirectory])
 		{
 			args[Subdirectory] = ctx.Lookup(Subdirectory, source());
 			argLocations.emplace(Subdirectory, source());
