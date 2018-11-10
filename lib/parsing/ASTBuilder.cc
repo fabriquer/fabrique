@@ -74,6 +74,11 @@ antlrcpp::Any ASTBuilder::visitValue(FabParser::ValueContext *ctx)
 		id = identifier(name);
 	}
 
+	if (not ctx->expression())
+	{
+		return false;
+	}
+
 	auto e = pop<Expression>(ctx->expression());
 	assert(e && "Value initializer is null");
 
