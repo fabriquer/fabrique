@@ -46,7 +46,6 @@
 #include <fabrique/platform/files.hh>
 
 #include <fabrique/plugin/Loader.hh>
-#include <fabrique/plugin/Registry.hh>
 
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
