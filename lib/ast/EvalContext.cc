@@ -365,6 +365,10 @@ ValuePtr EvalContext::Lookup(const string& name, SourceRange src)
 		return v;
 	}
 
+	// If no arguments have been defined, return an empty record.
+	if (name == names::Arguments)
+		return builder_.Record({});
+
 	// If we are looking for 'builddir' or 'subdir' and haven't found it
 	// defined anywhere, provide the top-level build/source subdirectory ('').
 	if (name == names::BuildDirectory)
