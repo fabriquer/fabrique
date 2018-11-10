@@ -29,6 +29,7 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/names.hh>
 #include <fabrique/ast/ast.hh>
 #include <fabrique/parsing/ASTBuilder.hh>
 #include "Support/Bytestream.h"
@@ -304,10 +305,10 @@ antlrcpp::Any ASTBuilder::visitLiteral(FabParser::LiteralContext *ctx)
 	{
 		string text = b->getText();
 
-		check(text == "true" or text == "false", src,
+		check(text == names::True or text == names::False, src,
 		              "boolean literal must be 'true' or 'false'");
 
-		bool value = (text == "true");
+		bool value = (text == names::True);
 
 		return push<BoolLiteral>(value, src);
 	}
