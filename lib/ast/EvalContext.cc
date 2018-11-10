@@ -212,6 +212,27 @@ EvalContext::Scope::Define(const string &name, dag::ValuePtr v, SourceRange src)
 	return *this;
 }
 
+EvalContext::Scope&
+EvalContext::Scope::DefineReserved(const string &name, dag::ValuePtr value)
+{
+	FAB_ASSERT(live_, "defining a value in a dead scope");
+	FAB_ASSERT(values_, "Scope has null values_");
+	FAB_ASSERT(names::reservedName(name), "'" + name + "' is not a reserved name");
+	FAB_ASSERT(value, "defining '" + name + "' as null");
+
+	values_->Define(name, value, SourceRange::None(), true);
+
+	Bytestream::Debug("ast.eval.define")
+		<< Bytestream::Action << "Defined "
+		<< Bytestream::Literal << "'" << name << "'"
+		<< Bytestream::Operator << " as "
+		<< *value
+		<< "\n"
+		;
+
+	return *this;
+}
+
 
 shared_ptr<EvalContext::ScopedValues> EvalContext::CurrentScope()
 {
@@ -252,29 +273,9 @@ std::shared_ptr<EvalContext::ScopedValues> EvalContext::PopScope()
 	return s;
 }
 
-dag::ValuePtr EvalContext::DefineBuiltin(string name, dag::ValuePtr value)
-{
-	SemaCheck(value, SourceRange::None(), "defining '" + name + "' as null");
-	SemaCheck(names::reservedName(name), value->source(),
-	          "invalid builtin name: '" + name + "'");
-
-	CurrentScope()->Define(name, value, value->source(), true);
-	builder_.Define(fullyQualifiedName(), value);
-
-	Bytestream::Debug("ast.eval.define")
-		<< Bytestream::Action << "Defined "
-		<< Bytestream::Literal << "'" << name << "'"
-		<< Bytestream::Operator << " as "
-		<< *value
-		<< "\n"
-		;
-
-	return value;
-}
-
 dag::ValuePtr EvalContext::Define(const ast::Value &v)
 {
-	Bytestream &dbg = Bytestream::Debug("ast.eval.define");
+	Bytestream &dbg = Bytestream::Debug("ast.eval.define.reserved");
 	dbg
 		<< Bytestream::Action << "Defining "
 		<< Bytestream::Type << "Value "

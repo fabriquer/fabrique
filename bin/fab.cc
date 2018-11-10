@@ -176,10 +176,12 @@ int main(int argc, char *argv[]) {
 		//builtins(types, srcroot, args->printAST, args->dumpAST));
 
 		dag::DAGBuilder &builder = ctx.builder();
-		ctx.DefineBuiltin("srcroot", builder.File(srcroot));
-		ctx.DefineBuiltin("buildroot", builder.File(buildroot));
-		ctx.DefineBuiltin("file", builtins::OpenFile(builder));
-		ctx.DefineBuiltin("import", builtins::Import(parser, srcroot, ctx));
+
+		auto scope = ctx.EnterScope(fabfile);
+		scope.DefineReserved("srcroot", builder.File(srcroot));
+		scope.DefineReserved("buildroot", builder.File(buildroot));
+		scope.DefineReserved("file", builtins::OpenFile(builder));
+		scope.DefineReserved("import", builtins::Import(parser, srcroot, ctx));
 
 		SharedPtrVec<dag::Value> dagValues;
 		vector<string> targets;

@@ -131,6 +131,9 @@ public:
 		Scope& Define(const std::string &name, dag::ValuePtr,
 		              SourceRange = SourceRange::None());
 
+		//! Define a language-reserved name within a scope
+		Scope& DefineReserved(const std::string &name, dag::ValuePtr);
+
 	private:
 		EvalContext &ctx_;
 		std::shared_ptr<ScopedValues> values_;
@@ -160,9 +163,6 @@ public:
 
 	virtual std::string currentValueName() const override;
 	virtual TypeContext& types() const override { return ctx_; }
-
-	//! Define a builtin value in the current scope
-	dag::ValuePtr DefineBuiltin(std::string, dag::ValuePtr);
 
 	//! Define an ast::Value in the current scope
 	dag::ValuePtr Define(const Value&);
