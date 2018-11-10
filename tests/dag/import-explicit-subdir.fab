@@ -1,0 +1,8 @@
+#
+# RUN: %fab --format=null --print-dag %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK-DAG: submodule:record
+# CHECK-DAG: submodule.x:file = Inputs
+submodule = import('subdir-test.fab', subdir = file('Inputs'));

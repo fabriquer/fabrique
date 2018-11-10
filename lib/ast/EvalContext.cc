@@ -365,6 +365,9 @@ ValuePtr EvalContext::Lookup(const string& name, SourceRange src)
 		return v;
 	}
 
+	// The `args` name ought to be [re-]defined once per module.
+	FAB_ASSERT(name != names::Arguments, "`args` ought to be defined by Fabrique");
+
 	// If we are looking for 'builddir' or 'subdir' and haven't found it
 	// defined anywhere, provide the top-level build/source subdirectory ('').
 	if (name == names::BuildDirectory)
