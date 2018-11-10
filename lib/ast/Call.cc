@@ -121,6 +121,8 @@ dag::ValuePtr Call::evaluate(EvalContext& ctx) const
 		const std::string name = a->getName().name();
 		const ast::Expression& value = a->getValue();
 
+		SemaCheck(not args[name], a->source(), "redefining '" + name + "'");
+
 		argLocations.emplace(name, SourceRange::Over(a, &value));
 		args[name] = value.evaluate(ctx);
 	}
