@@ -198,6 +198,11 @@ fabrique::builtins::Import(parsing::Parser &p, string srcroot, ast::EvalContext 
 				values = ImportFile(fabfile, subdir, src, p, eval, dbg);
 			}
 		}
+		else
+		{
+			throw SemanticException(
+				"no such file or plugin '" + filename + "'", n->source());
+		}
 
 		return builder.Record(values, src);
 	};
