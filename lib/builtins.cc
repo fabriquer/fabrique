@@ -191,7 +191,7 @@ fabrique::builtins::Import(parsing::Parser &p, string srcroot, ast::EvalContext 
 		}
 		else if (PathIsDirectory(filename))
 		{
-			const string subdir = JoinPath(currentSubdir->str(), filename);
+			const string subdir = JoinPath(currentSubdir->str(), name);
 			const string fabfile = JoinPath(filename, "fabfile");
 
 			if (PathIsFile(fabfile))
