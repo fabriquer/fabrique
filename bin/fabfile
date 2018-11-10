@@ -1,1 +1,4 @@
-sources = files(fab.cc);
+sources = files(
+	CLIArguments.cc
+	fab.cc
+);

@@ -1,11 +1,12 @@
-/** @file Support/CLIArguments.cc    Definition of @ref fabrique::CLIArguments. */
+//! @file bin/CLIArguments.cc    Definition of @ref fabrique::CLIArguments
 /*
  * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,13 +30,14 @@
  * SUCH DAMAGE.
  */
 
+#include "CLIArguments.h"
+
 // Include Matthias Benkmann's "Lean Mean C++ Option Parser".
 #include "optionparser.h"
 
 #include <fabrique/platform/files.hh>
 
 #include "Support/Bytestream.h"
-#include "Support/CLIArguments.h"
 #include "Support/String.h"
 
 #include <iostream>
@@ -170,7 +172,7 @@ void CLIArguments::PrintUsage(std::ostream& out)
 	option::printUsage(out, usage);
 }
 
-CLIArguments* CLIArguments::Parse(int argc, char *argv[])
+CLIArguments CLIArguments::Parse(int argc, char *argv[])
 {
 	option::Stats stats(usage, argc - 1, argv + 1);
 	std::vector<option::Option> options(stats.options_max);
@@ -179,7 +181,7 @@ CLIArguments* CLIArguments::Parse(int argc, char *argv[])
 	                    options.data(), buffer.data());
 
 	if (opts.nonOptionsCount() > 1)
-		return nullptr;
+		return {};
 
 	const string executable =
 		platform::PathIsFile(argv[0])
@@ -218,7 +220,8 @@ CLIArguments* CLIArguments::Parse(int argc, char *argv[])
 		? (options[DebugPattern].arg ? options[DebugPattern].arg : "*")
 		: "none";
 
-	return new CLIArguments {
+	return CLIArguments {
+		true,
 		executable,
 		help,
 		input,
@@ -236,36 +239,36 @@ CLIArguments* CLIArguments::Parse(int argc, char *argv[])
 }
 
 
-std::vector<string> CLIArguments::ArgVector(const CLIArguments& args)
+std::vector<string> CLIArguments::ArgVector()
 {
 	std::vector<string> argv;
 
-	argv.push_back("--debug='" + args.debugPattern + "'");
+	argv.push_back("--debug='" + debugPattern + "'");
 
-	if (args.help)
+	if (help)
 		argv.push_back("--help");
 
-	if (args.parseOnly)
+	if (parseOnly)
 		argv.push_back("--parse-only");
 	else
-		for (const string& format : args.outputFormats)
+		for (const string& format : outputFormats)
 			argv.push_back("--format=" + format);
 
-	if (args.printAST)
+	if (printAST)
 		argv.push_back("--print-ast");
 
-	if (args.dumpAST)
+	if (dumpAST)
 		argv.push_back("--dump-ast");
 
-	if (args.printDAG)
+	if (printDAG)
 		argv.push_back("--print-dag");
 
-	if (args.printOutput)
+	if (printOutput)
 		argv.push_back("--stdout");
 	else
-		argv.push_back("--output=" + platform::AbsoluteDirectory(args.output));
+		argv.push_back("--output=" + platform::AbsoluteDirectory(output));
 
-	for (const string& d : args.definitions)
+	for (const string& d : definitions)
 		argv.push_back("-D '" + d + "'");
 
 	return argv;
@@ -275,11 +278,11 @@ std::vector<string> CLIArguments::ArgVector(const CLIArguments& args)
 #define ARG(name) \
 	Bytestream::Definition << tab << #name \
 	<< Bytestream::Operator << " = " \
-	<< Bytestream::Literal << args.name << "\n"
+	<< Bytestream::Literal << name << "\n"
 
 static Bytestream& operator<< (Bytestream& out, const std::vector<string>&);
 
-void CLIArguments::Print(const CLIArguments& args, Bytestream& out)
+void CLIArguments::Print(Bytestream& out)
 {
 	const string tab(1, '\t');
 
@@ -303,11 +306,11 @@ void CLIArguments::Print(const CLIArguments& args, Bytestream& out)
 		;
 }
 
-string CLIArguments::str(const CLIArguments& args)
+string CLIArguments::str()
 {
 	std::ostringstream oss;
 
-	for (const string& a : CLIArguments::ArgVector(args))
+	for (const string& a : ArgVector())
 		oss << " " << a;
 
 	return oss.str();

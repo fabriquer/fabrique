@@ -1,7 +1,6 @@
 sources = files(
 	ABI.cc
 	Bytestream.cc
-	CLIArguments.cc
 	ErrorReport.cc
 	Join.cc
 	SourceLocation.cc

@@ -40,7 +40,6 @@
 #include <fabrique/dag/Rule.hh>
 
 #include "Support/Bytestream.h"
-#include "Support/CLIArguments.h"
 #include "Support/Join.h"
 #include "Support/exceptions.h"
 
@@ -229,7 +228,7 @@ UniqPtr<DAG> DAGBuilder::dag(vector<string> topLevelTargets) const
 }
 
 
-ValuePtr DAGBuilder::AddRegeneration(const CLIArguments& commandLineArgs,
+ValuePtr DAGBuilder::AddRegeneration(std::string command,
                                      const vector<string>& inputFiles,
                                      const vector<string>& outputFiles)
 {
@@ -262,18 +261,10 @@ ValuePtr DAGBuilder::AddRegeneration(const CLIArguments& commandLineArgs,
 	params.emplace_back(
 		new Parameter("output", t.listOf(outputType, Nowhere), Nothing));
 
-	shared_ptr<dag::Rule> rule;
-	{
-		const string Name = Rule::RegenerationRuleName();
-		const string Command =
-			commandLineArgs.executable
-			+ CLIArguments::str(commandLineArgs)
-			+ " ${rootInput}"
-			;
-
-		ValuePtr r = Rule(Name, Command, buildType, ruleArgs, params);
-		rule = dynamic_pointer_cast<class Rule>(r);
-	}
+	const string Name = Rule::RegenerationRuleName();
+	auto rule = dynamic_pointer_cast<class Rule>(
+		Rule(Name, command + " ${rootInput}", buildType, ruleArgs, params)
+	);
 
 	//
 	// Now, construct the build step that drives the rule above in order
