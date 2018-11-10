@@ -34,6 +34,7 @@
 #include <fabrique/ast/Identifier.hh>
 #include <fabrique/ast/Visitor.hh>
 #include <fabrique/dag/Record.hh>
+#include <fabrique/types/Type.hh>
 #include "Support/Bytestream.h"
 
 #include <cassert>
@@ -81,7 +82,7 @@ void FieldQuery::Accept(Visitor& v) const
 dag::ValuePtr FieldQuery::evaluate(EvalContext& ctx) const
 {
 	auto base = base_->evaluate(ctx);
-	SemaCheck(base->hasFields(), source(), TypeName(*base_) + " has no fields");
+	SemaCheck(base->hasFields(), source(), "no fields in " + base->type().str());
 
 	if (auto result = base->field(field_->name()))
 	{

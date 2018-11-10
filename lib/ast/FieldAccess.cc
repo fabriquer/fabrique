@@ -32,6 +32,7 @@
 #include <fabrique/ast/FieldAccess.hh>
 #include <fabrique/ast/Identifier.hh>
 #include <fabrique/ast/Visitor.hh>
+#include <fabrique/types/Type.hh>
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 
@@ -73,11 +74,11 @@ void FieldAccess::Accept(Visitor& v) const
 dag::ValuePtr FieldAccess::evaluate(EvalContext& ctx) const
 {
 	dag::ValuePtr base = base_->evaluate(ctx);
-	SemaCheck(base->hasFields(), base_->source(), TypeName(*base) + " has no fields");
+	SemaCheck(base->hasFields(), base_->source(), "no fields in " + base->type().str());
 
 	const std::string fieldName(field_->name());
 	dag::ValuePtr field = base->field(fieldName);
-	SemaCheck(field, source(), "no field " + fieldName + " within " + TypeName(base));
+	SemaCheck(field, source(), "no such field in " + base->type().str());
 
 	return field;
 }
