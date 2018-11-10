@@ -73,8 +73,8 @@ int main(int argc, char *argv[]) {
 	//
 	// Parse command-line arguments.
 	//
-	unique_ptr<CLIArguments> args(CLIArguments::Parse(argc, argv));
-	if (not args or args->help)
+	CLIArguments args = CLIArguments::Parse(argc, argv);
+	if (not args or args.help)
 	{
 		CLIArguments::PrintUsage(cerr);
 		return (args ? 0 : 1);
@@ -83,20 +83,20 @@ int main(int argc, char *argv[]) {
 	//
 	// Set up debug streams.
 	//
-	Bytestream::SetDebugPattern(args->debugPattern);
+	Bytestream::SetDebugPattern(args.debugPattern);
 	Bytestream::SetDebugStream(Bytestream::Stdout());
 
 	Bytestream& argDebug = Bytestream::Debug("cli.args");
-	args->Print(argDebug);
+	args.Print(argDebug);
 	argDebug << Bytestream::Reset << "\n";
 
 	//
 	// Locate input file, source root and build root.
 	//
 	const string fabfile =
-		PathIsDirectory(args->input)
-		? JoinPath(args->input, "fabfile")
-		: args->input
+		PathIsDirectory(args.input)
+		? JoinPath(args.input, "fabfile")
+		: args.input
 		;
 
 	if (not PathIsFile(fabfile))
@@ -114,7 +114,7 @@ int main(int argc, char *argv[]) {
 
 	const string abspath = PathIsAbsolute(fabfile) ? fabfile : AbsolutePath(fabfile);
 	const string srcroot = DirectoryOf(abspath);
-	const string buildroot = AbsoluteDirectory(args->output, true);
+	const string buildroot = AbsoluteDirectory(args.output, true);
 
 	vector<string> inputFiles = { fabfile };
 	vector<string> outputFiles;
@@ -123,7 +123,7 @@ int main(int argc, char *argv[]) {
 	// Prepare backends to receive the build graph.
 	//
 	UniqPtrVec<Backend> backends;
-	for (const string& format : args->outputFormats)
+	for (const string& format : args.outputFormats)
 	{
 		backends.emplace_back(Backend::Create(format));
 
@@ -148,7 +148,7 @@ int main(int argc, char *argv[]) {
 			throw UserError("failed to open '" + fabfile + "'");
 		}
 
-		parsing::Parser parser(args->printAST, args->dumpAST);
+		parsing::Parser parser(args.printAST, args.dumpAST);
 		auto parseResult = parser.ParseFile(infile, fabfile);
 
 		if (not parseResult.errors.empty())
@@ -160,7 +160,7 @@ int main(int argc, char *argv[]) {
 			return 1;
 		}
 
-		if (args->parseOnly)
+		if (args.parseOnly)
 		{
 			return 0;
 		}
@@ -172,9 +172,9 @@ int main(int argc, char *argv[]) {
 		// Convert the AST into a build graph.
 		//
 		TypeContext types;
-		plugin::Loader pluginLoader(PluginSearchPaths(args->executable));
+		plugin::Loader pluginLoader(PluginSearchPaths(args.executable));
 		ast::EvalContext ctx(types);
-		//builtins(types, srcroot, args->printAST, args->dumpAST));
+		//builtins(types, srcroot, args.printAST, args.dumpAST));
 
 		dag::DAGBuilder &builder = ctx.builder();
 
@@ -196,7 +196,7 @@ int main(int argc, char *argv[]) {
 		}
 
 		// Add regeneration (if Fabrique files change):
-		string regenerationCommand = args->executable + args->str();
+		string regenerationCommand = args.executable + args.str();
 		if (not outputFiles.empty())
 			ctx.builder().AddRegeneration(
 				regenerationCommand, inputFiles, outputFiles);
@@ -204,7 +204,7 @@ int main(int argc, char *argv[]) {
 		unique_ptr<dag::DAG> dag = ctx.builder().dag(targets);
 		FAB_ASSERT(dag, "null DAG");
 
-		if (args->printDAG)
+		if (args.printDAG)
 		{
 			dag->PrettyPrint(Bytestream::Stdout());
 		}
@@ -221,7 +221,7 @@ int main(int argc, char *argv[]) {
 			const string filename =
 				JoinPath(buildroot, backend->DefaultFilename());
 
-			if (not args->printOutput and filename != buildroot)
+			if (not args.printOutput and filename != buildroot)
 			{
 				outfile.open(filename.c_str());
 				outfileStream.reset(Bytestream::Plain(outfile));

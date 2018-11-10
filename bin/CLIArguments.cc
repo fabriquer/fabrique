@@ -172,7 +172,7 @@ void CLIArguments::PrintUsage(std::ostream& out)
 	option::printUsage(out, usage);
 }
 
-CLIArguments* CLIArguments::Parse(int argc, char *argv[])
+CLIArguments CLIArguments::Parse(int argc, char *argv[])
 {
 	option::Stats stats(usage, argc - 1, argv + 1);
 	std::vector<option::Option> options(stats.options_max);
@@ -181,7 +181,7 @@ CLIArguments* CLIArguments::Parse(int argc, char *argv[])
 	                    options.data(), buffer.data());
 
 	if (opts.nonOptionsCount() > 1)
-		return nullptr;
+		return {};
 
 	const string executable =
 		platform::PathIsFile(argv[0])
@@ -220,7 +220,8 @@ CLIArguments* CLIArguments::Parse(int argc, char *argv[])
 		? (options[DebugPattern].arg ? options[DebugPattern].arg : "*")
 		: "none";
 
-	return new CLIArguments {
+	return CLIArguments {
+		true,
 		executable,
 		help,
 		input,

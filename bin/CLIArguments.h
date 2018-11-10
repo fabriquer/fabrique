@@ -55,11 +55,16 @@ class CLIArguments
 {
 public:
 	static void PrintUsage(std::ostream&);
-	static CLIArguments* Parse(int argc, char *argv[]);
+	static CLIArguments Parse(int argc, char *argv[]);
 	std::vector<std::string> ArgVector();
+
+	operator bool () const { return valid; }
 
 	void Print(Bytestream&);
 	std::string str();
+
+	//! Command-line arguments were successfully parsed.
+	const bool valid;
 
 	//! The currently-running binary.
 	const std::string executable;
