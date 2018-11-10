@@ -5,7 +5,7 @@
 
 foo = record
 {
-	# CHECK: {{.*}}/subdir-wrong-type.fab:10:{{[0-9]+}}: error: subdir must be a file
-	# CHECK:   (not 'string')
+	# CHECK: {{.*}}/subdir-wrong-type.fab:10:{{[0-9\-]+}}: error: expected file,
+	# CHECK:   found string
 	subdir = 'hello.txt';
 };
