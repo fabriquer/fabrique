@@ -29,17 +29,15 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/names.hh>
 #include <fabrique/types/IntegerType.hh>
 #include <fabrique/types/TypeContext.hh>
 #include "Support/SourceLocation.h"
 using namespace fabrique;
 
 
-static const char *Name = "int";
-
-
 IntegerType::IntegerType(TypeContext& ctx)
-	: Type(Name, PtrVec<Type>(), ctx)
+	: Type(names::Int, PtrVec<Type>(), ctx)
 {
 }
 
@@ -48,7 +46,7 @@ IntegerType::~IntegerType() {}
 
 const Type& IntegerType::get(TypeContext& ctx)
 {
-	const Type& existing = ctx.find(Name);
+	const Type& existing = ctx.find(names::Int);
 	if (existing)
 		return existing;
 

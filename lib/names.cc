@@ -29,26 +29,39 @@
  */
 
 #include <fabrique/names.hh>
+using namespace fabrique;
 
 
 static const char* ReservedNames[] =
 {
-	"args",
-	"bool",
-	"buildroot",
-	"file",
-	"import",
-	"in",
-	"int",
-	"list",
-	"out",
-	"srcroot",
-	"string",
-	"type",
+	names::Action,
+	names::And,
+	names::Arguments,
+	names::Bool,
+	names::BuildDirectory,
+	names::BuildRoot,
+	names::False,
+	names::File,
+	names::Files,
+	names::Function,
+	names::Import,
+	names::In,
+	names::Int,
+	names::List,
+	names::Nil,
+	names::Not,
+	names::Or,
+	names::Out,
+	names::Record,
+	names::SourceRoot,
+	names::String,
+	names::True,
+	names::Type,
+	names::XOr,
 };
 
 
-bool fabrique::builtins::reservedName(const std::string &name)
+bool fabrique::names::reservedName(const std::string &name)
 {
 	for (const char *reserved : ReservedNames)
 		if (name == reserved)

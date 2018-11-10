@@ -28,32 +28,58 @@
  * SUCH DAMAGE.
  */
 
-#ifndef FAB_RESERVED_NAMES_H_
-#define FAB_RESERVED_NAMES_H_
+#ifndef FAB_NAMES_H_
+#define FAB_NAMES_H_
 
 #include <string>
 
 namespace fabrique {
-namespace builtins {
+namespace names {
 
+//
+// Reserved names: it is not permissible to define values with these names.
+//
+static const char Action[] = "action";
+static const char And[] = "and";
 static const char Arguments[] = "args";
-static const char Basename[] = "basename";
+static const char Bool[] = "bool";
 static const char BuildDirectory[] = "builddir";
 static const char BuildRoot[] = "buildroot";
+static const char False[] = "false";
+static const char File[] = "file";
+static const char Files[] = "files";
+static const char Function[] = "function";
+static const char Import[] = "import";
+static const char In[] = "in";
+static const char Int[] = "int";
+static const char List[] = "list";
+static const char Nil[] = "nil";
+static const char Not[] = "not";
+static const char Or[] = "or";
+static const char Out[] = "out";
+static const char Record[] = "record";
+static const char SourceRoot[] = "srcroot";
+static const char String[] = "string";
+static const char True[] = "true";
+static const char Type[] = "type";
+static const char XOr[] = "xor";
+
+//
+// Other names defined to have specific meanings in some contexts
+// but still usable as user-defined names.
+//
+static const char Basename[] = "basename";
 static const char Extension[] = "extension";
 static const char Generated[] = "generated";
-static const char File[] = "file";
 static const char FileName[] = "filename";
 static const char FullName[] = "fullname";
 static const char Name[] = "name";
-static const char SourceRoot[] = "sourceroot";
 static const char Subdirectory[] = "subdir";
 
 bool reservedName(const std::string&);
 
 
-} // namespace builtins
+} // namespace names
 } // namespace fabrique
 
-#endif  // FAB_RESERVED_NAMES_H_
-
+#endif  // FAB_NAMES_H_

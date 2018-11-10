@@ -29,6 +29,7 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/names.hh>
 #include <fabrique/ast/BinaryOperation.hh>
 #include <fabrique/ast/Visitor.hh>
 #include "Support/Bytestream.h"
@@ -70,9 +71,9 @@ BinaryOperation::Operator BinaryOperation::Op(const std::string& o)
 	else if (o == "==") op = Equal;
 	else if (o == "!=") op = NotEqual;
 
-	else if (o == "and") op = And;
-	else if (o == "or") op = Or;
-	else if (o == "xor") op = Xor;
+	else if (o == names::And) op = And;
+	else if (o == names::Or) op = Or;
+	else if (o == names::XOr) op = Xor;
 
 	else op = Invalid;
 
@@ -96,9 +97,9 @@ std::string BinaryOperation::OpStr(Operator op)
 		case Equal:             return "==";
 		case NotEqual:          return "!=";
 
-		case And:               return "and";
-		case Or:                return "or";
-		case Xor:               return "xor";
+		case And:               return names::And;
+		case Or:                return names::Or;
+		case Xor:               return names::XOr;
 
 		case Invalid:           FAB_ASSERT(false, "unreachable Invalid binary op");
 	}

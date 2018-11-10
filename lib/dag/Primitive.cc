@@ -29,6 +29,7 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/names.hh>
 #include <fabrique/dag/constants.hh>
 #include <fabrique/dag/Primitive.hh>
 #include <fabrique/dag/Visitor.hh>
@@ -104,7 +105,7 @@ ValuePtr Boolean::Equals(ValuePtr& v) const
 	                            SourceRange(*this, *other)));
 }
 
-string Boolean::str() const { return value_ ? "true" : "false"; }
+string Boolean::str() const { return value_ ? names::True : names::False; }
 
 void Boolean::Accept(Visitor& v) const
 {
@@ -131,7 +132,7 @@ ValuePtr Integer::Add(ValuePtr& v) const
 
 	shared_ptr<Integer> other = std::dynamic_pointer_cast<Integer>(v);
 	if (not other)
-		throw WrongTypeException("int", v->type(), v->source());
+		throw WrongTypeException(names::Int, v->type(), v->source());
 
 	return ValuePtr(
 		new Integer(this->value_ + other->value_, type(), loc));
@@ -143,7 +144,7 @@ ValuePtr Integer::DivideBy(ValuePtr& v) const
 
 	shared_ptr<Integer> other = std::dynamic_pointer_cast<Integer>(v);
 	if (not other)
-		throw WrongTypeException("int", v->type(), v->source());
+		throw WrongTypeException(names::Int, v->type(), v->source());
 
 	return ValuePtr(
 		new Integer(this->value_ / other->value_, type(), loc));
@@ -155,7 +156,7 @@ ValuePtr Integer::Equals(ValuePtr& v) const
 
 	shared_ptr<Integer> other = std::dynamic_pointer_cast<Integer>(v);
 	if (not other)
-		throw WrongTypeException("int", v->type(), v->source());
+		throw WrongTypeException(names::Int, v->type(), v->source());
 
 	const bool eq = this->value_ == other->value_;
 	const Type& boolTy = type().context().booleanType();
@@ -168,7 +169,7 @@ ValuePtr Integer::MultiplyBy(ValuePtr& v) const
 
 	shared_ptr<Integer> other = std::dynamic_pointer_cast<Integer>(v);
 	if (not other)
-		throw WrongTypeException("int", v->type(), v->source());
+		throw WrongTypeException(names::Int, v->type(), v->source());
 
 	return ValuePtr(
 		new Integer(this->value_ * other->value_, type(), loc));
@@ -180,7 +181,7 @@ ValuePtr Integer::Subtract(ValuePtr& v) const
 
 	shared_ptr<Integer> other = std::dynamic_pointer_cast<Integer>(v);
 	if (not other)
-		throw WrongTypeException("int", v->type(), v->source());
+		throw WrongTypeException(names::Int, v->type(), v->source());
 
 	return ValuePtr(
 		new Integer(this->value_ - other->value_, type(), loc));
@@ -205,7 +206,7 @@ ValuePtr String::Add(ValuePtr& v) const
 
 	shared_ptr<String> other = std::dynamic_pointer_cast<String>(v);
 	if (not other)
-		throw WrongTypeException("string", v->type(), loc);
+		throw WrongTypeException(names::String, v->type(), loc);
 
 	return ValuePtr(
 		new String(this->value_ + other->value_, type(), loc));
@@ -217,7 +218,7 @@ ValuePtr String::Equals(ValuePtr& v) const
 
 	shared_ptr<String> other = std::dynamic_pointer_cast<String>(v);
 	if (not other)
-		throw WrongTypeException("string", v->type(), loc);
+		throw WrongTypeException(names::String, v->type(), loc);
 
 	// Don't trust std::string::compare, it thinks "foo" != "foo\0".
 	const char *x = this->value_.data();

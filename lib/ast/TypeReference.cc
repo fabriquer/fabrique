@@ -1,6 +1,6 @@
 /** @file AST/TypeReference.cc    Definition of @ref fabrique::ast::TypeReference. */
 /*
- * Copyright (c) 2015-2017 Jonathan Anderson
+ * Copyright (c) 2015-2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed at Memorial University of Newfoundland under
@@ -28,6 +28,7 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/names.hh>
 #include <fabrique/ast/EvalContext.hh>
 #include <fabrique/ast/TypeDeclaration.hh>
 #include <fabrique/ast/TypeReference.hh>
@@ -236,7 +237,7 @@ void RecordTypeReference::Accept(Visitor& v) const
 void RecordTypeReference::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
 	out
-		<< Bytestream::Type << "record"
+		<< Bytestream::Type << names::Record
 		<< Bytestream::Operator << '['
 		<< Bytestream::Reset
 		;

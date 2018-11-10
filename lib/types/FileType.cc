@@ -41,10 +41,6 @@
 using namespace fabrique;
 
 
-static const char *InTagName = "in";
-static const char *OutTagName = "out";
-
-
 bool FileType::isInput(const Type& t)
 {
 	if (t.isFile())
@@ -97,13 +93,13 @@ FileType::TypeMap FileType::fields() const
 	TypeContext& ctx = context();
 
 	TypeMap map = {
-		{ builtins::Basename,      ctx.stringType() },
-		{ builtins::Extension,     ctx.stringType() },
-		{ builtins::FileName,      ctx.stringType() },
-		{ builtins::FullName,      ctx.stringType() },
-		{ builtins::Generated,     ctx.booleanType() },
-		{ builtins::Name,          ctx.stringType() },
-		{ builtins::Subdirectory,  ctx.fileType() },
+		{ names::Basename,      ctx.stringType() },
+		{ names::Extension,     ctx.stringType() },
+		{ names::FileName,      ctx.stringType() },
+		{ names::FullName,      ctx.stringType() },
+		{ names::Generated,     ctx.booleanType() },
+		{ names::Name,          ctx.stringType() },
+		{ names::Subdirectory,  ctx.fileType() },
 	};
 
 	for (auto& i : arguments_)
@@ -200,10 +196,10 @@ Type* FileType::Parameterise(const PtrVec<Type>& params, const SourceRange& src)
 
 	const std::string name = params[0]->name();
 
-	if (name == InTagName)
+	if (name == names::In)
 		return new FileType(Tag::Input, params, arguments_, context());
 
-	else if (name == OutTagName)
+	else if (name == names::Out)
 		return new FileType(Tag::Output, params, arguments_, context());
 
 	throw SemanticException("invalid file tag '" + name + "'", src);

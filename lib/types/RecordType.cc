@@ -29,6 +29,7 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/names.hh>
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
 #include "Support/SourceLocation.h"
@@ -64,7 +65,7 @@ RecordType::Create(const NamedTypeVec& fields, TypeContext& ctx)
 
 RecordType::RecordType(const StringMap<const Type&>& fieldTypes,
                              const vector<string>& fieldNames, TypeContext& ctx)
-	: Type("record", PtrVec<Type>(), ctx),
+	: Type(names::Record, PtrVec<Type>(), ctx),
 	  fieldTypes_(fieldTypes), fieldNames_(fieldNames)
 {
 #ifndef NDEBUG
@@ -177,7 +178,7 @@ const Type& RecordType::supertype(const Type& t) const
 
 void RecordType::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
-	out << Bytestream::Type << "record" << Bytestream::Reset;
+	out << Bytestream::Type << names::Record << Bytestream::Reset;
 
 	if (fieldNames_.empty())
 		return;

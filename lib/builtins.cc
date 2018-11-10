@@ -70,7 +70,7 @@ static ValuePtr OpenFileImpl(ValueMap arguments, DAGBuilder &b, SourceRange src)
 
 	// TODO: look up subdirectory in the call context?
 	string subdir;
-	if (auto s = arguments[builtins::Subdirectory])
+	if (auto s = arguments[names::Subdirectory])
 	{
 		subdir = s->str();
 	}
@@ -107,7 +107,7 @@ ImportFile(string filename, string subdir, SourceRange src, parsing::Parser &p,
 	DAGBuilder &b = eval.builder();
 
 	auto scope = eval.EnterScope(filename);
-	scope.Define(builtins::Subdirectory, b.File(subdir));
+	scope.Define(names::Subdirectory, b.File(subdir));
 
 	std::ifstream infile(filename.c_str());
 	SemaCheck(infile, src, "failed to open '" + filename + "'");
@@ -159,7 +159,7 @@ fabrique::builtins::Import(parsing::Parser &p, string srcroot, ast::EvalContext 
 		SemaCheck(n, src, "missing module or file name");
 		const string name = n->str();
 
-		auto s = arguments[Subdirectory];
+		auto s = arguments[names::Subdirectory];
 		SemaCheck(s, src, "missing subdir");
 
 		auto currentSubdir = std::dynamic_pointer_cast<dag::File>(s);

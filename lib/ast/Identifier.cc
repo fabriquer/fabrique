@@ -45,7 +45,7 @@ Identifier::Identifier(std::string name, SourceRange src)
 
 bool Identifier::reservedName() const
 {
-	return builtins::reservedName(name_);
+	return names::reservedName(name_);
 }
 
 void Identifier::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const

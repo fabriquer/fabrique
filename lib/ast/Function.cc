@@ -30,6 +30,7 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/names.hh>
 #include <fabrique/ast/CompoundExpr.hh>
 #include <fabrique/ast/EvalContext.hh>
 #include <fabrique/ast/Function.hh>
@@ -64,7 +65,7 @@ void Function::PrettyPrint(Bytestream& out, unsigned int indent) const
 	std::string intabs(indent + 1, '\t');
 
 	out
-		<< Bytestream::Action << "function"
+		<< Bytestream::Action << names::Function
 		<< Bytestream::Operator << "("
 		;
 

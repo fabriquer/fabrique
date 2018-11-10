@@ -29,6 +29,7 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/names.hh>
 #include <fabrique/UniqPtr.h>
 #include <fabrique/ast/Action.hh>
 #include <fabrique/ast/EvalContext.hh>
@@ -85,7 +86,7 @@ Action::Action(UniqPtr<Arguments> args, UniqPtrVec<Parameter> params, SourceRang
 void Action::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
 	out
-		<< Bytestream::Action << "action"
+		<< Bytestream::Action << names::Action
 		<< Bytestream::Operator << "("
 		<< Bytestream::Reset
 		;

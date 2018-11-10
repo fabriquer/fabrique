@@ -32,6 +32,7 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/names.hh>
 #include <fabrique/ast/EvalContext.hh>
 #include <fabrique/ast/Record.hh>
 #include <fabrique/ast/Visitor.hh>
@@ -82,7 +83,7 @@ void Record::Accept(Visitor& v) const
 
 dag::ValuePtr Record::evaluate(EvalContext& ctx) const
 {
-	auto instantiationScope(ctx.EnterScope("record"));
+	auto instantiationScope(ctx.EnterScope(names::Record));
 
 	dag::ValueMap fields;
 	for (auto& field : fields_)

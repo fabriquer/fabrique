@@ -29,6 +29,7 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/names.hh>
 #include <fabrique/ast/UnaryOperation.hh>
 #include <fabrique/ast/Visitor.hh>
 #include "Support/Bytestream.h"
@@ -53,7 +54,7 @@ UnaryOperation::Operator UnaryOperation::Op(const std::string& o)
 
 	if (o == "+") op = Plus;
 	else if (o == "-") op = Minus;
-	else if (o == "not") op = LogicalNot;
+	else if (o == names::Not) op = LogicalNot;
 	else op = Invalid;
 
 	FAB_ASSERT(o == OpStr(op), "symmetric unary operation check failed");
@@ -67,7 +68,7 @@ std::string UnaryOperation::OpStr(Operator op)
 	{
 		case Plus:              return "+";
 		case Minus:             return "-";
-		case LogicalNot:        return "not";
+		case LogicalNot:        return names::Not;
 		case Invalid:           FAB_ASSERT(false, "unreachable Invalid unary op");
 	}
 
