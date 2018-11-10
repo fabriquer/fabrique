@@ -107,7 +107,7 @@ ImportFile(string filename, string subdir, SourceRange src, parsing::Parser &p,
 	DAGBuilder &b = eval.builder();
 
 	auto scope = eval.EnterScope(filename);
-	scope.Define("subdir", b.File(subdir));
+	scope.Define(builtins::Subdirectory, b.File(subdir));
 
 	std::ifstream infile(filename.c_str());
 	SemaCheck(infile, src, "failed to open '" + filename + "'");
