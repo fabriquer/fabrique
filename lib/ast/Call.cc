@@ -90,23 +90,6 @@ dag::ValuePtr Call::evaluate(EvalContext& ctx) const
 	dag::ValueMap args;
 	StringMap<SourceRange> argLocations;
 
-	//
-	// Calls to file() and import() are special: they implicitly get access to the
-	// current `subdir` value
-	//
-	if (auto *n = dynamic_cast<NameReference*>(target_.get()))
-	{
-		const std::string &name = n->name().name();
-		using names::Subdirectory;
-
-		if ((name == names::File or name == names::Import)
-		    and not args[Subdirectory])
-		{
-			args[Subdirectory] = ctx.Lookup(Subdirectory, source());
-			argLocations.emplace(Subdirectory, source());
-		}
-	}
-
 	for (auto& i : target->NameArguments(arguments_->positional()))
 	{
 		const std::string name = i.first;
@@ -121,8 +104,27 @@ dag::ValuePtr Call::evaluate(EvalContext& ctx) const
 		const std::string name = a->getName().name();
 		const ast::Expression& value = a->getValue();
 
+		SemaCheck(not args[name], a->source(), "redefining '" + name + "'");
+
 		argLocations.emplace(name, SourceRange::Over(a, &value));
 		args[name] = value.evaluate(ctx);
+	}
+
+	//
+	// Calls to file() and import() are special: they implicitly get access to the
+	// current `subdir` value (if none has been specified explicitly)
+	//
+	if (auto *n = dynamic_cast<NameReference*>(target_.get()))
+	{
+		const std::string &name = n->name().name();
+		using names::Subdirectory;
+
+		if ((name == names::File or name == names::Import)
+		    and not args[Subdirectory])
+		{
+			args[Subdirectory] = ctx.Lookup(Subdirectory, source());
+			argLocations.emplace(Subdirectory, source());
+		}
 	}
 
 	target->CheckArguments(args, argLocations, source());
