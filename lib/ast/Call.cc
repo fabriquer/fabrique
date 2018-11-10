@@ -97,10 +97,10 @@ dag::ValuePtr Call::evaluate(EvalContext& ctx) const
 	if (auto *n = dynamic_cast<NameReference*>(target_.get()))
 	{
 		const std::string &name = n->name().name();
-		if (name == "import")
-		{
-			using builtins::Subdirectory;
+		using builtins::Subdirectory;
 
+		if (name == "import" and not args[Subdirectory])
+		{
 			args[Subdirectory] = ctx.Lookup(Subdirectory, source());
 			argLocations.emplace(Subdirectory, source());
 		}
