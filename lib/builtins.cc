@@ -107,6 +107,7 @@ ImportFile(string filename, string subdir, SourceRange src, parsing::Parser &p,
 	DAGBuilder &b = eval.builder();
 
 	auto scope = eval.EnterScope(filename);
+	scope.DefineReserved(names::BuildDirectory, b.File(subdir));
 	scope.Define(names::Subdirectory, b.File(subdir));
 
 	std::ifstream infile(filename.c_str());
