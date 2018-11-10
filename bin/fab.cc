@@ -139,6 +139,54 @@ int main(int argc, char *argv[]) {
 	//
 	try
 	{
+		parsing::Parser parser(args.printAST, args.dumpAST);
+		TypeContext types;
+		ast::EvalContext ctx(types);
+
+		//
+		// Parse command-line definitions.
+		//
+		Bytestream &defDbg = Bytestream::Debug("cli.definitions");
+		dag::ValueMap definitions;
+		for (const string &d : args.definitions)
+		{
+			defDbg
+				<< Bytestream::Action << "parsing "
+				<< Bytestream::Type << "command-line definition "
+				<< Bytestream::Operator << "'"
+				<< Bytestream::Definition << d
+				<< Bytestream::Operator << "'"
+				<< "\n"
+				;
+
+			auto parseResult = parser.Parse(d);
+			if (not parseResult.errors.empty())
+			{
+				for (auto &err : parseResult.errors)
+				{
+					Bytestream::Stderr() << err << "\n";
+				}
+				throw UserError("invalid definition: '" + d + "'");
+			}
+
+			FAB_ASSERT(parseResult.result, "!errors and !result");
+			if (auto &name = parseResult.result->name())
+			{
+				auto value = parseResult.result->evaluate(ctx);
+				definitions[name->name()] = value;
+			}
+			else
+			{
+				Bytestream::Stdout()
+					<< Bytestream::Warning << "warning: "
+					<< Bytestream::Action << "ignoring"
+					<< Bytestream::Reset << " definition '"
+					<< Bytestream::Literal << d
+					<< Bytestream::Reset << "' with no name\n"
+					;
+			}
+		}
+
 		//
 		// Parse the file, optionally pretty-printing it.
 		//
@@ -148,7 +196,6 @@ int main(int argc, char *argv[]) {
 			throw UserError("failed to open '" + fabfile + "'");
 		}
 
-		parsing::Parser parser(args.printAST, args.dumpAST);
 		auto parseResult = parser.ParseFile(infile, fabfile);
 
 		if (not parseResult.errors.empty())
@@ -171,14 +218,11 @@ int main(int argc, char *argv[]) {
 		//
 		// Convert the AST into a build graph.
 		//
-		TypeContext types;
 		plugin::Loader pluginLoader(PluginSearchPaths(args.executable));
-		ast::EvalContext ctx(types);
-		//builtins(types, srcroot, args.printAST, args.dumpAST));
-
 		dag::DAGBuilder &builder = ctx.builder();
 
 		auto scope = ctx.EnterScope(fabfile);
+		scope.DefineReserved("args", builder.Record(definitions));
 		scope.DefineReserved("srcroot", builder.File(srcroot));
 		scope.DefineReserved("buildroot", builder.File(buildroot));
 		scope.DefineReserved("file", builtins::OpenFile(builder));
