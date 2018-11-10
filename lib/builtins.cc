@@ -65,7 +65,7 @@ static std::vector<UniqPtrVec<ast::Value>> importedASTs;
 
 static ValuePtr OpenFileImpl(ValueMap arguments, DAGBuilder &b, SourceRange src)
 {
-	auto filename = arguments["name"];
+	auto filename = arguments["filename"];
 	SemaCheck(filename, src, "missing filename");
 
 	// TODO: look up subdirectory in the call context?
@@ -84,7 +84,7 @@ fabrique::dag::ValuePtr fabrique::builtins::OpenFile(fabrique::dag::DAGBuilder &
 	TypeContext &types = b.typeContext();
 
 	SharedPtrVec<dag::Parameter> params;
-	params.emplace_back(new Parameter("name", types.stringType()));
+	params.emplace_back(new Parameter("filename", types.stringType()));
 
 	return b.Function(OpenFileImpl, types.fileType(), params,
 	                  SourceRange::None(), true);
@@ -149,7 +149,7 @@ fabrique::builtins::Import(parsing::Parser &p, string srcroot, ast::EvalContext 
 	TypeContext &types = b.typeContext();
 
 	SharedPtrVec<dag::Parameter> params;
-	params.emplace_back(new Parameter("name", types.stringType()));
+	params.emplace_back(new Parameter("module", types.stringType()));
 
 	//plugin::Registry& pluginRegistry = plugin::Registry::get();
 
@@ -159,7 +159,7 @@ fabrique::builtins::Import(parsing::Parser &p, string srcroot, ast::EvalContext 
 	{
 		Bytestream &dbg = Bytestream::Debug("module.import");
 
-		auto n = arguments["name"];
+		auto n = arguments["module"];
 		SemaCheck(n, src, "missing module or file name");
 		const string name = n->str();
 
