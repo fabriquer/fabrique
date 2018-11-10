@@ -110,6 +110,13 @@ EvalContext::ScopedValues::Define(const string &name, ValuePtr v, SourceRange sr
 		SemaCheck(not builtins::reservedName(name), src, "defining reserved name");
 	}
 
+	if (name == builtins::Subdirectory)
+	{
+		const Type &t = v->type();
+		SemaCheck(t.isSubtype(t.context().fileType()), src,
+			"expected file, found " + t.str());
+	}
+
 	values_.emplace(name, v);
 
 	return *this;
