@@ -30,6 +30,8 @@
  * SUCH DAMAGE.
  */
 
+#include "CLIArguments.h"
+
 #include <fabrique/builtins.hh>
 
 #include <fabrique/ast/ASTDump.hh>
@@ -47,7 +49,6 @@
 #include <fabrique/plugin/Registry.hh>
 
 #include "Support/Bytestream.h"
-#include "Support/CLIArguments.h"
 #include "Support/exceptions.h"
 
 #include <fabrique/types/TypeContext.hh>
@@ -195,9 +196,10 @@ int main(int argc, char *argv[]) {
 		}
 
 		// Add regeneration (if Fabrique files change):
+		string regenerationCommand = args->executable + CLIArguments::str(*args);
 		if (not outputFiles.empty())
 			ctx.builder().AddRegeneration(
-				*args, inputFiles, outputFiles);
+				regenerationCommand, inputFiles, outputFiles);
 
 		unique_ptr<dag::DAG> dag = ctx.builder().dag(targets);
 		FAB_ASSERT(dag, "null DAG");

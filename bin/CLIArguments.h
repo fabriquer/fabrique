@@ -1,4 +1,4 @@
-/** @file Support/CLIArguments.h    Declaration of @ref fabrique::CLIArguments. */
+//! @file bin/CLIArguments.h    Declaration of @ref fabrique::CLIArguments
 /*
  * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.

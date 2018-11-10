@@ -1,4 +1,4 @@
-/** @file Support/CLIArguments.cc    Definition of @ref fabrique::CLIArguments. */
+//! @file bin/CLIArguments.cc    Definition of @ref fabrique::CLIArguments
 /*
  * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
@@ -29,13 +29,14 @@
  * SUCH DAMAGE.
  */
 
+#include "CLIArguments.h"
+
 // Include Matthias Benkmann's "Lean Mean C++ Option Parser".
 #include "optionparser.h"
 
 #include <fabrique/platform/files.hh>
 
 #include "Support/Bytestream.h"
-#include "Support/CLIArguments.h"
 #include "Support/String.h"
 
 #include <iostream>

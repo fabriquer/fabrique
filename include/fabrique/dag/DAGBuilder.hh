@@ -87,7 +87,7 @@ public:
 	 * Add the build steps required to regenerate the @ref DAG if
 	 * Fabrique input files change.
 	 */
-	ValuePtr AddRegeneration(const CLIArguments& commandLineArguments,
+	ValuePtr AddRegeneration(std::string command,
                                  const std::vector<std::string>& inputFiles,
                                  const std::vector<std::string>& outputFiles);
 
