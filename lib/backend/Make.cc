@@ -29,6 +29,8 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/names.hh>
+
 #include <fabrique/backend/Make.hh>
 
 #include <fabrique/dag/Build.hh>
@@ -372,7 +374,7 @@ int MakeFormatter::replaceAll(string& haystack, const string& pattern,
 
 string MakeFormatter::Format(const Boolean& b)
 {
-	return (b.value() ? "true" : "false");
+	return (b.value() ? fabrique::names::True : fabrique::names::False);
 }
 
 string MakeFormatter::Format(const Build& b)

@@ -29,6 +29,7 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/names.hh>
 #include <fabrique/types/FunctionType.hh>
 #include "Support/Bytestream.h"
 #include "Support/Join.h"
@@ -50,8 +51,7 @@ FunctionType::Create(const PtrVec<Type>& parameterTypes, const Type& retTy)
 
 const std::string FunctionType::name() const
 {
-	static const char* name = "function";
-	return name;
+	return names::Function;
 }
 
 

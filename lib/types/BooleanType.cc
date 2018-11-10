@@ -29,17 +29,15 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/names.hh>
 #include <fabrique/types/BooleanType.hh>
 #include <fabrique/types/TypeContext.hh>
 #include "Support/SourceLocation.h"
 using namespace fabrique;
 
 
-static const char *Name = "bool";
-
-
 BooleanType::BooleanType(TypeContext& ctx)
-	: Type(Name, PtrVec<Type>(), ctx)
+	: Type(names::Bool, PtrVec<Type>(), ctx)
 {
 }
 
@@ -48,7 +46,7 @@ BooleanType::~BooleanType() {}
 
 const Type& BooleanType::get(TypeContext& ctx)
 {
-	const Type& existing = ctx.find(Name);
+	const Type& existing = ctx.find(names::Bool);
 	if (existing)
 		return existing;
 

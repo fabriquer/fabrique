@@ -29,17 +29,15 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/names.hh>
 #include <fabrique/types/StringType.hh>
 #include <fabrique/types/TypeContext.hh>
 #include "Support/SourceLocation.h"
 using namespace fabrique;
 
 
-static const char *Name = "string";
-
-
 StringType::StringType(TypeContext& ctx)
-	: Type(Name, PtrVec<Type>(), ctx)
+	: Type(names::String, PtrVec<Type>(), ctx)
 {
 }
 
@@ -48,7 +46,7 @@ StringType::~StringType() {}
 
 const Type& StringType::get(TypeContext& ctx)
 {
-	const Type& existing = ctx.find(Name);
+	const Type& existing = ctx.find(names::String);
 	if (existing)
 		return existing;
 

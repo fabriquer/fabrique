@@ -57,7 +57,7 @@ FileList::FileList(UniqPtrVec<FilenameLiteral> f, UniqPtrVec<Argument> a,
 void FileList::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
 	out
-		<< Bytestream::Action << "files"
+		<< Bytestream::Action << names::Files
 		<< Bytestream::Operator << "("
 		<< Bytestream::Reset
 		;
@@ -98,7 +98,7 @@ void FileList::Accept(Visitor& v) const
 
 dag::ValuePtr FileList::evaluate(EvalContext& ctx) const
 {
-	auto subdir = ctx.Lookup(builtins::Subdirectory);
+	auto subdir = ctx.Lookup(names::Subdirectory);
 	SemaCheck(subdir, source(), "no subdir defined");
 
 	auto scope(ctx.EnterScope("files"));
@@ -107,7 +107,7 @@ dag::ValuePtr FileList::evaluate(EvalContext& ctx) const
 	for (const UniqPtr<Argument>& arg : arguments())
 	{
 		const string name = arg->getName().name();
-		if (name == builtins::Subdirectory)
+		if (name == names::Subdirectory)
 		{
 			const string subsubdir =
 				arg->getValue().evaluate(ctx)->str();

@@ -29,6 +29,8 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/names.hh>
+
 #include <fabrique/backend/Dot.hh>
 
 #include <fabrique/dag/Build.hh>
@@ -172,7 +174,7 @@ void DotBackend::Process(const DAG& dag, Bytestream& out, ErrorReport::Report)
 
 string DotFormatter::Format(const Boolean& b)
 {
-	return b.value() ? "true" : "false";
+	return b.value() ? fabrique::names::True : fabrique::names::False;
 }
 
 string DotFormatter::Format(const Build& b)

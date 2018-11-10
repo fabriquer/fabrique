@@ -29,6 +29,7 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/names.hh>
 #include <fabrique/ast/EvalContext.hh>
 #include <fabrique/ast/literals.hh>
 #include <fabrique/ast/Visitor.hh>
@@ -41,7 +42,7 @@ using namespace fabrique::ast;
 
 std::string BoolLiteral::str() const
 {
-	return (value() ? "true" : "false");
+	return (value() ? names::True : names::False);
 }
 
 void BoolLiteral::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const

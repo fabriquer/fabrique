@@ -107,10 +107,10 @@ EvalContext::ScopedValues::Define(const string &name, ValuePtr v, SourceRange sr
 
 	if (not allowReservedName)
 	{
-		SemaCheck(not builtins::reservedName(name), src, "defining reserved name");
+		SemaCheck(not names::reservedName(name), src, "defining reserved name");
 	}
 
-	if (name == builtins::Subdirectory)
+	if (name == names::Subdirectory)
 	{
 		const Type &t = v->type();
 		SemaCheck(t.isSubtype(t.context().fileType()), src,
@@ -255,7 +255,7 @@ std::shared_ptr<EvalContext::ScopedValues> EvalContext::PopScope()
 dag::ValuePtr EvalContext::DefineBuiltin(string name, dag::ValuePtr value)
 {
 	SemaCheck(value, SourceRange::None(), "defining '" + name + "' as null");
-	SemaCheck(builtins::reservedName(name), value->source(),
+	SemaCheck(names::reservedName(name), value->source(),
 	          "invalid builtin name: '" + name + "'");
 
 	CurrentScope()->Define(name, value, value->source(), true);
@@ -366,10 +366,10 @@ ValuePtr EvalContext::Lookup(const string& name, SourceRange src)
 
 	// If we are looking for 'builddir' or 'subdir' and haven't found it
 	// defined anywhere, provide the top-level build/source subdirectory ('').
-	if (name == builtins::BuildDirectory)
+	if (name == names::BuildDirectory)
 		return builder_.File("", ValueMap(), SourceRange::None(), true);
 
-	if (name == builtins::Subdirectory)
+	if (name == names::Subdirectory)
 		return builder_.File("");
 
 	throw SemanticException("reference to undefined name", src);

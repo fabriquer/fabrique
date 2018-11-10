@@ -29,6 +29,7 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/names.hh>
 #include <fabrique/types/BooleanType.hh>
 #include <fabrique/types/FileType.hh>
 #include <fabrique/types/FunctionType.hh>
@@ -53,7 +54,7 @@ namespace
 	{
 	public:
 		NilType(TypeContext& ctx)
-			: Type("nil", PtrVec<Type>(), ctx)
+			: Type(names::Nil, PtrVec<Type>(), ctx)
 		{
 		}
 
@@ -111,7 +112,7 @@ const Type& TypeContext::nilType()
 const Type& TypeContext::booleanType()
 {
 	static const Type& t = Register(
-		new Type("bool", PtrVec<Type>(), *this));
+		new Type(names::Bool, PtrVec<Type>(), *this));
 
 	return t;
 }
@@ -137,18 +138,22 @@ const FileType& TypeContext::fileType()
 
 const FileType& TypeContext::inputFileType()
 {
-	static const Type& in = Register(Type::Create("in", PtrVec<Type>(), *this));
+	static const Type& in =
+		Register(Type::Create(names::In, PtrVec<Type>(), *this));
+
 	static const FileType& ty = dynamic_cast<const FileType&>(
-		find("file", PtrVec<Type>(1, &in)));
+		find(names::File, PtrVec<Type>(1, &in)));
 
 	return ty;
 }
 
 const FileType& TypeContext::outputFileType()
 {
-	static const Type& out = Register(Type::Create("out", PtrVec<Type>(), *this));
+	static const Type& out =
+		Register(Type::Create(names::Out, PtrVec<Type>(), *this));
+
 	static const FileType& ty = dynamic_cast<const FileType&>(
-		find("file", PtrVec<Type>(1, &out)));
+		find(names::File, PtrVec<Type>(1, &out)));
 
 	return ty;
 }
@@ -193,7 +198,7 @@ TypeContext::recordType(const Type::NamedTypeVec& fields)
 const Type&
 TypeContext::typeType()
 {
-	static const Type& t = Register(new Type("type", PtrVec<Type>(), *this));
+	static const Type& t = Register(new Type(names::Type, PtrVec<Type>(), *this));
 	return t;
 }
 
