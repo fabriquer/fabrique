@@ -32,6 +32,7 @@
 #include <fabrique/dag/Parameter.hh>
 #include <fabrique/dag/Value.hh>
 #include "Support/Bytestream.h"
+#include "Support/exceptions.h"
 #include <fabrique/types/Type.hh>
 
 using namespace fabrique::dag;
@@ -41,6 +42,7 @@ using std::string;
 Parameter::Parameter(string name, const Type& t, ValuePtr v, const SourceRange& src)
 	: HasSource(src), Typed(t), name_(name), defaultValue_(v)
 {
+	SemaCheck(not name.empty(), src, "parameter has no name");
 }
 
 Parameter::~Parameter()
