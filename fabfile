@@ -72,7 +72,8 @@ generated_cxx_flags =
 	+ if debug [ '-D' 'YYDEBUG' ] else [];
 
 ldflags =
-	(if platform.posix ['-rdynamic'] else [])
+	(if debug [ '-g' '-O0' ] else [ '-O2' ])
+	+ (if platform.posix ['-rdynamic'] else [])
 	+ (if use_asan ['-fsanitize=address'] else [])
 	;
 
