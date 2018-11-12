@@ -86,7 +86,7 @@ cxx_srcs =
 
 objects = cxx.compile(cxx_srcs, cxx_flags);
 
-plugins = foreach lib <- import('base-plugins').libs
+plugins = foreach lib <- import('base-plugins', cxxflags = cxx_flags).libs
 	shell.copy(lib, file('lib/fabrique') + '/' + lib.filename)
 	;
 
