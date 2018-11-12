@@ -151,12 +151,10 @@ shared_ptr<Record> Which::Create(DAGBuilder& builder, const ValueMap& args) cons
 	}
 
 	const ValueMap scope;
-	const SharedPtrVec<Parameter> name = {
-		std::make_shared<Parameter>(FileName, string_, ValuePtr()),
-	};
+	const SharedPtrVec<Parameter> name = { builder.Param(FileName, string_) };
 	const SharedPtrVec<Parameter> nameAndDirectories = {
-		std::make_shared<Parameter>(FileName, string_, ValuePtr()),
-		std::make_shared<Parameter>(Directories, fileList_, ValuePtr()),
+		builder.Param(FileName, string_),
+		builder.Param(Directories, fileList_),
 	};
 
 	ValueMap fields = {
