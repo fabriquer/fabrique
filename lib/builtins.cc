@@ -163,10 +163,12 @@ fabrique::builtins::Import(parsing::Parser &p, plugin::Loader &pluginLoader,
 
 		auto n = arguments["module"];
 		SemaCheck(n, src, "missing module or file name");
+		arguments.erase("module");
 		const string name = n->str();
 
 		auto s = arguments[names::Subdirectory];
 		SemaCheck(s, src, "missing subdir");
+		arguments.erase(names::Subdirectory);
 
 		auto currentSubdir = std::dynamic_pointer_cast<dag::File>(s);
 		SemaCheck(currentSubdir, src, "subdir is not a File");
