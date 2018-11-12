@@ -191,6 +191,17 @@ fabrique::builtins::Import(parsing::Parser &p, plugin::Loader &pluginLoader,
 			const string subdir =
 				JoinPath(currentSubdir->str(), DirectoryOf(name));
 
+			dbg
+				<< Bytestream::Action << "found "
+				<< Bytestream::Type << "module "
+				<< Bytestream::Operator << "'"
+				<< Bytestream::Literal << name
+				<< Bytestream::Operator << "'"
+				<< Bytestream::Reset << " in "
+				<< Bytestream::Literal << subdir
+				<< "\n"
+				;
+
 			return ImportFile(filename, subdir, arguments, src, p, eval, dbg);
 		}
 
@@ -198,6 +209,17 @@ fabrique::builtins::Import(parsing::Parser &p, plugin::Loader &pluginLoader,
 		{
 			const string subdir = JoinPath(currentSubdir->str(), name);
 			const string fabfile = JoinPath(filename, "fabfile");
+
+			dbg
+				<< Bytestream::Action << "found "
+				<< Bytestream::Type << "module "
+				<< Bytestream::Operator << "'"
+				<< Bytestream::Literal << fabfile
+				<< Bytestream::Operator << "'"
+				<< Bytestream::Reset << " in "
+				<< Bytestream::Literal << subdir
+				<< "\n"
+				;
 
 			if (PathIsFile(fabfile))
 			{
@@ -213,10 +235,23 @@ fabrique::builtins::Import(parsing::Parser &p, plugin::Loader &pluginLoader,
 		}
 		SemaCheck(descriptor, n->source(), "no such file or plugin");
 
-		auto plugin = descriptor->Instantiate(eval.types());
-		SemaCheck(plugin, src, "failed to instantiate plugin");
+		auto creator = descriptor->Instantiate(eval.types());
+		SemaCheck(creator, src, "failed to instantiate plugin");
 
-		return plugin->Create(builder, arguments);
+		auto plugin = creator->Create(builder, arguments);
+		SemaCheck(plugin, src, "failed to create plugin with arguments");
+
+		dbg
+			<< Bytestream::Action << "instantiated "
+			<< Bytestream::Type << "plugin"
+			<< Bytestream::Operator << "'"
+			<< Bytestream::Literal << name
+			<< Bytestream::Operator << "': "
+			<< Bytestream::Reset << plugin->type()
+			<< "\n"
+			;
+
+		return plugin;
 	};
 
 	return b.Function(import, types.nilType(), params,
