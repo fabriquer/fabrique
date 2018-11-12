@@ -9,6 +9,8 @@ cxxflags = args.cxxflags + [
 	'-Wno-exit-time-destructors'
 ];
 
+ldflags = args.ldflags;
+
 libs = foreach plugin <- plugins
-	cxx.library(cxx.compile(plugin.sources, cxxflags), plugin.name, subdir)
+	cxx.library(cxx.compile(plugin.sources, cxxflags), plugin.name, subdir, ldflags)
 	;

@@ -75,7 +75,8 @@ generated_cxx_flags =
 	+ if debug [ '-D' 'YYDEBUG' ] else [];
 
 ldflags =
-	(if platform.posix ['-rdynamic'] else [])
+	(if debug [ '-g' '-O0' ] else [ '-O2' ])
+	+ (if platform.posix ['-rdynamic'] else [])
 	+ (if use_asan ['-fsanitize=address'] else [])
 	;
 
@@ -95,7 +96,7 @@ objects = cxx.compile(cxx_srcs, cxx_flags)
 	+ cxx.compile(generated_srcs, generated_cxx_flags);
 
 
-plugins = foreach lib <- import('base-plugins', cxxflags = cxx_flags).libs
+plugins = foreach lib <- import('base-plugins', cxxflags=cxx_flags, ldflags=ldflags).libs
 	shell.copy(lib, file('lib/fabrique') + '/' + lib.filename)
 	;
 
