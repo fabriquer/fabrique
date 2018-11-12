@@ -107,11 +107,9 @@ static const char GenericFnName[] = "generic";
 
 UniqPtr<Plugin> Which::Factory::Instantiate(TypeContext& ctx) const
 {
-	const SourceRange nowhere = SourceRange::None();
-
 	const Type& string = ctx.stringType();
 	const FileType& file = ctx.fileType();
-	const Type& files = ctx.listOf(file, nowhere);
+	const Type& files = ctx.listOf(file);
 
 	const FunctionType& executable = ctx.functionType(string, file);
 	const FunctionType& generic = ctx.functionType({ &string, &files }, file);
@@ -136,7 +134,7 @@ shared_ptr<Record> Which::Create(DAGBuilder& builder, const ValueMap& args) cons
 			ValuePtr paths = a.second;
 			const Type& t = paths->type();
 			SourceRange src = a.second->source();
-			t.CheckSubtype(Type::ListOf(t.context().fileType(), src), src);
+			t.CheckSubtype(Type::ListOf(t.context().fileType()), src);
 
 			auto list = std::dynamic_pointer_cast<List>(paths);
 

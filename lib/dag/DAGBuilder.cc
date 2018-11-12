@@ -239,7 +239,7 @@ ValuePtr DAGBuilder::AddRegeneration(std::string command,
 
 	TypeContext& t = ctx_.types();
 	const FileType& inputFileType = t.inputFileType();
-	const Type& inputType = t.listOf(inputFileType, Nowhere);
+	const Type& inputType = t.listOf(inputFileType);
 	const FileType& outputType = t.outputFileType();
 	const Type& buildType = t.functionType(inputType, outputType);
 
@@ -259,7 +259,7 @@ ValuePtr DAGBuilder::AddRegeneration(std::string command,
 	params.emplace_back(new Parameter("rootInput", inputFileType, Nothing));
 	params.emplace_back(new Parameter("otherInputs", inputType, Nothing));
 	params.emplace_back(
-		new Parameter("output", t.listOf(outputType, Nowhere), Nothing));
+		new Parameter("output", t.listOf(outputType), Nothing));
 
 	const string Name = Rule::RegenerationRuleName();
 	auto rule = dynamic_pointer_cast<class Rule>(

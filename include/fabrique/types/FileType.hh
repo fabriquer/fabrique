@@ -36,8 +36,6 @@
 
 namespace fabrique {
 
-class SourceRange;
-
 
 /**
  * A type that represents an ordered sequence.

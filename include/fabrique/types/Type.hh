@@ -56,7 +56,7 @@ public:
 	typedef std::pair<std::string, const Type&> NamedType;
 	typedef std::vector<NamedType> NamedTypeVec;
 
-	static const Type& ListOf(const Type&, const SourceRange&);
+	static const Type& ListOf(const Type&);
 
 	static std::string UntypedPart(std::string typedName);
 
@@ -88,7 +88,7 @@ public:
 	const Type& operator [] (size_t i) const;
 
 	typedef std::function<PtrVec<Type> (const PtrVec<Type>&)> TypesMapper;
-	const Type& Map(TypesMapper, const SourceRange&) const;
+	const Type& Map(TypesMapper) const;
 
 	virtual bool isSubtype(const Type&) const;
 	virtual bool isSupertype(const Type&) const;

@@ -97,7 +97,7 @@ Build* Build::Create(shared_ptr<Rule>& rule, SharedPtrMap<Value>& arguments,
 	const Type& type =
 		(outputs.size() == 1)
 			? outputs.front()->type()
-			: Type::ListOf(out.type(), out.source());
+			: Type::ListOf(out.type());
 
 	return new Build(rule, inputs, outputs, arguments, type, src);
 }

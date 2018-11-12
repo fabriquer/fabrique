@@ -40,9 +40,9 @@ using namespace fabrique;
 using std::string;
 
 
-const Type& Type::ListOf(const Type& t, const SourceRange& src)
+const Type& Type::ListOf(const Type& t)
 {
-	return t.parent_.listOf(t, src);
+	return t.parent_.listOf(t);
 }
 
 
@@ -131,7 +131,7 @@ Type* Type::Parameterise(const PtrVec<Type>&, const SourceRange&) const
 	return nullptr;
 }
 
-const Type& Type::Map(TypesMapper convert, const SourceRange&) const
+const Type& Type::Map(TypesMapper convert) const
 {
 	PtrVec<Type> newTypeParams = convert(parameters_);
 	return parent_.find(typeName_, newTypeParams);
