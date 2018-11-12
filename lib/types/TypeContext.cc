@@ -39,7 +39,6 @@
 #include <fabrique/types/StringType.hh>
 #include <fabrique/types/TypeContext.hh>
 #include "Support/Bytestream.h"
-#include "Support/SourceLocation.h"
 #include "Support/exceptions.h"
 
 #include <cassert>
@@ -123,7 +122,7 @@ const Type& TypeContext::integerType()
 	return t;
 }
 
-const Type& TypeContext::listOf(const Type& elementTy, const SourceRange&)
+const Type& TypeContext::listOf(const Type& elementTy)
 {
 	PtrVec<Type> params(1, &elementTy);
 	return find(rawSequenceType_->name(), params);
@@ -160,7 +159,7 @@ const FileType& TypeContext::outputFileType()
 
 const Type& TypeContext::fileListType()
 {
-	static const Type& f = listOf(fileType(), SourceRange::None());
+	static const Type& f = listOf(fileType());
 	return f;
 }
 

@@ -45,7 +45,6 @@ namespace fabrique {
 class FileType;
 class FunctionType;
 class RecordType;
-class SourceRange;
 class Type;
 class UserType;
 
@@ -72,7 +71,7 @@ public:
 	const Type& integerType();
 
 	//! The type of a list.
-	const Type& listOf(const Type&, const SourceRange&);
+	const Type& listOf(const Type&);
 
 	//! A file in a build.
 	const FileType& fileType();

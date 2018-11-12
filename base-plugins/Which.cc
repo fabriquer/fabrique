@@ -107,11 +107,9 @@ static const char GenericFnName[] = "generic";
 
 UniqPtr<Plugin> Which::Factory::Instantiate(TypeContext& ctx) const
 {
-	const SourceRange nowhere = SourceRange::None();
-
 	const Type& string = ctx.stringType();
 	const FileType& file = ctx.fileType();
-	const Type& files = ctx.listOf(file, nowhere);
+	const Type& files = ctx.listOf(file);
 
 	const FunctionType& executable = ctx.functionType(string, file);
 	const FunctionType& generic = ctx.functionType({ &string, &files }, file);
@@ -136,7 +134,7 @@ shared_ptr<Record> Which::Create(DAGBuilder& builder, const ValueMap& args) cons
 			ValuePtr paths = a.second;
 			const Type& t = paths->type();
 			SourceRange src = a.second->source();
-			t.CheckSubtype(Type::ListOf(t.context().fileType(), src), src);
+			t.CheckSubtype(Type::ListOf(t.context().fileType()), src);
 
 			auto list = std::dynamic_pointer_cast<List>(paths);
 
@@ -153,12 +151,10 @@ shared_ptr<Record> Which::Create(DAGBuilder& builder, const ValueMap& args) cons
 	}
 
 	const ValueMap scope;
-	const SharedPtrVec<Parameter> name = {
-		std::make_shared<Parameter>(FileName, string_, ValuePtr()),
-	};
+	const SharedPtrVec<Parameter> name = { builder.Param(FileName, string_) };
 	const SharedPtrVec<Parameter> nameAndDirectories = {
-		std::make_shared<Parameter>(FileName, string_, ValuePtr()),
-		std::make_shared<Parameter>(Directories, fileList_, ValuePtr()),
+		builder.Param(FileName, string_),
+		builder.Param(Directories, fileList_),
 	};
 
 	ValueMap fields = {

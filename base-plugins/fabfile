@@ -1,26 +1,13 @@
-# TODO: get this from a Fabrique file
-fabrique = record
-{
-	headers = srcroot;
-};
-
-defines =
-	if platform.posix [ '-D OS_POSIX' ]
-	else []
-	;
-
 plugins = [
 	record { name = 'platform-tests'; sources = files(PlatformTests.cc); }
 	record { name = 'sysctl'; sources = files(SysctlPlugin.cc); }
 	record { name = 'which'; sources = files(Which.cc); }
 ];
 
-cxxflags = [
-	'-std=c++11'
-	'-I' srcroot
-	'-I' srcroot + '/include'
-	'-Wall'
-] + defines;
+cxxflags = args.cxxflags + [
+	'-Wno-global-constructors'
+	'-Wno-exit-time-destructors'
+];
 
 libs = foreach plugin <- plugins
 	cxx.library(cxx.compile(plugin.sources, cxxflags), plugin.name, subdir)

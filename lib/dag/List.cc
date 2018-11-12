@@ -56,7 +56,7 @@ List* List::of(const SharedPtrVec<Value>& values, const SourceRange& src,
 		elementType = &elementType->supertype(v->type());
 	}
 
-	return new List(values, Type::ListOf(*elementType, src), src);
+	return new List(values, Type::ListOf(*elementType), src);
 }
 
 
