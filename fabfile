@@ -71,6 +71,11 @@ generated_cxx_flags =
 	common_cxx_flags + [ '-Wno-deprecated-register' ]
 	+ if debug [ '-D' 'YYDEBUG' ] else [];
 
+ldflags =
+	(if platform.posix ['-rdynamic'] else [])
+	+ (if use_asan ['-fsanitize=address'] else [])
+	;
+
 
 cxx_srcs =
 	import('bin').sources
@@ -86,7 +91,7 @@ plugins = foreach lib <- import('base-plugins').libs
 	;
 
 fab = cxx.link_executable(objects, executable = file('fab', subdir = 'bin'),
-                          flags = if use_asan ['-fsanitize=address'] else []);
+                          flags = ldflags);
 
 everything = [ fab ] + plugins + import('tests/manifest.fab').all_files;
 
