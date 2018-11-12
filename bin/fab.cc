@@ -225,7 +225,8 @@ int main(int argc, char *argv[]) {
 		scope.DefineReserved("srcroot", builder.File(srcroot));
 		scope.DefineReserved("buildroot", builder.File(buildroot));
 		scope.DefineReserved("file", builtins::OpenFile(builder));
-		scope.DefineReserved("import", builtins::Import(parser, srcroot, ctx));
+		scope.DefineReserved("import",
+			builtins::Import(parser, pluginLoader, srcroot, ctx));
 
 		SharedPtrVec<dag::Value> dagValues;
 		vector<string> targets;
