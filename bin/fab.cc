@@ -46,7 +46,6 @@
 #include <fabrique/platform/files.hh>
 
 #include <fabrique/plugin/Loader.hh>
-#include <fabrique/plugin/Registry.hh>
 
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
@@ -226,7 +225,8 @@ int main(int argc, char *argv[]) {
 		scope.DefineReserved("srcroot", builder.File(srcroot));
 		scope.DefineReserved("buildroot", builder.File(buildroot));
 		scope.DefineReserved("file", builtins::OpenFile(builder));
-		scope.DefineReserved("import", builtins::Import(parser, srcroot, ctx));
+		scope.DefineReserved("import",
+			builtins::Import(parser, pluginLoader, srcroot, ctx));
 
 		SharedPtrVec<dag::Value> dagValues;
 		vector<string> targets;

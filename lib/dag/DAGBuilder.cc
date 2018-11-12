@@ -351,6 +351,12 @@ ValuePtr DAGBuilder::Integer(int i, SourceRange src)
 }
 
 
+shared_ptr<Parameter> DAGBuilder::Param(std::string name, const Type &t,
+                                        ValuePtr defaultValue, SourceRange src)
+{
+	return std::make_shared<Parameter>(name, t, defaultValue, src);
+}
+
 
 ValuePtr DAGBuilder::Rule(string name, string command, const Type& type,
                           ValueMap arguments, SharedPtrVec<Parameter> parameters,

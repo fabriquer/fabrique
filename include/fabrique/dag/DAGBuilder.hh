@@ -114,6 +114,11 @@ public:
 	//! Create a @ref dag::Integer.
 	ValuePtr Integer(int, SourceRange);
 
+	//! Create a @ref dag::Parameter.
+	std::shared_ptr<Parameter> Param(std::string name, const Type&,
+	                                 ValuePtr defaultValue = nullptr,
+	                                 SourceRange src = SourceRange::None());
+
 	//! Create a @ref dag::Rule.
 	ValuePtr Rule(std::string command, const Type&, ValueMap arguments,
 	              SharedPtrVec<Parameter> parameters,

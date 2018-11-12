@@ -45,6 +45,10 @@ namespace parsing {
 class Parser;
 }
 
+namespace plugin {
+class Loader;
+}
+
 namespace builtins {
 
 /**
@@ -56,10 +60,12 @@ dag::ValuePtr OpenFile(dag::DAGBuilder&);
  * Create `import()` builtin function.
  *
  * @param     parser       parser to use when importing Fabrique files
+ * @param     loader       object that can load plugins that have not been loaded yet
  *                         (lifetime must exceed the value returned by this function)
  * @param     srcroot      root directory containing all source files (absolute path)
  */
-dag::ValuePtr Import(parsing::Parser &parser, std::string srcroot, ast::EvalContext&);
+dag::ValuePtr Import(parsing::Parser &parser, plugin::Loader &loader, std::string srcroot,
+                     ast::EvalContext&);
 
 } // namespace builtins
 } // namespace fabrique

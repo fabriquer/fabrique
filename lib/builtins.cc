@@ -35,6 +35,9 @@
 #include <fabrique/dag/File.hh>
 #include <fabrique/dag/Parameter.hh>
 #include <fabrique/parsing/Parser.hh>
+#include <fabrique/plugin/Loader.hh>
+#include <fabrique/plugin/Plugin.hh>
+#include <fabrique/plugin/Registry.hh>
 #include <fabrique/platform/files.hh>
 #include <fabrique/types/FileType.hh>
 #include <fabrique/types/TypeContext.hh>
@@ -91,7 +94,7 @@ fabrique::dag::ValuePtr fabrique::builtins::OpenFile(fabrique::dag::DAGBuilder &
 }
 
 
-static ValueMap
+static std::shared_ptr<Record>
 ImportFile(string filename, string subdir, ValueMap arguments, SourceRange src,
            parsing::Parser &p, ast::EvalContext &eval, Bytestream &dbg)
 {
@@ -136,12 +139,13 @@ ImportFile(string filename, string subdir, ValueMap arguments, SourceRange src,
 
 	importedASTs.emplace_back(std::move(parse.result));
 
-	return values;
+	return b.Record(values, src);
 }
 
 
 ValuePtr
-fabrique::builtins::Import(parsing::Parser &p, string srcroot, ast::EvalContext &eval)
+fabrique::builtins::Import(parsing::Parser &p, plugin::Loader &pluginLoader,
+                           string srcroot, ast::EvalContext &eval)
 {
 	FAB_ASSERT(PathIsAbsolute(srcroot), "srcroot must be an absolute path");
 
@@ -151,10 +155,8 @@ fabrique::builtins::Import(parsing::Parser &p, string srcroot, ast::EvalContext 
 	SharedPtrVec<dag::Parameter> params;
 	params.emplace_back(new Parameter("module", types.stringType()));
 
-	//plugin::Registry& pluginRegistry = plugin::Registry::get();
-
 	dag::Function::Evaluator import =
-		[&p, &eval, srcroot]
+		[&p, &eval, &pluginLoader, srcroot]
 		(dag::ValueMap arguments, dag::DAGBuilder &builder, SourceRange src)
 	{
 		Bytestream &dbg = Bytestream::Debug("module.import");
@@ -184,32 +186,37 @@ fabrique::builtins::Import(parsing::Parser &p, string srcroot, ast::EvalContext 
 			: JoinPath({ srcroot, currentSubdir->str(), name })
 			;
 
-		ValueMap values;
 		if (PathIsFile(filename))
 		{
 			const string subdir =
 				JoinPath(currentSubdir->str(), DirectoryOf(name));
 
-			values = ImportFile(filename, subdir, arguments, src, p, eval, dbg);
+			return ImportFile(filename, subdir, arguments, src, p, eval, dbg);
 		}
-		else if (PathIsDirectory(filename))
+
+		if (PathIsDirectory(filename))
 		{
 			const string subdir = JoinPath(currentSubdir->str(), name);
 			const string fabfile = JoinPath(filename, "fabfile");
 
 			if (PathIsFile(fabfile))
 			{
-				values = ImportFile(fabfile, subdir, arguments, src, p,
-				                    eval, dbg);
+				return ImportFile(fabfile, subdir, arguments, src, p,
+				                  eval, dbg);
 			}
 		}
-		else
-		{
-			throw SemanticException(
-				"no such file or plugin '" + filename + "'", n->source());
-		}
 
-		return builder.Record(values, src);
+		auto descriptor = plugin::Registry::get().lookup(name).lock();
+		if (not descriptor)
+		{
+			descriptor = pluginLoader.Load(name).lock();
+		}
+		SemaCheck(descriptor, n->source(), "no such file or plugin");
+
+		auto plugin = descriptor->Instantiate(eval.types());
+		SemaCheck(plugin, src, "failed to instantiate plugin");
+
+		return plugin->Create(builder, arguments);
 	};
 
 	return b.Function(import, types.nilType(), params,
