@@ -1,4 +1,5 @@
 plugins = [
+	record { name = 'log'; sources = files(LogPlugin.cc); }
 	record { name = 'platform-tests'; sources = files(PlatformTests.cc); }
 	record { name = 'sysctl'; sources = files(SysctlPlugin.cc); }
 	record { name = 'which'; sources = files(Which.cc); }
