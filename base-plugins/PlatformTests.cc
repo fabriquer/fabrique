@@ -29,31 +29,15 @@
  */
 
 #include <fabrique/dag/DAGBuilder.hh>
-#include <fabrique/dag/File.hh>
-#include <fabrique/dag/List.hh>
-#include <fabrique/dag/Parameter.hh>
 #include <fabrique/platform/naming.hh>
 #include <fabrique/plugin/Registry.hh>
-#include <fabrique/types/RecordType.hh>
-#include <fabrique/types/TypeContext.hh>
 #include "Support/exceptions.h"
-
-#include <cassert>
-#include <sstream>
-
-#include <errno.h>
-#include <stdlib.h>
 
 using namespace fabrique;
 using namespace fabrique::dag;
 using fabrique::plugin::Plugin;
-using std::placeholders::_1;
-using std::placeholders::_2;
-using std::placeholders::_3;
-using std::placeholders::_4;
 using std::shared_ptr;
 using std::string;
-using std::vector;
 
 
 namespace fabrique {
@@ -95,12 +79,10 @@ static const char* Platforms[] = {
 shared_ptr<Record>
 PlatformTests::Create(DAGBuilder& builder, const ValueMap& args) const
 {
-	SemaCheck(args.empty(), SourceRange::Over(args),
-		"platform plugin does not take arguments");
+	SourceRange src = SourceRange::Over(args);
+	SemaCheck(args.empty(), src, "platform plugin does not take arguments");
 
 	const ValueMap scope;
-	static const SourceRange src = SourceRange::None();
-
 	ValueMap fields;
 
 	for (const char *platform : Platforms)
