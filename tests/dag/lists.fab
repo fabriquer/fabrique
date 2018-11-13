@@ -7,7 +7,7 @@
 empty = [];
 
 # CHECK-DAG: integers:list[int] = [ 1 2 3 ]
-integers:list[nil] = [ 1 2 3 ];
+integers = [ 1 2 3 ];
 
 # CHECK-DAG: strings:list[string] = [ 'hello' 'world' ]
 strings = [ 'hello' 'world' ];

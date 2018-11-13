@@ -85,7 +85,7 @@ bool SequenceType::isSubtype(const Type& other) const
 	auto& t = dynamic_cast<const SequenceType&>(other);
 
 	// Sequences are covariant: list[subtype] is a subtype of list[super].
-	if (t.elementType().isSubtype(this->elementType()))
+	if (elementType().isSubtype(t.elementType()))
 		return true;
 
 	return false;
