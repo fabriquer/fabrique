@@ -1,11 +1,12 @@
 /** @file Plugin/Plugin.h    Declaration of @ref fabrique::plugin::Plugin. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -34,7 +35,6 @@
 
 #include <fabrique/UniqPtr.h>
 #include <fabrique/dag/Record.hh>
-#include <fabrique/types/Typed.hh>
 
 
 namespace fabrique {
@@ -58,38 +58,14 @@ namespace plugin {
  * if a Fabrique description expects the wrong type, it can receive a type error rather
  * than a syntactically-legal but logically-incorrect reinterpretation (e.g. "0").
  */
-class Plugin : public Typed
+class Plugin
 {
 	public:
 	virtual ~Plugin();
 
-
-	/**
-	 * Static information about a plugin.
-	 */
-	class Descriptor
-	{
-		public:
-		virtual ~Descriptor();
-
-		virtual std::string name() const = 0;
-		virtual UniqPtr<Plugin> Instantiate(TypeContext&) const = 0;
-	};
-
-	static Plugin::Descriptor& nullPlugin();
-
-	const Descriptor& descriptor() const { return descriptor_; }
-
+	virtual std::string name() const = 0;
 	virtual std::shared_ptr<dag::Record>
 		Create(dag::DAGBuilder&, const dag::ValueMap& arguments) const = 0;
-
-
-	protected:
-	Plugin(const Type&, const Descriptor& descriptor);
-
-
-	private:
-	const Descriptor& descriptor_;
 };
 
 } // namespace plugin

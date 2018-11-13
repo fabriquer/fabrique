@@ -38,7 +38,7 @@ using namespace fabrique;
 using namespace fabrique::plugin;
 
 
-Registry::Initializer::Initializer(Plugin::Descriptor *descriptor)
+Registry::Initializer::Initializer(Plugin *descriptor)
 	: registry_(Registry::get()), plugin_(descriptor)
 {
 	FAB_ASSERT(plugin_, "null plugin descriptor");
@@ -59,7 +59,7 @@ Registry& Registry::get()
 }
 
 
-Registry& Registry::Register(std::weak_ptr<Plugin::Descriptor> plugin)
+Registry& Registry::Register(std::weak_ptr<Plugin> plugin)
 {
 	const std::string name = plugin.lock()->name();
 	FAB_ASSERT(plugins_.find(name) == plugins_.end(), "redefining plugin " + name);
@@ -76,11 +76,11 @@ void Registry::Deregister(std::string name)
 }
 
 
-std::weak_ptr<Plugin::Descriptor> Registry::lookup(std::string name) const
+std::weak_ptr<Plugin> Registry::lookup(std::string name) const
 {
 	auto i = plugins_.find(name);
 	if (i == plugins_.end())
-		return std::weak_ptr<Plugin::Descriptor>();
+		return std::weak_ptr<Plugin>();
 
 	return i->second;
 }

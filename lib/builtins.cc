@@ -237,10 +237,7 @@ fabrique::builtins::Import(parsing::Parser &p, plugin::Loader &pluginLoader,
 		}
 		SemaCheck(descriptor, n->source(), "no such file or plugin");
 
-		auto creator = descriptor->Instantiate(eval.types());
-		SemaCheck(creator, src, "failed to instantiate plugin");
-
-		auto plugin = creator->Create(builder, arguments);
+		auto plugin = descriptor->Create(builder, arguments);
 		SemaCheck(plugin, src, "failed to create plugin with arguments");
 
 		dbg

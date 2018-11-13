@@ -49,7 +49,7 @@ Loader::Loader(const vector<string>& paths)
 }
 
 
-std::weak_ptr<Plugin::Descriptor> Loader::Load(string name)
+std::weak_ptr<Plugin> Loader::Load(string name)
 {
 	const string libname = LibraryFilename(name);
 
@@ -80,8 +80,9 @@ std::weak_ptr<Plugin::Descriptor> Loader::Load(string name)
 		<< Bytestream::Operator << "'"
 		<< Bytestream::Reset << "\n"
 		;
+
 	if (filename.empty())
-		return std::weak_ptr<Plugin::Descriptor>();
+		return {};
 
 	libraries_.emplace_back(SharedLibrary::Load(filename));
 	return Registry::get().lookup(name);

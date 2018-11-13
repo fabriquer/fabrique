@@ -37,8 +37,6 @@
 #include <fabrique/dag/Parameter.hh>
 #include <fabrique/platform/PosixError.hh>
 #include <fabrique/plugin/Registry.hh>
-#include <fabrique/types/FunctionType.hh>
-#include <fabrique/types/RecordType.hh>
 #include <fabrique/types/TypeContext.hh>
 #include "Support/exceptions.h"
 
@@ -67,26 +65,9 @@ namespace plugins {
 class SysctlPlugin : public plugin::Plugin
 {
 	public:
+	virtual string name() const override { return "sysctl"; }
 	virtual shared_ptr<dag::Record>
 		Create(dag::DAGBuilder&, const dag::ValueMap& args) const override;
-
-	class Factory : public Plugin::Descriptor
-	{
-		public:
-		virtual string name() const override { return "sysctl"; }
-		virtual UniqPtr<Plugin> Instantiate(TypeContext&) const override;
-
-	};
-
-	private:
-	SysctlPlugin(const Factory& factory, const RecordType& type,
-	             const Type& stringType, const Type& intType)
-		: Plugin(type, factory), intType_(intType), stringType_(stringType)
-	{
-	}
-
-	const Type& intType_;
-	const Type& stringType_;
 };
 
 
@@ -95,41 +76,27 @@ static ValuePtr StringSysctl(ValueMap args, DAGBuilder& builder, SourceRange);
 static ValuePtr IntegerSysctl(ValueMap args, DAGBuilder& builder, SourceRange);
 
 
-UniqPtr<Plugin> SysctlPlugin::Factory::Instantiate(TypeContext& ctx) const
-{
-	const Type& stringType = ctx.stringType();
-	const Type& intType = ctx.integerType();
-
-	const FunctionType& string = ctx.functionType(stringType, stringType);
-	const FunctionType& integer = ctx.functionType(stringType, intType);
-
-	const RecordType& type = ctx.recordType({
-		{ "string", string },
-		{ "int", integer },
-	});
-
-	return UniqPtr<Plugin>(
-		new SysctlPlugin(*this, type, stringType, integer));
-}
-
-
 shared_ptr<Record> SysctlPlugin::Create(DAGBuilder& builder, const ValueMap& args) const
 {
 	SemaCheck(args.empty(), SourceRange::Over(args),
 		"sysctl plugin does not take arguments");
 
+	auto &types = builder.typeContext();
+	const Type &stringType = types.stringType();
+	const Type &intType = types.integerType();
+
 	const SharedPtrVec<Parameter> params = {
-		std::make_shared<Parameter>("name", stringType_, ValuePtr()),
+		std::make_shared<Parameter>("name", stringType, ValuePtr()),
 	};
 
 	ValueMap fields = {
 		{
 			"string",
-			builder.Function(StringSysctl, stringType_, params)
+			builder.Function(StringSysctl, stringType, params)
 		},
 		{
 			"int",
-			builder.Function(IntegerSysctl, intType_, params)
+			builder.Function(IntegerSysctl, intType, params)
 		},
 	};
 
@@ -193,7 +160,7 @@ static ValuePtr IntegerSysctl(ValueMap args, DAGBuilder& builder, SourceRange sr
 }
 
 
-static plugin::Registry::Initializer init(new SysctlPlugin::Factory());
+static plugin::Registry::Initializer init(new SysctlPlugin());
 
 } // namespace plugins
 } // namespace fabrique
