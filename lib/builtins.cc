@@ -63,7 +63,7 @@ using std::string;
  * but until it's fixed, use this vector to keep all imported
  * ASTs in memory forever.
  */
-static std::vector<UniqPtrVec<ast::Value>> importedASTs;
+static std::vector<UniqPtrVec<ast::Value>> TerribleASTStorageHack;
 
 
 static ValuePtr OpenFileImpl(ValueMap arguments, DAGBuilder &b, SourceRange src)
@@ -137,7 +137,7 @@ ImportFile(string filename, string subdir, ValueMap arguments, SourceRange src,
 		}
 	}
 
-	importedASTs.emplace_back(std::move(parse.result));
+	TerribleASTStorageHack.emplace_back(std::move(parse.result));
 
 	return b.Record(values, src);
 }
