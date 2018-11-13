@@ -61,6 +61,10 @@ using std::string;
 using std::vector;
 
 
+//! Get a named argument if it exists (or throw an exception otherwise)
+static ValuePtr GetArgument(const ValueMap &args, const string &name);
+
+
 namespace fabrique {
 namespace plugins {
 
@@ -180,9 +184,9 @@ shared_ptr<Record> Which::Create(DAGBuilder& builder, const ValueMap& args) cons
 ValuePtr Which::FindFile(const ValueMap& args, DAGBuilder &builder) const
 {
 	assert(args.size() == 2);
-	const string filename = args.find(FileName)->second->str();
+	const string filename = GetArgument(args, FileName)->str();
 
-	auto list = args.find(Directories)->second->asList();
+	auto *list = GetArgument(args, Directories)->asList();
 	assert(list);
 
 	vector<string> directories;
@@ -202,7 +206,7 @@ ValuePtr Which::FindFile(const ValueMap& args, DAGBuilder &builder) const
 ValuePtr Which::FindExecutable(const ValueMap& args, DAGBuilder& builder,
                                vector<string> extraPaths) const
 {
-	const string filename = args.find(FileName)->second->str();
+	const string filename = GetArgument(args, FileName)->str();
 
 	return builder.File(platform::FindExecutable(filename, extraPaths));
 }
@@ -212,3 +216,15 @@ static plugin::Registry::Initializer init(new Which::Factory());
 
 } // plugins namespace
 } // fabrique namespace
+
+
+static ValuePtr GetArgument(const ValueMap &args, const string &name)
+{
+	auto i = args.find(name);
+	FAB_ASSERT(i != args.end(), "missing '" + name + "' argument");
+
+	auto filename = i->second;
+	FAB_ASSERT(i->second, name + " is null");
+
+	return i->second;
+}
