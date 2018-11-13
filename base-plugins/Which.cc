@@ -68,6 +68,10 @@ static ValuePtr GetArgument(const ValueMap &args, const string &name);
 namespace fabrique {
 namespace plugins {
 
+ValuePtr FindExecutable(const ValueMap& args, DAGBuilder&, vector<string> extraPaths);
+ValuePtr FindFile(const ValueMap& args, DAGBuilder& builder);
+
+
 /**
  * Finds files (executables or any other kind of files) in the
  * PATH environment variable.
@@ -75,32 +79,9 @@ namespace plugins {
 class Which : public plugin::Plugin
 {
 	public:
+	virtual string name() const override { return "which"; }
 	virtual shared_ptr<dag::Record>
 		Create(dag::DAGBuilder&, const ValueMap& args) const override;
-
-	class Factory : public Plugin::Descriptor
-	{
-		public:
-		virtual string name() const override { return "which"; }
-		virtual UniqPtr<Plugin> Instantiate(TypeContext&) const override;
-
-	};
-
-	private:
-	Which(const Factory& factory, const RecordType& type,
-	      const Type& string, const FileType& file, const Type& files)
-		: Plugin(type, factory), string_(string), file_(file), fileList_(files)
-	{
-	}
-
-	ValuePtr FindExecutable(const ValueMap& args, DAGBuilder &builder,
-	                        vector<string> extraPaths) const;
-
-	ValuePtr FindFile(const ValueMap& args, DAGBuilder& builder) const;
-
-	const Type& string_;
-	const FileType& file_;
-	const Type& fileList_;
 };
 
 static const char Directories[] = "directories";
@@ -109,26 +90,13 @@ static const char FileName[] = "filename";
 static const char GenericFnName[] = "generic";
 
 
-UniqPtr<Plugin> Which::Factory::Instantiate(TypeContext& ctx) const
-{
-	const Type& string = ctx.stringType();
-	const FileType& file = ctx.fileType();
-	const Type& files = ctx.listOf(file);
-
-	const FunctionType& executable = ctx.functionType(string, file);
-	const FunctionType& generic = ctx.functionType({ &string, &files }, file);
-
-	const RecordType& type = ctx.recordType({
-		{ ExecutableFnName, executable },
-		{ GenericFnName, generic },
-	});
-
-	return UniqPtr<Plugin>(new Which(*this, type, string, file, files));
-}
-
-
 shared_ptr<Record> Which::Create(DAGBuilder& builder, const ValueMap& args) const
 {
+	TypeContext &types = builder.typeContext();
+	const Type& stringType = types.stringType();
+	const FileType& fileType = types.fileType();
+	const Type& filesType = types.listOf(fileType);
+
 	vector<string> extraPaths;
 
 	for (auto a : args)
@@ -155,25 +123,24 @@ shared_ptr<Record> Which::Create(DAGBuilder& builder, const ValueMap& args) cons
 	}
 
 	const ValueMap scope;
-	const SharedPtrVec<Parameter> name = { builder.Param(FileName, string_) };
+	const SharedPtrVec<Parameter> name = { builder.Param(FileName, stringType) };
 	const SharedPtrVec<Parameter> nameAndDirectories = {
-		builder.Param(FileName, string_),
-		builder.Param(Directories, fileList_),
+		builder.Param(FileName, stringType),
+		builder.Param(Directories, filesType),
 	};
 
 	ValueMap fields = {
 		{
 			ExecutableFnName,
 			builder.Function(
-				std::bind(&Which::FindExecutable,
-				          this, _1, _2, extraPaths),
-				file_, name)
+				std::bind(FindExecutable, _1, _2, extraPaths),
+				fileType, name)
 		},
 		{
 			GenericFnName,
 			builder.Function(
-				std::bind(&Which::FindFile, this, _1, _2),
-				file_, nameAndDirectories)
+				std::bind(FindFile, _1, _2),
+				fileType, nameAndDirectories)
 		},
 	};
 
@@ -181,7 +148,7 @@ shared_ptr<Record> Which::Create(DAGBuilder& builder, const ValueMap& args) cons
 }
 
 
-ValuePtr Which::FindFile(const ValueMap& args, DAGBuilder &builder) const
+ValuePtr FindFile(const ValueMap& args, DAGBuilder &builder)
 {
 	assert(args.size() == 2);
 	const string filename = GetArgument(args, FileName)->str();
@@ -203,8 +170,8 @@ ValuePtr Which::FindFile(const ValueMap& args, DAGBuilder &builder) const
 }
 
 
-ValuePtr Which::FindExecutable(const ValueMap& args, DAGBuilder& builder,
-                               vector<string> extraPaths) const
+ValuePtr FindExecutable(const ValueMap& args, DAGBuilder& builder,
+                        vector<string> extraPaths)
 {
 	const string filename = GetArgument(args, FileName)->str();
 
@@ -212,7 +179,7 @@ ValuePtr Which::FindExecutable(const ValueMap& args, DAGBuilder& builder,
 }
 
 
-static plugin::Registry::Initializer init(new Which::Factory());
+plugin::Registry::Initializer init(new Which());
 
 } // plugins namespace
 } // fabrique namespace

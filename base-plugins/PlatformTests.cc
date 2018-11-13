@@ -67,22 +67,9 @@ namespace plugins {
 class PlatformTests : public plugin::Plugin
 {
 	public:
+	virtual string name() const override { return "platform-tests"; }
 	virtual shared_ptr<dag::Record>
 		Create(dag::DAGBuilder&, const ValueMap& args) const override;
-
-	class Factory : public Plugin::Descriptor
-	{
-		public:
-		virtual string name() const override { return "platform-tests"; }
-		virtual UniqPtr<Plugin> Instantiate(TypeContext&) const override;
-
-	};
-
-	private:
-	PlatformTests(const Factory& factory, const RecordType& type)
-		: Plugin(type, factory)
-	{
-	}
 };
 
 static const char* Platforms[] = {
@@ -104,23 +91,9 @@ static const char* Platforms[] = {
 };
 
 
-UniqPtr<Plugin> PlatformTests::Factory::Instantiate(TypeContext& ctx) const
-{
-	const SourceRange nowhere = SourceRange::None();
 
-	const Type& boolean = ctx.booleanType();
-
-	Type::NamedTypeVec fields;
-	for (const char *platform : Platforms)
-		fields.emplace_back(platform, boolean);
-
-	const RecordType& type = ctx.recordType(fields);
-
-	return UniqPtr<Plugin>(new PlatformTests(*this, type));
-}
-
-
-shared_ptr<Record> PlatformTests::Create(DAGBuilder& builder, const ValueMap& args) const
+shared_ptr<Record>
+PlatformTests::Create(DAGBuilder& builder, const ValueMap& args) const
 {
 	SemaCheck(args.empty(), SourceRange::Over(args),
 		"platform plugin does not take arguments");
@@ -139,7 +112,7 @@ shared_ptr<Record> PlatformTests::Create(DAGBuilder& builder, const ValueMap& ar
 	return builder.Record(fields);
 }
 
-static plugin::Registry::Initializer init(new PlatformTests::Factory());
+static plugin::Registry::Initializer init(new PlatformTests());
 
 } // plugins namespace
 } // fabrique namespace
