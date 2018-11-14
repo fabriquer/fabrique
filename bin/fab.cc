@@ -232,10 +232,10 @@ int main(int argc, char *argv[]) {
 		// Add regeneration (if Fabrique files change):
 		string regenerationCommand = args.executable + args.str();
 		if (not outputFiles.empty())
-			ctx.builder().AddRegeneration(
+			builder.AddRegeneration(
 				regenerationCommand, inputFiles, outputFiles);
 
-		unique_ptr<dag::DAG> dag = ctx.builder().dag(targets);
+		unique_ptr<dag::DAG> dag = builder.dag(targets);
 		FAB_ASSERT(dag, "null DAG");
 
 		if (args.printDAG)
