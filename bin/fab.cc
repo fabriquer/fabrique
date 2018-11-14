@@ -140,7 +140,6 @@ int main(int argc, char *argv[]) {
 	{
 		parsing::Parser parser(args.printAST, args.dumpAST);
 		TypeContext types;
-		ast::EvalContext ctx(types);
 
 		//
 		// Parse command-line definitions.
@@ -161,6 +160,7 @@ int main(int argc, char *argv[]) {
 			FAB_ASSERT(parseResult.result, "!errors and !result");
 			if (auto &name = parseResult.result->name())
 			{
+				ast::EvalContext ctx(types);
 				auto value = parseResult.result->evaluate(ctx);
 				definitions[name->name()] = value;
 			}
@@ -208,6 +208,7 @@ int main(int argc, char *argv[]) {
 		// Convert the AST into a build graph.
 		//
 		plugin::Loader pluginLoader(PluginSearchPaths(args.executable));
+		ast::EvalContext ctx(types);
 		dag::DAGBuilder &builder = ctx.builder();
 
 		auto scope = ctx.EnterScope(fabfile);
