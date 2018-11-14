@@ -34,7 +34,7 @@
 #include <fabrique/ast/TypeReference.hh>
 #include <fabrique/ast/Visitor.hh>
 #include <fabrique/dag/TypeReference.hh>
-#include "Support/ABI.h"
+#include <fabrique/platform/ABI.hh>
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 #include <fabrique/types/FunctionType.hh>

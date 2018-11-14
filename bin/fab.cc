@@ -145,19 +145,9 @@ int main(int argc, char *argv[]) {
 		//
 		// Parse command-line definitions.
 		//
-		Bytestream &defDbg = Bytestream::Debug("cli.definitions");
 		dag::ValueMap definitions;
 		for (const string &d : args.definitions)
 		{
-			defDbg
-				<< Bytestream::Action << "parsing "
-				<< Bytestream::Type << "command-line definition "
-				<< Bytestream::Operator << "'"
-				<< Bytestream::Definition << d
-				<< Bytestream::Operator << "'"
-				<< "\n"
-				;
-
 			auto parseResult = parser.Parse(d);
 			if (not parseResult.errors.empty())
 			{

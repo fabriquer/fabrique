@@ -1,6 +1,6 @@
-/** @file Parsing/ABI.cc    Definition of ABI helper functions. */
+//! @file platform/ABI.cc    Definition of ABI helper functions
 /*
- * Copyright (c) 2015 Jonathan Anderson
+ * Copyright (c) 2015, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed at Memorial University of Newfoundland under
@@ -28,7 +28,8 @@
  * SUCH DAMAGE.
  */
 
-#include "Support/ABI.h"
+#include <fabrique/platform/ABI.hh>
+
 #include <cxxabi.h>
 #include <memory>
 
@@ -36,7 +37,7 @@ using std::string;
 using std::unique_ptr;
 
 
-string fabrique::DemangleABIName(const string& name)
+string fabrique::platform::DemangleABIName(const string& name)
 {
 	int status = 0;
 
@@ -49,7 +50,7 @@ string fabrique::DemangleABIName(const string& name)
 }
 
 
-string fabrique::Demangle(const std::type_info& t)
+string fabrique::platform::Demangle(const std::type_info& t)
 {
 	return DemangleABIName(t.name());
 }
