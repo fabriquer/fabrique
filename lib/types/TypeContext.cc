@@ -58,7 +58,8 @@ namespace
 		}
 
 		virtual bool valid() const override { return false; }
-		virtual bool isSubtype(const Type&) const override { return true; }
+		virtual bool isNil() const override { return true; }
+		virtual bool isSupertype(const Type&) const override { return true; }
 	};
 }
 
