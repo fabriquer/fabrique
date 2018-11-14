@@ -3,6 +3,7 @@ posix = true;
 
 sources =
 	files(
+		ABI.cc
 		SharedLibrary.cc
 	)
 	+

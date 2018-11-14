@@ -35,7 +35,7 @@
 #include <fabrique/PtrVec.h>
 #include <fabrique/ast/Node.hh>
 #include <fabrique/dag/Value.hh>
-#include "Support/ABI.h"
+#include <fabrique/platform/ABI.hh>
 #include "Support/exceptions.h"
 
 namespace fabrique {
@@ -58,7 +58,7 @@ public:
 	std::shared_ptr<T> evaluateAs(EvalContext &ctx,
 	                              SourceRange src = SourceRange::None())
 	{
-		const std::string typeName = TypeName(*this);
+		const std::string typeName = platform::TypeName(*this);
 		if (not src)
 		{
 			src = source();
@@ -69,8 +69,8 @@ public:
 
 		auto asSubtype = std::dynamic_pointer_cast<T>(plainValue);
 		SemaCheck(asSubtype, src,
-			TypeName(*plainValue) + " (evaluated from " + typeName
-			+ ") is not a " + Demangle(typeid(T)));
+			platform::TypeName(*plainValue) + " (evaluated from " + typeName
+			+ ") is not a " + platform::Demangle(typeid(T)));
 
 		return asSubtype;
 	}

@@ -1,6 +1,6 @@
-/** @file Parsing/ABI.h    Declaration of ABI helper functions. */
+//! @file platform/ABI.hh    Declaration of ABI helper functions
 /*
- * Copyright (c) 2015 Jonathan Anderson
+ * Copyright (c) 2015, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed at Memorial University of Newfoundland under
@@ -28,13 +28,14 @@
  * SUCH DAMAGE.
  */
 
-#ifndef SUPPORT_ABI_H
-#define SUPPORT_ABI_H
+#ifndef FAB_PLATFORM_ABI_H_
+#define FAB_PLATFORM_ABI_H_
 
 #include <string>
 #include <typeinfo>
 
 namespace fabrique {
+namespace platform {
 
 /**
  * Demangle a C++ name according the current compiler's ABI.
@@ -54,6 +55,7 @@ std::string TypeName(const T& value)
 	return Demangle(typeid(value));
 }
 
+} // namespace platform
 } // namespace fabrique
 
-#endif
+#endif // FAB_PLATFORM_ABI_H_
