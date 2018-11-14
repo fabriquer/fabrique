@@ -1,0 +1,13 @@
+#
+# RUN: %fab --print-dag --format=null %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK-DAG: i:int = 42
+i:nil = 42;
+
+# CHECK-DAG: s:string = 'hello'
+s:nil = 'hello';
+
+# CHECK-DAG: l:list[int] = [ 1 2 3 ]
+l:list[nil] = [ 1 2 3 ];

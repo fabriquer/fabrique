@@ -50,18 +50,26 @@ using std::vector;
 List* List::of(const SharedPtrVec<Value>& values, const SourceRange& src,
                TypeContext& ctx)
 {
-	const Type *elementType = &ctx.nilType();
+	const Type *elementType = nullptr;
 	for (auto &v : values)
 	{
-		elementType = &elementType->supertype(v->type());
+		if (elementType)
+		{
+			elementType = &elementType->supertype(v->type());
+		}
+		else
+		{
+			elementType = &v->type();
+		}
 	}
 
-	return new List(values, Type::ListOf(*elementType), src);
+	const Type &t = values.empty() ? ctx.emptyList() : Type::ListOf(*elementType);
+	return new List(values, t, src);
 }
 
 
 List::List(const SharedPtrVec<Value>& v, const Type& t, const SourceRange& src)
-	: Value(t, src), elements_(v), elementType_(t[0])
+	: Value(t, src), elements_(v)
 {
 #ifndef NDEBUG
 	for (auto& value : v)
@@ -69,12 +77,6 @@ List::List(const SharedPtrVec<Value>& v, const Type& t, const SourceRange& src)
 		SemaCheck(value, src, "passed null value to List");
 	}
 #endif
-}
-
-
-const SequenceType& List::type() const
-{
-	return dynamic_cast<const SequenceType&>(Value::type());
 }
 
 
@@ -96,27 +98,35 @@ ValuePtr List::Add(ValuePtr& n) const
 	const List *next = n->asList();
 	SemaCheck(next, loc, "lists can only be concatenated with lists");
 
-	SemaCheck(elementType_.isSupertype(next->elementType_)
-		or next->elementType_.isSupertype(elementType_), loc,
-		"cannot concatenate " + type().str() + " and " + next->type().str());
-
 	SharedPtrVec<Value> values(elements_);
 	auto& nextElem = next->elements_;
 	values.insert(values.end(), nextElem.begin(), nextElem.end());
 
-	return ValuePtr(List::of(values, loc, elementType_.context()));
+	return ValuePtr(List::of(values, loc, type().context()));
 }
 
 ValuePtr List::PrefixWith(ValuePtr& prefix) const
 {
-	prefix->type().CheckSubtype(elementType_, prefix->source());
+	//
+	// The type of the resultant list will be list[elementType], where elementType is
+	// the supertype of the current element type (if we have one!) and the prefix's.
+	// That is:
+	//
+	// ```fab
+	// x:list[int] = 1 :: 2 :: [];
+	// y:list[nil] = 1 :: '2' :: [];
+	// ```
+	//
+	const Type &pt = prefix->type();
+	const Type &elementTy = elements_.empty() ? pt : pt.supertype(type()[0]);
+	const Type &t = type().context().listOf(elementTy);
 
 	SharedPtrVec<Value> values;
 	values.push_back(prefix);
 	values.insert(values.end(), elements_.begin(), elements_.end());
 
 	return ValuePtr(
-		new List(values, type(), SourceRange::Over(prefix.get(), this))
+		new List(values, t, SourceRange::Over(prefix.get(), this))
 	);
 }
 

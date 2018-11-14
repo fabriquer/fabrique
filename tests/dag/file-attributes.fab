@@ -18,7 +18,7 @@ base = foo.basename;
 # CHECK-DAG: ext:string = 'c'
 ext = foo.extension;
 
-# CHECK-DAG: no_flags:list[nil] = [ ]
+# CHECK-DAG: no_flags:list = [ ]
 no_flags:list[string] = foo.cflags ? [];
 
 # CHECK-DAG: sub:file =

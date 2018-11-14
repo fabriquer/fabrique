@@ -64,8 +64,13 @@ size_t Count(const Values& values, TypePredicate predicate)
 		if (t.isOrdered())
 		{
 			auto& seqType = dynamic_cast<const SequenceType&>(t);
-			if (predicate(seqType.elementType()))
-				count += 2;
+			if (auto *et = seqType.elementType())
+			{
+				if (predicate(*et))
+				{
+					count += 2;
+				}
+			}
 		}
 		else if (predicate(v->type()))
 		{

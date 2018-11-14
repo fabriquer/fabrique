@@ -3,7 +3,7 @@
 # RUN: %check %s -input-file %t
 #
 
-# CHECK-DAG: empty:list[nil] = [ ]
+# CHECK-DAG: empty:list = [ ]
 empty = [];
 
 # CHECK-DAG: integers:list[int] = [ 1 2 3 ]

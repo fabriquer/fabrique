@@ -72,7 +72,7 @@ bool Type::isSupertype(const Type& t) const
 
 void Type::CheckSubtype(const Type& t, SourceRange src) const
 {
-	if (not this->isSubtype(t))
+	if (not t.isSupertype(*this))
 		throw WrongTypeException(t, *this, src);
 }
 
