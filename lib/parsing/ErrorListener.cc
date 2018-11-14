@@ -29,7 +29,7 @@
  */
 
 #include <fabrique/parsing/ErrorListener.hh>
-#include "Support/ABI.h"
+#include <fabrique/platform/ABI.hh>
 #include "Support/SourceLocation.h"
 #include "Support/exceptions.h"
 
@@ -73,7 +73,7 @@ void ErrorListener::syntaxError(antlr4::Recognizer *r, Token *t, size_t line, si
 	}
 	catch (std::exception &e)
 	{
-		FAB_ASSERT(false, "unhandled exception of type " + TypeName(e));
+		FAB_ASSERT(false, "unhandled exception of type " + platform::TypeName(e));
 	}
 	catch (...)
 	{

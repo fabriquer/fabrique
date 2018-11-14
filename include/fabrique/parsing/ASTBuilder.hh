@@ -32,7 +32,7 @@
 #ifndef FAB_PARSING_PARSE_TREE_VISITOR_H_
 #define FAB_PARSING_PARSE_TREE_VISITOR_H_
 
-#include "Support/ABI.h"
+#include <fabrique/platform/ABI.hh>
 #include "Support/exceptions.h"
 #include "Support/SourceLocation.h"
 
@@ -169,8 +169,8 @@ private:
 		check(top, range, "top of AST-building stack was null");
 
 		check(dynamic_cast<T*>(top.get()), top->source(),
-			TypeName(*top) + " is not a " + Demangle(typeid(T))
-			+ " (internal parser error)");
+			platform::TypeName(*top) + " is not a "
+			+ platform::Demangle(typeid(T)) + " (internal parser error)");
 
 		return std::unique_ptr<T>(dynamic_cast<T*>(top.release()));
 	}

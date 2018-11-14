@@ -509,7 +509,7 @@ bool ASTBuilder::push(std::unique_ptr<Node> node)
 		<< Bytestream::Operator << "<<< "
 		<< Bytestream::Action << "parsed " << node->source()
 		<< Bytestream::Operator << " : "
-		<< Bytestream::Type << TypeName(*node)
+		<< Bytestream::Type << platform::TypeName(*node)
 		<< "\n"
 		;
 
@@ -542,7 +542,7 @@ std::unique_ptr<Node> ASTBuilder::popNode(SourceRange range)
 	debug_
 		<< Bytestream::Operator << ">>> "
 		<< Bytestream::Action << "popped "
-		<< Bytestream::Type << TypeName(*node)
+		<< Bytestream::Type << platform::TypeName(*node)
 		<< Bytestream::Operator << ": "
 		<< Bytestream::Reset << "\n\t"
 		;
