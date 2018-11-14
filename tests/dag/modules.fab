@@ -12,8 +12,8 @@ foo = submodule.foo;
 # CHECK-DAG: foo2:string = 'Hello, world!'
 foo2 = foo;
 
-# CHECK-DAG: bar:(file)->file = ${BAR} ${src} -o ${dest}
-bar = submodule.bar;
+# CHECK-DAG: first_bar:(file)->file = ${BAR} ${src} -o ${dest}
+first_bar = submodule.bar;
 
 # CHECK-DAG: another_bar:(file)->file = ${BAR} ${src} -o ${dest}
 another_bar = submodule.bar;
