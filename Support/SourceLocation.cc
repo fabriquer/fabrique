@@ -304,12 +304,10 @@ Bytestream& SourceRange::PrintSource(Bytestream& out, SourceLocation caret,
 		 * Otherwise, start where the source range says to.
 		 */
 		const size_t beginColumn = (begin.line == end.line) ? begin.column : 1;
-
-		const size_t preCaretHighlight =
-			caret ? (caret.column - beginColumn) : 0;
-
+		const size_t preCaretHighlight = caret ? (caret.column - beginColumn) : 0;
+		const size_t soFar = caret ? caret.column + 1 : beginColumn;
 		const size_t postCaretHighlight =
-			endColumn - (caret ? caret.column + 1 : beginColumn);
+			(soFar > endColumn) ? 0 : endColumn - soFar;
 
 		assert(preCaretHighlight >= 0);
 		assert(postCaretHighlight >= 0);
