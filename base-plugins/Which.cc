@@ -54,23 +54,12 @@ using namespace fabrique::dag;
 using fabrique::plugin::Plugin;
 using std::placeholders::_1;
 using std::placeholders::_2;
-using std::placeholders::_3;
-using std::placeholders::_4;
 using std::shared_ptr;
 using std::string;
 using std::vector;
 
 
-//! Get a named argument if it exists (or throw an exception otherwise)
-static ValuePtr GetArgument(const ValueMap &args, const string &name);
-
-
-namespace fabrique {
-namespace plugins {
-
-ValuePtr FindExecutable(const ValueMap& args, DAGBuilder&, vector<string> extraPaths);
-ValuePtr FindFile(const ValueMap& args, DAGBuilder& builder);
-
+namespace {
 
 /**
  * Finds files (executables or any other kind of files) in the
@@ -84,10 +73,18 @@ class Which : public plugin::Plugin
 		Create(dag::DAGBuilder&, const ValueMap& args) const override;
 };
 
+} // anonymous namespace
+
 static const char Directories[] = "directories";
 static const char ExecutableFnName[] = "executable";
 static const char FileName[] = "filename";
 static const char GenericFnName[] = "generic";
+
+static ValuePtr FindExecutable(const ValueMap&, DAGBuilder&, vector<string> extraPaths);
+static ValuePtr FindFile(const ValueMap& args, DAGBuilder& builder);
+
+//! Get a named argument if it exists (or throw an exception otherwise)
+static ValuePtr GetArgument(const ValueMap &args, const string &name);
 
 
 shared_ptr<Record> Which::Create(DAGBuilder& builder, const ValueMap& args) const
@@ -148,7 +145,7 @@ shared_ptr<Record> Which::Create(DAGBuilder& builder, const ValueMap& args) cons
 }
 
 
-ValuePtr FindFile(const ValueMap& args, DAGBuilder &builder)
+static ValuePtr FindFile(const ValueMap& args, DAGBuilder &builder)
 {
 	assert(args.size() == 2);
 	const string filename = GetArgument(args, FileName)->str();
@@ -169,21 +166,13 @@ ValuePtr FindFile(const ValueMap& args, DAGBuilder &builder)
 	return builder.File(fullName);
 }
 
-
-ValuePtr FindExecutable(const ValueMap& args, DAGBuilder& builder,
+static ValuePtr FindExecutable(const ValueMap& args, DAGBuilder& builder,
                         vector<string> extraPaths)
 {
 	const string filename = GetArgument(args, FileName)->str();
 
 	return builder.File(platform::FindExecutable(filename, extraPaths));
 }
-
-
-plugin::Registry::Initializer init(new Which());
-
-} // plugins namespace
-} // fabrique namespace
-
 
 static ValuePtr GetArgument(const ValueMap &args, const string &name)
 {
@@ -195,3 +184,5 @@ static ValuePtr GetArgument(const ValueMap &args, const string &name)
 
 	return i->second;
 }
+
+static plugin::Registry::Initializer init(new Which());

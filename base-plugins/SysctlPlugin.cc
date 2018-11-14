@@ -52,8 +52,7 @@ using std::shared_ptr;
 using std::string;
 
 
-namespace fabrique {
-namespace plugins {
+namespace {
 
 /**
  * Provides access to the sysctl(3) set of C library functions.
@@ -69,6 +68,8 @@ class SysctlPlugin : public plugin::Plugin
 	virtual shared_ptr<dag::Record>
 		Create(dag::DAGBuilder&, const dag::ValueMap& args) const override;
 };
+
+} // anonymous namespace
 
 
 static string SysctlName(ValueMap args);
@@ -161,6 +162,3 @@ static ValuePtr IntegerSysctl(ValueMap args, DAGBuilder& builder, SourceRange sr
 
 
 static plugin::Registry::Initializer init(new SysctlPlugin());
-
-} // namespace plugins
-} // namespace fabrique

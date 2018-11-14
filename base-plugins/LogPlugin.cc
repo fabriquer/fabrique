@@ -65,6 +65,8 @@ class LogPlugin : public plugin::Plugin
 		Create(dag::DAGBuilder&, const dag::ValueMap& args) const override;
 };
 
+} // anonymous namespace
+
 static ValuePtr Print(ValueMap args, dag::DAGBuilder&, SourceRange);
 
 
@@ -113,5 +115,3 @@ static ValuePtr Print(ValueMap args, dag::DAGBuilder &b, SourceRange src)
 
 
 static plugin::Registry::Initializer init(new LogPlugin());
-
-} // anonymous namespace

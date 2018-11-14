@@ -40,8 +40,7 @@ using std::shared_ptr;
 using std::string;
 
 
-namespace fabrique {
-namespace plugins {
+namespace {
 
 /**
  * Platform detection: defines the bare minimum of constants required to
@@ -74,6 +73,7 @@ static const char* Platforms[] = {
 	platform::Win64,
 };
 
+} // anonymous namespace
 
 
 shared_ptr<Record>
@@ -94,7 +94,5 @@ PlatformTests::Create(DAGBuilder& builder, const ValueMap& args) const
 	return builder.Record(fields);
 }
 
-static plugin::Registry::Initializer init(new PlatformTests());
 
-} // plugins namespace
-} // fabrique namespace
+static plugin::Registry::Initializer init(new PlatformTests());
