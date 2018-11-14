@@ -1,11 +1,12 @@
 /** @file Types/SequenceType.h    Declaration of @ref fabrique::SequenceType. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -43,10 +44,13 @@ namespace fabrique {
 class SequenceType : public Type
 {
 public:
-	virtual ~SequenceType() override;
-	const Type& elementType() const { return elementType_; }
+	SequenceType(TypeContext&);
+	SequenceType(const Type &elementType);
+
+	const Type* elementType() const;
 
 	virtual bool isSubtype(const Type&) const override;
+	virtual const Type& supertype(const Type& other) const override;
 
 	virtual bool hasFiles() const override;
 	virtual bool hasOutput() const override;
@@ -55,29 +59,7 @@ public:
 	virtual const Type& onAddTo(const Type&) const override;
 	virtual const Type& onPrefixWith(const Type&) const override;
 
-protected:
-	SequenceType(const Type& elementTy);
-
-private:
-	const Type& elementType_;
-	friend class TypeContext;
-	friend class RawSequenceType;
-};
-
-
-/**
- * An unparameterised sequence (e.g., `list`):
- * used to generate parameterised sequences (e.g., `list[foo]`).
- */
-class RawSequenceType : public Type
-{
-public:
-	virtual Type* Parameterise(
-		const PtrVec<Type>&, const SourceRange&) const override;
-
-protected:
-	RawSequenceType(TypeContext&);
-	friend class TypeContext;
+	Type* Parameterise(const PtrVec<Type>&, const SourceRange&) const override;
 };
 
 } // namespace fabrique

@@ -1,11 +1,12 @@
 /** @file Types/SequenceType.cc    Definition of @ref fabrique::SequenceType. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -41,17 +42,29 @@ using namespace fabrique;
 static const char* Name = "list";
 
 
-SequenceType::SequenceType(const Type& elementTy)
-	: Type(Name, PtrVec<Type>(1, &elementTy), elementTy.context()),
-	  elementType_(elementTy)
+SequenceType::SequenceType(TypeContext &ctx)
+	: Type(Name, {}, ctx)
 {
 }
 
-
-SequenceType::~SequenceType()
+SequenceType::SequenceType(const Type &elementType)
+	: Type(Name, { &elementType }, elementType.context())
 {
 }
 
+const Type* SequenceType::elementType() const
+{
+	FAB_ASSERT(typeParameters().size() < 2, "too many type parameters in " + str());
+
+	if (typeParameters().empty())
+	{
+		return nullptr;
+	}
+	else
+	{
+		return &(*this)[0];
+	}
+}
 
 bool SequenceType::hasFiles() const
 {
@@ -77,18 +90,28 @@ bool SequenceType::hasOutput() const
 }
 
 
+const Type& SequenceType::supertype(const Type& other) const
+{
+	if (not other.isOrdered())
+	{
+		return Type::supertype(other);
+	}
+
+	FAB_ASSERT(other.typeParameters().size() < 2,
+		"too many type parameters in " + other.str());
+
+	return typeParameters().empty() ? other : context().listOf(other[0]);
+}
+
 bool SequenceType::isSubtype(const Type& other) const
 {
 	if (not other.isOrdered())
 		return false;
 
-	auto& t = dynamic_cast<const SequenceType&>(other);
+	FAB_ASSERT(typeParameters().size() < 2, "too many type parameters in " + str());
 
 	// Sequences are covariant: list[subtype] is a subtype of list[super].
-	if (elementType().isSubtype(t.elementType()))
-		return true;
-
-	return false;
+	return typeParameters().empty() or other[0].isSupertype((*this)[0]);
 }
 
 
@@ -105,21 +128,16 @@ const Type& SequenceType::onAddTo(const Type& t) const
 
 const Type& SequenceType::onPrefixWith(const Type& t) const
 {
-	if (t == elementType_)
-		return *this;
-
-	return context().nilType();
+	return typeParameters().empty()
+		? context().listOf(t)
+		: t.supertype((*this)[0])
+		;
 }
 
-
-RawSequenceType::RawSequenceType(TypeContext& ctx)
-	: Type(Name, PtrVec<Type>(), ctx)
+Type* SequenceType::Parameterise(const PtrVec<Type>& t, const SourceRange &src) const
 {
-}
-
-
-Type* RawSequenceType::Parameterise(const PtrVec<Type>& t, const SourceRange &src) const
-{
+	SemaCheck(typeParameters().empty(), src, str() + " already has a type parameter");
 	SemaCheck(t.size() == 1, src, "sequences only take one type parameter");
+
 	return new SequenceType(*t.front());
 }

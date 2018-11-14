@@ -119,6 +119,7 @@ public:
 	virtual bool hasOutput() const { return false; }
 	virtual bool isFile() const { return false; }
 	virtual bool isFunction() const { return false; }
+	virtual bool isNil() const { return false; }
 	virtual bool isNumeric() const { return false; }
 	virtual bool isString() const { return false; }
 	virtual bool isOptional() const { return false; }

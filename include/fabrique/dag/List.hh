@@ -61,8 +61,6 @@ public:
 	static List* of(const SharedPtrVec<Value>&, const SourceRange&,
 	                TypeContext& ctx);
 
-	virtual const SequenceType& type() const override;
-
 	typedef SharedPtrVec<Value>::const_iterator iterator;
 
 	iterator begin() const;
@@ -84,7 +82,6 @@ private:
 	List(const SharedPtrVec<Value>&, const Type&, const SourceRange&);
 
 	const SharedPtrVec<Value> elements_;
-	const Type& elementType_;
 };
 
 } // namespace dag

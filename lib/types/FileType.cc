@@ -46,8 +46,8 @@ bool FileType::isInput(const Type& t)
 	if (t.isFile())
 		return dynamic_cast<const FileType&>(t).isInputFile();
 
-	if (t.isOrdered())
-		return isInput(dynamic_cast<const SequenceType&>(t).elementType());
+	if (t.isOrdered() and t.typeParameters().size() == 1)
+		return isInput(t[0]);
 
 	return false;
 }
@@ -57,17 +57,16 @@ bool FileType::isOutput(const Type& t)
 	if (t.isFile())
 		return dynamic_cast<const FileType&>(t).isOutputFile();
 
-	if (t.isOrdered())
-		return isOutput(dynamic_cast<const SequenceType&>(t).elementType());
+	if (t.isOrdered() and t.typeParameters().size() == 1)
+		return isOutput(t[0]);
 
 	return false;
 }
 
 bool FileType::isFileOrFiles(const Type& t)
 {
-	if (t.isOrdered())
-		return isFileOrFiles(
-			dynamic_cast<const SequenceType&>(t).elementType());
+	if (t.isOrdered() and t.typeParameters().size() == 1)
+		return isFileOrFiles(t[0]);
 
 	return t.isFile();
 }
@@ -80,10 +79,9 @@ void FileType::CheckFileTags(const Type& t, SourceRange src)
 		if (not file.isInputFile() and not file.isOutputFile())
 			throw WrongTypeException("file[in|out]", file, src);
 	}
-	else if (t.isOrdered())
+	else if (t.isOrdered() and t.typeParameters().size() == 1)
 	{
-		auto& seq = dynamic_cast<const SequenceType&>(t);
-		CheckFileTags(seq.elementType(), src);
+		CheckFileTags(t[0], src);
 	}
 }
 

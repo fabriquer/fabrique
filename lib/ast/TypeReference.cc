@@ -66,7 +66,7 @@ fabrique::dag::ValuePtr SimpleTypeReference::evaluate(EvalContext& ctx) const
 	if (name_->reservedName())
 	{
 		auto &t = ctx.types().find(name_->name());
-		SemaCheck(t or name_->name() == "nil", source(), "invalid type");
+		SemaCheck(t or t.isNil(), source(), "invalid type");
 
 		return dag::TypeReference::Create(t, source());
 	}

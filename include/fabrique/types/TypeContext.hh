@@ -70,6 +70,9 @@ public:
 	//! The type of an integer number.
 	const Type& integerType();
 
+	//! The type of a list that contains no elements.
+	const Type& emptyList();
+
 	//! The type of a list.
 	const Type& listOf(const Type&);
 
@@ -118,7 +121,6 @@ private:
 	static TypeName QualifiedName(const std::string& name,
 	                              const PtrVec<Type>& params = PtrVec<Type>());
 
-	Type* rawSequenceType_;
 	std::map<TypeName,std::unique_ptr<Type>> types;
 };
 

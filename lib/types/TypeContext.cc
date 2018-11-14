@@ -58,7 +58,8 @@ namespace
 		}
 
 		virtual bool valid() const override { return false; }
-		virtual bool isSubtype(const Type&) const override { return true; }
+		virtual bool isNil() const override { return true; }
+		virtual bool isSupertype(const Type&) const override { return true; }
 	};
 }
 
@@ -66,14 +67,12 @@ namespace
 TypeContext::TypeContext()
 {
 	booleanType();
+	emptyList();
 	fileType();
 	inputFileType();
 	integerType();
 	outputFileType();
 	stringType();
-
-	// Bare types required to build list[foo], maybe[foo], etc.
-	Register(rawSequenceType_ = new RawSequenceType(*this));
 }
 
 
@@ -122,10 +121,16 @@ const Type& TypeContext::integerType()
 	return t;
 }
 
+const Type& TypeContext::emptyList()
+{
+	static const Type &t = Register(new SequenceType(*this));
+	return t;
+}
+
 const Type& TypeContext::listOf(const Type& elementTy)
 {
 	PtrVec<Type> params(1, &elementTy);
-	return find(rawSequenceType_->name(), params);
+	return find(emptyList().name(), params);
 }
 
 const FileType& TypeContext::fileType()
