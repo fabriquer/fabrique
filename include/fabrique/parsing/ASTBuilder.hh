@@ -32,6 +32,7 @@
 #ifndef FAB_PARSING_PARSE_TREE_VISITOR_H_
 #define FAB_PARSING_PARSE_TREE_VISITOR_H_
 
+#include <fabrique/ast/ast.hh>
 #include <fabrique/platform/ABI.hh>
 #include "Support/exceptions.h"
 #include "Support/SourceLocation.h"
