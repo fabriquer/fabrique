@@ -1,0 +1,21 @@
+#!/bin/sh
+
+if [ "`which gmake`" != "" ]
+then
+	MAKE=gmake
+else
+	MAKE=make
+fi
+
+$MAKE Parsing/fab.yacc.cc || exit 1
+
+# Patch up platform Yacc differences
+if [ -e y.tab.h ]
+then
+	mv y.tab.h Parsing/fab.yacc.tab.h
+elif [ -e Parsing/fab.yacc.h ]
+then
+	mv Parsing/fab.yacc.h Parsing/fab.yacc.tab.h
+fi
+
+$MAKE $* || exit 1

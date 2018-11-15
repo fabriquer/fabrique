@@ -1,0 +1,3 @@
+#!/bin/sh
+
+../generate-ninja.py && ninja $*
