@@ -167,7 +167,7 @@ private:
 	{
 		std::unique_ptr<ast::Node> top = popNode(range);
 
-		check(top, range, "top of AST-building stack was null");
+		check(top, range, "syntax error");
 
 		check(dynamic_cast<T*>(top.get()), top->source(),
 			platform::TypeName(*top) + " is not a "
