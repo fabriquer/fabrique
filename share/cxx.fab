@@ -45,7 +45,8 @@ library_name = function(name:string): string
 compile_one = action('${CXX} -c ${flags} -MMD -MF ${obj}.d ${src} -o ${obj}',
              description = 'Compiling ${in}', depfile = '${obj}.d'
 	     <- src:file[in], obj:file[out], flags:list[string],
-	        otherDeps:list[file[in]] = [], CXX:file[in] = compiler, deps = 'gcc');
+	        otherDeps:list[file[in]] = [], CXX:file[in] = compiler,
+	        deps:string = 'gcc');
 
 compile = function(srcs:list[file], common_flags:list[string] = [],
                    deps:list[file[in]] = []): list[file]
