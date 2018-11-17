@@ -43,6 +43,11 @@ Parameter::Parameter(string name, const Type& t, ValuePtr v, const SourceRange& 
 	: HasSource(src), Typed(t), name_(name), defaultValue_(v)
 {
 	SemaCheck(not name.empty(), src, "parameter has no name");
+
+	if (defaultValue_)
+	{
+		defaultValue_->type().CheckSubtype(t, src);
+	}
 }
 
 Parameter::~Parameter()
