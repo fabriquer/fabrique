@@ -28,6 +28,6 @@ def FlagsForFile(filename, **kwargs):
 
             # We use C++11 features (but not C++14) for a balance of non-terribleness
             # and almost-ubiquitous availability.
-            '-std=c++11'
+            '-std=c++14'
         ],
     }
