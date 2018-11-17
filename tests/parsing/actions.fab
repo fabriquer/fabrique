@@ -6,15 +6,18 @@
 # CHECK: simple_cxx = action('$CXX -c $src -o $obj' <- src:list[file[in]], obj:file[out]);
 simple_cxx = action('$CXX -c $src -o $obj' <- src:list[file[in]], obj:file[out]);
 
+compiler = file('actions.fab');
+
 # CHECK: cc = action('${CC} -c ${flags} -MMD -MF ${obj}.d ${src} -o ${obj}',
 # CHECK:             description = 'Compiling ${in}', depfile = '${obj}.d'
 # CHECK:             <- src:file[in], obj:file[out], flags:list[string],
-# CHECK:                otherDeps:list[file[in]] = [], CC:file[in] = compiler,
-# CHECK:                deps = 'gcc');
+# CHECK:                otherDeps:list[file[in]] = [ ], CC:file[in] = compiler,
+# CHECK:                deps:string = 'gcc');
 cc = action('${CC} -c ${flags} -MMD -MF ${obj}.d ${src} -o ${obj}',
              description = 'Compiling ${in}', depfile = '${obj}.d'
              <- src:file[in], obj:file[out], flags:list[string],
-                otherDeps:list[file[in]] = [], CC:file[in] = [], deps:string = 'gcc');
+                otherDeps:list[file[in]] = [], CC:file[in] = compiler,
+                deps:string = 'gcc');
 
 # CHECK: cxx:(list[file])->list[file] = action('$CXX{{.*}} -MMD -MF $dep -o $out $src',
 # CHECK:            description = 'Compiling $src'
