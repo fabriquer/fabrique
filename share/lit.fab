@@ -15,7 +15,7 @@ run_lit = action(
 
 run = function(fabpath:string, test_tree:file[in], results_file:file[out],
                dependencies:list[file[in]] = [],
-               suppress_success_output = false, show_failure_details = true)
+               suppress_success_output:bool = false, show_failure_details:bool = true)
 {
 	flags = ['-D fab=' + fabpath]
 		+ (if suppress_success_output [ '--quiet' ] else [ '--succinct' ])
