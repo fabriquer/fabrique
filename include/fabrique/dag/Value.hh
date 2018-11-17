@@ -73,10 +73,10 @@ public:
 	//
 
 	//! Divide by aanother value.
-	virtual ValuePtr DivideBy(ValuePtr&) const;
+	virtual ValuePtr DivideBy(ValuePtr&, SourceRange) const;
 
 	//! Multiply by aanother value.
-	virtual ValuePtr MultiplyBy(ValuePtr&) const;
+	virtual ValuePtr MultiplyBy(ValuePtr&, SourceRange) const;
 
 	//
 	// Additive operations:
@@ -88,33 +88,33 @@ public:
 	 * The implementation of addition is type-dependent: it might make
 	 * sense to add, concatenate or apply a logical AND.
 	 */
-	virtual ValuePtr Add(ValuePtr&) const;
+	virtual ValuePtr Add(ValuePtr&, SourceRange) const;
 
 	//! Apply the prefix operation: prefix this value with another value.
-	virtual ValuePtr PrefixWith(ValuePtr&) const;
+	virtual ValuePtr PrefixWith(ValuePtr&, SourceRange) const;
 
 	//! Subtract another value from this one.
-	virtual ValuePtr Subtract(ValuePtr&) const;
+	virtual ValuePtr Subtract(ValuePtr&, SourceRange) const;
 
 	//
 	// Comparison operations:
 	//
 
 	/** Equivalence. */
-	virtual ValuePtr Equals(ValuePtr&) const;
+	virtual ValuePtr Equals(ValuePtr&, SourceRange) const;
 
 	//
 	// Logical operations:
 	//
 
 	/** Logical and. */
-	virtual ValuePtr And(ValuePtr&) const;
+	virtual ValuePtr And(ValuePtr&, SourceRange) const;
 
 	/** Logical or. */
-	virtual ValuePtr Or(ValuePtr&) const;
+	virtual ValuePtr Or(ValuePtr&, SourceRange) const;
 
 	/** Logical xor. */
-	virtual ValuePtr Xor(ValuePtr&) const;
+	virtual ValuePtr Xor(ValuePtr&, SourceRange) const;
 
 
 	//! A list representation of this value (or nullptr).

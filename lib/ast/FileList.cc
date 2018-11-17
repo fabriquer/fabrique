@@ -98,7 +98,7 @@ void FileList::Accept(Visitor& v) const
 
 dag::ValuePtr FileList::evaluate(EvalContext& ctx) const
 {
-	auto subdir = ctx.Lookup(names::Subdirectory);
+	auto subdir = ctx.Lookup(names::Subdirectory, source());
 	SemaCheck(subdir, source(), "no subdir defined");
 
 	auto scope(ctx.EnterScope("files"));

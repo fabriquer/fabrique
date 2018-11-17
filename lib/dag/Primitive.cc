@@ -59,50 +59,39 @@ ValuePtr Boolean::Not(const SourceRange& loc) const
 	return ValuePtr(new Boolean(not value_, type(), loc));
 }
 
-ValuePtr Boolean::And(ValuePtr& v) const
+ValuePtr Boolean::And(ValuePtr& v, SourceRange src) const
 {
-	auto other = dynamic_pointer_cast<Boolean>(v);
-	SemaCheck(other, v->source(), "not boolean");
-
-	return ValuePtr(
-		new Boolean(value_ and other->value_,
-			type().supertype(other->type()),
-			SourceRange(*this, *other))
-	);
+	return Op("and", [](bool x, bool y) { return x and y; }, v, src);
 }
 
-ValuePtr Boolean::Or(ValuePtr& v) const
+ValuePtr Boolean::Or(ValuePtr& v, SourceRange src) const
 {
-	auto other = dynamic_pointer_cast<Boolean>(v);
-	SemaCheck(other, v->source(), "not boolean");
-
-	return ValuePtr(
-		new Boolean(value_ or other->value_,
-			type().supertype(other->type()),
-			SourceRange(*this, *other))
-	);
+	return Op("or", [](bool x, bool y) { return x or y; }, v, src);
 }
 
-ValuePtr Boolean::Xor(ValuePtr& v) const
+ValuePtr Boolean::Xor(ValuePtr& v, SourceRange src) const
 {
-	auto other = dynamic_pointer_cast<Boolean>(v);
-	SemaCheck(other, v->source(), "not boolean");
-
-	return ValuePtr(
-		new Boolean(value_ xor other->value_,
-			type().supertype(other->type()),
-			SourceRange(*this, *other))
-	);
+	return Op("xor", [](bool x, bool y) { return x xor y; }, v, src);
 }
 
-ValuePtr Boolean::Equals(ValuePtr& v) const
+ValuePtr Boolean::Equals(ValuePtr& v, SourceRange src) const
 {
-	auto other = dynamic_pointer_cast<Boolean>(v);
-	SemaCheck(other, v->source(), "not a boolean");
+	return Op("check equality", [](bool x, bool y) { return x == y; }, v, src);
+}
 
-	return ValuePtr(new Boolean(value_ == other->value_,
-	                            type().supertype(other->type()),
-	                            SourceRange(*this, *other)));
+ValuePtr Boolean::Op(string name, std::function<bool (bool, bool)> f,
+                     ValuePtr v, SourceRange src) const
+{
+	if (not src)
+	{
+		src = SourceRange(*this, *v);
+	}
+
+	auto other = dynamic_pointer_cast<Boolean>(v);
+	SemaCheck(other, src, "cannot " + name + " boolean with " + v->type().str());
+
+	bool value = f(this->value_, other->value_);
+	return ValuePtr(new Boolean(value, type().context().booleanType(), src));
 }
 
 string Boolean::str() const { return value_ ? names::True : names::False; }
@@ -126,65 +115,64 @@ ValuePtr Integer::Negate(const SourceRange& src) const
 		new Integer(-this->value_, type(), SourceRange(src, source())));
 }
 
-ValuePtr Integer::Add(ValuePtr& v) const
+ValuePtr Integer::Add(ValuePtr& v, SourceRange src) const
 {
-	SourceRange loc = SourceRange(*this, *v);
-
-	shared_ptr<Integer> other = std::dynamic_pointer_cast<Integer>(v);
-	if (not other)
-		throw WrongTypeException(names::Int, v->type(), v->source());
-
-	return ValuePtr(
-		new Integer(this->value_ + other->value_, type(), loc));
+	return Op("add", [](int x, int y) { return x + y; }, v, src);
 }
 
-ValuePtr Integer::DivideBy(ValuePtr& v) const
+ValuePtr Integer::DivideBy(ValuePtr& v, SourceRange src) const
 {
-	SourceRange loc = SourceRange(*this, *v);
+	if (not src)
+	{
+		src = SourceRange(*this, *v);
+	}
 
-	shared_ptr<Integer> other = std::dynamic_pointer_cast<Integer>(v);
-	if (not other)
-		throw WrongTypeException(names::Int, v->type(), v->source());
+	auto f = [src](int x, int y)
+	{
+		SemaCheck(y != 0, src, "division by zero");
+		return x / y;
+	};
 
-	return ValuePtr(
-		new Integer(this->value_ / other->value_, type(), loc));
+	return Op("divide", f, v, src);
 }
 
-ValuePtr Integer::Equals(ValuePtr& v) const
+ValuePtr Integer::MultiplyBy(ValuePtr& v, SourceRange src) const
 {
-	SourceRange loc = SourceRange(*this, *v);
-
-	shared_ptr<Integer> other = std::dynamic_pointer_cast<Integer>(v);
-	if (not other)
-		throw WrongTypeException(names::Int, v->type(), v->source());
-
-	const bool eq = this->value_ == other->value_;
-	const Type& boolTy = type().context().booleanType();
-	return ValuePtr(new Boolean(eq, boolTy, loc));
+	return Op("multiply", [](int x, int y) { return x * y; }, v, src);
 }
 
-ValuePtr Integer::MultiplyBy(ValuePtr& v) const
+ValuePtr Integer::Subtract(ValuePtr& v, SourceRange src) const
 {
-	SourceRange loc = SourceRange(*this, *v);
-
-	shared_ptr<Integer> other = std::dynamic_pointer_cast<Integer>(v);
-	if (not other)
-		throw WrongTypeException(names::Int, v->type(), v->source());
-
-	return ValuePtr(
-		new Integer(this->value_ * other->value_, type(), loc));
+	return Op("subtract", [](int x, int y) { return x - y; }, v, src);
 }
 
-ValuePtr Integer::Subtract(ValuePtr& v) const
+ValuePtr Integer::Equals(ValuePtr& v, SourceRange src) const
 {
-	SourceRange loc = SourceRange(*this, *v);
+	if (not src)
+	{
+		src = SourceRange(*this, *v);
+	}
 
-	shared_ptr<Integer> other = std::dynamic_pointer_cast<Integer>(v);
-	if (not other)
-		throw WrongTypeException(names::Int, v->type(), v->source());
+	auto other = dynamic_pointer_cast<Integer>(v);
+	SemaCheck(other, v->source(), "not an integer");
 
-	return ValuePtr(
-		new Integer(this->value_ - other->value_, type(), loc));
+	bool value = (this->value_ == other->value_);
+	return ValuePtr(new Boolean(value, type().context().booleanType(), src));
+}
+
+ValuePtr Integer::Op(string name, std::function<int (int, int)> f, ValuePtr v,
+                     SourceRange src) const
+{
+	if (not src)
+	{
+		src = SourceRange(*this, *v);
+	}
+
+	auto other = dynamic_pointer_cast<Integer>(v);
+	SemaCheck(other, src, "cannot " + name + " integer with " + v->type().str());
+
+	bool value = f(this->value_, other->value_);
+	return ValuePtr(new Integer(value, type().context().booleanType(), src));
 }
 
 void Integer::Accept(Visitor& v) const
@@ -200,25 +188,23 @@ String::String(string s, const Type& t, SourceRange loc)
 
 string String::str() const { return value_; }
 
-ValuePtr String::Add(ValuePtr& v) const
+ValuePtr String::Add(ValuePtr& v, SourceRange src) const
 {
-	SourceRange loc = SourceRange(*this, *v);
+	SourceRange loc = src ? src : SourceRange(*this, *v);
 
 	shared_ptr<String> other = std::dynamic_pointer_cast<String>(v);
-	if (not other)
-		throw WrongTypeException(names::String, v->type(), loc);
+	SemaCheck(other, src, "cannot add string with " + v->type().str());
 
 	return ValuePtr(
 		new String(this->value_ + other->value_, type(), loc));
 }
 
-ValuePtr String::Equals(ValuePtr& v) const
+ValuePtr String::Equals(ValuePtr& v, SourceRange src) const
 {
-	SourceRange loc = SourceRange(*this, *v);
+	SourceRange loc = src ? src : SourceRange(*this, *v);
 
 	shared_ptr<String> other = std::dynamic_pointer_cast<String>(v);
-	if (not other)
-		throw WrongTypeException(names::String, v->type(), loc);
+	SemaCheck(other, loc, "cannot check string equality with " + v->type().str());
 
 	// Don't trust std::string::compare, it thinks "foo" != "foo\0".
 	const char *x = this->value_.data();

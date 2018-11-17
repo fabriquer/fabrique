@@ -78,10 +78,10 @@ public:
 	virtual ValuePtr field(const std::string& name) const override;
 
 	//! Name a file with my name + a suffix.
-	virtual ValuePtr Add(ValuePtr&) const override;
+	virtual ValuePtr Add(ValuePtr&, SourceRange) const override;
 
 	//! Name a file with a prefix + my name.
-	virtual ValuePtr PrefixWith(ValuePtr&) const override;
+	virtual ValuePtr PrefixWith(ValuePtr&, SourceRange) const override;
 
 	//! Our type is always a @ref FileType.
 	const FileType& type() const override;

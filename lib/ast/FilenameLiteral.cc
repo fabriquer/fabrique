@@ -65,8 +65,10 @@ void FilenameLiteral::Accept(Visitor& v) const
 
 dag::ValuePtr FilenameLiteral::evaluate(EvalContext& ctx) const
 {
-	SemaCheck(ctx.Lookup(names::Subdirectory), source(), "subdir not defined");
-	string subdirectory = ctx.Lookup(names::Subdirectory)->str();
+	SemaCheck(ctx.Lookup(names::Subdirectory, source()), source(),
+	          "subdir not defined");
+
+	string subdirectory = ctx.Lookup(names::Subdirectory, source())->str();
 
 	return ctx.builder().File(subdirectory, name_, {}, source());
 }
