@@ -29,22 +29,25 @@ if not os.path.isdir(builddir):
 
 # First, let's declare what we actually want to build.
 cxx_srcs = {
-	'AST/': (
-		'Action', 'Argument', 'ASTDump', 'BinaryOperation', 'Call',
-		'CompoundExpr', 'Conditional', 'DebugTracePoint',
-		'EvalContext', 'Expression',
-		'FieldAccess', 'FieldQuery', 'Filename', 'FileList',
-		'Foreach', 'Function',
-		'HasParameters', 'HasScope', 'Identifier', 'Import', 'List',
-		'Mapping', 'Node', 'Parameter', 'Record',
-		'Scope', 'SomeValue', 'SymbolReference',
-		'TypeDeclaration', 'UnaryOperation', 'Value', 'Visitor',
-		'literals',
+	'bin/': (
+		'CLIArguments',
+		'fab',
 	),
-	'Backend/': (
+	'lib/': (
+		'Printable', 'builtins', 'names',
+	),
+	'lib/ast/': (
+		'ASTDump', 'Action', 'Argument', 'Arguments', 'BinaryOperation', 'Call',
+		'CompoundExpr', 'Conditional', 'DebugTracePoint', 'EvalContext',
+		'Expression', 'FieldAccess', 'FieldQuery', 'FileList', 'FilenameLiteral',
+		'Foreach', 'Function', 'HasParameters', 'Identifier', 'List',
+		'NameReference', 'Node', 'Parameter', 'Record', 'TypeDeclaration',
+		'TypeReference', 'UnaryOperation', 'Value', 'Visitor', 'literals',
+	),
+	'lib/backend/': (
 		'Backend', 'Dot', 'Make', 'Ninja', 'Null',
 	),
-	'DAG/': (
+	'lib/dag/': (
 		'Build', 'Callable', 'DAG', 'DAGBuilder',
 		'File', 'Formatter', 'Function',
 		'List', 'Parameter', 'Primitive',
@@ -52,24 +55,88 @@ cxx_srcs = {
                 'UndefinedValueException',
 		'Value', 'Visitor',
 	),
-	'Parsing/': (
-		'Lexer', 'Parser', 'Token',
+	'lib/parsing/': (
+		'ASTBuilder', 'ErrorListener', 'ErrorReporter', 'Parser', 'Token',
 	),
-	'Plugin/': (
+	'lib/platform/': (
+		'ABI', 'SharedLibrary',
+	),
+	'lib/plugin/': (
 		'Loader', 'Plugin', 'Registry',
 	),
+	'lib/types/': (
+		'BooleanType', 'FileType', 'FunctionType', 'IntegerType', 'RecordType',
+		'SequenceType', 'StringType', 'Type', 'TypeContext', 'TypeError', 'Typed',
+	),
 	'Support/': (
-		'Arguments', 'Bytestream', 'ErrorReport', 'Join', 'Printable',
-		'SharedLibrary', 'SourceLocation', 'String',
-		'exceptions', 'os-posix',
+		'Bytestream', 'ErrorReport', 'Join', 'SourceLocation', 'String',
+		'exceptions',
 	),
-	'Types/': (
-		'BooleanType', 'FileType', 'FunctionType', 'IntegerType', 'MaybeType',
-		'OptionallyTyped', 'RecordType', 'SequenceType', 'StringType',
-		'Type', 'TypeContext', 'TypeError', 'Typed', 'UserType',
+	'vendor/antlr-cxx-runtime/': (
+		'ANTLRErrorListener', 'ANTLRErrorStrategy', 'ANTLRFileStream',
+		'ANTLRInputStream', 'BailErrorStrategy', 'BaseErrorListener',
+		'BufferedTokenStream', 'CharStream', 'CommonToken', 'CommonTokenFactory',
+		'CommonTokenStream', 'ConsoleErrorListener', 'DefaultErrorStrategy',
+		'DiagnosticErrorListener', 'Exceptions', 'FailedPredicateException',
+		'InputMismatchException', 'IntStream', 'InterpreterRuleContext', 'Lexer',
+		'LexerInterpreter', 'LexerNoViableAltException', 'ListTokenSource',
+		'NoViableAltException', 'Parser', 'ParserInterpreter',
+		'ParserRuleContext', 'ProxyErrorListener', 'RecognitionException',
+		'Recognizer', 'RuleContext', 'RuleContextWithAltNum', 'RuntimeMetaData',
+		'Token', 'TokenSource', 'TokenStream', 'TokenStreamRewriter',
+		'UnbufferedCharStream', 'UnbufferedTokenStream', 'Vocabulary',
+		'WritableToken',
 	),
-	'': (
-		'driver',
+	'vendor/antlr-cxx-runtime/atn/': (
+		'ATN', 'ATNConfig', 'ATNConfigSet', 'ATNDeserializationOptions',
+		'ATNDeserializer', 'ATNSerializer', 'ATNSimulator', 'ATNState',
+		'AbstractPredicateTransition', 'ActionTransition', 'AmbiguityInfo',
+		'ArrayPredictionContext', 'AtomTransition', 'BasicBlockStartState',
+		'BasicState', 'BlockEndState', 'BlockStartState',
+		'ContextSensitivityInfo', 'DecisionEventInfo', 'DecisionInfo',
+		'DecisionState', 'EmptyPredictionContext', 'EpsilonTransition',
+		'ErrorInfo', 'LL1Analyzer', 'LexerATNConfig', 'LexerATNSimulator',
+		'LexerAction', 'LexerActionExecutor', 'LexerChannelAction',
+		'LexerCustomAction', 'LexerIndexedCustomAction', 'LexerModeAction',
+		'LexerMoreAction', 'LexerPopModeAction', 'LexerPushModeAction',
+		'LexerSkipAction', 'LexerTypeAction', 'LookaheadEventInfo',
+		'LoopEndState', 'NotSetTransition', 'OrderedATNConfigSet', 'ParseInfo',
+		'ParserATNSimulator', 'PlusBlockStartState', 'PlusLoopbackState',
+		'PrecedencePredicateTransition', 'PredicateEvalInfo',
+		'PredicateTransition', 'PredictionContext', 'PredictionMode',
+		'ProfilingATNSimulator', 'RangeTransition', 'RuleStartState',
+		'RuleStopState', 'RuleTransition', 'SemanticContext', 'SetTransition',
+		'SingletonPredictionContext', 'StarBlockStartState', 'StarLoopEntryState',
+		'StarLoopbackState', 'TokensStartState', 'Transition',
+		'WildcardTransition',
+	),
+	'vendor/antlr-cxx-runtime/dfa/': (
+		'DFA', 'DFAState', 'DFASerializer', 'LexerDFASerializer',
+	),
+	'vendor/antlr-cxx-runtime/misc/': (
+		'InterpreterDataReader', 'Interval', 'IntervalSet', 'MurmurHash',
+		'Predicate',
+	),
+	'vendor/antlr-cxx-runtime/support/': (
+		'Any', 'Arrays', 'CPPUtils', 'StringUtils', 'guid',
+	),
+	'vendor/antlr-cxx-runtime/tree/': (
+		'ErrorNode', 'ErrorNodeImpl', 'IterativeParseTreeWalker', 'ParseTree',
+		'ParseTreeListener', 'ParseTreeVisitor', 'ParseTreeWalker',
+		'TerminalNode', 'TerminalNodeImpl', 'Trees',
+	),
+	'vendor/antlr-cxx-runtime/tree/pattern/': (
+		'Chunk', 'ParseTreeMatch', 'ParseTreePattern', 'ParseTreePatternMatcher',
+		'RuleTagToken', 'TagChunk', 'TextChunk', 'TokenTagToken',
+	),
+	'vendor/antlr-cxx-runtime/tree/xpath/': (
+		'XPath', 'XPathElement', 'XPathLexer', 'XPathLexerErrorListener',
+		'XPathRuleAnywhereElement', 'XPathRuleElement',
+		'XPathTokenAnywhereElement', 'XPathTokenElement',
+		'XPathWildcardAnywhereElement', 'XPathWildcardElement',
+	),
+	'vendor/generated-grammar/': (
+		'FabLexer', 'FabParser', 'FabParserBaseVisitor', 'FabParserVisitor',
 	),
 }
 
@@ -79,13 +146,13 @@ plugins = {
 	'which': [ 'Which' ],
 }
 
+def extension(subdir):
+	return 'cpp' if subdir.startswith('vendor') else 'cc'
+
 cxx_srcs = list(itertools.chain(*[
-	[ '%s%s' % (subdir,base) for base in srcs ]
+	[ '%s%s.%s' % (subdir,base,extension(subdir)) for base in srcs ]
 		for (subdir,srcs) in cxx_srcs.items()
 ]))
-
-lex = { 'Parsing/fab.lxx': 'Parsing/fab.lex' }
-yacc = { 'Parsing/fab.yy': 'Parsing/fab.yacc' }
 
 src_root = os.path.dirname(os.path.dirname(bootstrap))
 
@@ -99,7 +166,11 @@ if system in [ 'Darwin', 'FreeBSD', 'Linux' ]:
 	bindir = 'bin/'
 	libdir = 'lib/fabrique/'
 	libprefix = 'lib'
-	cxx_srcs += [ 'Support/PosixError', 'Support/PosixSharedLibrary' ]
+	cxx_srcs += [
+		'lib/platform/posix/PosixError.cc',
+		'lib/platform/posix/PosixSharedLibrary.cc',
+		'lib/platform/posix/files.cc',
+	]
 
 	if system == 'Darwin':
 		ldflags += [ '-undefined', 'dynamic_lookup' ]
@@ -130,8 +201,8 @@ defines = list(
 cxxflags = defines + [
 	'-I', src_root, '-I', builddir,
 
-	# Require C++11.
-	'-std=c++11',
+	# Require C++14.
+	'-std=c++14',
 
 	# Use position-independent code.
 	'-fPIC',
@@ -139,7 +210,9 @@ cxxflags = defines + [
 
 warnings = [
 	# Treat vendor headers as system headers: disable warnings.
-	'-isystem %s/vendor' % src_root
+	'-isystem %s/include' % src_root,
+	'-isystem %s/vendor' % src_root,
+	'-isystem %s/vendor/antlr-cxx-runtime' % src_root,
 ]
 
 plugin_warnings = [
@@ -189,13 +262,10 @@ variables = {
 	# tools
 	'cc': which('clang'),
 	'cxx': which('clang++'),
-	'lex': which('flex'),
-	'yacc': which('byacc'),
 
 	# flags
 	'cxxflags': ' '.join(cxxflags),
 	'ldflags': ' '.join(ldflags),
-	'yaccflags': '-d -g -t -v',
 }
 
 if args.withtests:
@@ -241,11 +311,6 @@ rules = {
 		'depfile': '$out.d',
 	},
 
-	'lex': {
-		'command': '$lex -c++ --header-file=$header --outfile=$main_out $in',
-		'description': 'Processing $in',
-	},
-
 	'lib': {
 		'command': '$cxx -shared -o $out $ldflags $in',
 		'description': 'Linking library $out',
@@ -255,11 +320,6 @@ rules = {
 		'command': 'python $in $args',
 		'description': 'Regenerating $out',
 		'generator': '',
-	},
-
-	'yacc': {
-		'command': '$yacc $yaccflags -b Parsing/fab.yacc -o $main_out $in',
-		'description': 'Processing $in',
 	},
 }
 
@@ -300,7 +360,7 @@ if args.withtests:
 
 
 # Main executable
-objs = [ '%s.o' % o for o in cxx_srcs + lex.values() + yacc.values() ]
+objs = [ '%s.o' % o for o in cxx_srcs ]
 
 out.write('build %sfab: bin %s\n\n' % (bindir, ' '.join(objs)))
 out.write('build fab: phony %sfab\n\n' % bindir)
@@ -324,29 +384,7 @@ for (plugin, srcs) in plugin_files.items():
 # C++ -> object files:
 for src in cxx_srcs:
 	obj = '%s.o' % src
-	src = os.path.join(src_root, '%s.cc' % src)
-
-	if 'Lex' in src or 'Parser' in src or 'driver' in src:
-		src += ' | Parsing/fab.yacc.tab.h'
-
+	src = os.path.join(src_root, '%s' % src)
 	out.write('build %s: cxx %s\n' % (obj, src))
 
 out.write('\n')
-
-# Lex and yacc:
-for (src,target) in lex.items():
-	src = os.path.join(src_root, src)
-	out.write('build %s.o: cxx %s.cc\n' % (target, target))
-	out.write('  cxxflags = %s\n\n' % ' '.join(gencxxflags))
-
-	out.write('build %s.h %s.cc: lex %s\n' % (target, target, src))
-	out.write('  header = %s.h\n' % target)
-	out.write('  main_out = %s.cc\n\n' % target)
-
-for (src,target) in yacc.items():
-	src = os.path.join(src_root, src)
-	out.write('build %s.o: cxx %s.cc\n' % (target, target))
-	out.write('  cxxflags = %s\n\n' % ' '.join(gencxxflags))
-
-	out.write('build %s.tab.h %s.cc: yacc %s\n' % (target, target, src))
-	out.write('  main_out = %s.cc\n\n' % target)
