@@ -58,56 +58,92 @@ ValuePtr Value::Not(const SourceRange& opLoc) const
 	);
 }
 
-ValuePtr Value::DivideBy(ValuePtr&) const
+ValuePtr Value::DivideBy(ValuePtr&, SourceRange src) const
 {
-	throw SemanticException(
-		"division unsupported by " + type().name(), source());
+	if (not src)
+	{
+		src = source();
+	}
+
+	throw SemanticException("division unsupported by " + type().name(), src);
 }
 
-ValuePtr Value::MultiplyBy(ValuePtr&) const
+ValuePtr Value::MultiplyBy(ValuePtr&, SourceRange src) const
 {
-	throw SemanticException(
-		"multiplication unsupported by " + type().name(), source());
+	if (not src)
+	{
+		src = source();
+	}
+
+	throw SemanticException("multiplication unsupported by " + type().name(), src);
 }
 
-ValuePtr Value::Add(ValuePtr&) const
+ValuePtr Value::Add(ValuePtr&, SourceRange src) const
 {
-	throw SemanticException(
-		"addition unsupported by " + type().name(), source());
+	if (not src)
+	{
+		src = source();
+	}
+
+	throw SemanticException("addition unsupported by " + type().name(), src);
 }
 
-ValuePtr Value::PrefixWith(ValuePtr&) const
+ValuePtr Value::PrefixWith(ValuePtr&, SourceRange src) const
 {
-	throw SemanticException(
-		"prefix operation unsupported by " + type().name(), source());
+	if (not src)
+	{
+		src = source();
+	}
+
+	throw SemanticException("prefix operation unsupported by " + type().name(), src);
 }
 
-ValuePtr Value::Subtract(ValuePtr&) const
+ValuePtr Value::Subtract(ValuePtr&, SourceRange src) const
 {
-	throw SemanticException(
-		"subtraction unsupported by " + type().name(), source());
+	if (not src)
+	{
+		src = source();
+	}
+
+	throw SemanticException("subtraction unsupported by " + type().name(), src);
 }
 
-ValuePtr Value::And(ValuePtr&) const
+ValuePtr Value::And(ValuePtr&, SourceRange src) const
 {
-	throw SemanticException(
-		"logial AND unsupported by " + type().name(), source());
+	if (not src)
+	{
+		src = source();
+	}
+
+	throw SemanticException("logial AND unsupported by " + type().name(), src);
 }
 
-ValuePtr Value::Or(ValuePtr&) const
+ValuePtr Value::Or(ValuePtr&, SourceRange src) const
 {
-	throw SemanticException(
-		"logial OR unsupported by " + type().name(), source());
+	if (not src)
+	{
+		src = source();
+	}
+
+	throw SemanticException("logial OR unsupported by " + type().name(), src);
 }
 
-ValuePtr Value::Xor(ValuePtr&) const
+ValuePtr Value::Xor(ValuePtr&, SourceRange src) const
 {
-	throw SemanticException(
-		"logial XOR unsupported by " + type().name(), source());
+	if (not src)
+	{
+		src = source();
+	}
+
+	throw SemanticException("logial XOR unsupported by " + type().name(), src);
 }
 
-ValuePtr Value::Equals(ValuePtr&) const
+ValuePtr Value::Equals(ValuePtr&, SourceRange src) const
 {
-	throw SemanticException(
-		"equivalence test unsupported by " + type().name(), source());
+	if (not src)
+	{
+		src = source();
+	}
+
+	throw SemanticException("equivalence test unsupported by " + type().name(), src);
 }

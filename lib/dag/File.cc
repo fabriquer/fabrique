@@ -194,26 +194,25 @@ ValuePtr File::field(const string& name) const
 }
 
 
-ValuePtr File::Add(ValuePtr& suffix) const
+ValuePtr File::Add(ValuePtr& suffix, SourceRange src) const
 {
 	const string file = filename_ + suffix->str();
 	const string filename = FilenameComponent(file);
 	const string subdir = JoinPath(subdirectory_, DirectoryOf(file));
 
 	shared_ptr<File> f(
-		new File(filename, subdir, absolute_,
-		         attributes_, type(), SourceRange::Over(this, suffix),
-		         generated_));
+		new File(filename, subdir, absolute_, attributes_, type(),
+		         src ? src : SourceRange::Over(this, suffix), generated_));
 
 	return f;
 }
 
 
-ValuePtr File::PrefixWith(ValuePtr& prefix) const
+ValuePtr File::PrefixWith(ValuePtr& prefix, SourceRange src) const
 {
 	shared_ptr<File> f(
 		new File(prefix->str() + filename_, subdirectory_, absolute_,
-		         attributes_, type(), SourceRange::Over(prefix, this),
+		         attributes_, type(), src ? src : SourceRange::Over(prefix, this),
 		         generated_));
 
 	return f;

@@ -36,6 +36,7 @@
 #include "Support/Bytestream.h"
 #include "Support/SourceLocation.h"
 
+#include <functional>
 #include <string>
 
 namespace fabrique {
@@ -75,12 +76,16 @@ public:
 
 	virtual ValuePtr Not(const SourceRange& src) const override;
 
-	virtual ValuePtr And(ValuePtr&) const override;
-	virtual ValuePtr Or(ValuePtr&) const override;
-	virtual ValuePtr Xor(ValuePtr&) const override;
-	virtual ValuePtr Equals(ValuePtr&) const override;
+	virtual ValuePtr And(ValuePtr&, SourceRange) const override;
+	virtual ValuePtr Or(ValuePtr&, SourceRange) const override;
+	virtual ValuePtr Xor(ValuePtr&, SourceRange) const override;
+	virtual ValuePtr Equals(ValuePtr&, SourceRange) const override;
 
 	void Accept(Visitor& v) const override;
+
+private:
+	ValuePtr Op(std::string operationName, std::function<bool (bool, bool)>,
+	            ValuePtr other, SourceRange) const;
 };
 
 
@@ -93,13 +98,17 @@ public:
 
 	virtual ValuePtr Negate(const SourceRange& src) const override;
 
-	virtual ValuePtr Add(ValuePtr&) const override;
-	virtual ValuePtr DivideBy(ValuePtr&) const override;
-	virtual ValuePtr Equals(ValuePtr&) const override;
-	virtual ValuePtr MultiplyBy(ValuePtr&) const override;
-	virtual ValuePtr Subtract(ValuePtr&) const override;
+	virtual ValuePtr Add(ValuePtr&, SourceRange) const override;
+	virtual ValuePtr DivideBy(ValuePtr&, SourceRange) const override;
+	virtual ValuePtr Equals(ValuePtr&, SourceRange) const override;
+	virtual ValuePtr MultiplyBy(ValuePtr&, SourceRange) const override;
+	virtual ValuePtr Subtract(ValuePtr&, SourceRange) const override;
 
 	void Accept(Visitor& v) const override;
+
+private:
+	ValuePtr Op(std::string operationName, std::function<int (int, int)>,
+	            ValuePtr other, SourceRange) const;
 };
 
 
@@ -110,8 +119,8 @@ public:
 	String(std::string, const Type&, SourceRange src = SourceRange::None());
 	std::string str() const override;
 
-	virtual ValuePtr Add(ValuePtr&) const override;
-	virtual ValuePtr Equals(ValuePtr&) const override;
+	virtual ValuePtr Add(ValuePtr&, SourceRange) const override;
+	virtual ValuePtr Equals(ValuePtr&, SourceRange) const override;
 
 	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 

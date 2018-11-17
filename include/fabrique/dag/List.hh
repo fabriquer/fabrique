@@ -70,8 +70,8 @@ public:
 	const Value& operator [] (size_t) const;
 
 	//! List addition is concatenation.
-	virtual ValuePtr Add(ValuePtr&) const override;
-	virtual ValuePtr PrefixWith(ValuePtr&) const override;
+	virtual ValuePtr Add(ValuePtr&, SourceRange) const override;
+	virtual ValuePtr PrefixWith(ValuePtr&, SourceRange) const override;
 	virtual const List* asList() const override { return this; }
 	virtual bool canScalarAdd(const Value&) const override;
 

@@ -121,34 +121,34 @@ ValuePtr Build::field(const std::string& name) const
 	return out_[0]->field(name);
 }
 
-ValuePtr Build::Add(ValuePtr& rhs) const
+ValuePtr Build::Add(ValuePtr& rhs, SourceRange src) const
 {
-	return outputValue()->Add(rhs);
+	return outputValue()->Add(rhs, src);
 }
 
-ValuePtr Build::PrefixWith(ValuePtr& rhs) const
+ValuePtr Build::PrefixWith(ValuePtr& rhs, SourceRange src) const
 {
-	return outputValue()->PrefixWith(rhs);
+	return outputValue()->PrefixWith(rhs, src);
 }
 
-ValuePtr Build::And(ValuePtr& rhs) const
+ValuePtr Build::And(ValuePtr& rhs, SourceRange src) const
 {
-	return outputValue()->And(rhs);
+	return outputValue()->And(rhs, src);
 }
 
-ValuePtr Build::Or(ValuePtr& rhs) const
+ValuePtr Build::Or(ValuePtr& rhs, SourceRange src) const
 {
-	return outputValue()->Or(rhs);
+	return outputValue()->Or(rhs, src);
 }
 
-ValuePtr Build::Xor(ValuePtr& rhs) const
+ValuePtr Build::Xor(ValuePtr& rhs, SourceRange src) const
 {
-	return outputValue()->Xor(rhs);
+	return outputValue()->Xor(rhs, src);
 }
 
-ValuePtr Build::Equals(ValuePtr& rhs) const
+ValuePtr Build::Equals(ValuePtr& rhs, SourceRange src) const
 {
-	return outputValue()->Equals(rhs);
+	return outputValue()->Equals(rhs, src);
 }
 
 ValuePtr Build::outputValue() const

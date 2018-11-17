@@ -91,9 +91,9 @@ const Value& List::operator [] (size_t i) const
 }
 
 
-ValuePtr List::Add(ValuePtr& n) const
+ValuePtr List::Add(ValuePtr& n, SourceRange src) const
 {
-	SourceRange loc = SourceRange::Over(this, n.get());
+	SourceRange loc = src ? src : SourceRange::Over(this, n.get());
 
 	const List *next = n->asList();
 	SemaCheck(next, loc, "lists can only be concatenated with lists");
@@ -105,7 +105,7 @@ ValuePtr List::Add(ValuePtr& n) const
 	return ValuePtr(List::of(values, loc, type().context()));
 }
 
-ValuePtr List::PrefixWith(ValuePtr& prefix) const
+ValuePtr List::PrefixWith(ValuePtr& prefix, SourceRange src) const
 {
 	//
 	// The type of the resultant list will be list[elementType], where elementType is
@@ -126,7 +126,7 @@ ValuePtr List::PrefixWith(ValuePtr& prefix) const
 	values.insert(values.end(), elements_.begin(), elements_.end());
 
 	return ValuePtr(
-		new List(values, t, SourceRange::Over(prefix.get(), this))
+		new List(values, t, src ? src : SourceRange::Over(prefix.get(), this))
 	);
 }
 

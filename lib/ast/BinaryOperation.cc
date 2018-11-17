@@ -142,22 +142,21 @@ dag::ValuePtr BinaryOperation::evaluate(EvalContext& ctx) const
 
 	switch (op_)
 	{
-		case Divide:    return lhs->DivideBy(rhs);
-		case Multiply:  return lhs->MultiplyBy(rhs);
+		case Divide:    return lhs->DivideBy(rhs, loc);
+		case Multiply:  return lhs->MultiplyBy(rhs, loc);
 
-		case Add:       return lhs->Add(rhs);
-		case Prefix:    return rhs->PrefixWith(lhs);
-		case Subtract:  return rhs->Subtract(lhs);
+		case Add:       return lhs->Add(rhs, loc);
+		case Prefix:    return rhs->PrefixWith(lhs, loc);
+		case Subtract:  return rhs->Subtract(lhs, loc);
 
-		case Equal:     return lhs->Equals(rhs);
-		case NotEqual:  return lhs->Equals(rhs)->Not(source());
+		case Equal:     return lhs->Equals(rhs, loc);
+		case NotEqual:  return lhs->Equals(rhs, loc)->Not(loc);
 
-		case And:       return lhs->And(rhs);
-		case Or:        return lhs->Or(rhs);
-		case Xor:       return lhs->Xor(rhs);
+		case And:       return lhs->And(rhs, loc);
+		case Or:        return lhs->Or(rhs, loc);
+		case Xor:       return lhs->Xor(rhs, loc);
 
-		case Invalid:
-			throw SemanticException("invalid operation", source());
+		case Invalid:   throw SemanticException("invalid operation", loc);
 	}
 
 	assert(false && "unreachable");

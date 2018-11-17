@@ -67,12 +67,12 @@ public:
 	virtual bool hasFields() const override;
 	virtual ValuePtr field(const std::string& name) const override;
 
-	virtual ValuePtr Add(ValuePtr&) const override;
-	virtual ValuePtr PrefixWith(ValuePtr&) const override;
-	virtual ValuePtr And(ValuePtr&) const override;
-	virtual ValuePtr Or(ValuePtr&) const override;
-	virtual ValuePtr Xor(ValuePtr&) const override;
-	virtual ValuePtr Equals(ValuePtr&) const override;
+	virtual ValuePtr Add(ValuePtr&, SourceRange) const override;
+	virtual ValuePtr PrefixWith(ValuePtr&, SourceRange) const override;
+	virtual ValuePtr And(ValuePtr&, SourceRange) const override;
+	virtual ValuePtr Or(ValuePtr&, SourceRange) const override;
+	virtual ValuePtr Xor(ValuePtr&, SourceRange) const override;
+	virtual ValuePtr Equals(ValuePtr&, SourceRange) const override;
 
 	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 	void Accept(Visitor& v) const override;
