@@ -144,7 +144,17 @@ Parser::ValueResult Parser::Parse(std::string s, SourceRange src)
 		;
 
 	ParserState state(s, src.filename(), prettyPrint_, dump_);
-	if (not state.ast.visitValue(state.parser.value()))
+	bool success = false;
+	try
+	{
+		success = state.ast.visitValue(state.parser.value());
+	}
+	catch (...)
+	{
+		FAB_ASSERT(not state.errors().empty(), "parsing failed without erro");
+	}
+
+	if (not success)
 	{
 		return ValueResult::Err(state.errors());
 	}
@@ -169,7 +179,17 @@ Parser::FileResult Parser::ParseFile(std::istream& input, string name)
 		;
 
 	ParserState state(input, name, prettyPrint_, dump_);
-	if (not state.ast.visitFile(state.parser.file()))
+	bool success = false;
+	try
+	{
+		success = state.ast.visitFile(state.parser.file());
+	}
+	catch (...)
+	{
+		FAB_ASSERT(not state.errors().empty(), "parsing failed without erro");
+	}
+
+	if (not success)
 	{
 		return FileResult::Err(state.errors());
 	}
