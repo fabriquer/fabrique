@@ -7,44 +7,51 @@
 #
 # Varables:
 #
-args=	
-args.asserts=	false
-args.debug=	false
-args.tests=	false
-asserts=	false
-buildroot=	.
+asserts=	true
+cc.compile=	
+cc.default_flags=	
+cc.default_flags.binary=	-fcolor-diagnostics -pie -rdynamic
+cc.default_flags.colour=	-fcolor-diagnostics
+cc.default_flags.library=	-fcolor-diagnostics -fPIC -rdynamic
+cc.default_flags.object=	-fcolor-diagnostics -fPIC
+cc.library=	
+cc.library_name=	
+cc.pic=	true
+cc.platform=	
+cc.use_colour=	true
 colour_output=	true
-common_cxx_flags=	-std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor
+common_cxx_flags=	-std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime
 compiler=	c++
 cxx.compile=	
 cxx.default_flags=	
-cxx.default_flags.binary=	-fcolor-diagnostics
+cxx.default_flags.binary=	-fcolor-diagnostics -pie -rdynamic
 cxx.default_flags.colour=	-fcolor-diagnostics
-cxx.default_flags.library=	-fcolor-diagnostics -fPIC -Wl,-undefined -Wl,dynamic_lookup
+cxx.default_flags.library=	-fcolor-diagnostics -fPIC -rdynamic
 cxx.default_flags.object=	-fcolor-diagnostics -fPIC
 cxx.library=	
 cxx.library_name=	
 cxx.pic=	true
 cxx.platform=	
 cxx.use_colour=	true
-cxx_flags=	-std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded
-cxx_srcs.posix=	true
-cxxoptions=	-std=c++11
-dbgflags=	-O2 -D NDEBUG
-debug=	false
-debug_and_asserts=	false
-defines=	-D OS_POSIX -D OS_DARWIN
-generated_cxx_flags=	-std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Wno-deprecated-register
-includes=	-I ${srcroot} -I ${buildroot}
-lex.process=	
-objects.flags=	-std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Wno-deprecated-register -fcolor-diagnostics -fPIC
+cxx_flags=	-std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension
+cxx_srcs.sources.posix=	true
+cxxoptions=	-std=c++14
+dbgflags=	-g -O0 
+debug=	true
+defines=	-D OS_POSIX
+generated_cxx_flags=	-std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG
+generated_srcs.basenames=	Lexer Parser ParserBaseVisitor ParserVisitor
+generated_srcs.names=	FabLexer FabParser FabParserBaseVisitor FabParserVisitor
+includes=	-I ${srcroot} -I ${srcroot}/include -I ${buildroot}
+ldflags=	-g -O0 -rdynamic
+objects.flags=	-std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC
 platform=	
-platform.bsd=	false
-platform.darwin=	true
-platform.freebsd=	false
+platform.bsd=	true
+platform.darwin=	false
+platform.freebsd=	true
 platform.ios=	false
 platform.linux=	false
-platform.mac=	true
+platform.mac=	false
 platform.netbsd=	false
 platform.openbsd=	false
 platform.posix=	true
@@ -52,758 +59,1648 @@ platform.raw=
 platform.win32=	false
 platform.win64=	false
 platform.windows=	false
-plugins.cxxflags=	-std=c++11 -I ${srcroot} -Wall -D OS_POSIX
-plugins.defines=	-D OS_POSIX
-plugins.fabrique=	
-plugins.fabrique.headers=	${srcroot}
-plugins.libs.flags=	-std=c++11 -I ${srcroot} -Wall -D OS_POSIX -fcolor-diagnostics -fPIC
-plugins.plugins.name=	platform-tests
+plugins.cxxflags=	-std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -Wno-global-constructors -Wno-exit-time-destructors
+plugins.ldflags=	-g -O0 -rdynamic
+plugins.libs.flags=	-std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -Wno-global-constructors -Wno-exit-time-destructors -fcolor-diagnostics -fPIC
+plugins.plugins.name=	log
 shell=	
+shell.shell=	
 srcroot=	../..
-test=	
-vendor=	-isystem ${srcroot}/vendor
+test.flags=	-D fab=fab --succinct --verbose
+test.lit.run=	
+use_asan=	false
+vendor_flags=	-isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime
 verbose_tests=	false
-warnings=	-Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded
+warnings=	-Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension
 which=	
-withtests=	false
-yacc.process=	
+withtests=	true
 
-products : bin/fab lib/fabrique/libplatform-tests.dylib lib/fabrique/libsysctl.dylib lib/fabrique/libwhich.dylib ${srcroot}/tests/./DAG/Inputs/another_subdir/fabfile ${srcroot}/tests/./DAG/Inputs/cc.fab ${srcroot}/tests/./DAG/Inputs/empty.fab ${srcroot}/tests/./DAG/Inputs/fabfile ${srcroot}/tests/./DAG/Inputs/requires-args.fab ${srcroot}/tests/./DAG/Inputs/some_files.fab ${srcroot}/tests/./DAG/Inputs/sources/import-another-subdir.fab ${srcroot}/tests/./DAG/Inputs/sources/src.fab ${srcroot}/tests/./DAG/Inputs/subdir-test.fab ${srcroot}/tests/./DAG/Inputs/submodule.fab ${srcroot}/tests/./DAG/Inputs/tools/c.fab ${srcroot}/tests/./DAG/action-apply.fab ${srcroot}/tests/./DAG/action-argument-types.fab ${srcroot}/tests/./DAG/action-default-arguments.fab ${srcroot}/tests/./DAG/action-list-of-outputs.fab ${srcroot}/tests/./DAG/action-missing-input.fab ${srcroot}/tests/./DAG/action-missing-output.fab ${srcroot}/tests/./DAG/action-no-output.fab ${srcroot}/tests/./DAG/action-param-types.fab ${srcroot}/tests/./DAG/argument-type-error-location.fab ${srcroot}/tests/./DAG/build-attributes.fab ${srcroot}/tests/./DAG/build-with-foreach.fab ${srcroot}/tests/./DAG/builddir.fab ${srcroot}/tests/./DAG/builtins.fab ${srcroot}/tests/./DAG/compile-arguments.fab ${srcroot}/tests/./DAG/compile-object.fab ${srcroot}/tests/./DAG/complex-build.fab ${srcroot}/tests/./DAG/compound-expr.fab ${srcroot}/tests/./DAG/conditionals.fab ${srcroot}/tests/./DAG/config-cli-optional.fab ${srcroot}/tests/./DAG/config-cli.fab ${srcroot}/tests/./DAG/custom-subdir.fab ${srcroot}/tests/./DAG/direct-call.fab ${srcroot}/tests/./DAG/empty-string.fab ${srcroot}/tests/./DAG/equality.fab ${srcroot}/tests/./DAG/explicit-compiler-imported-tools.fab ${srcroot}/tests/./DAG/explicit-compiler.fab ${srcroot}/tests/./DAG/field-existence.fab ${srcroot}/tests/./DAG/file-anonymous.fab ${srcroot}/tests/./DAG/file-attributes.fab ${srcroot}/tests/./DAG/file-explicitly-generated.fab ${srcroot}/tests/./DAG/file-string-addition.fab ${srcroot}/tests/./DAG/files.fab ${srcroot}/tests/./DAG/foreach.fab ${srcroot}/tests/./DAG/function-apply.fab ${srcroot}/tests/./DAG/function-arg-type-mismatch.fab ${srcroot}/tests/./DAG/function-default-parameters.fab ${srcroot}/tests/./DAG/function-named-args.fab ${srcroot}/tests/./DAG/hello-world.fab ${srcroot}/tests/./DAG/higher-order-functions.fab ${srcroot}/tests/./DAG/import-another-subdir.fab ${srcroot}/tests/./DAG/import-arguments-mandatory.fab ${srcroot}/tests/./DAG/import-directory.fab ${srcroot}/tests/./DAG/import-empty.fab ${srcroot}/tests/./DAG/list-of-lists-of-targets.fab ${srcroot}/tests/./DAG/lists.fab ${srcroot}/tests/./DAG/literals.fab ${srcroot}/tests/./DAG/logical-operators.fab ${srcroot}/tests/./DAG/maybe.fab ${srcroot}/tests/./DAG/missing-argument.fab ${srcroot}/tests/./DAG/modules.fab ${srcroot}/tests/./DAG/multiple-outputs.fab ${srcroot}/tests/./DAG/nested-paths.fab ${srcroot}/tests/./DAG/operators.fab ${srcroot}/tests/./DAG/param-default-values.fab ${srcroot}/tests/./DAG/print-inside-record.fab ${srcroot}/tests/./DAG/record-instantiation.fab ${srcroot}/tests/./DAG/record-nesting.fab ${srcroot}/tests/./DAG/rules.fab ${srcroot}/tests/./DAG/scopes.fab ${srcroot}/tests/./DAG/simple-build.fab ${srcroot}/tests/./DAG/string-list.fab ${srcroot}/tests/./DAG/subdir-within-subdir.fab ${srcroot}/tests/./DAG/subdir.fab ${srcroot}/tests/./DAG/target-filename-conflict.fab ${srcroot}/tests/./DAG/target-from-record.fab ${srcroot}/tests/./DAG/target-operations.fab ${srcroot}/tests/./DAG/tool-vs-src-directories.fab ${srcroot}/tests/./DAG/trace-simple.fab ${srcroot}/tests/./DAG/trace.fab ${srcroot}/tests/./DAG/types.fab ${srcroot}/tests/./DAG/unnamed-values.fab ${srcroot}/tests/./DAG/value-redefinition.fab ${srcroot}/tests/./Parsing/Inputs/accepts-args.fab ${srcroot}/tests/./Parsing/Inputs/accepts-file.fab ${srcroot}/tests/./Parsing/Inputs/fabfile ${srcroot}/tests/./Parsing/Inputs/requires-args.fab ${srcroot}/tests/./Parsing/Inputs/submodule-with-error.fab ${srcroot}/tests/./Parsing/Inputs/submodule.fab ${srcroot}/tests/./Parsing/Inputs/subsubmodule.fab ${srcroot}/tests/./Parsing/actions.fab ${srcroot}/tests/./Parsing/add-to-nil-list.fab ${srcroot}/tests/./Parsing/args-at-module-scope.fab ${srcroot}/tests/./Parsing/builddir.fab ${srcroot}/tests/./Parsing/builtins.fab ${srcroot}/tests/./Parsing/calling-the-uncallable.fab ${srcroot}/tests/./Parsing/compound-expr.fab ${srcroot}/tests/./Parsing/conditionals.fab ${srcroot}/tests/./Parsing/config-cli-optional.fab ${srcroot}/tests/./Parsing/config-cli.fab ${srcroot}/tests/./Parsing/default-parameters.fab ${srcroot}/tests/./Parsing/direct-call.fab ${srcroot}/tests/./Parsing/directory.fab ${srcroot}/tests/./Parsing/empty-string.fab ${srcroot}/tests/./Parsing/empty.fab ${srcroot}/tests/./Parsing/equality.fab ${srcroot}/tests/./Parsing/err-column-number.fab ${srcroot}/tests/./Parsing/err-files-lineno.fab ${srcroot}/tests/./Parsing/err-in-submodule.fab ${srcroot}/tests/./Parsing/field-existence.fab ${srcroot}/tests/./Parsing/file-attributes.fab ${srcroot}/tests/./Parsing/file-string-addition.fab ${srcroot}/tests/./Parsing/files.fab ${srcroot}/tests/./Parsing/foreach-not-iterable.fab ${srcroot}/tests/./Parsing/foreach.fab ${srcroot}/tests/./Parsing/function-type-inference.fab ${srcroot}/tests/./Parsing/functions.fab ${srcroot}/tests/./Parsing/hello-world.fab ${srcroot}/tests/./Parsing/higher-order-functions.fab ${srcroot}/tests/./Parsing/import-arguments-mandatory.fab ${srcroot}/tests/./Parsing/import-arguments-missing.fab ${srcroot}/tests/./Parsing/import-arguments-optional.fab ${srcroot}/tests/./Parsing/import-arguments-type-mismatch.fab ${srcroot}/tests/./Parsing/import-arguments-unnamed.fab ${srcroot}/tests/./Parsing/import-directory.fab ${srcroot}/tests/./Parsing/list-supertype.fab ${srcroot}/tests/./Parsing/list-type-mismatch.fab ${srcroot}/tests/./Parsing/lists.fab ${srcroot}/tests/./Parsing/literals.fab ${srcroot}/tests/./Parsing/logical-operators.fab ${srcroot}/tests/./Parsing/maybe.fab ${srcroot}/tests/./Parsing/modules.fab ${srcroot}/tests/./Parsing/multiple-definition.fab ${srcroot}/tests/./Parsing/operators.fab ${srcroot}/tests/./Parsing/positional-keyword-after-keyword.fab ${srcroot}/tests/./Parsing/record-instantiation.fab ${srcroot}/tests/./Parsing/record-nesting.fab ${srcroot}/tests/./Parsing/record-not-a-record.fab ${srcroot}/tests/./Parsing/record-type-too-many-fields.fab ${srcroot}/tests/./Parsing/record-types.fab ${srcroot}/tests/./Parsing/record-wrong-field-type.fab ${srcroot}/tests/./Parsing/scope-mismatch.fab ${srcroot}/tests/./Parsing/simple-build.fab ${srcroot}/tests/./Parsing/subdir-wrong-type.fab ${srcroot}/tests/./Parsing/subdir.fab ${srcroot}/tests/./Parsing/tokeniser.fab ${srcroot}/tests/./Parsing/type-conflict.fab ${srcroot}/tests/./Parsing/types.fab ${srcroot}/tests/./Parsing/unnamed-value.fab ${srcroot}/tests/./backends/dot/compile-arguments.fab ${srcroot}/tests/./backends/dot/compile-graph.fab ${srcroot}/tests/./backends/dot/complex-build.fab ${srcroot}/tests/./backends/dot/multiple-outputs.fab ${srcroot}/tests/./backends/make/Inputs/cc.fab ${srcroot}/tests/./backends/make/Inputs/foo.c ${srcroot}/tests/./backends/make/Inputs/foo.h ${srcroot}/tests/./backends/make/compile-arguments.fab ${srcroot}/tests/./backends/make/complex-build.fab ${srcroot}/tests/./backends/make/depfiles.fab ${srcroot}/tests/./backends/make/directory-dependencies.fab ${srcroot}/tests/./backends/make/explicit-compiler-imported-tools.fab ${srcroot}/tests/./backends/make/explicit-compiler.fab ${srcroot}/tests/./backends/make/literals.fab ${srcroot}/tests/./backends/make/multiple-outputs.fab ${srcroot}/tests/./backends/make/pseudo-targets.fab ${srcroot}/tests/./backends/make/rules.fab ${srcroot}/tests/./backends/make/string-list.fab ${srcroot}/tests/./backends/ninja/Inputs/cc.fab ${srcroot}/tests/./backends/ninja/Inputs/foo.c ${srcroot}/tests/./backends/ninja/Inputs/foo.h ${srcroot}/tests/./backends/ninja/Inputs/tools.fab ${srcroot}/tests/./backends/ninja/action-default-param.fab ${srcroot}/tests/./backends/ninja/action-reserved-names.fab ${srcroot}/tests/./backends/ninja/compile-arguments.fab ${srcroot}/tests/./backends/ninja/complex-build.fab ${srcroot}/tests/./backends/ninja/depfiles.fab ${srcroot}/tests/./backends/ninja/explicit-compiler-imported-tools.fab ${srcroot}/tests/./backends/ninja/explicit-compiler.fab ${srcroot}/tests/./backends/ninja/file-string-addition.fab ${srcroot}/tests/./backends/ninja/file-targets.fab ${srcroot}/tests/./backends/ninja/file-variables.fab ${srcroot}/tests/./backends/ninja/literals.fab ${srcroot}/tests/./backends/ninja/modules.fab ${srcroot}/tests/./backends/ninja/multiple-outputs.fab ${srcroot}/tests/./backends/ninja/pseudo-targets.fab ${srcroot}/tests/./backends/ninja/regenerate.fab ${srcroot}/tests/./backends/ninja/rules.fab ${srcroot}/tests/./backends/ninja/string-list.fab ${srcroot}/tests/lit.cfg ${srcroot}/tests/./plugins/sysctl.fab ${srcroot}/tests/./plugins/which-file-not-found.fab ${srcroot}/tests/./plugins/which.fab
+test : junit.xml
+everything : bin/fab lib/fabriquebase-pluginsliblog.so lib/fabriquebase-pluginslibplatform-tests.so lib/fabriquebase-pluginslibsysctl.so lib/fabriquebase-pluginslibwhich.so ${srcroot}/tests/./backends/dot/compile-arguments.fab ${srcroot}/tests/./backends/dot/compile-graph.fab ${srcroot}/tests/./backends/dot/complex-build.fab ${srcroot}/tests/./backends/dot/multiple-outputs.fab ${srcroot}/tests/./backends/make/Inputs/cc.fab ${srcroot}/tests/./backends/make/Inputs/foo.c ${srcroot}/tests/./backends/make/Inputs/foo.h ${srcroot}/tests/./backends/make/compile-arguments.fab ${srcroot}/tests/./backends/make/complex-build.fab ${srcroot}/tests/./backends/make/depfiles.fab ${srcroot}/tests/./backends/make/directory-dependencies.fab ${srcroot}/tests/./backends/make/explicit-compiler-imported-tools.fab ${srcroot}/tests/./backends/make/explicit-compiler.fab ${srcroot}/tests/./backends/make/literals.fab ${srcroot}/tests/./backends/make/multiple-outputs.fab ${srcroot}/tests/./backends/make/pseudo-targets.fab ${srcroot}/tests/./backends/make/rules.fab ${srcroot}/tests/./backends/make/string-list.fab ${srcroot}/tests/./backends/ninja/Inputs/cc.fab ${srcroot}/tests/./backends/ninja/Inputs/foo.c ${srcroot}/tests/./backends/ninja/Inputs/foo.h ${srcroot}/tests/./backends/ninja/Inputs/tools.fab ${srcroot}/tests/./backends/ninja/action-default-param.fab ${srcroot}/tests/./backends/ninja/action-reserved-names.fab ${srcroot}/tests/./backends/ninja/compile-arguments.fab ${srcroot}/tests/./backends/ninja/complex-build.fab ${srcroot}/tests/./backends/ninja/depfiles.fab ${srcroot}/tests/./backends/ninja/explicit-compiler-imported-tools.fab ${srcroot}/tests/./backends/ninja/explicit-compiler.fab ${srcroot}/tests/./backends/ninja/file-string-addition.fab ${srcroot}/tests/./backends/ninja/file-targets.fab ${srcroot}/tests/./backends/ninja/file-variables.fab ${srcroot}/tests/./backends/ninja/literals.fab ${srcroot}/tests/./backends/ninja/modules.fab ${srcroot}/tests/./backends/ninja/multiple-outputs.fab ${srcroot}/tests/./backends/ninja/pseudo-targets.fab ${srcroot}/tests/./backends/ninja/regenerate.fab ${srcroot}/tests/./backends/ninja/rules.fab ${srcroot}/tests/./backends/ninja/string-list.fab ${srcroot}/tests/./dag/Inputs/another_subdir/fabfile ${srcroot}/tests/./dag/Inputs/cc.fab ${srcroot}/tests/./dag/Inputs/empty.fab ${srcroot}/tests/./dag/Inputs/fabfile ${srcroot}/tests/./dag/Inputs/requires-args.fab ${srcroot}/tests/./dag/Inputs/some_files.fab ${srcroot}/tests/./dag/Inputs/sources/import-another-subdir.fab ${srcroot}/tests/./dag/Inputs/sources/src.fab ${srcroot}/tests/./dag/Inputs/subdir-test.fab ${srcroot}/tests/./dag/Inputs/submodule.fab ${srcroot}/tests/./dag/Inputs/tools/c.fab ${srcroot}/tests/./dag/action-apply.fab ${srcroot}/tests/./dag/action-argument-types.fab ${srcroot}/tests/./dag/action-default-arguments.fab ${srcroot}/tests/./dag/action-list-of-outputs.fab ${srcroot}/tests/./dag/action-missing-input.fab ${srcroot}/tests/./dag/action-missing-output.fab ${srcroot}/tests/./dag/action-param-types.fab ${srcroot}/tests/./dag/argument-type-error-location.fab ${srcroot}/tests/./dag/build-attributes.fab ${srcroot}/tests/./dag/build-with-foreach.fab ${srcroot}/tests/./dag/build-without-output.fab ${srcroot}/tests/./dag/builddir.fab ${srcroot}/tests/./dag/builtins.fab ${srcroot}/tests/./dag/calling-the-uncallable.fab ${srcroot}/tests/./dag/compile-arguments.fab ${srcroot}/tests/./dag/compile-object.fab ${srcroot}/tests/./dag/complex-build.fab ${srcroot}/tests/./dag/compound-expr.fab ${srcroot}/tests/./dag/conditionals.fab ${srcroot}/tests/./dag/config-cli-optional.fab ${srcroot}/tests/./dag/config-cli.fab ${srcroot}/tests/./dag/custom-subdir.fab ${srcroot}/tests/./dag/direct-call.fab ${srcroot}/tests/./dag/directory-creation.fab ${srcroot}/tests/./dag/empty-string.fab ${srcroot}/tests/./dag/equality.fab ${srcroot}/tests/./dag/explicit-compiler-imported-tools.fab ${srcroot}/tests/./dag/explicit-compiler.fab ${srcroot}/tests/./dag/field-existence.fab ${srcroot}/tests/./dag/file-anonymous.fab ${srcroot}/tests/./dag/file-attributes.fab ${srcroot}/tests/./dag/file-explicitly-generated.fab ${srcroot}/tests/./dag/file-string-addition.fab ${srcroot}/tests/./dag/files.fab ${srcroot}/tests/./dag/foreach-not-iterable.fab ${srcroot}/tests/./dag/foreach.fab ${srcroot}/tests/./dag/function-apply.fab ${srcroot}/tests/./dag/function-arg-type-mismatch.fab ${srcroot}/tests/./dag/function-default-parameters.fab ${srcroot}/tests/./dag/function-named-args.fab ${srcroot}/tests/./dag/hello-world.fab ${srcroot}/tests/./dag/higher-order-functions.fab ${srcroot}/tests/./dag/import-another-subdir.fab ${srcroot}/tests/./dag/import-arguments-mandatory.fab ${srcroot}/tests/./dag/import-directory.fab ${srcroot}/tests/./dag/import-empty.fab ${srcroot}/tests/./dag/list-of-lists-of-targets.fab ${srcroot}/tests/./dag/list-supertype.fab ${srcroot}/tests/./dag/list-type-mismatch.fab ${srcroot}/tests/./dag/lists.fab ${srcroot}/tests/./dag/literals.fab ${srcroot}/tests/./dag/logical-operators.fab ${srcroot}/tests/./dag/missing-argument.fab ${srcroot}/tests/./dag/modules.fab ${srcroot}/tests/./dag/multiple-definition.fab ${srcroot}/tests/./dag/multiple-outputs.fab ${srcroot}/tests/./dag/nested-paths.fab ${srcroot}/tests/./dag/operators.fab ${srcroot}/tests/./dag/param-default-values.fab ${srcroot}/tests/./dag/record-instantiation.fab ${srcroot}/tests/./dag/record-nesting.fab ${srcroot}/tests/./dag/record-type-too-many-fields.fab ${srcroot}/tests/./dag/record-wrong-field-type.fab ${srcroot}/tests/./dag/rules.fab ${srcroot}/tests/./dag/scopes.fab ${srcroot}/tests/./dag/simple-build.fab ${srcroot}/tests/./dag/string-list.fab ${srcroot}/tests/./dag/subdir-within-subdir.fab ${srcroot}/tests/./dag/subdir-wrong-type.fab ${srcroot}/tests/./dag/subdir.fab ${srcroot}/tests/./dag/target-filename-conflict.fab ${srcroot}/tests/./dag/target-from-record.fab ${srcroot}/tests/./dag/target-operations.fab ${srcroot}/tests/./dag/tool-vs-src-directories.fab ${srcroot}/tests/./dag/type-conflict.fab ${srcroot}/tests/./dag/types.fab ${srcroot}/tests/./dag/unnamed-values.fab ${srcroot}/tests/./dag/value-redefinition.fab ${srcroot}/tests/lit.cfg ${srcroot}/tests/./parsing/actions.fab ${srcroot}/tests/./parsing/binary-operations.fab ${srcroot}/tests/./parsing/compound-expr.fab ${srcroot}/tests/./parsing/conditionals.fab ${srcroot}/tests/./parsing/default-parameters.fab ${srcroot}/tests/./parsing/direct-call.fab ${srcroot}/tests/./parsing/empty-string.fab ${srcroot}/tests/./parsing/equality.fab ${srcroot}/tests/./parsing/field-call.fab ${srcroot}/tests/./parsing/field-existence.fab ${srcroot}/tests/./parsing/field-query.fab ${srcroot}/tests/./parsing/field-reference.fab ${srcroot}/tests/./parsing/fields-of-fields.fab ${srcroot}/tests/./parsing/file-attributes.fab ${srcroot}/tests/./parsing/files.fab ${srcroot}/tests/./parsing/foreach.fab ${srcroot}/tests/./parsing/functions.fab ${srcroot}/tests/./parsing/hello-world.fab ${srcroot}/tests/./parsing/higher-order-functions.fab ${srcroot}/tests/./parsing/indirect-call.fab ${srcroot}/tests/./parsing/lists.fab ${srcroot}/tests/./parsing/literals.fab ${srcroot}/tests/./parsing/logical-operators.fab ${srcroot}/tests/./parsing/record-instantiation.fab ${srcroot}/tests/./parsing/record-nesting.fab ${srcroot}/tests/./parsing/record-types.fab ${srcroot}/tests/./parsing/simple-build.fab ${srcroot}/tests/./parsing/types.fab ${srcroot}/tests/./parsing/unnamed-value.fab ${srcroot}/tests/./plugins/sysctl.fab ${srcroot}/tests/./plugins/which-file-not-found.fab ${srcroot}/tests/./plugins/which.fab
 fab : bin/fab
-plugins : lib/fabrique/libplatform-tests.dylib lib/fabrique/libsysctl.dylib lib/fabrique/libwhich.dylib
-objects : Parsing/fab.lex.cc.o Parsing/fab.yacc.cc.o driver.cc.o AST/Action.cc.o AST/Argument.cc.o AST/ASTDump.cc.o AST/BinaryOperation.cc.o AST/Call.cc.o AST/CompoundExpr.cc.o AST/Conditional.cc.o AST/DebugTracePoint.cc.o AST/EvalContext.cc.o AST/Expression.cc.o AST/FieldAccess.cc.o AST/FieldQuery.cc.o AST/Filename.cc.o AST/FileList.cc.o AST/Foreach.cc.o AST/Function.cc.o AST/HasParameters.cc.o AST/HasScope.cc.o AST/Identifier.cc.o AST/Import.cc.o AST/List.cc.o AST/Mapping.cc.o AST/Node.cc.o AST/Parameter.cc.o AST/Record.cc.o AST/Scope.cc.o AST/SomeValue.cc.o AST/SymbolReference.cc.o AST/TypeDeclaration.cc.o AST/UnaryOperation.cc.o AST/Value.cc.o AST/Visitor.cc.o AST/literals.cc.o Backend/Backend.cc.o Backend/Dot.cc.o Backend/Make.cc.o Backend/Ninja.cc.o Backend/Null.cc.o DAG/Build.cc.o DAG/Callable.cc.o DAG/DAG.cc.o DAG/DAGBuilder.cc.o DAG/File.cc.o DAG/Formatter.cc.o DAG/Function.cc.o DAG/List.cc.o DAG/Parameter.cc.o DAG/Primitive.cc.o DAG/Record.cc.o DAG/Rule.cc.o DAG/TypeReference.cc.o DAG/UndefinedValueException.cc.o DAG/Value.cc.o DAG/Visitor.cc.o Parsing/Lexer.cc.o Parsing/Parser.cc.o Parsing/Token.cc.o Plugin/Loader.cc.o Plugin/Plugin.cc.o Plugin/Registry.cc.o Support/Arguments.cc.o Support/Bytestream.cc.o Support/ErrorReport.cc.o Support/Join.cc.o Support/Printable.cc.o Support/SharedLibrary.cc.o Support/SourceLocation.cc.o Support/String.cc.o Support/exceptions.cc.o Support/PosixError.cc.o Support/PosixSharedLibrary.cc.o Support/os-posix.cc.o Types/BooleanType.cc.o Types/FileType.cc.o Types/FunctionType.cc.o Types/IntegerType.cc.o Types/MaybeType.cc.o Types/OptionallyTyped.cc.o Types/RecordType.cc.o Types/SequenceType.cc.o Types/StringType.cc.o Types/Type.cc.o Types/TypeContext.cc.o Types/TypeError.cc.o Types/Typed.cc.o Types/UserType.cc.o
-lexer_src : Parsing/fab.lex.cc
-parser_src : Parsing/fab.yacc.cc
-cxx_srcs : ${srcroot}/driver.cc ${srcroot}/AST/Action.cc ${srcroot}/AST/Argument.cc ${srcroot}/AST/ASTDump.cc ${srcroot}/AST/BinaryOperation.cc ${srcroot}/AST/Call.cc ${srcroot}/AST/CompoundExpr.cc ${srcroot}/AST/Conditional.cc ${srcroot}/AST/DebugTracePoint.cc ${srcroot}/AST/EvalContext.cc ${srcroot}/AST/Expression.cc ${srcroot}/AST/FieldAccess.cc ${srcroot}/AST/FieldQuery.cc ${srcroot}/AST/Filename.cc ${srcroot}/AST/FileList.cc ${srcroot}/AST/Foreach.cc ${srcroot}/AST/Function.cc ${srcroot}/AST/HasParameters.cc ${srcroot}/AST/HasScope.cc ${srcroot}/AST/Identifier.cc ${srcroot}/AST/Import.cc ${srcroot}/AST/List.cc ${srcroot}/AST/Mapping.cc ${srcroot}/AST/Node.cc ${srcroot}/AST/Parameter.cc ${srcroot}/AST/Record.cc ${srcroot}/AST/Scope.cc ${srcroot}/AST/SomeValue.cc ${srcroot}/AST/SymbolReference.cc ${srcroot}/AST/TypeDeclaration.cc ${srcroot}/AST/UnaryOperation.cc ${srcroot}/AST/Value.cc ${srcroot}/AST/Visitor.cc ${srcroot}/AST/literals.cc ${srcroot}/Backend/Backend.cc ${srcroot}/Backend/Dot.cc ${srcroot}/Backend/Make.cc ${srcroot}/Backend/Ninja.cc ${srcroot}/Backend/Null.cc ${srcroot}/DAG/Build.cc ${srcroot}/DAG/Callable.cc ${srcroot}/DAG/DAG.cc ${srcroot}/DAG/DAGBuilder.cc ${srcroot}/DAG/File.cc ${srcroot}/DAG/Formatter.cc ${srcroot}/DAG/Function.cc ${srcroot}/DAG/List.cc ${srcroot}/DAG/Parameter.cc ${srcroot}/DAG/Primitive.cc ${srcroot}/DAG/Record.cc ${srcroot}/DAG/Rule.cc ${srcroot}/DAG/TypeReference.cc ${srcroot}/DAG/UndefinedValueException.cc ${srcroot}/DAG/Value.cc ${srcroot}/DAG/Visitor.cc ${srcroot}/Parsing/Lexer.cc ${srcroot}/Parsing/Parser.cc ${srcroot}/Parsing/Token.cc ${srcroot}/Plugin/Loader.cc ${srcroot}/Plugin/Plugin.cc ${srcroot}/Plugin/Registry.cc ${srcroot}/Support/Arguments.cc ${srcroot}/Support/Bytestream.cc ${srcroot}/Support/ErrorReport.cc ${srcroot}/Support/Join.cc ${srcroot}/Support/Printable.cc ${srcroot}/Support/SharedLibrary.cc ${srcroot}/Support/SourceLocation.cc ${srcroot}/Support/String.cc ${srcroot}/Support/exceptions.cc ${srcroot}/Support/PosixError.cc ${srcroot}/Support/PosixSharedLibrary.cc ${srcroot}/Support/os-posix.cc ${srcroot}/Types/BooleanType.cc ${srcroot}/Types/FileType.cc ${srcroot}/Types/FunctionType.cc ${srcroot}/Types/IntegerType.cc ${srcroot}/Types/MaybeType.cc ${srcroot}/Types/OptionallyTyped.cc ${srcroot}/Types/RecordType.cc ${srcroot}/Types/SequenceType.cc ${srcroot}/Types/StringType.cc ${srcroot}/Types/Type.cc ${srcroot}/Types/TypeContext.cc ${srcroot}/Types/TypeError.cc ${srcroot}/Types/Typed.cc ${srcroot}/Types/UserType.cc
-yacc : 
-lex : 
+plugins : lib/fabriquebase-pluginsliblog.so lib/fabriquebase-pluginslibplatform-tests.so lib/fabriquebase-pluginslibsysctl.so lib/fabriquebase-pluginslibwhich.so
+objects : bin/CLIArguments.cc.o bin/fab.cc.o lib/Printable.cc.o lib/builtins.cc.o lib/names.cc.o lib/ast/Action.cc.o lib/ast/Argument.cc.o lib/ast/Arguments.cc.o lib/ast/ASTDump.cc.o lib/ast/BinaryOperation.cc.o lib/ast/Call.cc.o lib/ast/CompoundExpr.cc.o lib/ast/Conditional.cc.o lib/ast/DebugTracePoint.cc.o lib/ast/EvalContext.cc.o lib/ast/Expression.cc.o lib/ast/FieldAccess.cc.o lib/ast/FieldQuery.cc.o lib/ast/FilenameLiteral.cc.o lib/ast/FileList.cc.o lib/ast/Foreach.cc.o lib/ast/Function.cc.o lib/ast/HasParameters.cc.o lib/ast/Identifier.cc.o lib/ast/List.cc.o lib/ast/NameReference.cc.o lib/ast/Node.cc.o lib/ast/Parameter.cc.o lib/ast/Record.cc.o lib/ast/TypeDeclaration.cc.o lib/ast/TypeReference.cc.o lib/ast/UnaryOperation.cc.o lib/ast/Value.cc.o lib/ast/Visitor.cc.o lib/ast/literals.cc.o lib/backend/Backend.cc.o lib/backend/Dot.cc.o lib/backend/Make.cc.o lib/backend/Ninja.cc.o lib/backend/Null.cc.o lib/dag/Build.cc.o lib/dag/Callable.cc.o lib/dag/DAG.cc.o lib/dag/DAGBuilder.cc.o lib/dag/File.cc.o lib/dag/Formatter.cc.o lib/dag/Function.cc.o lib/dag/List.cc.o lib/dag/Parameter.cc.o lib/dag/Primitive.cc.o lib/dag/Record.cc.o lib/dag/Rule.cc.o lib/dag/TypeReference.cc.o lib/dag/UndefinedValueException.cc.o lib/dag/Value.cc.o lib/dag/Visitor.cc.o lib/parsing/ASTBuilder.cc.o lib/parsing/ErrorListener.cc.o lib/parsing/ErrorReporter.cc.o lib/parsing/Parser.cc.o lib/parsing/Token.cc.o lib/platform/ABI.cc.o lib/platform/SharedLibrary.cc.o lib/platform/posix/PosixError.cc.o lib/platform/posix/PosixSharedLibrary.cc.o lib/platform/posix/files.cc.o lib/plugin/Loader.cc.o lib/plugin/Plugin.cc.o lib/plugin/Registry.cc.o lib/types/BooleanType.cc.o lib/types/FileType.cc.o lib/types/FunctionType.cc.o lib/types/IntegerType.cc.o lib/types/RecordType.cc.o lib/types/SequenceType.cc.o lib/types/StringType.cc.o lib/types/Type.cc.o lib/types/TypeContext.cc.o lib/types/TypeError.cc.o lib/types/Typed.cc.o Support/Bytestream.cc.o Support/ErrorReport.cc.o Support/Join.cc.o Support/SourceLocation.cc.o Support/String.cc.o Support/exceptions.cc.o vendor/antlr-cxx-runtime/Exceptions.cpp.o vendor/antlr-cxx-runtime/misc/InterpreterDataReader.cpp.o vendor/antlr-cxx-runtime/misc/IntervalSet.cpp.o vendor/antlr-cxx-runtime/misc/Predicate.cpp.o vendor/antlr-cxx-runtime/misc/MurmurHash.cpp.o vendor/antlr-cxx-runtime/misc/Interval.cpp.o vendor/antlr-cxx-runtime/tree/TerminalNodeImpl.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathLexerErrorListener.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathRuleElement.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathElement.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardAnywhereElement.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathRuleAnywhereElement.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardElement.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathLexer.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPath.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathTokenAnywhereElement.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathTokenElement.cpp.o vendor/antlr-cxx-runtime/tree/ErrorNode.cpp.o vendor/antlr-cxx-runtime/tree/Trees.cpp.o vendor/antlr-cxx-runtime/tree/ParseTreeListener.cpp.o vendor/antlr-cxx-runtime/tree/ParseTree.cpp.o vendor/antlr-cxx-runtime/tree/ParseTreeVisitor.cpp.o vendor/antlr-cxx-runtime/tree/ErrorNodeImpl.cpp.o vendor/antlr-cxx-runtime/tree/ParseTreeWalker.cpp.o vendor/antlr-cxx-runtime/tree/IterativeParseTreeWalker.cpp.o vendor/antlr-cxx-runtime/tree/TerminalNode.cpp.o vendor/antlr-cxx-runtime/tree/pattern/RuleTagToken.cpp.o vendor/antlr-cxx-runtime/tree/pattern/ParseTreeMatch.cpp.o vendor/antlr-cxx-runtime/tree/pattern/TokenTagToken.cpp.o vendor/antlr-cxx-runtime/tree/pattern/Chunk.cpp.o vendor/antlr-cxx-runtime/tree/pattern/ParseTreePatternMatcher.cpp.o vendor/antlr-cxx-runtime/tree/pattern/TextChunk.cpp.o vendor/antlr-cxx-runtime/tree/pattern/TagChunk.cpp.o vendor/antlr-cxx-runtime/tree/pattern/ParseTreePattern.cpp.o vendor/antlr-cxx-runtime/DiagnosticErrorListener.cpp.o vendor/antlr-cxx-runtime/FailedPredicateException.cpp.o vendor/antlr-cxx-runtime/ConsoleErrorListener.cpp.o vendor/antlr-cxx-runtime/UnbufferedCharStream.cpp.o vendor/antlr-cxx-runtime/TokenStream.cpp.o vendor/antlr-cxx-runtime/UnbufferedTokenStream.cpp.o vendor/antlr-cxx-runtime/BaseErrorListener.cpp.o vendor/antlr-cxx-runtime/RuntimeMetaData.cpp.o vendor/antlr-cxx-runtime/InputMismatchException.cpp.o vendor/antlr-cxx-runtime/RuleContextWithAltNum.cpp.o vendor/antlr-cxx-runtime/dfa/DFAState.cpp.o vendor/antlr-cxx-runtime/dfa/DFASerializer.cpp.o vendor/antlr-cxx-runtime/dfa/DFA.cpp.o vendor/antlr-cxx-runtime/dfa/LexerDFASerializer.cpp.o vendor/antlr-cxx-runtime/Vocabulary.cpp.o vendor/antlr-cxx-runtime/ListTokenSource.cpp.o vendor/antlr-cxx-runtime/ANTLRErrorListener.cpp.o vendor/antlr-cxx-runtime/CommonTokenFactory.cpp.o vendor/antlr-cxx-runtime/TokenStreamRewriter.cpp.o vendor/antlr-cxx-runtime/CharStream.cpp.o vendor/antlr-cxx-runtime/ANTLRFileStream.cpp.o vendor/antlr-cxx-runtime/Lexer.cpp.o vendor/antlr-cxx-runtime/ProxyErrorListener.cpp.o vendor/antlr-cxx-runtime/ANTLRErrorStrategy.cpp.o vendor/antlr-cxx-runtime/RuleContext.cpp.o vendor/antlr-cxx-runtime/BufferedTokenStream.cpp.o vendor/antlr-cxx-runtime/LexerInterpreter.cpp.o vendor/antlr-cxx-runtime/Recognizer.cpp.o vendor/antlr-cxx-runtime/IntStream.cpp.o vendor/antlr-cxx-runtime/InterpreterRuleContext.cpp.o vendor/antlr-cxx-runtime/ParserInterpreter.cpp.o vendor/antlr-cxx-runtime/TokenSource.cpp.o vendor/antlr-cxx-runtime/support/CPPUtils.cpp.o vendor/antlr-cxx-runtime/support/Any.cpp.o vendor/antlr-cxx-runtime/support/StringUtils.cpp.o vendor/antlr-cxx-runtime/support/Arrays.cpp.o vendor/antlr-cxx-runtime/support/guid.cpp.o vendor/antlr-cxx-runtime/BailErrorStrategy.cpp.o vendor/antlr-cxx-runtime/CommonTokenStream.cpp.o vendor/antlr-cxx-runtime/atn/BlockStartState.cpp.o vendor/antlr-cxx-runtime/atn/StarBlockStartState.cpp.o vendor/antlr-cxx-runtime/atn/BlockEndState.cpp.o vendor/antlr-cxx-runtime/atn/Transition.cpp.o vendor/antlr-cxx-runtime/atn/EmptyPredictionContext.cpp.o vendor/antlr-cxx-runtime/atn/ParseInfo.cpp.o vendor/antlr-cxx-runtime/atn/ATNConfig.cpp.o vendor/antlr-cxx-runtime/atn/LexerTypeAction.cpp.o vendor/antlr-cxx-runtime/atn/AtomTransition.cpp.o vendor/antlr-cxx-runtime/atn/AmbiguityInfo.cpp.o vendor/antlr-cxx-runtime/atn/ATNSimulator.cpp.o vendor/antlr-cxx-runtime/atn/LexerIndexedCustomAction.cpp.o vendor/antlr-cxx-runtime/atn/RuleTransition.cpp.o vendor/antlr-cxx-runtime/atn/TokensStartState.cpp.o vendor/antlr-cxx-runtime/atn/PredicateTransition.cpp.o vendor/antlr-cxx-runtime/atn/SingletonPredictionContext.cpp.o vendor/antlr-cxx-runtime/atn/LexerMoreAction.cpp.o vendor/antlr-cxx-runtime/atn/ATNDeserializationOptions.cpp.o vendor/antlr-cxx-runtime/atn/LoopEndState.cpp.o vendor/antlr-cxx-runtime/atn/LexerActionExecutor.cpp.o vendor/antlr-cxx-runtime/atn/LexerATNSimulator.cpp.o vendor/antlr-cxx-runtime/atn/SetTransition.cpp.o vendor/antlr-cxx-runtime/atn/LexerModeAction.cpp.o vendor/antlr-cxx-runtime/atn/NotSetTransition.cpp.o vendor/antlr-cxx-runtime/atn/ProfilingATNSimulator.cpp.o vendor/antlr-cxx-runtime/atn/LexerATNConfig.cpp.o vendor/antlr-cxx-runtime/atn/DecisionInfo.cpp.o vendor/antlr-cxx-runtime/atn/ATNState.cpp.o vendor/antlr-cxx-runtime/atn/ATNSerializer.cpp.o vendor/antlr-cxx-runtime/atn/ArrayPredictionContext.cpp.o vendor/antlr-cxx-runtime/atn/PredictionMode.cpp.o vendor/antlr-cxx-runtime/atn/LookaheadEventInfo.cpp.o vendor/antlr-cxx-runtime/atn/ATN.cpp.o vendor/antlr-cxx-runtime/atn/SemanticContext.cpp.o vendor/antlr-cxx-runtime/atn/RuleStopState.cpp.o vendor/antlr-cxx-runtime/atn/OrderedATNConfigSet.cpp.o vendor/antlr-cxx-runtime/atn/RangeTransition.cpp.o vendor/antlr-cxx-runtime/atn/ATNDeserializer.cpp.o vendor/antlr-cxx-runtime/atn/PlusBlockStartState.cpp.o vendor/antlr-cxx-runtime/atn/WildcardTransition.cpp.o vendor/antlr-cxx-runtime/atn/ActionTransition.cpp.o vendor/antlr-cxx-runtime/atn/ParserATNSimulator.cpp.o vendor/antlr-cxx-runtime/atn/DecisionState.cpp.o vendor/antlr-cxx-runtime/atn/RuleStartState.cpp.o vendor/antlr-cxx-runtime/atn/ErrorInfo.cpp.o vendor/antlr-cxx-runtime/atn/StarLoopbackState.cpp.o vendor/antlr-cxx-runtime/atn/BasicState.cpp.o vendor/antlr-cxx-runtime/atn/AbstractPredicateTransition.cpp.o vendor/antlr-cxx-runtime/atn/PredictionContext.cpp.o vendor/antlr-cxx-runtime/atn/LexerAction.cpp.o vendor/antlr-cxx-runtime/atn/LL1Analyzer.cpp.o vendor/antlr-cxx-runtime/atn/EpsilonTransition.cpp.o vendor/antlr-cxx-runtime/atn/LexerCustomAction.cpp.o vendor/antlr-cxx-runtime/atn/PrecedencePredicateTransition.cpp.o vendor/antlr-cxx-runtime/atn/PlusLoopbackState.cpp.o vendor/antlr-cxx-runtime/atn/LexerPopModeAction.cpp.o vendor/antlr-cxx-runtime/atn/PredicateEvalInfo.cpp.o vendor/antlr-cxx-runtime/atn/LexerSkipAction.cpp.o vendor/antlr-cxx-runtime/atn/ContextSensitivityInfo.cpp.o vendor/antlr-cxx-runtime/atn/ATNConfigSet.cpp.o vendor/antlr-cxx-runtime/atn/LexerChannelAction.cpp.o vendor/antlr-cxx-runtime/atn/BasicBlockStartState.cpp.o vendor/antlr-cxx-runtime/atn/DecisionEventInfo.cpp.o vendor/antlr-cxx-runtime/atn/LexerPushModeAction.cpp.o vendor/antlr-cxx-runtime/atn/StarLoopEntryState.cpp.o vendor/antlr-cxx-runtime/DefaultErrorStrategy.cpp.o vendor/antlr-cxx-runtime/CommonToken.cpp.o vendor/antlr-cxx-runtime/NoViableAltException.cpp.o vendor/antlr-cxx-runtime/ParserRuleContext.cpp.o vendor/antlr-cxx-runtime/RecognitionException.cpp.o vendor/antlr-cxx-runtime/Parser.cpp.o vendor/antlr-cxx-runtime/ANTLRInputStream.cpp.o vendor/antlr-cxx-runtime/Token.cpp.o vendor/antlr-cxx-runtime/LexerNoViableAltException.cpp.o vendor/antlr-cxx-runtime/WritableToken.cpp.o vendor/generated-grammar/FabLexer.cpp.o vendor/generated-grammar/FabParser.cpp.o vendor/generated-grammar/FabParserBaseVisitor.cpp.o vendor/generated-grammar/FabParserVisitor.cpp.o
+generated_srcs : ${srcroot}/vendor/antlr-cxx-runtime/Exceptions.cpp ${srcroot}/vendor/antlr-cxx-runtime/misc/InterpreterDataReader.cpp ${srcroot}/vendor/antlr-cxx-runtime/misc/IntervalSet.cpp ${srcroot}/vendor/antlr-cxx-runtime/misc/Predicate.cpp ${srcroot}/vendor/antlr-cxx-runtime/misc/MurmurHash.cpp ${srcroot}/vendor/antlr-cxx-runtime/misc/Interval.cpp ${srcroot}/vendor/antlr-cxx-runtime/tree/TerminalNodeImpl.cpp ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathLexerErrorListener.cpp ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathRuleElement.cpp ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathElement.cpp ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardAnywhereElement.cpp ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathRuleAnywhereElement.cpp ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardElement.cpp ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathLexer.cpp ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPath.cpp ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathTokenAnywhereElement.cpp ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathTokenElement.cpp ${srcroot}/vendor/antlr-cxx-runtime/tree/ErrorNode.cpp ${srcroot}/vendor/antlr-cxx-runtime/tree/Trees.cpp ${srcroot}/vendor/antlr-cxx-runtime/tree/ParseTreeListener.cpp ${srcroot}/vendor/antlr-cxx-runtime/tree/ParseTree.cpp ${srcroot}/vendor/antlr-cxx-runtime/tree/ParseTreeVisitor.cpp ${srcroot}/vendor/antlr-cxx-runtime/tree/ErrorNodeImpl.cpp ${srcroot}/vendor/antlr-cxx-runtime/tree/ParseTreeWalker.cpp ${srcroot}/vendor/antlr-cxx-runtime/tree/IterativeParseTreeWalker.cpp ${srcroot}/vendor/antlr-cxx-runtime/tree/TerminalNode.cpp ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/RuleTagToken.cpp ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/ParseTreeMatch.cpp ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/TokenTagToken.cpp ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/Chunk.cpp ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/ParseTreePatternMatcher.cpp ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/TextChunk.cpp ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/TagChunk.cpp ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/ParseTreePattern.cpp ${srcroot}/vendor/antlr-cxx-runtime/DiagnosticErrorListener.cpp ${srcroot}/vendor/antlr-cxx-runtime/FailedPredicateException.cpp ${srcroot}/vendor/antlr-cxx-runtime/ConsoleErrorListener.cpp ${srcroot}/vendor/antlr-cxx-runtime/UnbufferedCharStream.cpp ${srcroot}/vendor/antlr-cxx-runtime/TokenStream.cpp ${srcroot}/vendor/antlr-cxx-runtime/UnbufferedTokenStream.cpp ${srcroot}/vendor/antlr-cxx-runtime/BaseErrorListener.cpp ${srcroot}/vendor/antlr-cxx-runtime/RuntimeMetaData.cpp ${srcroot}/vendor/antlr-cxx-runtime/InputMismatchException.cpp ${srcroot}/vendor/antlr-cxx-runtime/RuleContextWithAltNum.cpp ${srcroot}/vendor/antlr-cxx-runtime/dfa/DFAState.cpp ${srcroot}/vendor/antlr-cxx-runtime/dfa/DFASerializer.cpp ${srcroot}/vendor/antlr-cxx-runtime/dfa/DFA.cpp ${srcroot}/vendor/antlr-cxx-runtime/dfa/LexerDFASerializer.cpp ${srcroot}/vendor/antlr-cxx-runtime/Vocabulary.cpp ${srcroot}/vendor/antlr-cxx-runtime/ListTokenSource.cpp ${srcroot}/vendor/antlr-cxx-runtime/ANTLRErrorListener.cpp ${srcroot}/vendor/antlr-cxx-runtime/CommonTokenFactory.cpp ${srcroot}/vendor/antlr-cxx-runtime/TokenStreamRewriter.cpp ${srcroot}/vendor/antlr-cxx-runtime/CharStream.cpp ${srcroot}/vendor/antlr-cxx-runtime/ANTLRFileStream.cpp ${srcroot}/vendor/antlr-cxx-runtime/Lexer.cpp ${srcroot}/vendor/antlr-cxx-runtime/ProxyErrorListener.cpp ${srcroot}/vendor/antlr-cxx-runtime/ANTLRErrorStrategy.cpp ${srcroot}/vendor/antlr-cxx-runtime/RuleContext.cpp ${srcroot}/vendor/antlr-cxx-runtime/BufferedTokenStream.cpp ${srcroot}/vendor/antlr-cxx-runtime/LexerInterpreter.cpp ${srcroot}/vendor/antlr-cxx-runtime/Recognizer.cpp ${srcroot}/vendor/antlr-cxx-runtime/IntStream.cpp ${srcroot}/vendor/antlr-cxx-runtime/InterpreterRuleContext.cpp ${srcroot}/vendor/antlr-cxx-runtime/ParserInterpreter.cpp ${srcroot}/vendor/antlr-cxx-runtime/TokenSource.cpp ${srcroot}/vendor/antlr-cxx-runtime/support/CPPUtils.cpp ${srcroot}/vendor/antlr-cxx-runtime/support/Any.cpp ${srcroot}/vendor/antlr-cxx-runtime/support/StringUtils.cpp ${srcroot}/vendor/antlr-cxx-runtime/support/Arrays.cpp ${srcroot}/vendor/antlr-cxx-runtime/support/guid.cpp ${srcroot}/vendor/antlr-cxx-runtime/BailErrorStrategy.cpp ${srcroot}/vendor/antlr-cxx-runtime/CommonTokenStream.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/BlockStartState.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/StarBlockStartState.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/BlockEndState.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/Transition.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/EmptyPredictionContext.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/ParseInfo.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/ATNConfig.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerTypeAction.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/AtomTransition.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/AmbiguityInfo.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/ATNSimulator.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerIndexedCustomAction.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/RuleTransition.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/TokensStartState.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/PredicateTransition.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/SingletonPredictionContext.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerMoreAction.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/ATNDeserializationOptions.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/LoopEndState.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerActionExecutor.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerATNSimulator.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/SetTransition.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerModeAction.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/NotSetTransition.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/ProfilingATNSimulator.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerATNConfig.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/DecisionInfo.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/ATNState.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/ATNSerializer.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/ArrayPredictionContext.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/PredictionMode.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/LookaheadEventInfo.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/ATN.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/SemanticContext.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/RuleStopState.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/OrderedATNConfigSet.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/RangeTransition.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/ATNDeserializer.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/PlusBlockStartState.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/WildcardTransition.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/ActionTransition.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/ParserATNSimulator.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/DecisionState.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/RuleStartState.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/ErrorInfo.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/StarLoopbackState.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/BasicState.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/AbstractPredicateTransition.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/PredictionContext.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerAction.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/LL1Analyzer.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/EpsilonTransition.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerCustomAction.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/PrecedencePredicateTransition.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/PlusLoopbackState.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerPopModeAction.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/PredicateEvalInfo.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerSkipAction.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/ContextSensitivityInfo.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/ATNConfigSet.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerChannelAction.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/BasicBlockStartState.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/DecisionEventInfo.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerPushModeAction.cpp ${srcroot}/vendor/antlr-cxx-runtime/atn/StarLoopEntryState.cpp ${srcroot}/vendor/antlr-cxx-runtime/DefaultErrorStrategy.cpp ${srcroot}/vendor/antlr-cxx-runtime/CommonToken.cpp ${srcroot}/vendor/antlr-cxx-runtime/NoViableAltException.cpp ${srcroot}/vendor/antlr-cxx-runtime/ParserRuleContext.cpp ${srcroot}/vendor/antlr-cxx-runtime/RecognitionException.cpp ${srcroot}/vendor/antlr-cxx-runtime/Parser.cpp ${srcroot}/vendor/antlr-cxx-runtime/ANTLRInputStream.cpp ${srcroot}/vendor/antlr-cxx-runtime/Token.cpp ${srcroot}/vendor/antlr-cxx-runtime/LexerNoViableAltException.cpp ${srcroot}/vendor/antlr-cxx-runtime/WritableToken.cpp ${srcroot}/vendor/generated-grammar/FabLexer.cpp ${srcroot}/vendor/generated-grammar/FabParser.cpp ${srcroot}/vendor/generated-grammar/FabParserBaseVisitor.cpp ${srcroot}/vendor/generated-grammar/FabParserVisitor.cpp
+cxx_srcs : ${srcroot}/bin/CLIArguments.cc ${srcroot}/bin/fab.cc ${srcroot}/lib/Printable.cc ${srcroot}/lib/builtins.cc ${srcroot}/lib/names.cc ${srcroot}/lib/ast/Action.cc ${srcroot}/lib/ast/Argument.cc ${srcroot}/lib/ast/Arguments.cc ${srcroot}/lib/ast/ASTDump.cc ${srcroot}/lib/ast/BinaryOperation.cc ${srcroot}/lib/ast/Call.cc ${srcroot}/lib/ast/CompoundExpr.cc ${srcroot}/lib/ast/Conditional.cc ${srcroot}/lib/ast/DebugTracePoint.cc ${srcroot}/lib/ast/EvalContext.cc ${srcroot}/lib/ast/Expression.cc ${srcroot}/lib/ast/FieldAccess.cc ${srcroot}/lib/ast/FieldQuery.cc ${srcroot}/lib/ast/FilenameLiteral.cc ${srcroot}/lib/ast/FileList.cc ${srcroot}/lib/ast/Foreach.cc ${srcroot}/lib/ast/Function.cc ${srcroot}/lib/ast/HasParameters.cc ${srcroot}/lib/ast/Identifier.cc ${srcroot}/lib/ast/List.cc ${srcroot}/lib/ast/NameReference.cc ${srcroot}/lib/ast/Node.cc ${srcroot}/lib/ast/Parameter.cc ${srcroot}/lib/ast/Record.cc ${srcroot}/lib/ast/TypeDeclaration.cc ${srcroot}/lib/ast/TypeReference.cc ${srcroot}/lib/ast/UnaryOperation.cc ${srcroot}/lib/ast/Value.cc ${srcroot}/lib/ast/Visitor.cc ${srcroot}/lib/ast/literals.cc ${srcroot}/lib/backend/Backend.cc ${srcroot}/lib/backend/Dot.cc ${srcroot}/lib/backend/Make.cc ${srcroot}/lib/backend/Ninja.cc ${srcroot}/lib/backend/Null.cc ${srcroot}/lib/dag/Build.cc ${srcroot}/lib/dag/Callable.cc ${srcroot}/lib/dag/DAG.cc ${srcroot}/lib/dag/DAGBuilder.cc ${srcroot}/lib/dag/File.cc ${srcroot}/lib/dag/Formatter.cc ${srcroot}/lib/dag/Function.cc ${srcroot}/lib/dag/List.cc ${srcroot}/lib/dag/Parameter.cc ${srcroot}/lib/dag/Primitive.cc ${srcroot}/lib/dag/Record.cc ${srcroot}/lib/dag/Rule.cc ${srcroot}/lib/dag/TypeReference.cc ${srcroot}/lib/dag/UndefinedValueException.cc ${srcroot}/lib/dag/Value.cc ${srcroot}/lib/dag/Visitor.cc ${srcroot}/lib/parsing/ASTBuilder.cc ${srcroot}/lib/parsing/ErrorListener.cc ${srcroot}/lib/parsing/ErrorReporter.cc ${srcroot}/lib/parsing/Parser.cc ${srcroot}/lib/parsing/Token.cc ${srcroot}/lib/platform/ABI.cc ${srcroot}/lib/platform/SharedLibrary.cc ${srcroot}/lib/platform/posix/PosixError.cc ${srcroot}/lib/platform/posix/PosixSharedLibrary.cc ${srcroot}/lib/platform/posix/files.cc ${srcroot}/lib/plugin/Loader.cc ${srcroot}/lib/plugin/Plugin.cc ${srcroot}/lib/plugin/Registry.cc ${srcroot}/lib/types/BooleanType.cc ${srcroot}/lib/types/FileType.cc ${srcroot}/lib/types/FunctionType.cc ${srcroot}/lib/types/IntegerType.cc ${srcroot}/lib/types/RecordType.cc ${srcroot}/lib/types/SequenceType.cc ${srcroot}/lib/types/StringType.cc ${srcroot}/lib/types/Type.cc ${srcroot}/lib/types/TypeContext.cc ${srcroot}/lib/types/TypeError.cc ${srcroot}/lib/types/Typed.cc ${srcroot}/Support/Bytestream.cc ${srcroot}/Support/ErrorReport.cc ${srcroot}/Support/Join.cc ${srcroot}/Support/SourceLocation.cc ${srcroot}/Support/String.cc ${srcroot}/Support/exceptions.cc
 cxx : 
+cc : 
 
 clean :
 	echo "cleaning..."
-	rm -rf  AST AST/ASTDump.cc.o AST/Action.cc.o AST/Argument.cc.o AST/BinaryOperation.cc.o AST/Call.cc.o AST/CompoundExpr.cc.o AST/Conditional.cc.o AST/DebugTracePoint.cc.o AST/EvalContext.cc.o AST/Expression.cc.o AST/FieldAccess.cc.o AST/FieldQuery.cc.o AST/FileList.cc.o AST/Filename.cc.o AST/Foreach.cc.o AST/Function.cc.o AST/HasParameters.cc.o AST/HasScope.cc.o AST/Identifier.cc.o AST/Import.cc.o AST/List.cc.o AST/Mapping.cc.o AST/Node.cc.o AST/Parameter.cc.o AST/Record.cc.o AST/Scope.cc.o AST/SomeValue.cc.o AST/SymbolReference.cc.o AST/TypeDeclaration.cc.o AST/UnaryOperation.cc.o AST/Value.cc.o AST/Visitor.cc.o AST/literals.cc.o Backend Backend/Backend.cc.o Backend/Dot.cc.o Backend/Make.cc.o Backend/Ninja.cc.o Backend/Null.cc.o DAG DAG/Build.cc.o DAG/Callable.cc.o DAG/DAG.cc.o DAG/DAGBuilder.cc.o DAG/File.cc.o DAG/Formatter.cc.o DAG/Function.cc.o DAG/List.cc.o DAG/Parameter.cc.o DAG/Primitive.cc.o DAG/Record.cc.o DAG/Rule.cc.o DAG/TypeReference.cc.o DAG/UndefinedValueException.cc.o DAG/Value.cc.o DAG/Visitor.cc.o  Parsing Parsing/Lexer.cc.o Parsing/Parser.cc.o Parsing/Token.cc.o Parsing/fab.lex.cc Parsing/fab.lex.cc.o Parsing/fab.lex.h Parsing/fab.yacc.cc Parsing/fab.yacc.cc.o Parsing/fab.yacc.h Plugin Plugin/Loader.cc.o Plugin/Plugin.cc.o Plugin/Registry.cc.o Support Support/Arguments.cc.o Support/Bytestream.cc.o Support/ErrorReport.cc.o Support/Join.cc.o Support/PosixError.cc.o Support/PosixSharedLibrary.cc.o Support/Printable.cc.o Support/SharedLibrary.cc.o Support/SourceLocation.cc.o Support/String.cc.o Support/exceptions.cc.o Support/os-posix.cc.o Types Types/BooleanType.cc.o Types/FileType.cc.o Types/FunctionType.cc.o Types/IntegerType.cc.o Types/MaybeType.cc.o Types/OptionallyTyped.cc.o Types/RecordType.cc.o Types/SequenceType.cc.o Types/StringType.cc.o Types/Type.cc.o Types/TypeContext.cc.o Types/TypeError.cc.o Types/Typed.cc.o Types/UserType.cc.o base-plugins base-plugins/PlatformTests.cc.o base-plugins/SysctlPlugin.cc.o base-plugins/Which.cc.o base-plugins/libplatform-tests.dylib base-plugins/libsysctl.dylib base-plugins/libwhich.dylib bin/fab driver.cc.o lib/fabrique/libplatform-tests.dylib lib/fabrique/libsysctl.dylib lib/fabrique/libwhich.dylib share tests
+	rm -rf GNUmakefile Support Support/Bytestream.cc.o Support/ErrorReport.cc.o Support/Join.cc.o Support/SourceLocation.cc.o Support/String.cc.o Support/exceptions.cc.o base-plugins base-plugins/LogPlugin.cc.o base-plugins/PlatformTests.cc.o base-plugins/SysctlPlugin.cc.o base-plugins/Which.cc.o base-pluginsliblog.so base-pluginslibplatform-tests.so base-pluginslibsysctl.so base-pluginslibwhich.so bin bin/CLIArguments.cc.o bin/fab bin/fab.cc.o junit.xml lib lib/Printable.cc.o lib/ast lib/ast/ASTDump.cc.o lib/ast/Action.cc.o lib/ast/Argument.cc.o lib/ast/Arguments.cc.o lib/ast/BinaryOperation.cc.o lib/ast/Call.cc.o lib/ast/CompoundExpr.cc.o lib/ast/Conditional.cc.o lib/ast/DebugTracePoint.cc.o lib/ast/EvalContext.cc.o lib/ast/Expression.cc.o lib/ast/FieldAccess.cc.o lib/ast/FieldQuery.cc.o lib/ast/FileList.cc.o lib/ast/FilenameLiteral.cc.o lib/ast/Foreach.cc.o lib/ast/Function.cc.o lib/ast/HasParameters.cc.o lib/ast/Identifier.cc.o lib/ast/List.cc.o lib/ast/NameReference.cc.o lib/ast/Node.cc.o lib/ast/Parameter.cc.o lib/ast/Record.cc.o lib/ast/TypeDeclaration.cc.o lib/ast/TypeReference.cc.o lib/ast/UnaryOperation.cc.o lib/ast/Value.cc.o lib/ast/Visitor.cc.o lib/ast/literals.cc.o lib/backend lib/backend/Backend.cc.o lib/backend/Dot.cc.o lib/backend/Make.cc.o lib/backend/Ninja.cc.o lib/backend/Null.cc.o lib/builtins.cc.o lib/dag lib/dag/Build.cc.o lib/dag/Callable.cc.o lib/dag/DAG.cc.o lib/dag/DAGBuilder.cc.o lib/dag/File.cc.o lib/dag/Formatter.cc.o lib/dag/Function.cc.o lib/dag/List.cc.o lib/dag/Parameter.cc.o lib/dag/Primitive.cc.o lib/dag/Record.cc.o lib/dag/Rule.cc.o lib/dag/TypeReference.cc.o lib/dag/UndefinedValueException.cc.o lib/dag/Value.cc.o lib/dag/Visitor.cc.o lib/fabriquebase-pluginsliblog.so lib/fabriquebase-pluginslibplatform-tests.so lib/fabriquebase-pluginslibsysctl.so lib/fabriquebase-pluginslibwhich.so lib/names.cc.o lib/parsing lib/parsing/ASTBuilder.cc.o lib/parsing/ErrorListener.cc.o lib/parsing/ErrorReporter.cc.o lib/parsing/Parser.cc.o lib/parsing/Token.cc.o lib/platform lib/platform/ABI.cc.o lib/platform/SharedLibrary.cc.o lib/platform/posix lib/platform/posix/PosixError.cc.o lib/platform/posix/PosixSharedLibrary.cc.o lib/platform/posix/files.cc.o lib/plugin lib/plugin/Loader.cc.o lib/plugin/Plugin.cc.o lib/plugin/Registry.cc.o lib/types lib/types/BooleanType.cc.o lib/types/FileType.cc.o lib/types/FunctionType.cc.o lib/types/IntegerType.cc.o lib/types/RecordType.cc.o lib/types/SequenceType.cc.o lib/types/StringType.cc.o lib/types/Type.cc.o lib/types/TypeContext.cc.o lib/types/TypeError.cc.o lib/types/Typed.cc.o vendor vendor/antlr-cxx-runtime vendor/antlr-cxx-runtime/ANTLRErrorListener.cpp.o vendor/antlr-cxx-runtime/ANTLRErrorStrategy.cpp.o vendor/antlr-cxx-runtime/ANTLRFileStream.cpp.o vendor/antlr-cxx-runtime/ANTLRInputStream.cpp.o vendor/antlr-cxx-runtime/BailErrorStrategy.cpp.o vendor/antlr-cxx-runtime/BaseErrorListener.cpp.o vendor/antlr-cxx-runtime/BufferedTokenStream.cpp.o vendor/antlr-cxx-runtime/CharStream.cpp.o vendor/antlr-cxx-runtime/CommonToken.cpp.o vendor/antlr-cxx-runtime/CommonTokenFactory.cpp.o vendor/antlr-cxx-runtime/CommonTokenStream.cpp.o vendor/antlr-cxx-runtime/ConsoleErrorListener.cpp.o vendor/antlr-cxx-runtime/DefaultErrorStrategy.cpp.o vendor/antlr-cxx-runtime/DiagnosticErrorListener.cpp.o vendor/antlr-cxx-runtime/Exceptions.cpp.o vendor/antlr-cxx-runtime/FailedPredicateException.cpp.o vendor/antlr-cxx-runtime/InputMismatchException.cpp.o vendor/antlr-cxx-runtime/IntStream.cpp.o vendor/antlr-cxx-runtime/InterpreterRuleContext.cpp.o vendor/antlr-cxx-runtime/Lexer.cpp.o vendor/antlr-cxx-runtime/LexerInterpreter.cpp.o vendor/antlr-cxx-runtime/LexerNoViableAltException.cpp.o vendor/antlr-cxx-runtime/ListTokenSource.cpp.o vendor/antlr-cxx-runtime/NoViableAltException.cpp.o vendor/antlr-cxx-runtime/Parser.cpp.o vendor/antlr-cxx-runtime/ParserInterpreter.cpp.o vendor/antlr-cxx-runtime/ParserRuleContext.cpp.o vendor/antlr-cxx-runtime/ProxyErrorListener.cpp.o vendor/antlr-cxx-runtime/RecognitionException.cpp.o vendor/antlr-cxx-runtime/Recognizer.cpp.o vendor/antlr-cxx-runtime/RuleContext.cpp.o vendor/antlr-cxx-runtime/RuleContextWithAltNum.cpp.o vendor/antlr-cxx-runtime/RuntimeMetaData.cpp.o vendor/antlr-cxx-runtime/Token.cpp.o vendor/antlr-cxx-runtime/TokenSource.cpp.o vendor/antlr-cxx-runtime/TokenStream.cpp.o vendor/antlr-cxx-runtime/TokenStreamRewriter.cpp.o vendor/antlr-cxx-runtime/UnbufferedCharStream.cpp.o vendor/antlr-cxx-runtime/UnbufferedTokenStream.cpp.o vendor/antlr-cxx-runtime/Vocabulary.cpp.o vendor/antlr-cxx-runtime/WritableToken.cpp.o vendor/antlr-cxx-runtime/atn vendor/antlr-cxx-runtime/atn/ATN.cpp.o vendor/antlr-cxx-runtime/atn/ATNConfig.cpp.o vendor/antlr-cxx-runtime/atn/ATNConfigSet.cpp.o vendor/antlr-cxx-runtime/atn/ATNDeserializationOptions.cpp.o vendor/antlr-cxx-runtime/atn/ATNDeserializer.cpp.o vendor/antlr-cxx-runtime/atn/ATNSerializer.cpp.o vendor/antlr-cxx-runtime/atn/ATNSimulator.cpp.o vendor/antlr-cxx-runtime/atn/ATNState.cpp.o vendor/antlr-cxx-runtime/atn/AbstractPredicateTransition.cpp.o vendor/antlr-cxx-runtime/atn/ActionTransition.cpp.o vendor/antlr-cxx-runtime/atn/AmbiguityInfo.cpp.o vendor/antlr-cxx-runtime/atn/ArrayPredictionContext.cpp.o vendor/antlr-cxx-runtime/atn/AtomTransition.cpp.o vendor/antlr-cxx-runtime/atn/BasicBlockStartState.cpp.o vendor/antlr-cxx-runtime/atn/BasicState.cpp.o vendor/antlr-cxx-runtime/atn/BlockEndState.cpp.o vendor/antlr-cxx-runtime/atn/BlockStartState.cpp.o vendor/antlr-cxx-runtime/atn/ContextSensitivityInfo.cpp.o vendor/antlr-cxx-runtime/atn/DecisionEventInfo.cpp.o vendor/antlr-cxx-runtime/atn/DecisionInfo.cpp.o vendor/antlr-cxx-runtime/atn/DecisionState.cpp.o vendor/antlr-cxx-runtime/atn/EmptyPredictionContext.cpp.o vendor/antlr-cxx-runtime/atn/EpsilonTransition.cpp.o vendor/antlr-cxx-runtime/atn/ErrorInfo.cpp.o vendor/antlr-cxx-runtime/atn/LL1Analyzer.cpp.o vendor/antlr-cxx-runtime/atn/LexerATNConfig.cpp.o vendor/antlr-cxx-runtime/atn/LexerATNSimulator.cpp.o vendor/antlr-cxx-runtime/atn/LexerAction.cpp.o vendor/antlr-cxx-runtime/atn/LexerActionExecutor.cpp.o vendor/antlr-cxx-runtime/atn/LexerChannelAction.cpp.o vendor/antlr-cxx-runtime/atn/LexerCustomAction.cpp.o vendor/antlr-cxx-runtime/atn/LexerIndexedCustomAction.cpp.o vendor/antlr-cxx-runtime/atn/LexerModeAction.cpp.o vendor/antlr-cxx-runtime/atn/LexerMoreAction.cpp.o vendor/antlr-cxx-runtime/atn/LexerPopModeAction.cpp.o vendor/antlr-cxx-runtime/atn/LexerPushModeAction.cpp.o vendor/antlr-cxx-runtime/atn/LexerSkipAction.cpp.o vendor/antlr-cxx-runtime/atn/LexerTypeAction.cpp.o vendor/antlr-cxx-runtime/atn/LookaheadEventInfo.cpp.o vendor/antlr-cxx-runtime/atn/LoopEndState.cpp.o vendor/antlr-cxx-runtime/atn/NotSetTransition.cpp.o vendor/antlr-cxx-runtime/atn/OrderedATNConfigSet.cpp.o vendor/antlr-cxx-runtime/atn/ParseInfo.cpp.o vendor/antlr-cxx-runtime/atn/ParserATNSimulator.cpp.o vendor/antlr-cxx-runtime/atn/PlusBlockStartState.cpp.o vendor/antlr-cxx-runtime/atn/PlusLoopbackState.cpp.o vendor/antlr-cxx-runtime/atn/PrecedencePredicateTransition.cpp.o vendor/antlr-cxx-runtime/atn/PredicateEvalInfo.cpp.o vendor/antlr-cxx-runtime/atn/PredicateTransition.cpp.o vendor/antlr-cxx-runtime/atn/PredictionContext.cpp.o vendor/antlr-cxx-runtime/atn/PredictionMode.cpp.o vendor/antlr-cxx-runtime/atn/ProfilingATNSimulator.cpp.o vendor/antlr-cxx-runtime/atn/RangeTransition.cpp.o vendor/antlr-cxx-runtime/atn/RuleStartState.cpp.o vendor/antlr-cxx-runtime/atn/RuleStopState.cpp.o vendor/antlr-cxx-runtime/atn/RuleTransition.cpp.o vendor/antlr-cxx-runtime/atn/SemanticContext.cpp.o vendor/antlr-cxx-runtime/atn/SetTransition.cpp.o vendor/antlr-cxx-runtime/atn/SingletonPredictionContext.cpp.o vendor/antlr-cxx-runtime/atn/StarBlockStartState.cpp.o vendor/antlr-cxx-runtime/atn/StarLoopEntryState.cpp.o vendor/antlr-cxx-runtime/atn/StarLoopbackState.cpp.o vendor/antlr-cxx-runtime/atn/TokensStartState.cpp.o vendor/antlr-cxx-runtime/atn/Transition.cpp.o vendor/antlr-cxx-runtime/atn/WildcardTransition.cpp.o vendor/antlr-cxx-runtime/dfa vendor/antlr-cxx-runtime/dfa/DFA.cpp.o vendor/antlr-cxx-runtime/dfa/DFASerializer.cpp.o vendor/antlr-cxx-runtime/dfa/DFAState.cpp.o vendor/antlr-cxx-runtime/dfa/LexerDFASerializer.cpp.o vendor/antlr-cxx-runtime/misc vendor/antlr-cxx-runtime/misc/InterpreterDataReader.cpp.o vendor/antlr-cxx-runtime/misc/Interval.cpp.o vendor/antlr-cxx-runtime/misc/IntervalSet.cpp.o vendor/antlr-cxx-runtime/misc/MurmurHash.cpp.o vendor/antlr-cxx-runtime/misc/Predicate.cpp.o vendor/antlr-cxx-runtime/support vendor/antlr-cxx-runtime/support/Any.cpp.o vendor/antlr-cxx-runtime/support/Arrays.cpp.o vendor/antlr-cxx-runtime/support/CPPUtils.cpp.o vendor/antlr-cxx-runtime/support/StringUtils.cpp.o vendor/antlr-cxx-runtime/support/guid.cpp.o vendor/antlr-cxx-runtime/tree vendor/antlr-cxx-runtime/tree/ErrorNode.cpp.o vendor/antlr-cxx-runtime/tree/ErrorNodeImpl.cpp.o vendor/antlr-cxx-runtime/tree/IterativeParseTreeWalker.cpp.o vendor/antlr-cxx-runtime/tree/ParseTree.cpp.o vendor/antlr-cxx-runtime/tree/ParseTreeListener.cpp.o vendor/antlr-cxx-runtime/tree/ParseTreeVisitor.cpp.o vendor/antlr-cxx-runtime/tree/ParseTreeWalker.cpp.o vendor/antlr-cxx-runtime/tree/TerminalNode.cpp.o vendor/antlr-cxx-runtime/tree/TerminalNodeImpl.cpp.o vendor/antlr-cxx-runtime/tree/Trees.cpp.o vendor/antlr-cxx-runtime/tree/pattern vendor/antlr-cxx-runtime/tree/pattern/Chunk.cpp.o vendor/antlr-cxx-runtime/tree/pattern/ParseTreeMatch.cpp.o vendor/antlr-cxx-runtime/tree/pattern/ParseTreePattern.cpp.o vendor/antlr-cxx-runtime/tree/pattern/ParseTreePatternMatcher.cpp.o vendor/antlr-cxx-runtime/tree/pattern/RuleTagToken.cpp.o vendor/antlr-cxx-runtime/tree/pattern/TagChunk.cpp.o vendor/antlr-cxx-runtime/tree/pattern/TextChunk.cpp.o vendor/antlr-cxx-runtime/tree/pattern/TokenTagToken.cpp.o vendor/antlr-cxx-runtime/tree/xpath vendor/antlr-cxx-runtime/tree/xpath/XPath.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathElement.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathLexer.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathLexerErrorListener.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathRuleAnywhereElement.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathRuleElement.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathTokenAnywhereElement.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathTokenElement.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardAnywhereElement.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardElement.cpp.o vendor/generated-grammar vendor/generated-grammar/FabLexer.cpp.o vendor/generated-grammar/FabParser.cpp.o vendor/generated-grammar/FabParserBaseVisitor.cpp.o vendor/generated-grammar/FabParserVisitor.cpp.o
 
-AST/ASTDump.cc.o : | AST
-AST/Action.cc.o : | AST
-AST/Argument.cc.o : | AST
-AST/BinaryOperation.cc.o : | AST
-AST/Call.cc.o : | AST
-AST/CompoundExpr.cc.o : | AST
-AST/Conditional.cc.o : | AST
-AST/DebugTracePoint.cc.o : | AST
-AST/EvalContext.cc.o : | AST
-AST/Expression.cc.o : | AST
-AST/FieldAccess.cc.o : | AST
-AST/FieldQuery.cc.o : | AST
-AST/FileList.cc.o : | AST
-AST/Filename.cc.o : | AST
-AST/Foreach.cc.o : | AST
-AST/Function.cc.o : | AST
-AST/HasParameters.cc.o : | AST
-AST/HasScope.cc.o : | AST
-AST/Identifier.cc.o : | AST
-AST/Import.cc.o : | AST
-AST/List.cc.o : | AST
-AST/Mapping.cc.o : | AST
-AST/Node.cc.o : | AST
-AST/Parameter.cc.o : | AST
-AST/Record.cc.o : | AST
-AST/Scope.cc.o : | AST
-AST/SomeValue.cc.o : | AST
-AST/SymbolReference.cc.o : | AST
-AST/TypeDeclaration.cc.o : | AST
-AST/UnaryOperation.cc.o : | AST
-AST/Value.cc.o : | AST
-AST/Visitor.cc.o : | AST
-AST/literals.cc.o : | AST
-Backend/Backend.cc.o : | Backend
-Backend/Dot.cc.o : | Backend
-Backend/Make.cc.o : | Backend
-Backend/Ninja.cc.o : | Backend
-Backend/Null.cc.o : | Backend
-DAG/Build.cc.o : | DAG
-DAG/Callable.cc.o : | DAG
-DAG/DAG.cc.o : | DAG
-DAG/DAGBuilder.cc.o : | DAG
-DAG/File.cc.o : | DAG
-DAG/Formatter.cc.o : | DAG
-DAG/Function.cc.o : | DAG
-DAG/List.cc.o : | DAG
-DAG/Parameter.cc.o : | DAG
-DAG/Primitive.cc.o : | DAG
-DAG/Record.cc.o : | DAG
-DAG/Rule.cc.o : | DAG
-DAG/TypeReference.cc.o : | DAG
-DAG/UndefinedValueException.cc.o : | DAG
-DAG/Value.cc.o : | DAG
-DAG/Visitor.cc.o : | DAG
-Parsing/Lexer.cc.o : | Parsing
-Parsing/Parser.cc.o : | Parsing
-Parsing/Token.cc.o : | Parsing
-Parsing/fab.lex.cc : | Parsing
-Parsing/fab.lex.cc.o : | Parsing
-Parsing/fab.lex.h : | Parsing
-Parsing/fab.yacc.cc : | Parsing
-Parsing/fab.yacc.cc.o : | Parsing
-Parsing/fab.yacc.h : | Parsing
-Plugin/Loader.cc.o : | Plugin
-Plugin/Plugin.cc.o : | Plugin
-Plugin/Registry.cc.o : | Plugin
-Support/Arguments.cc.o : | Support
-Support/Bytestream.cc.o : | Support
-Support/ErrorReport.cc.o : | Support
-Support/Join.cc.o : | Support
-Support/PosixError.cc.o : | Support
-Support/PosixSharedLibrary.cc.o : | Support
-Support/Printable.cc.o : | Support
-Support/SharedLibrary.cc.o : | Support
-Support/SourceLocation.cc.o : | Support
-Support/String.cc.o : | Support
-Support/exceptions.cc.o : | Support
-Support/os-posix.cc.o : | Support
-Types/BooleanType.cc.o : | Types
-Types/FileType.cc.o : | Types
-Types/FunctionType.cc.o : | Types
-Types/IntegerType.cc.o : | Types
-Types/MaybeType.cc.o : | Types
-Types/OptionallyTyped.cc.o : | Types
-Types/RecordType.cc.o : | Types
-Types/SequenceType.cc.o : | Types
-Types/StringType.cc.o : | Types
-Types/Type.cc.o : | Types
-Types/TypeContext.cc.o : | Types
-Types/TypeError.cc.o : | Types
-Types/Typed.cc.o : | Types
-Types/UserType.cc.o : | Types
-base-plugins/PlatformTests.cc.o : | base-plugins
-base-plugins/SysctlPlugin.cc.o : | base-plugins
-base-plugins/Which.cc.o : | base-plugins
-base-plugins/libplatform-tests.dylib : | base-plugins
-base-plugins/libsysctl.dylib : | base-plugins
-base-plugins/libwhich.dylib : | base-plugins
-bin/fab : | bin
-lib/fabrique/libplatform-tests.dylib : | lib/fabrique
-lib/fabrique/libsysctl.dylib : | lib/fabrique
-lib/fabrique/libwhich.dylib : | lib/fabrique
 #
 # Build steps:
 #
-AST:
-	if [ ! -e "AST" ]; then mkdir -p "AST"; fi
-Backend:
-	if [ ! -e "Backend" ]; then mkdir -p "Backend"; fi
-DAG:
-	if [ ! -e "DAG" ]; then mkdir -p "DAG"; fi
-Parsing:
-	if [ ! -e "Parsing" ]; then mkdir -p "Parsing"; fi
-Plugin:
-	if [ ! -e "Plugin" ]; then mkdir -p "Plugin"; fi
-Support:
-	if [ ! -e "Support" ]; then mkdir -p "Support"; fi
-Types:
-	if [ ! -e "Types" ]; then mkdir -p "Types"; fi
-base-plugins:
-	if [ ! -e "base-plugins" ]; then mkdir -p "base-plugins"; fi
-bin:
-	if [ ! -e "bin" ]; then mkdir -p "bin"; fi
-lib/fabrique:
-	if [ ! -e "lib/fabrique" ]; then mkdir -p "lib/fabrique"; fi
-yacc.raw_yacc_1 : Parsing/fab.yacc.cc Parsing/fab.yacc.h
-Parsing/fab.yacc.cc Parsing/fab.yacc.h : ${srcroot}/Parsing/fab.yy
-	echo "Processing Parsing/fab.yacc.cc Parsing/fab.yacc.h"
-	echo "byacc -d -t -o Parsing/fab.yacc.cc ${srcroot}/Parsing/fab.yy" >> build.log
-	byacc -d -t -o Parsing/fab.yacc.cc ${srcroot}/Parsing/fab.yy
-
-lex.raw_lex_2 : Parsing/fab.lex.cc Parsing/fab.lex.h
-Parsing/fab.lex.cc Parsing/fab.lex.h : ${srcroot}/Parsing/fab.lxx
-	echo "Processing Parsing/fab.lex.cc Parsing/fab.lex.h"
-	echo "/usr/bin/flex -c++ --header-file=Parsing/fab.lex.h --outfile=Parsing/fab.lex.cc ${srcroot}/Parsing/fab.lxx" >> build.log
-	/usr/bin/flex -c++ --header-file=Parsing/fab.lex.h --outfile=Parsing/fab.lex.cc ${srcroot}/Parsing/fab.lxx
-
-Parsing/fab.lex.cc.o : Parsing/fab.yacc.cc Parsing/fab.lex.cc
-	echo "Compiling Parsing/fab.lex.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Wno-deprecated-register -fcolor-diagnostics -fPIC -MMD -MF Parsing/fab.lex.cc.o.d Parsing/fab.lex.cc -o Parsing/fab.lex.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Wno-deprecated-register -fcolor-diagnostics -fPIC -MMD -MF Parsing/fab.lex.cc.o.d Parsing/fab.lex.cc -o Parsing/fab.lex.cc.o
--include Parsing/fab.lex.cc.o.d
-
-Parsing/fab.yacc.cc.o : Parsing/fab.yacc.cc
-	echo "Compiling Parsing/fab.yacc.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Wno-deprecated-register -fcolor-diagnostics -fPIC -MMD -MF Parsing/fab.yacc.cc.o.d Parsing/fab.yacc.cc -o Parsing/fab.yacc.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Wno-deprecated-register -fcolor-diagnostics -fPIC -MMD -MF Parsing/fab.yacc.cc.o.d Parsing/fab.yacc.cc -o Parsing/fab.yacc.cc.o
--include Parsing/fab.yacc.cc.o.d
-
-driver.cc.o : ${srcroot}/driver.cc
-	echo "Compiling driver.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF driver.cc.o.d ${srcroot}/driver.cc -o driver.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF driver.cc.o.d ${srcroot}/driver.cc -o driver.cc.o
--include driver.cc.o.d
-
-AST/Action.cc.o : ${srcroot}/AST/Action.cc
-	echo "Compiling AST/Action.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Action.cc.o.d ${srcroot}/AST/Action.cc -o AST/Action.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Action.cc.o.d ${srcroot}/AST/Action.cc -o AST/Action.cc.o
--include AST/Action.cc.o.d
-
-AST/Argument.cc.o : ${srcroot}/AST/Argument.cc
-	echo "Compiling AST/Argument.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Argument.cc.o.d ${srcroot}/AST/Argument.cc -o AST/Argument.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Argument.cc.o.d ${srcroot}/AST/Argument.cc -o AST/Argument.cc.o
--include AST/Argument.cc.o.d
-
-AST/ASTDump.cc.o : ${srcroot}/AST/ASTDump.cc
-	echo "Compiling AST/ASTDump.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/ASTDump.cc.o.d ${srcroot}/AST/ASTDump.cc -o AST/ASTDump.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/ASTDump.cc.o.d ${srcroot}/AST/ASTDump.cc -o AST/ASTDump.cc.o
--include AST/ASTDump.cc.o.d
-
-AST/BinaryOperation.cc.o : ${srcroot}/AST/BinaryOperation.cc
-	echo "Compiling AST/BinaryOperation.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/BinaryOperation.cc.o.d ${srcroot}/AST/BinaryOperation.cc -o AST/BinaryOperation.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/BinaryOperation.cc.o.d ${srcroot}/AST/BinaryOperation.cc -o AST/BinaryOperation.cc.o
--include AST/BinaryOperation.cc.o.d
-
-AST/Call.cc.o : ${srcroot}/AST/Call.cc
-	echo "Compiling AST/Call.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Call.cc.o.d ${srcroot}/AST/Call.cc -o AST/Call.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Call.cc.o.d ${srcroot}/AST/Call.cc -o AST/Call.cc.o
--include AST/Call.cc.o.d
-
-AST/CompoundExpr.cc.o : ${srcroot}/AST/CompoundExpr.cc
-	echo "Compiling AST/CompoundExpr.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/CompoundExpr.cc.o.d ${srcroot}/AST/CompoundExpr.cc -o AST/CompoundExpr.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/CompoundExpr.cc.o.d ${srcroot}/AST/CompoundExpr.cc -o AST/CompoundExpr.cc.o
--include AST/CompoundExpr.cc.o.d
-
-AST/Conditional.cc.o : ${srcroot}/AST/Conditional.cc
-	echo "Compiling AST/Conditional.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Conditional.cc.o.d ${srcroot}/AST/Conditional.cc -o AST/Conditional.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Conditional.cc.o.d ${srcroot}/AST/Conditional.cc -o AST/Conditional.cc.o
--include AST/Conditional.cc.o.d
-
-AST/DebugTracePoint.cc.o : ${srcroot}/AST/DebugTracePoint.cc
-	echo "Compiling AST/DebugTracePoint.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/DebugTracePoint.cc.o.d ${srcroot}/AST/DebugTracePoint.cc -o AST/DebugTracePoint.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/DebugTracePoint.cc.o.d ${srcroot}/AST/DebugTracePoint.cc -o AST/DebugTracePoint.cc.o
--include AST/DebugTracePoint.cc.o.d
-
-AST/EvalContext.cc.o : ${srcroot}/AST/EvalContext.cc
-	echo "Compiling AST/EvalContext.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/EvalContext.cc.o.d ${srcroot}/AST/EvalContext.cc -o AST/EvalContext.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/EvalContext.cc.o.d ${srcroot}/AST/EvalContext.cc -o AST/EvalContext.cc.o
--include AST/EvalContext.cc.o.d
-
-AST/Expression.cc.o : ${srcroot}/AST/Expression.cc
-	echo "Compiling AST/Expression.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Expression.cc.o.d ${srcroot}/AST/Expression.cc -o AST/Expression.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Expression.cc.o.d ${srcroot}/AST/Expression.cc -o AST/Expression.cc.o
--include AST/Expression.cc.o.d
-
-AST/FieldAccess.cc.o : ${srcroot}/AST/FieldAccess.cc
-	echo "Compiling AST/FieldAccess.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/FieldAccess.cc.o.d ${srcroot}/AST/FieldAccess.cc -o AST/FieldAccess.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/FieldAccess.cc.o.d ${srcroot}/AST/FieldAccess.cc -o AST/FieldAccess.cc.o
--include AST/FieldAccess.cc.o.d
-
-AST/FieldQuery.cc.o : ${srcroot}/AST/FieldQuery.cc
-	echo "Compiling AST/FieldQuery.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/FieldQuery.cc.o.d ${srcroot}/AST/FieldQuery.cc -o AST/FieldQuery.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/FieldQuery.cc.o.d ${srcroot}/AST/FieldQuery.cc -o AST/FieldQuery.cc.o
--include AST/FieldQuery.cc.o.d
-
-AST/Filename.cc.o : ${srcroot}/AST/Filename.cc
-	echo "Compiling AST/Filename.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Filename.cc.o.d ${srcroot}/AST/Filename.cc -o AST/Filename.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Filename.cc.o.d ${srcroot}/AST/Filename.cc -o AST/Filename.cc.o
--include AST/Filename.cc.o.d
-
-AST/FileList.cc.o : ${srcroot}/AST/FileList.cc
-	echo "Compiling AST/FileList.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/FileList.cc.o.d ${srcroot}/AST/FileList.cc -o AST/FileList.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/FileList.cc.o.d ${srcroot}/AST/FileList.cc -o AST/FileList.cc.o
--include AST/FileList.cc.o.d
-
-AST/Foreach.cc.o : ${srcroot}/AST/Foreach.cc
-	echo "Compiling AST/Foreach.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Foreach.cc.o.d ${srcroot}/AST/Foreach.cc -o AST/Foreach.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Foreach.cc.o.d ${srcroot}/AST/Foreach.cc -o AST/Foreach.cc.o
--include AST/Foreach.cc.o.d
-
-AST/Function.cc.o : ${srcroot}/AST/Function.cc
-	echo "Compiling AST/Function.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Function.cc.o.d ${srcroot}/AST/Function.cc -o AST/Function.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Function.cc.o.d ${srcroot}/AST/Function.cc -o AST/Function.cc.o
--include AST/Function.cc.o.d
-
-AST/HasParameters.cc.o : ${srcroot}/AST/HasParameters.cc
-	echo "Compiling AST/HasParameters.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/HasParameters.cc.o.d ${srcroot}/AST/HasParameters.cc -o AST/HasParameters.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/HasParameters.cc.o.d ${srcroot}/AST/HasParameters.cc -o AST/HasParameters.cc.o
--include AST/HasParameters.cc.o.d
-
-AST/HasScope.cc.o : ${srcroot}/AST/HasScope.cc
-	echo "Compiling AST/HasScope.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/HasScope.cc.o.d ${srcroot}/AST/HasScope.cc -o AST/HasScope.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/HasScope.cc.o.d ${srcroot}/AST/HasScope.cc -o AST/HasScope.cc.o
--include AST/HasScope.cc.o.d
-
-AST/Identifier.cc.o : ${srcroot}/AST/Identifier.cc
-	echo "Compiling AST/Identifier.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Identifier.cc.o.d ${srcroot}/AST/Identifier.cc -o AST/Identifier.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Identifier.cc.o.d ${srcroot}/AST/Identifier.cc -o AST/Identifier.cc.o
--include AST/Identifier.cc.o.d
-
-AST/Import.cc.o : ${srcroot}/AST/Import.cc
-	echo "Compiling AST/Import.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Import.cc.o.d ${srcroot}/AST/Import.cc -o AST/Import.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Import.cc.o.d ${srcroot}/AST/Import.cc -o AST/Import.cc.o
--include AST/Import.cc.o.d
-
-AST/List.cc.o : ${srcroot}/AST/List.cc
-	echo "Compiling AST/List.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/List.cc.o.d ${srcroot}/AST/List.cc -o AST/List.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/List.cc.o.d ${srcroot}/AST/List.cc -o AST/List.cc.o
--include AST/List.cc.o.d
-
-AST/Mapping.cc.o : ${srcroot}/AST/Mapping.cc
-	echo "Compiling AST/Mapping.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Mapping.cc.o.d ${srcroot}/AST/Mapping.cc -o AST/Mapping.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Mapping.cc.o.d ${srcroot}/AST/Mapping.cc -o AST/Mapping.cc.o
--include AST/Mapping.cc.o.d
-
-AST/Node.cc.o : ${srcroot}/AST/Node.cc
-	echo "Compiling AST/Node.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Node.cc.o.d ${srcroot}/AST/Node.cc -o AST/Node.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Node.cc.o.d ${srcroot}/AST/Node.cc -o AST/Node.cc.o
--include AST/Node.cc.o.d
-
-AST/Parameter.cc.o : ${srcroot}/AST/Parameter.cc
-	echo "Compiling AST/Parameter.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Parameter.cc.o.d ${srcroot}/AST/Parameter.cc -o AST/Parameter.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Parameter.cc.o.d ${srcroot}/AST/Parameter.cc -o AST/Parameter.cc.o
--include AST/Parameter.cc.o.d
-
-AST/Record.cc.o : ${srcroot}/AST/Record.cc
-	echo "Compiling AST/Record.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Record.cc.o.d ${srcroot}/AST/Record.cc -o AST/Record.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Record.cc.o.d ${srcroot}/AST/Record.cc -o AST/Record.cc.o
--include AST/Record.cc.o.d
-
-AST/Scope.cc.o : ${srcroot}/AST/Scope.cc
-	echo "Compiling AST/Scope.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Scope.cc.o.d ${srcroot}/AST/Scope.cc -o AST/Scope.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Scope.cc.o.d ${srcroot}/AST/Scope.cc -o AST/Scope.cc.o
--include AST/Scope.cc.o.d
-
-AST/SomeValue.cc.o : ${srcroot}/AST/SomeValue.cc
-	echo "Compiling AST/SomeValue.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/SomeValue.cc.o.d ${srcroot}/AST/SomeValue.cc -o AST/SomeValue.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/SomeValue.cc.o.d ${srcroot}/AST/SomeValue.cc -o AST/SomeValue.cc.o
--include AST/SomeValue.cc.o.d
-
-AST/SymbolReference.cc.o : ${srcroot}/AST/SymbolReference.cc
-	echo "Compiling AST/SymbolReference.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/SymbolReference.cc.o.d ${srcroot}/AST/SymbolReference.cc -o AST/SymbolReference.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/SymbolReference.cc.o.d ${srcroot}/AST/SymbolReference.cc -o AST/SymbolReference.cc.o
--include AST/SymbolReference.cc.o.d
-
-AST/TypeDeclaration.cc.o : ${srcroot}/AST/TypeDeclaration.cc
-	echo "Compiling AST/TypeDeclaration.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/TypeDeclaration.cc.o.d ${srcroot}/AST/TypeDeclaration.cc -o AST/TypeDeclaration.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/TypeDeclaration.cc.o.d ${srcroot}/AST/TypeDeclaration.cc -o AST/TypeDeclaration.cc.o
--include AST/TypeDeclaration.cc.o.d
-
-AST/UnaryOperation.cc.o : ${srcroot}/AST/UnaryOperation.cc
-	echo "Compiling AST/UnaryOperation.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/UnaryOperation.cc.o.d ${srcroot}/AST/UnaryOperation.cc -o AST/UnaryOperation.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/UnaryOperation.cc.o.d ${srcroot}/AST/UnaryOperation.cc -o AST/UnaryOperation.cc.o
--include AST/UnaryOperation.cc.o.d
-
-AST/Value.cc.o : ${srcroot}/AST/Value.cc
-	echo "Compiling AST/Value.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Value.cc.o.d ${srcroot}/AST/Value.cc -o AST/Value.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Value.cc.o.d ${srcroot}/AST/Value.cc -o AST/Value.cc.o
--include AST/Value.cc.o.d
-
-AST/Visitor.cc.o : ${srcroot}/AST/Visitor.cc
-	echo "Compiling AST/Visitor.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Visitor.cc.o.d ${srcroot}/AST/Visitor.cc -o AST/Visitor.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/Visitor.cc.o.d ${srcroot}/AST/Visitor.cc -o AST/Visitor.cc.o
--include AST/Visitor.cc.o.d
-
-AST/literals.cc.o : ${srcroot}/AST/literals.cc
-	echo "Compiling AST/literals.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/literals.cc.o.d ${srcroot}/AST/literals.cc -o AST/literals.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF AST/literals.cc.o.d ${srcroot}/AST/literals.cc -o AST/literals.cc.o
--include AST/literals.cc.o.d
-
-Backend/Backend.cc.o : ${srcroot}/Backend/Backend.cc
-	echo "Compiling Backend/Backend.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Backend/Backend.cc.o.d ${srcroot}/Backend/Backend.cc -o Backend/Backend.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Backend/Backend.cc.o.d ${srcroot}/Backend/Backend.cc -o Backend/Backend.cc.o
--include Backend/Backend.cc.o.d
-
-Backend/Dot.cc.o : ${srcroot}/Backend/Dot.cc
-	echo "Compiling Backend/Dot.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Backend/Dot.cc.o.d ${srcroot}/Backend/Dot.cc -o Backend/Dot.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Backend/Dot.cc.o.d ${srcroot}/Backend/Dot.cc -o Backend/Dot.cc.o
--include Backend/Dot.cc.o.d
-
-Backend/Make.cc.o : ${srcroot}/Backend/Make.cc
-	echo "Compiling Backend/Make.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Backend/Make.cc.o.d ${srcroot}/Backend/Make.cc -o Backend/Make.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Backend/Make.cc.o.d ${srcroot}/Backend/Make.cc -o Backend/Make.cc.o
--include Backend/Make.cc.o.d
-
-Backend/Ninja.cc.o : ${srcroot}/Backend/Ninja.cc
-	echo "Compiling Backend/Ninja.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Backend/Ninja.cc.o.d ${srcroot}/Backend/Ninja.cc -o Backend/Ninja.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Backend/Ninja.cc.o.d ${srcroot}/Backend/Ninja.cc -o Backend/Ninja.cc.o
--include Backend/Ninja.cc.o.d
-
-Backend/Null.cc.o : ${srcroot}/Backend/Null.cc
-	echo "Compiling Backend/Null.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Backend/Null.cc.o.d ${srcroot}/Backend/Null.cc -o Backend/Null.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Backend/Null.cc.o.d ${srcroot}/Backend/Null.cc -o Backend/Null.cc.o
--include Backend/Null.cc.o.d
-
-DAG/Build.cc.o : ${srcroot}/DAG/Build.cc
-	echo "Compiling DAG/Build.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/Build.cc.o.d ${srcroot}/DAG/Build.cc -o DAG/Build.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/Build.cc.o.d ${srcroot}/DAG/Build.cc -o DAG/Build.cc.o
--include DAG/Build.cc.o.d
-
-DAG/Callable.cc.o : ${srcroot}/DAG/Callable.cc
-	echo "Compiling DAG/Callable.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/Callable.cc.o.d ${srcroot}/DAG/Callable.cc -o DAG/Callable.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/Callable.cc.o.d ${srcroot}/DAG/Callable.cc -o DAG/Callable.cc.o
--include DAG/Callable.cc.o.d
-
-DAG/DAG.cc.o : ${srcroot}/DAG/DAG.cc
-	echo "Compiling DAG/DAG.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/DAG.cc.o.d ${srcroot}/DAG/DAG.cc -o DAG/DAG.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/DAG.cc.o.d ${srcroot}/DAG/DAG.cc -o DAG/DAG.cc.o
--include DAG/DAG.cc.o.d
-
-DAG/DAGBuilder.cc.o : ${srcroot}/DAG/DAGBuilder.cc
-	echo "Compiling DAG/DAGBuilder.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/DAGBuilder.cc.o.d ${srcroot}/DAG/DAGBuilder.cc -o DAG/DAGBuilder.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/DAGBuilder.cc.o.d ${srcroot}/DAG/DAGBuilder.cc -o DAG/DAGBuilder.cc.o
--include DAG/DAGBuilder.cc.o.d
-
-DAG/File.cc.o : ${srcroot}/DAG/File.cc
-	echo "Compiling DAG/File.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/File.cc.o.d ${srcroot}/DAG/File.cc -o DAG/File.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/File.cc.o.d ${srcroot}/DAG/File.cc -o DAG/File.cc.o
--include DAG/File.cc.o.d
-
-DAG/Formatter.cc.o : ${srcroot}/DAG/Formatter.cc
-	echo "Compiling DAG/Formatter.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/Formatter.cc.o.d ${srcroot}/DAG/Formatter.cc -o DAG/Formatter.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/Formatter.cc.o.d ${srcroot}/DAG/Formatter.cc -o DAG/Formatter.cc.o
--include DAG/Formatter.cc.o.d
-
-DAG/Function.cc.o : ${srcroot}/DAG/Function.cc
-	echo "Compiling DAG/Function.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/Function.cc.o.d ${srcroot}/DAG/Function.cc -o DAG/Function.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/Function.cc.o.d ${srcroot}/DAG/Function.cc -o DAG/Function.cc.o
--include DAG/Function.cc.o.d
-
-DAG/List.cc.o : ${srcroot}/DAG/List.cc
-	echo "Compiling DAG/List.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/List.cc.o.d ${srcroot}/DAG/List.cc -o DAG/List.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/List.cc.o.d ${srcroot}/DAG/List.cc -o DAG/List.cc.o
--include DAG/List.cc.o.d
-
-DAG/Parameter.cc.o : ${srcroot}/DAG/Parameter.cc
-	echo "Compiling DAG/Parameter.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/Parameter.cc.o.d ${srcroot}/DAG/Parameter.cc -o DAG/Parameter.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/Parameter.cc.o.d ${srcroot}/DAG/Parameter.cc -o DAG/Parameter.cc.o
--include DAG/Parameter.cc.o.d
-
-DAG/Primitive.cc.o : ${srcroot}/DAG/Primitive.cc
-	echo "Compiling DAG/Primitive.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/Primitive.cc.o.d ${srcroot}/DAG/Primitive.cc -o DAG/Primitive.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/Primitive.cc.o.d ${srcroot}/DAG/Primitive.cc -o DAG/Primitive.cc.o
--include DAG/Primitive.cc.o.d
-
-DAG/Record.cc.o : ${srcroot}/DAG/Record.cc
-	echo "Compiling DAG/Record.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/Record.cc.o.d ${srcroot}/DAG/Record.cc -o DAG/Record.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/Record.cc.o.d ${srcroot}/DAG/Record.cc -o DAG/Record.cc.o
--include DAG/Record.cc.o.d
-
-DAG/Rule.cc.o : ${srcroot}/DAG/Rule.cc
-	echo "Compiling DAG/Rule.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/Rule.cc.o.d ${srcroot}/DAG/Rule.cc -o DAG/Rule.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/Rule.cc.o.d ${srcroot}/DAG/Rule.cc -o DAG/Rule.cc.o
--include DAG/Rule.cc.o.d
-
-DAG/TypeReference.cc.o : ${srcroot}/DAG/TypeReference.cc
-	echo "Compiling DAG/TypeReference.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/TypeReference.cc.o.d ${srcroot}/DAG/TypeReference.cc -o DAG/TypeReference.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/TypeReference.cc.o.d ${srcroot}/DAG/TypeReference.cc -o DAG/TypeReference.cc.o
--include DAG/TypeReference.cc.o.d
-
-DAG/UndefinedValueException.cc.o : ${srcroot}/DAG/UndefinedValueException.cc
-	echo "Compiling DAG/UndefinedValueException.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/UndefinedValueException.cc.o.d ${srcroot}/DAG/UndefinedValueException.cc -o DAG/UndefinedValueException.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/UndefinedValueException.cc.o.d ${srcroot}/DAG/UndefinedValueException.cc -o DAG/UndefinedValueException.cc.o
--include DAG/UndefinedValueException.cc.o.d
-
-DAG/Value.cc.o : ${srcroot}/DAG/Value.cc
-	echo "Compiling DAG/Value.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/Value.cc.o.d ${srcroot}/DAG/Value.cc -o DAG/Value.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/Value.cc.o.d ${srcroot}/DAG/Value.cc -o DAG/Value.cc.o
--include DAG/Value.cc.o.d
-
-DAG/Visitor.cc.o : ${srcroot}/DAG/Visitor.cc
-	echo "Compiling DAG/Visitor.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/Visitor.cc.o.d ${srcroot}/DAG/Visitor.cc -o DAG/Visitor.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF DAG/Visitor.cc.o.d ${srcroot}/DAG/Visitor.cc -o DAG/Visitor.cc.o
--include DAG/Visitor.cc.o.d
-
-Parsing/Lexer.cc.o : ${srcroot}/Parsing/Lexer.cc
-	echo "Compiling Parsing/Lexer.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Parsing/Lexer.cc.o.d ${srcroot}/Parsing/Lexer.cc -o Parsing/Lexer.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Parsing/Lexer.cc.o.d ${srcroot}/Parsing/Lexer.cc -o Parsing/Lexer.cc.o
--include Parsing/Lexer.cc.o.d
-
-Parsing/Parser.cc.o : ${srcroot}/Parsing/Parser.cc
-	echo "Compiling Parsing/Parser.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Parsing/Parser.cc.o.d ${srcroot}/Parsing/Parser.cc -o Parsing/Parser.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Parsing/Parser.cc.o.d ${srcroot}/Parsing/Parser.cc -o Parsing/Parser.cc.o
--include Parsing/Parser.cc.o.d
-
-Parsing/Token.cc.o : ${srcroot}/Parsing/Token.cc
-	echo "Compiling Parsing/Token.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Parsing/Token.cc.o.d ${srcroot}/Parsing/Token.cc -o Parsing/Token.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Parsing/Token.cc.o.d ${srcroot}/Parsing/Token.cc -o Parsing/Token.cc.o
--include Parsing/Token.cc.o.d
-
-Plugin/Loader.cc.o : ${srcroot}/Plugin/Loader.cc
-	echo "Compiling Plugin/Loader.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Plugin/Loader.cc.o.d ${srcroot}/Plugin/Loader.cc -o Plugin/Loader.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Plugin/Loader.cc.o.d ${srcroot}/Plugin/Loader.cc -o Plugin/Loader.cc.o
--include Plugin/Loader.cc.o.d
-
-Plugin/Plugin.cc.o : ${srcroot}/Plugin/Plugin.cc
-	echo "Compiling Plugin/Plugin.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Plugin/Plugin.cc.o.d ${srcroot}/Plugin/Plugin.cc -o Plugin/Plugin.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Plugin/Plugin.cc.o.d ${srcroot}/Plugin/Plugin.cc -o Plugin/Plugin.cc.o
--include Plugin/Plugin.cc.o.d
-
-Plugin/Registry.cc.o : ${srcroot}/Plugin/Registry.cc
-	echo "Compiling Plugin/Registry.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Plugin/Registry.cc.o.d ${srcroot}/Plugin/Registry.cc -o Plugin/Registry.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Plugin/Registry.cc.o.d ${srcroot}/Plugin/Registry.cc -o Plugin/Registry.cc.o
--include Plugin/Registry.cc.o.d
-
-Support/Arguments.cc.o : ${srcroot}/Support/Arguments.cc
-	echo "Compiling Support/Arguments.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Support/Arguments.cc.o.d ${srcroot}/Support/Arguments.cc -o Support/Arguments.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Support/Arguments.cc.o.d ${srcroot}/Support/Arguments.cc -o Support/Arguments.cc.o
--include Support/Arguments.cc.o.d
+bin/CLIArguments.cc.o : ${srcroot}/bin/CLIArguments.cc
+	echo "Compiling bin/CLIArguments.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF bin/CLIArguments.cc.o.d ${srcroot}/bin/CLIArguments.cc -o bin/CLIArguments.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF bin/CLIArguments.cc.o.d ${srcroot}/bin/CLIArguments.cc -o bin/CLIArguments.cc.o
+-include bin/CLIArguments.cc.o.d
+
+bin/fab.cc.o : ${srcroot}/bin/fab.cc
+	echo "Compiling bin/fab.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF bin/fab.cc.o.d ${srcroot}/bin/fab.cc -o bin/fab.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF bin/fab.cc.o.d ${srcroot}/bin/fab.cc -o bin/fab.cc.o
+-include bin/fab.cc.o.d
+
+lib/Printable.cc.o : ${srcroot}/lib/Printable.cc
+	echo "Compiling lib/Printable.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/Printable.cc.o.d ${srcroot}/lib/Printable.cc -o lib/Printable.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/Printable.cc.o.d ${srcroot}/lib/Printable.cc -o lib/Printable.cc.o
+-include lib/Printable.cc.o.d
+
+lib/builtins.cc.o : ${srcroot}/lib/builtins.cc
+	echo "Compiling lib/builtins.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/builtins.cc.o.d ${srcroot}/lib/builtins.cc -o lib/builtins.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/builtins.cc.o.d ${srcroot}/lib/builtins.cc -o lib/builtins.cc.o
+-include lib/builtins.cc.o.d
+
+lib/names.cc.o : ${srcroot}/lib/names.cc
+	echo "Compiling lib/names.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/names.cc.o.d ${srcroot}/lib/names.cc -o lib/names.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/names.cc.o.d ${srcroot}/lib/names.cc -o lib/names.cc.o
+-include lib/names.cc.o.d
+
+lib/ast/Action.cc.o : ${srcroot}/lib/ast/Action.cc
+	echo "Compiling lib/ast/Action.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/Action.cc.o.d ${srcroot}/lib/ast/Action.cc -o lib/ast/Action.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/Action.cc.o.d ${srcroot}/lib/ast/Action.cc -o lib/ast/Action.cc.o
+-include lib/ast/Action.cc.o.d
+
+lib/ast/Argument.cc.o : ${srcroot}/lib/ast/Argument.cc
+	echo "Compiling lib/ast/Argument.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/Argument.cc.o.d ${srcroot}/lib/ast/Argument.cc -o lib/ast/Argument.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/Argument.cc.o.d ${srcroot}/lib/ast/Argument.cc -o lib/ast/Argument.cc.o
+-include lib/ast/Argument.cc.o.d
+
+lib/ast/Arguments.cc.o : ${srcroot}/lib/ast/Arguments.cc
+	echo "Compiling lib/ast/Arguments.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/Arguments.cc.o.d ${srcroot}/lib/ast/Arguments.cc -o lib/ast/Arguments.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/Arguments.cc.o.d ${srcroot}/lib/ast/Arguments.cc -o lib/ast/Arguments.cc.o
+-include lib/ast/Arguments.cc.o.d
+
+lib/ast/ASTDump.cc.o : ${srcroot}/lib/ast/ASTDump.cc
+	echo "Compiling lib/ast/ASTDump.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/ASTDump.cc.o.d ${srcroot}/lib/ast/ASTDump.cc -o lib/ast/ASTDump.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/ASTDump.cc.o.d ${srcroot}/lib/ast/ASTDump.cc -o lib/ast/ASTDump.cc.o
+-include lib/ast/ASTDump.cc.o.d
+
+lib/ast/BinaryOperation.cc.o : ${srcroot}/lib/ast/BinaryOperation.cc
+	echo "Compiling lib/ast/BinaryOperation.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/BinaryOperation.cc.o.d ${srcroot}/lib/ast/BinaryOperation.cc -o lib/ast/BinaryOperation.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/BinaryOperation.cc.o.d ${srcroot}/lib/ast/BinaryOperation.cc -o lib/ast/BinaryOperation.cc.o
+-include lib/ast/BinaryOperation.cc.o.d
+
+lib/ast/Call.cc.o : ${srcroot}/lib/ast/Call.cc
+	echo "Compiling lib/ast/Call.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/Call.cc.o.d ${srcroot}/lib/ast/Call.cc -o lib/ast/Call.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/Call.cc.o.d ${srcroot}/lib/ast/Call.cc -o lib/ast/Call.cc.o
+-include lib/ast/Call.cc.o.d
+
+lib/ast/CompoundExpr.cc.o : ${srcroot}/lib/ast/CompoundExpr.cc
+	echo "Compiling lib/ast/CompoundExpr.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/CompoundExpr.cc.o.d ${srcroot}/lib/ast/CompoundExpr.cc -o lib/ast/CompoundExpr.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/CompoundExpr.cc.o.d ${srcroot}/lib/ast/CompoundExpr.cc -o lib/ast/CompoundExpr.cc.o
+-include lib/ast/CompoundExpr.cc.o.d
+
+lib/ast/Conditional.cc.o : ${srcroot}/lib/ast/Conditional.cc
+	echo "Compiling lib/ast/Conditional.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/Conditional.cc.o.d ${srcroot}/lib/ast/Conditional.cc -o lib/ast/Conditional.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/Conditional.cc.o.d ${srcroot}/lib/ast/Conditional.cc -o lib/ast/Conditional.cc.o
+-include lib/ast/Conditional.cc.o.d
+
+lib/ast/DebugTracePoint.cc.o : ${srcroot}/lib/ast/DebugTracePoint.cc
+	echo "Compiling lib/ast/DebugTracePoint.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/DebugTracePoint.cc.o.d ${srcroot}/lib/ast/DebugTracePoint.cc -o lib/ast/DebugTracePoint.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/DebugTracePoint.cc.o.d ${srcroot}/lib/ast/DebugTracePoint.cc -o lib/ast/DebugTracePoint.cc.o
+-include lib/ast/DebugTracePoint.cc.o.d
+
+lib/ast/EvalContext.cc.o : ${srcroot}/lib/ast/EvalContext.cc
+	echo "Compiling lib/ast/EvalContext.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/EvalContext.cc.o.d ${srcroot}/lib/ast/EvalContext.cc -o lib/ast/EvalContext.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/EvalContext.cc.o.d ${srcroot}/lib/ast/EvalContext.cc -o lib/ast/EvalContext.cc.o
+-include lib/ast/EvalContext.cc.o.d
+
+lib/ast/Expression.cc.o : ${srcroot}/lib/ast/Expression.cc
+	echo "Compiling lib/ast/Expression.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/Expression.cc.o.d ${srcroot}/lib/ast/Expression.cc -o lib/ast/Expression.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/Expression.cc.o.d ${srcroot}/lib/ast/Expression.cc -o lib/ast/Expression.cc.o
+-include lib/ast/Expression.cc.o.d
+
+lib/ast/FieldAccess.cc.o : ${srcroot}/lib/ast/FieldAccess.cc
+	echo "Compiling lib/ast/FieldAccess.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/FieldAccess.cc.o.d ${srcroot}/lib/ast/FieldAccess.cc -o lib/ast/FieldAccess.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/FieldAccess.cc.o.d ${srcroot}/lib/ast/FieldAccess.cc -o lib/ast/FieldAccess.cc.o
+-include lib/ast/FieldAccess.cc.o.d
+
+lib/ast/FieldQuery.cc.o : ${srcroot}/lib/ast/FieldQuery.cc
+	echo "Compiling lib/ast/FieldQuery.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/FieldQuery.cc.o.d ${srcroot}/lib/ast/FieldQuery.cc -o lib/ast/FieldQuery.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/FieldQuery.cc.o.d ${srcroot}/lib/ast/FieldQuery.cc -o lib/ast/FieldQuery.cc.o
+-include lib/ast/FieldQuery.cc.o.d
+
+lib/ast/FilenameLiteral.cc.o : ${srcroot}/lib/ast/FilenameLiteral.cc
+	echo "Compiling lib/ast/FilenameLiteral.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/FilenameLiteral.cc.o.d ${srcroot}/lib/ast/FilenameLiteral.cc -o lib/ast/FilenameLiteral.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/FilenameLiteral.cc.o.d ${srcroot}/lib/ast/FilenameLiteral.cc -o lib/ast/FilenameLiteral.cc.o
+-include lib/ast/FilenameLiteral.cc.o.d
+
+lib/ast/FileList.cc.o : ${srcroot}/lib/ast/FileList.cc
+	echo "Compiling lib/ast/FileList.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/FileList.cc.o.d ${srcroot}/lib/ast/FileList.cc -o lib/ast/FileList.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/FileList.cc.o.d ${srcroot}/lib/ast/FileList.cc -o lib/ast/FileList.cc.o
+-include lib/ast/FileList.cc.o.d
+
+lib/ast/Foreach.cc.o : ${srcroot}/lib/ast/Foreach.cc
+	echo "Compiling lib/ast/Foreach.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/Foreach.cc.o.d ${srcroot}/lib/ast/Foreach.cc -o lib/ast/Foreach.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/Foreach.cc.o.d ${srcroot}/lib/ast/Foreach.cc -o lib/ast/Foreach.cc.o
+-include lib/ast/Foreach.cc.o.d
+
+lib/ast/Function.cc.o : ${srcroot}/lib/ast/Function.cc
+	echo "Compiling lib/ast/Function.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/Function.cc.o.d ${srcroot}/lib/ast/Function.cc -o lib/ast/Function.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/Function.cc.o.d ${srcroot}/lib/ast/Function.cc -o lib/ast/Function.cc.o
+-include lib/ast/Function.cc.o.d
+
+lib/ast/HasParameters.cc.o : ${srcroot}/lib/ast/HasParameters.cc
+	echo "Compiling lib/ast/HasParameters.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/HasParameters.cc.o.d ${srcroot}/lib/ast/HasParameters.cc -o lib/ast/HasParameters.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/HasParameters.cc.o.d ${srcroot}/lib/ast/HasParameters.cc -o lib/ast/HasParameters.cc.o
+-include lib/ast/HasParameters.cc.o.d
+
+lib/ast/Identifier.cc.o : ${srcroot}/lib/ast/Identifier.cc
+	echo "Compiling lib/ast/Identifier.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/Identifier.cc.o.d ${srcroot}/lib/ast/Identifier.cc -o lib/ast/Identifier.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/Identifier.cc.o.d ${srcroot}/lib/ast/Identifier.cc -o lib/ast/Identifier.cc.o
+-include lib/ast/Identifier.cc.o.d
+
+lib/ast/List.cc.o : ${srcroot}/lib/ast/List.cc
+	echo "Compiling lib/ast/List.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/List.cc.o.d ${srcroot}/lib/ast/List.cc -o lib/ast/List.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/List.cc.o.d ${srcroot}/lib/ast/List.cc -o lib/ast/List.cc.o
+-include lib/ast/List.cc.o.d
+
+lib/ast/NameReference.cc.o : ${srcroot}/lib/ast/NameReference.cc
+	echo "Compiling lib/ast/NameReference.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/NameReference.cc.o.d ${srcroot}/lib/ast/NameReference.cc -o lib/ast/NameReference.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/NameReference.cc.o.d ${srcroot}/lib/ast/NameReference.cc -o lib/ast/NameReference.cc.o
+-include lib/ast/NameReference.cc.o.d
+
+lib/ast/Node.cc.o : ${srcroot}/lib/ast/Node.cc
+	echo "Compiling lib/ast/Node.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/Node.cc.o.d ${srcroot}/lib/ast/Node.cc -o lib/ast/Node.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/Node.cc.o.d ${srcroot}/lib/ast/Node.cc -o lib/ast/Node.cc.o
+-include lib/ast/Node.cc.o.d
+
+lib/ast/Parameter.cc.o : ${srcroot}/lib/ast/Parameter.cc
+	echo "Compiling lib/ast/Parameter.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/Parameter.cc.o.d ${srcroot}/lib/ast/Parameter.cc -o lib/ast/Parameter.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/Parameter.cc.o.d ${srcroot}/lib/ast/Parameter.cc -o lib/ast/Parameter.cc.o
+-include lib/ast/Parameter.cc.o.d
+
+lib/ast/Record.cc.o : ${srcroot}/lib/ast/Record.cc
+	echo "Compiling lib/ast/Record.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/Record.cc.o.d ${srcroot}/lib/ast/Record.cc -o lib/ast/Record.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/Record.cc.o.d ${srcroot}/lib/ast/Record.cc -o lib/ast/Record.cc.o
+-include lib/ast/Record.cc.o.d
+
+lib/ast/TypeDeclaration.cc.o : ${srcroot}/lib/ast/TypeDeclaration.cc
+	echo "Compiling lib/ast/TypeDeclaration.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/TypeDeclaration.cc.o.d ${srcroot}/lib/ast/TypeDeclaration.cc -o lib/ast/TypeDeclaration.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/TypeDeclaration.cc.o.d ${srcroot}/lib/ast/TypeDeclaration.cc -o lib/ast/TypeDeclaration.cc.o
+-include lib/ast/TypeDeclaration.cc.o.d
+
+lib/ast/TypeReference.cc.o : ${srcroot}/lib/ast/TypeReference.cc
+	echo "Compiling lib/ast/TypeReference.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/TypeReference.cc.o.d ${srcroot}/lib/ast/TypeReference.cc -o lib/ast/TypeReference.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/TypeReference.cc.o.d ${srcroot}/lib/ast/TypeReference.cc -o lib/ast/TypeReference.cc.o
+-include lib/ast/TypeReference.cc.o.d
+
+lib/ast/UnaryOperation.cc.o : ${srcroot}/lib/ast/UnaryOperation.cc
+	echo "Compiling lib/ast/UnaryOperation.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/UnaryOperation.cc.o.d ${srcroot}/lib/ast/UnaryOperation.cc -o lib/ast/UnaryOperation.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/UnaryOperation.cc.o.d ${srcroot}/lib/ast/UnaryOperation.cc -o lib/ast/UnaryOperation.cc.o
+-include lib/ast/UnaryOperation.cc.o.d
+
+lib/ast/Value.cc.o : ${srcroot}/lib/ast/Value.cc
+	echo "Compiling lib/ast/Value.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/Value.cc.o.d ${srcroot}/lib/ast/Value.cc -o lib/ast/Value.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/Value.cc.o.d ${srcroot}/lib/ast/Value.cc -o lib/ast/Value.cc.o
+-include lib/ast/Value.cc.o.d
+
+lib/ast/Visitor.cc.o : ${srcroot}/lib/ast/Visitor.cc
+	echo "Compiling lib/ast/Visitor.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/Visitor.cc.o.d ${srcroot}/lib/ast/Visitor.cc -o lib/ast/Visitor.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/Visitor.cc.o.d ${srcroot}/lib/ast/Visitor.cc -o lib/ast/Visitor.cc.o
+-include lib/ast/Visitor.cc.o.d
+
+lib/ast/literals.cc.o : ${srcroot}/lib/ast/literals.cc
+	echo "Compiling lib/ast/literals.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/literals.cc.o.d ${srcroot}/lib/ast/literals.cc -o lib/ast/literals.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/ast/literals.cc.o.d ${srcroot}/lib/ast/literals.cc -o lib/ast/literals.cc.o
+-include lib/ast/literals.cc.o.d
+
+lib/backend/Backend.cc.o : ${srcroot}/lib/backend/Backend.cc
+	echo "Compiling lib/backend/Backend.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/backend/Backend.cc.o.d ${srcroot}/lib/backend/Backend.cc -o lib/backend/Backend.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/backend/Backend.cc.o.d ${srcroot}/lib/backend/Backend.cc -o lib/backend/Backend.cc.o
+-include lib/backend/Backend.cc.o.d
+
+lib/backend/Dot.cc.o : ${srcroot}/lib/backend/Dot.cc
+	echo "Compiling lib/backend/Dot.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/backend/Dot.cc.o.d ${srcroot}/lib/backend/Dot.cc -o lib/backend/Dot.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/backend/Dot.cc.o.d ${srcroot}/lib/backend/Dot.cc -o lib/backend/Dot.cc.o
+-include lib/backend/Dot.cc.o.d
+
+lib/backend/Make.cc.o : ${srcroot}/lib/backend/Make.cc
+	echo "Compiling lib/backend/Make.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/backend/Make.cc.o.d ${srcroot}/lib/backend/Make.cc -o lib/backend/Make.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/backend/Make.cc.o.d ${srcroot}/lib/backend/Make.cc -o lib/backend/Make.cc.o
+-include lib/backend/Make.cc.o.d
+
+lib/backend/Ninja.cc.o : ${srcroot}/lib/backend/Ninja.cc
+	echo "Compiling lib/backend/Ninja.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/backend/Ninja.cc.o.d ${srcroot}/lib/backend/Ninja.cc -o lib/backend/Ninja.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/backend/Ninja.cc.o.d ${srcroot}/lib/backend/Ninja.cc -o lib/backend/Ninja.cc.o
+-include lib/backend/Ninja.cc.o.d
+
+lib/backend/Null.cc.o : ${srcroot}/lib/backend/Null.cc
+	echo "Compiling lib/backend/Null.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/backend/Null.cc.o.d ${srcroot}/lib/backend/Null.cc -o lib/backend/Null.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/backend/Null.cc.o.d ${srcroot}/lib/backend/Null.cc -o lib/backend/Null.cc.o
+-include lib/backend/Null.cc.o.d
+
+lib/dag/Build.cc.o : ${srcroot}/lib/dag/Build.cc
+	echo "Compiling lib/dag/Build.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/Build.cc.o.d ${srcroot}/lib/dag/Build.cc -o lib/dag/Build.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/Build.cc.o.d ${srcroot}/lib/dag/Build.cc -o lib/dag/Build.cc.o
+-include lib/dag/Build.cc.o.d
+
+lib/dag/Callable.cc.o : ${srcroot}/lib/dag/Callable.cc
+	echo "Compiling lib/dag/Callable.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/Callable.cc.o.d ${srcroot}/lib/dag/Callable.cc -o lib/dag/Callable.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/Callable.cc.o.d ${srcroot}/lib/dag/Callable.cc -o lib/dag/Callable.cc.o
+-include lib/dag/Callable.cc.o.d
+
+lib/dag/DAG.cc.o : ${srcroot}/lib/dag/DAG.cc
+	echo "Compiling lib/dag/DAG.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/DAG.cc.o.d ${srcroot}/lib/dag/DAG.cc -o lib/dag/DAG.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/DAG.cc.o.d ${srcroot}/lib/dag/DAG.cc -o lib/dag/DAG.cc.o
+-include lib/dag/DAG.cc.o.d
+
+lib/dag/DAGBuilder.cc.o : ${srcroot}/lib/dag/DAGBuilder.cc
+	echo "Compiling lib/dag/DAGBuilder.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/DAGBuilder.cc.o.d ${srcroot}/lib/dag/DAGBuilder.cc -o lib/dag/DAGBuilder.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/DAGBuilder.cc.o.d ${srcroot}/lib/dag/DAGBuilder.cc -o lib/dag/DAGBuilder.cc.o
+-include lib/dag/DAGBuilder.cc.o.d
+
+lib/dag/File.cc.o : ${srcroot}/lib/dag/File.cc
+	echo "Compiling lib/dag/File.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/File.cc.o.d ${srcroot}/lib/dag/File.cc -o lib/dag/File.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/File.cc.o.d ${srcroot}/lib/dag/File.cc -o lib/dag/File.cc.o
+-include lib/dag/File.cc.o.d
+
+lib/dag/Formatter.cc.o : ${srcroot}/lib/dag/Formatter.cc
+	echo "Compiling lib/dag/Formatter.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/Formatter.cc.o.d ${srcroot}/lib/dag/Formatter.cc -o lib/dag/Formatter.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/Formatter.cc.o.d ${srcroot}/lib/dag/Formatter.cc -o lib/dag/Formatter.cc.o
+-include lib/dag/Formatter.cc.o.d
+
+lib/dag/Function.cc.o : ${srcroot}/lib/dag/Function.cc
+	echo "Compiling lib/dag/Function.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/Function.cc.o.d ${srcroot}/lib/dag/Function.cc -o lib/dag/Function.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/Function.cc.o.d ${srcroot}/lib/dag/Function.cc -o lib/dag/Function.cc.o
+-include lib/dag/Function.cc.o.d
+
+lib/dag/List.cc.o : ${srcroot}/lib/dag/List.cc
+	echo "Compiling lib/dag/List.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/List.cc.o.d ${srcroot}/lib/dag/List.cc -o lib/dag/List.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/List.cc.o.d ${srcroot}/lib/dag/List.cc -o lib/dag/List.cc.o
+-include lib/dag/List.cc.o.d
+
+lib/dag/Parameter.cc.o : ${srcroot}/lib/dag/Parameter.cc
+	echo "Compiling lib/dag/Parameter.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/Parameter.cc.o.d ${srcroot}/lib/dag/Parameter.cc -o lib/dag/Parameter.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/Parameter.cc.o.d ${srcroot}/lib/dag/Parameter.cc -o lib/dag/Parameter.cc.o
+-include lib/dag/Parameter.cc.o.d
+
+lib/dag/Primitive.cc.o : ${srcroot}/lib/dag/Primitive.cc
+	echo "Compiling lib/dag/Primitive.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/Primitive.cc.o.d ${srcroot}/lib/dag/Primitive.cc -o lib/dag/Primitive.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/Primitive.cc.o.d ${srcroot}/lib/dag/Primitive.cc -o lib/dag/Primitive.cc.o
+-include lib/dag/Primitive.cc.o.d
+
+lib/dag/Record.cc.o : ${srcroot}/lib/dag/Record.cc
+	echo "Compiling lib/dag/Record.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/Record.cc.o.d ${srcroot}/lib/dag/Record.cc -o lib/dag/Record.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/Record.cc.o.d ${srcroot}/lib/dag/Record.cc -o lib/dag/Record.cc.o
+-include lib/dag/Record.cc.o.d
+
+lib/dag/Rule.cc.o : ${srcroot}/lib/dag/Rule.cc
+	echo "Compiling lib/dag/Rule.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/Rule.cc.o.d ${srcroot}/lib/dag/Rule.cc -o lib/dag/Rule.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/Rule.cc.o.d ${srcroot}/lib/dag/Rule.cc -o lib/dag/Rule.cc.o
+-include lib/dag/Rule.cc.o.d
+
+lib/dag/TypeReference.cc.o : ${srcroot}/lib/dag/TypeReference.cc
+	echo "Compiling lib/dag/TypeReference.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/TypeReference.cc.o.d ${srcroot}/lib/dag/TypeReference.cc -o lib/dag/TypeReference.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/TypeReference.cc.o.d ${srcroot}/lib/dag/TypeReference.cc -o lib/dag/TypeReference.cc.o
+-include lib/dag/TypeReference.cc.o.d
+
+lib/dag/UndefinedValueException.cc.o : ${srcroot}/lib/dag/UndefinedValueException.cc
+	echo "Compiling lib/dag/UndefinedValueException.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/UndefinedValueException.cc.o.d ${srcroot}/lib/dag/UndefinedValueException.cc -o lib/dag/UndefinedValueException.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/UndefinedValueException.cc.o.d ${srcroot}/lib/dag/UndefinedValueException.cc -o lib/dag/UndefinedValueException.cc.o
+-include lib/dag/UndefinedValueException.cc.o.d
+
+lib/dag/Value.cc.o : ${srcroot}/lib/dag/Value.cc
+	echo "Compiling lib/dag/Value.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/Value.cc.o.d ${srcroot}/lib/dag/Value.cc -o lib/dag/Value.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/Value.cc.o.d ${srcroot}/lib/dag/Value.cc -o lib/dag/Value.cc.o
+-include lib/dag/Value.cc.o.d
+
+lib/dag/Visitor.cc.o : ${srcroot}/lib/dag/Visitor.cc
+	echo "Compiling lib/dag/Visitor.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/Visitor.cc.o.d ${srcroot}/lib/dag/Visitor.cc -o lib/dag/Visitor.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/dag/Visitor.cc.o.d ${srcroot}/lib/dag/Visitor.cc -o lib/dag/Visitor.cc.o
+-include lib/dag/Visitor.cc.o.d
+
+lib/parsing/ASTBuilder.cc.o : ${srcroot}/lib/parsing/ASTBuilder.cc
+	echo "Compiling lib/parsing/ASTBuilder.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/parsing/ASTBuilder.cc.o.d ${srcroot}/lib/parsing/ASTBuilder.cc -o lib/parsing/ASTBuilder.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/parsing/ASTBuilder.cc.o.d ${srcroot}/lib/parsing/ASTBuilder.cc -o lib/parsing/ASTBuilder.cc.o
+-include lib/parsing/ASTBuilder.cc.o.d
+
+lib/parsing/ErrorListener.cc.o : ${srcroot}/lib/parsing/ErrorListener.cc
+	echo "Compiling lib/parsing/ErrorListener.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/parsing/ErrorListener.cc.o.d ${srcroot}/lib/parsing/ErrorListener.cc -o lib/parsing/ErrorListener.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/parsing/ErrorListener.cc.o.d ${srcroot}/lib/parsing/ErrorListener.cc -o lib/parsing/ErrorListener.cc.o
+-include lib/parsing/ErrorListener.cc.o.d
+
+lib/parsing/ErrorReporter.cc.o : ${srcroot}/lib/parsing/ErrorReporter.cc
+	echo "Compiling lib/parsing/ErrorReporter.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/parsing/ErrorReporter.cc.o.d ${srcroot}/lib/parsing/ErrorReporter.cc -o lib/parsing/ErrorReporter.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/parsing/ErrorReporter.cc.o.d ${srcroot}/lib/parsing/ErrorReporter.cc -o lib/parsing/ErrorReporter.cc.o
+-include lib/parsing/ErrorReporter.cc.o.d
+
+lib/parsing/Parser.cc.o : ${srcroot}/lib/parsing/Parser.cc
+	echo "Compiling lib/parsing/Parser.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/parsing/Parser.cc.o.d ${srcroot}/lib/parsing/Parser.cc -o lib/parsing/Parser.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/parsing/Parser.cc.o.d ${srcroot}/lib/parsing/Parser.cc -o lib/parsing/Parser.cc.o
+-include lib/parsing/Parser.cc.o.d
+
+lib/parsing/Token.cc.o : ${srcroot}/lib/parsing/Token.cc
+	echo "Compiling lib/parsing/Token.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/parsing/Token.cc.o.d ${srcroot}/lib/parsing/Token.cc -o lib/parsing/Token.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/parsing/Token.cc.o.d ${srcroot}/lib/parsing/Token.cc -o lib/parsing/Token.cc.o
+-include lib/parsing/Token.cc.o.d
+
+lib/platform/ABI.cc.o : ${srcroot}/lib/platform/ABI.cc
+	echo "Compiling lib/platform/ABI.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/platform/ABI.cc.o.d ${srcroot}/lib/platform/ABI.cc -o lib/platform/ABI.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/platform/ABI.cc.o.d ${srcroot}/lib/platform/ABI.cc -o lib/platform/ABI.cc.o
+-include lib/platform/ABI.cc.o.d
+
+lib/platform/SharedLibrary.cc.o : ${srcroot}/lib/platform/SharedLibrary.cc
+	echo "Compiling lib/platform/SharedLibrary.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/platform/SharedLibrary.cc.o.d ${srcroot}/lib/platform/SharedLibrary.cc -o lib/platform/SharedLibrary.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/platform/SharedLibrary.cc.o.d ${srcroot}/lib/platform/SharedLibrary.cc -o lib/platform/SharedLibrary.cc.o
+-include lib/platform/SharedLibrary.cc.o.d
+
+lib/platform/posix/PosixError.cc.o : ${srcroot}/lib/platform/posix/PosixError.cc
+	echo "Compiling lib/platform/posix/PosixError.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/platform/posix/PosixError.cc.o.d ${srcroot}/lib/platform/posix/PosixError.cc -o lib/platform/posix/PosixError.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/platform/posix/PosixError.cc.o.d ${srcroot}/lib/platform/posix/PosixError.cc -o lib/platform/posix/PosixError.cc.o
+-include lib/platform/posix/PosixError.cc.o.d
+
+lib/platform/posix/PosixSharedLibrary.cc.o : ${srcroot}/lib/platform/posix/PosixSharedLibrary.cc
+	echo "Compiling lib/platform/posix/PosixSharedLibrary.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/platform/posix/PosixSharedLibrary.cc.o.d ${srcroot}/lib/platform/posix/PosixSharedLibrary.cc -o lib/platform/posix/PosixSharedLibrary.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/platform/posix/PosixSharedLibrary.cc.o.d ${srcroot}/lib/platform/posix/PosixSharedLibrary.cc -o lib/platform/posix/PosixSharedLibrary.cc.o
+-include lib/platform/posix/PosixSharedLibrary.cc.o.d
+
+lib/platform/posix/files.cc.o : ${srcroot}/lib/platform/posix/files.cc
+	echo "Compiling lib/platform/posix/files.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/platform/posix/files.cc.o.d ${srcroot}/lib/platform/posix/files.cc -o lib/platform/posix/files.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/platform/posix/files.cc.o.d ${srcroot}/lib/platform/posix/files.cc -o lib/platform/posix/files.cc.o
+-include lib/platform/posix/files.cc.o.d
+
+lib/plugin/Loader.cc.o : ${srcroot}/lib/plugin/Loader.cc
+	echo "Compiling lib/plugin/Loader.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/plugin/Loader.cc.o.d ${srcroot}/lib/plugin/Loader.cc -o lib/plugin/Loader.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/plugin/Loader.cc.o.d ${srcroot}/lib/plugin/Loader.cc -o lib/plugin/Loader.cc.o
+-include lib/plugin/Loader.cc.o.d
+
+lib/plugin/Plugin.cc.o : ${srcroot}/lib/plugin/Plugin.cc
+	echo "Compiling lib/plugin/Plugin.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/plugin/Plugin.cc.o.d ${srcroot}/lib/plugin/Plugin.cc -o lib/plugin/Plugin.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/plugin/Plugin.cc.o.d ${srcroot}/lib/plugin/Plugin.cc -o lib/plugin/Plugin.cc.o
+-include lib/plugin/Plugin.cc.o.d
+
+lib/plugin/Registry.cc.o : ${srcroot}/lib/plugin/Registry.cc
+	echo "Compiling lib/plugin/Registry.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/plugin/Registry.cc.o.d ${srcroot}/lib/plugin/Registry.cc -o lib/plugin/Registry.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/plugin/Registry.cc.o.d ${srcroot}/lib/plugin/Registry.cc -o lib/plugin/Registry.cc.o
+-include lib/plugin/Registry.cc.o.d
+
+lib/types/BooleanType.cc.o : ${srcroot}/lib/types/BooleanType.cc
+	echo "Compiling lib/types/BooleanType.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/types/BooleanType.cc.o.d ${srcroot}/lib/types/BooleanType.cc -o lib/types/BooleanType.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/types/BooleanType.cc.o.d ${srcroot}/lib/types/BooleanType.cc -o lib/types/BooleanType.cc.o
+-include lib/types/BooleanType.cc.o.d
+
+lib/types/FileType.cc.o : ${srcroot}/lib/types/FileType.cc
+	echo "Compiling lib/types/FileType.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/types/FileType.cc.o.d ${srcroot}/lib/types/FileType.cc -o lib/types/FileType.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/types/FileType.cc.o.d ${srcroot}/lib/types/FileType.cc -o lib/types/FileType.cc.o
+-include lib/types/FileType.cc.o.d
+
+lib/types/FunctionType.cc.o : ${srcroot}/lib/types/FunctionType.cc
+	echo "Compiling lib/types/FunctionType.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/types/FunctionType.cc.o.d ${srcroot}/lib/types/FunctionType.cc -o lib/types/FunctionType.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/types/FunctionType.cc.o.d ${srcroot}/lib/types/FunctionType.cc -o lib/types/FunctionType.cc.o
+-include lib/types/FunctionType.cc.o.d
+
+lib/types/IntegerType.cc.o : ${srcroot}/lib/types/IntegerType.cc
+	echo "Compiling lib/types/IntegerType.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/types/IntegerType.cc.o.d ${srcroot}/lib/types/IntegerType.cc -o lib/types/IntegerType.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/types/IntegerType.cc.o.d ${srcroot}/lib/types/IntegerType.cc -o lib/types/IntegerType.cc.o
+-include lib/types/IntegerType.cc.o.d
+
+lib/types/RecordType.cc.o : ${srcroot}/lib/types/RecordType.cc
+	echo "Compiling lib/types/RecordType.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/types/RecordType.cc.o.d ${srcroot}/lib/types/RecordType.cc -o lib/types/RecordType.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/types/RecordType.cc.o.d ${srcroot}/lib/types/RecordType.cc -o lib/types/RecordType.cc.o
+-include lib/types/RecordType.cc.o.d
+
+lib/types/SequenceType.cc.o : ${srcroot}/lib/types/SequenceType.cc
+	echo "Compiling lib/types/SequenceType.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/types/SequenceType.cc.o.d ${srcroot}/lib/types/SequenceType.cc -o lib/types/SequenceType.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/types/SequenceType.cc.o.d ${srcroot}/lib/types/SequenceType.cc -o lib/types/SequenceType.cc.o
+-include lib/types/SequenceType.cc.o.d
+
+lib/types/StringType.cc.o : ${srcroot}/lib/types/StringType.cc
+	echo "Compiling lib/types/StringType.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/types/StringType.cc.o.d ${srcroot}/lib/types/StringType.cc -o lib/types/StringType.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/types/StringType.cc.o.d ${srcroot}/lib/types/StringType.cc -o lib/types/StringType.cc.o
+-include lib/types/StringType.cc.o.d
+
+lib/types/Type.cc.o : ${srcroot}/lib/types/Type.cc
+	echo "Compiling lib/types/Type.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/types/Type.cc.o.d ${srcroot}/lib/types/Type.cc -o lib/types/Type.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/types/Type.cc.o.d ${srcroot}/lib/types/Type.cc -o lib/types/Type.cc.o
+-include lib/types/Type.cc.o.d
+
+lib/types/TypeContext.cc.o : ${srcroot}/lib/types/TypeContext.cc
+	echo "Compiling lib/types/TypeContext.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/types/TypeContext.cc.o.d ${srcroot}/lib/types/TypeContext.cc -o lib/types/TypeContext.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/types/TypeContext.cc.o.d ${srcroot}/lib/types/TypeContext.cc -o lib/types/TypeContext.cc.o
+-include lib/types/TypeContext.cc.o.d
+
+lib/types/TypeError.cc.o : ${srcroot}/lib/types/TypeError.cc
+	echo "Compiling lib/types/TypeError.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/types/TypeError.cc.o.d ${srcroot}/lib/types/TypeError.cc -o lib/types/TypeError.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/types/TypeError.cc.o.d ${srcroot}/lib/types/TypeError.cc -o lib/types/TypeError.cc.o
+-include lib/types/TypeError.cc.o.d
+
+lib/types/Typed.cc.o : ${srcroot}/lib/types/Typed.cc
+	echo "Compiling lib/types/Typed.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/types/Typed.cc.o.d ${srcroot}/lib/types/Typed.cc -o lib/types/Typed.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF lib/types/Typed.cc.o.d ${srcroot}/lib/types/Typed.cc -o lib/types/Typed.cc.o
+-include lib/types/Typed.cc.o.d
 
 Support/Bytestream.cc.o : ${srcroot}/Support/Bytestream.cc
 	echo "Compiling Support/Bytestream.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Support/Bytestream.cc.o.d ${srcroot}/Support/Bytestream.cc -o Support/Bytestream.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Support/Bytestream.cc.o.d ${srcroot}/Support/Bytestream.cc -o Support/Bytestream.cc.o
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF Support/Bytestream.cc.o.d ${srcroot}/Support/Bytestream.cc -o Support/Bytestream.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF Support/Bytestream.cc.o.d ${srcroot}/Support/Bytestream.cc -o Support/Bytestream.cc.o
 -include Support/Bytestream.cc.o.d
 
 Support/ErrorReport.cc.o : ${srcroot}/Support/ErrorReport.cc
 	echo "Compiling Support/ErrorReport.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Support/ErrorReport.cc.o.d ${srcroot}/Support/ErrorReport.cc -o Support/ErrorReport.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Support/ErrorReport.cc.o.d ${srcroot}/Support/ErrorReport.cc -o Support/ErrorReport.cc.o
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF Support/ErrorReport.cc.o.d ${srcroot}/Support/ErrorReport.cc -o Support/ErrorReport.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF Support/ErrorReport.cc.o.d ${srcroot}/Support/ErrorReport.cc -o Support/ErrorReport.cc.o
 -include Support/ErrorReport.cc.o.d
 
 Support/Join.cc.o : ${srcroot}/Support/Join.cc
 	echo "Compiling Support/Join.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Support/Join.cc.o.d ${srcroot}/Support/Join.cc -o Support/Join.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Support/Join.cc.o.d ${srcroot}/Support/Join.cc -o Support/Join.cc.o
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF Support/Join.cc.o.d ${srcroot}/Support/Join.cc -o Support/Join.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF Support/Join.cc.o.d ${srcroot}/Support/Join.cc -o Support/Join.cc.o
 -include Support/Join.cc.o.d
-
-Support/Printable.cc.o : ${srcroot}/Support/Printable.cc
-	echo "Compiling Support/Printable.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Support/Printable.cc.o.d ${srcroot}/Support/Printable.cc -o Support/Printable.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Support/Printable.cc.o.d ${srcroot}/Support/Printable.cc -o Support/Printable.cc.o
--include Support/Printable.cc.o.d
-
-Support/SharedLibrary.cc.o : ${srcroot}/Support/SharedLibrary.cc
-	echo "Compiling Support/SharedLibrary.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Support/SharedLibrary.cc.o.d ${srcroot}/Support/SharedLibrary.cc -o Support/SharedLibrary.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Support/SharedLibrary.cc.o.d ${srcroot}/Support/SharedLibrary.cc -o Support/SharedLibrary.cc.o
--include Support/SharedLibrary.cc.o.d
 
 Support/SourceLocation.cc.o : ${srcroot}/Support/SourceLocation.cc
 	echo "Compiling Support/SourceLocation.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Support/SourceLocation.cc.o.d ${srcroot}/Support/SourceLocation.cc -o Support/SourceLocation.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Support/SourceLocation.cc.o.d ${srcroot}/Support/SourceLocation.cc -o Support/SourceLocation.cc.o
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF Support/SourceLocation.cc.o.d ${srcroot}/Support/SourceLocation.cc -o Support/SourceLocation.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF Support/SourceLocation.cc.o.d ${srcroot}/Support/SourceLocation.cc -o Support/SourceLocation.cc.o
 -include Support/SourceLocation.cc.o.d
 
 Support/String.cc.o : ${srcroot}/Support/String.cc
 	echo "Compiling Support/String.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Support/String.cc.o.d ${srcroot}/Support/String.cc -o Support/String.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Support/String.cc.o.d ${srcroot}/Support/String.cc -o Support/String.cc.o
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF Support/String.cc.o.d ${srcroot}/Support/String.cc -o Support/String.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF Support/String.cc.o.d ${srcroot}/Support/String.cc -o Support/String.cc.o
 -include Support/String.cc.o.d
 
 Support/exceptions.cc.o : ${srcroot}/Support/exceptions.cc
 	echo "Compiling Support/exceptions.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Support/exceptions.cc.o.d ${srcroot}/Support/exceptions.cc -o Support/exceptions.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Support/exceptions.cc.o.d ${srcroot}/Support/exceptions.cc -o Support/exceptions.cc.o
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF Support/exceptions.cc.o.d ${srcroot}/Support/exceptions.cc -o Support/exceptions.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -fcolor-diagnostics -fPIC -MMD -MF Support/exceptions.cc.o.d ${srcroot}/Support/exceptions.cc -o Support/exceptions.cc.o
 -include Support/exceptions.cc.o.d
 
-Support/PosixError.cc.o : ${srcroot}/Support/PosixError.cc
-	echo "Compiling Support/PosixError.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Support/PosixError.cc.o.d ${srcroot}/Support/PosixError.cc -o Support/PosixError.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Support/PosixError.cc.o.d ${srcroot}/Support/PosixError.cc -o Support/PosixError.cc.o
--include Support/PosixError.cc.o.d
+vendor/antlr-cxx-runtime/Exceptions.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/Exceptions.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/Exceptions.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/Exceptions.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/Exceptions.cpp -o vendor/antlr-cxx-runtime/Exceptions.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/Exceptions.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/Exceptions.cpp -o vendor/antlr-cxx-runtime/Exceptions.cpp.o
+-include vendor/antlr-cxx-runtime/Exceptions.cpp.o.d
 
-Support/PosixSharedLibrary.cc.o : ${srcroot}/Support/PosixSharedLibrary.cc
-	echo "Compiling Support/PosixSharedLibrary.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Support/PosixSharedLibrary.cc.o.d ${srcroot}/Support/PosixSharedLibrary.cc -o Support/PosixSharedLibrary.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Support/PosixSharedLibrary.cc.o.d ${srcroot}/Support/PosixSharedLibrary.cc -o Support/PosixSharedLibrary.cc.o
--include Support/PosixSharedLibrary.cc.o.d
+vendor/antlr-cxx-runtime/misc/InterpreterDataReader.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/misc/InterpreterDataReader.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/misc/InterpreterDataReader.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/misc/InterpreterDataReader.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/misc/InterpreterDataReader.cpp -o vendor/antlr-cxx-runtime/misc/InterpreterDataReader.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/misc/InterpreterDataReader.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/misc/InterpreterDataReader.cpp -o vendor/antlr-cxx-runtime/misc/InterpreterDataReader.cpp.o
+-include vendor/antlr-cxx-runtime/misc/InterpreterDataReader.cpp.o.d
 
-Support/os-posix.cc.o : ${srcroot}/Support/os-posix.cc
-	echo "Compiling Support/os-posix.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Support/os-posix.cc.o.d ${srcroot}/Support/os-posix.cc -o Support/os-posix.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Support/os-posix.cc.o.d ${srcroot}/Support/os-posix.cc -o Support/os-posix.cc.o
--include Support/os-posix.cc.o.d
+vendor/antlr-cxx-runtime/misc/IntervalSet.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/misc/IntervalSet.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/misc/IntervalSet.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/misc/IntervalSet.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/misc/IntervalSet.cpp -o vendor/antlr-cxx-runtime/misc/IntervalSet.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/misc/IntervalSet.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/misc/IntervalSet.cpp -o vendor/antlr-cxx-runtime/misc/IntervalSet.cpp.o
+-include vendor/antlr-cxx-runtime/misc/IntervalSet.cpp.o.d
 
-Types/BooleanType.cc.o : ${srcroot}/Types/BooleanType.cc
-	echo "Compiling Types/BooleanType.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Types/BooleanType.cc.o.d ${srcroot}/Types/BooleanType.cc -o Types/BooleanType.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Types/BooleanType.cc.o.d ${srcroot}/Types/BooleanType.cc -o Types/BooleanType.cc.o
--include Types/BooleanType.cc.o.d
+vendor/antlr-cxx-runtime/misc/Predicate.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/misc/Predicate.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/misc/Predicate.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/misc/Predicate.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/misc/Predicate.cpp -o vendor/antlr-cxx-runtime/misc/Predicate.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/misc/Predicate.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/misc/Predicate.cpp -o vendor/antlr-cxx-runtime/misc/Predicate.cpp.o
+-include vendor/antlr-cxx-runtime/misc/Predicate.cpp.o.d
 
-Types/FileType.cc.o : ${srcroot}/Types/FileType.cc
-	echo "Compiling Types/FileType.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Types/FileType.cc.o.d ${srcroot}/Types/FileType.cc -o Types/FileType.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Types/FileType.cc.o.d ${srcroot}/Types/FileType.cc -o Types/FileType.cc.o
--include Types/FileType.cc.o.d
+vendor/antlr-cxx-runtime/misc/MurmurHash.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/misc/MurmurHash.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/misc/MurmurHash.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/misc/MurmurHash.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/misc/MurmurHash.cpp -o vendor/antlr-cxx-runtime/misc/MurmurHash.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/misc/MurmurHash.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/misc/MurmurHash.cpp -o vendor/antlr-cxx-runtime/misc/MurmurHash.cpp.o
+-include vendor/antlr-cxx-runtime/misc/MurmurHash.cpp.o.d
 
-Types/FunctionType.cc.o : ${srcroot}/Types/FunctionType.cc
-	echo "Compiling Types/FunctionType.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Types/FunctionType.cc.o.d ${srcroot}/Types/FunctionType.cc -o Types/FunctionType.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Types/FunctionType.cc.o.d ${srcroot}/Types/FunctionType.cc -o Types/FunctionType.cc.o
--include Types/FunctionType.cc.o.d
+vendor/antlr-cxx-runtime/misc/Interval.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/misc/Interval.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/misc/Interval.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/misc/Interval.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/misc/Interval.cpp -o vendor/antlr-cxx-runtime/misc/Interval.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/misc/Interval.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/misc/Interval.cpp -o vendor/antlr-cxx-runtime/misc/Interval.cpp.o
+-include vendor/antlr-cxx-runtime/misc/Interval.cpp.o.d
 
-Types/IntegerType.cc.o : ${srcroot}/Types/IntegerType.cc
-	echo "Compiling Types/IntegerType.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Types/IntegerType.cc.o.d ${srcroot}/Types/IntegerType.cc -o Types/IntegerType.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Types/IntegerType.cc.o.d ${srcroot}/Types/IntegerType.cc -o Types/IntegerType.cc.o
--include Types/IntegerType.cc.o.d
+vendor/antlr-cxx-runtime/tree/TerminalNodeImpl.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/tree/TerminalNodeImpl.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/tree/TerminalNodeImpl.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/TerminalNodeImpl.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/TerminalNodeImpl.cpp -o vendor/antlr-cxx-runtime/tree/TerminalNodeImpl.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/TerminalNodeImpl.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/TerminalNodeImpl.cpp -o vendor/antlr-cxx-runtime/tree/TerminalNodeImpl.cpp.o
+-include vendor/antlr-cxx-runtime/tree/TerminalNodeImpl.cpp.o.d
 
-Types/MaybeType.cc.o : ${srcroot}/Types/MaybeType.cc
-	echo "Compiling Types/MaybeType.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Types/MaybeType.cc.o.d ${srcroot}/Types/MaybeType.cc -o Types/MaybeType.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Types/MaybeType.cc.o.d ${srcroot}/Types/MaybeType.cc -o Types/MaybeType.cc.o
--include Types/MaybeType.cc.o.d
+vendor/antlr-cxx-runtime/tree/xpath/XPathLexerErrorListener.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathLexerErrorListener.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/tree/xpath/XPathLexerErrorListener.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/xpath/XPathLexerErrorListener.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathLexerErrorListener.cpp -o vendor/antlr-cxx-runtime/tree/xpath/XPathLexerErrorListener.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/xpath/XPathLexerErrorListener.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathLexerErrorListener.cpp -o vendor/antlr-cxx-runtime/tree/xpath/XPathLexerErrorListener.cpp.o
+-include vendor/antlr-cxx-runtime/tree/xpath/XPathLexerErrorListener.cpp.o.d
 
-Types/OptionallyTyped.cc.o : ${srcroot}/Types/OptionallyTyped.cc
-	echo "Compiling Types/OptionallyTyped.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Types/OptionallyTyped.cc.o.d ${srcroot}/Types/OptionallyTyped.cc -o Types/OptionallyTyped.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Types/OptionallyTyped.cc.o.d ${srcroot}/Types/OptionallyTyped.cc -o Types/OptionallyTyped.cc.o
--include Types/OptionallyTyped.cc.o.d
+vendor/antlr-cxx-runtime/tree/xpath/XPathRuleElement.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathRuleElement.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/tree/xpath/XPathRuleElement.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/xpath/XPathRuleElement.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathRuleElement.cpp -o vendor/antlr-cxx-runtime/tree/xpath/XPathRuleElement.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/xpath/XPathRuleElement.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathRuleElement.cpp -o vendor/antlr-cxx-runtime/tree/xpath/XPathRuleElement.cpp.o
+-include vendor/antlr-cxx-runtime/tree/xpath/XPathRuleElement.cpp.o.d
 
-Types/RecordType.cc.o : ${srcroot}/Types/RecordType.cc
-	echo "Compiling Types/RecordType.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Types/RecordType.cc.o.d ${srcroot}/Types/RecordType.cc -o Types/RecordType.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Types/RecordType.cc.o.d ${srcroot}/Types/RecordType.cc -o Types/RecordType.cc.o
--include Types/RecordType.cc.o.d
+vendor/antlr-cxx-runtime/tree/xpath/XPathElement.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathElement.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/tree/xpath/XPathElement.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/xpath/XPathElement.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathElement.cpp -o vendor/antlr-cxx-runtime/tree/xpath/XPathElement.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/xpath/XPathElement.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathElement.cpp -o vendor/antlr-cxx-runtime/tree/xpath/XPathElement.cpp.o
+-include vendor/antlr-cxx-runtime/tree/xpath/XPathElement.cpp.o.d
 
-Types/SequenceType.cc.o : ${srcroot}/Types/SequenceType.cc
-	echo "Compiling Types/SequenceType.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Types/SequenceType.cc.o.d ${srcroot}/Types/SequenceType.cc -o Types/SequenceType.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Types/SequenceType.cc.o.d ${srcroot}/Types/SequenceType.cc -o Types/SequenceType.cc.o
--include Types/SequenceType.cc.o.d
+vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardAnywhereElement.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardAnywhereElement.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardAnywhereElement.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardAnywhereElement.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardAnywhereElement.cpp -o vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardAnywhereElement.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardAnywhereElement.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardAnywhereElement.cpp -o vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardAnywhereElement.cpp.o
+-include vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardAnywhereElement.cpp.o.d
 
-Types/StringType.cc.o : ${srcroot}/Types/StringType.cc
-	echo "Compiling Types/StringType.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Types/StringType.cc.o.d ${srcroot}/Types/StringType.cc -o Types/StringType.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Types/StringType.cc.o.d ${srcroot}/Types/StringType.cc -o Types/StringType.cc.o
--include Types/StringType.cc.o.d
+vendor/antlr-cxx-runtime/tree/xpath/XPathRuleAnywhereElement.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathRuleAnywhereElement.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/tree/xpath/XPathRuleAnywhereElement.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/xpath/XPathRuleAnywhereElement.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathRuleAnywhereElement.cpp -o vendor/antlr-cxx-runtime/tree/xpath/XPathRuleAnywhereElement.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/xpath/XPathRuleAnywhereElement.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathRuleAnywhereElement.cpp -o vendor/antlr-cxx-runtime/tree/xpath/XPathRuleAnywhereElement.cpp.o
+-include vendor/antlr-cxx-runtime/tree/xpath/XPathRuleAnywhereElement.cpp.o.d
 
-Types/Type.cc.o : ${srcroot}/Types/Type.cc
-	echo "Compiling Types/Type.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Types/Type.cc.o.d ${srcroot}/Types/Type.cc -o Types/Type.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Types/Type.cc.o.d ${srcroot}/Types/Type.cc -o Types/Type.cc.o
--include Types/Type.cc.o.d
+vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardElement.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardElement.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardElement.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardElement.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardElement.cpp -o vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardElement.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardElement.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardElement.cpp -o vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardElement.cpp.o
+-include vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardElement.cpp.o.d
 
-Types/TypeContext.cc.o : ${srcroot}/Types/TypeContext.cc
-	echo "Compiling Types/TypeContext.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Types/TypeContext.cc.o.d ${srcroot}/Types/TypeContext.cc -o Types/TypeContext.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Types/TypeContext.cc.o.d ${srcroot}/Types/TypeContext.cc -o Types/TypeContext.cc.o
--include Types/TypeContext.cc.o.d
+vendor/antlr-cxx-runtime/tree/xpath/XPathLexer.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathLexer.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/tree/xpath/XPathLexer.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/xpath/XPathLexer.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathLexer.cpp -o vendor/antlr-cxx-runtime/tree/xpath/XPathLexer.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/xpath/XPathLexer.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathLexer.cpp -o vendor/antlr-cxx-runtime/tree/xpath/XPathLexer.cpp.o
+-include vendor/antlr-cxx-runtime/tree/xpath/XPathLexer.cpp.o.d
 
-Types/TypeError.cc.o : ${srcroot}/Types/TypeError.cc
-	echo "Compiling Types/TypeError.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Types/TypeError.cc.o.d ${srcroot}/Types/TypeError.cc -o Types/TypeError.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Types/TypeError.cc.o.d ${srcroot}/Types/TypeError.cc -o Types/TypeError.cc.o
--include Types/TypeError.cc.o.d
+vendor/antlr-cxx-runtime/tree/xpath/XPath.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPath.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/tree/xpath/XPath.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/xpath/XPath.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPath.cpp -o vendor/antlr-cxx-runtime/tree/xpath/XPath.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/xpath/XPath.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPath.cpp -o vendor/antlr-cxx-runtime/tree/xpath/XPath.cpp.o
+-include vendor/antlr-cxx-runtime/tree/xpath/XPath.cpp.o.d
 
-Types/Typed.cc.o : ${srcroot}/Types/Typed.cc
-	echo "Compiling Types/Typed.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Types/Typed.cc.o.d ${srcroot}/Types/Typed.cc -o Types/Typed.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Types/Typed.cc.o.d ${srcroot}/Types/Typed.cc -o Types/Typed.cc.o
--include Types/Typed.cc.o.d
+vendor/antlr-cxx-runtime/tree/xpath/XPathTokenAnywhereElement.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathTokenAnywhereElement.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/tree/xpath/XPathTokenAnywhereElement.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/xpath/XPathTokenAnywhereElement.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathTokenAnywhereElement.cpp -o vendor/antlr-cxx-runtime/tree/xpath/XPathTokenAnywhereElement.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/xpath/XPathTokenAnywhereElement.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathTokenAnywhereElement.cpp -o vendor/antlr-cxx-runtime/tree/xpath/XPathTokenAnywhereElement.cpp.o
+-include vendor/antlr-cxx-runtime/tree/xpath/XPathTokenAnywhereElement.cpp.o.d
 
-Types/UserType.cc.o : ${srcroot}/Types/UserType.cc
-	echo "Compiling Types/UserType.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Types/UserType.cc.o.d ${srcroot}/Types/UserType.cc -o Types/UserType.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -D OS_POSIX -D OS_DARWIN -O2 -D NDEBUG -I ${srcroot} -I ${buildroot} -isystem ${srcroot}/vendor -Weverything -Wno-overloaded-virtual -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -fcolor-diagnostics -fPIC -MMD -MF Types/UserType.cc.o.d ${srcroot}/Types/UserType.cc -o Types/UserType.cc.o
--include Types/UserType.cc.o.d
+vendor/antlr-cxx-runtime/tree/xpath/XPathTokenElement.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathTokenElement.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/tree/xpath/XPathTokenElement.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/xpath/XPathTokenElement.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathTokenElement.cpp -o vendor/antlr-cxx-runtime/tree/xpath/XPathTokenElement.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/xpath/XPathTokenElement.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/xpath/XPathTokenElement.cpp -o vendor/antlr-cxx-runtime/tree/xpath/XPathTokenElement.cpp.o
+-include vendor/antlr-cxx-runtime/tree/xpath/XPathTokenElement.cpp.o.d
+
+vendor/antlr-cxx-runtime/tree/ErrorNode.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/tree/ErrorNode.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/tree/ErrorNode.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/ErrorNode.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/ErrorNode.cpp -o vendor/antlr-cxx-runtime/tree/ErrorNode.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/ErrorNode.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/ErrorNode.cpp -o vendor/antlr-cxx-runtime/tree/ErrorNode.cpp.o
+-include vendor/antlr-cxx-runtime/tree/ErrorNode.cpp.o.d
+
+vendor/antlr-cxx-runtime/tree/Trees.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/tree/Trees.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/tree/Trees.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/Trees.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/Trees.cpp -o vendor/antlr-cxx-runtime/tree/Trees.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/Trees.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/Trees.cpp -o vendor/antlr-cxx-runtime/tree/Trees.cpp.o
+-include vendor/antlr-cxx-runtime/tree/Trees.cpp.o.d
+
+vendor/antlr-cxx-runtime/tree/ParseTreeListener.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/tree/ParseTreeListener.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/tree/ParseTreeListener.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/ParseTreeListener.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/ParseTreeListener.cpp -o vendor/antlr-cxx-runtime/tree/ParseTreeListener.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/ParseTreeListener.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/ParseTreeListener.cpp -o vendor/antlr-cxx-runtime/tree/ParseTreeListener.cpp.o
+-include vendor/antlr-cxx-runtime/tree/ParseTreeListener.cpp.o.d
+
+vendor/antlr-cxx-runtime/tree/ParseTree.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/tree/ParseTree.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/tree/ParseTree.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/ParseTree.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/ParseTree.cpp -o vendor/antlr-cxx-runtime/tree/ParseTree.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/ParseTree.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/ParseTree.cpp -o vendor/antlr-cxx-runtime/tree/ParseTree.cpp.o
+-include vendor/antlr-cxx-runtime/tree/ParseTree.cpp.o.d
+
+vendor/antlr-cxx-runtime/tree/ParseTreeVisitor.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/tree/ParseTreeVisitor.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/tree/ParseTreeVisitor.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/ParseTreeVisitor.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/ParseTreeVisitor.cpp -o vendor/antlr-cxx-runtime/tree/ParseTreeVisitor.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/ParseTreeVisitor.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/ParseTreeVisitor.cpp -o vendor/antlr-cxx-runtime/tree/ParseTreeVisitor.cpp.o
+-include vendor/antlr-cxx-runtime/tree/ParseTreeVisitor.cpp.o.d
+
+vendor/antlr-cxx-runtime/tree/ErrorNodeImpl.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/tree/ErrorNodeImpl.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/tree/ErrorNodeImpl.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/ErrorNodeImpl.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/ErrorNodeImpl.cpp -o vendor/antlr-cxx-runtime/tree/ErrorNodeImpl.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/ErrorNodeImpl.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/ErrorNodeImpl.cpp -o vendor/antlr-cxx-runtime/tree/ErrorNodeImpl.cpp.o
+-include vendor/antlr-cxx-runtime/tree/ErrorNodeImpl.cpp.o.d
+
+vendor/antlr-cxx-runtime/tree/ParseTreeWalker.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/tree/ParseTreeWalker.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/tree/ParseTreeWalker.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/ParseTreeWalker.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/ParseTreeWalker.cpp -o vendor/antlr-cxx-runtime/tree/ParseTreeWalker.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/ParseTreeWalker.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/ParseTreeWalker.cpp -o vendor/antlr-cxx-runtime/tree/ParseTreeWalker.cpp.o
+-include vendor/antlr-cxx-runtime/tree/ParseTreeWalker.cpp.o.d
+
+vendor/antlr-cxx-runtime/tree/IterativeParseTreeWalker.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/tree/IterativeParseTreeWalker.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/tree/IterativeParseTreeWalker.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/IterativeParseTreeWalker.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/IterativeParseTreeWalker.cpp -o vendor/antlr-cxx-runtime/tree/IterativeParseTreeWalker.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/IterativeParseTreeWalker.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/IterativeParseTreeWalker.cpp -o vendor/antlr-cxx-runtime/tree/IterativeParseTreeWalker.cpp.o
+-include vendor/antlr-cxx-runtime/tree/IterativeParseTreeWalker.cpp.o.d
+
+vendor/antlr-cxx-runtime/tree/TerminalNode.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/tree/TerminalNode.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/tree/TerminalNode.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/TerminalNode.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/TerminalNode.cpp -o vendor/antlr-cxx-runtime/tree/TerminalNode.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/TerminalNode.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/TerminalNode.cpp -o vendor/antlr-cxx-runtime/tree/TerminalNode.cpp.o
+-include vendor/antlr-cxx-runtime/tree/TerminalNode.cpp.o.d
+
+vendor/antlr-cxx-runtime/tree/pattern/RuleTagToken.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/RuleTagToken.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/tree/pattern/RuleTagToken.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/pattern/RuleTagToken.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/RuleTagToken.cpp -o vendor/antlr-cxx-runtime/tree/pattern/RuleTagToken.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/pattern/RuleTagToken.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/RuleTagToken.cpp -o vendor/antlr-cxx-runtime/tree/pattern/RuleTagToken.cpp.o
+-include vendor/antlr-cxx-runtime/tree/pattern/RuleTagToken.cpp.o.d
+
+vendor/antlr-cxx-runtime/tree/pattern/ParseTreeMatch.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/ParseTreeMatch.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/tree/pattern/ParseTreeMatch.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/pattern/ParseTreeMatch.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/ParseTreeMatch.cpp -o vendor/antlr-cxx-runtime/tree/pattern/ParseTreeMatch.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/pattern/ParseTreeMatch.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/ParseTreeMatch.cpp -o vendor/antlr-cxx-runtime/tree/pattern/ParseTreeMatch.cpp.o
+-include vendor/antlr-cxx-runtime/tree/pattern/ParseTreeMatch.cpp.o.d
+
+vendor/antlr-cxx-runtime/tree/pattern/TokenTagToken.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/TokenTagToken.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/tree/pattern/TokenTagToken.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/pattern/TokenTagToken.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/TokenTagToken.cpp -o vendor/antlr-cxx-runtime/tree/pattern/TokenTagToken.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/pattern/TokenTagToken.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/TokenTagToken.cpp -o vendor/antlr-cxx-runtime/tree/pattern/TokenTagToken.cpp.o
+-include vendor/antlr-cxx-runtime/tree/pattern/TokenTagToken.cpp.o.d
+
+vendor/antlr-cxx-runtime/tree/pattern/Chunk.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/Chunk.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/tree/pattern/Chunk.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/pattern/Chunk.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/Chunk.cpp -o vendor/antlr-cxx-runtime/tree/pattern/Chunk.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/pattern/Chunk.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/Chunk.cpp -o vendor/antlr-cxx-runtime/tree/pattern/Chunk.cpp.o
+-include vendor/antlr-cxx-runtime/tree/pattern/Chunk.cpp.o.d
+
+vendor/antlr-cxx-runtime/tree/pattern/ParseTreePatternMatcher.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/ParseTreePatternMatcher.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/tree/pattern/ParseTreePatternMatcher.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/pattern/ParseTreePatternMatcher.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/ParseTreePatternMatcher.cpp -o vendor/antlr-cxx-runtime/tree/pattern/ParseTreePatternMatcher.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/pattern/ParseTreePatternMatcher.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/ParseTreePatternMatcher.cpp -o vendor/antlr-cxx-runtime/tree/pattern/ParseTreePatternMatcher.cpp.o
+-include vendor/antlr-cxx-runtime/tree/pattern/ParseTreePatternMatcher.cpp.o.d
+
+vendor/antlr-cxx-runtime/tree/pattern/TextChunk.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/TextChunk.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/tree/pattern/TextChunk.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/pattern/TextChunk.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/TextChunk.cpp -o vendor/antlr-cxx-runtime/tree/pattern/TextChunk.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/pattern/TextChunk.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/TextChunk.cpp -o vendor/antlr-cxx-runtime/tree/pattern/TextChunk.cpp.o
+-include vendor/antlr-cxx-runtime/tree/pattern/TextChunk.cpp.o.d
+
+vendor/antlr-cxx-runtime/tree/pattern/TagChunk.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/TagChunk.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/tree/pattern/TagChunk.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/pattern/TagChunk.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/TagChunk.cpp -o vendor/antlr-cxx-runtime/tree/pattern/TagChunk.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/pattern/TagChunk.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/TagChunk.cpp -o vendor/antlr-cxx-runtime/tree/pattern/TagChunk.cpp.o
+-include vendor/antlr-cxx-runtime/tree/pattern/TagChunk.cpp.o.d
+
+vendor/antlr-cxx-runtime/tree/pattern/ParseTreePattern.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/ParseTreePattern.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/tree/pattern/ParseTreePattern.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/pattern/ParseTreePattern.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/ParseTreePattern.cpp -o vendor/antlr-cxx-runtime/tree/pattern/ParseTreePattern.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/tree/pattern/ParseTreePattern.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/tree/pattern/ParseTreePattern.cpp -o vendor/antlr-cxx-runtime/tree/pattern/ParseTreePattern.cpp.o
+-include vendor/antlr-cxx-runtime/tree/pattern/ParseTreePattern.cpp.o.d
+
+vendor/antlr-cxx-runtime/DiagnosticErrorListener.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/DiagnosticErrorListener.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/DiagnosticErrorListener.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/DiagnosticErrorListener.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/DiagnosticErrorListener.cpp -o vendor/antlr-cxx-runtime/DiagnosticErrorListener.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/DiagnosticErrorListener.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/DiagnosticErrorListener.cpp -o vendor/antlr-cxx-runtime/DiagnosticErrorListener.cpp.o
+-include vendor/antlr-cxx-runtime/DiagnosticErrorListener.cpp.o.d
+
+vendor/antlr-cxx-runtime/FailedPredicateException.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/FailedPredicateException.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/FailedPredicateException.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/FailedPredicateException.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/FailedPredicateException.cpp -o vendor/antlr-cxx-runtime/FailedPredicateException.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/FailedPredicateException.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/FailedPredicateException.cpp -o vendor/antlr-cxx-runtime/FailedPredicateException.cpp.o
+-include vendor/antlr-cxx-runtime/FailedPredicateException.cpp.o.d
+
+vendor/antlr-cxx-runtime/ConsoleErrorListener.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/ConsoleErrorListener.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/ConsoleErrorListener.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/ConsoleErrorListener.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/ConsoleErrorListener.cpp -o vendor/antlr-cxx-runtime/ConsoleErrorListener.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/ConsoleErrorListener.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/ConsoleErrorListener.cpp -o vendor/antlr-cxx-runtime/ConsoleErrorListener.cpp.o
+-include vendor/antlr-cxx-runtime/ConsoleErrorListener.cpp.o.d
+
+vendor/antlr-cxx-runtime/UnbufferedCharStream.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/UnbufferedCharStream.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/UnbufferedCharStream.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/UnbufferedCharStream.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/UnbufferedCharStream.cpp -o vendor/antlr-cxx-runtime/UnbufferedCharStream.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/UnbufferedCharStream.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/UnbufferedCharStream.cpp -o vendor/antlr-cxx-runtime/UnbufferedCharStream.cpp.o
+-include vendor/antlr-cxx-runtime/UnbufferedCharStream.cpp.o.d
+
+vendor/antlr-cxx-runtime/TokenStream.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/TokenStream.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/TokenStream.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/TokenStream.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/TokenStream.cpp -o vendor/antlr-cxx-runtime/TokenStream.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/TokenStream.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/TokenStream.cpp -o vendor/antlr-cxx-runtime/TokenStream.cpp.o
+-include vendor/antlr-cxx-runtime/TokenStream.cpp.o.d
+
+vendor/antlr-cxx-runtime/UnbufferedTokenStream.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/UnbufferedTokenStream.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/UnbufferedTokenStream.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/UnbufferedTokenStream.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/UnbufferedTokenStream.cpp -o vendor/antlr-cxx-runtime/UnbufferedTokenStream.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/UnbufferedTokenStream.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/UnbufferedTokenStream.cpp -o vendor/antlr-cxx-runtime/UnbufferedTokenStream.cpp.o
+-include vendor/antlr-cxx-runtime/UnbufferedTokenStream.cpp.o.d
+
+vendor/antlr-cxx-runtime/BaseErrorListener.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/BaseErrorListener.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/BaseErrorListener.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/BaseErrorListener.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/BaseErrorListener.cpp -o vendor/antlr-cxx-runtime/BaseErrorListener.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/BaseErrorListener.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/BaseErrorListener.cpp -o vendor/antlr-cxx-runtime/BaseErrorListener.cpp.o
+-include vendor/antlr-cxx-runtime/BaseErrorListener.cpp.o.d
+
+vendor/antlr-cxx-runtime/RuntimeMetaData.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/RuntimeMetaData.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/RuntimeMetaData.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/RuntimeMetaData.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/RuntimeMetaData.cpp -o vendor/antlr-cxx-runtime/RuntimeMetaData.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/RuntimeMetaData.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/RuntimeMetaData.cpp -o vendor/antlr-cxx-runtime/RuntimeMetaData.cpp.o
+-include vendor/antlr-cxx-runtime/RuntimeMetaData.cpp.o.d
+
+vendor/antlr-cxx-runtime/InputMismatchException.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/InputMismatchException.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/InputMismatchException.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/InputMismatchException.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/InputMismatchException.cpp -o vendor/antlr-cxx-runtime/InputMismatchException.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/InputMismatchException.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/InputMismatchException.cpp -o vendor/antlr-cxx-runtime/InputMismatchException.cpp.o
+-include vendor/antlr-cxx-runtime/InputMismatchException.cpp.o.d
+
+vendor/antlr-cxx-runtime/RuleContextWithAltNum.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/RuleContextWithAltNum.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/RuleContextWithAltNum.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/RuleContextWithAltNum.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/RuleContextWithAltNum.cpp -o vendor/antlr-cxx-runtime/RuleContextWithAltNum.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/RuleContextWithAltNum.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/RuleContextWithAltNum.cpp -o vendor/antlr-cxx-runtime/RuleContextWithAltNum.cpp.o
+-include vendor/antlr-cxx-runtime/RuleContextWithAltNum.cpp.o.d
+
+vendor/antlr-cxx-runtime/dfa/DFAState.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/dfa/DFAState.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/dfa/DFAState.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/dfa/DFAState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/dfa/DFAState.cpp -o vendor/antlr-cxx-runtime/dfa/DFAState.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/dfa/DFAState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/dfa/DFAState.cpp -o vendor/antlr-cxx-runtime/dfa/DFAState.cpp.o
+-include vendor/antlr-cxx-runtime/dfa/DFAState.cpp.o.d
+
+vendor/antlr-cxx-runtime/dfa/DFASerializer.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/dfa/DFASerializer.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/dfa/DFASerializer.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/dfa/DFASerializer.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/dfa/DFASerializer.cpp -o vendor/antlr-cxx-runtime/dfa/DFASerializer.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/dfa/DFASerializer.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/dfa/DFASerializer.cpp -o vendor/antlr-cxx-runtime/dfa/DFASerializer.cpp.o
+-include vendor/antlr-cxx-runtime/dfa/DFASerializer.cpp.o.d
+
+vendor/antlr-cxx-runtime/dfa/DFA.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/dfa/DFA.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/dfa/DFA.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/dfa/DFA.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/dfa/DFA.cpp -o vendor/antlr-cxx-runtime/dfa/DFA.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/dfa/DFA.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/dfa/DFA.cpp -o vendor/antlr-cxx-runtime/dfa/DFA.cpp.o
+-include vendor/antlr-cxx-runtime/dfa/DFA.cpp.o.d
+
+vendor/antlr-cxx-runtime/dfa/LexerDFASerializer.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/dfa/LexerDFASerializer.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/dfa/LexerDFASerializer.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/dfa/LexerDFASerializer.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/dfa/LexerDFASerializer.cpp -o vendor/antlr-cxx-runtime/dfa/LexerDFASerializer.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/dfa/LexerDFASerializer.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/dfa/LexerDFASerializer.cpp -o vendor/antlr-cxx-runtime/dfa/LexerDFASerializer.cpp.o
+-include vendor/antlr-cxx-runtime/dfa/LexerDFASerializer.cpp.o.d
+
+vendor/antlr-cxx-runtime/Vocabulary.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/Vocabulary.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/Vocabulary.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/Vocabulary.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/Vocabulary.cpp -o vendor/antlr-cxx-runtime/Vocabulary.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/Vocabulary.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/Vocabulary.cpp -o vendor/antlr-cxx-runtime/Vocabulary.cpp.o
+-include vendor/antlr-cxx-runtime/Vocabulary.cpp.o.d
+
+vendor/antlr-cxx-runtime/ListTokenSource.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/ListTokenSource.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/ListTokenSource.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/ListTokenSource.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/ListTokenSource.cpp -o vendor/antlr-cxx-runtime/ListTokenSource.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/ListTokenSource.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/ListTokenSource.cpp -o vendor/antlr-cxx-runtime/ListTokenSource.cpp.o
+-include vendor/antlr-cxx-runtime/ListTokenSource.cpp.o.d
+
+vendor/antlr-cxx-runtime/ANTLRErrorListener.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/ANTLRErrorListener.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/ANTLRErrorListener.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/ANTLRErrorListener.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/ANTLRErrorListener.cpp -o vendor/antlr-cxx-runtime/ANTLRErrorListener.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/ANTLRErrorListener.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/ANTLRErrorListener.cpp -o vendor/antlr-cxx-runtime/ANTLRErrorListener.cpp.o
+-include vendor/antlr-cxx-runtime/ANTLRErrorListener.cpp.o.d
+
+vendor/antlr-cxx-runtime/CommonTokenFactory.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/CommonTokenFactory.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/CommonTokenFactory.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/CommonTokenFactory.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/CommonTokenFactory.cpp -o vendor/antlr-cxx-runtime/CommonTokenFactory.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/CommonTokenFactory.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/CommonTokenFactory.cpp -o vendor/antlr-cxx-runtime/CommonTokenFactory.cpp.o
+-include vendor/antlr-cxx-runtime/CommonTokenFactory.cpp.o.d
+
+vendor/antlr-cxx-runtime/TokenStreamRewriter.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/TokenStreamRewriter.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/TokenStreamRewriter.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/TokenStreamRewriter.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/TokenStreamRewriter.cpp -o vendor/antlr-cxx-runtime/TokenStreamRewriter.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/TokenStreamRewriter.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/TokenStreamRewriter.cpp -o vendor/antlr-cxx-runtime/TokenStreamRewriter.cpp.o
+-include vendor/antlr-cxx-runtime/TokenStreamRewriter.cpp.o.d
+
+vendor/antlr-cxx-runtime/CharStream.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/CharStream.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/CharStream.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/CharStream.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/CharStream.cpp -o vendor/antlr-cxx-runtime/CharStream.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/CharStream.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/CharStream.cpp -o vendor/antlr-cxx-runtime/CharStream.cpp.o
+-include vendor/antlr-cxx-runtime/CharStream.cpp.o.d
+
+vendor/antlr-cxx-runtime/ANTLRFileStream.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/ANTLRFileStream.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/ANTLRFileStream.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/ANTLRFileStream.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/ANTLRFileStream.cpp -o vendor/antlr-cxx-runtime/ANTLRFileStream.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/ANTLRFileStream.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/ANTLRFileStream.cpp -o vendor/antlr-cxx-runtime/ANTLRFileStream.cpp.o
+-include vendor/antlr-cxx-runtime/ANTLRFileStream.cpp.o.d
+
+vendor/antlr-cxx-runtime/Lexer.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/Lexer.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/Lexer.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/Lexer.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/Lexer.cpp -o vendor/antlr-cxx-runtime/Lexer.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/Lexer.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/Lexer.cpp -o vendor/antlr-cxx-runtime/Lexer.cpp.o
+-include vendor/antlr-cxx-runtime/Lexer.cpp.o.d
+
+vendor/antlr-cxx-runtime/ProxyErrorListener.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/ProxyErrorListener.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/ProxyErrorListener.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/ProxyErrorListener.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/ProxyErrorListener.cpp -o vendor/antlr-cxx-runtime/ProxyErrorListener.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/ProxyErrorListener.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/ProxyErrorListener.cpp -o vendor/antlr-cxx-runtime/ProxyErrorListener.cpp.o
+-include vendor/antlr-cxx-runtime/ProxyErrorListener.cpp.o.d
+
+vendor/antlr-cxx-runtime/ANTLRErrorStrategy.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/ANTLRErrorStrategy.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/ANTLRErrorStrategy.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/ANTLRErrorStrategy.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/ANTLRErrorStrategy.cpp -o vendor/antlr-cxx-runtime/ANTLRErrorStrategy.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/ANTLRErrorStrategy.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/ANTLRErrorStrategy.cpp -o vendor/antlr-cxx-runtime/ANTLRErrorStrategy.cpp.o
+-include vendor/antlr-cxx-runtime/ANTLRErrorStrategy.cpp.o.d
+
+vendor/antlr-cxx-runtime/RuleContext.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/RuleContext.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/RuleContext.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/RuleContext.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/RuleContext.cpp -o vendor/antlr-cxx-runtime/RuleContext.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/RuleContext.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/RuleContext.cpp -o vendor/antlr-cxx-runtime/RuleContext.cpp.o
+-include vendor/antlr-cxx-runtime/RuleContext.cpp.o.d
+
+vendor/antlr-cxx-runtime/BufferedTokenStream.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/BufferedTokenStream.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/BufferedTokenStream.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/BufferedTokenStream.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/BufferedTokenStream.cpp -o vendor/antlr-cxx-runtime/BufferedTokenStream.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/BufferedTokenStream.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/BufferedTokenStream.cpp -o vendor/antlr-cxx-runtime/BufferedTokenStream.cpp.o
+-include vendor/antlr-cxx-runtime/BufferedTokenStream.cpp.o.d
+
+vendor/antlr-cxx-runtime/LexerInterpreter.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/LexerInterpreter.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/LexerInterpreter.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/LexerInterpreter.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/LexerInterpreter.cpp -o vendor/antlr-cxx-runtime/LexerInterpreter.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/LexerInterpreter.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/LexerInterpreter.cpp -o vendor/antlr-cxx-runtime/LexerInterpreter.cpp.o
+-include vendor/antlr-cxx-runtime/LexerInterpreter.cpp.o.d
+
+vendor/antlr-cxx-runtime/Recognizer.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/Recognizer.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/Recognizer.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/Recognizer.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/Recognizer.cpp -o vendor/antlr-cxx-runtime/Recognizer.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/Recognizer.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/Recognizer.cpp -o vendor/antlr-cxx-runtime/Recognizer.cpp.o
+-include vendor/antlr-cxx-runtime/Recognizer.cpp.o.d
+
+vendor/antlr-cxx-runtime/IntStream.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/IntStream.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/IntStream.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/IntStream.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/IntStream.cpp -o vendor/antlr-cxx-runtime/IntStream.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/IntStream.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/IntStream.cpp -o vendor/antlr-cxx-runtime/IntStream.cpp.o
+-include vendor/antlr-cxx-runtime/IntStream.cpp.o.d
+
+vendor/antlr-cxx-runtime/InterpreterRuleContext.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/InterpreterRuleContext.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/InterpreterRuleContext.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/InterpreterRuleContext.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/InterpreterRuleContext.cpp -o vendor/antlr-cxx-runtime/InterpreterRuleContext.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/InterpreterRuleContext.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/InterpreterRuleContext.cpp -o vendor/antlr-cxx-runtime/InterpreterRuleContext.cpp.o
+-include vendor/antlr-cxx-runtime/InterpreterRuleContext.cpp.o.d
+
+vendor/antlr-cxx-runtime/ParserInterpreter.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/ParserInterpreter.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/ParserInterpreter.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/ParserInterpreter.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/ParserInterpreter.cpp -o vendor/antlr-cxx-runtime/ParserInterpreter.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/ParserInterpreter.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/ParserInterpreter.cpp -o vendor/antlr-cxx-runtime/ParserInterpreter.cpp.o
+-include vendor/antlr-cxx-runtime/ParserInterpreter.cpp.o.d
+
+vendor/antlr-cxx-runtime/TokenSource.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/TokenSource.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/TokenSource.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/TokenSource.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/TokenSource.cpp -o vendor/antlr-cxx-runtime/TokenSource.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/TokenSource.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/TokenSource.cpp -o vendor/antlr-cxx-runtime/TokenSource.cpp.o
+-include vendor/antlr-cxx-runtime/TokenSource.cpp.o.d
+
+vendor/antlr-cxx-runtime/support/CPPUtils.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/support/CPPUtils.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/support/CPPUtils.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/support/CPPUtils.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/support/CPPUtils.cpp -o vendor/antlr-cxx-runtime/support/CPPUtils.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/support/CPPUtils.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/support/CPPUtils.cpp -o vendor/antlr-cxx-runtime/support/CPPUtils.cpp.o
+-include vendor/antlr-cxx-runtime/support/CPPUtils.cpp.o.d
+
+vendor/antlr-cxx-runtime/support/Any.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/support/Any.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/support/Any.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/support/Any.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/support/Any.cpp -o vendor/antlr-cxx-runtime/support/Any.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/support/Any.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/support/Any.cpp -o vendor/antlr-cxx-runtime/support/Any.cpp.o
+-include vendor/antlr-cxx-runtime/support/Any.cpp.o.d
+
+vendor/antlr-cxx-runtime/support/StringUtils.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/support/StringUtils.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/support/StringUtils.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/support/StringUtils.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/support/StringUtils.cpp -o vendor/antlr-cxx-runtime/support/StringUtils.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/support/StringUtils.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/support/StringUtils.cpp -o vendor/antlr-cxx-runtime/support/StringUtils.cpp.o
+-include vendor/antlr-cxx-runtime/support/StringUtils.cpp.o.d
+
+vendor/antlr-cxx-runtime/support/Arrays.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/support/Arrays.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/support/Arrays.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/support/Arrays.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/support/Arrays.cpp -o vendor/antlr-cxx-runtime/support/Arrays.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/support/Arrays.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/support/Arrays.cpp -o vendor/antlr-cxx-runtime/support/Arrays.cpp.o
+-include vendor/antlr-cxx-runtime/support/Arrays.cpp.o.d
+
+vendor/antlr-cxx-runtime/support/guid.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/support/guid.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/support/guid.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/support/guid.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/support/guid.cpp -o vendor/antlr-cxx-runtime/support/guid.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/support/guid.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/support/guid.cpp -o vendor/antlr-cxx-runtime/support/guid.cpp.o
+-include vendor/antlr-cxx-runtime/support/guid.cpp.o.d
+
+vendor/antlr-cxx-runtime/BailErrorStrategy.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/BailErrorStrategy.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/BailErrorStrategy.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/BailErrorStrategy.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/BailErrorStrategy.cpp -o vendor/antlr-cxx-runtime/BailErrorStrategy.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/BailErrorStrategy.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/BailErrorStrategy.cpp -o vendor/antlr-cxx-runtime/BailErrorStrategy.cpp.o
+-include vendor/antlr-cxx-runtime/BailErrorStrategy.cpp.o.d
+
+vendor/antlr-cxx-runtime/CommonTokenStream.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/CommonTokenStream.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/CommonTokenStream.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/CommonTokenStream.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/CommonTokenStream.cpp -o vendor/antlr-cxx-runtime/CommonTokenStream.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/CommonTokenStream.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/CommonTokenStream.cpp -o vendor/antlr-cxx-runtime/CommonTokenStream.cpp.o
+-include vendor/antlr-cxx-runtime/CommonTokenStream.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/BlockStartState.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/BlockStartState.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/BlockStartState.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/BlockStartState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/BlockStartState.cpp -o vendor/antlr-cxx-runtime/atn/BlockStartState.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/BlockStartState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/BlockStartState.cpp -o vendor/antlr-cxx-runtime/atn/BlockStartState.cpp.o
+-include vendor/antlr-cxx-runtime/atn/BlockStartState.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/StarBlockStartState.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/StarBlockStartState.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/StarBlockStartState.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/StarBlockStartState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/StarBlockStartState.cpp -o vendor/antlr-cxx-runtime/atn/StarBlockStartState.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/StarBlockStartState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/StarBlockStartState.cpp -o vendor/antlr-cxx-runtime/atn/StarBlockStartState.cpp.o
+-include vendor/antlr-cxx-runtime/atn/StarBlockStartState.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/BlockEndState.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/BlockEndState.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/BlockEndState.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/BlockEndState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/BlockEndState.cpp -o vendor/antlr-cxx-runtime/atn/BlockEndState.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/BlockEndState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/BlockEndState.cpp -o vendor/antlr-cxx-runtime/atn/BlockEndState.cpp.o
+-include vendor/antlr-cxx-runtime/atn/BlockEndState.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/Transition.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/Transition.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/Transition.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/Transition.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/Transition.cpp -o vendor/antlr-cxx-runtime/atn/Transition.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/Transition.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/Transition.cpp -o vendor/antlr-cxx-runtime/atn/Transition.cpp.o
+-include vendor/antlr-cxx-runtime/atn/Transition.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/EmptyPredictionContext.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/EmptyPredictionContext.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/EmptyPredictionContext.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/EmptyPredictionContext.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/EmptyPredictionContext.cpp -o vendor/antlr-cxx-runtime/atn/EmptyPredictionContext.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/EmptyPredictionContext.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/EmptyPredictionContext.cpp -o vendor/antlr-cxx-runtime/atn/EmptyPredictionContext.cpp.o
+-include vendor/antlr-cxx-runtime/atn/EmptyPredictionContext.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/ParseInfo.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/ParseInfo.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/ParseInfo.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/ParseInfo.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/ParseInfo.cpp -o vendor/antlr-cxx-runtime/atn/ParseInfo.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/ParseInfo.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/ParseInfo.cpp -o vendor/antlr-cxx-runtime/atn/ParseInfo.cpp.o
+-include vendor/antlr-cxx-runtime/atn/ParseInfo.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/ATNConfig.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/ATNConfig.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/ATNConfig.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/ATNConfig.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/ATNConfig.cpp -o vendor/antlr-cxx-runtime/atn/ATNConfig.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/ATNConfig.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/ATNConfig.cpp -o vendor/antlr-cxx-runtime/atn/ATNConfig.cpp.o
+-include vendor/antlr-cxx-runtime/atn/ATNConfig.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/LexerTypeAction.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerTypeAction.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/LexerTypeAction.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LexerTypeAction.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerTypeAction.cpp -o vendor/antlr-cxx-runtime/atn/LexerTypeAction.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LexerTypeAction.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerTypeAction.cpp -o vendor/antlr-cxx-runtime/atn/LexerTypeAction.cpp.o
+-include vendor/antlr-cxx-runtime/atn/LexerTypeAction.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/AtomTransition.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/AtomTransition.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/AtomTransition.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/AtomTransition.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/AtomTransition.cpp -o vendor/antlr-cxx-runtime/atn/AtomTransition.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/AtomTransition.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/AtomTransition.cpp -o vendor/antlr-cxx-runtime/atn/AtomTransition.cpp.o
+-include vendor/antlr-cxx-runtime/atn/AtomTransition.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/AmbiguityInfo.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/AmbiguityInfo.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/AmbiguityInfo.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/AmbiguityInfo.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/AmbiguityInfo.cpp -o vendor/antlr-cxx-runtime/atn/AmbiguityInfo.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/AmbiguityInfo.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/AmbiguityInfo.cpp -o vendor/antlr-cxx-runtime/atn/AmbiguityInfo.cpp.o
+-include vendor/antlr-cxx-runtime/atn/AmbiguityInfo.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/ATNSimulator.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/ATNSimulator.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/ATNSimulator.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/ATNSimulator.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/ATNSimulator.cpp -o vendor/antlr-cxx-runtime/atn/ATNSimulator.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/ATNSimulator.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/ATNSimulator.cpp -o vendor/antlr-cxx-runtime/atn/ATNSimulator.cpp.o
+-include vendor/antlr-cxx-runtime/atn/ATNSimulator.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/LexerIndexedCustomAction.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerIndexedCustomAction.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/LexerIndexedCustomAction.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LexerIndexedCustomAction.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerIndexedCustomAction.cpp -o vendor/antlr-cxx-runtime/atn/LexerIndexedCustomAction.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LexerIndexedCustomAction.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerIndexedCustomAction.cpp -o vendor/antlr-cxx-runtime/atn/LexerIndexedCustomAction.cpp.o
+-include vendor/antlr-cxx-runtime/atn/LexerIndexedCustomAction.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/RuleTransition.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/RuleTransition.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/RuleTransition.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/RuleTransition.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/RuleTransition.cpp -o vendor/antlr-cxx-runtime/atn/RuleTransition.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/RuleTransition.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/RuleTransition.cpp -o vendor/antlr-cxx-runtime/atn/RuleTransition.cpp.o
+-include vendor/antlr-cxx-runtime/atn/RuleTransition.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/TokensStartState.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/TokensStartState.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/TokensStartState.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/TokensStartState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/TokensStartState.cpp -o vendor/antlr-cxx-runtime/atn/TokensStartState.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/TokensStartState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/TokensStartState.cpp -o vendor/antlr-cxx-runtime/atn/TokensStartState.cpp.o
+-include vendor/antlr-cxx-runtime/atn/TokensStartState.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/PredicateTransition.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/PredicateTransition.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/PredicateTransition.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/PredicateTransition.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/PredicateTransition.cpp -o vendor/antlr-cxx-runtime/atn/PredicateTransition.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/PredicateTransition.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/PredicateTransition.cpp -o vendor/antlr-cxx-runtime/atn/PredicateTransition.cpp.o
+-include vendor/antlr-cxx-runtime/atn/PredicateTransition.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/SingletonPredictionContext.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/SingletonPredictionContext.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/SingletonPredictionContext.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/SingletonPredictionContext.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/SingletonPredictionContext.cpp -o vendor/antlr-cxx-runtime/atn/SingletonPredictionContext.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/SingletonPredictionContext.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/SingletonPredictionContext.cpp -o vendor/antlr-cxx-runtime/atn/SingletonPredictionContext.cpp.o
+-include vendor/antlr-cxx-runtime/atn/SingletonPredictionContext.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/LexerMoreAction.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerMoreAction.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/LexerMoreAction.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LexerMoreAction.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerMoreAction.cpp -o vendor/antlr-cxx-runtime/atn/LexerMoreAction.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LexerMoreAction.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerMoreAction.cpp -o vendor/antlr-cxx-runtime/atn/LexerMoreAction.cpp.o
+-include vendor/antlr-cxx-runtime/atn/LexerMoreAction.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/ATNDeserializationOptions.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/ATNDeserializationOptions.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/ATNDeserializationOptions.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/ATNDeserializationOptions.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/ATNDeserializationOptions.cpp -o vendor/antlr-cxx-runtime/atn/ATNDeserializationOptions.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/ATNDeserializationOptions.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/ATNDeserializationOptions.cpp -o vendor/antlr-cxx-runtime/atn/ATNDeserializationOptions.cpp.o
+-include vendor/antlr-cxx-runtime/atn/ATNDeserializationOptions.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/LoopEndState.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/LoopEndState.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/LoopEndState.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LoopEndState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LoopEndState.cpp -o vendor/antlr-cxx-runtime/atn/LoopEndState.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LoopEndState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LoopEndState.cpp -o vendor/antlr-cxx-runtime/atn/LoopEndState.cpp.o
+-include vendor/antlr-cxx-runtime/atn/LoopEndState.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/LexerActionExecutor.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerActionExecutor.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/LexerActionExecutor.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LexerActionExecutor.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerActionExecutor.cpp -o vendor/antlr-cxx-runtime/atn/LexerActionExecutor.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LexerActionExecutor.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerActionExecutor.cpp -o vendor/antlr-cxx-runtime/atn/LexerActionExecutor.cpp.o
+-include vendor/antlr-cxx-runtime/atn/LexerActionExecutor.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/LexerATNSimulator.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerATNSimulator.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/LexerATNSimulator.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LexerATNSimulator.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerATNSimulator.cpp -o vendor/antlr-cxx-runtime/atn/LexerATNSimulator.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LexerATNSimulator.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerATNSimulator.cpp -o vendor/antlr-cxx-runtime/atn/LexerATNSimulator.cpp.o
+-include vendor/antlr-cxx-runtime/atn/LexerATNSimulator.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/SetTransition.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/SetTransition.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/SetTransition.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/SetTransition.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/SetTransition.cpp -o vendor/antlr-cxx-runtime/atn/SetTransition.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/SetTransition.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/SetTransition.cpp -o vendor/antlr-cxx-runtime/atn/SetTransition.cpp.o
+-include vendor/antlr-cxx-runtime/atn/SetTransition.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/LexerModeAction.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerModeAction.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/LexerModeAction.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LexerModeAction.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerModeAction.cpp -o vendor/antlr-cxx-runtime/atn/LexerModeAction.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LexerModeAction.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerModeAction.cpp -o vendor/antlr-cxx-runtime/atn/LexerModeAction.cpp.o
+-include vendor/antlr-cxx-runtime/atn/LexerModeAction.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/NotSetTransition.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/NotSetTransition.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/NotSetTransition.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/NotSetTransition.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/NotSetTransition.cpp -o vendor/antlr-cxx-runtime/atn/NotSetTransition.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/NotSetTransition.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/NotSetTransition.cpp -o vendor/antlr-cxx-runtime/atn/NotSetTransition.cpp.o
+-include vendor/antlr-cxx-runtime/atn/NotSetTransition.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/ProfilingATNSimulator.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/ProfilingATNSimulator.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/ProfilingATNSimulator.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/ProfilingATNSimulator.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/ProfilingATNSimulator.cpp -o vendor/antlr-cxx-runtime/atn/ProfilingATNSimulator.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/ProfilingATNSimulator.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/ProfilingATNSimulator.cpp -o vendor/antlr-cxx-runtime/atn/ProfilingATNSimulator.cpp.o
+-include vendor/antlr-cxx-runtime/atn/ProfilingATNSimulator.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/LexerATNConfig.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerATNConfig.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/LexerATNConfig.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LexerATNConfig.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerATNConfig.cpp -o vendor/antlr-cxx-runtime/atn/LexerATNConfig.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LexerATNConfig.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerATNConfig.cpp -o vendor/antlr-cxx-runtime/atn/LexerATNConfig.cpp.o
+-include vendor/antlr-cxx-runtime/atn/LexerATNConfig.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/DecisionInfo.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/DecisionInfo.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/DecisionInfo.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/DecisionInfo.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/DecisionInfo.cpp -o vendor/antlr-cxx-runtime/atn/DecisionInfo.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/DecisionInfo.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/DecisionInfo.cpp -o vendor/antlr-cxx-runtime/atn/DecisionInfo.cpp.o
+-include vendor/antlr-cxx-runtime/atn/DecisionInfo.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/ATNState.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/ATNState.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/ATNState.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/ATNState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/ATNState.cpp -o vendor/antlr-cxx-runtime/atn/ATNState.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/ATNState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/ATNState.cpp -o vendor/antlr-cxx-runtime/atn/ATNState.cpp.o
+-include vendor/antlr-cxx-runtime/atn/ATNState.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/ATNSerializer.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/ATNSerializer.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/ATNSerializer.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/ATNSerializer.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/ATNSerializer.cpp -o vendor/antlr-cxx-runtime/atn/ATNSerializer.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/ATNSerializer.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/ATNSerializer.cpp -o vendor/antlr-cxx-runtime/atn/ATNSerializer.cpp.o
+-include vendor/antlr-cxx-runtime/atn/ATNSerializer.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/ArrayPredictionContext.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/ArrayPredictionContext.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/ArrayPredictionContext.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/ArrayPredictionContext.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/ArrayPredictionContext.cpp -o vendor/antlr-cxx-runtime/atn/ArrayPredictionContext.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/ArrayPredictionContext.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/ArrayPredictionContext.cpp -o vendor/antlr-cxx-runtime/atn/ArrayPredictionContext.cpp.o
+-include vendor/antlr-cxx-runtime/atn/ArrayPredictionContext.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/PredictionMode.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/PredictionMode.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/PredictionMode.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/PredictionMode.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/PredictionMode.cpp -o vendor/antlr-cxx-runtime/atn/PredictionMode.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/PredictionMode.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/PredictionMode.cpp -o vendor/antlr-cxx-runtime/atn/PredictionMode.cpp.o
+-include vendor/antlr-cxx-runtime/atn/PredictionMode.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/LookaheadEventInfo.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/LookaheadEventInfo.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/LookaheadEventInfo.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LookaheadEventInfo.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LookaheadEventInfo.cpp -o vendor/antlr-cxx-runtime/atn/LookaheadEventInfo.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LookaheadEventInfo.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LookaheadEventInfo.cpp -o vendor/antlr-cxx-runtime/atn/LookaheadEventInfo.cpp.o
+-include vendor/antlr-cxx-runtime/atn/LookaheadEventInfo.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/ATN.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/ATN.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/ATN.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/ATN.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/ATN.cpp -o vendor/antlr-cxx-runtime/atn/ATN.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/ATN.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/ATN.cpp -o vendor/antlr-cxx-runtime/atn/ATN.cpp.o
+-include vendor/antlr-cxx-runtime/atn/ATN.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/SemanticContext.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/SemanticContext.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/SemanticContext.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/SemanticContext.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/SemanticContext.cpp -o vendor/antlr-cxx-runtime/atn/SemanticContext.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/SemanticContext.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/SemanticContext.cpp -o vendor/antlr-cxx-runtime/atn/SemanticContext.cpp.o
+-include vendor/antlr-cxx-runtime/atn/SemanticContext.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/RuleStopState.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/RuleStopState.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/RuleStopState.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/RuleStopState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/RuleStopState.cpp -o vendor/antlr-cxx-runtime/atn/RuleStopState.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/RuleStopState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/RuleStopState.cpp -o vendor/antlr-cxx-runtime/atn/RuleStopState.cpp.o
+-include vendor/antlr-cxx-runtime/atn/RuleStopState.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/OrderedATNConfigSet.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/OrderedATNConfigSet.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/OrderedATNConfigSet.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/OrderedATNConfigSet.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/OrderedATNConfigSet.cpp -o vendor/antlr-cxx-runtime/atn/OrderedATNConfigSet.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/OrderedATNConfigSet.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/OrderedATNConfigSet.cpp -o vendor/antlr-cxx-runtime/atn/OrderedATNConfigSet.cpp.o
+-include vendor/antlr-cxx-runtime/atn/OrderedATNConfigSet.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/RangeTransition.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/RangeTransition.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/RangeTransition.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/RangeTransition.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/RangeTransition.cpp -o vendor/antlr-cxx-runtime/atn/RangeTransition.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/RangeTransition.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/RangeTransition.cpp -o vendor/antlr-cxx-runtime/atn/RangeTransition.cpp.o
+-include vendor/antlr-cxx-runtime/atn/RangeTransition.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/ATNDeserializer.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/ATNDeserializer.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/ATNDeserializer.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/ATNDeserializer.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/ATNDeserializer.cpp -o vendor/antlr-cxx-runtime/atn/ATNDeserializer.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/ATNDeserializer.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/ATNDeserializer.cpp -o vendor/antlr-cxx-runtime/atn/ATNDeserializer.cpp.o
+-include vendor/antlr-cxx-runtime/atn/ATNDeserializer.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/PlusBlockStartState.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/PlusBlockStartState.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/PlusBlockStartState.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/PlusBlockStartState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/PlusBlockStartState.cpp -o vendor/antlr-cxx-runtime/atn/PlusBlockStartState.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/PlusBlockStartState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/PlusBlockStartState.cpp -o vendor/antlr-cxx-runtime/atn/PlusBlockStartState.cpp.o
+-include vendor/antlr-cxx-runtime/atn/PlusBlockStartState.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/WildcardTransition.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/WildcardTransition.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/WildcardTransition.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/WildcardTransition.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/WildcardTransition.cpp -o vendor/antlr-cxx-runtime/atn/WildcardTransition.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/WildcardTransition.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/WildcardTransition.cpp -o vendor/antlr-cxx-runtime/atn/WildcardTransition.cpp.o
+-include vendor/antlr-cxx-runtime/atn/WildcardTransition.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/ActionTransition.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/ActionTransition.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/ActionTransition.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/ActionTransition.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/ActionTransition.cpp -o vendor/antlr-cxx-runtime/atn/ActionTransition.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/ActionTransition.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/ActionTransition.cpp -o vendor/antlr-cxx-runtime/atn/ActionTransition.cpp.o
+-include vendor/antlr-cxx-runtime/atn/ActionTransition.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/ParserATNSimulator.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/ParserATNSimulator.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/ParserATNSimulator.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/ParserATNSimulator.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/ParserATNSimulator.cpp -o vendor/antlr-cxx-runtime/atn/ParserATNSimulator.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/ParserATNSimulator.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/ParserATNSimulator.cpp -o vendor/antlr-cxx-runtime/atn/ParserATNSimulator.cpp.o
+-include vendor/antlr-cxx-runtime/atn/ParserATNSimulator.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/DecisionState.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/DecisionState.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/DecisionState.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/DecisionState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/DecisionState.cpp -o vendor/antlr-cxx-runtime/atn/DecisionState.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/DecisionState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/DecisionState.cpp -o vendor/antlr-cxx-runtime/atn/DecisionState.cpp.o
+-include vendor/antlr-cxx-runtime/atn/DecisionState.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/RuleStartState.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/RuleStartState.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/RuleStartState.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/RuleStartState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/RuleStartState.cpp -o vendor/antlr-cxx-runtime/atn/RuleStartState.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/RuleStartState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/RuleStartState.cpp -o vendor/antlr-cxx-runtime/atn/RuleStartState.cpp.o
+-include vendor/antlr-cxx-runtime/atn/RuleStartState.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/ErrorInfo.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/ErrorInfo.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/ErrorInfo.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/ErrorInfo.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/ErrorInfo.cpp -o vendor/antlr-cxx-runtime/atn/ErrorInfo.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/ErrorInfo.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/ErrorInfo.cpp -o vendor/antlr-cxx-runtime/atn/ErrorInfo.cpp.o
+-include vendor/antlr-cxx-runtime/atn/ErrorInfo.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/StarLoopbackState.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/StarLoopbackState.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/StarLoopbackState.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/StarLoopbackState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/StarLoopbackState.cpp -o vendor/antlr-cxx-runtime/atn/StarLoopbackState.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/StarLoopbackState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/StarLoopbackState.cpp -o vendor/antlr-cxx-runtime/atn/StarLoopbackState.cpp.o
+-include vendor/antlr-cxx-runtime/atn/StarLoopbackState.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/BasicState.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/BasicState.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/BasicState.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/BasicState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/BasicState.cpp -o vendor/antlr-cxx-runtime/atn/BasicState.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/BasicState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/BasicState.cpp -o vendor/antlr-cxx-runtime/atn/BasicState.cpp.o
+-include vendor/antlr-cxx-runtime/atn/BasicState.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/AbstractPredicateTransition.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/AbstractPredicateTransition.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/AbstractPredicateTransition.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/AbstractPredicateTransition.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/AbstractPredicateTransition.cpp -o vendor/antlr-cxx-runtime/atn/AbstractPredicateTransition.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/AbstractPredicateTransition.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/AbstractPredicateTransition.cpp -o vendor/antlr-cxx-runtime/atn/AbstractPredicateTransition.cpp.o
+-include vendor/antlr-cxx-runtime/atn/AbstractPredicateTransition.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/PredictionContext.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/PredictionContext.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/PredictionContext.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/PredictionContext.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/PredictionContext.cpp -o vendor/antlr-cxx-runtime/atn/PredictionContext.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/PredictionContext.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/PredictionContext.cpp -o vendor/antlr-cxx-runtime/atn/PredictionContext.cpp.o
+-include vendor/antlr-cxx-runtime/atn/PredictionContext.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/LexerAction.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerAction.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/LexerAction.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LexerAction.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerAction.cpp -o vendor/antlr-cxx-runtime/atn/LexerAction.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LexerAction.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerAction.cpp -o vendor/antlr-cxx-runtime/atn/LexerAction.cpp.o
+-include vendor/antlr-cxx-runtime/atn/LexerAction.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/LL1Analyzer.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/LL1Analyzer.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/LL1Analyzer.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LL1Analyzer.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LL1Analyzer.cpp -o vendor/antlr-cxx-runtime/atn/LL1Analyzer.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LL1Analyzer.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LL1Analyzer.cpp -o vendor/antlr-cxx-runtime/atn/LL1Analyzer.cpp.o
+-include vendor/antlr-cxx-runtime/atn/LL1Analyzer.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/EpsilonTransition.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/EpsilonTransition.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/EpsilonTransition.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/EpsilonTransition.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/EpsilonTransition.cpp -o vendor/antlr-cxx-runtime/atn/EpsilonTransition.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/EpsilonTransition.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/EpsilonTransition.cpp -o vendor/antlr-cxx-runtime/atn/EpsilonTransition.cpp.o
+-include vendor/antlr-cxx-runtime/atn/EpsilonTransition.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/LexerCustomAction.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerCustomAction.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/LexerCustomAction.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LexerCustomAction.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerCustomAction.cpp -o vendor/antlr-cxx-runtime/atn/LexerCustomAction.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LexerCustomAction.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerCustomAction.cpp -o vendor/antlr-cxx-runtime/atn/LexerCustomAction.cpp.o
+-include vendor/antlr-cxx-runtime/atn/LexerCustomAction.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/PrecedencePredicateTransition.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/PrecedencePredicateTransition.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/PrecedencePredicateTransition.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/PrecedencePredicateTransition.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/PrecedencePredicateTransition.cpp -o vendor/antlr-cxx-runtime/atn/PrecedencePredicateTransition.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/PrecedencePredicateTransition.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/PrecedencePredicateTransition.cpp -o vendor/antlr-cxx-runtime/atn/PrecedencePredicateTransition.cpp.o
+-include vendor/antlr-cxx-runtime/atn/PrecedencePredicateTransition.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/PlusLoopbackState.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/PlusLoopbackState.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/PlusLoopbackState.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/PlusLoopbackState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/PlusLoopbackState.cpp -o vendor/antlr-cxx-runtime/atn/PlusLoopbackState.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/PlusLoopbackState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/PlusLoopbackState.cpp -o vendor/antlr-cxx-runtime/atn/PlusLoopbackState.cpp.o
+-include vendor/antlr-cxx-runtime/atn/PlusLoopbackState.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/LexerPopModeAction.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerPopModeAction.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/LexerPopModeAction.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LexerPopModeAction.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerPopModeAction.cpp -o vendor/antlr-cxx-runtime/atn/LexerPopModeAction.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LexerPopModeAction.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerPopModeAction.cpp -o vendor/antlr-cxx-runtime/atn/LexerPopModeAction.cpp.o
+-include vendor/antlr-cxx-runtime/atn/LexerPopModeAction.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/PredicateEvalInfo.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/PredicateEvalInfo.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/PredicateEvalInfo.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/PredicateEvalInfo.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/PredicateEvalInfo.cpp -o vendor/antlr-cxx-runtime/atn/PredicateEvalInfo.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/PredicateEvalInfo.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/PredicateEvalInfo.cpp -o vendor/antlr-cxx-runtime/atn/PredicateEvalInfo.cpp.o
+-include vendor/antlr-cxx-runtime/atn/PredicateEvalInfo.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/LexerSkipAction.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerSkipAction.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/LexerSkipAction.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LexerSkipAction.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerSkipAction.cpp -o vendor/antlr-cxx-runtime/atn/LexerSkipAction.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LexerSkipAction.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerSkipAction.cpp -o vendor/antlr-cxx-runtime/atn/LexerSkipAction.cpp.o
+-include vendor/antlr-cxx-runtime/atn/LexerSkipAction.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/ContextSensitivityInfo.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/ContextSensitivityInfo.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/ContextSensitivityInfo.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/ContextSensitivityInfo.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/ContextSensitivityInfo.cpp -o vendor/antlr-cxx-runtime/atn/ContextSensitivityInfo.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/ContextSensitivityInfo.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/ContextSensitivityInfo.cpp -o vendor/antlr-cxx-runtime/atn/ContextSensitivityInfo.cpp.o
+-include vendor/antlr-cxx-runtime/atn/ContextSensitivityInfo.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/ATNConfigSet.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/ATNConfigSet.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/ATNConfigSet.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/ATNConfigSet.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/ATNConfigSet.cpp -o vendor/antlr-cxx-runtime/atn/ATNConfigSet.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/ATNConfigSet.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/ATNConfigSet.cpp -o vendor/antlr-cxx-runtime/atn/ATNConfigSet.cpp.o
+-include vendor/antlr-cxx-runtime/atn/ATNConfigSet.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/LexerChannelAction.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerChannelAction.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/LexerChannelAction.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LexerChannelAction.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerChannelAction.cpp -o vendor/antlr-cxx-runtime/atn/LexerChannelAction.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LexerChannelAction.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerChannelAction.cpp -o vendor/antlr-cxx-runtime/atn/LexerChannelAction.cpp.o
+-include vendor/antlr-cxx-runtime/atn/LexerChannelAction.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/BasicBlockStartState.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/BasicBlockStartState.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/BasicBlockStartState.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/BasicBlockStartState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/BasicBlockStartState.cpp -o vendor/antlr-cxx-runtime/atn/BasicBlockStartState.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/BasicBlockStartState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/BasicBlockStartState.cpp -o vendor/antlr-cxx-runtime/atn/BasicBlockStartState.cpp.o
+-include vendor/antlr-cxx-runtime/atn/BasicBlockStartState.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/DecisionEventInfo.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/DecisionEventInfo.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/DecisionEventInfo.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/DecisionEventInfo.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/DecisionEventInfo.cpp -o vendor/antlr-cxx-runtime/atn/DecisionEventInfo.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/DecisionEventInfo.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/DecisionEventInfo.cpp -o vendor/antlr-cxx-runtime/atn/DecisionEventInfo.cpp.o
+-include vendor/antlr-cxx-runtime/atn/DecisionEventInfo.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/LexerPushModeAction.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerPushModeAction.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/LexerPushModeAction.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LexerPushModeAction.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerPushModeAction.cpp -o vendor/antlr-cxx-runtime/atn/LexerPushModeAction.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/LexerPushModeAction.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/LexerPushModeAction.cpp -o vendor/antlr-cxx-runtime/atn/LexerPushModeAction.cpp.o
+-include vendor/antlr-cxx-runtime/atn/LexerPushModeAction.cpp.o.d
+
+vendor/antlr-cxx-runtime/atn/StarLoopEntryState.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/atn/StarLoopEntryState.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/atn/StarLoopEntryState.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/StarLoopEntryState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/StarLoopEntryState.cpp -o vendor/antlr-cxx-runtime/atn/StarLoopEntryState.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/atn/StarLoopEntryState.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/atn/StarLoopEntryState.cpp -o vendor/antlr-cxx-runtime/atn/StarLoopEntryState.cpp.o
+-include vendor/antlr-cxx-runtime/atn/StarLoopEntryState.cpp.o.d
+
+vendor/antlr-cxx-runtime/DefaultErrorStrategy.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/DefaultErrorStrategy.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/DefaultErrorStrategy.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/DefaultErrorStrategy.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/DefaultErrorStrategy.cpp -o vendor/antlr-cxx-runtime/DefaultErrorStrategy.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/DefaultErrorStrategy.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/DefaultErrorStrategy.cpp -o vendor/antlr-cxx-runtime/DefaultErrorStrategy.cpp.o
+-include vendor/antlr-cxx-runtime/DefaultErrorStrategy.cpp.o.d
+
+vendor/antlr-cxx-runtime/CommonToken.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/CommonToken.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/CommonToken.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/CommonToken.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/CommonToken.cpp -o vendor/antlr-cxx-runtime/CommonToken.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/CommonToken.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/CommonToken.cpp -o vendor/antlr-cxx-runtime/CommonToken.cpp.o
+-include vendor/antlr-cxx-runtime/CommonToken.cpp.o.d
+
+vendor/antlr-cxx-runtime/NoViableAltException.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/NoViableAltException.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/NoViableAltException.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/NoViableAltException.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/NoViableAltException.cpp -o vendor/antlr-cxx-runtime/NoViableAltException.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/NoViableAltException.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/NoViableAltException.cpp -o vendor/antlr-cxx-runtime/NoViableAltException.cpp.o
+-include vendor/antlr-cxx-runtime/NoViableAltException.cpp.o.d
+
+vendor/antlr-cxx-runtime/ParserRuleContext.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/ParserRuleContext.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/ParserRuleContext.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/ParserRuleContext.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/ParserRuleContext.cpp -o vendor/antlr-cxx-runtime/ParserRuleContext.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/ParserRuleContext.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/ParserRuleContext.cpp -o vendor/antlr-cxx-runtime/ParserRuleContext.cpp.o
+-include vendor/antlr-cxx-runtime/ParserRuleContext.cpp.o.d
+
+vendor/antlr-cxx-runtime/RecognitionException.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/RecognitionException.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/RecognitionException.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/RecognitionException.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/RecognitionException.cpp -o vendor/antlr-cxx-runtime/RecognitionException.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/RecognitionException.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/RecognitionException.cpp -o vendor/antlr-cxx-runtime/RecognitionException.cpp.o
+-include vendor/antlr-cxx-runtime/RecognitionException.cpp.o.d
+
+vendor/antlr-cxx-runtime/Parser.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/Parser.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/Parser.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/Parser.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/Parser.cpp -o vendor/antlr-cxx-runtime/Parser.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/Parser.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/Parser.cpp -o vendor/antlr-cxx-runtime/Parser.cpp.o
+-include vendor/antlr-cxx-runtime/Parser.cpp.o.d
+
+vendor/antlr-cxx-runtime/ANTLRInputStream.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/ANTLRInputStream.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/ANTLRInputStream.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/ANTLRInputStream.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/ANTLRInputStream.cpp -o vendor/antlr-cxx-runtime/ANTLRInputStream.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/ANTLRInputStream.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/ANTLRInputStream.cpp -o vendor/antlr-cxx-runtime/ANTLRInputStream.cpp.o
+-include vendor/antlr-cxx-runtime/ANTLRInputStream.cpp.o.d
+
+vendor/antlr-cxx-runtime/Token.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/Token.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/Token.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/Token.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/Token.cpp -o vendor/antlr-cxx-runtime/Token.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/Token.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/Token.cpp -o vendor/antlr-cxx-runtime/Token.cpp.o
+-include vendor/antlr-cxx-runtime/Token.cpp.o.d
+
+vendor/antlr-cxx-runtime/LexerNoViableAltException.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/LexerNoViableAltException.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/LexerNoViableAltException.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/LexerNoViableAltException.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/LexerNoViableAltException.cpp -o vendor/antlr-cxx-runtime/LexerNoViableAltException.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/LexerNoViableAltException.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/LexerNoViableAltException.cpp -o vendor/antlr-cxx-runtime/LexerNoViableAltException.cpp.o
+-include vendor/antlr-cxx-runtime/LexerNoViableAltException.cpp.o.d
+
+vendor/antlr-cxx-runtime/WritableToken.cpp.o : ${srcroot}/vendor/antlr-cxx-runtime/WritableToken.cpp
+	echo "Compiling vendor/antlr-cxx-runtime/WritableToken.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/WritableToken.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/WritableToken.cpp -o vendor/antlr-cxx-runtime/WritableToken.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/antlr-cxx-runtime/WritableToken.cpp.o.d ${srcroot}/vendor/antlr-cxx-runtime/WritableToken.cpp -o vendor/antlr-cxx-runtime/WritableToken.cpp.o
+-include vendor/antlr-cxx-runtime/WritableToken.cpp.o.d
+
+vendor/generated-grammar/FabLexer.cpp.o : ${srcroot}/vendor/generated-grammar/FabLexer.cpp
+	echo "Compiling vendor/generated-grammar/FabLexer.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/generated-grammar/FabLexer.cpp.o.d ${srcroot}/vendor/generated-grammar/FabLexer.cpp -o vendor/generated-grammar/FabLexer.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/generated-grammar/FabLexer.cpp.o.d ${srcroot}/vendor/generated-grammar/FabLexer.cpp -o vendor/generated-grammar/FabLexer.cpp.o
+-include vendor/generated-grammar/FabLexer.cpp.o.d
+
+vendor/generated-grammar/FabParser.cpp.o : ${srcroot}/vendor/generated-grammar/FabParser.cpp
+	echo "Compiling vendor/generated-grammar/FabParser.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/generated-grammar/FabParser.cpp.o.d ${srcroot}/vendor/generated-grammar/FabParser.cpp -o vendor/generated-grammar/FabParser.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/generated-grammar/FabParser.cpp.o.d ${srcroot}/vendor/generated-grammar/FabParser.cpp -o vendor/generated-grammar/FabParser.cpp.o
+-include vendor/generated-grammar/FabParser.cpp.o.d
+
+vendor/generated-grammar/FabParserBaseVisitor.cpp.o : ${srcroot}/vendor/generated-grammar/FabParserBaseVisitor.cpp
+	echo "Compiling vendor/generated-grammar/FabParserBaseVisitor.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/generated-grammar/FabParserBaseVisitor.cpp.o.d ${srcroot}/vendor/generated-grammar/FabParserBaseVisitor.cpp -o vendor/generated-grammar/FabParserBaseVisitor.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/generated-grammar/FabParserBaseVisitor.cpp.o.d ${srcroot}/vendor/generated-grammar/FabParserBaseVisitor.cpp -o vendor/generated-grammar/FabParserBaseVisitor.cpp.o
+-include vendor/generated-grammar/FabParserBaseVisitor.cpp.o.d
+
+vendor/generated-grammar/FabParserVisitor.cpp.o : ${srcroot}/vendor/generated-grammar/FabParserVisitor.cpp
+	echo "Compiling vendor/generated-grammar/FabParserVisitor.cpp.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/generated-grammar/FabParserVisitor.cpp.o.d ${srcroot}/vendor/generated-grammar/FabParserVisitor.cpp -o vendor/generated-grammar/FabParserVisitor.cpp.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Wno-deprecated-register -D YYDEBUG -fcolor-diagnostics -fPIC -MMD -MF vendor/generated-grammar/FabParserVisitor.cpp.o.d ${srcroot}/vendor/generated-grammar/FabParserVisitor.cpp -o vendor/generated-grammar/FabParserVisitor.cpp.o
+-include vendor/generated-grammar/FabParserVisitor.cpp.o.d
+
+base-plugins/LogPlugin.cc.o : ${srcroot}/base-plugins/LogPlugin.cc
+	echo "Compiling base-plugins/LogPlugin.cc.o"
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -Wno-global-constructors -Wno-exit-time-destructors -fcolor-diagnostics -fPIC -MMD -MF base-plugins/LogPlugin.cc.o.d ${srcroot}/base-plugins/LogPlugin.cc -o base-plugins/LogPlugin.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -Wno-global-constructors -Wno-exit-time-destructors -fcolor-diagnostics -fPIC -MMD -MF base-plugins/LogPlugin.cc.o.d ${srcroot}/base-plugins/LogPlugin.cc -o base-plugins/LogPlugin.cc.o
+-include base-plugins/LogPlugin.cc.o.d
+
+base-pluginsliblog.so : base-plugins/LogPlugin.cc.o
+	echo "Linking base-pluginsliblog.so"
+	echo "/usr/bin/c++ -shared -o base-pluginsliblog.so -g -O0 -rdynamic -fcolor-diagnostics -fPIC -rdynamic base-plugins/LogPlugin.cc.o" >> build.log
+	/usr/bin/c++ -shared -o base-pluginsliblog.so -g -O0 -rdynamic -fcolor-diagnostics -fPIC -rdynamic base-plugins/LogPlugin.cc.o
 
 base-plugins/PlatformTests.cc.o : ${srcroot}/base-plugins/PlatformTests.cc
 	echo "Compiling base-plugins/PlatformTests.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -I ${srcroot} -Wall -D OS_POSIX -fcolor-diagnostics -fPIC -MMD -MF base-plugins/PlatformTests.cc.o.d ${srcroot}/base-plugins/PlatformTests.cc -o base-plugins/PlatformTests.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -I ${srcroot} -Wall -D OS_POSIX -fcolor-diagnostics -fPIC -MMD -MF base-plugins/PlatformTests.cc.o.d ${srcroot}/base-plugins/PlatformTests.cc -o base-plugins/PlatformTests.cc.o
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -Wno-global-constructors -Wno-exit-time-destructors -fcolor-diagnostics -fPIC -MMD -MF base-plugins/PlatformTests.cc.o.d ${srcroot}/base-plugins/PlatformTests.cc -o base-plugins/PlatformTests.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -Wno-global-constructors -Wno-exit-time-destructors -fcolor-diagnostics -fPIC -MMD -MF base-plugins/PlatformTests.cc.o.d ${srcroot}/base-plugins/PlatformTests.cc -o base-plugins/PlatformTests.cc.o
 -include base-plugins/PlatformTests.cc.o.d
 
-base-plugins/libplatform-tests.dylib : base-plugins/PlatformTests.cc.o
-	echo "Linking base-plugins/libplatform-tests.dylib"
-	echo "/usr/bin/c++ -shared -o base-plugins/libplatform-tests.dylib -fcolor-diagnostics -fPIC -Wl,-undefined -Wl,dynamic_lookup base-plugins/PlatformTests.cc.o" >> build.log
-	/usr/bin/c++ -shared -o base-plugins/libplatform-tests.dylib -fcolor-diagnostics -fPIC -Wl,-undefined -Wl,dynamic_lookup base-plugins/PlatformTests.cc.o
+base-pluginslibplatform-tests.so : base-plugins/PlatformTests.cc.o
+	echo "Linking base-pluginslibplatform-tests.so"
+	echo "/usr/bin/c++ -shared -o base-pluginslibplatform-tests.so -g -O0 -rdynamic -fcolor-diagnostics -fPIC -rdynamic base-plugins/PlatformTests.cc.o" >> build.log
+	/usr/bin/c++ -shared -o base-pluginslibplatform-tests.so -g -O0 -rdynamic -fcolor-diagnostics -fPIC -rdynamic base-plugins/PlatformTests.cc.o
 
 base-plugins/SysctlPlugin.cc.o : ${srcroot}/base-plugins/SysctlPlugin.cc
 	echo "Compiling base-plugins/SysctlPlugin.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -I ${srcroot} -Wall -D OS_POSIX -fcolor-diagnostics -fPIC -MMD -MF base-plugins/SysctlPlugin.cc.o.d ${srcroot}/base-plugins/SysctlPlugin.cc -o base-plugins/SysctlPlugin.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -I ${srcroot} -Wall -D OS_POSIX -fcolor-diagnostics -fPIC -MMD -MF base-plugins/SysctlPlugin.cc.o.d ${srcroot}/base-plugins/SysctlPlugin.cc -o base-plugins/SysctlPlugin.cc.o
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -Wno-global-constructors -Wno-exit-time-destructors -fcolor-diagnostics -fPIC -MMD -MF base-plugins/SysctlPlugin.cc.o.d ${srcroot}/base-plugins/SysctlPlugin.cc -o base-plugins/SysctlPlugin.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -Wno-global-constructors -Wno-exit-time-destructors -fcolor-diagnostics -fPIC -MMD -MF base-plugins/SysctlPlugin.cc.o.d ${srcroot}/base-plugins/SysctlPlugin.cc -o base-plugins/SysctlPlugin.cc.o
 -include base-plugins/SysctlPlugin.cc.o.d
 
-base-plugins/libsysctl.dylib : base-plugins/SysctlPlugin.cc.o
-	echo "Linking base-plugins/libsysctl.dylib"
-	echo "/usr/bin/c++ -shared -o base-plugins/libsysctl.dylib -fcolor-diagnostics -fPIC -Wl,-undefined -Wl,dynamic_lookup base-plugins/SysctlPlugin.cc.o" >> build.log
-	/usr/bin/c++ -shared -o base-plugins/libsysctl.dylib -fcolor-diagnostics -fPIC -Wl,-undefined -Wl,dynamic_lookup base-plugins/SysctlPlugin.cc.o
+base-pluginslibsysctl.so : base-plugins/SysctlPlugin.cc.o
+	echo "Linking base-pluginslibsysctl.so"
+	echo "/usr/bin/c++ -shared -o base-pluginslibsysctl.so -g -O0 -rdynamic -fcolor-diagnostics -fPIC -rdynamic base-plugins/SysctlPlugin.cc.o" >> build.log
+	/usr/bin/c++ -shared -o base-pluginslibsysctl.so -g -O0 -rdynamic -fcolor-diagnostics -fPIC -rdynamic base-plugins/SysctlPlugin.cc.o
 
 base-plugins/Which.cc.o : ${srcroot}/base-plugins/Which.cc
 	echo "Compiling base-plugins/Which.cc.o"
-	echo "/usr/bin/c++ -c -std=c++11 -I ${srcroot} -Wall -D OS_POSIX -fcolor-diagnostics -fPIC -MMD -MF base-plugins/Which.cc.o.d ${srcroot}/base-plugins/Which.cc -o base-plugins/Which.cc.o" >> build.log
-	/usr/bin/c++ -c -std=c++11 -I ${srcroot} -Wall -D OS_POSIX -fcolor-diagnostics -fPIC -MMD -MF base-plugins/Which.cc.o.d ${srcroot}/base-plugins/Which.cc -o base-plugins/Which.cc.o
+	echo "/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -Wno-global-constructors -Wno-exit-time-destructors -fcolor-diagnostics -fPIC -MMD -MF base-plugins/Which.cc.o.d ${srcroot}/base-plugins/Which.cc -o base-plugins/Which.cc.o" >> build.log
+	/usr/bin/c++ -c -std=c++14 -D OS_POSIX -g -O0  -I ${srcroot} -I ${srcroot}/include -isystem ${srcroot}/vendor -isystem ${srcroot}/vendor/antlr-cxx-runtime -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-vla -Wno-vla-extension -Wno-global-constructors -Wno-exit-time-destructors -fcolor-diagnostics -fPIC -MMD -MF base-plugins/Which.cc.o.d ${srcroot}/base-plugins/Which.cc -o base-plugins/Which.cc.o
 -include base-plugins/Which.cc.o.d
 
-base-plugins/libwhich.dylib : base-plugins/Which.cc.o
-	echo "Linking base-plugins/libwhich.dylib"
-	echo "/usr/bin/c++ -shared -o base-plugins/libwhich.dylib -fcolor-diagnostics -fPIC -Wl,-undefined -Wl,dynamic_lookup base-plugins/Which.cc.o" >> build.log
-	/usr/bin/c++ -shared -o base-plugins/libwhich.dylib -fcolor-diagnostics -fPIC -Wl,-undefined -Wl,dynamic_lookup base-plugins/Which.cc.o
+base-pluginslibwhich.so : base-plugins/Which.cc.o
+	echo "Linking base-pluginslibwhich.so"
+	echo "/usr/bin/c++ -shared -o base-pluginslibwhich.so -g -O0 -rdynamic -fcolor-diagnostics -fPIC -rdynamic base-plugins/Which.cc.o" >> build.log
+	/usr/bin/c++ -shared -o base-pluginslibwhich.so -g -O0 -rdynamic -fcolor-diagnostics -fPIC -rdynamic base-plugins/Which.cc.o
 
-lib/fabrique/libplatform-tests.dylib : base-plugins/libplatform-tests.dylib
-	echo "cp base-plugins/libplatform-tests.dylib lib/fabrique/libplatform-tests.dylib"
-	echo "cp base-plugins/libplatform-tests.dylib lib/fabrique/libplatform-tests.dylib" >> build.log
-	cp base-plugins/libplatform-tests.dylib lib/fabrique/libplatform-tests.dylib
+lib/fabriquebase-pluginsliblog.so : base-pluginsliblog.so
+	echo "cp base-pluginsliblog.so lib/fabriquebase-pluginsliblog.so"
+	echo "cp base-pluginsliblog.so lib/fabriquebase-pluginsliblog.so" >> build.log
+	cp base-pluginsliblog.so lib/fabriquebase-pluginsliblog.so
 
-lib/fabrique/libsysctl.dylib : base-plugins/libsysctl.dylib
-	echo "cp base-plugins/libsysctl.dylib lib/fabrique/libsysctl.dylib"
-	echo "cp base-plugins/libsysctl.dylib lib/fabrique/libsysctl.dylib" >> build.log
-	cp base-plugins/libsysctl.dylib lib/fabrique/libsysctl.dylib
+lib/fabriquebase-pluginslibplatform-tests.so : base-pluginslibplatform-tests.so
+	echo "cp base-pluginslibplatform-tests.so lib/fabriquebase-pluginslibplatform-tests.so"
+	echo "cp base-pluginslibplatform-tests.so lib/fabriquebase-pluginslibplatform-tests.so" >> build.log
+	cp base-pluginslibplatform-tests.so lib/fabriquebase-pluginslibplatform-tests.so
 
-lib/fabrique/libwhich.dylib : base-plugins/libwhich.dylib
-	echo "cp base-plugins/libwhich.dylib lib/fabrique/libwhich.dylib"
-	echo "cp base-plugins/libwhich.dylib lib/fabrique/libwhich.dylib" >> build.log
-	cp base-plugins/libwhich.dylib lib/fabrique/libwhich.dylib
+lib/fabriquebase-pluginslibsysctl.so : base-pluginslibsysctl.so
+	echo "cp base-pluginslibsysctl.so lib/fabriquebase-pluginslibsysctl.so"
+	echo "cp base-pluginslibsysctl.so lib/fabriquebase-pluginslibsysctl.so" >> build.log
+	cp base-pluginslibsysctl.so lib/fabriquebase-pluginslibsysctl.so
 
-bin/fab : Parsing/fab.lex.cc.o Parsing/fab.yacc.cc.o driver.cc.o AST/Action.cc.o AST/Argument.cc.o AST/ASTDump.cc.o AST/BinaryOperation.cc.o AST/Call.cc.o AST/CompoundExpr.cc.o AST/Conditional.cc.o AST/DebugTracePoint.cc.o AST/EvalContext.cc.o AST/Expression.cc.o AST/FieldAccess.cc.o AST/FieldQuery.cc.o AST/Filename.cc.o AST/FileList.cc.o AST/Foreach.cc.o AST/Function.cc.o AST/HasParameters.cc.o AST/HasScope.cc.o AST/Identifier.cc.o AST/Import.cc.o AST/List.cc.o AST/Mapping.cc.o AST/Node.cc.o AST/Parameter.cc.o AST/Record.cc.o AST/Scope.cc.o AST/SomeValue.cc.o AST/SymbolReference.cc.o AST/TypeDeclaration.cc.o AST/UnaryOperation.cc.o AST/Value.cc.o AST/Visitor.cc.o AST/literals.cc.o Backend/Backend.cc.o Backend/Dot.cc.o Backend/Make.cc.o Backend/Ninja.cc.o Backend/Null.cc.o DAG/Build.cc.o DAG/Callable.cc.o DAG/DAG.cc.o DAG/DAGBuilder.cc.o DAG/File.cc.o DAG/Formatter.cc.o DAG/Function.cc.o DAG/List.cc.o DAG/Parameter.cc.o DAG/Primitive.cc.o DAG/Record.cc.o DAG/Rule.cc.o DAG/TypeReference.cc.o DAG/UndefinedValueException.cc.o DAG/Value.cc.o DAG/Visitor.cc.o Parsing/Lexer.cc.o Parsing/Parser.cc.o Parsing/Token.cc.o Plugin/Loader.cc.o Plugin/Plugin.cc.o Plugin/Registry.cc.o Support/Arguments.cc.o Support/Bytestream.cc.o Support/ErrorReport.cc.o Support/Join.cc.o Support/Printable.cc.o Support/SharedLibrary.cc.o Support/SourceLocation.cc.o Support/String.cc.o Support/exceptions.cc.o Support/PosixError.cc.o Support/PosixSharedLibrary.cc.o Support/os-posix.cc.o Types/BooleanType.cc.o Types/FileType.cc.o Types/FunctionType.cc.o Types/IntegerType.cc.o Types/MaybeType.cc.o Types/OptionallyTyped.cc.o Types/RecordType.cc.o Types/SequenceType.cc.o Types/StringType.cc.o Types/Type.cc.o Types/TypeContext.cc.o Types/TypeError.cc.o Types/Typed.cc.o Types/UserType.cc.o
+lib/fabriquebase-pluginslibwhich.so : base-pluginslibwhich.so
+	echo "cp base-pluginslibwhich.so lib/fabriquebase-pluginslibwhich.so"
+	echo "cp base-pluginslibwhich.so lib/fabriquebase-pluginslibwhich.so" >> build.log
+	cp base-pluginslibwhich.so lib/fabriquebase-pluginslibwhich.so
+
+bin/fab : bin/CLIArguments.cc.o bin/fab.cc.o lib/Printable.cc.o lib/builtins.cc.o lib/names.cc.o lib/ast/Action.cc.o lib/ast/Argument.cc.o lib/ast/Arguments.cc.o lib/ast/ASTDump.cc.o lib/ast/BinaryOperation.cc.o lib/ast/Call.cc.o lib/ast/CompoundExpr.cc.o lib/ast/Conditional.cc.o lib/ast/DebugTracePoint.cc.o lib/ast/EvalContext.cc.o lib/ast/Expression.cc.o lib/ast/FieldAccess.cc.o lib/ast/FieldQuery.cc.o lib/ast/FilenameLiteral.cc.o lib/ast/FileList.cc.o lib/ast/Foreach.cc.o lib/ast/Function.cc.o lib/ast/HasParameters.cc.o lib/ast/Identifier.cc.o lib/ast/List.cc.o lib/ast/NameReference.cc.o lib/ast/Node.cc.o lib/ast/Parameter.cc.o lib/ast/Record.cc.o lib/ast/TypeDeclaration.cc.o lib/ast/TypeReference.cc.o lib/ast/UnaryOperation.cc.o lib/ast/Value.cc.o lib/ast/Visitor.cc.o lib/ast/literals.cc.o lib/backend/Backend.cc.o lib/backend/Dot.cc.o lib/backend/Make.cc.o lib/backend/Ninja.cc.o lib/backend/Null.cc.o lib/dag/Build.cc.o lib/dag/Callable.cc.o lib/dag/DAG.cc.o lib/dag/DAGBuilder.cc.o lib/dag/File.cc.o lib/dag/Formatter.cc.o lib/dag/Function.cc.o lib/dag/List.cc.o lib/dag/Parameter.cc.o lib/dag/Primitive.cc.o lib/dag/Record.cc.o lib/dag/Rule.cc.o lib/dag/TypeReference.cc.o lib/dag/UndefinedValueException.cc.o lib/dag/Value.cc.o lib/dag/Visitor.cc.o lib/parsing/ASTBuilder.cc.o lib/parsing/ErrorListener.cc.o lib/parsing/ErrorReporter.cc.o lib/parsing/Parser.cc.o lib/parsing/Token.cc.o lib/platform/ABI.cc.o lib/platform/SharedLibrary.cc.o lib/platform/posix/PosixError.cc.o lib/platform/posix/PosixSharedLibrary.cc.o lib/platform/posix/files.cc.o lib/plugin/Loader.cc.o lib/plugin/Plugin.cc.o lib/plugin/Registry.cc.o lib/types/BooleanType.cc.o lib/types/FileType.cc.o lib/types/FunctionType.cc.o lib/types/IntegerType.cc.o lib/types/RecordType.cc.o lib/types/SequenceType.cc.o lib/types/StringType.cc.o lib/types/Type.cc.o lib/types/TypeContext.cc.o lib/types/TypeError.cc.o lib/types/Typed.cc.o Support/Bytestream.cc.o Support/ErrorReport.cc.o Support/Join.cc.o Support/SourceLocation.cc.o Support/String.cc.o Support/exceptions.cc.o vendor/antlr-cxx-runtime/Exceptions.cpp.o vendor/antlr-cxx-runtime/misc/InterpreterDataReader.cpp.o vendor/antlr-cxx-runtime/misc/IntervalSet.cpp.o vendor/antlr-cxx-runtime/misc/Predicate.cpp.o vendor/antlr-cxx-runtime/misc/MurmurHash.cpp.o vendor/antlr-cxx-runtime/misc/Interval.cpp.o vendor/antlr-cxx-runtime/tree/TerminalNodeImpl.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathLexerErrorListener.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathRuleElement.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathElement.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardAnywhereElement.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathRuleAnywhereElement.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardElement.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathLexer.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPath.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathTokenAnywhereElement.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathTokenElement.cpp.o vendor/antlr-cxx-runtime/tree/ErrorNode.cpp.o vendor/antlr-cxx-runtime/tree/Trees.cpp.o vendor/antlr-cxx-runtime/tree/ParseTreeListener.cpp.o vendor/antlr-cxx-runtime/tree/ParseTree.cpp.o vendor/antlr-cxx-runtime/tree/ParseTreeVisitor.cpp.o vendor/antlr-cxx-runtime/tree/ErrorNodeImpl.cpp.o vendor/antlr-cxx-runtime/tree/ParseTreeWalker.cpp.o vendor/antlr-cxx-runtime/tree/IterativeParseTreeWalker.cpp.o vendor/antlr-cxx-runtime/tree/TerminalNode.cpp.o vendor/antlr-cxx-runtime/tree/pattern/RuleTagToken.cpp.o vendor/antlr-cxx-runtime/tree/pattern/ParseTreeMatch.cpp.o vendor/antlr-cxx-runtime/tree/pattern/TokenTagToken.cpp.o vendor/antlr-cxx-runtime/tree/pattern/Chunk.cpp.o vendor/antlr-cxx-runtime/tree/pattern/ParseTreePatternMatcher.cpp.o vendor/antlr-cxx-runtime/tree/pattern/TextChunk.cpp.o vendor/antlr-cxx-runtime/tree/pattern/TagChunk.cpp.o vendor/antlr-cxx-runtime/tree/pattern/ParseTreePattern.cpp.o vendor/antlr-cxx-runtime/DiagnosticErrorListener.cpp.o vendor/antlr-cxx-runtime/FailedPredicateException.cpp.o vendor/antlr-cxx-runtime/ConsoleErrorListener.cpp.o vendor/antlr-cxx-runtime/UnbufferedCharStream.cpp.o vendor/antlr-cxx-runtime/TokenStream.cpp.o vendor/antlr-cxx-runtime/UnbufferedTokenStream.cpp.o vendor/antlr-cxx-runtime/BaseErrorListener.cpp.o vendor/antlr-cxx-runtime/RuntimeMetaData.cpp.o vendor/antlr-cxx-runtime/InputMismatchException.cpp.o vendor/antlr-cxx-runtime/RuleContextWithAltNum.cpp.o vendor/antlr-cxx-runtime/dfa/DFAState.cpp.o vendor/antlr-cxx-runtime/dfa/DFASerializer.cpp.o vendor/antlr-cxx-runtime/dfa/DFA.cpp.o vendor/antlr-cxx-runtime/dfa/LexerDFASerializer.cpp.o vendor/antlr-cxx-runtime/Vocabulary.cpp.o vendor/antlr-cxx-runtime/ListTokenSource.cpp.o vendor/antlr-cxx-runtime/ANTLRErrorListener.cpp.o vendor/antlr-cxx-runtime/CommonTokenFactory.cpp.o vendor/antlr-cxx-runtime/TokenStreamRewriter.cpp.o vendor/antlr-cxx-runtime/CharStream.cpp.o vendor/antlr-cxx-runtime/ANTLRFileStream.cpp.o vendor/antlr-cxx-runtime/Lexer.cpp.o vendor/antlr-cxx-runtime/ProxyErrorListener.cpp.o vendor/antlr-cxx-runtime/ANTLRErrorStrategy.cpp.o vendor/antlr-cxx-runtime/RuleContext.cpp.o vendor/antlr-cxx-runtime/BufferedTokenStream.cpp.o vendor/antlr-cxx-runtime/LexerInterpreter.cpp.o vendor/antlr-cxx-runtime/Recognizer.cpp.o vendor/antlr-cxx-runtime/IntStream.cpp.o vendor/antlr-cxx-runtime/InterpreterRuleContext.cpp.o vendor/antlr-cxx-runtime/ParserInterpreter.cpp.o vendor/antlr-cxx-runtime/TokenSource.cpp.o vendor/antlr-cxx-runtime/support/CPPUtils.cpp.o vendor/antlr-cxx-runtime/support/Any.cpp.o vendor/antlr-cxx-runtime/support/StringUtils.cpp.o vendor/antlr-cxx-runtime/support/Arrays.cpp.o vendor/antlr-cxx-runtime/support/guid.cpp.o vendor/antlr-cxx-runtime/BailErrorStrategy.cpp.o vendor/antlr-cxx-runtime/CommonTokenStream.cpp.o vendor/antlr-cxx-runtime/atn/BlockStartState.cpp.o vendor/antlr-cxx-runtime/atn/StarBlockStartState.cpp.o vendor/antlr-cxx-runtime/atn/BlockEndState.cpp.o vendor/antlr-cxx-runtime/atn/Transition.cpp.o vendor/antlr-cxx-runtime/atn/EmptyPredictionContext.cpp.o vendor/antlr-cxx-runtime/atn/ParseInfo.cpp.o vendor/antlr-cxx-runtime/atn/ATNConfig.cpp.o vendor/antlr-cxx-runtime/atn/LexerTypeAction.cpp.o vendor/antlr-cxx-runtime/atn/AtomTransition.cpp.o vendor/antlr-cxx-runtime/atn/AmbiguityInfo.cpp.o vendor/antlr-cxx-runtime/atn/ATNSimulator.cpp.o vendor/antlr-cxx-runtime/atn/LexerIndexedCustomAction.cpp.o vendor/antlr-cxx-runtime/atn/RuleTransition.cpp.o vendor/antlr-cxx-runtime/atn/TokensStartState.cpp.o vendor/antlr-cxx-runtime/atn/PredicateTransition.cpp.o vendor/antlr-cxx-runtime/atn/SingletonPredictionContext.cpp.o vendor/antlr-cxx-runtime/atn/LexerMoreAction.cpp.o vendor/antlr-cxx-runtime/atn/ATNDeserializationOptions.cpp.o vendor/antlr-cxx-runtime/atn/LoopEndState.cpp.o vendor/antlr-cxx-runtime/atn/LexerActionExecutor.cpp.o vendor/antlr-cxx-runtime/atn/LexerATNSimulator.cpp.o vendor/antlr-cxx-runtime/atn/SetTransition.cpp.o vendor/antlr-cxx-runtime/atn/LexerModeAction.cpp.o vendor/antlr-cxx-runtime/atn/NotSetTransition.cpp.o vendor/antlr-cxx-runtime/atn/ProfilingATNSimulator.cpp.o vendor/antlr-cxx-runtime/atn/LexerATNConfig.cpp.o vendor/antlr-cxx-runtime/atn/DecisionInfo.cpp.o vendor/antlr-cxx-runtime/atn/ATNState.cpp.o vendor/antlr-cxx-runtime/atn/ATNSerializer.cpp.o vendor/antlr-cxx-runtime/atn/ArrayPredictionContext.cpp.o vendor/antlr-cxx-runtime/atn/PredictionMode.cpp.o vendor/antlr-cxx-runtime/atn/LookaheadEventInfo.cpp.o vendor/antlr-cxx-runtime/atn/ATN.cpp.o vendor/antlr-cxx-runtime/atn/SemanticContext.cpp.o vendor/antlr-cxx-runtime/atn/RuleStopState.cpp.o vendor/antlr-cxx-runtime/atn/OrderedATNConfigSet.cpp.o vendor/antlr-cxx-runtime/atn/RangeTransition.cpp.o vendor/antlr-cxx-runtime/atn/ATNDeserializer.cpp.o vendor/antlr-cxx-runtime/atn/PlusBlockStartState.cpp.o vendor/antlr-cxx-runtime/atn/WildcardTransition.cpp.o vendor/antlr-cxx-runtime/atn/ActionTransition.cpp.o vendor/antlr-cxx-runtime/atn/ParserATNSimulator.cpp.o vendor/antlr-cxx-runtime/atn/DecisionState.cpp.o vendor/antlr-cxx-runtime/atn/RuleStartState.cpp.o vendor/antlr-cxx-runtime/atn/ErrorInfo.cpp.o vendor/antlr-cxx-runtime/atn/StarLoopbackState.cpp.o vendor/antlr-cxx-runtime/atn/BasicState.cpp.o vendor/antlr-cxx-runtime/atn/AbstractPredicateTransition.cpp.o vendor/antlr-cxx-runtime/atn/PredictionContext.cpp.o vendor/antlr-cxx-runtime/atn/LexerAction.cpp.o vendor/antlr-cxx-runtime/atn/LL1Analyzer.cpp.o vendor/antlr-cxx-runtime/atn/EpsilonTransition.cpp.o vendor/antlr-cxx-runtime/atn/LexerCustomAction.cpp.o vendor/antlr-cxx-runtime/atn/PrecedencePredicateTransition.cpp.o vendor/antlr-cxx-runtime/atn/PlusLoopbackState.cpp.o vendor/antlr-cxx-runtime/atn/LexerPopModeAction.cpp.o vendor/antlr-cxx-runtime/atn/PredicateEvalInfo.cpp.o vendor/antlr-cxx-runtime/atn/LexerSkipAction.cpp.o vendor/antlr-cxx-runtime/atn/ContextSensitivityInfo.cpp.o vendor/antlr-cxx-runtime/atn/ATNConfigSet.cpp.o vendor/antlr-cxx-runtime/atn/LexerChannelAction.cpp.o vendor/antlr-cxx-runtime/atn/BasicBlockStartState.cpp.o vendor/antlr-cxx-runtime/atn/DecisionEventInfo.cpp.o vendor/antlr-cxx-runtime/atn/LexerPushModeAction.cpp.o vendor/antlr-cxx-runtime/atn/StarLoopEntryState.cpp.o vendor/antlr-cxx-runtime/DefaultErrorStrategy.cpp.o vendor/antlr-cxx-runtime/CommonToken.cpp.o vendor/antlr-cxx-runtime/NoViableAltException.cpp.o vendor/antlr-cxx-runtime/ParserRuleContext.cpp.o vendor/antlr-cxx-runtime/RecognitionException.cpp.o vendor/antlr-cxx-runtime/Parser.cpp.o vendor/antlr-cxx-runtime/ANTLRInputStream.cpp.o vendor/antlr-cxx-runtime/Token.cpp.o vendor/antlr-cxx-runtime/LexerNoViableAltException.cpp.o vendor/antlr-cxx-runtime/WritableToken.cpp.o vendor/generated-grammar/FabLexer.cpp.o vendor/generated-grammar/FabParser.cpp.o vendor/generated-grammar/FabParserBaseVisitor.cpp.o vendor/generated-grammar/FabParserVisitor.cpp.o
 	echo "Linking bin/fab"
-	echo "/usr/bin/c++ -o bin/fab -fcolor-diagnostics Parsing/fab.lex.cc.o Parsing/fab.yacc.cc.o driver.cc.o AST/Action.cc.o AST/Argument.cc.o AST/ASTDump.cc.o AST/BinaryOperation.cc.o AST/Call.cc.o AST/CompoundExpr.cc.o AST/Conditional.cc.o AST/DebugTracePoint.cc.o AST/EvalContext.cc.o AST/Expression.cc.o AST/FieldAccess.cc.o AST/FieldQuery.cc.o AST/Filename.cc.o AST/FileList.cc.o AST/Foreach.cc.o AST/Function.cc.o AST/HasParameters.cc.o AST/HasScope.cc.o AST/Identifier.cc.o AST/Import.cc.o AST/List.cc.o AST/Mapping.cc.o AST/Node.cc.o AST/Parameter.cc.o AST/Record.cc.o AST/Scope.cc.o AST/SomeValue.cc.o AST/SymbolReference.cc.o AST/TypeDeclaration.cc.o AST/UnaryOperation.cc.o AST/Value.cc.o AST/Visitor.cc.o AST/literals.cc.o Backend/Backend.cc.o Backend/Dot.cc.o Backend/Make.cc.o Backend/Ninja.cc.o Backend/Null.cc.o DAG/Build.cc.o DAG/Callable.cc.o DAG/DAG.cc.o DAG/DAGBuilder.cc.o DAG/File.cc.o DAG/Formatter.cc.o DAG/Function.cc.o DAG/List.cc.o DAG/Parameter.cc.o DAG/Primitive.cc.o DAG/Record.cc.o DAG/Rule.cc.o DAG/TypeReference.cc.o DAG/UndefinedValueException.cc.o DAG/Value.cc.o DAG/Visitor.cc.o Parsing/Lexer.cc.o Parsing/Parser.cc.o Parsing/Token.cc.o Plugin/Loader.cc.o Plugin/Plugin.cc.o Plugin/Registry.cc.o Support/Arguments.cc.o Support/Bytestream.cc.o Support/ErrorReport.cc.o Support/Join.cc.o Support/Printable.cc.o Support/SharedLibrary.cc.o Support/SourceLocation.cc.o Support/String.cc.o Support/exceptions.cc.o Support/PosixError.cc.o Support/PosixSharedLibrary.cc.o Support/os-posix.cc.o Types/BooleanType.cc.o Types/FileType.cc.o Types/FunctionType.cc.o Types/IntegerType.cc.o Types/MaybeType.cc.o Types/OptionallyTyped.cc.o Types/RecordType.cc.o Types/SequenceType.cc.o Types/StringType.cc.o Types/Type.cc.o Types/TypeContext.cc.o Types/TypeError.cc.o Types/Typed.cc.o Types/UserType.cc.o" >> build.log
-	/usr/bin/c++ -o bin/fab -fcolor-diagnostics Parsing/fab.lex.cc.o Parsing/fab.yacc.cc.o driver.cc.o AST/Action.cc.o AST/Argument.cc.o AST/ASTDump.cc.o AST/BinaryOperation.cc.o AST/Call.cc.o AST/CompoundExpr.cc.o AST/Conditional.cc.o AST/DebugTracePoint.cc.o AST/EvalContext.cc.o AST/Expression.cc.o AST/FieldAccess.cc.o AST/FieldQuery.cc.o AST/Filename.cc.o AST/FileList.cc.o AST/Foreach.cc.o AST/Function.cc.o AST/HasParameters.cc.o AST/HasScope.cc.o AST/Identifier.cc.o AST/Import.cc.o AST/List.cc.o AST/Mapping.cc.o AST/Node.cc.o AST/Parameter.cc.o AST/Record.cc.o AST/Scope.cc.o AST/SomeValue.cc.o AST/SymbolReference.cc.o AST/TypeDeclaration.cc.o AST/UnaryOperation.cc.o AST/Value.cc.o AST/Visitor.cc.o AST/literals.cc.o Backend/Backend.cc.o Backend/Dot.cc.o Backend/Make.cc.o Backend/Ninja.cc.o Backend/Null.cc.o DAG/Build.cc.o DAG/Callable.cc.o DAG/DAG.cc.o DAG/DAGBuilder.cc.o DAG/File.cc.o DAG/Formatter.cc.o DAG/Function.cc.o DAG/List.cc.o DAG/Parameter.cc.o DAG/Primitive.cc.o DAG/Record.cc.o DAG/Rule.cc.o DAG/TypeReference.cc.o DAG/UndefinedValueException.cc.o DAG/Value.cc.o DAG/Visitor.cc.o Parsing/Lexer.cc.o Parsing/Parser.cc.o Parsing/Token.cc.o Plugin/Loader.cc.o Plugin/Plugin.cc.o Plugin/Registry.cc.o Support/Arguments.cc.o Support/Bytestream.cc.o Support/ErrorReport.cc.o Support/Join.cc.o Support/Printable.cc.o Support/SharedLibrary.cc.o Support/SourceLocation.cc.o Support/String.cc.o Support/exceptions.cc.o Support/PosixError.cc.o Support/PosixSharedLibrary.cc.o Support/os-posix.cc.o Types/BooleanType.cc.o Types/FileType.cc.o Types/FunctionType.cc.o Types/IntegerType.cc.o Types/MaybeType.cc.o Types/OptionallyTyped.cc.o Types/RecordType.cc.o Types/SequenceType.cc.o Types/StringType.cc.o Types/Type.cc.o Types/TypeContext.cc.o Types/TypeError.cc.o Types/Typed.cc.o Types/UserType.cc.o
+	echo "/usr/bin/c++ -o bin/fab -g -O0 -rdynamic bin/CLIArguments.cc.o bin/fab.cc.o lib/Printable.cc.o lib/builtins.cc.o lib/names.cc.o lib/ast/Action.cc.o lib/ast/Argument.cc.o lib/ast/Arguments.cc.o lib/ast/ASTDump.cc.o lib/ast/BinaryOperation.cc.o lib/ast/Call.cc.o lib/ast/CompoundExpr.cc.o lib/ast/Conditional.cc.o lib/ast/DebugTracePoint.cc.o lib/ast/EvalContext.cc.o lib/ast/Expression.cc.o lib/ast/FieldAccess.cc.o lib/ast/FieldQuery.cc.o lib/ast/FilenameLiteral.cc.o lib/ast/FileList.cc.o lib/ast/Foreach.cc.o lib/ast/Function.cc.o lib/ast/HasParameters.cc.o lib/ast/Identifier.cc.o lib/ast/List.cc.o lib/ast/NameReference.cc.o lib/ast/Node.cc.o lib/ast/Parameter.cc.o lib/ast/Record.cc.o lib/ast/TypeDeclaration.cc.o lib/ast/TypeReference.cc.o lib/ast/UnaryOperation.cc.o lib/ast/Value.cc.o lib/ast/Visitor.cc.o lib/ast/literals.cc.o lib/backend/Backend.cc.o lib/backend/Dot.cc.o lib/backend/Make.cc.o lib/backend/Ninja.cc.o lib/backend/Null.cc.o lib/dag/Build.cc.o lib/dag/Callable.cc.o lib/dag/DAG.cc.o lib/dag/DAGBuilder.cc.o lib/dag/File.cc.o lib/dag/Formatter.cc.o lib/dag/Function.cc.o lib/dag/List.cc.o lib/dag/Parameter.cc.o lib/dag/Primitive.cc.o lib/dag/Record.cc.o lib/dag/Rule.cc.o lib/dag/TypeReference.cc.o lib/dag/UndefinedValueException.cc.o lib/dag/Value.cc.o lib/dag/Visitor.cc.o lib/parsing/ASTBuilder.cc.o lib/parsing/ErrorListener.cc.o lib/parsing/ErrorReporter.cc.o lib/parsing/Parser.cc.o lib/parsing/Token.cc.o lib/platform/ABI.cc.o lib/platform/SharedLibrary.cc.o lib/platform/posix/PosixError.cc.o lib/platform/posix/PosixSharedLibrary.cc.o lib/platform/posix/files.cc.o lib/plugin/Loader.cc.o lib/plugin/Plugin.cc.o lib/plugin/Registry.cc.o lib/types/BooleanType.cc.o lib/types/FileType.cc.o lib/types/FunctionType.cc.o lib/types/IntegerType.cc.o lib/types/RecordType.cc.o lib/types/SequenceType.cc.o lib/types/StringType.cc.o lib/types/Type.cc.o lib/types/TypeContext.cc.o lib/types/TypeError.cc.o lib/types/Typed.cc.o Support/Bytestream.cc.o Support/ErrorReport.cc.o Support/Join.cc.o Support/SourceLocation.cc.o Support/String.cc.o Support/exceptions.cc.o vendor/antlr-cxx-runtime/Exceptions.cpp.o vendor/antlr-cxx-runtime/misc/InterpreterDataReader.cpp.o vendor/antlr-cxx-runtime/misc/IntervalSet.cpp.o vendor/antlr-cxx-runtime/misc/Predicate.cpp.o vendor/antlr-cxx-runtime/misc/MurmurHash.cpp.o vendor/antlr-cxx-runtime/misc/Interval.cpp.o vendor/antlr-cxx-runtime/tree/TerminalNodeImpl.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathLexerErrorListener.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathRuleElement.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathElement.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardAnywhereElement.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathRuleAnywhereElement.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardElement.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathLexer.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPath.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathTokenAnywhereElement.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathTokenElement.cpp.o vendor/antlr-cxx-runtime/tree/ErrorNode.cpp.o vendor/antlr-cxx-runtime/tree/Trees.cpp.o vendor/antlr-cxx-runtime/tree/ParseTreeListener.cpp.o vendor/antlr-cxx-runtime/tree/ParseTree.cpp.o vendor/antlr-cxx-runtime/tree/ParseTreeVisitor.cpp.o vendor/antlr-cxx-runtime/tree/ErrorNodeImpl.cpp.o vendor/antlr-cxx-runtime/tree/ParseTreeWalker.cpp.o vendor/antlr-cxx-runtime/tree/IterativeParseTreeWalker.cpp.o vendor/antlr-cxx-runtime/tree/TerminalNode.cpp.o vendor/antlr-cxx-runtime/tree/pattern/RuleTagToken.cpp.o vendor/antlr-cxx-runtime/tree/pattern/ParseTreeMatch.cpp.o vendor/antlr-cxx-runtime/tree/pattern/TokenTagToken.cpp.o vendor/antlr-cxx-runtime/tree/pattern/Chunk.cpp.o vendor/antlr-cxx-runtime/tree/pattern/ParseTreePatternMatcher.cpp.o vendor/antlr-cxx-runtime/tree/pattern/TextChunk.cpp.o vendor/antlr-cxx-runtime/tree/pattern/TagChunk.cpp.o vendor/antlr-cxx-runtime/tree/pattern/ParseTreePattern.cpp.o vendor/antlr-cxx-runtime/DiagnosticErrorListener.cpp.o vendor/antlr-cxx-runtime/FailedPredicateException.cpp.o vendor/antlr-cxx-runtime/ConsoleErrorListener.cpp.o vendor/antlr-cxx-runtime/UnbufferedCharStream.cpp.o vendor/antlr-cxx-runtime/TokenStream.cpp.o vendor/antlr-cxx-runtime/UnbufferedTokenStream.cpp.o vendor/antlr-cxx-runtime/BaseErrorListener.cpp.o vendor/antlr-cxx-runtime/RuntimeMetaData.cpp.o vendor/antlr-cxx-runtime/InputMismatchException.cpp.o vendor/antlr-cxx-runtime/RuleContextWithAltNum.cpp.o vendor/antlr-cxx-runtime/dfa/DFAState.cpp.o vendor/antlr-cxx-runtime/dfa/DFASerializer.cpp.o vendor/antlr-cxx-runtime/dfa/DFA.cpp.o vendor/antlr-cxx-runtime/dfa/LexerDFASerializer.cpp.o vendor/antlr-cxx-runtime/Vocabulary.cpp.o vendor/antlr-cxx-runtime/ListTokenSource.cpp.o vendor/antlr-cxx-runtime/ANTLRErrorListener.cpp.o vendor/antlr-cxx-runtime/CommonTokenFactory.cpp.o vendor/antlr-cxx-runtime/TokenStreamRewriter.cpp.o vendor/antlr-cxx-runtime/CharStream.cpp.o vendor/antlr-cxx-runtime/ANTLRFileStream.cpp.o vendor/antlr-cxx-runtime/Lexer.cpp.o vendor/antlr-cxx-runtime/ProxyErrorListener.cpp.o vendor/antlr-cxx-runtime/ANTLRErrorStrategy.cpp.o vendor/antlr-cxx-runtime/RuleContext.cpp.o vendor/antlr-cxx-runtime/BufferedTokenStream.cpp.o vendor/antlr-cxx-runtime/LexerInterpreter.cpp.o vendor/antlr-cxx-runtime/Recognizer.cpp.o vendor/antlr-cxx-runtime/IntStream.cpp.o vendor/antlr-cxx-runtime/InterpreterRuleContext.cpp.o vendor/antlr-cxx-runtime/ParserInterpreter.cpp.o vendor/antlr-cxx-runtime/TokenSource.cpp.o vendor/antlr-cxx-runtime/support/CPPUtils.cpp.o vendor/antlr-cxx-runtime/support/Any.cpp.o vendor/antlr-cxx-runtime/support/StringUtils.cpp.o vendor/antlr-cxx-runtime/support/Arrays.cpp.o vendor/antlr-cxx-runtime/support/guid.cpp.o vendor/antlr-cxx-runtime/BailErrorStrategy.cpp.o vendor/antlr-cxx-runtime/CommonTokenStream.cpp.o vendor/antlr-cxx-runtime/atn/BlockStartState.cpp.o vendor/antlr-cxx-runtime/atn/StarBlockStartState.cpp.o vendor/antlr-cxx-runtime/atn/BlockEndState.cpp.o vendor/antlr-cxx-runtime/atn/Transition.cpp.o vendor/antlr-cxx-runtime/atn/EmptyPredictionContext.cpp.o vendor/antlr-cxx-runtime/atn/ParseInfo.cpp.o vendor/antlr-cxx-runtime/atn/ATNConfig.cpp.o vendor/antlr-cxx-runtime/atn/LexerTypeAction.cpp.o vendor/antlr-cxx-runtime/atn/AtomTransition.cpp.o vendor/antlr-cxx-runtime/atn/AmbiguityInfo.cpp.o vendor/antlr-cxx-runtime/atn/ATNSimulator.cpp.o vendor/antlr-cxx-runtime/atn/LexerIndexedCustomAction.cpp.o vendor/antlr-cxx-runtime/atn/RuleTransition.cpp.o vendor/antlr-cxx-runtime/atn/TokensStartState.cpp.o vendor/antlr-cxx-runtime/atn/PredicateTransition.cpp.o vendor/antlr-cxx-runtime/atn/SingletonPredictionContext.cpp.o vendor/antlr-cxx-runtime/atn/LexerMoreAction.cpp.o vendor/antlr-cxx-runtime/atn/ATNDeserializationOptions.cpp.o vendor/antlr-cxx-runtime/atn/LoopEndState.cpp.o vendor/antlr-cxx-runtime/atn/LexerActionExecutor.cpp.o vendor/antlr-cxx-runtime/atn/LexerATNSimulator.cpp.o vendor/antlr-cxx-runtime/atn/SetTransition.cpp.o vendor/antlr-cxx-runtime/atn/LexerModeAction.cpp.o vendor/antlr-cxx-runtime/atn/NotSetTransition.cpp.o vendor/antlr-cxx-runtime/atn/ProfilingATNSimulator.cpp.o vendor/antlr-cxx-runtime/atn/LexerATNConfig.cpp.o vendor/antlr-cxx-runtime/atn/DecisionInfo.cpp.o vendor/antlr-cxx-runtime/atn/ATNState.cpp.o vendor/antlr-cxx-runtime/atn/ATNSerializer.cpp.o vendor/antlr-cxx-runtime/atn/ArrayPredictionContext.cpp.o vendor/antlr-cxx-runtime/atn/PredictionMode.cpp.o vendor/antlr-cxx-runtime/atn/LookaheadEventInfo.cpp.o vendor/antlr-cxx-runtime/atn/ATN.cpp.o vendor/antlr-cxx-runtime/atn/SemanticContext.cpp.o vendor/antlr-cxx-runtime/atn/RuleStopState.cpp.o vendor/antlr-cxx-runtime/atn/OrderedATNConfigSet.cpp.o vendor/antlr-cxx-runtime/atn/RangeTransition.cpp.o vendor/antlr-cxx-runtime/atn/ATNDeserializer.cpp.o vendor/antlr-cxx-runtime/atn/PlusBlockStartState.cpp.o vendor/antlr-cxx-runtime/atn/WildcardTransition.cpp.o vendor/antlr-cxx-runtime/atn/ActionTransition.cpp.o vendor/antlr-cxx-runtime/atn/ParserATNSimulator.cpp.o vendor/antlr-cxx-runtime/atn/DecisionState.cpp.o vendor/antlr-cxx-runtime/atn/RuleStartState.cpp.o vendor/antlr-cxx-runtime/atn/ErrorInfo.cpp.o vendor/antlr-cxx-runtime/atn/StarLoopbackState.cpp.o vendor/antlr-cxx-runtime/atn/BasicState.cpp.o vendor/antlr-cxx-runtime/atn/AbstractPredicateTransition.cpp.o vendor/antlr-cxx-runtime/atn/PredictionContext.cpp.o vendor/antlr-cxx-runtime/atn/LexerAction.cpp.o vendor/antlr-cxx-runtime/atn/LL1Analyzer.cpp.o vendor/antlr-cxx-runtime/atn/EpsilonTransition.cpp.o vendor/antlr-cxx-runtime/atn/LexerCustomAction.cpp.o vendor/antlr-cxx-runtime/atn/PrecedencePredicateTransition.cpp.o vendor/antlr-cxx-runtime/atn/PlusLoopbackState.cpp.o vendor/antlr-cxx-runtime/atn/LexerPopModeAction.cpp.o vendor/antlr-cxx-runtime/atn/PredicateEvalInfo.cpp.o vendor/antlr-cxx-runtime/atn/LexerSkipAction.cpp.o vendor/antlr-cxx-runtime/atn/ContextSensitivityInfo.cpp.o vendor/antlr-cxx-runtime/atn/ATNConfigSet.cpp.o vendor/antlr-cxx-runtime/atn/LexerChannelAction.cpp.o vendor/antlr-cxx-runtime/atn/BasicBlockStartState.cpp.o vendor/antlr-cxx-runtime/atn/DecisionEventInfo.cpp.o vendor/antlr-cxx-runtime/atn/LexerPushModeAction.cpp.o vendor/antlr-cxx-runtime/atn/StarLoopEntryState.cpp.o vendor/antlr-cxx-runtime/DefaultErrorStrategy.cpp.o vendor/antlr-cxx-runtime/CommonToken.cpp.o vendor/antlr-cxx-runtime/NoViableAltException.cpp.o vendor/antlr-cxx-runtime/ParserRuleContext.cpp.o vendor/antlr-cxx-runtime/RecognitionException.cpp.o vendor/antlr-cxx-runtime/Parser.cpp.o vendor/antlr-cxx-runtime/ANTLRInputStream.cpp.o vendor/antlr-cxx-runtime/Token.cpp.o vendor/antlr-cxx-runtime/LexerNoViableAltException.cpp.o vendor/antlr-cxx-runtime/WritableToken.cpp.o vendor/generated-grammar/FabLexer.cpp.o vendor/generated-grammar/FabParser.cpp.o vendor/generated-grammar/FabParserBaseVisitor.cpp.o vendor/generated-grammar/FabParserVisitor.cpp.o" >> build.log
+	/usr/bin/c++ -o bin/fab -g -O0 -rdynamic bin/CLIArguments.cc.o bin/fab.cc.o lib/Printable.cc.o lib/builtins.cc.o lib/names.cc.o lib/ast/Action.cc.o lib/ast/Argument.cc.o lib/ast/Arguments.cc.o lib/ast/ASTDump.cc.o lib/ast/BinaryOperation.cc.o lib/ast/Call.cc.o lib/ast/CompoundExpr.cc.o lib/ast/Conditional.cc.o lib/ast/DebugTracePoint.cc.o lib/ast/EvalContext.cc.o lib/ast/Expression.cc.o lib/ast/FieldAccess.cc.o lib/ast/FieldQuery.cc.o lib/ast/FilenameLiteral.cc.o lib/ast/FileList.cc.o lib/ast/Foreach.cc.o lib/ast/Function.cc.o lib/ast/HasParameters.cc.o lib/ast/Identifier.cc.o lib/ast/List.cc.o lib/ast/NameReference.cc.o lib/ast/Node.cc.o lib/ast/Parameter.cc.o lib/ast/Record.cc.o lib/ast/TypeDeclaration.cc.o lib/ast/TypeReference.cc.o lib/ast/UnaryOperation.cc.o lib/ast/Value.cc.o lib/ast/Visitor.cc.o lib/ast/literals.cc.o lib/backend/Backend.cc.o lib/backend/Dot.cc.o lib/backend/Make.cc.o lib/backend/Ninja.cc.o lib/backend/Null.cc.o lib/dag/Build.cc.o lib/dag/Callable.cc.o lib/dag/DAG.cc.o lib/dag/DAGBuilder.cc.o lib/dag/File.cc.o lib/dag/Formatter.cc.o lib/dag/Function.cc.o lib/dag/List.cc.o lib/dag/Parameter.cc.o lib/dag/Primitive.cc.o lib/dag/Record.cc.o lib/dag/Rule.cc.o lib/dag/TypeReference.cc.o lib/dag/UndefinedValueException.cc.o lib/dag/Value.cc.o lib/dag/Visitor.cc.o lib/parsing/ASTBuilder.cc.o lib/parsing/ErrorListener.cc.o lib/parsing/ErrorReporter.cc.o lib/parsing/Parser.cc.o lib/parsing/Token.cc.o lib/platform/ABI.cc.o lib/platform/SharedLibrary.cc.o lib/platform/posix/PosixError.cc.o lib/platform/posix/PosixSharedLibrary.cc.o lib/platform/posix/files.cc.o lib/plugin/Loader.cc.o lib/plugin/Plugin.cc.o lib/plugin/Registry.cc.o lib/types/BooleanType.cc.o lib/types/FileType.cc.o lib/types/FunctionType.cc.o lib/types/IntegerType.cc.o lib/types/RecordType.cc.o lib/types/SequenceType.cc.o lib/types/StringType.cc.o lib/types/Type.cc.o lib/types/TypeContext.cc.o lib/types/TypeError.cc.o lib/types/Typed.cc.o Support/Bytestream.cc.o Support/ErrorReport.cc.o Support/Join.cc.o Support/SourceLocation.cc.o Support/String.cc.o Support/exceptions.cc.o vendor/antlr-cxx-runtime/Exceptions.cpp.o vendor/antlr-cxx-runtime/misc/InterpreterDataReader.cpp.o vendor/antlr-cxx-runtime/misc/IntervalSet.cpp.o vendor/antlr-cxx-runtime/misc/Predicate.cpp.o vendor/antlr-cxx-runtime/misc/MurmurHash.cpp.o vendor/antlr-cxx-runtime/misc/Interval.cpp.o vendor/antlr-cxx-runtime/tree/TerminalNodeImpl.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathLexerErrorListener.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathRuleElement.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathElement.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardAnywhereElement.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathRuleAnywhereElement.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathWildcardElement.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathLexer.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPath.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathTokenAnywhereElement.cpp.o vendor/antlr-cxx-runtime/tree/xpath/XPathTokenElement.cpp.o vendor/antlr-cxx-runtime/tree/ErrorNode.cpp.o vendor/antlr-cxx-runtime/tree/Trees.cpp.o vendor/antlr-cxx-runtime/tree/ParseTreeListener.cpp.o vendor/antlr-cxx-runtime/tree/ParseTree.cpp.o vendor/antlr-cxx-runtime/tree/ParseTreeVisitor.cpp.o vendor/antlr-cxx-runtime/tree/ErrorNodeImpl.cpp.o vendor/antlr-cxx-runtime/tree/ParseTreeWalker.cpp.o vendor/antlr-cxx-runtime/tree/IterativeParseTreeWalker.cpp.o vendor/antlr-cxx-runtime/tree/TerminalNode.cpp.o vendor/antlr-cxx-runtime/tree/pattern/RuleTagToken.cpp.o vendor/antlr-cxx-runtime/tree/pattern/ParseTreeMatch.cpp.o vendor/antlr-cxx-runtime/tree/pattern/TokenTagToken.cpp.o vendor/antlr-cxx-runtime/tree/pattern/Chunk.cpp.o vendor/antlr-cxx-runtime/tree/pattern/ParseTreePatternMatcher.cpp.o vendor/antlr-cxx-runtime/tree/pattern/TextChunk.cpp.o vendor/antlr-cxx-runtime/tree/pattern/TagChunk.cpp.o vendor/antlr-cxx-runtime/tree/pattern/ParseTreePattern.cpp.o vendor/antlr-cxx-runtime/DiagnosticErrorListener.cpp.o vendor/antlr-cxx-runtime/FailedPredicateException.cpp.o vendor/antlr-cxx-runtime/ConsoleErrorListener.cpp.o vendor/antlr-cxx-runtime/UnbufferedCharStream.cpp.o vendor/antlr-cxx-runtime/TokenStream.cpp.o vendor/antlr-cxx-runtime/UnbufferedTokenStream.cpp.o vendor/antlr-cxx-runtime/BaseErrorListener.cpp.o vendor/antlr-cxx-runtime/RuntimeMetaData.cpp.o vendor/antlr-cxx-runtime/InputMismatchException.cpp.o vendor/antlr-cxx-runtime/RuleContextWithAltNum.cpp.o vendor/antlr-cxx-runtime/dfa/DFAState.cpp.o vendor/antlr-cxx-runtime/dfa/DFASerializer.cpp.o vendor/antlr-cxx-runtime/dfa/DFA.cpp.o vendor/antlr-cxx-runtime/dfa/LexerDFASerializer.cpp.o vendor/antlr-cxx-runtime/Vocabulary.cpp.o vendor/antlr-cxx-runtime/ListTokenSource.cpp.o vendor/antlr-cxx-runtime/ANTLRErrorListener.cpp.o vendor/antlr-cxx-runtime/CommonTokenFactory.cpp.o vendor/antlr-cxx-runtime/TokenStreamRewriter.cpp.o vendor/antlr-cxx-runtime/CharStream.cpp.o vendor/antlr-cxx-runtime/ANTLRFileStream.cpp.o vendor/antlr-cxx-runtime/Lexer.cpp.o vendor/antlr-cxx-runtime/ProxyErrorListener.cpp.o vendor/antlr-cxx-runtime/ANTLRErrorStrategy.cpp.o vendor/antlr-cxx-runtime/RuleContext.cpp.o vendor/antlr-cxx-runtime/BufferedTokenStream.cpp.o vendor/antlr-cxx-runtime/LexerInterpreter.cpp.o vendor/antlr-cxx-runtime/Recognizer.cpp.o vendor/antlr-cxx-runtime/IntStream.cpp.o vendor/antlr-cxx-runtime/InterpreterRuleContext.cpp.o vendor/antlr-cxx-runtime/ParserInterpreter.cpp.o vendor/antlr-cxx-runtime/TokenSource.cpp.o vendor/antlr-cxx-runtime/support/CPPUtils.cpp.o vendor/antlr-cxx-runtime/support/Any.cpp.o vendor/antlr-cxx-runtime/support/StringUtils.cpp.o vendor/antlr-cxx-runtime/support/Arrays.cpp.o vendor/antlr-cxx-runtime/support/guid.cpp.o vendor/antlr-cxx-runtime/BailErrorStrategy.cpp.o vendor/antlr-cxx-runtime/CommonTokenStream.cpp.o vendor/antlr-cxx-runtime/atn/BlockStartState.cpp.o vendor/antlr-cxx-runtime/atn/StarBlockStartState.cpp.o vendor/antlr-cxx-runtime/atn/BlockEndState.cpp.o vendor/antlr-cxx-runtime/atn/Transition.cpp.o vendor/antlr-cxx-runtime/atn/EmptyPredictionContext.cpp.o vendor/antlr-cxx-runtime/atn/ParseInfo.cpp.o vendor/antlr-cxx-runtime/atn/ATNConfig.cpp.o vendor/antlr-cxx-runtime/atn/LexerTypeAction.cpp.o vendor/antlr-cxx-runtime/atn/AtomTransition.cpp.o vendor/antlr-cxx-runtime/atn/AmbiguityInfo.cpp.o vendor/antlr-cxx-runtime/atn/ATNSimulator.cpp.o vendor/antlr-cxx-runtime/atn/LexerIndexedCustomAction.cpp.o vendor/antlr-cxx-runtime/atn/RuleTransition.cpp.o vendor/antlr-cxx-runtime/atn/TokensStartState.cpp.o vendor/antlr-cxx-runtime/atn/PredicateTransition.cpp.o vendor/antlr-cxx-runtime/atn/SingletonPredictionContext.cpp.o vendor/antlr-cxx-runtime/atn/LexerMoreAction.cpp.o vendor/antlr-cxx-runtime/atn/ATNDeserializationOptions.cpp.o vendor/antlr-cxx-runtime/atn/LoopEndState.cpp.o vendor/antlr-cxx-runtime/atn/LexerActionExecutor.cpp.o vendor/antlr-cxx-runtime/atn/LexerATNSimulator.cpp.o vendor/antlr-cxx-runtime/atn/SetTransition.cpp.o vendor/antlr-cxx-runtime/atn/LexerModeAction.cpp.o vendor/antlr-cxx-runtime/atn/NotSetTransition.cpp.o vendor/antlr-cxx-runtime/atn/ProfilingATNSimulator.cpp.o vendor/antlr-cxx-runtime/atn/LexerATNConfig.cpp.o vendor/antlr-cxx-runtime/atn/DecisionInfo.cpp.o vendor/antlr-cxx-runtime/atn/ATNState.cpp.o vendor/antlr-cxx-runtime/atn/ATNSerializer.cpp.o vendor/antlr-cxx-runtime/atn/ArrayPredictionContext.cpp.o vendor/antlr-cxx-runtime/atn/PredictionMode.cpp.o vendor/antlr-cxx-runtime/atn/LookaheadEventInfo.cpp.o vendor/antlr-cxx-runtime/atn/ATN.cpp.o vendor/antlr-cxx-runtime/atn/SemanticContext.cpp.o vendor/antlr-cxx-runtime/atn/RuleStopState.cpp.o vendor/antlr-cxx-runtime/atn/OrderedATNConfigSet.cpp.o vendor/antlr-cxx-runtime/atn/RangeTransition.cpp.o vendor/antlr-cxx-runtime/atn/ATNDeserializer.cpp.o vendor/antlr-cxx-runtime/atn/PlusBlockStartState.cpp.o vendor/antlr-cxx-runtime/atn/WildcardTransition.cpp.o vendor/antlr-cxx-runtime/atn/ActionTransition.cpp.o vendor/antlr-cxx-runtime/atn/ParserATNSimulator.cpp.o vendor/antlr-cxx-runtime/atn/DecisionState.cpp.o vendor/antlr-cxx-runtime/atn/RuleStartState.cpp.o vendor/antlr-cxx-runtime/atn/ErrorInfo.cpp.o vendor/antlr-cxx-runtime/atn/StarLoopbackState.cpp.o vendor/antlr-cxx-runtime/atn/BasicState.cpp.o vendor/antlr-cxx-runtime/atn/AbstractPredicateTransition.cpp.o vendor/antlr-cxx-runtime/atn/PredictionContext.cpp.o vendor/antlr-cxx-runtime/atn/LexerAction.cpp.o vendor/antlr-cxx-runtime/atn/LL1Analyzer.cpp.o vendor/antlr-cxx-runtime/atn/EpsilonTransition.cpp.o vendor/antlr-cxx-runtime/atn/LexerCustomAction.cpp.o vendor/antlr-cxx-runtime/atn/PrecedencePredicateTransition.cpp.o vendor/antlr-cxx-runtime/atn/PlusLoopbackState.cpp.o vendor/antlr-cxx-runtime/atn/LexerPopModeAction.cpp.o vendor/antlr-cxx-runtime/atn/PredicateEvalInfo.cpp.o vendor/antlr-cxx-runtime/atn/LexerSkipAction.cpp.o vendor/antlr-cxx-runtime/atn/ContextSensitivityInfo.cpp.o vendor/antlr-cxx-runtime/atn/ATNConfigSet.cpp.o vendor/antlr-cxx-runtime/atn/LexerChannelAction.cpp.o vendor/antlr-cxx-runtime/atn/BasicBlockStartState.cpp.o vendor/antlr-cxx-runtime/atn/DecisionEventInfo.cpp.o vendor/antlr-cxx-runtime/atn/LexerPushModeAction.cpp.o vendor/antlr-cxx-runtime/atn/StarLoopEntryState.cpp.o vendor/antlr-cxx-runtime/DefaultErrorStrategy.cpp.o vendor/antlr-cxx-runtime/CommonToken.cpp.o vendor/antlr-cxx-runtime/NoViableAltException.cpp.o vendor/antlr-cxx-runtime/ParserRuleContext.cpp.o vendor/antlr-cxx-runtime/RecognitionException.cpp.o vendor/antlr-cxx-runtime/Parser.cpp.o vendor/antlr-cxx-runtime/ANTLRInputStream.cpp.o vendor/antlr-cxx-runtime/Token.cpp.o vendor/antlr-cxx-runtime/LexerNoViableAltException.cpp.o vendor/antlr-cxx-runtime/WritableToken.cpp.o vendor/generated-grammar/FabLexer.cpp.o vendor/generated-grammar/FabParser.cpp.o vendor/generated-grammar/FabParserBaseVisitor.cpp.o vendor/generated-grammar/FabParserVisitor.cpp.o
+
+junit.xml : bin/fab lib/fabriquebase-pluginsliblog.so lib/fabriquebase-pluginslibplatform-tests.so lib/fabriquebase-pluginslibsysctl.so lib/fabriquebase-pluginslibwhich.so ${srcroot}/tests/./backends/dot/compile-arguments.fab ${srcroot}/tests/./backends/dot/compile-graph.fab ${srcroot}/tests/./backends/dot/complex-build.fab ${srcroot}/tests/./backends/dot/multiple-outputs.fab ${srcroot}/tests/./backends/make/Inputs/cc.fab ${srcroot}/tests/./backends/make/Inputs/foo.c ${srcroot}/tests/./backends/make/Inputs/foo.h ${srcroot}/tests/./backends/make/compile-arguments.fab ${srcroot}/tests/./backends/make/complex-build.fab ${srcroot}/tests/./backends/make/depfiles.fab ${srcroot}/tests/./backends/make/directory-dependencies.fab ${srcroot}/tests/./backends/make/explicit-compiler-imported-tools.fab ${srcroot}/tests/./backends/make/explicit-compiler.fab ${srcroot}/tests/./backends/make/literals.fab ${srcroot}/tests/./backends/make/multiple-outputs.fab ${srcroot}/tests/./backends/make/pseudo-targets.fab ${srcroot}/tests/./backends/make/rules.fab ${srcroot}/tests/./backends/make/string-list.fab ${srcroot}/tests/./backends/ninja/Inputs/cc.fab ${srcroot}/tests/./backends/ninja/Inputs/foo.c ${srcroot}/tests/./backends/ninja/Inputs/foo.h ${srcroot}/tests/./backends/ninja/Inputs/tools.fab ${srcroot}/tests/./backends/ninja/action-default-param.fab ${srcroot}/tests/./backends/ninja/action-reserved-names.fab ${srcroot}/tests/./backends/ninja/compile-arguments.fab ${srcroot}/tests/./backends/ninja/complex-build.fab ${srcroot}/tests/./backends/ninja/depfiles.fab ${srcroot}/tests/./backends/ninja/explicit-compiler-imported-tools.fab ${srcroot}/tests/./backends/ninja/explicit-compiler.fab ${srcroot}/tests/./backends/ninja/file-string-addition.fab ${srcroot}/tests/./backends/ninja/file-targets.fab ${srcroot}/tests/./backends/ninja/file-variables.fab ${srcroot}/tests/./backends/ninja/literals.fab ${srcroot}/tests/./backends/ninja/modules.fab ${srcroot}/tests/./backends/ninja/multiple-outputs.fab ${srcroot}/tests/./backends/ninja/pseudo-targets.fab ${srcroot}/tests/./backends/ninja/regenerate.fab ${srcroot}/tests/./backends/ninja/rules.fab ${srcroot}/tests/./backends/ninja/string-list.fab ${srcroot}/tests/./dag/Inputs/another_subdir/fabfile ${srcroot}/tests/./dag/Inputs/cc.fab ${srcroot}/tests/./dag/Inputs/empty.fab ${srcroot}/tests/./dag/Inputs/fabfile ${srcroot}/tests/./dag/Inputs/requires-args.fab ${srcroot}/tests/./dag/Inputs/some_files.fab ${srcroot}/tests/./dag/Inputs/sources/import-another-subdir.fab ${srcroot}/tests/./dag/Inputs/sources/src.fab ${srcroot}/tests/./dag/Inputs/subdir-test.fab ${srcroot}/tests/./dag/Inputs/submodule.fab ${srcroot}/tests/./dag/Inputs/tools/c.fab ${srcroot}/tests/./dag/action-apply.fab ${srcroot}/tests/./dag/action-argument-types.fab ${srcroot}/tests/./dag/action-default-arguments.fab ${srcroot}/tests/./dag/action-list-of-outputs.fab ${srcroot}/tests/./dag/action-missing-input.fab ${srcroot}/tests/./dag/action-missing-output.fab ${srcroot}/tests/./dag/action-param-types.fab ${srcroot}/tests/./dag/argument-type-error-location.fab ${srcroot}/tests/./dag/build-attributes.fab ${srcroot}/tests/./dag/build-with-foreach.fab ${srcroot}/tests/./dag/build-without-output.fab ${srcroot}/tests/./dag/builddir.fab ${srcroot}/tests/./dag/builtins.fab ${srcroot}/tests/./dag/calling-the-uncallable.fab ${srcroot}/tests/./dag/compile-arguments.fab ${srcroot}/tests/./dag/compile-object.fab ${srcroot}/tests/./dag/complex-build.fab ${srcroot}/tests/./dag/compound-expr.fab ${srcroot}/tests/./dag/conditionals.fab ${srcroot}/tests/./dag/config-cli-optional.fab ${srcroot}/tests/./dag/config-cli.fab ${srcroot}/tests/./dag/custom-subdir.fab ${srcroot}/tests/./dag/direct-call.fab ${srcroot}/tests/./dag/directory-creation.fab ${srcroot}/tests/./dag/empty-string.fab ${srcroot}/tests/./dag/equality.fab ${srcroot}/tests/./dag/explicit-compiler-imported-tools.fab ${srcroot}/tests/./dag/explicit-compiler.fab ${srcroot}/tests/./dag/field-existence.fab ${srcroot}/tests/./dag/file-anonymous.fab ${srcroot}/tests/./dag/file-attributes.fab ${srcroot}/tests/./dag/file-explicitly-generated.fab ${srcroot}/tests/./dag/file-string-addition.fab ${srcroot}/tests/./dag/files.fab ${srcroot}/tests/./dag/foreach-not-iterable.fab ${srcroot}/tests/./dag/foreach.fab ${srcroot}/tests/./dag/function-apply.fab ${srcroot}/tests/./dag/function-arg-type-mismatch.fab ${srcroot}/tests/./dag/function-default-parameters.fab ${srcroot}/tests/./dag/function-named-args.fab ${srcroot}/tests/./dag/hello-world.fab ${srcroot}/tests/./dag/higher-order-functions.fab ${srcroot}/tests/./dag/import-another-subdir.fab ${srcroot}/tests/./dag/import-arguments-mandatory.fab ${srcroot}/tests/./dag/import-directory.fab ${srcroot}/tests/./dag/import-empty.fab ${srcroot}/tests/./dag/list-of-lists-of-targets.fab ${srcroot}/tests/./dag/list-supertype.fab ${srcroot}/tests/./dag/list-type-mismatch.fab ${srcroot}/tests/./dag/lists.fab ${srcroot}/tests/./dag/literals.fab ${srcroot}/tests/./dag/logical-operators.fab ${srcroot}/tests/./dag/missing-argument.fab ${srcroot}/tests/./dag/modules.fab ${srcroot}/tests/./dag/multiple-definition.fab ${srcroot}/tests/./dag/multiple-outputs.fab ${srcroot}/tests/./dag/nested-paths.fab ${srcroot}/tests/./dag/operators.fab ${srcroot}/tests/./dag/param-default-values.fab ${srcroot}/tests/./dag/record-instantiation.fab ${srcroot}/tests/./dag/record-nesting.fab ${srcroot}/tests/./dag/record-type-too-many-fields.fab ${srcroot}/tests/./dag/record-wrong-field-type.fab ${srcroot}/tests/./dag/rules.fab ${srcroot}/tests/./dag/scopes.fab ${srcroot}/tests/./dag/simple-build.fab ${srcroot}/tests/./dag/string-list.fab ${srcroot}/tests/./dag/subdir-within-subdir.fab ${srcroot}/tests/./dag/subdir-wrong-type.fab ${srcroot}/tests/./dag/subdir.fab ${srcroot}/tests/./dag/target-filename-conflict.fab ${srcroot}/tests/./dag/target-from-record.fab ${srcroot}/tests/./dag/target-operations.fab ${srcroot}/tests/./dag/tool-vs-src-directories.fab ${srcroot}/tests/./dag/type-conflict.fab ${srcroot}/tests/./dag/types.fab ${srcroot}/tests/./dag/unnamed-values.fab ${srcroot}/tests/./dag/value-redefinition.fab ${srcroot}/tests/lit.cfg ${srcroot}/tests/./parsing/actions.fab ${srcroot}/tests/./parsing/binary-operations.fab ${srcroot}/tests/./parsing/compound-expr.fab ${srcroot}/tests/./parsing/conditionals.fab ${srcroot}/tests/./parsing/default-parameters.fab ${srcroot}/tests/./parsing/direct-call.fab ${srcroot}/tests/./parsing/empty-string.fab ${srcroot}/tests/./parsing/equality.fab ${srcroot}/tests/./parsing/field-call.fab ${srcroot}/tests/./parsing/field-existence.fab ${srcroot}/tests/./parsing/field-query.fab ${srcroot}/tests/./parsing/field-reference.fab ${srcroot}/tests/./parsing/fields-of-fields.fab ${srcroot}/tests/./parsing/file-attributes.fab ${srcroot}/tests/./parsing/files.fab ${srcroot}/tests/./parsing/foreach.fab ${srcroot}/tests/./parsing/functions.fab ${srcroot}/tests/./parsing/hello-world.fab ${srcroot}/tests/./parsing/higher-order-functions.fab ${srcroot}/tests/./parsing/indirect-call.fab ${srcroot}/tests/./parsing/lists.fab ${srcroot}/tests/./parsing/literals.fab ${srcroot}/tests/./parsing/logical-operators.fab ${srcroot}/tests/./parsing/record-instantiation.fab ${srcroot}/tests/./parsing/record-nesting.fab ${srcroot}/tests/./parsing/record-types.fab ${srcroot}/tests/./parsing/simple-build.fab ${srcroot}/tests/./parsing/types.fab ${srcroot}/tests/./parsing/unnamed-value.fab ${srcroot}/tests/./plugins/sysctl.fab ${srcroot}/tests/./plugins/which-file-not-found.fab ${srcroot}/tests/./plugins/which.fab ${srcroot}/tests
+	echo "Running LLVM Integrated Tester on ${srcroot}/tests"
+	echo "/usr/home/jon/.local/bin/lit -D fab=fab --succinct --verbose --xunit-xml-output=junit.xml ${srcroot}/tests" >> build.log
+	/usr/home/jon/.local/bin/lit -D fab=fab --succinct --verbose --xunit-xml-output=junit.xml ${srcroot}/tests
+
+bin :
+	echo "Creating bin"
+	echo "if [ ! -e "bin" ]; then mkdir -p "bin"; fi" >> build.log
+	if [ ! -e "bin" ]; then mkdir -p "bin"; fi
+
+lib :
+	echo "Creating lib"
+	echo "if [ ! -e "lib" ]; then mkdir -p "lib"; fi" >> build.log
+	if [ ! -e "lib" ]; then mkdir -p "lib"; fi
+
+lib/ast :
+	echo "Creating lib/ast"
+	echo "if [ ! -e "lib/ast" ]; then mkdir -p "lib/ast"; fi" >> build.log
+	if [ ! -e "lib/ast" ]; then mkdir -p "lib/ast"; fi
+
+lib/backend :
+	echo "Creating lib/backend"
+	echo "if [ ! -e "lib/backend" ]; then mkdir -p "lib/backend"; fi" >> build.log
+	if [ ! -e "lib/backend" ]; then mkdir -p "lib/backend"; fi
+
+lib/dag :
+	echo "Creating lib/dag"
+	echo "if [ ! -e "lib/dag" ]; then mkdir -p "lib/dag"; fi" >> build.log
+	if [ ! -e "lib/dag" ]; then mkdir -p "lib/dag"; fi
+
+lib/parsing :
+	echo "Creating lib/parsing"
+	echo "if [ ! -e "lib/parsing" ]; then mkdir -p "lib/parsing"; fi" >> build.log
+	if [ ! -e "lib/parsing" ]; then mkdir -p "lib/parsing"; fi
+
+lib/platform :
+	echo "Creating lib/platform"
+	echo "if [ ! -e "lib/platform" ]; then mkdir -p "lib/platform"; fi" >> build.log
+	if [ ! -e "lib/platform" ]; then mkdir -p "lib/platform"; fi
+
+lib/platform/posix :
+	echo "Creating lib/platform/posix"
+	echo "if [ ! -e "lib/platform/posix" ]; then mkdir -p "lib/platform/posix"; fi" >> build.log
+	if [ ! -e "lib/platform/posix" ]; then mkdir -p "lib/platform/posix"; fi
+
+lib/plugin :
+	echo "Creating lib/plugin"
+	echo "if [ ! -e "lib/plugin" ]; then mkdir -p "lib/plugin"; fi" >> build.log
+	if [ ! -e "lib/plugin" ]; then mkdir -p "lib/plugin"; fi
+
+lib/types :
+	echo "Creating lib/types"
+	echo "if [ ! -e "lib/types" ]; then mkdir -p "lib/types"; fi" >> build.log
+	if [ ! -e "lib/types" ]; then mkdir -p "lib/types"; fi
+
+Support :
+	echo "Creating Support"
+	echo "if [ ! -e "Support" ]; then mkdir -p "Support"; fi" >> build.log
+	if [ ! -e "Support" ]; then mkdir -p "Support"; fi
+
+vendor/antlr-cxx-runtime :
+	echo "Creating vendor/antlr-cxx-runtime"
+	echo "if [ ! -e "vendor/antlr-cxx-runtime" ]; then mkdir -p "vendor/antlr-cxx-runtime"; fi" >> build.log
+	if [ ! -e "vendor/antlr-cxx-runtime" ]; then mkdir -p "vendor/antlr-cxx-runtime"; fi
+
+vendor :
+	echo "Creating vendor"
+	echo "if [ ! -e "vendor" ]; then mkdir -p "vendor"; fi" >> build.log
+	if [ ! -e "vendor" ]; then mkdir -p "vendor"; fi
+
+vendor/antlr-cxx-runtime/misc :
+	echo "Creating vendor/antlr-cxx-runtime/misc"
+	echo "if [ ! -e "vendor/antlr-cxx-runtime/misc" ]; then mkdir -p "vendor/antlr-cxx-runtime/misc"; fi" >> build.log
+	if [ ! -e "vendor/antlr-cxx-runtime/misc" ]; then mkdir -p "vendor/antlr-cxx-runtime/misc"; fi
+
+vendor/antlr-cxx-runtime/tree :
+	echo "Creating vendor/antlr-cxx-runtime/tree"
+	echo "if [ ! -e "vendor/antlr-cxx-runtime/tree" ]; then mkdir -p "vendor/antlr-cxx-runtime/tree"; fi" >> build.log
+	if [ ! -e "vendor/antlr-cxx-runtime/tree" ]; then mkdir -p "vendor/antlr-cxx-runtime/tree"; fi
+
+vendor/antlr-cxx-runtime/tree/xpath :
+	echo "Creating vendor/antlr-cxx-runtime/tree/xpath"
+	echo "if [ ! -e "vendor/antlr-cxx-runtime/tree/xpath" ]; then mkdir -p "vendor/antlr-cxx-runtime/tree/xpath"; fi" >> build.log
+	if [ ! -e "vendor/antlr-cxx-runtime/tree/xpath" ]; then mkdir -p "vendor/antlr-cxx-runtime/tree/xpath"; fi
+
+vendor/antlr-cxx-runtime/tree/pattern :
+	echo "Creating vendor/antlr-cxx-runtime/tree/pattern"
+	echo "if [ ! -e "vendor/antlr-cxx-runtime/tree/pattern" ]; then mkdir -p "vendor/antlr-cxx-runtime/tree/pattern"; fi" >> build.log
+	if [ ! -e "vendor/antlr-cxx-runtime/tree/pattern" ]; then mkdir -p "vendor/antlr-cxx-runtime/tree/pattern"; fi
+
+vendor/antlr-cxx-runtime/dfa :
+	echo "Creating vendor/antlr-cxx-runtime/dfa"
+	echo "if [ ! -e "vendor/antlr-cxx-runtime/dfa" ]; then mkdir -p "vendor/antlr-cxx-runtime/dfa"; fi" >> build.log
+	if [ ! -e "vendor/antlr-cxx-runtime/dfa" ]; then mkdir -p "vendor/antlr-cxx-runtime/dfa"; fi
+
+vendor/antlr-cxx-runtime/support :
+	echo "Creating vendor/antlr-cxx-runtime/support"
+	echo "if [ ! -e "vendor/antlr-cxx-runtime/support" ]; then mkdir -p "vendor/antlr-cxx-runtime/support"; fi" >> build.log
+	if [ ! -e "vendor/antlr-cxx-runtime/support" ]; then mkdir -p "vendor/antlr-cxx-runtime/support"; fi
+
+vendor/antlr-cxx-runtime/atn :
+	echo "Creating vendor/antlr-cxx-runtime/atn"
+	echo "if [ ! -e "vendor/antlr-cxx-runtime/atn" ]; then mkdir -p "vendor/antlr-cxx-runtime/atn"; fi" >> build.log
+	if [ ! -e "vendor/antlr-cxx-runtime/atn" ]; then mkdir -p "vendor/antlr-cxx-runtime/atn"; fi
+
+vendor/generated-grammar :
+	echo "Creating vendor/generated-grammar"
+	echo "if [ ! -e "vendor/generated-grammar" ]; then mkdir -p "vendor/generated-grammar"; fi" >> build.log
+	if [ ! -e "vendor/generated-grammar" ]; then mkdir -p "vendor/generated-grammar"; fi
+
+base-plugins :
+	echo "Creating base-plugins"
+	echo "if [ ! -e "base-plugins" ]; then mkdir -p "base-plugins"; fi" >> build.log
+	if [ ! -e "base-plugins" ]; then mkdir -p "base-plugins"; fi
 
