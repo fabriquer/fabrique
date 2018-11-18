@@ -80,7 +80,12 @@ void ErrorListener::syntaxError(antlr4::Recognizer *r, Token *t, size_t line, si
 		FAB_ASSERT(false, "unhandled exception of unknown type");
 	}
 
-	const unsigned int len = t->getText().length();
+	const size_t fullLength = t->getText().length();
+	SemaCheck(fullLength < (1L << 32),
+		SourceRange::Span(filename_, line, col + 1, col + 2),
+		"token has extraordinary length: " + std::to_string(fullLength));
+
+	const auto len = static_cast<unsigned int>(fullLength);
 	SourceRange src = SourceRange::Span(filename_, line, col + 1, col + 1 + len);
 	errors_.emplace_back(message, src, ErrorReport::Severity::Error, detail);
 }
