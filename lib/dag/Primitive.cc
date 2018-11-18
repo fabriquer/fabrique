@@ -171,8 +171,8 @@ ValuePtr Integer::Op(string name, std::function<int (int, int)> f, ValuePtr v,
 	auto other = dynamic_pointer_cast<Integer>(v);
 	SemaCheck(other, src, "cannot " + name + " integer with " + v->type().str());
 
-	bool value = f(this->value_, other->value_);
-	return ValuePtr(new Integer(value, type().context().booleanType(), src));
+	int value = f(this->value_, other->value_);
+	return ValuePtr(new Integer(value, type().context().integerType(), src));
 }
 
 void Integer::Accept(Visitor& v) const
