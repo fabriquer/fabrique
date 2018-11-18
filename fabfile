@@ -100,9 +100,7 @@ test = if withtests {
 	lit = import('share/lit.fab', show_failure_details = verbose_tests,
 	             lit = args.lit ? import('which').executable('lit'));
 
-	fab_path = buildroot + '/bin/fab';
-
-	[ lit.run(fab_path, file('tests'), file('junit.xml'), dependencies = everything) ]
+	[ lit.run(fab, file('tests'), file('junit.xml'), dependencies = everything) ]
 } else {
 	[]
 };
