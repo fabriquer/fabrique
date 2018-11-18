@@ -186,7 +186,9 @@ antlrcpp::Any ASTBuilder::visitFunction(FabParser::FunctionContext *ctx)
 {
 	ParseChildren(ctx);
 
+	check(ctx->type(), ctx, "missing function result type");
 	check(ctx->body, ctx, "missing function body");
+
 	auto body = pop<Expression>(ctx->body);
 
 	UniqPtr<TypeReference> resultType;
@@ -194,7 +196,6 @@ antlrcpp::Any ASTBuilder::visitFunction(FabParser::FunctionContext *ctx)
 	{
 		resultType = pop<TypeReference>(t);
 	}
-	check(resultType, source(*ctx), "missing result type");
 
 	auto params = popChildren<Parameter>(ctx->parameters());
 
