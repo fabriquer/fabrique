@@ -13,11 +13,12 @@ run_lit = action(
 	   lit:file[in] = lit);  # TODO: find precise lit with 'which' plugin
 
 
-run = function(fabpath:string, test_tree:file[in], results_file:file[out],
+run = function(fab:file, test_tree:file[in], results_file:file[out],
                dependencies:list[file[in]] = [],
                suppress_success_output:bool = false, show_failure_details:bool = true)
+               : file
 {
-	flags = ['-D fab=' + fabpath]
+	flags = ['-D fab=' + fab.filename]
 		+ (if suppress_success_output [ '--quiet' ] else [ '--succinct' ])
 		+ (if show_failure_details [ '--verbose' ] else [])
 		;
