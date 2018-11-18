@@ -129,12 +129,12 @@ static ValuePtr StringSysctl(ValueMap args, DAGBuilder& builder, SourceRange src
 	const char *rawName = name.c_str();
 
 	size_t len = 0;
-	if (sysctlbyname(rawName, NULL, &len, NULL, 0))
+	if (sysctlbyname(rawName, nullptr, &len, nullptr, 0))
 		throw PosixError(
 			"error querying size of '" + name + "' sysctl");
 
 	UniqPtr<char> buffer(new char[len]);
-	if (sysctlbyname(rawName, buffer.get(), &len, NULL, 0))
+	if (sysctlbyname(rawName, buffer.get(), &len, nullptr, 0))
 		throw PosixError(
 			"error retrieving '" + name + "' via sysctlbyname()");
 
@@ -153,7 +153,7 @@ static ValuePtr IntegerSysctl(ValueMap args, DAGBuilder& builder, SourceRange sr
 
 	int value;
 	size_t len = sizeof(value);
-	if (sysctlbyname(rawName, &value, &len, NULL, 0))
+	if (sysctlbyname(rawName, &value, &len, nullptr, 0))
 		throw PosixError(
 			"error retrieving '" + name + "' via sysctlbyname()");
 
