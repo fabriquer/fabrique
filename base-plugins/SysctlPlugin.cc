@@ -133,12 +133,12 @@ static ValuePtr StringSysctl(ValueMap args, DAGBuilder& builder, SourceRange src
 		throw PosixError(
 			"error querying size of '" + name + "' sysctl");
 
-	UniqPtr<char> buffer(new char[len]);
-	if (sysctlbyname(rawName, buffer.get(), &len, nullptr, 0))
+	std::vector<char> buffer(len + 1, '\0');
+	if (sysctlbyname(rawName, buffer.data(), &len, nullptr, 0))
 		throw PosixError(
 			"error retrieving '" + name + "' via sysctlbyname()");
 
-	return builder.String(buffer.get(), src);
+	return builder.String(buffer.data(), src);
 }
 
 
