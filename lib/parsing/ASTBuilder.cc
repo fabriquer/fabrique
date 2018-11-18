@@ -190,13 +190,7 @@ antlrcpp::Any ASTBuilder::visitFunction(FabParser::FunctionContext *ctx)
 	check(ctx->body, ctx, "missing function body");
 
 	auto body = pop<Expression>(ctx->body);
-
-	UniqPtr<TypeReference> resultType;
-	if (auto *t = ctx->type())
-	{
-		resultType = pop<TypeReference>(t);
-	}
-
+	auto resultType = pop<TypeReference>(ctx->type());
 	auto params = popChildren<Parameter>(ctx->parameters());
 
 	return push<Function>(std::move(params), std::move(resultType), std::move(body),
