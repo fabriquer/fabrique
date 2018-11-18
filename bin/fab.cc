@@ -115,7 +115,7 @@ int main(int argc, char *argv[]) {
 	const string srcroot = DirectoryOf(abspath);
 	const string buildroot = AbsoluteDirectory(args.output, true);
 
-	vector<string> inputFiles = { fabfile };
+	vector<string> inputFiles = { abspath };
 	vector<string> outputFiles;
 
 	//
