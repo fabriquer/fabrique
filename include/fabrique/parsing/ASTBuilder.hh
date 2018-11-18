@@ -179,6 +179,7 @@ private:
 	template<typename T, typename ToSrc>
 	std::unique_ptr<T> pop(ToSrc *ctx)
 	{
+		FAB_ASSERT(ctx, "popping empty source context from AST-building stack");
 		return pop<T>(source(*ctx));
 	}
 
