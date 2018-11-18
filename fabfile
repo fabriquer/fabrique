@@ -45,10 +45,10 @@ defines =
 	+ (if platform.windows [ '-D OS_WINDOWS' ] else [])
 	;
 
-includes = foreach dir <- [ srcroot srcroot + '/include' buildroot ] '-I ' + dir;
+includes = foreach dir <- [ srcroot srcroot + '/include' buildroot ] '-I ' + dir.fullname;
 
 # Treat vendor headers as system headers (disable warnings).
-vendor_flags = [ '-isystem ' + srcroot + '/vendor' ];
+vendor_flags = [ '-isystem ' + srcroot.fullname + '/vendor' ];
 
 common_cxx_flags = cxxoptions + defines + dbgflags + includes + vendor_flags;
 
