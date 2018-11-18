@@ -219,6 +219,9 @@ int main(int argc, char *argv[]) {
 		scope.DefineReserved("import",
 			builtins::Import(parser, pluginLoader, srcroot, ctx));
 
+		// Also define srcroot as an explicit variable in the DAG:
+		builder.Define("srcroot", builder.String(srcroot));
+
 		vector<string> targets;
 		for (const auto& v : values)
 		{
