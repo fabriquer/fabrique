@@ -219,7 +219,6 @@ int main(int argc, char *argv[]) {
 		scope.DefineReserved("import",
 			builtins::Import(parser, pluginLoader, srcroot, ctx));
 
-		SharedPtrVec<dag::Value> dagValues;
 		vector<string> targets;
 		for (const auto& v : values)
 		{
