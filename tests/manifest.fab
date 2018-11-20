@@ -68,6 +68,7 @@ all_files = files(
 ./dag/build-without-output.fab
 ./dag/builddir.fab
 ./dag/builtins.fab
+./dag/call-argument-redefinition.fab
 ./dag/calling-the-uncallable.fab
 ./dag/compile-arguments.fab
 ./dag/compile-object.fab
@@ -86,6 +87,7 @@ all_files = files(
 ./dag/file-anonymous.fab
 ./dag/file-attributes.fab
 ./dag/file-explicitly-generated.fab
+./dag/file-prefix.fab
 ./dag/file-string-addition.fab
 ./dag/files.fab
 ./dag/foreach-not-iterable.fab
@@ -100,6 +102,7 @@ all_files = files(
 ./dag/import-arguments-mandatory.fab
 ./dag/import-directory.fab
 ./dag/import-empty.fab
+./dag/import-explicit-subdir.fab
 ./dag/list-of-lists-of-targets.fab
 ./dag/list-supertype.fab
 ./dag/list-type-mismatch.fab
@@ -111,16 +114,20 @@ all_files = files(
 ./dag/multiple-definition.fab
 ./dag/multiple-outputs.fab
 ./dag/nested-paths.fab
+./dag/nil-type.fab
 ./dag/operators.fab
 ./dag/param-default-values.fab
+./dag/param-wrong-type.fab
 ./dag/record-instantiation.fab
 ./dag/record-nesting.fab
 ./dag/record-type-too-many-fields.fab
 ./dag/record-wrong-field-type.fab
+./dag/reserved-name.fab
 ./dag/rules.fab
 ./dag/scopes.fab
 ./dag/simple-build.fab
 ./dag/string-list.fab
+./dag/string-prefix.fab
 ./dag/subdir-within-subdir.fab
 ./dag/subdir-wrong-type.fab
 ./dag/subdir.fab
@@ -162,7 +169,9 @@ all_files = files(
 ./parsing/simple-build.fab
 ./parsing/types.fab
 ./parsing/unnamed-value.fab
+./plugins/log.fab
 ./plugins/sysctl.fab
 ./plugins/which-file-not-found.fab
 ./plugins/which.fab
+./test-tools.fab
 );
