@@ -45,12 +45,12 @@ defines =
 	+ (if platform.windows [ '-D OS_WINDOWS' ] else [])
 	;
 
-includes = foreach dir <- [ srcroot srcroot + '/include' buildroot ] '-I ' + dir.fullname;
+includes = foreach dir <- [ srcroot srcroot :: 'include' buildroot ] '-I ' + dir.fullname;
 
 # Treat vendor headers as system headers (disable warnings).
 vendor_flags = [
-	'-isystem ' + srcroot.fullname + '/vendor'
-	'-isystem ' + srcroot.fullname + '/vendor/antlr-cxx-runtime'
+	'-isystem ' + file('vendor').fullname
+	'-isystem ' + (file('vendor') :: 'antlr-cxx-runtime').fullname
 ];
 
 common_cxx_flags = cxxoptions + defines + dbgflags + includes + vendor_flags;
@@ -97,7 +97,7 @@ objects = cxx.compile(cxx_srcs, cxx_flags)
 
 
 plugins = foreach lib <- import('base-plugins', cxxflags=cxx_flags, ldflags=ldflags).libs
-	shell.copy(lib, file('lib/fabrique') + '/' + lib.filename)
+	shell.copy(lib, 'lib' :: 'fabrique' :: file(lib.filename))
 	;
 
 fab = cxx.link_executable(objects, executable = file('fab', subdir = 'bin'),
