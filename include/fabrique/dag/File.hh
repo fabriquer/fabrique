@@ -72,7 +72,6 @@ public:
 	//! Absolute path to the directory this file is in.
 	std::string directory(bool relativeBuildDirectories = true) const;
 	std::string subdirectory() const { return subdirectory_; }
-	void appendSubdirectory(std::string subdir);
 
 	virtual bool hasFields() const override { return true; }
 	virtual ValuePtr field(const std::string& name) const override;
@@ -95,7 +94,7 @@ private:
 	     bool generated);
 
 	const std::string filename_;
-	std::string subdirectory_;
+	const std::string subdirectory_;
 	const bool absolute_;
 	bool generated_;
 	ValueMap attributes_;
