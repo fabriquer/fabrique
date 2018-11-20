@@ -1,0 +1,7 @@
+#
+# RUN: %fab --format=null %s 2> %t || true
+# RUN: %check %s -input-file %t
+#
+
+# CHECK: expected record[foo:string, bar:string, baz:string]
+foo:record[foo:string, bar:string, baz:string] = record { foo = 'hi'; bar = 'world'; };

@@ -6,8 +6,7 @@ which = import('which');
 
 debug = args.debug ? true;
 asserts = args.asserts ? true;
-debug_and_asserts = debug and asserts;
-
+use_asan = args.asan ? false;
 withtests = args.tests ? true;
 
 compiler = args.compiler ? 'c++';
@@ -17,21 +16,16 @@ verbose_tests = args.verbose_tests ? false;
 
 platform = import('share/platform.fab');
 
+cc = import('share/c.fab',
+	colour_diagnostics = colour_output,
+	platform = platform);
+
 cxx = import('share/cxx.fab',
 	compiler = which.executable(compiler),
 	colour_diagnostics = colour_output,
 	platform = platform);
 
-lex = import('share/lex.fab');
-
-# TODO: let modules "pass through" values from other modules
-shell =
-	if platform.posix import('share/shell-posix.fab')
-	else import('share/shell-unimplemented.fab')
-	;
-
-yacc = import('share/yacc.fab', yacc = which.executable('byacc'));
-
+shell = import('share/shell.fab').shell;
 
 
 #
@@ -40,8 +34,9 @@ yacc = import('share/yacc.fab', yacc = which.executable('byacc'));
 cxxoptions = [ '-std=c++14' ];
 
 dbgflags =
-	if debug [ '-g' '-ggdb' '-O0' ] else [ '-O2' ]
-	+ if asserts [ '' ] else [ '-D NDEBUG' ]
+	(if debug [ '-g' '-O0' ] else [ '-O2' ])
+	+ (if asserts [ '' ] else [ '-D NDEBUG' ])
+	+ (if use_asan [ '-fsanitize=address' ] else [])
 	;
 
 defines =
@@ -50,25 +45,28 @@ defines =
 	+ (if platform.windows [ '-D OS_WINDOWS' ] else [])
 	;
 
-includes = foreach dir <- [ srcroot buildroot ] '-I ' + dir;
+includes = foreach dir <- [ srcroot srcroot :: 'include' ] '-I ' + dir.fullname;
 
 # Treat vendor headers as system headers (disable warnings).
-vendor = [ '-isystem ' + srcroot + '/vendor' ];
+vendor_flags = [
+	'-isystem ' + file('vendor').fullname
+	'-isystem ' + (file('vendor') :: 'antlr-cxx-runtime').fullname
+];
 
-common_cxx_flags = cxxoptions + defines + dbgflags + includes + vendor;
+common_cxx_flags = cxxoptions + defines + dbgflags + includes + vendor_flags;
 
 warnings = [
 	# Use lots and lots of warnings.
 	'-Weverything'
-
-	# We intentionally hide yyFlexLexer::yylex().
-	'-Wno-overloaded-virtual'
 
 	# We really really don't care about C++98 compatibility.
 	'-Wno-c++98-compat' '-Wno-c++98-compat-pedantic'
 
 	# We aren't attempting to preserve an ABI. At least not yet.
 	'-Wno-padded'
+
+	# We are OK with C99 variable-length arrays.
+	'-Wno-vla' '-Wno-vla-extension'
 ];
 
 cxx_flags = common_cxx_flags + warnings;
@@ -76,44 +74,34 @@ generated_cxx_flags =
 	common_cxx_flags + [ '-Wno-deprecated-register' ]
 	+ if debug [ '-D' 'YYDEBUG' ] else [];
 
+ldflags =
+	(if debug [ '-g' '-O0' ] else [ '-O2' ])
+	+ (if platform.posix ['-rdynamic'] else [])
+	+ (if use_asan ['-fsanitize=address'] else [])
+	;
 
-#
-# TODO: allow 'for module in [ ast backends dag ]
-# (or even better, foreach dir in [ 'AST' 'Backend' ... ]
-#   {
-#     module = import(dir + '/' + dir + '.fab');
-#     module.sources
-#   }
-#
+
 cxx_srcs =
-	files(driver.cc)
-	+ import('AST').sources
-	+ import('Backend').sources
-	+ import('DAG').sources
-	+ import('Parsing').sources
-	+ import('Plugin').sources
+	import('bin').sources
+	+ import('lib').sources
 	+ import('Support').sources
-	+ import('Types').sources
 	;
 
-
-parser_src = yacc.process(file('Parsing/fab.yy'), subdir, 'Parsing/fab.yacc');
-lexer_src = lex.process(
-	src = file('Parsing/fab.lxx'), gen = file('Parsing/fab.lex.cc'),
-	flags = [ '-c++'], header_out = file('Parsing/fab.lex.h')
-);
-
-objects =
-	cxx.compile([ lexer_src ], generated_cxx_flags, deps = [ parser_src ])
-	+ cxx.compile([ parser_src ], generated_cxx_flags)
-	+ cxx.compile(cxx_srcs, cxx_flags)
+generated_srcs =
+	import('vendor/antlr-cxx-runtime').sources
+	+ import('vendor/generated-grammar').sources
 	;
 
-plugins = foreach lib <- import('base-plugins').libs
-	shell.copy(lib, file('lib/fabrique') + '/' + lib.filename)
+objects = cxx.compile(cxx_srcs, cxx_flags)
+	+ cxx.compile(generated_srcs, generated_cxx_flags);
+
+
+plugins = foreach lib <- import('base-plugins', cxxflags=cxx_flags, ldflags=ldflags).libs
+	shell.copy(lib, 'lib' :: 'fabrique' :: file(lib.filename))
 	;
 
-fab = cxx.link_executable(objects, executable = file('fab', subdir = 'bin'));
+fab = cxx.link_executable(objects, executable = file('fab', subdir = 'bin'),
+                          flags = ldflags);
 
 everything = [ fab ] + plugins + import('tests/manifest.fab').all_files;
 
@@ -121,9 +109,7 @@ test = if withtests {
 	lit = import('share/lit.fab', show_failure_details = verbose_tests,
 	             lit = args.lit ? import('which').executable('lit'));
 
-	fab_path = buildroot + '/bin/fab';
-
-	[ lit.run(fab_path, file('tests'), file('junit.xml'), dependencies = everything) ]
+	[ lit.run(fab, file('tests'), file('junit.xml'), dependencies = everything) ]
 } else {
 	[]
 };

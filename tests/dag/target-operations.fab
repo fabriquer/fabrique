@@ -1,0 +1,19 @@
+#
+# RUN: %fab --print-dag --format=null %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK-DAG: empty:list = [ ]
+empty = [];
+
+# CHECK-DAG: some_files:list[file] = [ foo.c bar.c ]
+some_files = files(foo.c bar.c);
+
+# CHECK-DAG: more_files:list[file] = [ baz.c ]
+more_files = [ file('baz.c') ];
+
+# CHECK-DAG: concat:list[file] = [ foo.c bar.c baz.c ]
+concat = some_files + more_files;
+
+# CHECK-DAG: prefix:list[file] = [ wibble.c baz.c ]
+prefix = file('wibble.c') :: more_files;

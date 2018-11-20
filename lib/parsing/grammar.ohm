@@ -1,0 +1,173 @@
+FabriqueFile
+{
+  Values
+    = (Value ";")*
+
+  Value
+    = Identifier "=" Expression
+    | TypedIdentifier "=" Expression
+
+  Identifier
+    = letter alnum*
+
+  TypedIdentifier
+    = Identifier ":" Type
+
+  Type
+    = FunctionType | RecordType| ParametricType | SimpleType
+
+  FunctionType
+    = "(" TypeList ")" "=>" Type
+
+  RecordType
+    = "record" "[" (FieldType ("," FieldType)*)? ","? "]"
+
+  FieldType
+    = Identifier ":" Type
+
+  ParametricType
+    = SimpleType "[" Type ("," Type)* "]"
+
+  SimpleType
+    = Identifier
+
+  TypeList
+    = (Type ("," Type)*)?
+
+  Expression
+    = Conditional
+    | FieldQuery
+    | Foreach
+    | Function
+    | UnaryOperation
+    | BinaryOperation
+
+  Conditional
+    = "if" Expression Expression "else" Expression
+
+  FieldQuery
+    = Term "." Identifier "?" Term
+
+  Foreach
+    = "foreach" Identifier (":" Type)? "<-" Expression Expression
+
+  UnaryOperation
+    = NotOperation | NegativeOperation | PositiveOperation
+
+  NotOperation = "not" Expression
+  NegativeOperation = "-" Expression
+  PositiveOperation = "+" Expression
+
+  BinaryOperation
+    = LogicExpr | CompareOperation | Sum | Term
+
+  LogicExpr = LogicExpr ("and" | "or" | "xor") LogicExpr
+  CompareOperation
+    = (Sum | Term) ("<" | "<=" | ">" | ">=" | "==" | "!=") (Sum | Term)
+
+  Sum = Term ("+" | "::" | ".+") (Sum | Term)
+
+  Term
+    = Call
+    | Action
+    | CompoundExpression
+    | FieldReference
+    | File
+    | FileList
+    | List
+    | Literal
+    | NameReference
+    | ParentheticalExpression
+    | Record
+    | TypeDeclaration
+
+  Action
+    = "action" "("
+        PositionalArgument
+        ("," KeywordArguments)?
+        ("<-" Parameters)?
+      ")"
+
+  Call
+    = Term "(" Arguments ")"
+
+  CompoundExpression
+    = "{" Values Expression "}"
+
+  File
+    = "file" "(" Expression ("," KeywordArguments)* ")"
+
+  FileList
+    = "files" "(" (File | Filename)* ("," KeywordArguments)? ")"
+
+  Filename
+    = (alnum | "_" | "-" | "." | "/")+
+
+  Function
+    = "function" "(" Parameters ")" (":" Type)? Expression
+
+  FieldReference
+    = Term "." NameReference
+
+  List
+    = "[" Expression* "]"
+
+  Literal
+    = BoolLiteral
+    | IntLiteral
+    | StringLiteral
+
+  BoolLiteral = "true" | "false"
+  IntLiteral = digit+
+  StringLiteral = SingleQuotedString | DoubleQuotedString
+  SingleQuotedString = "'" (~"'" any)+ "'"
+  DoubleQuotedString = "\"" (~"\"" any)+ "\""
+
+  NameReference
+    = Identifier
+
+  ParentheticalExpression
+    = "(" Expression ")"
+
+  Record
+    = "record" "{" Values "}"
+
+  RecordTypeDeclaration
+    = "record" "[" (FieldType ("," FieldType)*)? "]"
+
+  TypeDeclaration
+    = RecordTypeDeclaration
+
+  //
+  // Arguments: positional followed by keyword
+  //
+  Arguments
+    = PositionalThenKeywordArgs
+    | PositionalArguments
+    | KeywordArguments
+
+  PositionalThenKeywordArgs
+    = PositionalArguments "," KeywordArguments
+
+  PositionalArguments
+    = PositionalArgument ("," PositionalArgument)*
+
+  PositionalArgument
+    = Expression
+
+  KeywordArguments
+    = KeywordArgument ("," KeywordArgument)*
+
+  KeywordArgument
+    = Identifier "=" Expression
+
+  //
+  // Parameters: a name and a type with an optional default argument.
+  //
+  Parameters
+    = (Parameter ("," Parameter)*)?
+
+  Parameter = ParameterWithDefault | ParameterWithoutDefault
+  ParameterWithoutDefault = Identifier ":" Type
+  ParameterWithDefault = Identifier ":" Type "=" Expression
+}

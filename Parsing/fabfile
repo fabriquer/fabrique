@@ -1,5 +1,0 @@
-sources = files(
-	Lexer.cc
-	Parser.cc
-	Token.cc
-);

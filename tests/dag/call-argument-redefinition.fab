@@ -1,0 +1,9 @@
+#
+# RUN: %fab --format=null --print-dag %s 2> %t || true
+# RUN: %check %s -input-file %t
+#
+
+identity = function(x:int): int x;
+
+# CHECK: fab:9:{{[0-9\-]+}}: error: redefining 'x'
+call = identity(1, x = 1);

@@ -1,7 +1,7 @@
 #
 # RUN: mkdir -p %t
 # RUN: %fab --format=ninja --output=%t %s 2> %t/err.txt
-# RUN: FileCheck %s -input-file %t/err.txt
+# RUN: %check %s -input-file %t/err.txt
 #
 
 foo = action('foo' <- src:file[in], obj:file[out], command:string = '');

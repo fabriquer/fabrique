@@ -1,0 +1,16 @@
+#
+# RUN: %fab --format=null --print-dag --output=%t %s > %t.output
+#
+# llvm-lit substitutes %[sStT] for source/target files/directories in RUN
+# lines but not CHECK lines, so we have to do some substitution in the
+# output file if we're going to check for the current source and build dirs:
+# RUN: sed -i '' 's#%S#<<SOURCE DIRECTORY>>#' %t.output
+# RUN: sed -i '' 's#%t#<<OUTPUT DIRECTORY>>#' %t.output
+# RUN: %check %s -input-file %t.output
+#
+
+# CHECK-DAG: src:file = <<SOURCE DIRECTORY>>
+src = srcroot;
+
+# CHECK-DAG: build:file = <<OUTPUT DIRECTORY>>
+build = buildroot;

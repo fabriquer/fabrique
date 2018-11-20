@@ -3,7 +3,7 @@
  * Definition of @ref fabrique::plugins::PlatformTests.
  */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,38 +28,19 @@
  * SUCH DAMAGE.
  */
 
-#include "DAG/DAGBuilder.h"
-#include "DAG/File.h"
-#include "DAG/List.h"
-#include "DAG/Parameter.h"
-#include "Plugin/Registry.h"
-#include "Types/FileType.h"
-#include "Types/FunctionType.h"
-#include "Types/RecordType.h"
-#include "Types/TypeContext.h"
-#include "Support/Platform.h"
+#include <fabrique/dag/DAGBuilder.hh>
+#include <fabrique/platform/naming.hh>
+#include <fabrique/plugin/Registry.hh>
 #include "Support/exceptions.h"
-
-#include <cassert>
-#include <sstream>
-
-#include <errno.h>
-#include <stdlib.h>
 
 using namespace fabrique;
 using namespace fabrique::dag;
 using fabrique::plugin::Plugin;
-using std::placeholders::_1;
-using std::placeholders::_2;
-using std::placeholders::_3;
-using std::placeholders::_4;
 using std::shared_ptr;
 using std::string;
-using std::vector;
 
 
-namespace fabrique {
-namespace plugins {
+namespace {
 
 /**
  * Platform detection: defines the bare minimum of constants required to
@@ -69,22 +50,9 @@ namespace plugins {
 class PlatformTests : public plugin::Plugin
 {
 	public:
+	virtual string name() const override { return "platform-tests"; }
 	virtual shared_ptr<dag::Record>
 		Create(dag::DAGBuilder&, const ValueMap& args) const override;
-
-	class Factory : public Plugin::Descriptor
-	{
-		public:
-		virtual string name() const override { return "platform-tests"; }
-		virtual UniqPtr<Plugin> Instantiate(TypeContext&) const override;
-
-	};
-
-	private:
-	PlatformTests(const Factory& factory, const RecordType& type)
-		: Plugin(type, factory)
-	{
-	}
 };
 
 static const char* Platforms[] = {
@@ -105,32 +73,16 @@ static const char* Platforms[] = {
 	platform::Win64,
 };
 
+} // anonymous namespace
 
-UniqPtr<Plugin> PlatformTests::Factory::Instantiate(TypeContext& ctx) const
+
+shared_ptr<Record>
+PlatformTests::Create(DAGBuilder& builder, const ValueMap& args) const
 {
-	const SourceRange nowhere = SourceRange::None();
-
-	const Type& boolean = ctx.booleanType();
-
-	Type::NamedTypeVec fields;
-	for (const char *platform : Platforms)
-		fields.emplace_back(platform, boolean);
-
-	const RecordType& type = ctx.recordType(fields);
-
-	return UniqPtr<Plugin>(new PlatformTests(*this, type));
-}
-
-
-shared_ptr<Record> PlatformTests::Create(DAGBuilder& builder, const ValueMap& args) const
-{
-	if (not args.empty())
-		throw SemanticException("platform plugin does not take arguments",
-		                        SourceRange::Over(args));
+	SourceRange src = SourceRange::Over(args);
+	SemaCheck(args.empty(), src, "platform plugin does not take arguments");
 
 	const ValueMap scope;
-	static const SourceRange src = SourceRange::None();
-
 	ValueMap fields;
 
 	for (const char *platform : Platforms)
@@ -139,14 +91,8 @@ shared_ptr<Record> PlatformTests::Create(DAGBuilder& builder, const ValueMap& ar
 		fields[platform] = builder.Bool(isThisPlatform, src);
 	}
 
-	auto result = std::dynamic_pointer_cast<Record>(
-		builder.Record(fields, type(), SourceRange::None()));
-
-	assert(result);
-	return result;
+	return builder.Record(fields);
 }
 
-static plugin::Registry::Initializer init(new PlatformTests::Factory());
 
-} // plugins namespace
-} // fabrique namespace
+static plugin::Registry::Initializer init(new PlatformTests());

@@ -1,0 +1,39 @@
+#
+# RUN: %fab --parse-only --print-ast %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK: simple_cxx = action('$CXX -c $src -o $obj' <- src:list[file[in]], obj:file[out]);
+simple_cxx = action('$CXX -c $src -o $obj' <- src:list[file[in]], obj:file[out]);
+
+compiler = file('actions.fab');
+
+# CHECK: cc = action('${CC} -c ${flags} -MMD -MF ${obj}.d ${src} -o ${obj}',
+# CHECK:             description = 'Compiling ${in}', depfile = '${obj}.d'
+# CHECK:             <- src:file[in], obj:file[out], flags:list[string],
+# CHECK:                otherDeps:list[file[in]] = [ ], CC:file[in] = compiler,
+# CHECK:                deps:string = 'gcc');
+cc = action('${CC} -c ${flags} -MMD -MF ${obj}.d ${src} -o ${obj}',
+             description = 'Compiling ${in}', depfile = '${obj}.d'
+             <- src:file[in], obj:file[out], flags:list[string],
+                otherDeps:list[file[in]] = [], CC:file[in] = compiler,
+                deps:string = 'gcc');
+
+# CHECK: cxx:(list[file])->list[file] = action('$CXX{{.*}} -MMD -MF $dep -o $out $src',
+# CHECK:            description = 'Compiling $src'
+# CHECK:            <- src:file[out], obj:file[out], depfile:file[out]);
+cxx:(list[file])->list[file] = action('$CXX -c $cxxflags -MMD -MF $dep -o $out $src',
+	description = 'Compiling $src'
+	<- src:file[out], obj:file[out], depfile:file[out]);
+
+# CHECK: lex = action('$LEX{{.*}} --outfile=$gen $lex'
+# CHECK:            <- lex:file[in], gen:file[out], header:file[out]);
+lex = action('$LEX -c++ --header-file=$header --outfile=$gen $lex'
+              <- lex:file[in], gen:file[out], header:file[out]);
+
+# CHECK: single_object:list[file] =
+# CHECK:   cxx(file('a.cc'), obj = file('a.o'), depfile = file('a.o.d'));
+single_object:list[file] = cxx(file('a.cc'), obj = file('a.o'), depfile = file('a.o.d'));
+
+# CHECK: lexed:list[file] = lex(file('foo.l'), file('foo.lex.c'), file('foo.lex.h'));
+lexed:list[file] = lex(file('foo.l'), file('foo.lex.c'), file('foo.lex.h'));

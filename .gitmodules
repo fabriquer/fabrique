@@ -1,0 +1,7 @@
+[submodule "vendor/generated-grammar"]
+	path = vendor/generated-grammar
+	url = https://github.com/fabriquer/grammar
+	branch = generated-cxx
+[submodule "vendor/antlr-cxx-runtime"]
+	path = vendor/antlr-cxx-runtime
+	url = https://github.com/fabriquer/antlr-cxx-runtime

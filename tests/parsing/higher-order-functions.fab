@@ -1,0 +1,16 @@
+#
+# RUN: %fab --parse-only --print-ast %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK: increment = function(x:int): int
+# CHECK:   x + 1
+increment = function(x:int): int x + 1;
+
+# CHECK: copy:(int)->int = increment;
+copy:(int)->int = increment;
+
+# CHECK: apply:((int)->int,int)->int = function(fn:(int)->int, x:int): int
+# CHECK:   fn(x)
+apply:((int)->int,int)->int = function(fn:(int)->int, x:int): int
+	fn(x);

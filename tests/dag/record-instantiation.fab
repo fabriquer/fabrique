@@ -1,0 +1,32 @@
+#
+# RUN: %fab --format=null --print-dag %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK-DAG: foo:string = 'hi'
+# CHECK-DAG: bar:string = 'world'
+container = record { foo = 'hi'; bar = 'world'; };
+
+# CHECK-DAG: value:string = 'world'
+value = container.bar;
+
+self_referential = record
+{
+	# CHECK-DAG: def:string = 'Hello, world!'
+	def = 'Hello, world!';
+
+	# CHECK-DAG: ref:string = 'Hello, world!'
+	ref = def;
+};
+
+# CHECK-DAG: value2:string = 'Hello, world!'
+value2 = self_referential.ref;
+
+# CHECK-DAG: subset:record[{{.*}}] = {
+# CHECK-DAG:       foo:int = 42
+# CHECK-DAG:       bar:int = 99
+subset:record[foo:int] = record
+{
+	foo = 42;
+	bar = 99;
+};

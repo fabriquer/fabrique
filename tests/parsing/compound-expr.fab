@@ -1,0 +1,20 @@
+#
+# RUN: %fab --parse-only --print-ast %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK: foo:int =
+# CHECK: {
+# CHECK-NEXT:   x = 1;
+# CHECK-NEXT:   y = x + 1;
+# CHECK-NEXT:   z = y + 1;
+# CHECK-NEXT:   z
+# CHECK-NEXT: }
+# CHECK: ;
+foo:int = {
+	x = 1;
+	y = x + 1;
+	z = y + 1;
+
+	z
+};

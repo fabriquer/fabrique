@@ -1,0 +1,7 @@
+#
+# RUN: %fab --format=null --print-dag %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK: empty:record = {
+empty = import('Inputs/empty.fab');

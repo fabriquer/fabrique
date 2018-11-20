@@ -1,0 +1,16 @@
+#
+# RUN: %fab --format=null --print-dag %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK-DAG: addition:int = 4
+addition = 2 + 2;
+
+# CHECK-DAG: scalar_add:list[int] = [ 2 3 ]
+scalar_add = 2 :: [ 3 ];
+
+# CHECK-DAG: integers:list[int] = [ 1 2 3 4 5 ]
+integers = 1 :: [ 2 3 ] + [ 4 5 ];
+
+# CHECK-DAG: strings:list[string] = [ 'hello' 'world' '!' ]
+strings = 'hello' :: [ 'world' ] + [ '!' ];

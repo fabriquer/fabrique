@@ -1,6 +1,6 @@
 #
 # RUN: %fab --format=dot --output=%t %s
-# RUN: FileCheck %s -input-file %t/build.dot
+# RUN: %check %s -input-file %t/build.dot
 #
 
 lex = action('$LEX -c++ --header-file=$header --outfile=$gen $src'

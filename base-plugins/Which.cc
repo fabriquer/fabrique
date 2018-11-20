@@ -1,7 +1,12 @@
 /** @file plugins/Which.cc   Definition of @ref fabrique::plugins::Which. */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.
+ *
+ * This software was developed by SRI International and the University of
+ * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -25,19 +30,18 @@
  * SUCH DAMAGE.
  */
 
-#include "DAG/DAGBuilder.h"
-#include "DAG/File.h"
-#include "DAG/List.h"
-#include "DAG/Parameter.h"
-#include "Plugin/Registry.h"
-#include "Types/FileType.h"
-#include "Types/FunctionType.h"
-#include "Types/RecordType.h"
-#include "Types/TypeContext.h"
-#include "Support/PosixError.h"
+#include <fabrique/dag/DAGBuilder.hh>
+#include <fabrique/dag/File.hh>
+#include <fabrique/dag/List.hh>
+#include <fabrique/dag/Parameter.hh>
+#include <fabrique/platform/files.hh>
+#include <fabrique/plugin/Registry.hh>
+#include <fabrique/types/FileType.hh>
+#include <fabrique/types/FunctionType.hh>
+#include <fabrique/types/RecordType.hh>
+#include <fabrique/types/TypeContext.hh>
 #include "Support/String.h"
 #include "Support/exceptions.h"
-#include "Support/os.h"
 
 #include <cassert>
 #include <sstream>
@@ -50,15 +54,12 @@ using namespace fabrique::dag;
 using fabrique::plugin::Plugin;
 using std::placeholders::_1;
 using std::placeholders::_2;
-using std::placeholders::_3;
-using std::placeholders::_4;
 using std::shared_ptr;
 using std::string;
 using std::vector;
 
 
-namespace fabrique {
-namespace plugins {
+namespace {
 
 /**
  * Finds files (executables or any other kind of files) in the
@@ -67,69 +68,32 @@ namespace plugins {
 class Which : public plugin::Plugin
 {
 	public:
+	virtual string name() const override { return "which"; }
 	virtual shared_ptr<dag::Record>
 		Create(dag::DAGBuilder&, const ValueMap& args) const override;
-
-	class Factory : public Plugin::Descriptor
-	{
-		public:
-		virtual string name() const override { return "which"; }
-		virtual UniqPtr<Plugin> Instantiate(TypeContext&) const override;
-
-	};
-
-	private:
-	Which(const Factory& factory, const RecordType& type,
-	      const Type& string, const FileType& file, const Type& files,
-	      const FunctionType& executable, const FunctionType& generic)
-		: Plugin(type, factory), string_(string), file_(file), fileList_(files),
-		  executable_(executable), generic_(generic)
-	{
-	}
-
-	ValuePtr FindExecutable(const ValueMap& /*scope*/, const ValueMap& args,
-	                        vector<string> extraPaths, DAGBuilder& builder,
-	                        SourceRange src) const;
-
-	ValuePtr FindFile(const ValueMap& /*scope*/, const ValueMap& args,
-	                  DAGBuilder& builder, SourceRange src) const;
-
-	const Type& string_;
-	const FileType& file_;
-	const Type& fileList_;
-	const FunctionType& executable_;
-	const FunctionType& generic_;
 };
+
+} // anonymous namespace
 
 static const char Directories[] = "directories";
 static const char ExecutableFnName[] = "executable";
 static const char FileName[] = "filename";
 static const char GenericFnName[] = "generic";
 
+static ValuePtr FindExecutable(const ValueMap&, DAGBuilder&, vector<string> extraPaths);
+static ValuePtr FindFile(const ValueMap& args, DAGBuilder& builder);
 
-UniqPtr<Plugin> Which::Factory::Instantiate(TypeContext& ctx) const
-{
-	const SourceRange nowhere = SourceRange::None();
-
-	const Type& string = ctx.stringType();
-	const FileType& file = ctx.fileType();
-	const Type& files = ctx.listOf(file, nowhere);
-
-	const FunctionType& executable = ctx.functionType(string, file);
-	const FunctionType& generic = ctx.functionType({ &string, &files }, file);
-
-	const RecordType& type = ctx.recordType({
-		{ ExecutableFnName, executable },
-		{ GenericFnName, generic },
-	});
-
-	return UniqPtr<Plugin>(
-		new Which(*this, type, string, file, files, executable, generic));
-}
+//! Get a named argument if it exists (or throw an exception otherwise)
+static ValuePtr GetArgument(const ValueMap &args, const string &name);
 
 
 shared_ptr<Record> Which::Create(DAGBuilder& builder, const ValueMap& args) const
 {
+	TypeContext &types = builder.typeContext();
+	const Type& stringType = types.stringType();
+	const FileType& fileType = types.fileType();
+	const Type& filesType = types.listOf(fileType);
+
 	vector<string> extraPaths;
 
 	for (auto a : args)
@@ -139,7 +103,7 @@ shared_ptr<Record> Which::Create(DAGBuilder& builder, const ValueMap& args) cons
 			ValuePtr paths = a.second;
 			const Type& t = paths->type();
 			SourceRange src = a.second->source();
-			t.CheckSubtype(Type::ListOf(t.context().fileType(), src), src);
+			t.CheckSubtype(Type::ListOf(t.context().fileType()), src);
 
 			auto list = std::dynamic_pointer_cast<List>(paths);
 
@@ -156,45 +120,37 @@ shared_ptr<Record> Which::Create(DAGBuilder& builder, const ValueMap& args) cons
 	}
 
 	const ValueMap scope;
-	const SharedPtrVec<Parameter> name = {
-		std::make_shared<Parameter>(FileName, string_, ValuePtr()),
-	};
+	const SharedPtrVec<Parameter> name = { builder.Param(FileName, stringType) };
 	const SharedPtrVec<Parameter> nameAndDirectories = {
-		std::make_shared<Parameter>(FileName, string_, ValuePtr()),
-		std::make_shared<Parameter>(Directories, fileList_, ValuePtr()),
+		builder.Param(FileName, stringType),
+		builder.Param(Directories, filesType),
 	};
 
 	ValueMap fields = {
 		{
 			ExecutableFnName,
 			builder.Function(
-				std::bind(&Which::FindExecutable,
-				          this, _1, _2, extraPaths, _3, _4),
-				scope, name, executable_)
+				std::bind(FindExecutable, _1, _2, extraPaths),
+				fileType, name)
 		},
 		{
 			GenericFnName,
 			builder.Function(
-				std::bind(&Which::FindFile, this, _1, _2, _3, _4),
-				scope, nameAndDirectories, generic_)
+				std::bind(FindFile, _1, _2),
+				fileType, nameAndDirectories)
 		},
 	};
 
-	auto result = std::dynamic_pointer_cast<Record>(
-		builder.Record(fields, type(), SourceRange::None()));
-
-	assert(result);
-	return result;
+	return builder.Record(fields);
 }
 
 
-ValuePtr Which::FindFile(const ValueMap& /*scope*/, const ValueMap& args,
-                         DAGBuilder& builder, SourceRange src) const
+static ValuePtr FindFile(const ValueMap& args, DAGBuilder &builder)
 {
 	assert(args.size() == 2);
-	const string filename = args.find(FileName)->second->str();
+	const string filename = GetArgument(args, FileName)->str();
 
-	auto list = args.find(Directories)->second->asList();
+	auto *list = GetArgument(args, Directories)->asList();
 	assert(list);
 
 	vector<string> directories;
@@ -206,23 +162,27 @@ ValuePtr Which::FindFile(const ValueMap& /*scope*/, const ValueMap& args,
 		directories.push_back(file->fullName());
 	}
 
-	const string fullName = ::FindFile(filename, directories);
-	return builder.File(fullName, ValueMap(), file_, src);
+	const string fullName = platform::FindFile(filename, directories);
+	return builder.File(fullName);
 }
 
-
-ValuePtr Which::FindExecutable(const ValueMap& /*scope*/, const ValueMap& args,
-                               vector<string> extraPaths, DAGBuilder& builder,
-                               SourceRange src) const
+static ValuePtr FindExecutable(const ValueMap& args, DAGBuilder& builder,
+                        vector<string> extraPaths)
 {
-	const string filename = args.find(FileName)->second->str();
+	const string filename = GetArgument(args, FileName)->str();
 
-	return builder.File(fabrique::FindExecutable(filename, extraPaths),
-	                    ValueMap(), file_, src);
+	return builder.File(platform::FindExecutable(filename, extraPaths));
 }
 
+static ValuePtr GetArgument(const ValueMap &args, const string &name)
+{
+	auto i = args.find(name);
+	FAB_ASSERT(i != args.end(), "missing '" + name + "' argument");
 
-static plugin::Registry::Initializer init(new Which::Factory());
+	auto filename = i->second;
+	FAB_ASSERT(i->second, name + " is null");
 
-} // plugins namespace
-} // fabrique namespace
+	return i->second;
+}
+
+static plugin::Registry::Initializer init(new Which());

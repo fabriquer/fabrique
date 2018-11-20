@@ -1,6 +1,6 @@
 #
 # RUN: %fab --format=ninja --output=%t %s
-# RUN: FileCheck %s -input-file %t/build.ninja
+# RUN: %check %s -input-file %t/build.ninja
 #
 
 compile = action('$CC -c $src -D NAME=\"${name}\" -o $obj'
@@ -12,7 +12,7 @@ compile = action('$CC -c $src -D NAME=\"${name}\" -o $obj'
 # CHECK-DAG: name = foo
 obj = compile(file('a.c'), obj = file('a.o'));
 
-compile2 = function(src:file, name:string = 'undefined')
+compile2 = function(src:file, name:string = 'undefined'): file
 {
 	compile(src, src + '.o', name)
 };

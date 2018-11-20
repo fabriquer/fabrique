@@ -5,7 +5,7 @@
  * @ref fabrique::SourceRange.
  */
 /*
- * Copyright (c) 2013, 2016 Jonathan Anderson
+ * Copyright (c) 2013, 2016, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -67,7 +67,7 @@ bool SourceLocation::operator < (const SourceLocation& other) const
 	return *this or not other
 		or filename < other.filename
 		or line < other.line
-		or column < other.column;
+		or (line == other.line and column < other.column);
 }
 
 bool SourceLocation::operator > (const SourceLocation& other) const
@@ -75,7 +75,7 @@ bool SourceLocation::operator > (const SourceLocation& other) const
 	return *this or not other
 		or filename > other.filename
 		or line > other.line
-		or column > other.column;
+		or (line == other.line and column > other.column);
 }
 
 bool SourceLocation::operator == (const SourceLocation& other) const
@@ -178,9 +178,39 @@ bool SourceRange::operator != (const SourceRange& other) const
 
 bool SourceRange::isInside(const SourceRange& other) const
 {
-	return begin >= other.begin and end <= other.end;
+	if (begin.filename != other.begin.filename
+	    or end.filename != other.end.filename)
+	{
+		return false;
+	}
+
+	if (begin.line < other.begin.line)
+	{
+		return false;
+	}
+
+	if (begin.line == other.begin.line and begin.column < other.begin.column)
+	{
+		return false;
+	}
+
+	if (end.line > other.end.line)
+	{
+		return false;
+	}
+
+	if (end.line == other.end.line and end.column > other.end.column)
+	{
+		return false;
+	}
+
+	return true;
 }
 
+string SourceRange::filename() const
+{
+	return begin.filename;
+}
 
 void SourceRange::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 {
@@ -222,11 +252,9 @@ void SourceRange::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 }
 
 
-Bytestream& SourceRange::PrintSource(Bytestream& out, unsigned int indent,
-                                     SourceLocation caret, unsigned int context) const
+Bytestream& SourceRange::PrintSource(Bytestream& out, SourceLocation caret,
+                                     unsigned int context) const
 {
-	const string tabs(indent, '\t');
-
 	/*
 	 * If we are reading a file (rather than stdin), re-read the
 	 * source file to display the line in question.
@@ -240,18 +268,32 @@ Bytestream& SourceRange::PrintSource(Bytestream& out, unsigned int indent,
 	if (!filename.empty())
 	{
 		std::ifstream sourceFile(filename.c_str());
-		assert(sourceFile.good());
+		if (not sourceFile.good())
+		{
+			return out;
+		}
 
-		for (size_t i = 1; i <= caret.line; i++) {
-			string line;
+		string line;   // the last-read line
+
+		const size_t firstLine = begin.line > context ? (begin.line - context) : 1;
+		size_t endColumn = end.column;
+
+		for (size_t i = 1; i <= end.line; i++)
+		{
 			getline(sourceFile, line);
 
-			if ((caret.line - i) <= context)
+			if (i >= firstLine)
+			{
+				if (i >= begin.line and begin.line != end.line)
+				{
+					endColumn = std::max(endColumn, line.length());
+				}
+
 				out
-					<< tabs
 					<< Bytestream::Line << i << "\t"
 					<< Bytestream::Reset << line << "\n"
 					;
+			}
 		}
 
 		/*
@@ -261,35 +303,30 @@ Bytestream& SourceRange::PrintSource(Bytestream& out, unsigned int indent,
 		 *
 		 * Otherwise, start where the source range says to.
 		 */
-		const size_t firstHighlightColumn =
-			begin.column < caret.column
-				? caret.column - begin.column
-				: caret.column;
-
-		const size_t preCaretHighlight =
-			caret.column - firstHighlightColumn;
-
+		const size_t beginColumn = (begin.line == end.line) ? begin.column : 1;
+		const size_t preCaretHighlight = caret ? (caret.column - beginColumn) : 0;
+		const size_t soFar = caret ? caret.column + 1 : beginColumn;
 		const size_t postCaretHighlight =
-			end.column > caret.column
-			  ? end.column - caret.column - 1
-			  : 0;
+			(soFar > endColumn) ? 0 : endColumn - soFar;
 
-		assert(firstHighlightColumn >= 1);
 		assert(preCaretHighlight >= 0);
 		assert(postCaretHighlight >= 0);
 
+		out << "\t";
+
+		for (size_t i = 0; i < beginColumn - 1; i++)
+		{
+			out << ((line.length() > i and line[i] == '\t') ? '\t' : ' ');
+		}
+
 		out
-			<< tabs << "\t"
-			<< string(firstHighlightColumn - 1, ' ')
 			<< Bytestream::ErrorLoc
 			<< string(preCaretHighlight, '~')
-			<< "^"
+			<< (caret ? "^" : "")
 			<< string(postCaretHighlight, '~')
-			<< "\n"
+			<< Bytestream::Reset << "\n"
 			;
 	}
-
-	out << Bytestream::Reset;
 
 	return out;
 }

@@ -1,0 +1,18 @@
+#
+# RUN: %fab --parse-only --print-ast %s > %t
+# RUN: %check %s -input-file %t
+#
+
+foo = record
+{
+	bar = record
+	{
+		baz = record
+		{
+			wibble = 1;
+		};
+	};
+};
+
+# CHECK: the_wibble = foo.bar.baz.wibble;
+the_wibble = foo.bar.baz.wibble;

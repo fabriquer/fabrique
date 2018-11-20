@@ -1,0 +1,64 @@
+#
+# RUN: %fab --parse-only --print-ast %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK: foo:(list[int])->list[int] = function(ints:list[int]): list[int]
+# CHECK:      {
+# CHECK-NEXT:   local_var = 42;
+# CHECK-NEXT:   foreach x <- ints
+# CHECK:        {
+# CHECK-NEXT:     y = x + local_var;
+# CHECK-NEXT:     y + 1
+# CHECK-NEXT:   }
+# CHECK:      }
+foo:(list[int])->list[int] = function(ints:list[int]): list[int]
+{
+	local_var = 42;
+
+	foreach x <- ints
+	{
+		y = x + local_var;
+		y + 1
+	}
+};
+
+# CHECK: bar = function(names:list[string]): list[file]
+# CHECK-NEXT:   foreach name <- names
+# CHECK:          file(name)
+bar = function(names:list[string]): list[file]
+	foreach name <- names
+		file(name);
+
+# CHECK: baz:(int)->int = function(x:int): int
+# CHECK:   x + 1
+baz:(int)->int = function(x:int): int x + 1;
+
+
+wibble:()->()->int = function(): ()->int
+{
+	function(): int
+	{
+		42
+	}
+};
+
+wobble = wibble();
+
+
+#
+# Functions should act as closures:
+#
+
+# CHECK: makeClosure:(int)->(int)->int = function(x:int): (int)->int
+makeClosure:(int)->(int)->int = function(x:int): (int)->int
+{
+	function(y:int): int
+		x + y
+};
+
+# CHECK: theClosure:(int)->int = makeClosure(4);
+theClosure:(int)->int = makeClosure(4);
+
+# CHECK: closed:int = theClosure(1);
+closed:int = theClosure(1);

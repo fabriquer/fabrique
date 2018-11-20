@@ -1,0 +1,23 @@
+#
+# RUN: %fab --print-dag --format=null %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK-DAG: foo:int = 1
+foo = 1;
+
+# CHECK-DAG: bar:list[string] = [ 'hello!' 'world!' ]
+bar = foreach foo <- [ 'hello' 'world' ]
+{
+	foo + '!'
+};
+
+fn = function(): int
+{
+	foo = true;
+
+	if (foo)
+		42
+	else
+		31415926
+};

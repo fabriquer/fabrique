@@ -1,9 +1,0 @@
-#
-# RUN: %fab --format=null %s 2> %t || true
-# RUN: FileCheck %s -input-file %t
-#
-
-cc = action('$CC -c $src -o $obj' <- src:file[in], obj:file[out]);
-
-# CHECK: expected file, got list[file]
-bad = cc(files(foo.c), file('foo.o'));

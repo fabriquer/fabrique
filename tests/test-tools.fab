@@ -1,0 +1,14 @@
+#
+# Output the path of the fab binary to a file:
+# RUN: echo "fab: %fab" > %t
+#
+# Run the resultant file through FileCheck:
+# RUN: %check %s -input-file %t
+#
+
+#
+# Let FileCheck ensure that the file contains a path to a fab binary, and that
+# the path is absolute (or at least that it's contained in a directory):
+#
+
+# CHECK: fab: {{.*}}/fab

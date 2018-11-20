@@ -1,0 +1,22 @@
+#
+# RUN: %fab --print-dag --format=null %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK-DAG: foo:file = Inputs/foo.txt
+foo = file('Inputs/foo.txt');
+
+# CHECK-DAG: bar:list[file] = [ Inputs/foo.txt Inputs/bar.txt ]
+bar = files(Inputs/foo.txt Inputs/bar.txt);
+
+# CHECK-DAG: baz:list[file] = [ Inputs/foo.txt Inputs/bar.txt ]
+baz = files(
+	Inputs/foo.txt
+	Inputs/bar.txt
+);
+
+# CHECK-DAG: wibble:list[file] = [ Inputs/foo.txt ]
+wibble = files(foo.txt, subdir = 'Inputs');
+
+# CHECK-DAG: wobble:file = Inputs/foo.txt
+wobble = foo;

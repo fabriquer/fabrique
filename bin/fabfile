@@ -1,0 +1,4 @@
+sources = files(
+	CLIArguments.cc
+	fab.cc
+);

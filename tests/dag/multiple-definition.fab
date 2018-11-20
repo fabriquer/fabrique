@@ -1,0 +1,9 @@
+#
+# RUN: %fab --format=null %s 2> %t || true
+# RUN: %check %s -input-file %t
+#
+
+foo = 'Hello, ';
+
+# CHECK: multiple-definition.fab:10:1: error: redefining value
+foo = 'world!';

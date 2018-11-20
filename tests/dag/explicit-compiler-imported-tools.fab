@@ -1,0 +1,14 @@
+#
+# RUN: %fab --format=null --print-dag %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK-DAG: compile_one:(list[file])->list[file] = ${CC} -c ${flags}{{.*}}<-{{.*}} CC:file[in] = /usr/bin/cc
+# CHECK-DAG: link_executable:(list[file])->file = ${CC} -o ${executable}{{.*}}<-{{.*}} CC:file[in] = /usr/bin/cc
+cc = import('Inputs/cc.fab', compiler = file('/usr/bin/cc'));
+
+# CHECK-DAG: build: cc.compile_one { Inputs/foo.c =>{{.*}} Inputs/foo.c.o
+obj = cc.compile(files(Inputs/foo.c));
+
+# CHECK-DAG: build: cc.link_executable { Inputs/foo.c.o => foo }
+bin = cc.link_executable(obj, executable = file('foo'));

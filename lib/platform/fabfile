@@ -1,0 +1,18 @@
+# TODO: actually check for POSIX-ness once plugins, etc., work again
+posix = true;
+
+sources =
+	files(
+		ABI.cc
+		SharedLibrary.cc
+	)
+	+
+	if posix
+	{
+		import('posix').sources
+	}
+	else
+	{
+		[]
+	}
+	;

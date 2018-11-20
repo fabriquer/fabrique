@@ -1,0 +1,27 @@
+#
+# RUN: %fab --parse-only --print-ast %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK: foo = true;
+foo = true;
+
+# CHECK: bar:int = if true
+# CHECK:   42
+# CHECK: else
+# CHECK:   31415926
+bar:int = if true 42 else 31415926;
+
+# CHECK: baz = if foo 'hello' else 'world';
+baz = if foo 'hello' else 'world';
+
+# CHECK: wibble = if foo
+# CHECK: {
+# CHECK:   'a'
+# CHECK: }
+# CHECK: else
+# CHECK: {
+# CHECK:   'b'
+# CHECK: }
+# CHECK: ;
+wibble = if foo { 'a' } else { 'b' };

@@ -1,0 +1,5 @@
+sources = files(
+	PosixError.cc
+	PosixSharedLibrary.cc
+	files.cc
+);

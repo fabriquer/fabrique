@@ -1,0 +1,32 @@
+#
+# RUN: %fab --parse-only --print-ast %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK: foo:record[foo:string, bar:string] = record
+# CHECK-NEXT: {
+# CHECK-DAG:   foo = 'hi';
+# CHECK-DAG:   bar = 'world';
+foo:record[foo:string, bar:string] = record { foo = 'hi'; bar = 'world'; };
+
+# CHECK: bar:string = foo.bar;
+bar:string = foo.bar;
+
+# CHECK: self_referential:record[def:string, ref:string] = record
+# CHECK: {
+self_referential:record[def:string, ref:string] = record
+{
+	# CHECK: def:string = 'Hello, world!';
+	def:string = 'Hello, world!';
+
+	# CHECK: ref:string = def;
+	ref:string = def;
+};
+
+# CHECK: lowest_common_denominator:record[
+# CHECK-NOT: baz
+# CHECK: ] =
+lowest_common_denominator:record[foo:int, bar:string] =
+	if true record { foo = 1; bar = 'hi'; baz = 42; }
+	else record { foo = 2; bar = 'world'; baz = 'what!?'; }
+	;

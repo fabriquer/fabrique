@@ -1,0 +1,13 @@
+#
+# RUN: %fab --format=null %s 2> %t || true
+# RUN: %check %s -input-file %t
+#
+# DAG actions must always produce outputs. We explicitly disallow actions
+# like 'echo': they might belong in the configuration phase, but never in
+# builds. Builds should be reorderable and silent in the common case.
+#
+
+echo = action('echo ${text}' <- text:string);
+
+# CHECK: build does not produce any output files
+echo('something');

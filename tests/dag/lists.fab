@@ -1,0 +1,19 @@
+#
+# RUN: %fab --print-dag --format=null %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK-DAG: empty:list = [ ]
+empty = [];
+
+# CHECK-DAG: integers:list[int] = [ 1 2 3 ]
+integers = [ 1 2 3 ];
+
+# CHECK-DAG: strings:list[string] = [ 'hello' 'world' ]
+strings = [ 'hello' 'world' ];
+
+# CHECK-DAG: fileseq:list[file] = [ a.c b.c ]
+fileseq = [ file('a.c') file('b.c') ];
+
+# CHECK-DAG: morefiles:list[file] = [ a.c b.c ]
+morefiles = files(a.c b.c);

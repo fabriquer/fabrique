@@ -1,15 +1,15 @@
 #
 # RUN: %fab --format=make --output=%t %s
-# RUN: FileCheck %s -input-file %t/Makefile
+# RUN: %check %s -input-file %t/Makefile
 #
 
 cc = action('${CC} ${src} -o ${obj}' <- src:file[in], obj:file[out]);
 
-# CHECK-DAG: foo/subdir :
-# CHECK-DAG: mkdir -p "foo/subdir"
+# CHECK-DAG: foo/subdir:
+# CHECK-DAG: mkdir -p foo/subdir
 #
-# CHECK-DAG: bar/subdir :
-# CHECK-DAG: mkdir -p "bar/subdir"
+# CHECK-DAG: bar/subdir:
+# CHECK-DAG: mkdir -p bar/subdir
 
 
 # CHECK-DAG: foo/subdir/foo.c.o : ${srcroot}/foo/subdir/foo.c

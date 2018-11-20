@@ -45,7 +45,8 @@ library_name = function(name:string): string
 compile_one = action('${CXX} -c ${flags} -MMD -MF ${obj}.d ${src} -o ${obj}',
              description = 'Compiling ${in}', depfile = '${obj}.d'
 	     <- src:file[in], obj:file[out], flags:list[string],
-	        otherDeps:list[file[in]] = [], CXX:file[in] = compiler, deps = 'gcc');
+	        otherDeps:list[file[in]] = [], CXX:file[in] = compiler,
+	        deps:string = 'gcc');
 
 compile = function(srcs:list[file], common_flags:list[string] = [],
                    deps:list[file[in]] = []): list[file]
@@ -75,6 +76,6 @@ link_lib = action('${CXX} -shared -o ${library} ${flags} ${objects}',
 library = function(objects:list[file], libname:string, subdir:file,
                    flags:list[string] = []): file
 {
-	filename = subdir + '/' + library_name(libname);
+	filename = subdir :: library_name(libname);
 	link_lib(objects, filename, flags = flags + default_flags.library)
 };

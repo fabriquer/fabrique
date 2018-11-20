@@ -1,0 +1,28 @@
+#
+# RUN: %fab --format=null --print-dag %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK-DAG: f:file = Inputs/f.txt
+submodule = import('Inputs/submodule.fab');
+
+# CHECK-DAG: foo:string = 'Hello, world!'
+foo = submodule.foo;
+
+# CHECK-DAG: foo2:string = 'Hello, world!'
+foo2 = foo;
+
+# CHECK-DAG: first_bar:(file)->file = ${BAR} ${src} -o ${dest}
+first_bar = submodule.bar;
+
+# CHECK-DAG: another_bar:(file)->file = ${BAR} ${src} -o ${dest}
+another_bar = submodule.bar;
+
+# CHECK-DAG: bazzed:int = 2
+bazzed = import('Inputs/submodule.fab').baz(1);
+
+# CHECK-DAG: wibbled:int = 2
+wibbled = submodule.wibble(1);
+
+# CHECK-DAG: local_copy_of_f:file = Inputs/f.txt
+local_copy_of_f = submodule.f;

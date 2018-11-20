@@ -1,0 +1,10 @@
+#
+# RUN: %fab --format=null --print-dag %s 2> %t || true
+# RUN: %check %s -input-file %t
+#
+
+# CHECK: expected file[in], got list
+cc = action('${CC} -c ${flags} -MMD -MF ${obj}.d ${src} -o ${obj}',
+             description = 'Compiling ${in}', depfile = '${obj}.d'
+             <- src:file[in], obj:file[out], flags:list[string],
+                otherDeps:list[file[in]] = [], CC:file[in] = []);

@@ -1,0 +1,31 @@
+#
+# RUN: %fab --parse-only --print-ast %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK: foo:file = file('foo.c');
+foo:file = file('foo.c');
+
+# CHECK: name:string = foo.name;
+name:string = foo.name;
+
+# CHECK: no_flags:list[string] = foo.cflags ? [ ];
+no_flags:list[string] = foo.cflags ? [];
+
+# CHECK: sub:file = foo.subdir;
+sub:file = foo.subdir;
+
+# CHECK: gen:bool = foo.generated;
+gen:bool = foo.generated;
+
+# CHECK: file_with_explicit_subdir = file('bar.c', subdir = subdir);
+file_with_explicit_subdir = file('bar.c', subdir = subdir);
+
+# CHECK: explicit_subdir = file_with_explicit_subdir.subdir;
+explicit_subdir = file_with_explicit_subdir.subdir;
+
+# CHECK: file_with_flags = file('baz.c', cflags = [ '-D SOMETHING_SPECIAL' ]);
+file_with_flags = file('baz.c', cflags = [ '-D SOMETHING_SPECIAL' ]);
+
+# CHECK: cflags = file_with_flags.cflags;
+cflags = file_with_flags.cflags;

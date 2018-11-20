@@ -1,0 +1,7 @@
+#
+# RUN: %fab --format=null %s 2> %t || true
+# RUN: %check %s -input-file %t
+#
+
+# CHECK: 7:{{[0-9]+}}-{{[0-9]+}}: error: {{.*}} is not {{.*}}Callable
+result = [ 'hello' 'world' ]('argument');

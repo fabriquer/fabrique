@@ -1,0 +1,81 @@
+compiler = args.compiler ? file('/usr/bin/cc');
+pic = args.position_independent ? true;
+platform = args.platform;
+use_colour = args.colour_diagnostics;
+
+
+default_flags = record {
+	colour = if use_colour [ '-fcolor-diagnostics' ] else [];
+
+	binary = colour
+		+
+		if platform.darwin []
+		else if platform.posix [ '-pie' '-rdynamic' ]
+		else []
+		;
+
+	object = colour +
+		if pic [ '-fPIC' ]
+		else [];
+
+	library = colour
+		+
+		(if pic [ '-fPIC' ] else [])
+		+
+		if platform.darwin [ '-Wl,-undefined' '-Wl,dynamic_lookup' ]
+		else if platform.posix [ '-rdynamic' ]
+		else []
+		;
+};
+
+library_name = function(name:string): string
+{
+	if platform.darwin
+		'lib' + name + '.dylib'
+
+	else if platform.posix
+		'lib' + name + '.so'
+
+	else
+		name + '.dll'
+};
+
+
+### Compile one C++ source file into an object file.
+compile_one = action('${CC} -c ${flags} -MMD -MF ${obj}.d ${src} -o ${obj}',
+             description = 'Compiling ${in}', depfile = '${obj}.d'
+	     <- src:file[in], obj:file[out], flags:list[string],
+	        otherDeps:list[file[in]] = [], CC:file[in] = compiler,
+	        deps:string = 'gcc');
+
+compile = function(srcs:list[file], common_flags:list[string] = [],
+                   deps:list[file[in]] = []): list[file]
+{
+	foreach src <- srcs {
+		obj = src + '.o';
+		flags = (src.cxxflags ? common_flags) + default_flags.object;
+
+		compile_one(src, obj, flags, deps);
+		obj
+	}
+};
+
+
+link_executable = action('${CC} -o ${executable} ${flags} ${objects}',
+                         description = 'Linking ${executable}'
+                         <- objects:list[file[in]], executable:file[out],
+                            CC:file[in] = compiler,
+                            flags:list[string] = default_flags.binary);
+
+link_lib = action('${CC} -shared -o ${library} ${flags} ${objects}',
+                  description = 'Linking ${library}'
+                  <- objects:list[file[in]], library:file[out],
+                     CC:file[in] = compiler,
+                     flags:list[string]);
+
+library = function(objects:list[file], libname:string, subdir:file,
+                   flags:list[string] = []): file
+{
+	filename = subdir :: library_name(libname);
+	link_lib(objects, filename, flags = flags + default_flags.library)
+};

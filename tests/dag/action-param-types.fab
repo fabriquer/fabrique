@@ -1,0 +1,12 @@
+#
+# RUN: %fab --print-dag --format=null %s > %t
+# RUN: %check %s -input-file %t
+#
+
+
+#
+# An action must specify the types of its inputs.
+#
+# CHECK-DAG: lex:(file)->list[file] = $LEX -c++ --header-file=$header --outfile=$gen $src
+lex = action('$LEX -c++ --header-file=$header --outfile=$gen $src'
+              <- src:file[in], gen:file[out], header:file[out]);

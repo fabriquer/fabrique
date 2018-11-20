@@ -1,0 +1,19 @@
+#
+# RUN: %fab --parse-only --print-ast %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK: foo = true;
+foo = true;
+
+# CHECK: bar = not foo;
+bar = not foo;
+
+# CHECK: baz = foo or bar;
+baz = foo or bar;
+
+# CHECK: wibble = foo and bar;
+wibble = foo and bar;
+
+# CHECK: wobble = foo xor bar;
+wobble = foo xor bar;

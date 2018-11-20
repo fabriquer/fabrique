@@ -1,0 +1,12 @@
+#
+# RUN: %fab --print-dag --format=null %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK-DAG: lex:(file)->file = $LEX -c++ --yyclass=$classname --outfile=$gen $src
+lex = action('$LEX -c++ --yyclass=$classname --outfile=$gen $src'
+             <- src:file[in], gen:file[out], classname:string);
+
+# CHECK-DAG: build: lex { foo.yy => foo.c }( classname = 'FooClass' )
+# CHECK-DAG: gen:file = lex { foo.yy => foo.c }
+gen = lex(file('foo.yy'), file('foo.c'), classname = 'FooClass');

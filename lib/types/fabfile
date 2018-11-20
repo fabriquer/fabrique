@@ -1,0 +1,13 @@
+sources = files(
+	BooleanType.cc
+	FileType.cc
+	FunctionType.cc
+	IntegerType.cc
+	RecordType.cc
+	SequenceType.cc
+	StringType.cc
+	Type.cc
+	TypeContext.cc
+	TypeError.cc
+	Typed.cc
+);

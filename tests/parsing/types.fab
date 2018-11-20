@@ -1,0 +1,27 @@
+#
+# RUN: %fab --parse-only --print-ast %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK: foo:type = type int;
+foo:type = type int;
+
+# CHECK: bar = type record[x:int, y:string, z:record[wibble:int]];
+bar = type record[x:int, y:string, z:record[wibble:int]];
+
+# CHECK: my_foo:foo = record
+# CHECK-NEXT: {
+# CHECK-NEXT:   x = 'anything at all';
+# CHECK-NEXT: };
+my_foo:foo = record { x = 'anything at all'; };
+
+# CHECK: baz:bar = record
+# CHECK-NEXT: {
+# CHECK-NEXT:   x = 42;
+# CHECK-NEXT:   y = 'hello';
+# CHECK-NEXT:   z = record
+# CHECK-NEXT:   {
+# CHECK-NEXT:     wibble = - 1;
+# CHECK-NEXT:   };
+# CHECK-NEXT: };
+baz:bar = record { x = 42; y = 'hello'; z = record { wibble = -1; }; };

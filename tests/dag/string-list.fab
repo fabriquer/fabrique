@@ -1,0 +1,13 @@
+#
+# RUN: %fab --print-dag --format=null %s > %t
+# RUN: %check %s -input-file %t
+#
+
+foo = 'a string literal';
+bar = 'and another one';
+
+# CHECK-DAG: baz:list[string] = [ 'a string literal' 'and another one' ]
+baz = [ foo bar ];
+
+# CHECK-DAG: wibble:list[string] = [ 'yes, it's' 'a string literal' 'from a list' ]
+wibble = [ "yes, it's" foo 'from a list' ];

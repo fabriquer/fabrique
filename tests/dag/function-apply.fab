@@ -1,0 +1,35 @@
+#
+# RUN: %fab --format=null --print-dag %s > %t
+# RUN: %check %s -input-file %t
+#
+
+increment = function(x:int): int
+	x + 1;
+
+# CHECK-DAG: incremented:int = 1
+incremented = increment(0);
+
+
+#
+# Functions should act as closures:
+#
+makeClosure = function(x:int): (int)->int
+{
+	function(y:int): int
+		x + y
+};
+
+foo = makeClosure(4);
+
+# CHECK-DAG: bar:int = 5
+bar = foo(1);
+
+#
+# Functions can take default arguments:
+#
+baz = function(x:int = 1): int
+	increment(x)
+	;
+
+# CHECK-DAG: wibble:int = 2
+wibble = baz();

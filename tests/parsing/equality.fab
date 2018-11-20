@@ -1,0 +1,28 @@
+#
+# RUN: %fab --parse-only --print-ast %s > %t
+# RUN: %check %s -input-file %t
+#
+
+x = true;
+y = false;
+
+# CHECK: equal:bool = x == y;
+equal:bool = (x == y);
+
+# CHECK: nequal = x != y;
+nequal = (x != y);
+
+# CHECK: notequal:bool = not x == y;
+notequal:bool = not x == y;
+
+hello = 'Hello';
+world = 'World';
+
+# CHECK: strequal = hello == world;
+strequal = (hello == world);
+
+# CHECK: strnequal = hello != world;
+strnequal = (hello != world);
+
+# CHECK: strnotequal = not hello == world;
+strnotequal = not hello == world;

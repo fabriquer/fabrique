@@ -1,0 +1,24 @@
+#
+# Type errors should show up at the point of usage, not necessarily definition:
+#
+# foo = 'hi';
+# bar:file = foo;    # error highlight should be shown here, not the line above
+#
+# RUN: %fab --format=null %s 2> %t || true
+# RUN: %check %s -input-file %t
+#
+
+join = function(x:string, y:string): string
+	if (x == '') y
+	else if (y == '') x
+	else x + ', ' + y
+;
+
+foo = 'Hello';
+bar = 'world';
+baz = file('a.c');
+
+success = join(foo, bar) + '!';
+
+# CHECK: error-locations.fab:24:16: error: type error:
+failure = join(foo, baz);

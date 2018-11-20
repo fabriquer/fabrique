@@ -1,7 +1,0 @@
-#
-# RUN: %fab --parse-only --print-ast %s 2> %t || true
-# RUN: FileCheck %s -input-file %t
-#
-
-# CHECK: 7:{{[0-9]+}}: error: calling an uncallable expression
-result = [ 'hello' 'world' ]('argument');

@@ -1,0 +1,4 @@
+shell =
+	if platform.posix import('shell-posix.fab')
+	else import('shell-unimplemented.fab')
+	;

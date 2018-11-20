@@ -5,8 +5,6 @@
 #
 
 echo "#"
-echo "# Generated at `date` by `basename $0`"
-echo "#"
 echo "# WARNING: Do not modify by hand!"
 echo "#          Re-run $0 when adding, removing or renaming tests."
 echo "#"

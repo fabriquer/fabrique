@@ -1,0 +1,13 @@
+#
+# RUN: %fab --format=null --print-dag %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK-DAG: foo:file = foo.c
+foo = file('foo.c');
+
+# CHECK-DAG: bar:file = custom-subdir/bar.c
+bar = file('bar.c', subdir = 'custom-subdir');
+
+# CHECK-DAG: baz:list[file] = [ custom2/baz1.c custom2/baz2.c ]
+baz = files(baz1.c baz2.c, subdir = 'custom2');

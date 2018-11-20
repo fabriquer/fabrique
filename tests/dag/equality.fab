@@ -1,0 +1,41 @@
+#
+# RUN: %fab --format=null --print-dag %s > %t
+# RUN: %check %s -input-file %t
+#
+
+x = false;
+y = false;
+
+# CHECK-DAG: equal:bool = true
+equal = (x == y);
+
+# CHECK-DAG: nequal:bool = false
+nequal = (x != y);
+
+# CHECK-DAG: notequal:bool = false
+notequal = not x == y;
+
+hello = 'Hello';
+world = 'World';
+
+# CHECK-DAG: strequal:bool = false
+strequal = (hello == world);
+
+# CHECK-DAG: strnequal:bool = true
+strnequal = (hello != world);
+
+# CHECK-DAG: strnotequal:bool = true
+strnotequal = not hello == world;
+
+
+m = 42;
+n = 42;
+
+# CHECK-DAG: int_is_equal:bool = true
+int_is_equal = m == n;
+
+# CHECK-DAG: int_not_equal:bool = false
+int_not_equal = m != n;
+
+# CHECK-DAG: not_int_equal:bool = false
+not_int_equal = not m == n;

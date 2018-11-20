@@ -1,6 +1,6 @@
 #
 # RUN: %fab --format=null --print-dag %s > %t.out
-# RUN: FileCheck %s -input-file %t.out
+# RUN: %check %s -input-file %t.out
 #
 
 which = import('which');
@@ -20,9 +20,7 @@ include_paths = files(
 	/usr/include
 	/usr/local/include
 	/opt/include
-	/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/usr/include
-	/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/include
-	/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/include
+	/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include
 );
 
 # CHECK-DAG: stdlib_h:file = {{.*}}/stdlib.h

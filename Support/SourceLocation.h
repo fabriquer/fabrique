@@ -5,12 +5,13 @@
  * @ref fabrique::SourceRange.
  */
 /*
- * Copyright (c) 2013, 2016 Jonathan Anderson
+ * Copyright (c) 2013, 2016, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -37,8 +38,8 @@
 #ifndef LOCATION_H
 #define LOCATION_H
 
-#include "ADT/UniqPtr.h"
-#include "Support/Printable.h"
+#include <fabrique/Printable.hh>
+#include <fabrique/UniqPtr.h>
 
 #include <string>
 
@@ -132,8 +133,9 @@ public:
 
 	bool isInside(const SourceRange&) const;
 
-	Bytestream& PrintSource(Bytestream&, unsigned int indent,
-	                        SourceLocation caret = SourceLocation(),
+	std::string filename() const;
+
+	Bytestream& PrintSource(Bytestream&, SourceLocation caret = SourceLocation(),
 	                        unsigned int contextLines = 3) const;
 	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 

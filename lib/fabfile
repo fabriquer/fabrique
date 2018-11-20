@@ -1,0 +1,23 @@
+#
+# TODO: allow 'for module in [ ast backends dag ]
+# (or even better, foreach dir in [ 'ast' 'backend' ... ]
+#   {
+#     module = import(dir + '/' + dir + '.fab');
+#     module.sources
+#   }
+#
+
+sources =
+	files(
+		Printable.cc
+		builtins.cc
+		names.cc
+	)
+	+ import('ast').sources
+	+ import('backend').sources
+	+ import('dag').sources
+	+ import('parsing').sources
+	+ import('platform').sources
+	+ import('plugin').sources
+	+ import('types').sources
+	;

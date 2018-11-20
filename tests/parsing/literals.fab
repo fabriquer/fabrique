@@ -1,0 +1,16 @@
+#
+# RUN: %fab --parse-only --print-ast %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK: foo = 'a string literal';
+foo = 'a string literal';
+
+# CHECK: bar:int = 42;
+bar:int = 42;
+
+# CHECK: baz:list[int] = [ 1 2 3 ];
+baz:list[int] = [ 1 2 3 ];
+
+# CHECK-DAG: wibble = [ true false ];
+wibble = [ true false ];

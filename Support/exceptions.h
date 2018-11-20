@@ -1,6 +1,6 @@
 /** @file Support/exceptions.h    Declaration of basic Fabrique exceptions. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -32,12 +32,22 @@
 #ifndef EXCEPTIONS_H
 #define EXCEPTIONS_H
 
-#include "Support/Printable.h"
-#include "Support/SourceLocation.h"
+#include "Support/ErrorReport.h"
 
 #include <exception>
 #include <memory>
 #include <string>
+
+#define FAB_ASSERT(expr, detail) \
+	do \
+	{ \
+		if (not (expr)) \
+		{ \
+			throw fabrique::AssertionFailure(#expr, detail); \
+		} \
+	} \
+	while (false)
+
 
 
 namespace fabrique {
@@ -108,31 +118,37 @@ private:
 class ErrorReport;
 
 //! Base class for exceptions related to invalid source code.
-class SourceCodeException
-	: public std::exception, public HasSource, public Printable
+class SourceCodeException : public std::exception, public HasSource, public Printable
 {
 public:
-	virtual ~SourceCodeException() override;
-
 	const std::string& message() const;
+	const std::string& detail() const;
 	virtual const char* what() const noexcept override;
 
 	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 
 protected:
-	SourceCodeException(const std::string& message, const SourceRange&);
-	SourceCodeException(const SourceCodeException&);
+	SourceCodeException(std::string message, SourceRange, std::string detail);
 
 private:
-	std::shared_ptr<ErrorReport> err_;
+	ErrorReport err_;
 };
 
+
+//! A parser assertion failed.
+class ParserError : public SourceCodeException
+{
+public:
+	ParserError(std::string message, SourceRange, std::string detail = "");
+	ParserError(const ParserError&);
+	virtual ~ParserError() override;
+};
 
 //! A syntactic error is present in the Fabrique description.
 class SyntaxError : public SourceCodeException
 {
 public:
-	SyntaxError(const std::string& message, const SourceRange&);
+	SyntaxError(std::string message, SourceRange, std::string detail = "");
 	SyntaxError(const SyntaxError&);
 	virtual ~SyntaxError() override;
 };
@@ -141,10 +157,19 @@ public:
 class SemanticException : public SourceCodeException
 {
 public:
-	SemanticException(const std::string& message, const SourceRange&);
+	SemanticException(std::string message, SourceRange, std::string detail = "");
 	SemanticException(const SemanticException&);
 	virtual ~SemanticException() override;
 };
+
+template<typename T>
+void SemaCheck(const T &condition, SourceRange src, std::string message)
+{
+	if (not condition)
+	{
+		throw SemanticException(message, src);
+	}
+}
 
 }
 

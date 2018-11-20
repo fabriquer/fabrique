@@ -1,7 +1,0 @@
-#
-# RUN: %fab --format=null %s 2> %t.err || true
-# RUN: FileCheck %s -input-file %t.err
-#
-
-# CHECK: list element's type (string) != list subtype (int)
-foo = [ 1 2 '3' ];

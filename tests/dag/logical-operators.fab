@@ -1,0 +1,19 @@
+#
+# RUN: %fab --format=null --print-dag %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK-DAG: foo:bool = true
+foo = true;
+
+# CHECK-DAG: bar:bool = false
+bar = not foo;
+
+# CHECK-DAG: baz:bool = true
+baz = foo or bar;
+
+# CHECK-DAG: wibble:bool = false
+wibble = foo and bar;
+
+# CHECK-DAG: wobble:bool = true
+wobble = foo xor bar;

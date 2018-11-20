@@ -1,0 +1,28 @@
+#
+# RUN: %fab --parse-only --print-ast %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK: foo = record
+# CHECK: {
+# CHECK:   hello = 'Hello, ';
+# CHECK:   world = 'world!';
+# CHECK: }
+foo = record
+{
+	hello = 'Hello, ';
+	world = 'world!';
+};
+
+# CHECK: bar = foo.hello ? 'default value for bar';
+bar = foo.hello ? 'default value for bar';
+
+# CHECK-DAG: baz = foo.wibble ? 'default value for wibble';
+baz = foo.wibble ? 'default value for wibble';
+
+# CHECK: x = record
+# CHECK-NEXT: {
+# CHECK-NEXT:   hello = 'world';
+# CHECK-NEXT: }
+# CHECK: .hello ? 'default value';
+x = (record { hello = 'world'; }).hello ? 'default value';

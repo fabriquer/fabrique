@@ -1,7 +1,0 @@
-#
-# RUN: %fab --parse-only --print-ast %s 2> %t || true
-# RUN: FileCheck %s -input-file %t
-#
-
-# CHECK: {{.*}}/accepts-file.fab:[[LINE:[0-9]+]]:13: error: type error: expected file
-submodule = import('Inputs/accepts-file.fab', some_file = 'a filename');

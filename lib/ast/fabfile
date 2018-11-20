@@ -1,0 +1,32 @@
+sources = files(
+	Action.cc
+	Argument.cc
+	Arguments.cc
+	ASTDump.cc
+	BinaryOperation.cc
+	Call.cc
+	CompoundExpr.cc
+	Conditional.cc
+	DebugTracePoint.cc
+	EvalContext.cc
+	Expression.cc
+	FieldAccess.cc
+	FieldQuery.cc
+	FilenameLiteral.cc
+	FileList.cc
+	Foreach.cc
+	Function.cc
+	HasParameters.cc
+	Identifier.cc
+	List.cc
+	NameReference.cc
+	Node.cc
+	Parameter.cc
+	Record.cc
+	TypeDeclaration.cc
+	TypeReference.cc
+	UnaryOperation.cc
+	Value.cc
+	Visitor.cc
+	literals.cc
+);

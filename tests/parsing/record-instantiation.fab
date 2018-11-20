@@ -1,0 +1,24 @@
+#
+# RUN: %fab --parse-only --print-ast %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK: foo = record
+# CHECK: {
+# CHECK:   foo = 'hi';
+# CHECK:   bar = 'world';
+foo = record { foo = 'hi'; bar = 'world'; };
+
+# CHECK: bar = foo.bar;
+bar = foo.bar;
+
+# CHECK: self_referential = record
+# CHECK: {
+self_referential = record
+{
+	# CHECK: def = 'Hello, world!';
+	def = 'Hello, world!';
+
+	# CHECK: ref = def;
+	ref = def;
+};
