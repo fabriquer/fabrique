@@ -1,11 +1,12 @@
 /** @file DAG/File.h    Declaration of @ref fabrique::dag::File. */
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -57,6 +58,8 @@ public:
 	static bool Equals(const std::shared_ptr<File>&, const std::shared_ptr<File>&);
 	static bool LessThan(const std::shared_ptr<File>&, const std::shared_ptr<File>&);
 
+	ValueMap attributes() const { return attributes_; }
+
 	virtual ~File() override {}
 
 	virtual std::string filename() const;
@@ -72,7 +75,6 @@ public:
 	//! Absolute path to the directory this file is in.
 	std::string directory(bool relativeBuildDirectories = true) const;
 	std::string subdirectory() const { return subdirectory_; }
-	void appendSubdirectory(std::string subdir);
 
 	virtual bool hasFields() const override { return true; }
 	virtual ValuePtr field(const std::string& name) const override;
@@ -95,7 +97,7 @@ private:
 	     bool generated);
 
 	const std::string filename_;
-	std::string subdirectory_;
+	const std::string subdirectory_;
 	const bool absolute_;
 	bool generated_;
 	ValueMap attributes_;

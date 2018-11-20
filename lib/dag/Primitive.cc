@@ -31,8 +31,10 @@
 
 #include <fabrique/names.hh>
 #include <fabrique/dag/constants.hh>
+#include <fabrique/dag/File.hh>
 #include <fabrique/dag/Primitive.hh>
 #include <fabrique/dag/Visitor.hh>
+#include <fabrique/platform/files.hh>
 #include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 #include <fabrique/types/TypeContext.hh>
@@ -197,6 +199,28 @@ ValuePtr String::Add(ValuePtr& v, SourceRange src) const
 
 	return ValuePtr(
 		new String(this->value_ + other->value_, type(), loc));
+}
+
+ValuePtr String::PrefixWith(ValuePtr &v, SourceRange src) const
+{
+	src = src ? src : SourceRange(*this, *v);
+
+	if (auto f = dynamic_pointer_cast<File>(v))
+	{
+		const auto *t = dynamic_cast<const FileType*>(&f->type());
+		SemaCheck(t, f->source(), "not a file");
+
+		const string name = platform::JoinPath(f->filename(), value_);
+		const bool generated = f->generated();
+
+		return ValuePtr(File::Create(name, *t, f->attributes(), src, generated));
+	}
+	else if (auto s = dynamic_pointer_cast<String>(v))
+	{
+		return ValuePtr(new String(s->value_ + this->value_, type(), src));
+	}
+
+	throw SemanticException("cannot prefix string with " + v->type().str(), src);
 }
 
 ValuePtr String::Equals(ValuePtr& v, SourceRange src) const

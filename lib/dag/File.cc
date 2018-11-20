@@ -127,12 +127,6 @@ string File::directory(bool relativeBuildDirectories) const
 }
 
 
-void File::appendSubdirectory(string subdir)
-{
-	subdirectory_ = JoinPath(subdirectory_, subdir);
-}
-
-
 string File::relativeName() const
 {
 	return JoinPath(subdirectory_, filename_);
