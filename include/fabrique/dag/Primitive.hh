@@ -120,6 +120,7 @@ public:
 	std::string str() const override;
 
 	virtual ValuePtr Add(ValuePtr&, SourceRange) const override;
+	virtual ValuePtr PrefixWith(ValuePtr&, SourceRange) const override;
 	virtual ValuePtr Equals(ValuePtr&, SourceRange) const override;
 
 	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
