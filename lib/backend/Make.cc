@@ -195,6 +195,30 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out, ErrorReport::Rep
 	out << Bytestream::Reset << "\n\n";
 
 
+	// Output directories:
+	std::set<string> directories;
+	for (auto& f : dag.files())
+	{
+		assert(f);
+
+		if (not f->generated())
+			continue;
+
+		const string dir = f->directory();
+		if (dir.empty())
+			continue;
+
+		directories.insert(dir);
+
+		out
+			<< Bytestream::Definition << formatter.Format(*f)
+			<< Bytestream::Operator << " : | "
+			<< Bytestream::Literal << dir
+			<< Bytestream::Reset << "\n"
+			;
+	}
+
+
 	// Build steps:
 	out
 		<< Bytestream::Comment
@@ -203,6 +227,17 @@ void MakeBackend::Process(const dag::DAG& dag, Bytestream& out, ErrorReport::Rep
 		<< "#\n"
 		<< Bytestream::Reset
 		;
+
+	for (const string& dir : directories)
+	{
+		out
+			<< Bytestream::Definition << dir
+			<< Bytestream::Operator << ":\n"
+			<< indent_ << Bytestream::Action << "mkdir -p "
+			<< Bytestream::Literal << dir
+			<< Bytestream::Reset << "\n"
+			;
+	}
 
 	StringMap<string> pseudoTargets;
 	size_t buildID = 0;
