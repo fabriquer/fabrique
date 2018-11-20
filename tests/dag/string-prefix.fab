@@ -3,8 +3,8 @@
 # RUN: %check %s -input-file %t
 #
 
-# CHECK-DAG: message:string = 'hello, world!';
+# CHECK-DAG: message:string = 'hello, world!'
 message = 'hello' :: ', ' :: 'world!';
 
-# CHECK-DAG: names:list[string] = [ 'Alice' 'Bob' 'Charlie' ];
+# CHECK-DAG: names:list[string] = [ 'Alice' 'Bob' 'Charlie' ]
 names = 'Alice' :: 'Bob' :: 'Charlie' :: [];
