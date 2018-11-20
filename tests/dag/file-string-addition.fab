@@ -14,3 +14,6 @@ baz = file('path/to/baz');
 
 # CHECK-DAG: wibble:file = path/to/baz/wibble
 wibble = baz + '/wibble';
+
+# CHECK-DAG: wobble:file = path/to/baz/wibble/wobble
+wobble = wibble :: 'wobble';
