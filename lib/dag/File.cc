@@ -204,8 +204,10 @@ ValuePtr File::Add(ValuePtr& suffix, SourceRange src) const
 
 ValuePtr File::PrefixWith(ValuePtr& prefix, SourceRange src) const
 {
+	const string name = JoinPath(prefix->str(), filename_);
+
 	shared_ptr<File> f(
-		new File(prefix->str() + filename_, subdirectory_, absolute_,
+		new File(name, subdirectory_, absolute_,
 		         attributes_, type(), src ? src : SourceRange::Over(prefix, this),
 		         generated_));
 
