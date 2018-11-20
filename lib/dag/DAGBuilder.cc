@@ -49,7 +49,6 @@
 #include <fabrique/types/TypeContext.hh>
 
 #include <cassert>
-#include <set>
 
 using namespace fabrique;
 using namespace fabrique::dag;
@@ -124,58 +123,9 @@ void DAGBuilder::Define(string name, ValuePtr v)
 UniqPtr<DAG> DAGBuilder::dag(vector<string> topLevelTargets) const
 {
 	//
-	// If we create files in output directories, we should also generate
-	// rules to make those directories.
-	//
-	// Many tools (e.g., compilers) can create the output directories themselves,
-	// but sometimes the build tool itself wants to know where the directories
-	// come from (e.g., when a build depends on generated include directories).
-	//
-	std::map<string,shared_ptr<class File>> directories;
-	SharedPtrVec<class Build> builds = builds_;
-	SharedPtrMap<class Rule> rules = rules_;
-	shared_ptr<class Rule> mkdir = MakeDirectory();
-
-	for (auto& file : files_)
-	{
-		FAB_ASSERT(file, "DAGBuilder contains null file");
-
-		if (not file->generated())
-			continue;
-
-		string dirname = file->directory();
-		while (not dirname.empty() and dirname != ".")
-		{
-			shared_ptr<class File>& dir = directories[dirname];
-			if (not dir)
-			{
-				dir.reset(
-					File::Create(dirname, ctx_.types().fileType(), {},
-					             SourceRange::None(), true));
-
-				directories[dirname] = dir;
-
-				ValueMap buildArgs;
-				buildArgs["directory"] = dir;
-				builds.emplace_back(
-					Build::Create(mkdir, buildArgs,
-					              SourceRange::None()));
-			}
-
-			dirname = dir->directory();
-		}
-	}
-
-	//
 	// Ensure all files are unique.
 	//
-	if (not directories.empty())
-		rules["mkdir"] = mkdir;
-
 	SharedPtrVec<class File> files = files_;
-	for (auto d : directories)
-		files.push_back(d.second);
-
 	std::sort(files.begin(), files.end(), File::LessThan);
 	files.erase(std::unique(files.begin(), files.end(), File::Equals), files.end());
 
@@ -224,7 +174,7 @@ UniqPtr<DAG> DAGBuilder::dag(vector<string> topLevelTargets) const
 
 
 	return UniqPtr<DAG>(
-		new ImmutableDAG(files, builds, rules, variables_, targets_, top));
+		new ImmutableDAG(files, builds_, rules_, variables_, targets_, top));
 }
 
 
@@ -391,23 +341,4 @@ ValuePtr DAGBuilder::String(string s, SourceRange src)
 std::shared_ptr<Record> DAGBuilder::Record(ValueMap fields, SourceRange source)
 {
 	return std::shared_ptr<class Record>(Record::Create(fields, ctx_.types(), source));
-}
-
-
-shared_ptr<class Rule> DAGBuilder::MakeDirectory() const
-{
-	TypeContext& ctx = ctx_.types();
-	const Type& str = ctx.stringType();
-	const Type& file = ctx.outputFileType();
-	const FunctionType& type = ctx.functionType(str, file);
-
-	ValueMap arguments;
-	arguments["description"].reset(new class String("Creating ${directory}", str));
-
-	SharedPtrVec<class Parameter> parameters;
-	parameters.emplace_back(new class Parameter("directory", file, ValuePtr()));
-
-	return shared_ptr<class Rule>(
-		Rule::Create("mkdir", platform::CreateDirCommand("${directory}"),
-			arguments, parameters, type));
 }
