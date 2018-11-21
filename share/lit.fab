@@ -3,7 +3,9 @@
 # console access. This has no effect on other backends.
 #
 
-lit = args.lit ? import('which').executable('lit');
+which = import('which');
+
+lit = args.lit ? which.executable('lit');
 
 run_lit = action(
 	'${lit} ${flags} --xunit-xml-output=${results} ${tree}',
@@ -18,7 +20,12 @@ run = function(fab:file, test_tree:file[in], results_file:file[out],
                suppress_success_output:bool = false, show_failure_details:bool = true)
                : file
 {
-	flags = ['-D fab=' + fab.fullname]
+	filecheck = args.filecheck ? which.executable('FileCheck');
+
+	flags = [
+			'-D fab=' + fab.fullname
+			'-D FileCheck=' + filecheck.fullname
+		]
 		+ (if suppress_success_output [ '--quiet' ] else [ '--succinct' ])
 		+ (if show_failure_details [ '--verbose' ] else [])
 		;
