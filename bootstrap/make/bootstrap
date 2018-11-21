@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# Re-build the GNUmakefile
-./regenerate.sh
-
 # Manually create this one directory until we can properly fix the make backend...
 mkdir -p lib/fabrique
 
