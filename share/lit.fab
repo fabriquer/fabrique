@@ -18,7 +18,7 @@ run = function(fab:file, test_tree:file[in], results_file:file[out],
                suppress_success_output:bool = false, show_failure_details:bool = true)
                : file
 {
-	flags = ['-D fab=' + fab.filename]
+	flags = ['-D fab=' + fab.fullname]
 		+ (if suppress_success_output [ '--quiet' ] else [ '--succinct' ])
 		+ (if show_failure_details [ '--verbose' ] else [])
 		;
