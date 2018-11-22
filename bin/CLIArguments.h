@@ -40,14 +40,6 @@ namespace fabrique {
 
 class Bytestream;
 
-enum OutputFormat
-{
-	Fabrique,
-	Make,
-	Ninja,
-	Sh,
-};
-
 /**
  * Command-line options and arguments after parsing, type-checking, etc.
  */
