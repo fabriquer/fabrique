@@ -9,6 +9,8 @@
 
 sources =
 	files(
+		Fabrique.cc
+		FabBuilder.cc
 		Printable.cc
 		builtins.cc
 		names.cc

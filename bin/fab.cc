@@ -33,6 +33,7 @@
 #include "CLIArguments.h"
 
 #include <fabrique/builtins.hh>
+#include <fabrique/FabBuilder.hh>
 
 #include <fabrique/ast/ASTDump.hh>
 #include <fabrique/ast/EvalContext.hh>
@@ -64,10 +65,6 @@ using namespace std;
 using fabrique::backend::Backend;
 
 
-static Bytestream& err();
-static void reportError(string message, SourceRange, ErrorReport::Severity, string detail);
-
-
 int main(int argc, char *argv[]) {
 	//
 	// Parse command-line arguments.
@@ -89,203 +86,42 @@ int main(int argc, char *argv[]) {
 	args.Print(argDebug);
 	argDebug << Bytestream::Reset << "\n";
 
-	//
-	// Locate input file, source root and build root.
-	//
-	const string fabfile =
-		PathIsDirectory(args.input)
-		? JoinPath(args.input, "fabfile")
-		: args.input
-		;
+	Bytestream& err = Bytestream::Stderr();
 
-	if (not PathIsFile(fabfile))
-	{
-		err()
-			<< Bytestream::Error << "Error"
-			<< Bytestream::Reset << ": "
-			<< Bytestream::ErrorMessage << "no such file: "
-			<< Bytestream::Literal << "'" << fabfile << "'"
-			<< Bytestream::Reset << "\n"
-			;
-
-		return 1;
-	}
-
-	const string abspath = PathIsAbsolute(fabfile) ? fabfile : AbsolutePath(fabfile);
-	const string srcroot = DirectoryOf(abspath);
-	const string buildroot = AbsoluteDirectory(args.output, true);
-
-	vector<string> inputFiles = { abspath };
-	vector<string> outputFiles;
-
-	//
-	// Prepare backends to receive the build graph.
-	//
-	UniqPtrVec<Backend> backends;
-	for (const string& format : args.outputFormats)
-	{
-		backends.emplace_back(Backend::Create(format));
-
-		const string filename = backends.back()->DefaultFilename();
-		if (not filename.empty())
-			outputFiles.push_back(filename);
-	}
-
-	//
-	// Parse the file, build the DAG and pass it to the backend(s).
-	// These operations can report errors with exceptions, so put them in
-	// a `try` block.
-	//
 	try
 	{
-		parsing::Parser parser(args.printAST, args.dumpAST);
-		TypeContext types;
-
 		//
-		// Parse command-line definitions.
+		// Translate command-line arguments into values for the
+		// Fabrique instance using a FabBuilder:
 		//
-		dag::ValueMap definitions;
-		for (const string &d : args.definitions)
-		{
-			auto parseResult = parser.Parse(d);
-			if (not parseResult.errors.empty())
-			{
-				for (auto &err : parseResult.errors)
-				{
-					Bytestream::Stderr() << err << "\n";
-				}
-				throw UserError("invalid definition: '" + d + "'");
-			}
+		Fabrique fab = FabBuilder()
+			.parseOnly(args.parseOnly)
+			.printASTs(args.printAST)
+			.printDAG(args.printDAG)
+			.dumpASTs(args.dumpAST)
+			.backends(args.outputFormats)
+			.outputDirectory(args.output)
+			.pluginPaths(PluginSearchPaths(args.executable))
+			.printToStdout(args.printOutput)
+			.regenerationCommand(args.executable + args.str())
+			.build()
+			;
 
-			FAB_ASSERT(parseResult.result, "!errors and !result");
-			if (auto &name = parseResult.result->name())
-			{
-				ast::EvalContext ctx(types);
-				auto value = parseResult.result->evaluate(ctx);
-				definitions[name->name()] = value;
-			}
-			else
-			{
-				Bytestream::Stdout()
-					<< Bytestream::Warning << "warning: "
-					<< Bytestream::Action << "ignoring"
-					<< Bytestream::Reset << " definition '"
-					<< Bytestream::Literal << d
-					<< Bytestream::Reset << "' with no name\n"
-					;
-			}
-		}
-
-		//
-		// Parse the file, optionally pretty-printing it.
-		//
-		std::ifstream infile(fabfile.c_str());
-		if (not infile)
-		{
-			throw UserError("failed to open '" + fabfile + "'");
-		}
-
-		auto parseResult = parser.ParseFile(infile, fabfile);
-
-		if (not parseResult.errors.empty())
-		{
-			for (auto &err : parseResult.errors)
-			{
-				Bytestream::Stderr() << err << "\n";
-			}
-			return 1;
-		}
-
-		if (args.parseOnly)
-		{
-			return 0;
-		}
-
-		auto values = std::move(parseResult.result);
-
-
-		//
-		// Convert the AST into a build graph.
-		//
-		plugin::Loader pluginLoader(PluginSearchPaths(args.executable));
-		ast::EvalContext ctx(types);
-		dag::DAGBuilder &builder = ctx.builder();
-
-		auto scope = ctx.EnterScope(fabfile);
-		scope.DefineReserved("args", builder.Record(definitions));
-		scope.DefineReserved("srcroot", builder.File(srcroot));
-		scope.DefineReserved("buildroot", builder.File(buildroot));
-		scope.DefineReserved("file", builtins::OpenFile(builder));
-		scope.DefineReserved("import",
-			builtins::Import(parser, pluginLoader, srcroot, ctx));
-
-		// Also define srcroot as an explicit variable in the DAG:
-		builder.Define("srcroot", builder.String(srcroot));
-
-		vector<string> targets;
-		for (const auto& v : values)
-		{
-			ctx.Define(*v);
-			if (auto &name = v->name())
-			{
-				targets.push_back(name->name());
-			}
-		}
-
-		// Add regeneration (if Fabrique files change):
-		string regenerationCommand = args.executable + args.str();
-		if (not outputFiles.empty())
-			builder.AddRegeneration(
-				regenerationCommand, inputFiles, outputFiles);
-
-		unique_ptr<dag::DAG> dag = builder.dag(targets);
-		FAB_ASSERT(dag, "null DAG");
-
-		if (args.printDAG)
-		{
-			dag->PrettyPrint(Bytestream::Stdout());
-		}
-
-
-		//
-		// Finally, feed the build graph into the backend(s).
-		//
-		for (UniqPtr<Backend>& backend : backends)
-		{
-			std::ofstream outfile;
-			unique_ptr<Bytestream> outfileStream;
-
-			const string filename =
-				JoinPath(buildroot, backend->DefaultFilename());
-
-			if (not args.printOutput and filename != buildroot)
-			{
-				outfile.open(filename.c_str());
-				outfileStream.reset(Bytestream::Plain(outfile));
-			}
-
-			Bytestream& out = outfileStream
-				? *outfileStream
-				: Bytestream::Stdout();
-
-			backend->Process(*dag, out, reportError);
-
-			outfile.flush();
-			outfile.close();
-		}
+		fab.AddArguments(args.definitions);
+		fab.Process(args.input);
 
 		return 0;
 	}
 	catch (const UserError& e)
 	{
-		err()
+		err
 			<< Bytestream::Error << "Error"
 			<< Bytestream::Reset << ": " << e
 			;
 	}
 	catch (const OSError& e)
 	{
-		err()
+		err
 			<< Bytestream::Error << e.message()
 			<< Bytestream::Reset << ": "
 			<< Bytestream::ErrorMessage << e.description()
@@ -293,31 +129,17 @@ int main(int argc, char *argv[]) {
 	}
 	catch (const SourceCodeException& e)
 	{
-		err() << e;
+		err << e;
 	}
 	catch (const std::exception& e)
 	{
-		err()
+		err
 			<< Bytestream::Error << "Uncaught exception"
 			<< Bytestream::Reset << ": "
 			<< Bytestream::ErrorMessage << e.what()
 			;
 	}
 
-	err() << Bytestream::Reset << "\n";
+	err << Bytestream::Reset << "\n";
 	return 1;
-}
-
-
-static Bytestream& err()
-{
-	static Bytestream& err = Bytestream::Stderr();
-	return err;
-}
-
-
-static void reportError(string message, SourceRange src, ErrorReport::Severity severity,
-                        string detail)
-{
-	err() << ErrorReport(message, src, severity, detail) << Bytestream::Reset << "\n";
 }
