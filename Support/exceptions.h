@@ -124,6 +124,7 @@ public:
 	const std::string& message() const;
 	const std::string& detail() const;
 	virtual const char* what() const noexcept override;
+	ErrorReport err() const { return err_; }
 
 	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 
