@@ -34,7 +34,7 @@ cxx_srcs = {
 		'fab',
 	),
 	'lib/': (
-		'Printable', 'builtins', 'names',
+		'Fabrique', 'FabBuilder', 'Printable', 'builtins', 'names',
 	),
 	'lib/ast/': (
 		'ASTDump', 'Action', 'Argument', 'Arguments', 'BinaryOperation', 'Call',
