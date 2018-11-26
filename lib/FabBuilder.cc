@@ -32,8 +32,18 @@
 
 #include <fabrique/FabBuilder.hh>
 #include <fabrique/platform/files.hh>
+#include "Support/Bytestream.h"
 
 using namespace fabrique;
+
+
+static void DefaultErrorHandler(ErrorReport);
+
+
+FabBuilder::FabBuilder()
+	: err_(DefaultErrorHandler)
+{
+}
 
 
 FabBuilder& FabBuilder::backends(std::vector<std::string> backendNames)
@@ -57,4 +67,10 @@ Fabrique FabBuilder::build()
 	return Fabrique(parseOnly_, printASTs_, dumpASTs_, printDAG_, stdout_,
 	                std::move(backends_), outputDir_, std::move(pluginPaths_),
 	                regenCommand_, err_);
+}
+
+
+static void DefaultErrorHandler(ErrorReport r)
+{
+	Bytestream::Stderr() << r << "\n";
 }

@@ -45,6 +45,7 @@ namespace fabrique {
 class FabBuilder
 {
 public:
+	FabBuilder();
 	Fabrique build();
 
 	FabBuilder& parseOnly(bool p) { parseOnly_ = p; return *this; }
