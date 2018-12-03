@@ -1,5 +1,4 @@
 sources = files(
-	Bytestream.cc
 	ErrorReport.cc
 	Join.cc
 	SourceLocation.cc

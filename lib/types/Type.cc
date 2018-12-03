@@ -29,7 +29,7 @@
  * SUCH DAMAGE.
  */
 
-#include "Support/Bytestream.h"
+#include <fabrique/Bytestream.hh>
 #include "Support/SourceLocation.h"
 #include <fabrique/types/TypeContext.hh>
 #include <fabrique/types/TypeError.hh>

@@ -30,13 +30,13 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/Bytestream.hh>
 #include <fabrique/Fabrique.hh>
 #include <fabrique/ast/EvalContext.hh>
 #include <fabrique/dag/DAGBuilder.hh>
 #include <fabrique/parsing/Parser.hh>
 #include <fabrique/platform/files.hh>
 #include <fabrique/plugin/Loader.hh>
-#include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 #include <fabrique/types/TypeContext.hh>
 

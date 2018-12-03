@@ -29,8 +29,8 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/Bytestream.hh>
 #include <fabrique/parsing/Token.hh>
-#include "Support/Bytestream.h"
 using namespace fabrique;
 using std::string;
 

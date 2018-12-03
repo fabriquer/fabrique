@@ -29,6 +29,7 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/Bytestream.hh>
 #include <fabrique/dag/Build.hh>
 #include <fabrique/dag/File.hh>
 #include <fabrique/dag/List.hh>
@@ -36,7 +37,6 @@
 #include <fabrique/dag/Rule.hh>
 #include <fabrique/dag/Visitor.hh>
 
-#include "Support/Bytestream.h"
 #include "Support/Join.h"
 #include "Support/exceptions.h"
 

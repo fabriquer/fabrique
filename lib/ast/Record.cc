@@ -33,10 +33,10 @@
  */
 
 #include <fabrique/names.hh>
+#include <fabrique/Bytestream.hh>
 #include <fabrique/ast/EvalContext.hh>
 #include <fabrique/ast/Record.hh>
 #include <fabrique/ast/Visitor.hh>
-#include "Support/Bytestream.h"
 
 using namespace fabrique;
 using namespace fabrique::ast;

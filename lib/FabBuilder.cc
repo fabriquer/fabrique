@@ -30,9 +30,9 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/Bytestream.hh>
 #include <fabrique/FabBuilder.hh>
 #include <fabrique/platform/files.hh>
-#include "Support/Bytestream.h"
 
 using namespace fabrique;
 

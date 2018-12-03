@@ -29,9 +29,9 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/Bytestream.hh>
 #include <fabrique/ast/Arguments.hh>
 #include <fabrique/ast/Visitor.hh>
-#include "Support/Bytestream.h"
 
 using namespace fabrique;
 using namespace fabrique::ast;

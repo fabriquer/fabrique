@@ -29,11 +29,11 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/Bytestream.hh>
 #include <fabrique/platform/SharedLibrary.hh>
 #include <fabrique/platform/files.hh>
 #include <fabrique/plugin/Loader.hh>
 #include <fabrique/plugin/Registry.hh>
-#include "Support/Bytestream.h"
 #include "Support/Join.h"
 
 using namespace fabrique;

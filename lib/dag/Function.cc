@@ -30,10 +30,10 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/Bytestream.hh>
 #include <fabrique/dag/Function.hh>
 #include <fabrique/dag/Parameter.hh>
 #include <fabrique/dag/Visitor.hh>
-#include "Support/Bytestream.h"
 #include <fabrique/types/FunctionType.hh>
 #include <fabrique/types/TypeContext.hh>
 

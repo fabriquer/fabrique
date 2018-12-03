@@ -30,6 +30,7 @@
 
 #include <fabrique/builtins.hh>
 #include <fabrique/names.hh>
+#include <fabrique/Bytestream.hh>
 #include <fabrique/ast/EvalContext.hh>
 #include <fabrique/dag/DAGBuilder.hh>
 #include <fabrique/dag/File.hh>
@@ -42,7 +43,6 @@
 #include <fabrique/types/FileType.hh>
 #include <fabrique/types/TypeContext.hh>
 
-#include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 
 #include <fstream>

@@ -29,6 +29,7 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/Bytestream.hh>
 #include <fabrique/ast/EvalContext.hh>
 #include <fabrique/ast/Value.hh>
 #include <fabrique/ast/Visitor.hh>
@@ -36,7 +37,6 @@
 #include <fabrique/dag/File.hh>
 #include <fabrique/dag/List.hh>
 #include <fabrique/dag/TypeReference.hh>
-#include "Support/Bytestream.h"
 #include <fabrique/types/Type.hh>
 
 #include <cassert>

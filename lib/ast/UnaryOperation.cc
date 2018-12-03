@@ -30,9 +30,9 @@
  */
 
 #include <fabrique/names.hh>
+#include <fabrique/Bytestream.hh>
 #include <fabrique/ast/UnaryOperation.hh>
 #include <fabrique/ast/Visitor.hh>
-#include "Support/Bytestream.h"
 #include "Support/SourceLocation.h"
 #include "Support/exceptions.h"
 

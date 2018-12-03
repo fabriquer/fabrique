@@ -30,10 +30,10 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/Bytestream.hh>
 #include <fabrique/platform/PosixError.hh>
 #include <fabrique/platform/files.hh>
 
-#include "Support/Bytestream.h"
 #include "Support/Join.h"
 #include "Support/String.h"
 #include "Support/exceptions.h"

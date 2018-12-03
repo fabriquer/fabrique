@@ -30,12 +30,12 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/Bytestream.hh>
 #include <fabrique/ast/FieldQuery.hh>
 #include <fabrique/ast/Identifier.hh>
 #include <fabrique/ast/Visitor.hh>
 #include <fabrique/dag/Record.hh>
 #include <fabrique/types/Type.hh>
-#include "Support/Bytestream.h"
 
 #include <cassert>
 

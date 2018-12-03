@@ -30,9 +30,9 @@
  */
 
 #include <fabrique/names.hh>
+#include <fabrique/Bytestream.hh>
 #include <fabrique/ast/ast.hh>
 #include <fabrique/parsing/ASTBuilder.hh>
-#include "Support/Bytestream.h"
 
 #include <cassert>
 

@@ -32,9 +32,9 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/Bytestream.hh>
 #include <fabrique/ast/Argument.hh>
 #include <fabrique/ast/HasParameters.hh>
-#include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 
 using namespace fabrique;

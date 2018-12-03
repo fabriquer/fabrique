@@ -30,12 +30,12 @@
  */
 
 #include <fabrique/names.hh>
+#include <fabrique/Bytestream.hh>
 #include <fabrique/dag/constants.hh>
 #include <fabrique/dag/File.hh>
 #include <fabrique/dag/Primitive.hh>
 #include <fabrique/dag/Visitor.hh>
 #include <fabrique/platform/files.hh>
-#include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 #include <fabrique/types/TypeContext.hh>
 #include <fabrique/types/TypeError.hh>

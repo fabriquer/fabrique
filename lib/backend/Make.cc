@@ -30,6 +30,7 @@
  */
 
 #include <fabrique/names.hh>
+#include <fabrique/Bytestream.hh>
 
 #include <fabrique/backend/Make.hh>
 
@@ -43,7 +44,6 @@
 #include <fabrique/dag/TypeReference.hh>
 #include <fabrique/dag/Value.hh>
 
-#include "Support/Bytestream.h"
 #include "Support/Join.h"
 
 #include <cassert>

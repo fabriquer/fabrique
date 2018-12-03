@@ -30,8 +30,8 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/Bytestream.hh>
 #include <fabrique/ast/ASTDump.hh>
-#include "Support/Bytestream.h"
 
 #include <iomanip>
 

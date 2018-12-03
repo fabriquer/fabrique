@@ -32,8 +32,8 @@
 #ifndef PRIMITIVE_H
 #define PRIMITIVE_H
 
+#include <fabrique/Bytestream.hh>
 #include <fabrique/dag/Value.hh>
-#include "Support/Bytestream.h"
 #include "Support/SourceLocation.h"
 
 #include <functional>

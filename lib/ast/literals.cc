@@ -30,11 +30,11 @@
  */
 
 #include <fabrique/names.hh>
+#include <fabrique/Bytestream.hh>
 #include <fabrique/ast/EvalContext.hh>
 #include <fabrique/ast/literals.hh>
 #include <fabrique/ast/Visitor.hh>
 #include <fabrique/dag/Primitive.hh>
-#include "Support/Bytestream.h"
 
 using namespace fabrique;
 using namespace fabrique::ast;

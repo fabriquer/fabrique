@@ -29,6 +29,8 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/Bytestream.hh>
+
 #include <fabrique/backend/Ninja.hh>
 
 #include <fabrique/dag/Build.hh>
@@ -42,7 +44,6 @@
 #include <fabrique/dag/Rule.hh>
 #include <fabrique/dag/TypeReference.hh>
 
-#include "Support/Bytestream.h"
 #include "Support/Join.h"
 
 #include <cassert>

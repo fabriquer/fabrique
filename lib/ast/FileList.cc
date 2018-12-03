@@ -30,6 +30,7 @@
  */
 
 #include <fabrique/names.hh>
+#include <fabrique/Bytestream.hh>
 #include <fabrique/ast/EvalContext.hh>
 #include <fabrique/ast/FileList.hh>
 #include <fabrique/ast/Visitor.hh>
@@ -37,7 +38,6 @@
 #include <fabrique/dag/List.hh>
 #include <fabrique/dag/Primitive.hh>
 #include <fabrique/platform/files.hh>
-#include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 
 #include <cassert>

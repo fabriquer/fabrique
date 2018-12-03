@@ -32,12 +32,12 @@
 
 #include <sys/types.h>
 
+#include <fabrique/Bytestream.hh>
 #include <fabrique/dag/DAGBuilder.hh>
 #include <fabrique/dag/List.hh>
 #include <fabrique/dag/Parameter.hh>
 #include <fabrique/plugin/Registry.hh>
 #include <fabrique/types/TypeContext.hh>
-#include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 
 using namespace fabrique;

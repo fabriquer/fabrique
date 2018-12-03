@@ -30,9 +30,9 @@
  */
 
 #include <fabrique/names.hh>
+#include <fabrique/Bytestream.hh>
 #include <fabrique/ast/Identifier.hh>
 #include <fabrique/ast/Visitor.hh>
-#include "Support/Bytestream.h"
 
 using namespace fabrique::ast;
 

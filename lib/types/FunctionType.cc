@@ -30,8 +30,8 @@
  */
 
 #include <fabrique/names.hh>
+#include <fabrique/Bytestream.hh>
 #include <fabrique/types/FunctionType.hh>
-#include "Support/Bytestream.h"
 #include "Support/Join.h"
 
 #include <memory>

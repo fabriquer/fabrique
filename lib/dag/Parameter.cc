@@ -29,9 +29,9 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/Bytestream.hh>
 #include <fabrique/dag/Parameter.hh>
 #include <fabrique/dag/Value.hh>
-#include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 #include <fabrique/types/Type.hh>
 

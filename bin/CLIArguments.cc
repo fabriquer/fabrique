@@ -35,9 +35,9 @@
 // Include Matthias Benkmann's "Lean Mean C++ Option Parser".
 #include "optionparser.h"
 
+#include <fabrique/Bytestream.hh>
 #include <fabrique/platform/files.hh>
 
-#include "Support/Bytestream.h"
 #include "Support/String.h"
 
 #include <iostream>

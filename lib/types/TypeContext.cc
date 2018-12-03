@@ -30,6 +30,7 @@
  */
 
 #include <fabrique/names.hh>
+#include <fabrique/Bytestream.hh>
 #include <fabrique/types/BooleanType.hh>
 #include <fabrique/types/FileType.hh>
 #include <fabrique/types/FunctionType.hh>
@@ -38,7 +39,6 @@
 #include <fabrique/types/SequenceType.hh>
 #include <fabrique/types/StringType.hh>
 #include <fabrique/types/TypeContext.hh>
-#include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 
 #include <cassert>

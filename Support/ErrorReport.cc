@@ -30,8 +30,8 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/Bytestream.hh>
 #include "Support/ErrorReport.h"
-#include "Support/Bytestream.h"
 
 #include <cassert>
 #include <fstream>

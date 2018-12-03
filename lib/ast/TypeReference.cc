@@ -29,13 +29,13 @@
  */
 
 #include <fabrique/names.hh>
+#include <fabrique/Bytestream.hh>
 #include <fabrique/ast/EvalContext.hh>
 #include <fabrique/ast/TypeDeclaration.hh>
 #include <fabrique/ast/TypeReference.hh>
 #include <fabrique/ast/Visitor.hh>
 #include <fabrique/dag/TypeReference.hh>
 #include <fabrique/platform/ABI.hh>
-#include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 #include <fabrique/types/FunctionType.hh>
 #include <fabrique/types/RecordType.hh>

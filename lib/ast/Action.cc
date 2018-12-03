@@ -30,13 +30,13 @@
  */
 
 #include <fabrique/names.hh>
+#include <fabrique/Bytestream.hh>
 #include <fabrique/UniqPtr.h>
 #include <fabrique/ast/Action.hh>
 #include <fabrique/ast/EvalContext.hh>
 #include <fabrique/ast/Visitor.hh>
 #include <fabrique/dag/Parameter.hh>
 #include <fabrique/dag/Primitive.hh>
-#include "Support/Bytestream.h"
 #include <fabrique/types/FileType.hh>
 #include <fabrique/types/FunctionType.hh>
 #include <fabrique/types/SequenceType.hh>

@@ -29,6 +29,7 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/Bytestream.hh>
 #include <fabrique/names.hh>
 #include <fabrique/ast/Call.hh>
 #include <fabrique/ast/EvalContext.hh>
@@ -36,7 +37,6 @@
 #include <fabrique/ast/NameReference.hh>
 #include <fabrique/ast/Visitor.hh>
 #include <fabrique/dag/Callable.hh>
-#include "Support/Bytestream.h"
 #include "Support/SourceLocation.h"
 #include "Support/exceptions.h"
 #include <fabrique/types/FunctionType.hh>

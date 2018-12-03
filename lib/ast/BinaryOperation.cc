@@ -29,10 +29,10 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/Bytestream.hh>
 #include <fabrique/names.hh>
 #include <fabrique/ast/BinaryOperation.hh>
 #include <fabrique/ast/Visitor.hh>
-#include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 #include <fabrique/types/TypeContext.hh>
 

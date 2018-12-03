@@ -29,7 +29,7 @@
  * SUCH DAMAGE.
  */
 
-#include "Support/Bytestream.h"
+#include <fabrique/Bytestream.hh>
 #include "Support/Join.h"
 
 #include <iterator>

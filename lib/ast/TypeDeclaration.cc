@@ -32,11 +32,11 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/Bytestream.hh>
 #include <fabrique/ast/EvalContext.hh>
 #include <fabrique/ast/TypeDeclaration.hh>
 #include <fabrique/ast/Visitor.hh>
 #include <fabrique/dag/TypeReference.hh>
-#include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 
 using namespace fabrique;

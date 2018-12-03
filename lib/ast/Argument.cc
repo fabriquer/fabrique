@@ -29,9 +29,9 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/Bytestream.hh>
 #include <fabrique/ast/Argument.hh>
 #include <fabrique/ast/Visitor.hh>
-#include "Support/Bytestream.h"
 
 #include <cassert>
 

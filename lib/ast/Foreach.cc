@@ -29,13 +29,13 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/Bytestream.hh>
 #include <fabrique/ast/EvalContext.hh>
 #include <fabrique/ast/Foreach.hh>
 #include <fabrique/ast/Parameter.hh>
 #include <fabrique/ast/Value.hh>
 #include <fabrique/ast/Visitor.hh>
 #include <fabrique/dag/List.hh>
-#include "Support/Bytestream.h"
 
 #include <cassert>
 

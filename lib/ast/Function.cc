@@ -31,6 +31,7 @@
  */
 
 #include <fabrique/names.hh>
+#include <fabrique/Bytestream.hh>
 #include <fabrique/ast/CompoundExpr.hh>
 #include <fabrique/ast/EvalContext.hh>
 #include <fabrique/ast/Function.hh>
@@ -40,7 +41,6 @@
 #include <fabrique/dag/Function.hh>
 #include <fabrique/dag/Parameter.hh>
 #include <fabrique/dag/TypeReference.hh>
-#include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 #include <fabrique/types/FunctionType.hh>
 #include <fabrique/types/TypeContext.hh>

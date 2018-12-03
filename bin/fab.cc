@@ -33,6 +33,7 @@
 #include "CLIArguments.h"
 
 #include <fabrique/builtins.hh>
+#include <fabrique/Bytestream.hh>
 #include <fabrique/FabBuilder.hh>
 
 #include <fabrique/ast/ASTDump.hh>
@@ -48,7 +49,6 @@
 
 #include <fabrique/plugin/Loader.hh>
 
-#include "Support/Bytestream.h"
 #include "Support/exceptions.h"
 
 #include <fabrique/types/TypeContext.hh>

@@ -34,7 +34,7 @@
  * SUCH DAMAGE.
  */
 
-#include "Support/Bytestream.h"
+#include <fabrique/Bytestream.hh>
 #include "Support/SourceLocation.h"
 
 #include <cassert>

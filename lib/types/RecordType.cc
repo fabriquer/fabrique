@@ -30,7 +30,7 @@
  */
 
 #include <fabrique/names.hh>
-#include "Support/Bytestream.h"
+#include <fabrique/Bytestream.hh>
 #include "Support/Join.h"
 #include "Support/SourceLocation.h"
 #include "Support/exceptions.h"

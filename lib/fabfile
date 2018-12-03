@@ -9,6 +9,7 @@
 
 sources =
 	files(
+		Bytestream.cc
 		Fabrique.cc
 		FabBuilder.cc
 		Printable.cc
