@@ -29,10 +29,10 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/names.hh>
 #include <fabrique/Bytestream.hh>
+#include <fabrique/names.hh>
+#include <fabrique/strings.hh>
 #include <fabrique/types/FunctionType.hh>
-#include "Support/Join.h"
 
 #include <memory>
 

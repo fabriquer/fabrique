@@ -30,6 +30,7 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/strings.hh>
 #include <fabrique/dag/DAGBuilder.hh>
 #include <fabrique/dag/File.hh>
 #include <fabrique/dag/List.hh>
@@ -40,7 +41,6 @@
 #include <fabrique/types/FunctionType.hh>
 #include <fabrique/types/RecordType.hh>
 #include <fabrique/types/TypeContext.hh>
-#include "Support/String.h"
 #include "Support/exceptions.h"
 
 #include <cassert>

@@ -1,15 +1,12 @@
-/**
- * @file Support/Join.h
- * Declaration of the @ref fabrique::Join ostream helper and some helper functions
- * for joining strings (or things that be made into strings) together.
- */
+//! @file strings.hh    Declaration of string manipulation functions (join, split, etc.)
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -42,12 +39,14 @@
 #include <functional>
 #include <sstream>
 #include <string>
+#include <vector>
 
 
 namespace fabrique {
 
 class Bytestream;
 
+std::vector<std::string> Split(const std::string&, std::string delimiter = ",");
 
 //! Joins printable objects into a string, e.g., "a, b, c" or "a b c".
 template<class T>

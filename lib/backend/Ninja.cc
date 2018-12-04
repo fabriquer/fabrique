@@ -30,6 +30,7 @@
  */
 
 #include <fabrique/Bytestream.hh>
+#include <fabrique/strings.hh>
 
 #include <fabrique/backend/Ninja.hh>
 
@@ -43,8 +44,6 @@
 #include <fabrique/dag/Record.hh>
 #include <fabrique/dag/Rule.hh>
 #include <fabrique/dag/TypeReference.hh>
-
-#include "Support/Join.h"
 
 #include <cassert>
 

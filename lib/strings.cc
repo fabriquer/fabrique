@@ -1,11 +1,12 @@
-/** @file Support/String.h    Declaration of string utility functions. */
+//! @file strings.cc    Definition of string manipulation functions (join, split, etc.)
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,17 +30,47 @@
  * SUCH DAMAGE.
  */
 
-#ifndef STRING_H
-#define STRING_H
+#include <fabrique/Bytestream.hh>
+#include <fabrique/strings.hh>
 
-#include <string>
-#include <vector>
+#include <iterator>
+
+using namespace fabrique;
+using std::string;
 
 
-namespace fabrique {
+string fabrique::join(const string& x, const string& y, const string& delim)
+{
+	if (x.empty())
+		return y;
 
-std::vector<std::string> Split(const std::string&, std::string delimiter = ",");
+	return x + delim + y;
+}
 
-} // namespace fabrique
 
-#endif // !STRING_H
+std::vector<string> fabrique::Split(const std::string& s, const std::string delim)
+{
+	long long lastDelimiter = -1;
+	std::vector<string> parts;
+
+	while (true)
+	{
+		assert(lastDelimiter >= -1);
+		size_t last = static_cast<size_t>(lastDelimiter) + delim.length();
+
+		size_t next = s.find(delim, last);
+		if (next == string::npos)
+			break;
+
+		const size_t len = next - last;
+		parts.push_back(s.substr(last, len));
+
+		assert(next >= 0);
+		lastDelimiter = static_cast<long long>(next);
+	}
+
+	assert(lastDelimiter >= -1);
+	parts.push_back(s.substr(static_cast<size_t>(lastDelimiter) + delim.length()));
+
+	return parts;
+}

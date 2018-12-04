@@ -36,9 +36,8 @@
 #include "optionparser.h"
 
 #include <fabrique/Bytestream.hh>
+#include <fabrique/strings.hh>
 #include <fabrique/platform/files.hh>
-
-#include "Support/String.h"
 
 #include <iostream>
 #include <sstream>

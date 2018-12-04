@@ -15,6 +15,7 @@ sources =
 		Printable.cc
 		builtins.cc
 		names.cc
+		strings.cc
 	)
 	+ import('ast').sources
 	+ import('backend').sources

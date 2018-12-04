@@ -31,11 +31,10 @@
  */
 
 #include <fabrique/Bytestream.hh>
+#include <fabrique/strings.hh>
 #include <fabrique/platform/PosixError.hh>
 #include <fabrique/platform/files.hh>
 
-#include "Support/Join.h"
-#include "Support/String.h"
 #include "Support/exceptions.h"
 
 #include <fstream>

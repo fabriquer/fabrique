@@ -30,11 +30,11 @@
  */
 
 #include <fabrique/Bytestream.hh>
+#include <fabrique/strings.hh>
 #include <fabrique/platform/SharedLibrary.hh>
 #include <fabrique/platform/files.hh>
 #include <fabrique/plugin/Loader.hh>
 #include <fabrique/plugin/Registry.hh>
-#include "Support/Join.h"
 
 using namespace fabrique;
 using namespace fabrique::platform;

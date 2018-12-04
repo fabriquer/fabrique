@@ -31,6 +31,7 @@
  */
 
 #include <fabrique/names.hh>
+#include <fabrique/strings.hh>
 #include <fabrique/Bytestream.hh>
 #include <fabrique/ast/EvalContext.hh>
 #include <fabrique/ast/Parameter.hh>
@@ -39,7 +40,6 @@
 #include <fabrique/dag/DAGBuilder.hh>
 #include <fabrique/dag/TypeReference.hh>
 
-#include "Support/Join.h"
 #include "Support/exceptions.h"
 
 #include <fabrique/types/FileType.hh>

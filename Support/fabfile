@@ -1,7 +1,5 @@
 sources = files(
 	ErrorReport.cc
-	Join.cc
 	SourceLocation.cc
-	String.cc
 	exceptions.cc
 );

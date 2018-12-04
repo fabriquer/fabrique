@@ -30,9 +30,9 @@
  */
 
 #include <fabrique/Bytestream.hh>
+#include <fabrique/strings.hh>
 #include <fabrique/dag/List.hh>
 #include <fabrique/dag/Visitor.hh>
-#include "Support/Join.h"
 #include "Support/SourceLocation.h"
 #include "Support/exceptions.h"
 #include <fabrique/types/TypeContext.hh>

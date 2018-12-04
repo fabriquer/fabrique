@@ -30,6 +30,8 @@
  */
 
 #include <fabrique/Bytestream.hh>
+#include <fabrique/strings.hh>
+
 #include <fabrique/dag/Build.hh>
 #include <fabrique/dag/File.hh>
 #include <fabrique/dag/List.hh>
@@ -37,7 +39,6 @@
 #include <fabrique/dag/Rule.hh>
 #include <fabrique/dag/Visitor.hh>
 
-#include "Support/Join.h"
 #include "Support/exceptions.h"
 
 #include <fabrique/types/FileType.hh>

@@ -29,8 +29,9 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/names.hh>
 #include <fabrique/Bytestream.hh>
+#include <fabrique/names.hh>
+#include <fabrique/strings.hh>
 
 #include <fabrique/backend/Make.hh>
 
@@ -43,8 +44,6 @@
 #include <fabrique/dag/Rule.hh>
 #include <fabrique/dag/TypeReference.hh>
 #include <fabrique/dag/Value.hh>
-
-#include "Support/Join.h"
 
 #include <cassert>
 #include <set>

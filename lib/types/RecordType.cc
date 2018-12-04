@@ -29,9 +29,9 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/names.hh>
 #include <fabrique/Bytestream.hh>
-#include "Support/Join.h"
+#include <fabrique/names.hh>
+#include <fabrique/strings.hh>
 #include "Support/SourceLocation.h"
 #include "Support/exceptions.h"
 #include <fabrique/types/RecordType.hh>

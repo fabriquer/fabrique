@@ -31,6 +31,7 @@
  */
 
 #include <fabrique/Bytestream.hh>
+#include <fabrique/strings.hh>
 
 #include <fabrique/ast/Value.hh>
 
@@ -41,7 +42,6 @@
 #include <fabrique/dag/Primitive.hh>
 #include <fabrique/dag/Rule.hh>
 
-#include "Support/Join.h"
 #include "Support/exceptions.h"
 
 #include <fabrique/platform/files.hh>
