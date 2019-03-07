@@ -74,6 +74,8 @@ struct Platform
 
 } // anonymous namespace
 
+static string Architecture();
+
 
 shared_ptr<Record>
 PlatformTests::Create(DAGBuilder& builder, const ValueMap& args) const
@@ -82,6 +84,8 @@ PlatformTests::Create(DAGBuilder& builder, const ValueMap& args) const
 	SemaCheck(args.empty(), src, "platform plugin does not take arguments");
 
 	ValueMap fields;
+	fields["architecture"] = builder.String(Architecture(), src);
+
 	Platform p = Platform::get();
 	fields["osname"] = builder.String(p.name);
 
@@ -94,6 +98,41 @@ PlatformTests::Create(DAGBuilder& builder, const ValueMap& args) const
 }
 
 static plugin::Registry::Initializer init(new PlatformTests());
+
+
+static string Architecture()
+{
+#if defined(__amd64__) || defined(__x86_64__) || defined(_M_AMD64)
+	return "amd64";
+
+#elif defined(__arm__) || defined(_M_ARM)
+	return "arm";
+
+#elif defined(__aarch64__)
+	return "arm64";
+
+#elif defined(__i386__) || defined(_M_IX86)
+	return "i386";
+
+#elif defined(__ia64__) || defined(_M_IA64)
+	return "ia64";
+
+#elif defined(__m68k__)
+	return "m68k";
+
+#elif defined(__mips__)
+	return "mips";
+
+#elif defined(__powerpc__) || defined(_M_PPC)
+	return "powerpc";
+
+#elif defined(__sparc__) || defined(__sparc)
+	return "sparc";
+
+#else
+	#error Unknown architecture
+#endif
+}
 
 
 Platform Platform::get()
