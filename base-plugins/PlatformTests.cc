@@ -1,9 +1,9 @@
 /**
- * @file plugins/PlatformTests.cc
+ * @file base-plugins/PlatformTests.cc
  * Definition of @ref fabrique::plugins::PlatformTests.
  */
 /*
- * Copyright (c) 2014, 2018 Jonathan Anderson
+ * Copyright (c) 2014, 2018-2019 Jonathan Anderson
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -45,79 +45,6 @@ using std::string;
 
 namespace {
 
-// Apple:
-static const char iOS[]		= "ios";
-static const char MacOSX[]	= "macosx";
-
-// BSD:
-static const char FreeBSD[]	= "freebsd";
-static const char NetBSD[]	= "netbsd";
-static const char OpenBSD[]	= "openbsd";
-
-// Linux (I hope we don't need distro differentiation):
-static const char Linux[]	= "linux";
-
-// Windows:
-static const char Win32[]	= "win32";
-static const char Win64[]	= "win64";
-
-static const char* Platforms[] = {
-	// Apple:
-	iOS,
-	MacOSX,
-
-	// BSD:
-	FreeBSD,
-	NetBSD,
-	OpenBSD,
-
-	// Linux:
-	Linux,
-
-	// Windows:
-	Win32,
-	Win64,
-};
-
-
-/**
- * The name of the platform that Fabrique was compiled for.
- *
- * This doesn't provide any logic such as "BSD, Linux and Mac are all POSIX":
- * that is done in Fabrique files rather than compiled C++ files.
- */
-static const char *Name =
-// Apple currently means Mac:
-#if defined(__APPLE__)
-	MacOSX
-
-// BSD:
-#elif defined(__FreeBSD__)
-	FreeBSD
-
-#elif defined(__NetBSD__)
-	NetBSD
-
-#elif defined(__OpenBSD__)
-	OpenBSD
-
-// Linux:
-#elif defined(__linux)
-	Linux
-
-// Windows:
-#elif defined(_WIN32)
-	#if defined(_WIN64)
-		Win64
-	#else
-		Win32
-	#endif
-
-#else
-	#error Unsupported platform
-#endif
-	;
-
 /**
  * Platform detection: defines the bare minimum of constants required to
  * implement platform-specific functionality.
@@ -126,9 +53,23 @@ static const char *Name =
 class PlatformTests : public plugin::Plugin
 {
 	public:
-	virtual string name() const override { return "platform-tests"; }
+	virtual string name() const override { return "platform"; }
 	virtual shared_ptr<dag::Record>
 		Create(dag::DAGBuilder&, const ValueMap& args) const override;
+};
+
+struct Platform
+{
+	string name;
+
+	// Non-mutually-exclusive flags:
+	bool bsd;
+	bool darwin;
+	bool linux;
+	bool posix;
+	bool windows;
+
+	static Platform get();
 };
 
 } // anonymous namespace
@@ -140,17 +81,59 @@ PlatformTests::Create(DAGBuilder& builder, const ValueMap& args) const
 	SourceRange src = SourceRange::Over(args);
 	SemaCheck(args.empty(), src, "platform plugin does not take arguments");
 
-	const ValueMap scope;
 	ValueMap fields;
+	Platform p = Platform::get();
+	fields["osname"] = builder.String(p.name);
 
-	for (const char *platform : Platforms)
-	{
-		const bool isThisPlatform = (Name == platform);
-		fields[platform] = builder.Bool(isThisPlatform, src);
-	}
+	fields["bsd"] = builder.Bool(p.bsd, src);
+	fields["darwin"] = builder.Bool(p.darwin, src);
+	fields["posix"] = builder.Bool(p.posix, src);
+	fields["windows"] = builder.Bool(p.windows, src);
 
 	return builder.Record(fields);
 }
 
-
 static plugin::Registry::Initializer init(new PlatformTests());
+
+
+Platform Platform::get()
+{
+	Platform p;
+	p.name =
+#if defined(__APPLE__)
+		"macos"
+
+#elif defined(__FreeBSD__)
+		"freebsd"
+
+#elif defined(__NetBSD__)
+		"netbsd"
+
+#elif defined(__OpenBSD__)
+		"openbsd"
+
+#elif defined(__linux)
+		"linux"
+
+#elif defined(_WIN32) || defined(_WIN64)
+		"windows"
+
+#else
+	#error Unsupported platform
+#endif
+		;
+
+#if defined(__Apple__)
+	p.darwin = true;
+#elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
+	p.bsd = true;
+#elif defined(__linux)
+	p.linux = true;
+#elif defined(_WIN32) || defined(_WIN64)
+	p.windows = true;
+#endif
+
+	p.posix = p.bsd or p.darwin or p.linux;
+
+	return p;
+}

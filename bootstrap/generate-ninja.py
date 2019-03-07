@@ -141,7 +141,7 @@ cxx_srcs = {
 }
 
 plugins = {
-	'platform-tests': [ 'PlatformTests' ],
+	'platform': [ 'PlatformTests' ],
 	'sysctl': [ 'SysctlPlugin' ],
 	'which': [ 'Which' ],
 }
