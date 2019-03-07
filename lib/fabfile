@@ -1,10 +1,6 @@
 #
-# TODO: allow 'for module in [ ast backends dag ]
-# (or even better, foreach dir in [ 'ast' 'backend' ... ]
-#   {
-#     module = import(dir + '/' + dir + '.fab');
-#     module.sources
-#   }
+# TODO: allow 'for module in [ 'ast' 'backends' 'dag' ] { ... }
+#       (see https://github.com/fabriquer/fabrique/issues/40)
 #
 
 sources =
