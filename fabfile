@@ -70,9 +70,7 @@ warnings = [
 ];
 
 cxx_flags = common_cxx_flags + warnings;
-generated_cxx_flags =
-	common_cxx_flags + [ '-Wno-deprecated-register' ]
-	+ if debug [ '-D' 'YYDEBUG' ] else [];
+generated_cxx_flags = common_cxx_flags + [ '-Wno-deprecated-register' ];
 
 ldflags =
 	(if debug [ '-g' '-O0' ] else [ '-O2' ])

@@ -228,8 +228,6 @@ else:
     cxxflags += [ '-D NDEBUG', '-O2' ]
 
 gencxxflags = cxxflags + [ '-Wno-deprecated-register' ]
-if args.debug: gencxxflags += [ '-D YYDEBUG' ]
-
 cxxflags = cxxflags + warnings
 
 plugin_files = dict([
