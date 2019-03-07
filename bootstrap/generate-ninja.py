@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7
 
 import argparse
 import itertools
@@ -317,7 +317,7 @@ rules = {
 	},
 
 	'rebuild': {
-		'command': 'python $in $args',
+		'command': 'python2.7 $in $args',
 		'description': 'Regenerating $out',
 		'generator': '',
 	},
