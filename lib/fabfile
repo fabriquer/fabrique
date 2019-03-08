@@ -8,6 +8,7 @@ sources =
 		Bytestream.cc
 		Fabrique.cc
 		FabBuilder.cc
+		ErrorReport.cc
 		Printable.cc
 		SourceLocation.cc
 		SourceRange.cc

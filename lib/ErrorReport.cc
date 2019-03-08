@@ -1,6 +1,6 @@
-/** @file Support/ErrorReport.cc    Definition of @ref fabrique::ErrorReport. */
+/** @file lib/ErrorReport.cc    Definition of @ref fabrique::ErrorReport. */
 /*
- * Copyright (c) 2013, 2016, 2018 Jonathan Anderson
+ * Copyright (c) 2013, 2016, 2018-2019 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -31,7 +31,7 @@
  */
 
 #include <fabrique/Bytestream.hh>
-#include "Support/ErrorReport.h"
+#include <fabrique/ErrorReport.hh>
 
 #include <cassert>
 #include <fstream>

@@ -33,9 +33,10 @@
 #ifndef FAB_PARSING_ERROR_LISTENER_H_
 #define FAB_PARSING_ERROR_LISTENER_H_
 
+#include <fabrique/ErrorReport.hh>
+
 #include <antlr-cxx-runtime/BaseErrorListener.h>
 
-#include "Support/ErrorReport.h"
 
 namespace fabrique {
 namespace parsing {

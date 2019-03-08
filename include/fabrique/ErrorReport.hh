@@ -1,6 +1,6 @@
-/** @file Support/ErrorReport.h    Declaration of @ref fabrique::ErrorReport. */
+/** @file fabrique/ErrorReport.hh    Declaration of @ref fabrique::ErrorReport. */
 /*
- * Copyright (c) 2013, 2018 Jonathan Anderson
+ * Copyright (c) 2013, 2018-2019 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -30,8 +30,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef ERROR_REPORT_H
-#define ERROR_REPORT_H
+#ifndef ERROR_REPORT_H_
+#define ERROR_REPORT_H_
 
 #include <fabrique/HasSource.hh>
 #include <fabrique/Printable.hh>
@@ -74,4 +74,4 @@ private:
 
 } // namespace fabrique
 
-#endif
+#endif // ERROR_REPORT_H_

@@ -31,7 +31,7 @@
 #ifndef ERROR_REPORTER_H
 #define ERROR_REPORTER_H
 
-#include "Support/ErrorReport.h"
+#include <fabrique/ErrorReport.hh>
 
 
 namespace fabrique {

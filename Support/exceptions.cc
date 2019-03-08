@@ -30,7 +30,7 @@
  */
 
 #include <fabrique/Bytestream.hh>
-#include "Support/ErrorReport.h"
+#include <fabrique/ErrorReport.hh>
 #include "Support/exceptions.h"
 
 using namespace fabrique;

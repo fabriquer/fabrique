@@ -32,7 +32,7 @@
 #ifndef EXCEPTIONS_H
 #define EXCEPTIONS_H
 
-#include "Support/ErrorReport.h"
+#include <fabrique/ErrorReport.hh>
 
 #include <exception>
 #include <memory>
@@ -47,7 +47,6 @@
 		} \
 	} \
 	while (false)
-
 
 
 namespace fabrique {
@@ -113,9 +112,6 @@ private:
 	const std::string message_;
 };
 
-
-
-class ErrorReport;
 
 //! Base class for exceptions related to invalid source code.
 class SourceCodeException : public std::exception, public HasSource, public Printable

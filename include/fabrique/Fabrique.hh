@@ -34,10 +34,10 @@
 #define FABRIQUE_H_
 
 #include <fabrique/builtins.hh>
+#include <fabrique/ErrorReport.hh>
 #include <fabrique/backend/Backend.hh>
 #include <fabrique/dag/Value.hh>
 #include <fabrique/parsing/Parser.hh>
-#include "Support/ErrorReport.h"
 #include <fabrique/types/TypeContext.hh>
 
 #include <functional>

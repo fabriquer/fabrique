@@ -33,9 +33,9 @@
 #ifndef PARSER_H
 #define PARSER_H
 
+#include <fabrique/ErrorReport.hh>
 #include <fabrique/UniqPtr.h>
 #include <fabrique/ast/ast.hh>
-#include "Support/ErrorReport.h"
 
 #include <unordered_map>
 

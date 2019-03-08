@@ -32,9 +32,10 @@
 #ifndef BACKEND_H
 #define BACKEND_H
 
+#include <fabrique/ErrorReport.hh>
+
 #include <string>
 
-#include "Support/ErrorReport.h"
 
 namespace fabrique {
 
