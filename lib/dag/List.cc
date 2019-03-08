@@ -33,7 +33,6 @@
 #include <fabrique/strings.hh>
 #include <fabrique/dag/List.hh>
 #include <fabrique/dag/Visitor.hh>
-#include "Support/SourceLocation.h"
 #include "Support/exceptions.h"
 #include <fabrique/types/TypeContext.hh>
 

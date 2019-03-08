@@ -1,5 +1,4 @@
 sources = files(
 	ErrorReport.cc
-	SourceLocation.cc
 	exceptions.cc
 );

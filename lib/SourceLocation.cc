@@ -1,6 +1,11 @@
-/** @file Support/ErrorReport.h    Declaration of @ref fabrique::ErrorReport. */
+/**
+ * @file lib/SourceLocation.cc
+ *
+ * Definition of @ref fabrique::HasSource, @ref fabrique::SourceLocation and
+ * @ref fabrique::SourceRange.
+ */
 /*
- * Copyright (c) 2013, 2018 Jonathan Anderson
+ * Copyright (c) 2013, 2016, 2018-2019 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -30,48 +35,73 @@
  * SUCH DAMAGE.
  */
 
-#ifndef ERROR_REPORT_H
-#define ERROR_REPORT_H
+#include <fabrique/Bytestream.hh>
+#include <fabrique/SourceLocation.hh>
 
-#include <fabrique/HasSource.hh>
-#include <fabrique/Printable.hh>
+#include <cassert>
+#include <fstream>
 
-#include <functional>
-#include <ostream>
-#include <string>
+using namespace fabrique;
+using std::string;
 
-namespace fabrique {
 
-//! A non-exceptional representation of a problem in source code.
-class ErrorReport : public HasSource, public Printable
+SourceLocation::SourceLocation(const std::string& file, size_t lineno, size_t colno)
+	: filename(file), line(lineno), column(colno)
 {
-public:
-	enum class Severity
-	{
-		Error,
-		Warning,
-		Message,
-	};
+}
 
-	typedef std::function<void (std::string, SourceRange, Severity, std::string)>
-		Report;
+SourceLocation::operator bool() const
+{
+	return not (line == 0);
+}
 
-	ErrorReport(std::string message, SourceRange, Severity = Severity::Error,
-		    std::string detail = "", SourceLocation loc = SourceLocation(),
-	            unsigned int contextLines = 3);
+bool SourceLocation::operator < (const SourceLocation& other) const
+{
+	return *this or not other
+		or filename < other.filename
+		or line < other.line
+		or (line == other.line and column < other.column);
+}
 
-	const std::string& getMessage() const { return message_; }
-	const std::string& getDetails() const { return detail_; }
-	void PrettyPrint(Bytestream& out, unsigned int indent = 0) const override;
+bool SourceLocation::operator > (const SourceLocation& other) const
+{
+	return *this or not other
+		or filename > other.filename
+		or line > other.line
+		or (line == other.line and column > other.column);
+}
 
-private:
-	const Severity severity_;
-	const std::string message_;
-	const std::string detail_;
-	const SourceLocation caret_;
-	const unsigned int contextLines_;
-};
+bool SourceLocation::operator == (const SourceLocation& other) const
+{
+	return filename == other.filename
+		and line == other.line
+		and column == other.column;
+}
 
-} // namespace fabrique
 
-#endif
+bool SourceLocation::operator != (const SourceLocation& other) const
+{
+	return not (*this == other);
+}
+
+void SourceLocation::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
+{
+	out
+		<< Bytestream::Filename
+		<< (filename.empty() ? "-" : filename)
+		;
+
+	if (line > 0)
+		out
+			<< Bytestream::Operator << ":"
+			<< Bytestream::Line << line
+			;
+
+	if (column > 0)
+		out
+			<< Bytestream::Operator << ":"
+			<< Bytestream::Column << column
+			;
+
+	out << Bytestream::Reset;
+}

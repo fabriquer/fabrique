@@ -35,7 +35,8 @@
  */
 
 #include <fabrique/Bytestream.hh>
-#include "Support/SourceLocation.h"
+#include <fabrique/HasSource.hh>
+#include <fabrique/SourceRange.hh>
 
 #include <cassert>
 #include <fstream>
@@ -44,81 +45,9 @@ using namespace fabrique;
 using std::string;
 
 
-static const SourceLocation& Nowhere()
-{
-	static SourceLocation& nowhere = *new SourceLocation;
-	return nowhere;
-}
-
-
-SourceLocation::SourceLocation(const std::string& file,
-                               size_t lineno, size_t colno)
-	: filename(file), line(lineno), column(colno)
-{
-}
-
-SourceLocation::operator bool() const
-{
-	return not (line == 0);
-}
-
-bool SourceLocation::operator < (const SourceLocation& other) const
-{
-	return *this or not other
-		or filename < other.filename
-		or line < other.line
-		or (line == other.line and column < other.column);
-}
-
-bool SourceLocation::operator > (const SourceLocation& other) const
-{
-	return *this or not other
-		or filename > other.filename
-		or line > other.line
-		or (line == other.line and column > other.column);
-}
-
-bool SourceLocation::operator == (const SourceLocation& other) const
-{
-	return filename == other.filename
-		and line == other.line
-		and column == other.column;
-}
-
-
-bool SourceLocation::operator != (const SourceLocation& other) const
-{
-	return not (*this == other);
-}
-
-
-void SourceLocation::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
-{
-	out
-		<< Bytestream::Filename
-		<< (filename.empty() ? "-" : filename)
-		;
-
-	if (line > 0)
-		out
-			<< Bytestream::Operator << ":"
-			<< Bytestream::Line << line
-			;
-
-	if (column > 0)
-		out
-			<< Bytestream::Operator << ":"
-			<< Bytestream::Column << column
-			;
-
-	out << Bytestream::Reset;
-}
-
-
-
 const SourceRange& SourceRange::None()
 {
-	static SourceRange& none = *new SourceRange(Nowhere(), Nowhere());
+	static SourceRange& none = *new SourceRange({}, {});
 	return none;
 }
 

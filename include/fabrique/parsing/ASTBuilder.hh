@@ -35,7 +35,6 @@
 #include <fabrique/ast/ast.hh>
 #include <fabrique/platform/ABI.hh>
 #include "Support/exceptions.h"
-#include "Support/SourceLocation.h"
 
 #include <generated-grammar/FabParserBaseVisitor.h>
 

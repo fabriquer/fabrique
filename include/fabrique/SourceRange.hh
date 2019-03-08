@@ -1,11 +1,9 @@
 /**
- * @file Support/SourceLocation.h
- *
- * Declaration of @ref fabrique::HasSource, @ref fabrique::SourceLocation and
- * @ref fabrique::SourceRange.
+ * @file  fabrique/SourceRange.hh
+ * @brief Declaration of @ref fabrique::HasSource and @ref fabrique::SourceRange
  */
 /*
- * Copyright (c) 2013, 2016, 2018 Jonathan Anderson
+ * Copyright (c) 2013, 2016, 2018-2019 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -35,41 +33,15 @@
  * SUCH DAMAGE.
  */
 
-#ifndef LOCATION_H
-#define LOCATION_H
+#ifndef FAB_SOURCE_RANGE_H_
+#define FAB_SOURCE_RANGE_H_
 
 #include <fabrique/Printable.hh>
-#include <fabrique/UniqPtr.h>
+#include <fabrique/SourceLocation.hh>
 
 #include <string>
 
 namespace fabrique {
-
-class Lexer;
-
-
-//! A location in the original source code.
-class SourceLocation : public Printable
-{
-public:
-	//static const SourceLocation& Nowhere();
-
-	SourceLocation(const std::string& filename = "",
-	               size_t line = 0, size_t column = 0);
-
-	operator bool() const;
-	bool operator < (const SourceLocation&) const;
-	bool operator > (const SourceLocation&) const;
-	bool operator == (const SourceLocation&) const;
-	bool operator != (const SourceLocation&) const;
-
-	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
-
-	std::string filename;
-	size_t line;
-	size_t column;
-};
-
 
 class HasSource;
 
@@ -143,18 +115,6 @@ public:
 	SourceLocation end;
 };
 
-
-//! A mixin type for something that has a location in source code.
-class HasSource
-{
-public:
-	HasSource(const SourceRange& src) : src_(src) {}
-	const SourceRange& source() const { return src_; }
-
-private:
-	SourceRange src_;
-};
-
 } // class fabrique
 
-#endif
+#endif  // FAB_SOURCE_RANGE_H_

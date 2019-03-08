@@ -9,6 +9,8 @@ sources =
 		Fabrique.cc
 		FabBuilder.cc
 		Printable.cc
+		SourceLocation.cc
+		SourceRange.cc
 		builtins.cc
 		names.cc
 		strings.cc

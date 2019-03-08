@@ -33,9 +33,9 @@
 #ifndef DAG_PARAMETER_H
 #define DAG_PARAMETER_H
 
+#include <fabrique/HasSource.hh>
 #include <fabrique/Printable.hh>
 #include <fabrique/Uncopyable.hh>
-#include "Support/SourceLocation.h"
 #include <fabrique/types/Typed.hh>
 
 #include <memory>

@@ -32,7 +32,7 @@
 #ifndef STRINGREF_H
 #define STRINGREF_H
 
-#include "Support/SourceLocation.h"
+#include <fabrique/HasSource.hh>
 
 #include <string>
 

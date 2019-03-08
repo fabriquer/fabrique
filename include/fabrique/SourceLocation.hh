@@ -1,11 +1,15 @@
-/** @file Types/IntegerType.h    Declaration of @ref fabrique::IntegerType. */
+/**
+ * @file  fabrique/SourceLocation.h
+ * @brief Declaration of @ref fabrique::SourceLocation
+ */
 /*
- * Copyright (c) 2014 Jonathan Anderson
+ * Copyright (c) 2013, 2016, 2018-2019 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,36 +33,36 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/names.hh>
-#include <fabrique/types/IntegerType.hh>
-#include <fabrique/types/TypeContext.hh>
+#ifndef FAB_SOURCE_LOCATION_H_
+#define FAB_SOURCE_LOCATION_H_
 
-using namespace fabrique;
+#include <fabrique/Printable.hh>
+#include <fabrique/UniqPtr.h>
 
+#include <string>
 
-IntegerType::IntegerType(TypeContext& ctx)
-	: Type(names::Int, PtrVec<Type>(), ctx)
+namespace fabrique {
+
+//! A location in the original source code.
+class SourceLocation : public Printable
 {
-}
+public:
+	SourceLocation(const std::string& filename = "",
+	               size_t line = 0, size_t column = 0);
 
-IntegerType::~IntegerType() {}
+	operator bool() const;
+	bool operator < (const SourceLocation&) const;
+	bool operator > (const SourceLocation&) const;
+	bool operator == (const SourceLocation&) const;
+	bool operator != (const SourceLocation&) const;
 
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 
-const Type& IntegerType::get(TypeContext& ctx)
-{
-	const Type& existing = ctx.find(names::Int);
-	if (existing)
-		return existing;
+	std::string filename;
+	size_t line;
+	size_t column;
+};
 
-	return *new IntegerType(ctx);
-}
+} // class fabrique
 
-
-const Type& IntegerType::onAddTo(const Type& other) const
-{
-	// The type of `int + specialInt` is `int`.
-	if (other.isSubtype(*this))
-		return *this;
-
-	return context().nilType();
-}
+#endif  // FAB_SOURCE_LOCATION_H_

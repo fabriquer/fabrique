@@ -30,7 +30,6 @@
  */
 
 #include <fabrique/Bytestream.hh>
-#include "Support/SourceLocation.h"
 #include <fabrique/types/TypeContext.hh>
 #include <fabrique/types/TypeError.hh>
 

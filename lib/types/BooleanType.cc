@@ -32,7 +32,7 @@
 #include <fabrique/names.hh>
 #include <fabrique/types/BooleanType.hh>
 #include <fabrique/types/TypeContext.hh>
-#include "Support/SourceLocation.h"
+
 using namespace fabrique;
 
 

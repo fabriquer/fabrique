@@ -34,7 +34,8 @@ cxx_srcs = {
 		'fab',
 	),
 	'lib/': (
-		'Bytestream', 'Fabrique', 'FabBuilder', 'Printable',
+		'Bytestream', 'Fabrique', 'FabBuilder',
+                'Printable', 'SourceLocation', 'SourceRange',
                 'builtins', 'names', 'strings',
 	),
 	'lib/ast/': (
@@ -70,7 +71,7 @@ cxx_srcs = {
 		'SequenceType', 'StringType', 'Type', 'TypeContext', 'TypeError', 'Typed',
 	),
 	'Support/': (
-		'ErrorReport', 'SourceLocation', 'exceptions',
+		'ErrorReport', 'exceptions',
 	),
 	'vendor/antlr-cxx-runtime/': (
 		'ANTLRErrorListener', 'ANTLRErrorStrategy', 'ANTLRFileStream',
