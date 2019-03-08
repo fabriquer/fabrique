@@ -147,14 +147,11 @@ Callable::NameArguments(const vector<string>& args, SourceRange src) const
 	{
 		if (argName.empty())
 		{
-			if (doneWithPositionalArgs)
-				throw SyntaxError(
-					"positional argument after keywords",
-					src);
+			SemaCheck(not doneWithPositionalArgs, src,
+				"positional argument after keywords");
 
-			if (nextParameter == parameters_.end())
-				throw SyntaxError(
-					"too many positional arguments", src);
+			SemaCheck(nextParameter != parameters_.end(), src,
+				"too many positional arguments");
 
 			const Parameter& p = **nextParameter++;
 			argName = p.name();
