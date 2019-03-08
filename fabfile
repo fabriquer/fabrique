@@ -39,12 +39,6 @@ dbgflags =
 	+ (if use_asan [ '-fsanitize=address' ] else [])
 	;
 
-defines =
-	(if platform.posix [ '-D OS_POSIX' ] else [])
-	+ (if platform.darwin [ '-D OS_DARWIN' ] else [])
-	+ (if platform.windows [ '-D OS_WINDOWS' ] else [])
-	;
-
 includes = foreach dir <- [ srcroot srcroot :: 'include' ] '-I ' + dir.fullname;
 
 # Treat vendor headers as system headers (disable warnings).
@@ -53,7 +47,7 @@ vendor_flags = [
 	'-isystem ' + (file('vendor') :: 'antlr-cxx-runtime').fullname
 ];
 
-common_cxx_flags = cxxoptions + defines + dbgflags + includes + vendor_flags;
+common_cxx_flags = cxxoptions + dbgflags + includes + vendor_flags;
 
 warnings = [
 	# Use lots and lots of warnings.

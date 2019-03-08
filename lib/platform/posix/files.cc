@@ -324,7 +324,7 @@ string JoinPath(const vector<string>& components)
 string LibraryFilename(string name)
 {
 	static constexpr char Extension[] =
-#if defined(OS_DARWIN)
+#if defined(__Apple__)
 		"dylib"
 #else
 		"so"

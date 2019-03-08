@@ -121,10 +121,6 @@ static string SysctlName(ValueMap args)
 
 static ValuePtr StringSysctl(ValueMap args, DAGBuilder& builder, SourceRange src)
 {
-#if !defined (OS_POSIX)
-	throw UserError("the sysctl plugin is only useful on POSIX platforms");
-#endif
-
 	const string name = SysctlName(args);
 	const char *rawName = name.c_str();
 
@@ -144,10 +140,6 @@ static ValuePtr StringSysctl(ValueMap args, DAGBuilder& builder, SourceRange src
 
 static ValuePtr IntegerSysctl(ValueMap args, DAGBuilder& builder, SourceRange src)
 {
-#if !defined (OS_POSIX)
-	throw UserError("the sysctl plugin is only useful on POSIX platforms");
-#endif
-
 	const string name = SysctlName(args);
 	const char *rawName = name.c_str();
 

@@ -33,8 +33,6 @@
 #ifndef FAB_POSIX_ERROR_H_
 #define FAB_POSIX_ERROR_H_
 
-#include <fabrique/platform/PosixOnly.hh>
-
 #include "Support/exceptions.h"
 
 namespace fabrique {
