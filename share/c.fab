@@ -3,6 +3,9 @@ pic = args.position_independent ? true;
 platform = args.platform;
 use_colour = args.colour_diagnostics;
 
+#
+# TODO: add support for Clang vs CL vs GCC? Sanitizers?
+#
 
 #
 # Where supported, treat system header directories differently from other include dirs:
