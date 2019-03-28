@@ -143,6 +143,7 @@ ImportFile(string filename, string subdir, ValueMap arguments, SourceRange src,
 }
 
 
+// TODO: report any files that have been imported
 ValuePtr
 fabrique::builtins::Import(parsing::Parser &p, plugin::Loader &pluginLoader,
                            string srcroot, ast::EvalContext &eval)
