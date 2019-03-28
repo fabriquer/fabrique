@@ -42,10 +42,8 @@ dbgflags =
 includes = foreach dir <- [ srcroot srcroot :: 'include' ] '-I ' + dir.fullname;
 
 # Treat vendor headers as system headers (disable warnings).
-vendor_flags = [
-	'-isystem ' + file('vendor').fullname
-	'-isystem ' + (file('vendor') :: 'antlr-cxx-runtime').fullname
-];
+vendor_dir = file('vendor');
+vendor_flags = cc.system_headers([ vendor_dir vendor_dir::'antlr-cxx-runtime' ]);
 
 common_cxx_flags = cxxoptions + dbgflags + includes + vendor_flags;
 

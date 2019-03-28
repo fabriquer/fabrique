@@ -4,6 +4,21 @@ platform = args.platform;
 use_colour = args.colour_diagnostics;
 
 
+#
+# Where supported, treat system header directories differently from other include dirs:
+# suppress warnings in files that we aren't responsible for.
+#
+# TODO: make this part of the description of how to use Clang/GCC, not CL, etc.
+#
+system_headers = function(dirs:list[file]): list[string]
+{
+	foreach dir <- dirs
+	{
+		'-isystem ' + dir.fullname
+	}
+};
+
+
 default_flags = record {
 	colour = if use_colour [ '-fcolor-diagnostics' ] else [];
 
