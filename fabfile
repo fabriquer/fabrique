@@ -6,7 +6,6 @@ which = import('which');
 
 debug = args.debug ? true;
 asserts = args.asserts ? true;
-use_asan = args.asan ? false;
 withtests = args.tests ? true;
 
 compiler = args.compiler ? 'c++';
@@ -36,7 +35,6 @@ cxxoptions = [ '-std=c++14' ];
 dbgflags =
 	(if debug [ '-g' '-O0' ] else [ '-O2' ])
 	+ (if asserts [ '' ] else [ '-D NDEBUG' ])
-	+ (if use_asan [ '-fsanitize=address' ] else [])
 	;
 
 includes = foreach dir <- [ srcroot srcroot :: 'include' ] '-I ' + dir.fullname;
@@ -67,7 +65,6 @@ generated_cxx_flags = common_cxx_flags + [ '-Wno-deprecated-register' ];
 ldflags =
 	(if debug [ '-g' '-O0' ] else [ '-O2' ])
 	+ (if platform.posix ['-rdynamic'] else [])
-	+ (if use_asan ['-fsanitize=address'] else [])
 	;
 
 
