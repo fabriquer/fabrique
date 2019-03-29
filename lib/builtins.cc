@@ -204,11 +204,10 @@ fabrique::builtins::Import(parsing::Parser &p, plugin::Loader &pluginLoader,
 			const string subdir = JoinPath(currentSubdir->str(), name);
 			const string fabfile = JoinPath(filename, "fabfile");
 
-			if (PathIsFile(fabfile))
-			{
-				return ImportFile(fabfile, subdir, arguments, src, p,
-				                  eval, dbg);
-			}
+			SemaCheck(PathIsFile(fabfile), src,
+			          "directory does not contain 'fabfile'");
+
+			return ImportFile(fabfile, subdir, arguments, src, p, eval, dbg);
 		}
 
 		auto descriptor = plugin::Registry::get().lookup(name).lock();
