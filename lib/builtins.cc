@@ -104,6 +104,8 @@ ImportFile(string filename, string subdir, ValueMap arguments, SourceRange src,
 		<< Bytestream::Operator << "'"
 		<< Bytestream::Literal << filename
 		<< Bytestream::Operator << "'"
+		<< Bytestream::Reset << " from "
+		<< Bytestream::Literal << subdir
 		<< Bytestream::Reset << "\n"
 		;
 
@@ -194,17 +196,6 @@ fabrique::builtins::Import(parsing::Parser &p, plugin::Loader &pluginLoader,
 			const string subdir =
 				JoinPath(currentSubdir->str(), DirectoryOf(name));
 
-			dbg
-				<< Bytestream::Action << "found "
-				<< Bytestream::Type << "module "
-				<< Bytestream::Operator << "'"
-				<< Bytestream::Literal << name
-				<< Bytestream::Operator << "'"
-				<< Bytestream::Reset << " in "
-				<< Bytestream::Literal << subdir
-				<< "\n"
-				;
-
 			return ImportFile(filename, subdir, arguments, src, p, eval, dbg);
 		}
 
@@ -212,17 +203,6 @@ fabrique::builtins::Import(parsing::Parser &p, plugin::Loader &pluginLoader,
 		{
 			const string subdir = JoinPath(currentSubdir->str(), name);
 			const string fabfile = JoinPath(filename, "fabfile");
-
-			dbg
-				<< Bytestream::Action << "found "
-				<< Bytestream::Type << "module "
-				<< Bytestream::Operator << "'"
-				<< Bytestream::Literal << fabfile
-				<< Bytestream::Operator << "'"
-				<< Bytestream::Reset << " in "
-				<< Bytestream::Literal << subdir
-				<< "\n"
-				;
 
 			if (PathIsFile(fabfile))
 			{
