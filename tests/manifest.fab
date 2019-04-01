@@ -101,6 +101,7 @@ all_files = files(
 ./dag/import-another-subdir.fab
 ./dag/import-arguments-mandatory.fab
 ./dag/import-directory.fab
+./dag/import-directory-missing-fabfile.fab
 ./dag/import-empty.fab
 ./dag/import-explicit-subdir.fab
 ./dag/list-of-lists-of-targets.fab
