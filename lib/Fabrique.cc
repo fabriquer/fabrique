@@ -105,8 +105,6 @@ void Fabrique::AddArguments(const vector<string> &args)
 
 const UniqPtrVec<ast::Value>& Fabrique::Parse(const std::string &filename)
 {
-	inputFiles_.push_back(AbsolutePath(filename));
-
 	if (not PathIsFile(filename))
 	{
 		throw UserError("no such file: '" + filename + "'");
@@ -188,7 +186,7 @@ void Fabrique::Process(const std::string &filename)
 	if (not regenerationCommand_.empty() and not outputFiles_.empty())
 	{
 		builder.AddRegeneration(
-			regenerationCommand_, inputFiles_, outputFiles_);
+			regenerationCommand_, parser_.inputs(), outputFiles_);
 	}
 
 	unique_ptr<dag::DAG> dag = builder.dag(targets);

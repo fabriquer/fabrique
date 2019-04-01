@@ -107,8 +107,6 @@ private:
 
 	dag::ValueMap arguments_;
 
-	//! Fabrique files that have been parsed (including imported files)
-	std::vector<std::string> inputFiles_;
 	std::vector<std::string> outputFiles_;
 
 	const std::string outputDirectory_;

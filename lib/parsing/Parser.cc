@@ -171,6 +171,7 @@ Parser::ValueResult Parser::Parse(std::string s, SourceRange src)
 	FAB_ASSERT(parseTrees_.find(name) == parseTrees_.end(),
 	           "already parsed '" + name + "'");
 
+	inputs_.push_back(name);
 	parseTrees_.emplace(name, std::move(values));
 	return ValueResult::Ok(value);
 }
@@ -210,6 +211,7 @@ Parser::FileResult Parser::ParseFile(std::istream& input, string name)
 		return FileResult::Err(state.errors());
 	}
 
+	inputs_.push_back(name);
 	auto i = parseTrees_.emplace(name, state.ast.takeValues());
 	FAB_ASSERT(i.second, "failed to emplace in parseTrees_");
 	const auto &values = i.first->second;
@@ -241,6 +243,13 @@ Parser::FileResult Parser::ParseFile(std::istream& input, string name)
 
 	return FileResult::Ok(values);
 }
+
+
+std::vector<string> Parser::inputs() const
+{
+	return inputs_;
+}
+
 
 const UniqPtrVec<ast::Value>& Parser::parseTree(const std::string &name)
 {
