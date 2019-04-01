@@ -1,6 +1,6 @@
 //! @file  names.cc    Definitions of name-related functions
 /*
- * Copyright (c) 2018 Jonathan Anderson
+ * Copyright (c) 2018-2019 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed at Memorial University of Newfoundland
@@ -52,6 +52,7 @@ static const char* ReservedNames[] =
 	names::Not,
 	names::Or,
 	names::Out,
+	names::Print,
 	names::Record,
 	names::SourceRoot,
 	names::String,

@@ -1,6 +1,6 @@
 //! @file  builtins.cc    Definitions of builtin functions
 /*
- * Copyright (c) 2018 Jonathan Anderson
+ * Copyright (c) 2018-2019 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed at Memorial University of Newfoundland
@@ -67,6 +67,31 @@ static ValuePtr OpenFileImpl(ValueMap arguments, DAGBuilder &b, SourceRange src)
 	}
 
 	return b.File(subdir, filename->str(), arguments, src);
+}
+
+static ValuePtr PrintImpl(ValueMap arguments, DAGBuilder &b, SourceRange src)
+{
+	Bytestream &out = Bytestream::Stdout();
+
+	auto v = arguments["value"];
+	string s;
+
+	if (v)
+	{
+		s = v->str();
+		v->PrettyPrint(out);
+		out << Bytestream::Reset << "\n";
+	}
+	else
+	{
+		s = "nil";
+		out
+			<< Bytestream::Literal << "nil"
+			<< Bytestream::Reset
+			;
+	}
+
+	return b.String(s, src);
 }
 
 
@@ -219,5 +244,17 @@ fabrique::builtins::Import(parsing::Parser &p, plugin::Loader &pluginLoader,
 	};
 
 	return b.Function(import, types.nilType(), params,
+	                  SourceRange::None(), true);
+}
+
+
+ValuePtr builtins::Print(DAGBuilder &b)
+{
+	TypeContext &types = b.typeContext();
+
+	SharedPtrVec<dag::Parameter> params;
+	params.emplace_back(new Parameter("value", types.nilType()));
+
+	return b.Function(PrintImpl, types.nilType(), params,
 	                  SourceRange::None(), true);
 }

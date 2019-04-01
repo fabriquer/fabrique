@@ -1,6 +1,6 @@
 //! @file  builtins.hh    Declaration of builtin functions
 /*
- * Copyright (c) 2018 Jonathan Anderson
+ * Copyright (c) 2018-2019 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed at Memorial University of Newfoundland
@@ -66,6 +66,11 @@ dag::ValuePtr OpenFile(dag::DAGBuilder&);
  */
 dag::ValuePtr Import(parsing::Parser &parser, plugin::Loader &loader, std::string srcroot,
                      ast::EvalContext&);
+
+/**
+ * Create implementation of Fabrique `print()` function
+ */
+dag::ValuePtr Print(dag::DAGBuilder&);
 
 } // namespace builtins
 } // namespace fabrique

@@ -1,6 +1,6 @@
 //! @file  names.hh    Names defined or reserved by the Fabrique language
 /*
- * Copyright (c) 2018 Jonathan Anderson
+ * Copyright (c) 2018-2019 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed at Memorial University of Newfoundland
@@ -57,6 +57,7 @@ static const char Nil[] = "nil";
 static const char Not[] = "not";
 static const char Or[] = "or";
 static const char Out[] = "out";
+static const char Print[] = "print";
 static const char Record[] = "record";
 static const char SourceRoot[] = "srcroot";
 static const char String[] = "string";
