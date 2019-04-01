@@ -74,34 +74,21 @@ static ValuePtr PrintImpl(ValueMap arguments, DAGBuilder &b, SourceRange src)
 	Bytestream &out = Bytestream::Stdout();
 
 	auto v = arguments["value"];
-	string s;
+	SemaCheck(v, src, "printing nil");
 
-	if (v)
+	auto &types = b.typeContext();
+	if (v->type().isSubtype(types.stringType()))
 	{
-		s = v->str();
-
-		auto &types = b.typeContext();
-		if (v->type().isSubtype(types.stringType()))
-		{
-			out << s;
-		}
-		else
-		{
-			v->PrettyPrint(out);
-		}
-
-		out << Bytestream::Reset << "\n";
+		out << v->str();
 	}
 	else
 	{
-		s = "nil";
-		out
-			<< Bytestream::Literal << "nil"
-			<< Bytestream::Reset
-			;
+		v->PrettyPrint(out);
 	}
 
-	return b.String(s, src);
+	out << Bytestream::Reset << "\n";
+
+	return v;
 }
 
 
