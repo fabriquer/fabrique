@@ -2,6 +2,8 @@
 # Fabrique build description for Fabrique.
 #
 
+print('Configuring Fabrique vX.Y.Z');  # TODO: Git? shell commands?
+
 which = import('which');
 
 debug = args.debug ? true;
