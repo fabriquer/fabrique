@@ -1,6 +1,6 @@
-/** @file Parsing/Parser.h    Declaration of @ref fabrique::ast::Parser. */
+/** @file Parsing/Parser.hh    Declaration of @ref fabrique::parsing::Parser. */
 /*
- * Copyright (c) 2013-2014, 2018 Jonathan Anderson
+ * Copyright (c) 2013-2014, 2018-2019 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -37,25 +37,12 @@
 #include <fabrique/ast/ast.hh>
 #include "Support/ErrorReport.h"
 
-#include <map>
-#include <stack>
-
 namespace fabrique {
-
-class TypeContext;
-class Lexer;
-class Token;
-
-namespace plugin {
-class Loader;
-class Registry;
-}
-
 namespace parsing {
 
 
 /**
- * Parses Fabrique files as driven by flex/byacc.
+ * Parser for Fabrique files and/or values defined at the command line.
  */
 class Parser
 {

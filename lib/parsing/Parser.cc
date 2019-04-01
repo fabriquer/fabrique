@@ -1,11 +1,12 @@
-/** @file Parsing/Parser.cc    Definition of @ref fabrique::ast::Parser. */
+/** @file Parsing/Parser.cc    Definition of @ref fabrique::parsing::Parser. */
 /*
- * Copyright (c) 2013-2014, 2018 Jonathan Anderson
+ * Copyright (c) 2013-2014, 2018-2019 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -151,7 +152,7 @@ Parser::ValueResult Parser::Parse(std::string s, SourceRange src)
 	}
 	catch (...)
 	{
-		FAB_ASSERT(not state.errors().empty(), "parsing failed without erro");
+		FAB_ASSERT(not state.errors().empty(), "parsing failed without error");
 	}
 
 	if (not success)
@@ -186,7 +187,7 @@ Parser::FileResult Parser::ParseFile(std::istream& input, string name)
 	}
 	catch (...)
 	{
-		FAB_ASSERT(not state.errors().empty(), "parsing failed without erro");
+		FAB_ASSERT(not state.errors().empty(), "parsing failed without error");
 	}
 
 	if (not success)
@@ -207,7 +208,9 @@ Parser::FileResult Parser::ParseFile(std::istream& input, string name)
 			;
 
 		for (auto& val : values)
+		{
 			Bytestream::Stdout() << *val << "\n";
+		}
 	}
 
 	if (dump_)
