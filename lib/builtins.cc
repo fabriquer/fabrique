@@ -79,7 +79,17 @@ static ValuePtr PrintImpl(ValueMap arguments, DAGBuilder &b, SourceRange src)
 	if (v)
 	{
 		s = v->str();
-		v->PrettyPrint(out);
+
+		auto &types = b.typeContext();
+		if (v->type().isSubtype(types.stringType()))
+		{
+			out << s;
+		}
+		else
+		{
+			v->PrettyPrint(out);
+		}
+
 		out << Bytestream::Reset << "\n";
 	}
 	else
