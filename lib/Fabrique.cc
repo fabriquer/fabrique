@@ -79,12 +79,12 @@ void Fabrique::AddArgument(const string &s)
 		throw UserError("invalid definition: '" + s + "'");
 	}
 
-	FAB_ASSERT(parseResult.result, "!errors and !result");
+	FAB_ASSERT(parseResult, "!errors and !result");
 
-	if (auto &name = parseResult.result->name())
+	if (auto &name = parseResult.result.name())
 	{
 		ast::EvalContext ctx(types_);
-		auto value = parseResult.result->evaluate(ctx);
+		auto value = parseResult.result.evaluate(ctx);
 		arguments_.emplace(name->name(), value);
 	}
 	else
@@ -103,7 +103,7 @@ void Fabrique::AddArguments(const vector<string> &args)
 }
 
 
-UniqPtrVec<ast::Value> Fabrique::Parse(const std::string &filename)
+const UniqPtrVec<ast::Value>& Fabrique::Parse(const std::string &filename)
 {
 	inputFiles_.push_back(AbsolutePath(filename));
 
@@ -129,7 +129,7 @@ UniqPtrVec<ast::Value> Fabrique::Parse(const std::string &filename)
 		throw UserError("unparseable file: '" + filename + "'");
 	}
 
-	return std::move(parseResult.result);
+	return parseResult.result;
 }
 
 
@@ -144,7 +144,7 @@ void Fabrique::Process(const std::string &filename)
 		: filename
 		;
 
-	auto values = Parse(fabfile);
+	auto &values = Parse(fabfile);
 
 	if (parseOnly_)
 	{

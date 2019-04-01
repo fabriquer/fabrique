@@ -164,11 +164,26 @@ Parser::ValueResult Parser::Parse(std::string s, SourceRange src)
 	SemaCheck(not values.empty(), src, "no value in '" + s + "'");
 	SemaCheck(values.size() == 1, src, "multiple values in '" + s + "'");
 
-	return ValueResult::Ok(std::move(values.front()));
+	auto &value = *values.front();
+	SemaCheck(value.name(), src, "expected value to have a name");
+	const string name = value.name()->name();
+
+	FAB_ASSERT(parseTrees_.find(name) == parseTrees_.end(),
+	           "already parsed '" + name + "'");
+
+	parseTrees_.emplace(name, std::move(values));
+	return ValueResult::Ok(value);
 }
 
 Parser::FileResult Parser::ParseFile(std::istream& input, string name)
 {
+	// Have we already parsed the requested file?
+	auto existing = parseTrees_.find(name);
+	if (existing != parseTrees_.end())
+	{
+		return FileResult::Ok(existing->second);
+	}
+
 	Bytestream& dbg = Bytestream::Debug("parser.file");
 	dbg
 		<< Bytestream::Action << "Parsing"
@@ -195,7 +210,9 @@ Parser::FileResult Parser::ParseFile(std::istream& input, string name)
 		return FileResult::Err(state.errors());
 	}
 
-	auto values = state.ast.takeValues();
+	auto i = parseTrees_.emplace(name, state.ast.takeValues());
+	FAB_ASSERT(i.second, "failed to emplace in parseTrees_");
+	const auto &values = i.first->second;
 
 	if (prettyPrint_)
 	{
@@ -222,5 +239,16 @@ Parser::FileResult Parser::ParseFile(std::istream& input, string name)
 		}
 	}
 
-	return FileResult::Ok(std::move(values));
+	return FileResult::Ok(values);
+}
+
+const UniqPtrVec<ast::Value>& Parser::parseTree(const std::string &name)
+{
+	auto i = parseTrees_.find(name);
+	if (i == parseTrees_.end())
+	{
+		throw UserError("no such parse tree: '" + name + "'");
+	}
+
+	return i->second;
 }

@@ -90,7 +90,7 @@ public:
 
 private:
 	//! Parse a file, optionally pretty-printing it.
-	UniqPtrVec<ast::Value> Parse(const std::string &filename);
+	const UniqPtrVec<ast::Value>& Parse(const std::string &filename);
 
 	void ReportError(std::string message, SourceRange, ErrorReport::Severity,
 	                 std::string detail);
