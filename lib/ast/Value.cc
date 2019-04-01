@@ -47,6 +47,11 @@ using namespace fabrique::ast;
 using std::string;
 
 
+Value::Value()
+	: Expression(SourceRange::None())
+{
+}
+
 Value::Value(UniqPtr<Identifier> id, UniqPtr<TypeReference> explicitType,
              UniqPtr<Expression> value)
 	: Expression(SourceRange::Over(id, value)),

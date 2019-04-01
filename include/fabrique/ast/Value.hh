@@ -44,6 +44,7 @@ namespace ast {
 class Value : public Expression
 {
 public:
+	Value();
 	Value(UniqPtr<Identifier>, UniqPtr<TypeReference>, UniqPtr<Expression>);
 
 	const UniqPtr<Identifier>& name() const { return name_; }
