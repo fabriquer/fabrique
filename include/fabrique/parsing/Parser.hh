@@ -58,26 +58,39 @@ public:
 	Parser(bool prettyPrint, bool dump);
 
 	template<typename T>
-	struct Result
+	class Result
 	{
-		const T &result;
-		const bool success;
-		std::vector<ErrorReport> errors;
+	public:
+		operator bool() const { return result; }
 
-		operator bool() const { return success; }
-
-		static Result Ok(const T &value)
+		const T& ok() const
 		{
-			return { value, true, {} };
+			FAB_ASSERT(result, "calling ok() on invalid parse result");
+			return *result;
 		}
 
+		const std::vector<ErrorReport>& errors()
+		{
+			return errs;
+		}
+
+		static Result Ok(const T &value) { return Result(&value, {}); }
 		static Result Err(std::vector<ErrorReport> errs)
 		{
 			FAB_ASSERT(not errs.empty(),
 			           "Parser::Result::Err() has no errors");
 
-			return { {}, false, errs };
+			return Result(nullptr, errs);
 		}
+
+	private:
+		Result(const T *value, std::vector<ErrorReport> errors)
+			: result(value), errs(errors)
+		{
+		}
+
+		const T *result;
+		std::vector<ErrorReport> errs;
 	};
 
 	using ValueResult = Result<ast::Value>;

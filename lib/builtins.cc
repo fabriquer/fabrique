@@ -132,15 +132,15 @@ ImportFile(string filename, string subdir, ValueMap arguments, SourceRange src,
 	SemaCheck(infile, src, "failed to open '" + filename + "'");
 
 	auto parse = p.ParseFile(infile, filename);
-	for (auto &e : parse.errors)
+	for (auto &e : parse.errors())
 	{
 		Bytestream::Stderr() << e << "\n";
 	}
 
-	SemaCheck(parse.errors.empty(), src, "failed to import '" + filename + "'");
+	SemaCheck(parse, src, "failed to import '" + filename + "'");
 
 	ValueMap values;
-	for (auto &v : parse.result)
+	for (auto &v : parse.ok())
 	{
 		auto val = eval.Define(*v);
 		if (auto &name = v->name())

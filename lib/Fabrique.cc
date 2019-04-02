@@ -70,9 +70,9 @@ Fabrique::Fabrique(bool parseOnly, bool printASTs, bool dumpASTs, bool printDAG,
 void Fabrique::AddArgument(const string &s)
 {
 	auto parseResult = parser_.Parse(s);
-	if (not parseResult.errors.empty())
+	if (not parseResult)
 	{
-		for (auto &err : parseResult.errors)
+		for (auto &err : parseResult.errors())
 		{
 			err_(err);
 		}
@@ -81,10 +81,10 @@ void Fabrique::AddArgument(const string &s)
 
 	FAB_ASSERT(parseResult, "!errors and !result");
 
-	if (auto &name = parseResult.result.name())
+	if (auto &name = parseResult.ok().name())
 	{
 		ast::EvalContext ctx(types_);
-		auto value = parseResult.result.evaluate(ctx);
+		auto value = parseResult.ok().evaluate(ctx);
 		arguments_.emplace(name->name(), value);
 	}
 	else
@@ -118,16 +118,16 @@ const UniqPtrVec<ast::Value>& Fabrique::Parse(const std::string &filename)
 
 	auto parseResult = parser_.ParseFile(infile, filename);
 
-	if (not parseResult.errors.empty())
+	if (not parseResult)
 	{
-		for (auto &err : parseResult.errors)
+		for (auto &err : parseResult.errors())
 		{
 			err_(err);
 		}
 		throw UserError("unparseable file: '" + filename + "'");
 	}
 
-	return parseResult.result;
+	return parseResult.ok();
 }
 
 
