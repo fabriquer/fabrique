@@ -61,9 +61,8 @@ const std::set<string>& HasParameters::parameterNames() const
 }
 
 void HasParameters::CheckArguments(const UniqPtrVec<Argument>& args,
-                              const SourceRange& src) const
+                                   const SourceRange& src) const
 {
-	// TODO: check DAG values?
 	const auto& names = parameterNames();
 
 	for (auto& a : args)
