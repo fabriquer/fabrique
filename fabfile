@@ -32,8 +32,6 @@ vendor_dir = file('vendor');
 antlr_dir = vendor_dir :: 'antlr-cxx-runtime';
 vendor_flags = cc.system_headers([ vendor_dir antlr_dir ]);
 
-common_cxx_flags = cxxoptions + dbgflags + includes + vendor_flags;
-
 exclude_warnings =
 [
 	# We really really don't care about C++98 compatibility.
@@ -49,6 +47,7 @@ exclude_warnings =
 # Use lots and lots of warnings.
 warnings = ['-Weverything'] + foreach warn <- exclude_warnings '-Wno-' + warn;
 
+common_cxx_flags = cxxoptions + dbgflags + includes + vendor_flags;
 cxx_flags = common_cxx_flags + warnings;
 generated_cxx_flags = common_cxx_flags + [ '-Wno-deprecated-register' ];
 
