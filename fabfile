@@ -4,6 +4,10 @@
 
 print('Configuring Fabrique vX.Y.Z');  # TODO: Git? shell commands?
 
+
+#
+# Find toolchain (C++ and shell):
+#
 platform = import('platform');
 cc = import('share/c.fab', platform = platform);
 cxx = import('share/cxx.fab', platform = platform);
