@@ -39,19 +39,20 @@ vendor_flags = cc.system_headers([ vendor_dir vendor_dir::'antlr-cxx-runtime' ])
 
 common_cxx_flags = cxxoptions + dbgflags + includes + vendor_flags;
 
-warnings = [
-	# Use lots and lots of warnings.
-	'-Weverything'
-
+exclude_warnings =
+[
 	# We really really don't care about C++98 compatibility.
-	'-Wno-c++98-compat' '-Wno-c++98-compat-pedantic'
+	'c++98-compat' 'c++98-compat-pedantic'
 
 	# We aren't attempting to preserve an ABI. At least not yet.
-	'-Wno-padded'
+	'padded'
 
 	# We are OK with C99 variable-length arrays.
-	'-Wno-vla' '-Wno-vla-extension'
+	'vla' 'vla-extension'
 ];
+
+# Use lots and lots of warnings.
+warnings = ['-Weverything'] + foreach warn <- exclude_warnings '-Wno-' + warn;
 
 cxx_flags = common_cxx_flags + warnings;
 generated_cxx_flags = common_cxx_flags + [ '-Wno-deprecated-register' ];
