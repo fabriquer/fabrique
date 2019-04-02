@@ -4,12 +4,7 @@
 
 print('Configuring Fabrique vX.Y.Z');  # TODO: Git? shell commands?
 
-which = import('which');
-
-debug = args.debug ? true;
-
 platform = import('platform');
-
 cc = import('share/c.fab', platform = platform);
 cxx = import('share/cxx.fab', platform = platform);
 
@@ -20,7 +15,10 @@ shell = import('share/shell.fab').shell;
 # C++ compilation flags:
 #
 cxxoptions = [ '-std=c++14' ];
+
+debug = args.debug ? true;
 dbgflags = if debug [ '-g' '-O0' ] else [ '-O2' ];
+
 includes = foreach dir <- [ srcroot srcroot :: 'include' ] '-I ' + dir.fullname;
 
 # Treat vendor headers as system headers (disable warnings).
