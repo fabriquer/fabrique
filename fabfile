@@ -8,8 +8,6 @@ which = import('which');
 
 debug = args.debug ? true;
 withtests = args.tests ? true;
-
-colour_output = args.colour_output ? true;
 verbose_tests = args.verbose_tests ? false;
 
 platform = import('platform');
