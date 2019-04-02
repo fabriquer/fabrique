@@ -7,8 +7,6 @@ print('Configuring Fabrique vX.Y.Z');  # TODO: Git? shell commands?
 which = import('which');
 
 debug = args.debug ? true;
-withtests = args.tests ? true;
-verbose_tests = args.verbose_tests ? false;
 
 platform = import('platform');
 
@@ -102,9 +100,13 @@ everything = [ fab ] + plugins + import('tests/manifest.fab').all_files;
 # Unless `-D tests=false` is specified explicitly, all tests will be executed whenever
 # the fab binary, plugins or test sources have changed.
 #
-test = if withtests {
-	lit = import('share/lit.fab', show_failure_details = verbose_tests,
-	             lit = args.lit ? import('which').executable('lit'));
+# Allow `-D verbose_tests=true` to enable lit's verbose ("show failure details") mode.
+#
+test = if (args.tests ? true) {
+	lit = import('share/lit.fab',
+		lit = args.lit ? import('which').executable('lit'),
+		show_failure_details = args.verbose_tests ? false,
+	);
 
 	[ lit.run(fab, file('tests'), file('junit.xml'), dependencies = everything) ]
 } else {
