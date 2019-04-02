@@ -1,7 +1,7 @@
 compiler = args.compiler ? file('/usr/bin/cc');
 pic = args.position_independent ? true;
 platform = args.platform;
-use_colour = args.colour_diagnostics;
+force_colour = args.colour_diagnostics ? false;
 
 #
 # TODO: add support for Clang vs CL vs GCC? Sanitizers?
@@ -23,7 +23,7 @@ system_headers = function(dirs:list[file]): list[string]
 
 
 default_flags = record {
-	colour = if use_colour [ '-fcolor-diagnostics' ] else [];
+	colour = if force_colour [ '-fcolor-diagnostics' ] else [];
 
 	binary = colour
 		+

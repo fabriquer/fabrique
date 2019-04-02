@@ -15,13 +15,8 @@ verbose_tests = args.verbose_tests ? false;
 
 platform = import('platform');
 
-cc = import('share/c.fab',
-	colour_diagnostics = colour_output,
-	platform = platform);
-
-cxx = import('share/cxx.fab',
-	colour_diagnostics = colour_output,
-	platform = platform);
+cc = import('share/c.fab', platform = platform);
+cxx = import('share/cxx.fab', platform = platform);
 
 shell = import('share/shell.fab').shell;
 

@@ -1,11 +1,11 @@
 compiler = args.compiler ? file('/usr/bin/c++');
 pic = args.position_independent ? true;
 platform = args.platform;
-use_colour = args.colour_diagnostics;
+force_colour = args.colour_diagnostics ? false;
 
 
 default_flags = record {
-	colour = if use_colour [ '-fcolor-diagnostics' ] else [];
+	colour = if force_colour [ '-fcolor-diagnostics' ] else [];
 
 	binary = colour
 		+
