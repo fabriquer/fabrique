@@ -7,7 +7,6 @@ print('Configuring Fabrique vX.Y.Z');  # TODO: Git? shell commands?
 which = import('which');
 
 debug = args.debug ? true;
-asserts = args.asserts ? true;
 withtests = args.tests ? true;
 
 colour_output = args.colour_output ? true;
@@ -25,12 +24,7 @@ shell = import('share/shell.fab').shell;
 # C++ compilation flags:
 #
 cxxoptions = [ '-std=c++14' ];
-
-dbgflags =
-	(if debug [ '-g' '-O0' ] else [ '-O2' ])
-	+ (if asserts [ '' ] else [ '-D NDEBUG' ])
-	;
-
+dbgflags = if debug [ '-g' '-O0' ] else [ '-O2' ];
 includes = foreach dir <- [ srcroot srcroot :: 'include' ] '-I ' + dir.fullname;
 
 # Treat vendor headers as system headers (disable warnings).
