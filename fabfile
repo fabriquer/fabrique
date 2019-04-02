@@ -3,6 +3,7 @@
 #
 
 print('Configuring Fabrique vX.Y.Z');  # TODO: Git? shell commands?
+print('')
 
 
 #
@@ -80,6 +81,11 @@ generated_srcs =
 objects = cxx.compile(cxx_srcs, cxx_flags)
 	+ cxx.compile(generated_srcs, generated_cxx_flags);
 
+fab = cxx.link_executable(objects, executable = file('fab', subdir = 'bin'),
+                          flags = ldflags);
+
+print('Binary: ' + fab.fullname);
+
 
 base_plugins = import('base-plugins',
 	cxxflags=cxx_flags,
@@ -87,12 +93,13 @@ base_plugins = import('base-plugins',
 	toolchain = record { compile=cxx.compile; library=cxx.library; },
 );
 
+print('Base plugins: ')
+print(foreach plugin <- base_plugins.plugins plugin.name);
+print('');
+
 plugins = foreach lib <- base_plugins.libs
 	shell.copy(lib, 'lib' :: 'fabrique' :: file(lib.filename))
 	;
-
-fab = cxx.link_executable(objects, executable = file('fab', subdir = 'bin'),
-                          flags = ldflags);
 
 
 #
