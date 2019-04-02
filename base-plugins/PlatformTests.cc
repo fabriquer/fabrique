@@ -162,7 +162,7 @@ Platform Platform::get()
 #endif
 		;
 
-#if defined(__Apple__)
+#if defined(__APPLE__)
 	p.darwin = true;
 #elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
 	p.bsd = true;
