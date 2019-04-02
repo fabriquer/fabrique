@@ -51,12 +51,19 @@ common_cxx_flags = cxxoptions + dbgflags + includes + vendor_flags;
 cxx_flags = common_cxx_flags + warnings;
 generated_cxx_flags = common_cxx_flags + [ '-Wno-deprecated-register' ];
 
+
+#
+# Linker flags:
+#
 ldflags =
 	(if debug [ '-g' '-O0' ] else [ '-O2' ])
 	+ (if platform.posix ['-rdynamic'] else [])
 	;
 
 
+#
+# Source files that go into Fabrique:
+#
 cxx_srcs =
 	import('bin').sources
 	+ import('lib').sources
@@ -68,6 +75,10 @@ generated_srcs =
 	+ import('vendor/generated-grammar').sources
 	;
 
+
+#
+# Object files, shared libraries and fab binary:
+#
 objects = cxx.compile(cxx_srcs, cxx_flags)
 	+ cxx.compile(generated_srcs, generated_cxx_flags);
 
@@ -79,8 +90,20 @@ plugins = foreach lib <- import('base-plugins', cxxflags=cxx_flags, ldflags=ldfl
 fab = cxx.link_executable(objects, executable = file('fab', subdir = 'bin'),
                           flags = ldflags);
 
+
+#
+# The "everything" target includes fab, its plugins and its test sources.
+#
+# This is useful for building all the things and double-checking that all of the test
+# sources exist without actually running the tests.
+#
 everything = [ fab ] + plugins + import('tests/manifest.fab').all_files;
 
+
+#
+# Unless `-D tests=false` is specified explicitly, all tests will be executed whenever
+# the fab binary, plugins or test sources have changed.
+#
 test = if withtests {
 	lit = import('share/lit.fab', show_failure_details = verbose_tests,
 	             lit = args.lit ? import('which').executable('lit'));
