@@ -41,6 +41,9 @@ exclude_warnings =
 
 	# We are OK with C99 variable-length arrays.
 	'vla' 'vla-extension'
+
+	# Ignore a problem with old C++ versions and copy elision.
+	'return-std-move-in-c++11'
 ];
 
 # Use lots and lots of warnings.
