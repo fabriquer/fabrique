@@ -10,8 +10,6 @@ debug = args.debug ? true;
 asserts = args.asserts ? true;
 withtests = args.tests ? true;
 
-compiler = args.compiler ? 'c++';
-
 colour_output = args.colour_output ? true;
 verbose_tests = args.verbose_tests ? false;
 
@@ -22,7 +20,6 @@ cc = import('share/c.fab',
 	platform = platform);
 
 cxx = import('share/cxx.fab',
-	compiler = which.executable(compiler),
 	colour_diagnostics = colour_output,
 	platform = platform);
 
