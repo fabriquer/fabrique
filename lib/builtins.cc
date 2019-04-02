@@ -79,7 +79,7 @@ static ValuePtr PrintImpl(ValueMap arguments, DAGBuilder &b, SourceRange src)
 	auto &types = b.typeContext();
 	if (v->type().isSubtype(types.stringType()))
 	{
-		out << v->str();
+		out << Bytestream::Info << v->str();
 	}
 	else
 	{
