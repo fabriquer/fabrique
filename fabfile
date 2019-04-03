@@ -6,6 +6,21 @@ print('Configuring Fabrique...');
 
 
 #
+# Source files that go into Fabrique:
+#
+cxx_srcs =
+	import('bin').sources
+	+ import('lib').sources
+	+ import('Support').sources
+	;
+
+generated_srcs =
+	import('vendor/antlr-cxx-runtime').sources
+	+ import('vendor/generated-grammar').sources
+	;
+
+
+#
 # Find toolchain (C++ and shell):
 #
 clang = import('share/toolchains/c/clang.fab');
@@ -62,21 +77,6 @@ generated_cxx_flags = common_cxx_flags + [ '-Wno-deprecated-register' ];
 ldflags =
 	(if debug [ '-g' '-O0' ] else [ '-O2' ])
 	+ (if import('platform').posix ['-rdynamic'] else [])
-	;
-
-
-#
-# Source files that go into Fabrique:
-#
-cxx_srcs =
-	import('bin').sources
-	+ import('lib').sources
-	+ import('Support').sources
-	;
-
-generated_srcs =
-	import('vendor/antlr-cxx-runtime').sources
-	+ import('vendor/generated-grammar').sources
 	;
 
 
