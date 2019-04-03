@@ -222,7 +222,8 @@ fabrique::builtins::Import(parsing::Parser &p, plugin::Loader &pluginLoader,
 		{
 			descriptor = pluginLoader.Load(name).lock();
 		}
-		SemaCheck(descriptor, n->source(), "no such file or plugin");
+		SemaCheck(descriptor, n->source(),
+			"no such file or plugin ('" + name + "')");
 
 		auto plugin = descriptor->Create(builder, arguments);
 		SemaCheck(plugin, src, "failed to create plugin with arguments");
