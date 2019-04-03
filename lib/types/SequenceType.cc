@@ -111,7 +111,10 @@ bool SequenceType::isSubtype(const Type& other) const
 	FAB_ASSERT(typeParameters().size() < 2, "too many type parameters in " + str());
 
 	// Sequences are covariant: list[subtype] is a subtype of list[super].
-	return typeParameters().empty() or other[0].isSupertype((*this)[0]);
+	// Also, an empty list is a subtype of any list type.
+	return typeParameters().empty() or (
+		not other.typeParameters().empty() and other[0].isSupertype((*this)[0])
+	);
 }
 
 
