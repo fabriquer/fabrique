@@ -2,7 +2,10 @@
 # Fabrique build description for Fabrique.
 #
 
-print('Configuring Fabrique...');
+print('Configuring Fabrique with arguments:');
+print(args);
+
+debug = args.debug ? true;
 
 
 #
@@ -29,7 +32,6 @@ generated_srcs =
 #
 clang = import('share/toolchains/c/clang.fab');
 
-debug = args.debug ? true;
 cxx_options = record
 {
 	debug = debug;
