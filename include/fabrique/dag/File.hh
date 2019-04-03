@@ -66,9 +66,6 @@ public:
 	virtual std::string relativeName() const;
 	virtual std::string fullName() const;
 
-	//! This file refers to an absolute path.
-	bool absolute() const { return absolute_; }
-
 	bool generated() const { return generated_; }
 	void setGenerated(bool);
 
