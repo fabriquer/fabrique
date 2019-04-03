@@ -83,19 +83,12 @@ objects = clang.compile(cxx_srcs, cxx_flags)
 
 fab = clang.binary(objects, binary = file('fab', subdir = 'bin'), flags = ldflags);
 
-print('Binary: ' + fab.fullname);
-
-
 plugins = import('base-plugins',
 	cxxflags=cxx_flags,
 	ldflags=ldflags,
 	target_dir=file('lib') :: 'fabrique',
 	toolchain = record { compile=clang.compile; library=clang.library; },
 );
-
-print('Base plugins: ')
-print(foreach plugin <- plugins.plugins plugin.name);
-print('');
 
 
 #
