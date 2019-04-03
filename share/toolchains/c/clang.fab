@@ -24,17 +24,17 @@ common_flags =
 	;
 
 
+binary = function(objects:list[file[in]], binary:file[out], flags:list[string]): file
+{
+	# TODO: cc or cxx?
+	gcc.link_binary(cxx, objects, binary, common_flags + flags)
+};
+
 compile = function(srcs:list[file], flags:list[string] = [],
                    position_independent:bool = true, deps:list[file[in]] = []): list[file]
 {
 	# TODO: cc or cxx?
 	gcc.compile(cxx, srcs, common_flags + flags, position_independent, deps)
-};
-
-binary = function(objects:list[file[in]], binary:file[out], flags:list[string]): file
-{
-	# TODO: cc or cxx?
-	gcc.link_binary(cxx, objects, binary, common_flags + flags)
 };
 
 library = function(objects:list[file[in]], libname:string, subdir:file,
