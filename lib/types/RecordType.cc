@@ -125,8 +125,10 @@ bool RecordType::isSubtype(const Type& t) const
 		// record[foo:special_int] to record[foo:int]
 		// but not the other way around.
 		//
+		// TODO: add test for this
+		//
 		const Type& ourType = i->second;
-		if (not theirType.isSubtype(ourType))
+		if (not ourType.isSubtype(theirType))
 			return false;
 
 		++fieldsChecked;
