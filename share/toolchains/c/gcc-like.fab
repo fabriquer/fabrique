@@ -2,6 +2,38 @@
 # Description of how to compile things with "GCC-like" compilers (GCC, Clang, others?)
 #
 
+
+#
+# Options represent compiler flags in a more structured way.
+#
+compiler_options = type record
+[
+	debug:bool,
+	include_dirs:list[file],
+	optlevel:int,
+	pic:bool,
+	standard:string,
+	system_include_dirs:list[file],
+	warnings:list[string]
+];
+
+flags = function(opts:compiler_options): list[string]
+{
+	(if opts.debug '-g' else '')
+	::
+	(if opts.optlevel == 2 '-O2' else '-O0') # TODO: fix this!
+	::
+	(if opts.pic '-fPIC' else '')
+	::
+	(if opts.standard != '' ['-std=' + opts.standard] else [])
+	+
+	(foreach dir <- opts.include_dirs '-I ' + dir.fullname)
+	+
+	(foreach dir <- opts.system_include_dirs '-isystem ' + dir.fullname)
+	+
+	(foreach warning <- opts.warnings '-W' + warning)
+};
+
 # Get information about the current platform (POSIX? Darwin? Windows?)
 platform = import('platform');
 
