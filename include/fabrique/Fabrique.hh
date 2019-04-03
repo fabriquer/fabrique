@@ -1,6 +1,6 @@
 //! @file Fabrique.hh    Declaration of the top-level Fabrique type
 /*
- * Copyright (c) 2018 Jonathan Anderson
+ * Copyright (c) 2018-2019 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -90,7 +90,7 @@ public:
 
 private:
 	//! Parse a file, optionally pretty-printing it.
-	const UniqPtrVec<ast::Value>& Parse(const std::string &filename);
+	const UniqPtrVec<ast::Value>& Parse(std::istream&, const std::string &filename);
 
 	void ReportError(std::string message, SourceRange, ErrorReport::Severity,
 	                 std::string detail);

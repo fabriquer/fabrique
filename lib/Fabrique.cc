@@ -103,20 +103,11 @@ void Fabrique::AddArguments(const vector<string> &args)
 }
 
 
-const UniqPtrVec<ast::Value>& Fabrique::Parse(const std::string &filename)
+const UniqPtrVec<ast::Value>& Fabrique::Parse(std::istream &f, const std::string &name)
 {
-	if (not PathIsFile(filename))
-	{
-		throw UserError("no such file: '" + filename + "'");
-	}
+	FAB_ASSERT(f.good(), "invalid input stream");
 
-	std::ifstream infile(filename);
-	if (not infile)
-	{
-		throw UserError("failed to open '" + filename + "'");
-	}
-
-	auto parseResult = parser_.ParseFile(infile, filename);
+	auto parseResult = parser_.ParseFile(f, name);
 
 	if (not parseResult)
 	{
@@ -124,7 +115,7 @@ const UniqPtrVec<ast::Value>& Fabrique::Parse(const std::string &filename)
 		{
 			err_(err);
 		}
-		throw UserError("unparseable file: '" + filename + "'");
+		throw UserError("failed to parse " + name);
 	}
 
 	return parseResult.ok();
@@ -142,15 +133,29 @@ void Fabrique::Process(const std::string &filename)
 		: filename
 		;
 
-	auto &values = Parse(fabfile);
+	const string abspath = PathIsAbsolute(fabfile) ? fabfile : AbsolutePath(fabfile);
+	const string srcroot = DirectoryOf(abspath);
+
+	if (not PathIsFile(abspath))
+	{
+		throw UserError("no such file: '" + fabfile + "'");
+	}
+
+	//
+	// Open and parse the file.
+	//
+	std::ifstream infile(abspath);
+	if (not infile.good())
+	{
+		throw UserError("failed to open '" + filename + "'");
+	}
+
+	auto &values = Parse(infile, abspath);
 
 	if (parseOnly_)
 	{
 		return;
 	}
-
-	const string abspath = PathIsAbsolute(fabfile) ? fabfile : AbsolutePath(fabfile);
-	const string srcroot = DirectoryOf(abspath);
 
 
 	//
