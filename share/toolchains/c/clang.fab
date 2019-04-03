@@ -1,0 +1,45 @@
+#
+# Support for the Clang (and Clang++) compiler.
+#
+# Arguments:
+#   force_colour    force the compiler to colour diagnostic messages even if not on a TTY
+#
+force_colour = args.colour_diagnostics ? false;
+
+
+# Find comnpiler binaries:
+which = import('which');
+cc = which.executable('clang');
+cxx = which.executable('clang++');
+
+# Most of this functionality is just a wrapper around generic "GCC-like" functionality.
+gcc = import('gcc-like.fab');
+system_headers = gcc.system_headers;
+
+#
+# Clang specializations:
+#
+common_flags =
+	(if force_colour ['-fcolor-diagnostics'] else [])
+	;
+
+
+compile = function(srcs:list[file], flags:list[string] = [],
+                   position_independent:bool = true, deps:list[file[in]] = []): list[file]
+{
+	# TODO: cc or cxx?
+	gcc.compile(cxx, srcs, common_flags + flags, position_independent, deps)
+};
+
+binary = function(objects:list[file[in]], binary:file[out], flags:list[string]): file
+{
+	# TODO: cc or cxx?
+	gcc.link_binary(cxx, objects, binary, common_flags + flags)
+};
+
+library = function(objects:list[file[in]], libname:string, subdir:file,
+                   flags:list[string]): file
+{
+	# TODO: cc or cxx?
+	gcc.library(cxx, objects, libname, subdir, common_flags + flags)
+};

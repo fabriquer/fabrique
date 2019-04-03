@@ -1,0 +1,97 @@
+#
+# Description of how to compile things with "GCC-like" compilers (GCC, Clang, others?)
+#
+
+# Get information about the current platform (POSIX? Darwin? Windows?)
+platform = import('platform');
+
+
+#
+# Compile some number of source files into their corresponding object files.
+#
+compile = function(compiler:file, srcs:list[file], flags:list[string] = [],
+                   position_independent:bool=true, deps:list[file[in]] = []): list[file]
+{
+	# Compile each source file into a corresponding object file and accumulate
+	# all of the object files into a list.
+	foreach src <- srcs {
+		obj = src + '.o';
+		flags = flags
+			+ (src.cxxflags ? [])
+			+ if position_independent ['-fPIC'] else []
+			;
+
+		compile_one(compiler, src, obj, flags, deps);
+		obj
+	}
+};
+
+
+#
+# Compile objects into a shared library given by libname (e.g., `foo` for `libfoo.so`).
+#
+library = function(compiler:file, objects:list[file], libname:string, subdir:file,
+                   flags:list[string] = []): file
+{
+	filename = subdir :: library_name(libname);
+	default_flags =
+		if platform.darwin ['-Wl,-undefined' '-Wl,dynamic_lookup']
+		else if platform.posix ['-rdynamic']
+		else []
+		;
+
+	link_library(compiler, objects, filename, flags = flags + default_flags)
+};
+
+
+#
+# What should a library be called on this platform?
+#
+library_name = function(name:string): string
+{
+	if platform.darwin
+		'lib' + name + '.dylib'
+
+	else if platform.posix
+		'lib' + name + '.so'
+
+	else
+		name + '.dll'
+};
+
+
+#
+# Where supported, treat system header directories differently from other include dirs:
+# suppress warnings in files that we aren't responsible for.
+#
+system_headers = function(dirs:list[file]): list[string]
+{
+	foreach dir <- dirs
+	{
+		'-isystem ' + dir.fullname
+	}
+};
+
+
+#
+# Low-level rules:
+#
+
+# Compile one source file into one object file.
+compile_one = action('${compiler} -c ${flags} -MMD -MF ${obj}.d ${src} -o ${obj}',
+             description = 'Compiling ${in}', depfile = '${obj}.d'
+	     <- compiler:file[in], src:file[in], obj:file[out], flags:list[string],
+	        otherDeps:list[file[in]] = [], deps:string = 'gcc');
+
+# Link object files into an executable binary.
+link_binary = action(
+	'${compiler} -o ${binary} ${flags} ${objects}', description = 'Linking ${binary}'
+	<- compiler:file[in], objects:list[file[in]], binary:file[out], flags:list[string]
+);
+
+# Low-level rule for compiling objects into a shared library.
+link_library = action(
+	'${compiler} -shared -o ${library} ${flags} ${objects}',
+	description = 'Linking ${library}'
+        <- compiler:file[in], objects:list[file[in]], library:file[out],
+	   flags:list[string]);

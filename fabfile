@@ -9,10 +9,7 @@ print('')
 #
 # Find toolchain (C++ and shell):
 #
-platform = import('platform');
-cc = import('share/c.fab', platform = platform);
-cxx = import('share/cxx.fab', platform = platform);
-
+clang = import('share/toolchains/c/clang.fab');
 shell = import('share/shell.fab').shell;
 
 
@@ -29,7 +26,7 @@ includes = foreach dir <- [ srcroot srcroot :: 'include' ] '-I ' + dir.fullname;
 # Treat vendor headers as system headers (disable warnings).
 vendor_dir = file('vendor');
 antlr_dir = vendor_dir :: 'antlr-cxx-runtime';
-vendor_flags = cc.system_headers([ vendor_dir antlr_dir ]);
+vendor_flags = clang.system_headers([ vendor_dir antlr_dir ]);
 
 exclude_warnings =
 [
@@ -62,7 +59,7 @@ generated_cxx_flags = common_cxx_flags + [ '-Wno-deprecated-register' ];
 #
 ldflags =
 	(if debug [ '-g' '-O0' ] else [ '-O2' ])
-	+ (if platform.posix ['-rdynamic'] else [])
+	+ (if import('platform').posix ['-rdynamic'] else [])
 	;
 
 
@@ -84,11 +81,10 @@ generated_srcs =
 #
 # Object files, shared libraries and fab binary:
 #
-objects = cxx.compile(cxx_srcs, cxx_flags)
-	+ cxx.compile(generated_srcs, generated_cxx_flags);
+objects = clang.compile(cxx_srcs, cxx_flags)
+	+ clang.compile(generated_srcs, generated_cxx_flags);
 
-fab = cxx.link_executable(objects, executable = file('fab', subdir = 'bin'),
-                          flags = ldflags);
+fab = clang.binary(objects, binary = file('fab', subdir = 'bin'), flags = ldflags);
 
 print('Binary: ' + fab.fullname);
 
@@ -96,7 +92,7 @@ print('Binary: ' + fab.fullname);
 base_plugins = import('base-plugins',
 	cxxflags=cxx_flags,
 	ldflags=ldflags,
-	toolchain = record { compile=cxx.compile; library=cxx.library; },
+	toolchain = record { compile=clang.compile; library=clang.library; },
 );
 
 print('Base plugins: ')
