@@ -21,15 +21,10 @@ generated_srcs =
 
 
 #
-# Find toolchain (C++ and shell):
+# C++ toolchain and compilation flags:
 #
 clang = import('share/toolchains/c/clang.fab');
-shell = import('share/shell.fab').shell;
 
-
-#
-# C++ compilation flags:
-#
 debug = args.debug ? true;
 vendor_dir = file('vendor');
 
@@ -91,19 +86,16 @@ fab = clang.binary(objects, binary = file('fab', subdir = 'bin'), flags = ldflag
 print('Binary: ' + fab.fullname);
 
 
-base_plugins = import('base-plugins',
+plugins = import('base-plugins',
 	cxxflags=cxx_flags,
 	ldflags=ldflags,
+	target_dir=file('lib') :: 'fabrique',
 	toolchain = record { compile=clang.compile; library=clang.library; },
 );
 
 print('Base plugins: ')
-print(foreach plugin <- base_plugins.plugins plugin.name);
+print(foreach plugin <- plugins.plugins plugin.name);
 print('');
-
-plugins = foreach lib <- base_plugins.libs
-	shell.copy(lib, 'lib' :: 'fabrique' :: file(lib.filename))
-	;
 
 
 #
@@ -112,7 +104,7 @@ plugins = foreach lib <- base_plugins.libs
 # This is useful for building all the things and double-checking that all of the test
 # sources exist without actually running the tests.
 #
-everything = [ fab ] + plugins + import('tests/manifest.fab').all_files;
+everything = [ fab ] + plugins.libs + import('tests/manifest.fab').all_files;
 
 
 #
