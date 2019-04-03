@@ -103,8 +103,8 @@ all_files = files(
 ./dag/higher-order-functions.fab
 ./dag/import-another-subdir.fab
 ./dag/import-arguments-mandatory.fab
-./dag/import-directory.fab
 ./dag/import-directory-missing-fabfile.fab
+./dag/import-directory.fab
 ./dag/import-empty.fab
 ./dag/import-explicit-subdir.fab
 ./dag/list-of-lists-of-targets.fab
