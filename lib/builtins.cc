@@ -60,7 +60,7 @@ static ValuePtr FieldsImpl(ValueMap arguments, DAGBuilder &b, SourceRange src)
 	auto v = arguments["value"];
 	SemaCheck(v, src, "null value");
 
-	const Type &t = v->type();
+	const auto &t = v->type();
 
 	ValueMap fields;
 	for (auto i : t.fields())
@@ -106,6 +106,14 @@ static ValuePtr PrintImpl(ValueMap arguments, DAGBuilder &b, SourceRange src)
 	out << Bytestream::Reset << "\n";
 
 	return v;
+}
+
+static ValuePtr TypeImpl(ValueMap arguments, DAGBuilder &, SourceRange src)
+{
+	auto v = arguments["value"];
+	SemaCheck(v, src, "null value");
+
+	return TypeReference::Create(v->type(), src);
 }
 
 
@@ -281,4 +289,14 @@ ValuePtr builtins::Print(DAGBuilder &b)
 
 	return b.Function(PrintImpl, types.nilType(), params,
 	                  SourceRange::None(), true);
+}
+
+
+dag::ValuePtr builtins::Type(DAGBuilder &b)
+{
+	TypeContext &types = b.typeContext();
+	SharedPtrVec<dag::Parameter> params;
+	params.emplace_back(new Parameter("value", types.nilType()));
+
+	return b.Function(TypeImpl, types.typeType(), params);
 }

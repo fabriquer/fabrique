@@ -64,6 +64,7 @@ static const char SourceRoot[] = "srcroot";
 static const char String[] = "string";
 static const char True[] = "true";
 static const char Type[] = "type";
+static const char TypeOf[] = "typeof";
 static const char XOr[] = "xor";
 
 //

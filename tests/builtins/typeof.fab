@@ -1,0 +1,19 @@
+#
+# RUN: %fab --format=null %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK: type of 42:
+# CHECK-NEXT: int
+print('type of 42:')
+print(typeof(42));
+
+# CHECK: type of Inputs:
+# CHECK-NEXT: file
+print('type of Inputs:');
+print(typeof(file('Inputs')));
+
+# CHECK: type of a record:
+# CHECK-NEXT: record[x:int, y:string, z:record[whut:string]]
+print('type of a record:');
+print(typeof(record { x = 42; y = 'hello'; z = record { whut = 'now'; }; }));

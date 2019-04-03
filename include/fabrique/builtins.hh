@@ -77,6 +77,13 @@ dag::ValuePtr Import(parsing::Parser &parser, plugin::Loader &loader, std::strin
  */
 dag::ValuePtr Print(dag::DAGBuilder&);
 
+
+/**
+ * Create implementation of Fabrique `type()` function
+ */
+dag::ValuePtr Type(dag::DAGBuilder&);
+
+
 } // namespace builtins
 } // namespace fabrique
 

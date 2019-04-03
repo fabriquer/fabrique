@@ -59,6 +59,7 @@ static const char* ReservedNames[] =
 	names::String,
 	names::True,
 	names::Type,
+	names::TypeOf,
 	names::XOr,
 };
 

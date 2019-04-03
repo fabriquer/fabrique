@@ -174,6 +174,7 @@ void Fabrique::Process(const std::string &filename)
 	scope.DefineReserved("import",
 		builtins::Import(parser_, pluginLoader, srcroot, ctx));
 	scope.DefineReserved("print", builtins::Print(builder));
+	scope.DefineReserved("typeof", builtins::Type(builder));
 
 	// Also define srcroot as an explicit variable in the DAG:
 	builder.Define("srcroot", builder.String(srcroot));
