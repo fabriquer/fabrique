@@ -169,6 +169,7 @@ void Fabrique::Process(const std::string &filename)
 	scope.DefineReserved("args", builder.Record(arguments_));
 	scope.DefineReserved("srcroot", builder.File(srcroot));
 	scope.DefineReserved("buildroot", builder.File(outputDirectory_));
+	scope.DefineReserved("fields", builtins::Fields(builder));
 	scope.DefineReserved("file", builtins::OpenFile(builder));
 	scope.DefineReserved("import",
 		builtins::Import(parser_, pluginLoader, srcroot, ctx));

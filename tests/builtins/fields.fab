@@ -1,0 +1,26 @@
+#
+# RUN: %fab --format=null %s > %t
+# RUN: %check %s -input-file %t
+#
+
+i = 42;
+f = file('Inputs');
+r = record { x = 42; y = 'hello'; z = record { whut = 'now'; }; };
+
+# CHECK: {
+# CHECK: }
+print(fields(i));
+
+# CHECK: {
+# CHECK:   generated:{{.*}}bool
+# CHECK:   name:{{.*}}string
+# CHECK:   subdir:{{.*}}file
+# CHECK: }
+print(fields(f));
+
+# CHECK: {
+# CHECK:   x:{{.*}}int
+# CHECK:   y:{{.*}}string
+# CHECK:   z:{{.*}}record[whut:string]
+# CHECK: }
+print(fields(r));

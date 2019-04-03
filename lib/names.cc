@@ -41,6 +41,7 @@ static const char* ReservedNames[] =
 	names::BuildDirectory,
 	names::BuildRoot,
 	names::False,
+	names::Fields,
 	names::File,
 	names::Files,
 	names::Function,

@@ -35,6 +35,7 @@
 #include <fabrique/dag/DAGBuilder.hh>
 #include <fabrique/dag/File.hh>
 #include <fabrique/dag/Parameter.hh>
+#include <fabrique/dag/TypeReference.hh>
 #include <fabrique/parsing/Parser.hh>
 #include <fabrique/plugin/Loader.hh>
 #include <fabrique/plugin/Plugin.hh>
@@ -53,6 +54,22 @@ using namespace fabrique::dag;
 using namespace fabrique::platform;
 using std::string;
 
+
+static ValuePtr FieldsImpl(ValueMap arguments, DAGBuilder &b, SourceRange src)
+{
+	auto v = arguments["value"];
+	SemaCheck(v, src, "null value");
+
+	const Type &t = v->type();
+
+	ValueMap fields;
+	for (auto i : t.fields())
+	{
+		fields[i.first] = TypeReference::Create(i.second, src);
+	}
+
+	return ValuePtr(b.Record(fields, src));
+}
 
 static ValuePtr OpenFileImpl(ValueMap arguments, DAGBuilder &b, SourceRange src)
 {
@@ -91,6 +108,15 @@ static ValuePtr PrintImpl(ValueMap arguments, DAGBuilder &b, SourceRange src)
 	return v;
 }
 
+
+dag::ValuePtr builtins::Fields(DAGBuilder &b)
+{
+	TypeContext &types = b.typeContext();
+	SharedPtrVec<dag::Parameter> params;
+	params.emplace_back(new Parameter("value", types.nilType()));
+
+	return b.Function(FieldsImpl, types.listOf(types.stringType()), params);
+}
 
 fabrique::dag::ValuePtr fabrique::builtins::OpenFile(fabrique::dag::DAGBuilder &b)
 {

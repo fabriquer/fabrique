@@ -57,6 +57,11 @@ namespace builtins {
 dag::ValuePtr OpenFile(dag::DAGBuilder&);
 
 /**
+ * Get `fields()` builtin function.
+ */
+dag::ValuePtr Fields(dag::DAGBuilder&);
+
+/**
  * Create `import()` builtin function.
  *
  * @param     parser       parser to use when importing Fabrique files

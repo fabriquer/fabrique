@@ -46,6 +46,7 @@ static const char Bool[] = "bool";
 static const char BuildDirectory[] = "builddir";
 static const char BuildRoot[] = "buildroot";
 static const char False[] = "false";
+static const char Fields[] = "fields";
 static const char File[] = "file";
 static const char Files[] = "files";
 static const char Function[] = "function";
