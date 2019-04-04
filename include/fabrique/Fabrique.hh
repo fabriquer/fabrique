@@ -68,12 +68,6 @@ public:
 	Fabrique(Fabrique&&);
 
 
-	/**
-	 * Parse an argument to the top-level Fabrique file (e.g., an argument
-	 * passed at the command line, i.e., `fab -D foo=42`).
-	 */
-	void AddArgument(const std::string&);
-
 	//! Parse several arguments for the top-level Fabrique file
 	void AddArguments(const std::vector<std::string>&);
 
@@ -89,6 +83,12 @@ public:
 	TypeContext& types() { return types_; }
 
 private:
+	/**
+	 * Parse an argument to the top-level Fabrique file (e.g., an argument
+	 * passed at the command line, i.e., `fab -D foo=42`).
+	 */
+	void AddArgument(const std::string&);
+
 	//! Parse a file, optionally pretty-printing it.
 	const UniqPtrVec<ast::Value>& Parse(std::istream&, const std::string &filename);
 
