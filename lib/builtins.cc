@@ -108,6 +108,14 @@ static ValuePtr PrintImpl(ValueMap arguments, DAGBuilder &b, SourceRange src)
 	return v;
 }
 
+static ValuePtr StringifyImpl(ValueMap arguments, DAGBuilder &b, SourceRange src)
+{
+	auto v = arguments["value"];
+	SemaCheck(v, src, "null value");
+
+	return b.String(v->str(), src);
+}
+
 static ValuePtr TypeImpl(ValueMap arguments, DAGBuilder &, SourceRange src)
 {
 	auto v = arguments["value"];
@@ -289,6 +297,16 @@ ValuePtr builtins::Print(DAGBuilder &b)
 
 	return b.Function(PrintImpl, types.nilType(), params,
 	                  SourceRange::None(), true);
+}
+
+
+ValuePtr builtins::Stringify(DAGBuilder &b)
+{
+	TypeContext &types = b.typeContext();
+	SharedPtrVec<dag::Parameter> params;
+	params.emplace_back(new Parameter("value", types.nilType()));
+
+	return b.Function(StringifyImpl, types.stringType(), params);
 }
 
 

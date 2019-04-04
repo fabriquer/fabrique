@@ -79,6 +79,12 @@ dag::ValuePtr Print(dag::DAGBuilder&);
 
 
 /**
+ * Create implementation of Fabrique `str()` function
+ */
+dag::ValuePtr Stringify(dag::DAGBuilder&);
+
+
+/**
  * Create implementation of Fabrique `type()` function
  */
 dag::ValuePtr Type(dag::DAGBuilder&);

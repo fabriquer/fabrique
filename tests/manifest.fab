@@ -46,6 +46,7 @@ all_files = files(
 ./backends/ninja/string-list.fab
 ./builtins/Inputs/fabfile
 ./builtins/fields.fab
+./builtins/stringify.fab
 ./builtins/typeof.fab
 ./dag/Inputs/another_subdir/fabfile
 ./dag/Inputs/cc.fab

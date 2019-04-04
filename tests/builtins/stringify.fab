@@ -1,0 +1,13 @@
+#
+# RUN: %fab --format=null --print-dag %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK-DAG: i:string = '42'
+i = string(42);
+
+# CHECK-DAG: f:string = 'Inputs'
+f = string(file('Inputs'));
+
+# CHECK-DAG: r:string = '{
+r = string(record { x = 42; y = 'hello'; z = record { whut = 'now'; }; });
