@@ -19,6 +19,7 @@ echo "all_files = files("
 find . -type f \
 	| grep -v './manifest.fab' \
 	| grep -v './regenerate-manifest.sh' \
+	| grep -v '.fish' \
 	| grep -v '.swp' \
 	| sort
 
