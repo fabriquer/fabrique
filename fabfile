@@ -69,15 +69,7 @@ cxx_options = record
 	];
 };
 
-common_cxx_flags = clang.gcc.flags(cxx_options);
-
-cxx_flags = common_cxx_flags + ['-Weverything'];
-generated_cxx_flags = common_cxx_flags + [ '-Wno-deprecated-register' ];
-
-
-#
-# Linker flags:
-#
+cxxflags = clang.gcc.flags(cxx_options);
 ldflags =
 	(if debug [ '-g' '-O0' ] else [ '-O2' ])
 	+ (if import('platform').posix ['-rdynamic'] else [])
@@ -87,13 +79,13 @@ ldflags =
 #
 # Object files, shared libraries and fab binary:
 #
-objects = clang.compile(cxx_srcs, cxx_flags)
-	+ clang.compile(generated_srcs, generated_cxx_flags);
+objects = clang.compile(cxx_srcs, cxxflags + ['-Weverything'])
+	+ clang.compile(generated_srcs, cxxflags + [ '-Wno-deprecated-register' ]);
 
 fab = clang.binary(objects, binary = file('fab', subdir = 'bin'), flags = ldflags);
 
 plugins = import('base-plugins',
-	cxxflags=cxx_flags,
+	cxxflags=cxxflags + ['-Weverything'],
 	ldflags=ldflags,
 	target_dir=file('lib') :: 'fabrique',
 	toolchain = record { compile=clang.compile; library=clang.library; },
