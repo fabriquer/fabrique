@@ -7,7 +7,7 @@ print(args);
 
 which = import('which');
 
-debug = args.debug ? true;
+debug = args.debug ? false;
 filecheck = file(args.filecheck ? which.executable('FileCheck').fullname);
 lit = file(args.lit ? which.executable('lit').fullname);
 verbose_tests = args.verbose_tests ? false;
