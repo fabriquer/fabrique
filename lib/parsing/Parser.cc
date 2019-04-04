@@ -171,7 +171,6 @@ Parser::ValueResult Parser::Parse(std::string s, SourceRange src)
 	FAB_ASSERT(parseTrees_.find(name) == parseTrees_.end(),
 	           "already parsed '" + name + "'");
 
-	inputs_.push_back(name);
 	parseTrees_.emplace(name, std::move(values));
 	return ValueResult::Ok(value);
 }
