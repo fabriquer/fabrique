@@ -21,7 +21,7 @@ flags = function(opts:compiler_options): list[string]
 {
 	(if opts.debug '-g' else '')
 	::
-	(if opts.optlevel == 2 '-O2' else '-O0') # TODO: fix this!
+	('-O' + string(opts.optlevel))
 	::
 	(if opts.pic '-fPIC' else '')
 	::
