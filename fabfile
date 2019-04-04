@@ -5,7 +5,12 @@
 print('Configuring Fabrique with arguments:');
 print(args);
 
+which = import('which');
+
 debug = args.debug ? true;
+filecheck = file(args.filecheck ? which.executable('FileCheck').fullname);
+lit = file(args.lit ? which.executable('lit').fullname);
+verbose_tests = args.verbose_tests ? false;
 
 
 #
@@ -112,8 +117,9 @@ everything = [ fab ] + plugins.libs + import('tests/manifest.fab').all_files;
 #
 test = if (args.tests ? true) {
 	lit = import('share/lit.fab',
-		lit = args.lit ? import('which').executable('lit'),
-		show_failure_details = args.verbose_tests ? false,
+		filecheck = filecheck,
+		lit = lit,
+		show_failure_details = verbose_tests
 	);
 
 	[ lit.run(fab, file('tests'), file('junit.xml'), dependencies = everything) ]
