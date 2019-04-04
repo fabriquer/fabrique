@@ -122,7 +122,6 @@ all_files = files(
 ./dag/multiple-definition.fab
 ./dag/multiple-outputs.fab
 ./dag/nested-directories.fab
-./dag/nested-paths.fab
 ./dag/nil-type.fab
 ./dag/operators.fab
 ./dag/param-default-values.fab
