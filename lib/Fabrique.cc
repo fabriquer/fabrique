@@ -48,6 +48,10 @@ using namespace std;
 using namespace std::placeholders;
 
 
+//! Define builtins that don't require knowledge of the source tree.
+static void DefineSourcelessBuiltins(ast::EvalContext::Scope&, dag::DAGBuilder&);
+
+
 Fabrique::Fabrique(bool parseOnly, bool printASTs, bool dumpASTs, bool printDAG,
                    bool printToStdout, UniqPtrVec<backend::Backend> backends,
                    string outputDir, vector<string> pluginPaths, string regenCommand,
@@ -166,16 +170,16 @@ void Fabrique::Process(const std::string &filename)
 	dag::DAGBuilder &builder = ctx.builder();
 
 	auto scope = ctx.EnterScope(fabfile);
+
+	// Some builtins don't require much context:
+	DefineSourcelessBuiltins(scope, builder);
+
+	// Others require arguments or knowledge of source or build trees:
 	scope.DefineReserved("args", builder.Record(arguments_));
 	scope.DefineReserved("srcroot", builder.File(srcroot));
 	scope.DefineReserved("buildroot", builder.File(outputDirectory_));
-	scope.DefineReserved("fields", builtins::Fields(builder));
-	scope.DefineReserved("file", builtins::OpenFile(builder));
 	scope.DefineReserved("import",
 		builtins::Import(parser_, pluginLoader, srcroot, ctx));
-	scope.DefineReserved("print", builtins::Print(builder));
-	scope.DefineReserved("string", builtins::Stringify(builder));
-	scope.DefineReserved("typeof", builtins::Type(builder));
 
 	// Also define srcroot as an explicit variable in the DAG:
 	builder.Define("srcroot", builder.String(srcroot));
@@ -246,4 +250,14 @@ void Fabrique::ReportError(string message, SourceRange src, ErrorReport::Severit
                            string detail)
 {
 	err_(ErrorReport(message, src, severity, detail));
+}
+
+
+static void DefineSourcelessBuiltins(ast::EvalContext::Scope &scope, dag::DAGBuilder &b)
+{
+	scope.DefineReserved("fields", builtins::Fields(b));
+	scope.DefineReserved("file", builtins::OpenFile(b));
+	scope.DefineReserved("print", builtins::Print(b));
+	scope.DefineReserved("string", builtins::Stringify(b));
+	scope.DefineReserved("typeof", builtins::Type(b));
 }
