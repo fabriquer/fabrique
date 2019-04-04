@@ -1,0 +1,19 @@
+#
+# RUN: %fab --format=null --print-dag %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK-DAG: the_srcroot:file = [[SRCROOT:.*]]
+the_srcroot = srcroot;
+
+# CHECK-DAG: inputs:file = [[SRCROOT]]/Inputs
+inputs = srcroot :: 'Inputs';
+
+# CHECK-DAG: foo:file = [[SRCROOT]]/Inputs/another_subdir
+foo = inputs :: 'another_subdir';
+
+# CHECK-DAG: bar:file = [[SRCROOT]]/Inputs/another_subdir/yet_another_subdir
+bar = foo :: 'yet_another_subdir';
+
+# CHECK-DAG: baz:file = [[SRCROOT]]/Inputs/another_subdir/yet_another_subdir
+baz = inputs :: 'another_subdir' ::: 'yet_another_subdir';

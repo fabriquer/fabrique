@@ -50,6 +50,7 @@ all_files = files(
 ./builtins/stringify.fab
 ./builtins/typeof.fab
 ./dag/Inputs/another_subdir/fabfile
+./dag/Inputs/another_subdir/yet_another_subdir/fabfile
 ./dag/Inputs/cc.fab
 ./dag/Inputs/empty.fab
 ./dag/Inputs/fabfile
@@ -120,6 +121,7 @@ all_files = files(
 ./dag/modules.fab
 ./dag/multiple-definition.fab
 ./dag/multiple-outputs.fab
+./dag/nested-directories.fab
 ./dag/nested-paths.fab
 ./dag/nil-type.fab
 ./dag/operators.fab
