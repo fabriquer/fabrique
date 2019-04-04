@@ -1,0 +1,7 @@
+#
+# RUN: %fab -D 'foo=file("Inputs")' --format=null --print-dag %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK: foo:file = Inputs
+foo = args.foo;
