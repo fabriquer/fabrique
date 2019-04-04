@@ -81,6 +81,7 @@ all_files = files(
 ./dag/compound-expr.fab
 ./dag/conditionals.fab
 ./dag/config-cli-optional.fab
+./dag/config-cli-references.fab
 ./dag/config-cli.fab
 ./dag/custom-subdir.fab
 ./dag/direct-call.fab

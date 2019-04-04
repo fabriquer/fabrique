@@ -1,0 +1,10 @@
+#
+# RUN: %fab --format=null --print-dag -D foo=42 -D bar=foo %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK-DAG: foo:int = 42
+foo = args.foo;
+
+# CHECK-DAG: bar:int = 42
+bar = args.bar;

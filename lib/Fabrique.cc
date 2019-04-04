@@ -71,7 +71,7 @@ Fabrique::Fabrique(bool parseOnly, bool printASTs, bool dumpASTs, bool printDAG,
 	}
 }
 
-void Fabrique::AddArgument(const string &s)
+void Fabrique::AddArgument(const string &s, ast::EvalContext &ctx)
 {
 	auto parseResult = parser_.Parse(s);
 	if (not parseResult)
@@ -87,11 +87,6 @@ void Fabrique::AddArgument(const string &s)
 
 	if (auto &name = parseResult.ok().name())
 	{
-		ast::EvalContext ctx(types_);
-
-		auto scope = ctx.EnterScope("CLI args");
-		DefineSourcelessBuiltins(scope, ctx.builder());
-
 		auto value = parseResult.ok().evaluate(ctx);
 		arguments_.emplace(name->name(), value);
 	}
@@ -104,9 +99,13 @@ void Fabrique::AddArgument(const string &s)
 
 void Fabrique::AddArguments(const vector<string> &args)
 {
+	ast::EvalContext ctx(types_);
+	auto scope = ctx.EnterScope("CLI args");
+	DefineSourcelessBuiltins(scope, ctx.builder());
+
 	for (const string &a : args)
 	{
-		AddArgument(a);
+		AddArgument(a, ctx);
 	}
 }
 
