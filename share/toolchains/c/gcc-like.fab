@@ -111,7 +111,7 @@ system_headers = function(dirs:list[file]): list[string]
 
 # Compile one source file into one object file.
 compile_one = action('${compiler} -c ${flags} -MMD -MF ${obj}.d ${src} -o ${obj}',
-             description = 'Compiling ${in}', depfile = '${obj}.d'
+	     description = 'Compiling ${obj}', depfile = '${obj}.d'
 	     <- compiler:file[in], src:file[in], obj:file[out], flags:list[string],
 	        otherDeps:list[file[in]] = [], deps:string = 'gcc');
 
