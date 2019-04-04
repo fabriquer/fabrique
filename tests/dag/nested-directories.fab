@@ -17,3 +17,6 @@ bar = foo :: 'yet_another_subdir';
 
 # CHECK-DAG: baz:file = [[SRCROOT]]/Inputs/another_subdir/yet_another_subdir
 baz = inputs :: 'another_subdir' ::: 'yet_another_subdir';
+
+# CHECK-DAG: srcs:list[file] = [ [[SRCROOT]]/Inputs/another_subdir/yet_another_subdir/fabfile ]
+srcs = files(fabfile, subdir = baz);
