@@ -1,6 +1,6 @@
-/** @file AST/EvalContext.h    Declaration of @ref fabrique::ast::EvalContext. */
+/** @file ast/EvalContext.hh    Declaration of @ref fabrique::ast::EvalContext. */
 /*
- * Copyright (c) 2014, 2018 Jonathan Anderson
+ * Copyright (c) 2014, 2018-2019 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -126,6 +126,9 @@ public:
 
 		//! Is the given name defined in this scope?
 		bool contains(const std::string &name) const;
+
+		//! What context did this scope come from?
+		EvalContext& context() { return ctx_; }
 
 		//! Define a name within a scope
 		Scope& Define(const std::string &name, dag::ValuePtr,
