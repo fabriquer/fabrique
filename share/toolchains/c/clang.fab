@@ -42,7 +42,8 @@ compile = function(srcs:list[file], options:compile_options, extra_flags:list[st
 	flags = gcc.compile_flags(options);
 
 	# TODO: cc or cxx?
-	gcc.compile(cxx, srcs, common_flags + flags, position_independent, deps)
+	gcc.compile(cxx, srcs, common_flags + flags + extra_flags,
+	            position_independent, deps)
 };
 
 library_options = gcc.library_options;
