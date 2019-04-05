@@ -91,6 +91,7 @@ PlatformTests::Create(DAGBuilder& builder, const ValueMap& args) const
 
 	fields["bsd"] = builder.Bool(p.bsd, src);
 	fields["darwin"] = builder.Bool(p.darwin, src);
+	fields["linux"] = builder.Bool(p.linux, src);
 	fields["posix"] = builder.Bool(p.posix, src);
 	fields["windows"] = builder.Bool(p.windows, src);
 
