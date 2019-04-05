@@ -5,6 +5,8 @@
 #   force_colour    force the compiler to colour diagnostic messages even if not on a TTY
 #
 force_colour = args.colour_diagnostics ? false;
+lto = args.lto ? false;
+use_ir = lto or (args.ir ? false);
 
 
 # Find comnpiler binaries:
@@ -21,10 +23,14 @@ system_headers = gcc.system_headers;
 #
 clang_compile_flags =
 	(if force_colour ['-fcolor-diagnostics'] else [])
+	+
+	(if use_ir ['-emit-llvm'] else [])
 	;
 
 clang_linker_flags =
 	(if force_colour ['-fcolor-diagnostics'] else [])
+	+
+	(if lto ['-flto' '-O4'] else [])
 	;
 
 
