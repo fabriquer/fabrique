@@ -7,14 +7,15 @@ plugins = [
 
 toolchain = args.toolchain;
 
-cxxflags = args.cxxflags + [
+extra_flags =
+[
 	'-Wno-global-constructors'
 	'-Wno-exit-time-destructors'
 ];
 
 libs = foreach plugin <- plugins
 	toolchain.library(
-		toolchain.compile(plugin.sources, cxx_options, cxxflags),
+		toolchain.compile(plugin.sources, args.cxx_options, extra_flags),
 		plugin.name,
 		args.target_dir,
 		options = record { shared_library = true; },

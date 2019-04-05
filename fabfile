@@ -87,7 +87,7 @@ objects = clang.compile(cxx_srcs, cxx_options, fab_cxxflags)
 fab = clang.binary(objects, binary=file('fab', subdir = 'bin'), options=binary_options);
 
 plugins = import('base-plugins',
-	cxxflags=fab_cxxflags,
+	cxx_options=cxx_options,
 	target_dir=file('lib') :: 'fabrique',
 	toolchain = record { compile=clang.compile; library=clang.library; },
 );
