@@ -11,8 +11,8 @@ debug = args.debug ? false;
 release = args.release ? not debug;
 lto = release or (args.lto ? false);
 
-filecheck = file(args.filecheck ? which.executable('FileCheck').fullname);
-lit = file(args.lit ? which.executable('lit').fullname);
+filecheck:file = args.filecheck ? which.executable('FileCheck');
+lit:file = args.lit ? which.executable('lit');
 verbose_tests = args.verbose_tests ? false;
 
 
