@@ -1,6 +1,6 @@
 /** @file Types/SequenceType.cc    Definition of @ref fabrique::SequenceType. */
 /*
- * Copyright (c) 2014, 2018 Jonathan Anderson
+ * Copyright (c) 2014, 2018-2019 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -30,6 +30,7 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/AssertionFailure.hh>
 #include <fabrique/types/SequenceType.hh>
 #include <fabrique/types/TypeContext.hh>
 #include "Support/exceptions.h"

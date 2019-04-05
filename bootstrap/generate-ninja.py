@@ -34,7 +34,7 @@ cxx_srcs = {
 		'fab',
 	),
 	'lib/': (
-		'Bytestream', 'ErrorReport', 'Fabrique', 'FabBuilder',
+		'AssertionFailure', 'Bytestream', 'ErrorReport', 'Fabrique', 'FabBuilder',
                 'Printable', 'SourceLocation', 'SourceRange',
                 'builtins', 'names', 'strings',
 	),

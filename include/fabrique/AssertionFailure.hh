@@ -1,6 +1,6 @@
-/** @file plugin/Registry.cc    Definition of @ref fabrique::plugin::Registry. */
+//! @file AssertionFailure.hh    Declaration of fabrique::AssertionFailure
 /*
- * Copyright (c) 2014, 2019 Jonathan Anderson
+ * Copyright (c) 2013, 2018-2019 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -30,58 +30,46 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/AssertionFailure.hh>
-#include <fabrique/plugin/Registry.hh>
+#ifndef FAB_ASSERTION_FAILURE_H_
+#define FAB_ASSERTION_FAILURE_H_
 
-#include <cassert>
-
-using namespace fabrique;
-using namespace fabrique::plugin;
+#include <exception>
+#include <string>
 
 
-Registry::Initializer::Initializer(Plugin *descriptor)
-	: registry_(Registry::get()), plugin_(descriptor)
+namespace fabrique {
+
+//! Some code may choose to throw this exception rather than assert() out.
+class AssertionFailure : public std::exception
 {
-	FAB_ASSERT(plugin_, "null plugin descriptor");
-	registry_.Register(plugin_);
-}
+public:
+	AssertionFailure(const std::string& condition,
+	                 const std::string& message = "");
+
+	AssertionFailure(const AssertionFailure&);
+
+	virtual ~AssertionFailure() override;
+
+	const char* what() const noexcept override;
+	const std::string& condition() const noexcept { return condition_; }
+	const std::string& message() const noexcept { return message_; }
+
+private:
+	const std::string condition_;
+	const std::string message_;
+};
+
+} // namespace fabrique
 
 
-Registry::Initializer::~Initializer()
-{
-	registry_.Deregister(plugin_->name());
-}
+#define FAB_ASSERT(expr, detail) \
+	do \
+	{ \
+		if (not (expr)) \
+		{ \
+			throw fabrique::AssertionFailure(#expr, detail); \
+		} \
+	} \
+	while (false)
 
-
-Registry& Registry::get()
-{
-	static Registry& instance = *new Registry();
-	return instance;
-}
-
-
-Registry& Registry::Register(std::weak_ptr<Plugin> plugin)
-{
-	const std::string name = plugin.lock()->name();
-	FAB_ASSERT(plugins_.find(name) == plugins_.end(), "redefining plugin " + name);
-
-	plugins_.emplace(name, plugin);
-	return *this;
-}
-
-
-void Registry::Deregister(std::string name)
-{
-	FAB_ASSERT(plugins_.find(name) != plugins_.end(), "no such plugin: " + name);
-	plugins_.erase(name);
-}
-
-
-std::weak_ptr<Plugin> Registry::lookup(std::string name) const
-{
-	auto i = plugins_.find(name);
-	if (i == plugins_.end())
-		return std::weak_ptr<Plugin>();
-
-	return i->second;
-}
+#endif // FAB_ASSERTION_FAILURE_H_

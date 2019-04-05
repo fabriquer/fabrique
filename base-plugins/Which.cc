@@ -1,6 +1,6 @@
 /** @file plugins/Which.cc   Definition of @ref fabrique::plugins::Which. */
 /*
- * Copyright (c) 2014, 2018 Jonathan Anderson
+ * Copyright (c) 2014, 2018-2019 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -30,6 +30,7 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/AssertionFailure.hh>
 #include <fabrique/strings.hh>
 #include <fabrique/dag/DAGBuilder.hh>
 #include <fabrique/dag/File.hh>

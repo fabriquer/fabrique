@@ -1,4 +1,4 @@
-/** @file Support/exceptions.cc    Definition of basic Fabrique exceptions. */
+//! @file AssertionFailure.cc    Definition of fabrique::AssertionFailure
 /*
  * Copyright (c) 2013, 2018-2019 Jonathan Anderson
  * All rights reserved.
@@ -30,86 +30,26 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/Bytestream.hh>
-#include <fabrique/ErrorReport.hh>
-#include "Support/exceptions.h"
+#include <fabrique/AssertionFailure.hh>
 
 using namespace fabrique;
 using std::string;
 
 
-UserError::UserError(const string& message)
-	: message_(message)
+AssertionFailure::AssertionFailure(const string& condition, const string& msg)
+	: condition_(condition),
+	  message_(msg.empty() ? ("Assertion failed: " + condition) : msg)
 {
 }
 
-UserError::UserError(const UserError& orig)
-	: message_(orig.message_)
+AssertionFailure::AssertionFailure(const AssertionFailure& orig)
+	: condition_(orig.condition_), message_(orig.message_)
 {
 }
 
-UserError::~UserError() {}
+AssertionFailure::~AssertionFailure() {}
 
-void UserError::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
+const char* AssertionFailure::what() const noexcept
 {
-	out << Bytestream::ErrorMessage << message_ << Bytestream::Reset;
+	return message_.c_str();
 }
-
-
-SourceCodeException::SourceCodeException(string m, SourceRange l, string detail)
-	: HasSource(l), err_(m, l, ErrorReport::Severity::Error, detail)
-{
-}
-
-const string& SourceCodeException::message() const
-{
-	return err_.getMessage();
-}
-
-const string& SourceCodeException::detail() const
-{
-	return err_.getDetails();
-}
-
-const char* SourceCodeException::what() const noexcept
-{
-	return message().c_str();
-}
-
-void SourceCodeException::PrettyPrint(Bytestream& out, unsigned int indent) const
-{
-	err_.PrettyPrint(out, indent);
-}
-
-
-ParserError::ParserError(string message, SourceRange loc, string detail)
-	: SourceCodeException(message, loc, detail)
-{
-}
-
-ParserError::ParserError(const ParserError& orig)
-	: SourceCodeException(orig.message(), orig.source(), orig.detail())
-{
-}
-
-ParserError::~ParserError() {}
-
-
-SyntaxError::SyntaxError(string message, SourceRange loc, string detail)
-	: SourceCodeException(message, loc, detail)
-{
-}
-
-SyntaxError::SyntaxError(const SyntaxError& orig)
-	: SourceCodeException(orig.message(), orig.source(), orig.detail())
-{
-}
-
-SyntaxError::~SyntaxError() {}
-
-SemanticException::SemanticException(string m, SourceRange loc, string detail)
-	: SourceCodeException(m, loc, detail)
-{
-}
-
-SemanticException::~SemanticException() {}

@@ -1,11 +1,12 @@
 /** @file Support/exceptions.h    Declaration of basic Fabrique exceptions. */
 /*
- * Copyright (c) 2013, 2018 Jonathan Anderson
+ * Copyright (c) 2013, 2018-2019 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -38,39 +39,7 @@
 #include <memory>
 #include <string>
 
-#define FAB_ASSERT(expr, detail) \
-	do \
-	{ \
-		if (not (expr)) \
-		{ \
-			throw fabrique::AssertionFailure(#expr, detail); \
-		} \
-	} \
-	while (false)
-
-
 namespace fabrique {
-
-
-//! Some code may choose to throw this exception rather than assert() out.
-class AssertionFailure : public std::exception
-{
-public:
-	AssertionFailure(const std::string& condition,
-	                 const std::string& message = "");
-
-	AssertionFailure(const AssertionFailure&);
-
-	virtual ~AssertionFailure() override;
-
-	const char* what() const noexcept override;
-	const std::string& condition() const noexcept { return condition_; }
-	const std::string& message() const noexcept { return message_; }
-
-private:
-	const std::string condition_;
-	const std::string message_;
-};
 
 
 //! An error in user input.

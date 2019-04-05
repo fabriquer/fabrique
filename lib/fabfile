@@ -5,6 +5,7 @@
 
 sources =
 	files(
+		AssertionFailure.cc
 		Bytestream.cc
 		Fabrique.cc
 		FabBuilder.cc

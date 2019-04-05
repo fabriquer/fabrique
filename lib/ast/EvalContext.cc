@@ -1,6 +1,6 @@
-/** @file DAG/EvalContext.cc    Definition of @ref fabrique::ast::EvalContext. */
+/** @file ast/EvalContext.cc    Definition of @ref fabrique::ast::EvalContext. */
 /*
- * Copyright (c) 2014, 2018 Jonathan Anderson
+ * Copyright (c) 2014, 2018-2019 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -32,6 +32,7 @@
 
 #include <fabrique/names.hh>
 #include <fabrique/strings.hh>
+#include <fabrique/AssertionFailure.hh>
 #include <fabrique/Bytestream.hh>
 #include <fabrique/ast/EvalContext.hh>
 #include <fabrique/ast/Parameter.hh>

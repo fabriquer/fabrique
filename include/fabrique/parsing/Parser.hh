@@ -33,6 +33,7 @@
 #ifndef PARSER_H
 #define PARSER_H
 
+#include <fabrique/AssertionFailure.hh>
 #include <fabrique/ErrorReport.hh>
 #include <fabrique/UniqPtr.h>
 #include <fabrique/ast/ast.hh>

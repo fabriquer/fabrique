@@ -1,6 +1,6 @@
 ﻿//! @file Parsing/ErrorListener.h   Declaration of @ref fabrique::ast::ErrorListener
 /*
- * Copyright (c) 2018 Jonathan Anderson
+ * Copyright (c) 2018-2019 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed at Memorial University of Newfoundland
@@ -28,6 +28,7 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/AssertionFailure.hh>
 #include <fabrique/parsing/ErrorListener.hh>
 #include <fabrique/platform/ABI.hh>
 #include "Support/exceptions.h"
