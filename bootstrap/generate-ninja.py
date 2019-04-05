@@ -61,7 +61,7 @@ cxx_srcs = {
 		'ASTBuilder', 'ErrorListener', 'ErrorReporter', 'Parser', 'Token',
 	),
 	'lib/platform/': (
-		'ABI', 'SharedLibrary',
+		'ABI', 'OSError', 'SharedLibrary',
 	),
 	'lib/plugin/': (
 		'Loader', 'Plugin', 'Registry',
