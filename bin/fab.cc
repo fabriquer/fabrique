@@ -45,6 +45,7 @@
 
 #include <fabrique/parsing/Parser.hh>
 
+#include <fabrique/platform/OSError.hh>
 #include <fabrique/platform/files.hh>
 
 #include <fabrique/plugin/Loader.hh>

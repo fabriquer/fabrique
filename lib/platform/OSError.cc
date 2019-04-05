@@ -1,6 +1,6 @@
-//! @file platform/posix/PosixError.h     Declaration of @ref platform::PosixError
+//! @file platform/OSError.cc    Definition of platform::OSError
 /*
- * Copyright (c) 2014, 2018 Jonathan Anderson
+ * Copyright (c) 2013, 2018-2019 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -30,28 +30,33 @@
  * SUCH DAMAGE.
  */
 
-#ifndef FAB_POSIX_ERROR_H_
-#define FAB_POSIX_ERROR_H_
-
+#include <fabrique/Bytestream.hh>
 #include <fabrique/platform/OSError.hh>
 
-namespace fabrique {
-namespace platform {
+using namespace fabrique::platform;
+using std::string;
 
-//! An OS error that has an errno or equivalent output.
-class PosixError : public OSError
+
+OSError::OSError(const string& message, const string& description)
+	: message_(message), description_(description),
+	  completeMessage_(message + ": " + description)
 {
-public:
-	explicit PosixError(std::string message);
-	PosixError(PosixError&&);
+}
 
-	virtual ~PosixError() override;
+OSError::OSError(const OSError& orig)
+	: message_(orig.message_), description_(orig.description_),
+	  completeMessage_(orig.completeMessage_)
+{
+}
 
-private:
-	PosixError(const PosixError&) = delete;
-};
+OSError::~OSError() {}
 
-} // namespace platform
-} // namespace fabrique
-
-#endif
+void OSError::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
+{
+	out
+		<< Bytestream::Error << "OS error"
+		<< Bytestream::Reset << ": " << message_ << ": "
+		<< Bytestream::ErrorMessage << description_
+		<< Bytestream::Reset
+		;
+}

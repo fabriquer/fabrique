@@ -1,6 +1,6 @@
-//! @file platform/posix/PosixError.h     Declaration of @ref platform::PosixError
+//! @file platform/OSError.hh    Declaration of platform::OSError
 /*
- * Copyright (c) 2014, 2018 Jonathan Anderson
+ * Copyright (c) 2013, 2018-2019 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -30,28 +30,37 @@
  * SUCH DAMAGE.
  */
 
-#ifndef FAB_POSIX_ERROR_H_
-#define FAB_POSIX_ERROR_H_
+#ifndef FAB_PLATFORM_OSERROR_H_
+#define FAB_PLATFORM_OSERROR_H_
 
-#include <fabrique/platform/OSError.hh>
+#include <fabrique/Printable.hh>
+
+#include <exception>
 
 namespace fabrique {
 namespace platform {
 
-//! An OS error that has an errno or equivalent output.
-class PosixError : public OSError
+//! An error that has an OS-specific description.
+class OSError : public std::exception, public Printable
 {
 public:
-	explicit PosixError(std::string message);
-	PosixError(PosixError&&);
+	OSError(const std::string& message, const std::string& description);
+	OSError(const OSError&);
+	virtual ~OSError() override;
 
-	virtual ~PosixError() override;
+	virtual const std::string& message() const { return message_; }
+	virtual const std::string& description() const { return description_; }
+
+	const char* what() const noexcept override { return completeMessage_.c_str(); }
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 
 private:
-	PosixError(const PosixError&) = delete;
+	const std::string message_;
+	const std::string description_;
+	const std::string completeMessage_;
 };
 
 } // namespace platform
 } // namespace fabrique
 
-#endif
+#endif // FAB_PLATFORM_OSERROR_H_

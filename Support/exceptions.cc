@@ -56,31 +56,6 @@ const char* AssertionFailure::what() const noexcept
 }
 
 
-OSError::OSError(const string& message, const string& description)
-	: message_(message), description_(description),
-	  completeMessage_(message + ": " + description)
-{
-}
-
-OSError::OSError(const OSError& orig)
-	: message_(orig.message_), description_(orig.description_),
-	  completeMessage_(orig.completeMessage_)
-{
-}
-
-OSError::~OSError() {}
-
-void OSError::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
-{
-	out
-		<< Bytestream::Error << "OS error"
-		<< Bytestream::Reset << ": " << message_ << ": "
-		<< Bytestream::ErrorMessage << description_
-		<< Bytestream::Reset
-		;
-}
-
-
 UserError::UserError(const string& message)
 	: message_(message)
 {

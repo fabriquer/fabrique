@@ -73,28 +73,6 @@ private:
 };
 
 
-//! An error that has an OS-specific description.
-class OSError : public std::exception, public Printable
-{
-public:
-	OSError(const std::string& message, const std::string& description);
-	OSError(const OSError&);
-	virtual ~OSError() override;
-
-	virtual const std::string& message() const { return message_; }
-	virtual const std::string& description() const { return description_; }
-
-	const char* what() const noexcept override { return completeMessage_.c_str(); }
-	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
-
-private:
-	const std::string message_;
-	const std::string description_;
-	const std::string completeMessage_;
-};
-
-
-
 //! An error in user input.
 class UserError : public std::exception, public Printable
 {

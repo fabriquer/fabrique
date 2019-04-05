@@ -3,6 +3,7 @@ platform = import('platform');
 sources =
 	files(
 		ABI.cc
+		OSError.cc
 		SharedLibrary.cc
 	)
 	+
