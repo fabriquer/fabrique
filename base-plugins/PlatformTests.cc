@@ -63,11 +63,11 @@ struct Platform
 	string name;
 
 	// Non-mutually-exclusive flags:
-	bool bsd;
-	bool darwin;
-	bool linux;
-	bool posix;
-	bool windows;
+	bool bsd = false;
+	bool darwin = false;
+	bool linux = false;
+	bool posix = false;
+	bool windows = false;
 
 	static Platform get();
 };
