@@ -8,7 +8,7 @@ print(args);
 which = import('which');
 
 debug = args.debug ? false;
-release = args.debug ? true;
+release = args.release ? true;
 lto = release or (args.lto ? false);
 
 filecheck = file(args.filecheck ? which.executable('FileCheck').fullname);
