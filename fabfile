@@ -52,6 +52,9 @@ cxx_options = record
 	system_include_dirs = [vendor antlr];
 
 	warnings = [
+		# Warn about lots and lots of things.
+		'everything'
+
 		# We don't care about C++98 compatibility.
 		'no-c++98-compat' 'no-c++98-compat-pedantic'
 
@@ -75,14 +78,12 @@ binary_options = record
 	dynamic = true;
 };
 
-fab_cxxflags = ['-Weverything'];
-
 
 #
 # Object files, shared libraries and fab binary:
 #
-objects = clang.compile(cxx_srcs, cxx_options, fab_cxxflags)
-	+ clang.compile(generated_srcs, cxx_options, ['-Wno-deprecated-register']);
+objects = clang.compile(cxx_srcs, cxx_options)
+	+ clang.compile(generated_srcs, cxx_options, extra_flags=['-Wno-everything']);
 
 fab = clang.binary(objects, binary=file('fab', subdir = 'bin'), options=binary_options);
 
