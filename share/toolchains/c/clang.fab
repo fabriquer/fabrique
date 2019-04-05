@@ -19,7 +19,11 @@ system_headers = gcc.system_headers;
 #
 # Clang specializations:
 #
-common_flags =
+clang_compile_flags =
+	(if force_colour ['-fcolor-diagnostics'] else [])
+	;
+
+clang_linker_flags =
 	(if force_colour ['-fcolor-diagnostics'] else [])
 	;
 
@@ -32,7 +36,7 @@ binary = function(objects:list[file[in]], binary:file[out],
 	flags = gcc.binary_flags(options);
 
 	# TODO: cc or cxx?
-	gcc.link_binary(cxx, objects, binary, common_flags + flags)
+	gcc.link_binary(cxx, objects, binary, clang_linker_flags + flags)
 };
 
 compile_options = gcc.compiler_options;
@@ -42,7 +46,7 @@ compile = function(srcs:list[file], options:compile_options, extra_flags:list[st
 	flags = gcc.compile_flags(options);
 
 	# TODO: cc or cxx?
-	gcc.compile(cxx, srcs, common_flags + flags + extra_flags,
+	gcc.compile(cxx, srcs, clang_compile_flags + flags + extra_flags,
 	            position_independent, deps)
 };
 
@@ -51,5 +55,6 @@ library = function(objects:list[file[in]], libname:string, subdir:file,
                    options:library_options, extra_flags:list[string] = []): file
 {
 	# TODO: cc or cxx?
-	gcc.library(cxx, objects, libname, subdir, options, common_flags + extra_flags)
+	gcc.library(cxx, objects, libname, subdir, options,
+	            extra_flags = clang_linker_flags + extra_flags)
 };
