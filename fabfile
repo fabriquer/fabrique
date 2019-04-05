@@ -8,6 +8,9 @@ print(args);
 which = import('which');
 
 debug = args.debug ? false;
+release = args.debug ? true;
+lto = release or (args.lto ? false);
+
 filecheck = file(args.filecheck ? which.executable('FileCheck').fullname);
 lit = file(args.lit ? which.executable('lit').fullname);
 verbose_tests = args.verbose_tests ? false;
@@ -35,7 +38,7 @@ generated_srcs =
 #
 # C++ toolchain and compilation flags:
 #
-clang = import('share/toolchains/c/clang.fab');
+clang = import('share/toolchains/c/clang.fab', lto=lto);
 
 cxx_options = record
 {
