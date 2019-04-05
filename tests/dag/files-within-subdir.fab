@@ -1,0 +1,8 @@
+#
+# RUN: %fab --format=null --print-dag %s > %t
+# RUN: %check %s -input-file %t
+#
+
+# CHECK-DAG: srcs_la:list[file] = [ {{.*}}/Inputs/another_subdir/yet_another_subdir/fabfile ]
+# CHECK-DAG: srcs_ra:list[file] = [ {{.*}}/Inputs/another_subdir/yet_another_subdir/fabfile ]
+import('Inputs/has-files.fab');

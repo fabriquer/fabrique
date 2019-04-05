@@ -54,6 +54,7 @@ all_files = files(
 ./dag/Inputs/cc.fab
 ./dag/Inputs/empty.fab
 ./dag/Inputs/fabfile
+./dag/Inputs/has-files.fab
 ./dag/Inputs/requires-args.fab
 ./dag/Inputs/some_files.fab
 ./dag/Inputs/sources/import-another-subdir.fab
@@ -96,6 +97,7 @@ all_files = files(
 ./dag/file-explicitly-generated.fab
 ./dag/file-prefix.fab
 ./dag/file-string-addition.fab
+./dag/files-within-subdir.fab
 ./dag/files.fab
 ./dag/foreach-not-iterable.fab
 ./dag/foreach.fab

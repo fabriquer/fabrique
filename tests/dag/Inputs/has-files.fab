@@ -1,0 +1,7 @@
+# Define base using the right-associative prefix operator:
+base_ra = srcroot :: 'Inputs' ::: 'another_subdir' ::: 'yet_another_subdir';
+srcs_ra = files(fabfile, subdir = base_ra);
+
+# Define base2 using the left-associative prefix operator:
+base_la = srcroot ::: 'Inputs' ::: 'another_subdir' ::: 'yet_another_subdir';
+srcs_la = files(fabfile, subdir = base_la);
