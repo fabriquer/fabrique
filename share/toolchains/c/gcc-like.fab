@@ -17,7 +17,7 @@ compiler_options = type record
 	warnings:list[string]
 ];
 
-flags = function(opts:compiler_options): list[string]
+compile_flags = function(opts:compiler_options): list[string]
 {
 	(if opts.debug '-g' else '')
 	::
@@ -32,6 +32,31 @@ flags = function(opts:compiler_options): list[string]
 	(foreach dir <- opts.system_include_dirs '-isystem ' + dir.fullname)
 	+
 	(foreach warning <- opts.warnings '-W' + warning)
+};
+
+binary_options = type record
+[
+	debug:bool,
+	dynamic:bool,
+];
+
+binary_flags = function(opts:binary_options): list[string]
+{
+	(if opts.debug ['-g'] else [])
+	+
+	(if opts.dynamic and platform.posix ['-rdynamic'] else [])
+};
+
+library_options = type record
+[
+	shared_library:bool,
+];
+
+library_flags = function(opts:library_options): list[string]
+{
+	(if platform.darwin ['-Wl,-undefined' '-Wl,dynamic_lookup'] else [])
+	+
+	(if opts.shared_library ['-shared'] else [])
 };
 
 # Get information about the current platform (POSIX? Darwin? Windows?)
@@ -63,16 +88,12 @@ compile = function(compiler:file, srcs:list[file], flags:list[string] = [],
 # Compile objects into a shared library given by libname (e.g., `foo` for `libfoo.so`).
 #
 library = function(compiler:file, objects:list[file], libname:string, subdir:file,
-                   flags:list[string] = []): file
+                   options:library_options, extra_flags:list[string] = []): file
 {
 	filename = subdir :: library_name(libname);
-	default_flags =
-		if platform.darwin ['-Wl,-undefined' '-Wl,dynamic_lookup']
-		else if platform.posix ['-rdynamic']
-		else []
-		;
+	flags = library_flags(options) + extra_flags;
 
-	link_library(compiler, objects, filename, flags = flags + default_flags)
+	link_library(compiler, objects, filename, flags)
 };
 
 

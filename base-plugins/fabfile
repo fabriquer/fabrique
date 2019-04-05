@@ -12,13 +12,11 @@ cxxflags = args.cxxflags + [
 	'-Wno-exit-time-destructors'
 ];
 
-ldflags = args.ldflags;
-
 libs = foreach plugin <- plugins
 	toolchain.library(
-		toolchain.compile(plugin.sources, cxxflags),
+		toolchain.compile(plugin.sources, cxx_options, cxxflags),
 		plugin.name,
 		args.target_dir,
-		ldflags
+		options = record { shared_library = true; },
 	)
 	;

@@ -24,22 +24,31 @@ common_flags =
 	;
 
 
-binary = function(objects:list[file[in]], binary:file[out], flags:list[string]): file
+# TODO: let arbitrary name references be types
+binary_options = gcc.binary_options;
+binary = function(objects:list[file[in]], binary:file[out],
+                  options:binary_options, extra_flags:list[string] = []): file
 {
+	flags = gcc.binary_flags(options);
+
 	# TODO: cc or cxx?
 	gcc.link_binary(cxx, objects, binary, common_flags + flags)
 };
 
-compile = function(srcs:list[file], flags:list[string] = [],
+compile_options = gcc.compiler_options;
+compile = function(srcs:list[file], options:compile_options, extra_flags:list[string] = [],
                    position_independent:bool = true, deps:list[file[in]] = []): list[file]
 {
+	flags = gcc.compile_flags(options);
+
 	# TODO: cc or cxx?
 	gcc.compile(cxx, srcs, common_flags + flags, position_independent, deps)
 };
 
+library_options = gcc.library_options;
 library = function(objects:list[file[in]], libname:string, subdir:file,
-                   flags:list[string]): file
+                   options:library_options, extra_flags:list[string] = []): file
 {
 	# TODO: cc or cxx?
-	gcc.library(cxx, objects, libname, subdir, common_flags + flags)
+	gcc.library(cxx, objects, libname, subdir, options, common_flags + extra_flags)
 };
