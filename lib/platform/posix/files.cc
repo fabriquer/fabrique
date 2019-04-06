@@ -258,52 +258,6 @@ string FindFile(string filename, const vector<string>& directories,
 }
 
 
-string FindModule(string srcroot, string subdir, string name)
-{
-	const string relativeName = JoinPath(subdir, name);
-
-	//
-	// Have we been passed an absolute module path?
-	//
-	if (PathIsAbsolute(relativeName) and FileExists(relativeName))
-		return relativeName;
-
-	//
-	// If we can find the module relative to the srcroot, we don't want to
-	// return an absolute path: it will go into 'subdir' and try to generate
-	// files by absolute name. That is not allowed: files must be generated
-	// relative to the buildroot.
-	//
-	if (FileExists(JoinPath(srcroot, relativeName)))
-		return relativeName;
-
-	//
-	// Look for the file within platform-specific search paths.
-	//
-	const vector<string> searchPaths = {
-		"/usr/local/share/fabrique",
-	};
-
-	const string found = FindFile(relativeName, searchPaths,
-	                              PathIsFile, DefaultFilename(""));
-	if (not found.empty())
-		return found;
-
-	//
-	// If we were passed a directory, look for 'fabfile' within it.
-	//
-	const string dirname = JoinPath(srcroot, relativeName);
-	if (FileExists(dirname, true))
-	{
-		const string fabfile = JoinPath(dirname, "fabfile");
-		if (FileExists(fabfile))
-			return JoinPath(relativeName, "fabfile");
-	}
-
-	throw UserError("unable to find module '" + name + "'");
-}
-
-
 string JoinPath(const string& x, const string& y)
 {
 	if (x.empty() or x == ".")

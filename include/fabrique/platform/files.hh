@@ -131,15 +131,6 @@ std::string LibraryFilename(std::string name);
  */
 std::vector<std::string> PluginSearchPaths(std::string executablePath);
 
-
-//
-// Fabrique modules:
-//
-
-//! Find the name of a Fabrique module within the @a srcroot and platform search paths.
-std::string FindModule(std::string srcroot, std::string subdir,
-                       std::string filename);
-
 } // namespace platform
 } // namespace fabrique
 
