@@ -32,12 +32,13 @@
 #ifndef ACTION_H
 #define ACTION_H
 
-#include <fabrique/PtrVec.h>
+#include <fabrique/PtrVec.hh>
 
 #include <fabrique/ast/Arguments.hh>
 #include <fabrique/ast/Expression.hh>
 #include <fabrique/ast/HasParameters.hh>
 #include <fabrique/ast/Parameter.hh>
+
 
 namespace fabrique {
 namespace ast {

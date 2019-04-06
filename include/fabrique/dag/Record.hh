@@ -32,7 +32,7 @@
 #ifndef DAG_STRUCTURE_H
 #define DAG_STRUCTURE_H
 
-#include <fabrique/StringMap.h>
+#include <fabrique/StringMap.hh>
 #include <fabrique/dag/Value.hh>
 
 #include <memory>

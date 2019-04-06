@@ -32,13 +32,12 @@
 #ifndef TYPE_H
 #define TYPE_H
 
-#include <functional>
-
 #include <fabrique/Printable.hh>
-#include <fabrique/PtrVec.h>
-#include <fabrique/StringMap.h>
+#include <fabrique/PtrVec.hh>
+#include <fabrique/StringMap.hh>
 #include <fabrique/Uncopyable.hh>
 
+#include <functional>
 #include <string>
 
 namespace fabrique {

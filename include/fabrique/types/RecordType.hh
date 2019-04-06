@@ -32,7 +32,7 @@
 #ifndef STRUCTURE_TYPE_H
 #define STRUCTURE_TYPE_H
 
-#include <fabrique/StringMap.h>
+#include <fabrique/StringMap.hh>
 #include <fabrique/types/Type.hh>
 #include <vector>
 

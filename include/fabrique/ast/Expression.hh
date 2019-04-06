@@ -32,7 +32,7 @@
 #ifndef EXPRESSION_H
 #define EXPRESSION_H
 
-#include <fabrique/PtrVec.h>
+#include <fabrique/PtrVec.hh>
 #include <fabrique/SemanticException.hh>
 #include <fabrique/ast/Node.hh>
 #include <fabrique/dag/Value.hh>

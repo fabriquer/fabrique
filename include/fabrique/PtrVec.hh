@@ -32,7 +32,7 @@
 #ifndef PTRVEC_H
 #define PTRVEC_H
 
-#include <fabrique/UniqPtr.h>
+#include <fabrique/UniqPtr.hh>
 #include <vector>
 
 namespace fabrique {

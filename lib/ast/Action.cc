@@ -31,7 +31,7 @@
 
 #include <fabrique/names.hh>
 #include <fabrique/Bytestream.hh>
-#include <fabrique/UniqPtr.h>
+#include <fabrique/UniqPtr.hh>
 #include <fabrique/ast/Action.hh>
 #include <fabrique/ast/EvalContext.hh>
 #include <fabrique/ast/Visitor.hh>

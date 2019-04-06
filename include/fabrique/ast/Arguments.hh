@@ -32,13 +32,13 @@
 #ifndef AST_ARGUMENTS_H
 #define AST_ARGUMENTS_H
 
-#include <fabrique/UniqPtr.h>
+#include <fabrique/UniqPtr.hh>
 #include <fabrique/ast/Argument.hh>
 #include <fabrique/ast/Node.hh>
 
+
 namespace fabrique {
 namespace ast {
-
 
 /**
  * Arguments to something Callable: positional arguments followed by keyword arguments.

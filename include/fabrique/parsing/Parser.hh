@@ -35,7 +35,7 @@
 
 #include <fabrique/AssertionFailure.hh>
 #include <fabrique/ErrorReport.hh>
-#include <fabrique/UniqPtr.h>
+#include <fabrique/UniqPtr.hh>
 #include <fabrique/ast/ast.hh>
 
 #include <unordered_map>

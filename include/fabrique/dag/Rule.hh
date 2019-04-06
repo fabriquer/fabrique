@@ -33,7 +33,7 @@
 #ifndef DAG_ACTION_H
 #define DAG_ACTION_H
 
-#include <fabrique/StringMap.h>
+#include <fabrique/StringMap.hh>
 #include <fabrique/dag/Callable.hh>
 #include <fabrique/dag/DAG.hh>
 #include <fabrique/dag/Value.hh>

@@ -32,7 +32,7 @@
 #ifndef NAME_REFERENCE_H
 #define NAME_REFERENCE_H
 
-#include <fabrique/PtrVec.h>
+#include <fabrique/PtrVec.hh>
 
 #include <fabrique/ast/Argument.hh>
 #include <fabrique/ast/Expression.hh>

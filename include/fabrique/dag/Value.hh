@@ -34,7 +34,7 @@
 
 #include <fabrique/HasSource.hh>
 #include <fabrique/Printable.hh>
-#include <fabrique/StringMap.h>
+#include <fabrique/StringMap.hh>
 #include <fabrique/Uncopyable.hh>
 #include <fabrique/types/Typed.hh>
 

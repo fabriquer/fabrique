@@ -32,8 +32,8 @@
 #ifndef CALLABLE_H
 #define CALLABLE_H
 
-#include <fabrique/PtrVec.h>
-#include <fabrique/StringMap.h>
+#include <fabrique/PtrVec.hh>
+#include <fabrique/StringMap.hh>
 #include <fabrique/ast/Parameter.hh>
 
 #include <memory>

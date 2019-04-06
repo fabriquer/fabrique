@@ -34,7 +34,7 @@
 #define JOIN_H
 
 #include <fabrique/Printable.hh>
-#include <fabrique/PtrVec.h>
+#include <fabrique/PtrVec.hh>
 
 #include <functional>
 #include <sstream>

@@ -32,7 +32,7 @@
 #ifndef FAB_PRINTABLE_H_
 #define FAB_PRINTABLE_H_
 
-#include <fabrique/PtrVec.h>
+#include <fabrique/PtrVec.hh>
 #include <string>
 
 namespace fabrique {

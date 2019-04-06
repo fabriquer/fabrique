@@ -33,9 +33,9 @@
 #ifndef DAG_CALLABLE_H
 #define DAG_CALLABLE_H
 
-#include <fabrique/PtrVec.h>
+#include <fabrique/PtrVec.hh>
 #include <fabrique/SourceRange.hh>
-#include <fabrique/StringMap.h>
+#include <fabrique/StringMap.hh>
 #include <fabrique/dag/Value.hh>
 
 #include <functional>

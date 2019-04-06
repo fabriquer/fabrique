@@ -33,7 +33,7 @@
 #ifndef TYPE_CONTEXT_H
 #define TYPE_CONTEXT_H
 
-#include <fabrique/PtrVec.h>
+#include <fabrique/PtrVec.hh>
 #include <fabrique/types/Type.hh>
 
 #include <map>

@@ -32,8 +32,8 @@
 #ifndef CALL_H
 #define CALL_H
 
-#include <fabrique/PtrVec.h>
-#include <fabrique/UniqPtr.h>
+#include <fabrique/PtrVec.hh>
+#include <fabrique/UniqPtr.hh>
 #include <fabrique/ast/Arguments.hh>
 #include <fabrique/ast/Expression.hh>
 

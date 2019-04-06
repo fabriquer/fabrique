@@ -33,7 +33,7 @@
 #ifndef DAG_FUNCTION_H
 #define DAG_FUNCTION_H
 
-#include <fabrique/PtrVec.h>
+#include <fabrique/PtrVec.hh>
 #include <fabrique/dag/Callable.hh>
 #include <fabrique/dag/Value.hh>
 

@@ -33,7 +33,7 @@
 #ifndef PLUGIN_H
 #define PLUGIN_H
 
-#include <fabrique/UniqPtr.h>
+#include <fabrique/UniqPtr.hh>
 #include <fabrique/dag/Record.hh>
 
 

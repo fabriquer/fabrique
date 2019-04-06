@@ -37,7 +37,7 @@
 #define FAB_SOURCE_LOCATION_H_
 
 #include <fabrique/Printable.hh>
-#include <fabrique/UniqPtr.h>
+#include <fabrique/UniqPtr.hh>
 
 #include <string>
 

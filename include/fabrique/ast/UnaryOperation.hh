@@ -32,7 +32,7 @@
 #ifndef UNARY_OPERATION_H
 #define UNARY_OPERATION_H
 
-#include <fabrique/UniqPtr.h>
+#include <fabrique/UniqPtr.hh>
 #include <fabrique/ast/Expression.hh>
 
 
