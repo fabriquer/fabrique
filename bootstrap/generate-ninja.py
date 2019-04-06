@@ -41,8 +41,8 @@ cxx_srcs = {
 	),
 	'lib/ast/': (
 		'ASTDump', 'Action', 'Argument', 'Arguments', 'BinaryOperation', 'Call',
-		'CompoundExpr', 'Conditional', 'DebugTracePoint', 'EvalContext',
-		'Expression', 'FieldAccess', 'FieldQuery', 'FileList', 'FilenameLiteral',
+		'CompoundExpr', 'Conditional', 'EvalContext', 'Expression',
+		'FieldAccess', 'FieldQuery', 'FileList', 'FilenameLiteral',
 		'Foreach', 'Function', 'HasParameters', 'Identifier', 'List',
 		'NameReference', 'Node', 'Parameter', 'Record', 'SyntaxError',
 		'TypeDeclaration', 'TypeReference',

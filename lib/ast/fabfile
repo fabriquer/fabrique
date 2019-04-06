@@ -7,7 +7,6 @@ sources = files(
 	Call.cc
 	CompoundExpr.cc
 	Conditional.cc
-	DebugTracePoint.cc
 	EvalContext.cc
 	Expression.cc
 	FieldAccess.cc

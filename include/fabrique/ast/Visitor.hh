@@ -59,7 +59,6 @@ public:
 	VISIT(Call)
 	VISIT(CompoundExpression)
 	VISIT(Conditional)
-	VISIT(DebugTracePoint)
 	VISIT(FieldAccess)
 	VISIT(FieldQuery)
 	VISIT(FilenameLiteral)

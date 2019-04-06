@@ -42,7 +42,6 @@ class BinaryOperation;
 class Call;
 class CompoundExpression;
 class Conditional;
-class DebugTracePoint;
 class FieldAccess;
 class FieldQuery;
 class FilenameLiteral;

@@ -47,7 +47,6 @@ namespace ast {}
 #include <fabrique/ast/Call.hh>
 #include <fabrique/ast/CompoundExpr.hh>
 #include <fabrique/ast/Conditional.hh>
-#include <fabrique/ast/DebugTracePoint.hh>
 #include <fabrique/ast/FieldAccess.hh>
 #include <fabrique/ast/FieldQuery.hh>
 #include <fabrique/ast/FilenameLiteral.hh>
