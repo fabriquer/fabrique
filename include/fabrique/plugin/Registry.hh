@@ -29,8 +29,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef PLUGIN_REGISTRY_H
-#define PLUGIN_REGISTRY_H
+#ifndef FAB_PLUGIN_REGISTRY_H_
+#define FAB_PLUGIN_REGISTRY_H_
 
 #include <fabrique/UniqPtr.hh>
 #include <fabrique/plugin/Plugin.hh>
@@ -74,4 +74,4 @@ class Registry
 } // namespace plugin
 } // namespace fabrique
 
-#endif
+#endif // FAB_PLUGIN_REGISTRY_H_

@@ -30,8 +30,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DAG_ACTION_H
-#define DAG_ACTION_H
+#ifndef FAB_DAG_RULE_H_
+#define FAB_DAG_RULE_H_
 
 #include <fabrique/StringMap.hh>
 #include <fabrique/dag/Callable.hh>
@@ -99,4 +99,4 @@ private:
 } // namespace dag
 } // namespace fabrique
 
-#endif
+#endif // FAB_DAG_RULE_H_

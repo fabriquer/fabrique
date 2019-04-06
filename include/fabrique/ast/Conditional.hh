@@ -29,8 +29,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef CONDITIONAL_H
-#define CONDITIONAL_H
+#ifndef FAB_AST_CONDITIONAL_H_
+#define FAB_AST_CONDITIONAL_H_
 
 #include <fabrique/UniqPtr.hh>
 #include <fabrique/ast/Expression.hh>
@@ -70,4 +70,4 @@ private:
 } // namespace ast
 } // namespace fabrique
 
-#endif
+#endif // FAB_AST_CONDITIONAL_H_

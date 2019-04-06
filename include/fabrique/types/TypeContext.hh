@@ -30,8 +30,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef TYPE_CONTEXT_H
-#define TYPE_CONTEXT_H
+#ifndef FAB_TYPE_CONTEXT_H_
+#define FAB_TYPE_CONTEXT_H_
 
 #include <fabrique/PtrVec.hh>
 #include <fabrique/types/Type.hh>
@@ -126,4 +126,4 @@ private:
 
 } // namespace fabrique
 
-#endif
+#endif // FAB_TYPE_CONTEXT_H_

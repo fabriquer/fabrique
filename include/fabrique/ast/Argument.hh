@@ -29,10 +29,10 @@
  * SUCH DAMAGE.
  */
 
-#ifndef ARGUMENT_H
-#define ARGUMENT_H
+#ifndef FAB_AST_ARGUMENT_H_
+#define FAB_AST_ARGUMENT_H_
 
-#include <fabrique/UniqPtr.h>
+#include <fabrique/UniqPtr.hh>
 #include <fabrique/ast/Expression.hh>
 #include <fabrique/ast/Identifier.hh>
 
@@ -67,4 +67,4 @@ private:
 } // namespace ast
 } // namespace fabrique
 
-#endif
+#endif // FAB_AST_ARGUMENT_H_

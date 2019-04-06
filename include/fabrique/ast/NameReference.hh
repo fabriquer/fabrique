@@ -29,8 +29,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef NAME_REFERENCE_H
-#define NAME_REFERENCE_H
+#ifndef FAB_AST_NAME_REFERENCE_H_
+#define FAB_AST_NAME_REFERENCE_H_
 
 #include <fabrique/PtrVec.hh>
 
@@ -65,4 +65,4 @@ private:
 } // namespace ast
 } // namespace fabrique
 
-#endif
+#endif // FAB_AST_NAME_REFERENCE_H_

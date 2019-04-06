@@ -29,8 +29,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef CALL_H
-#define CALL_H
+#ifndef FAB_AST_CALL_H_
+#define FAB_AST_CALL_H_
 
 #include <fabrique/PtrVec.hh>
 #include <fabrique/UniqPtr.hh>
@@ -66,4 +66,4 @@ private:
 } // namespace ast
 } // namespace fabrique
 
-#endif
+#endif // FAB_AST_CALL_H_

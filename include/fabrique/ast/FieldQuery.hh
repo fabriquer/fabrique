@@ -29,8 +29,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef FIELD_QUERY_H
-#define FIELD_QUERY_H
+#ifndef FAB_AST_FIELD_QUERY_H_
+#define FAB_AST_FIELD_QUERY_H_
 
 #include <fabrique/UniqPtr.hh>
 #include <fabrique/ast/Expression.hh>
@@ -68,4 +68,4 @@ private:
 } // namespace ast
 } // namespace fabrique
 
-#endif
+#endif // FAB_AST_FIELD_QUERY_H_

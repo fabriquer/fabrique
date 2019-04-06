@@ -30,8 +30,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef PLUGIN_H
-#define PLUGIN_H
+#ifndef FAB_PLUGIN_H_
+#define FAB_PLUGIN_H_
 
 #include <fabrique/UniqPtr.hh>
 #include <fabrique/dag/Record.hh>
@@ -71,4 +71,4 @@ class Plugin
 } // namespace plugin
 } // namespace fabrique
 
-#endif
+#endif // FAB_PLUGIN_H_

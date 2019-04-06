@@ -29,8 +29,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef EXPRESSION_H
-#define EXPRESSION_H
+#ifndef FAB_AST_EXPRESSION_H_
+#define FAB_AST_EXPRESSION_H_
 
 #include <fabrique/PtrVec.hh>
 #include <fabrique/SemanticException.hh>
@@ -87,4 +87,4 @@ typedef PtrVec<Expression> ExprVec;
 } // namespace ast
 } // namespace fabrique
 
-#endif
+#endif // FAB_AST_EXPRESSION_H_

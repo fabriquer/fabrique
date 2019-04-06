@@ -29,8 +29,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef AST_ARGUMENTS_H
-#define AST_ARGUMENTS_H
+#ifndef FAB_AST_ARGUMENTS_H_
+#define FAB_AST_ARGUMENTS_H_
 
 #include <fabrique/UniqPtr.hh>
 #include <fabrique/ast/Argument.hh>
@@ -65,4 +65,4 @@ private:
 } // namespace ast
 } // namespace fabrique
 
-#endif
+#endif // FAB_AST_ARGUMENTS_H_

@@ -29,8 +29,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef STRUCTURE_TYPE_H
-#define STRUCTURE_TYPE_H
+#ifndef FAB_RECORD_TYPE_H_
+#define FAB_RECORD_TYPE_H_
 
 #include <fabrique/StringMap.hh>
 #include <fabrique/types/Type.hh>
@@ -77,4 +77,4 @@ private:
 
 } // namespace fabrique
 
-#endif
+#endif // FAB_RECORD_TYPE_H_

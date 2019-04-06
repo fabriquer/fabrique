@@ -29,8 +29,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef CALLABLE_H
-#define CALLABLE_H
+#ifndef FAB_AST_HAS_PARAMETERS_H_
+#define FAB_AST_HAS_PARAMETERS_H_
 
 #include <fabrique/PtrVec.hh>
 #include <fabrique/StringMap.hh>
@@ -107,4 +107,4 @@ private:
 } // namespace ast
 } // namespace fabrique
 
-#endif
+#endif // FAB_AST_HAS_PARAMETERS_H_

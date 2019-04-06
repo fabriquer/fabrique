@@ -29,8 +29,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef ACTION_H
-#define ACTION_H
+#ifndef FAB_AST_ACTION_H_
+#define FAB_AST_ACTION_H_
 
 #include <fabrique/PtrVec.hh>
 
@@ -65,4 +65,4 @@ private:
 } // namespace ast
 } // namespace fabrique
 
-#endif
+#endif // FAB_AST_ACTION_H_

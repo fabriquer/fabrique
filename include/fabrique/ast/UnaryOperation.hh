@@ -29,8 +29,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef UNARY_OPERATION_H
-#define UNARY_OPERATION_H
+#ifndef FAB_AST_UNARY_OPERATION_H_
+#define FAB_AST_UNARY_OPERATION_H_
 
 #include <fabrique/UniqPtr.hh>
 #include <fabrique/ast/Expression.hh>
@@ -84,4 +84,4 @@ Bytestream& operator << (Bytestream&, enum ast::UnaryOperation::Operator);
 
 } // namespace fabrique
 
-#endif
+#endif // FAB_AST_UNARY_OPERATION_H_

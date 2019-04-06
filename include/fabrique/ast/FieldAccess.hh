@@ -29,8 +29,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef FIELD_ACCESS_H
-#define FIELD_ACCESS_H
+#ifndef FAB_AST_FIELD_ACCESS_H_
+#define FAB_AST_FIELD_ACCESS_H_
 
 #include <fabrique/UniqPtr.hh>
 #include <fabrique/ast/Expression.hh>
@@ -66,4 +66,4 @@ private:
 } // namespace ast
 } // namespace fabrique
 
-#endif
+#endif // FAB_AST_FIELD_ACCESS_H_
