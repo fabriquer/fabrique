@@ -1,4 +1,4 @@
-/** @file Types/Type.h    Declaration of @ref fabrique::Type. */
+//! @file types/Type.hh    Declaration of @ref fabrique::types::Type
 /*
  * Copyright (c) 2013-2016, 2018 Jonathan Anderson
  * All rights reserved.

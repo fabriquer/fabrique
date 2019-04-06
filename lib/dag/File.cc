@@ -1,4 +1,4 @@
-/** @file DAG/File.cc    Definition of @ref fabrique::dag::File. */
+//! @file dag/File.cc    Definition of @ref fabrique::dag::File
 /*
  * Copyright (c) 2013, 2018-2019 Jonathan Anderson
  * All rights reserved.

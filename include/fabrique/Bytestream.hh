@@ -1,4 +1,4 @@
-/** @file Support/Bytestream.h    Declaration of @ref fabrique::Bytestream. */
+//! @file Bytestream.hh    Declaration of @ref fabrique::Bytestream
 /*
  * Copyright (c) 2013, 2016 Jonathan Anderson
  * All rights reserved.

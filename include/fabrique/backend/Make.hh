@@ -1,4 +1,4 @@
-/** @file Backend/Make.h    Declaration of fabrique::backend::MakeBackend. */
+//! @file backend/Make.hh    Declaration of @ref fabrique::backend::MakeBackend
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

@@ -1,4 +1,4 @@
-/** @file DAG/Formatter.cc    Definition of @ref fabrique::dag::Formatter. */
+//! @file dag/Formatter.cc    Definition of @ref fabrique::dag::Formatter
 /*
  * Copyright (c) 2014, 2019 Jonathan Anderson
  * All rights reserved.

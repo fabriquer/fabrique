@@ -1,4 +1,4 @@
-/** @file Types/FunctionType.cc    Definition of @ref fabrique::FunctionType. */
+//! @file types/FunctionType.cc    Definition of @ref fabrique::types::FunctionType
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

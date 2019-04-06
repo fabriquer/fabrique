@@ -1,4 +1,4 @@
-/** @file Plugin/Loader.h    Declaration of @ref fabrique::plugin::Loader. */
+//! @file plugin/Loader.hh    Declaration of @ref fabrique::plugin::Loader
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

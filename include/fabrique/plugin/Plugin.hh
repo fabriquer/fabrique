@@ -1,4 +1,4 @@
-/** @file Plugin/Plugin.h    Declaration of @ref fabrique::plugin::Plugin. */
+//! @file plugin/Plugin.hh    Declaration of @ref fabrique::plugin::Plugin
 /*
  * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.

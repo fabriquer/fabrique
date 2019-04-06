@@ -1,4 +1,4 @@
-/** @file Types/IntegerType.h    Declaration of @ref fabrique::IntegerType. */
+//! @file types/IntegerType.cc    Definition of @ref fabrique::types::IntegerType
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

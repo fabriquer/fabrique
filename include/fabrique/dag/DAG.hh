@@ -1,4 +1,4 @@
-/** @file DAG/DAG.h    Declaration of @ref fabrique::dag::DAG. */
+//! @file dag/DAG.hh    Declaration of @ref fabrique::dag::DAG
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.

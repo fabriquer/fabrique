@@ -1,4 +1,4 @@
-/** @file ast/UnaryOperation.cc    Definition of @ref fabrique::ast::UnaryOperation. */
+//! @file ast/UnaryOperation.cc    Definition of @ref fabrique::ast::UnaryOperation
 /*
  * Copyright (c) 2014-2019 Jonathan Anderson
  * All rights reserved.

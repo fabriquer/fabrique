@@ -1,4 +1,4 @@
-/** @file DAG/Rule.h    Declaration of @ref fabrique::dag::Rule. */
+//! @file dag/Rule.hh    Declaration of @ref fabrique::dag::Rule
 /*
  * Copyright (c) 2013, 2016, 2018 Jonathan Anderson
  * All rights reserved.

@@ -1,4 +1,4 @@
-/** @file plugin/Registry.cc    Definition of @ref fabrique::plugin::Registry. */
+//! @file plugin/Registry.cc    Definition of @ref fabrique::plugin::Registry
 /*
  * Copyright (c) 2014, 2019 Jonathan Anderson
  * All rights reserved.

@@ -1,4 +1,4 @@
-/** @file fabrique/PtrVec.h    Declaration of @ref fabrique::PtrVec. */
+//! @file fabrique/PtrVec.h    Declaration of @ref fabrique::PtrVec
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.

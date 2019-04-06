@@ -1,4 +1,4 @@
-/** @file Plugin/Registry.h    Declaration of @ref fabrique::plugin::Registry. */
+//! @file plugin/Registry.hh    Declaration of @ref fabrique::plugin::Registry
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

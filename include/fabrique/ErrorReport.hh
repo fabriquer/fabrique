@@ -1,4 +1,4 @@
-/** @file fabrique/ErrorReport.hh    Declaration of @ref fabrique::ErrorReport. */
+//! @file ErrorReport.hh    Declaration of @ref fabrique::ErrorReport
 /*
  * Copyright (c) 2013, 2018-2019 Jonathan Anderson
  * All rights reserved.

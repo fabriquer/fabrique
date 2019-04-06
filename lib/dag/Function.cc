@@ -1,4 +1,4 @@
-/** @file DAG/Function.cc    Definition of @ref fabrique::dag::Function. */
+//! @file dag/Function.cc    Definition of @ref fabrique::dag::Function
 /*
  * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.

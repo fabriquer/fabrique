@@ -1,4 +1,4 @@
-/** @file DAG/DAGBuilder.h    Declaration of @ref fabrique::dag::DAGBuilder. */
+//! @file dag/DAGBuilder.hh    Declaration of @ref fabrique::dag::DAGBuilder
 /*
  * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.

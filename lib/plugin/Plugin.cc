@@ -1,4 +1,4 @@
-/** @file Plugin/Plugin.cc    Definition of @ref fabrique::plugin::Plugin. */
+//! @file plugin/Plugin.cc    Definition of @ref fabrique::plugin::Plugin
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

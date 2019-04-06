@@ -1,4 +1,4 @@
-/** @file ast/BinaryOperation.cc    Definition of @ref fabrique::ast::BinaryOperation. */
+//! @file ast/BinaryOperation.cc    Definition of @ref fabrique::ast::BinaryOperation
 /*
  * Copyright (c) 2013-2014, 2018, 2019 Jonathan Anderson
  * All rights reserved.

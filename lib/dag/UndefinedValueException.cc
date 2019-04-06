@@ -1,4 +1,7 @@
-/** @file DAG/UndefinedValueException.cc  Definition of @ref fabrique::dag::UndefinedValueException. */
+/**
+ * @file dag/UndefinedValueException.cc
+ * Definition of @ref fabrique::dag::UndefinedValueException
+ */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.

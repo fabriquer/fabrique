@@ -1,4 +1,4 @@
-/** @file DAG/Parameter.h    Declaration of @ref fabrique::dag::Parameter. */
+//! @file dag/Parameter.hh    Declaration of @ref fabrique::dag::Parameter
 /*
  * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.

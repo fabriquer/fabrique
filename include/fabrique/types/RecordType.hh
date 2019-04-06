@@ -1,4 +1,4 @@
-/** @file Types/RecordType.h    Declaration of @ref fabrique::RecordType. */
+//! @file types/RecordType.hh    Declaration of @ref fabrique::types::RecordType
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

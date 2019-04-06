@@ -1,4 +1,4 @@
-/** @file DAG/constants.h    Declaration of DAG constants. */
+//! @file dag/constants.hh    Declaration of DAG constants
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

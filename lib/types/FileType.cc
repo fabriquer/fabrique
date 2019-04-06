@@ -1,4 +1,4 @@
-/** @file Types/FileType.cc    Definition of @ref fabrique::FileType. */
+//! @file types/FileType.cc    Definition of @ref fabrique::types::FileType
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

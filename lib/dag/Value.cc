@@ -1,4 +1,4 @@
-/** @file DAG/Value.cc    Definition of @ref fabrique::dag::Value. */
+//! @file dag/Value.cc    Definition of @ref fabrique::dag::Value
 /*
  * Copyright (c) 2013-2014, 2018-2019 Jonathan Anderson
  * All rights reserved.

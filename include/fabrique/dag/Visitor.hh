@@ -1,4 +1,4 @@
-/** @file DAG/Visitor.h    Declaration of @ref fabrique::dag::Visitor. */
+//! @file dag/Visitor.hh    Declaration of @ref fabrique::dag::Visitor
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

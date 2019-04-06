@@ -1,4 +1,4 @@
-/** @file Types/BooleanType.h    Declaration of @ref fabrique::BooleanType. */
+//! @file types/BooleanType.cc    Definition of @ref fabrique::types::BooleanType
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

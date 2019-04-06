@@ -1,4 +1,4 @@
-/** @file dag/Rule.cc    Definition of @ref fabrique::dag::Rule. */
+//! @file dag/Rule.cc    Definition of @ref fabrique::dag::Rule
 /*
  * Copyright (c) 2013, 2019 Jonathan Anderson
  * All rights reserved.

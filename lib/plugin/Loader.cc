@@ -1,4 +1,4 @@
-/** @file Plugin/Loader.cc    Definition of @ref fabrique::plugin::Loader. */
+//! @file plugin/Loader.cc    Definition of @ref fabrique::plugin::Loader
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

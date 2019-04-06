@@ -1,4 +1,4 @@
-/** @file TypeContext.h    Declaration of fabrique::TypeContext. */
+//! @file types/TypeContext.hh    Declaration of @ref fabrique::types::TypeContext
 /*
  * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.

@@ -1,4 +1,4 @@
-/** @file Backend/Null.cc    Definition of fabrique::backend::NullBackend. */
+//! @file backend/Null.cc    Definition of @ref fabrique::backend::NullBackend
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

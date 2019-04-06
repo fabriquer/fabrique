@@ -1,4 +1,4 @@
-/** @file lib/ErrorReport.cc    Definition of @ref fabrique::ErrorReport. */
+//! @file lib/ErrorReport.cc    Definition of @ref fabrique::ErrorReport
 /*
  * Copyright (c) 2013, 2016, 2018-2019 Jonathan Anderson
  * All rights reserved.

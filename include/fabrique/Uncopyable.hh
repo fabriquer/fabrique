@@ -1,4 +1,4 @@
-/** @file Support/Uncopyable.h    Declaration of @ref fabrique::Uncopyable. */
+//! @file Uncopyable.hh    Declaration of @ref fabrique::Uncopyable
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.

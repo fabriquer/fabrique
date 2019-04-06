@@ -1,4 +1,4 @@
-/** @file Parsing/ErrorReporter.cc Definition of @ref fabrique::parser::ErrorReporter. */
+//! @file parsing/ErrorReporter.cc    Definition of @ref fabrique::parser::ErrorReporter
 /*
  * Copyright (c) 2016 Jonathan Anderson
  * All rights reserved.

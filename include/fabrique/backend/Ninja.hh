@@ -1,4 +1,4 @@
-/** @file Backend/Ninja.h    Declaration of fabrique::backend::NinjaBackend. */
+//! @file backend/Ninja.hh    Declaration of @ref fabrique::backend::NinjaBackend
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.

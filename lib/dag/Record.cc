@@ -1,4 +1,4 @@
-/** @file DAG/Record.h    Declaration of @ref fabrique::dag::Record. */
+//! @file dag/Record.cc    Definition of @ref fabrique::dag::Record
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

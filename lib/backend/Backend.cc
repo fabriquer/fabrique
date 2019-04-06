@@ -1,4 +1,4 @@
-/** @file Backend/Backend.cc    Definition of fabrique::backend::Backend. */
+//! @file backend/Backend.cc    Definition of @ref fabrique::backend::Backend
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

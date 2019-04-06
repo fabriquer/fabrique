@@ -1,4 +1,4 @@
-/** @file DAG/Value.h    Declaration of @ref fabrique::dag::Value. */
+//! @file dag/Value.hh    Declaration of @ref fabrique::dag::Value
 /*
  * Copyright (c) 2013-2014, 2018 Jonathan Anderson
  * All rights reserved.

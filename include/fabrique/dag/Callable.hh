@@ -1,4 +1,4 @@
-/** @file DAG/Callable.h    Declaration of @ref fabrique::dag::Callable. */
+//! @file dag/Callable.hh    Declaration of @ref fabrique::dag::Callable
 /*
  * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.

@@ -1,4 +1,4 @@
-/** @file Parsing/ErrorReporter.h Declaration of @ref fabrique::parser::ErrorReporter. */
+//! @file parsing/ErrorReporter.hh    Declaration of @ref fabrique::parser::ErrorReporter
 /*
  * Copyright (c) 2016, 2018 Jonathan Anderson
  * All rights reserved.

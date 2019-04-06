@@ -1,4 +1,4 @@
-/** @file Types/Type.cc    Definition of @ref fabrique::Type. */
+//! @file types/Type.cc    Definition of @ref fabrique::types::Type
 /*
  * Copyright (c) 2013-2015, 2018-2019 Jonathan Anderson
  * All rights reserved.

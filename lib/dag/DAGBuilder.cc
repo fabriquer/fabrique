@@ -1,4 +1,4 @@
-/** @file dag/DAGBuilder.cc    Definition of @ref fabrique::dag::DAGBuilder. */
+//! @file dag/DAGBuilder.cc    Definition of @ref fabrique::dag::DAGBuilder
 /*
  * Copyright (c) 2014, 2018-2019 Jonathan Anderson
  * All rights reserved.

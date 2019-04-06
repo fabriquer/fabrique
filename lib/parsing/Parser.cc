@@ -1,4 +1,4 @@
-/** @file Parsing/Parser.cc    Definition of @ref fabrique::parsing::Parser. */
+//! @file parsing/Parser.cc    Definition of @ref fabrique::parsing::Parser
 /*
  * Copyright (c) 2013-2014, 2018-2019 Jonathan Anderson
  * All rights reserved.

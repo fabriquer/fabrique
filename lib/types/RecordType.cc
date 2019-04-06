@@ -1,4 +1,4 @@
-/** @file Types/RecordType.cc    Definition of @ref fabrique::RecordType. */
+//! @file types/RecordType.cc    Definition of @ref fabrique::types::RecordType
 /*
  * Copyright (c) 2014, 2019 Jonathan Anderson
  * All rights reserved.

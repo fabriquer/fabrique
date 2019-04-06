@@ -1,4 +1,4 @@
-/** @file DAG/Visitor.cc    Definition of @ref fabrique::dag::Visitor. */
+//! @file dag/Visitor.cc    Definition of @ref fabrique::dag::Visitor
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

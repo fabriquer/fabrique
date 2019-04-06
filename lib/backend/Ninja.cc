@@ -1,4 +1,4 @@
-/** @file Backend/Ninja.cc    Definition of fabrique::backend::NinjaBackend. */
+//! @file backend/Ninja.cc    Definition of @ref fabrique::backend::NinjaBackend
 /*
  * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.

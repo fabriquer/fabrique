@@ -1,4 +1,4 @@
-/** @file ADT/StringMap.h    Declaration of @ref fabrique::StringMap. */
+//! @file StringMap.h    Declaration of @ref fabrique::StringMap
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.

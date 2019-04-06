@@ -1,4 +1,4 @@
-/** @file Types/TypeError.cc    Definition of @ref fabrique::TypeError. */
+//! @file types/TypeError.cc    Definition of @ref fabrique::types::TypeError
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

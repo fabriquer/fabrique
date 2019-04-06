@@ -1,4 +1,4 @@
-/** @file Support/Printable.h    Declaration of the @ref fabrique::Printable interface. */
+//! @file Printable.hh    Declaration of the @ref fabrique::Printable interface
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.

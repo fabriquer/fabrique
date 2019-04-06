@@ -1,4 +1,4 @@
-/** @file Types/Typed.cc    Definition of @ref fabrique::Typed mixin. */
+//! @file types/Typed.cc    Definition of @ref fabrique::types::Typed mixin
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

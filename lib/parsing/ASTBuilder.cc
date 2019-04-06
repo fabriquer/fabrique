@@ -1,4 +1,4 @@
-/** @file Parsing/ASTBuilder.cc    Definition of @ref fabrique::ast::ASTBuilder. */
+//! @file parsing/ASTBuilder.cc    Definition of @ref fabrique::ast::ASTBuilder
 /*
  * Copyright (c) 2018 Jonathan Anderson
  * All rights reserved.

@@ -1,4 +1,4 @@
-/** @file Backend/Make.cc    Definition of fabrique::backend::MakeBackend. */
+//! @file backend/Make.cc    Definition of @ref fabrique::backend::MakeBackend
 /*
  * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.

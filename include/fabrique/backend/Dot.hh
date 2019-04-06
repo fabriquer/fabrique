@@ -1,4 +1,4 @@
-/** @file Backend/Dot.h    Declaration of fabrique::backend::DotBackend. */
+//! @file backend/Dot.hh    Declaration of @ref fabrique::backend::DotBackend
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

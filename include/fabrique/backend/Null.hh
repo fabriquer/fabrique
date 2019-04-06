@@ -1,4 +1,4 @@
-/** @file Backend/Null.h    Declaration of fabrique::backend::NullBackend. */
+//! @file backend/Null.hh    Declaration of @ref fabrique::backend::NullBackend
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.

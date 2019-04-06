@@ -1,4 +1,4 @@
-/** @file Backend/Dot.cc    Definition of fabrique::backend::DotBackend. */
+//! @file backend/Dot.cc    Definition of @ref fabrique::backend::DotBackend
 /*
  * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.

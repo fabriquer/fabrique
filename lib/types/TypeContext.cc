@@ -1,4 +1,4 @@
-/** @file TypeContext.cc    Definition of fabrique::TypeContext. */
+//! @file types/TypeContext.cc    Definition of @ref fabrique::types::TypeContext
 /*
  * Copyright (c) 2014, 2018-2019 Jonathan Anderson
  * All rights reserved.

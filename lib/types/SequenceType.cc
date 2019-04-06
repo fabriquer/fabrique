@@ -1,4 +1,4 @@
-/** @file Types/SequenceType.cc    Definition of @ref fabrique::SequenceType. */
+//! @file types/SequenceType.cc    Definition of @ref fabrique::types::SequenceType
 /*
  * Copyright (c) 2014, 2018-2019 Jonathan Anderson
  * All rights reserved.

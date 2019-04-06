@@ -1,4 +1,4 @@
-/** @file DAG/Primitive.h    Declaration of @ref fabrique::dag::Primitive. */
+//! @file dag/Primitive.hh    Declaration of @ref fabrique::dag::Primitive
 /*
  * Copyright (c) 2013-2014, 2018 Jonathan Anderson
  * All rights reserved.

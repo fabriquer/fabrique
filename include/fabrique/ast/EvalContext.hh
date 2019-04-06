@@ -1,4 +1,4 @@
-/** @file ast/EvalContext.hh    Declaration of @ref fabrique::ast::EvalContext. */
+//! @file ast/EvalContext.hh    Declaration of @ref fabrique::ast::EvalContext
 /*
  * Copyright (c) 2014, 2018-2019 Jonathan Anderson
  * All rights reserved.

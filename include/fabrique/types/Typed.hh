@@ -1,4 +1,4 @@
-/** @file Types/Typed.h    Declaration of @ref fabrique::Typed mixin. */
+//! @file types/Typed.hh    Declaration of @ref fabrique::types::Typed mixin
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.

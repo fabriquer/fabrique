@@ -1,4 +1,4 @@
-/** @file Types/StringType.h    Declaration of @ref fabrique::StringType. */
+//! @file types/StringType.hh    Declaration of @ref fabrique::types::StringType
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

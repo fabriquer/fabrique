@@ -1,4 +1,4 @@
-/** @file Types/TypeError.h    Declaration of @ref fabrique::TypeError. */
+//! @file types/TypeError.hh    Declaration of @ref fabrique::types::TypeError
 /*
  * Copyright (c) 2014, 2019 Jonathan Anderson
  * All rights reserved.

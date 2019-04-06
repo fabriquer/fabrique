@@ -1,4 +1,4 @@
-/** @file Types/SequenceType.h    Declaration of @ref fabrique::SequenceType. */
+//! @file types/SequenceType.hh    Declaration of @ref fabrique::types::SequenceType
 /*
  * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.

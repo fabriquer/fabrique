@@ -1,4 +1,4 @@
-/** @file DAG/List.h    Declaration of @ref fabrique::dag::List. */
+//! @file dag/List.hh    Declaration of @ref fabrique::dag::List
 /*
  * Copyright (c) 2013-2014, 2018 Jonathan Anderson
  * All rights reserved.

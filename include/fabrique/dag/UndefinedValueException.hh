@@ -1,4 +1,7 @@
-/** @file DAG/UndefinedValueException.h    Declaration of @ref fabrique::dag::UndefinedValueException. */
+/**
+ * @file dag/UndefinedValueException.hh
+ * Declaration of @ref fabrique::dag::UndefinedValueException
+ */
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.

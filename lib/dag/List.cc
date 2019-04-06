@@ -1,4 +1,4 @@
-/** @file DAG/List.cc    Definition of @ref fabrique::dag::List. */
+//! @file dag/List.cc    Definition of @ref fabrique::dag::List
 /*
  * Copyright (c) 2013-2014, 2018-2019 Jonathan Anderson
  * All rights reserved.
