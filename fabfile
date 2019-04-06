@@ -41,34 +41,21 @@ clang = import('share/toolchains/c/clang.fab', colour_diagnostics=pretty, lto=lt
 cxx_options = record
 {
 	debug = debug;
-
-	include_dirs = [srcroot srcroot :: 'include'];
-
 	optlevel = (if debug 0 else 2);
-
 	pic = true;
-
 	standard = 'c++14';
 
+	include_dirs = [srcroot srcroot :: 'include'];
 	system_include_dirs = [vendor antlr];
 
+	# Use lots and lots of warnings, but ignore things like C++98 compatibility,
+	# problems with C++11 copy elision and warnings that the current compiler
+	# version doesn't understand.
 	warnings = [
-		# Warn about lots and lots of things.
 		'everything'
-
-		# We don't care about C++98 compatibility.
-		'no-c++98-compat' 'no-c++98-compat-pedantic'
-
-		# We aren't attempting to preserve an ABI. At least not yet.
-		'no-padded'
-
-		# We are OK with C99 variable-length arrays.
+		'no-c++98-compat' 'no-c++98-compat-pedantic' 'no-padded'
 		'no-vla' 'no-vla-extension'
-
-		# Ignore a problem with old C++ versions and copy elision.
 		'no-return-std-move-in-c++11'
-
-		# Don't warn about unknown warnings. TODO: identify compiler versions?
 		'no-unknown-warning-option'
 	];
 };
