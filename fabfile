@@ -26,21 +26,11 @@ verbose_tests:bool = args.verbose_tests ? false;
 
 
 #
-# Source files that go into Fabrique:
+# Directories containing vendored (including generated) code:
 #
-cxx_srcs =
-	import('bin').sources
-	+ import('lib').sources
-	;
-
 vendor = file('vendor');
 antlr = vendor :: 'antlr-cxx-runtime';
 grammar = vendor :: 'generated-grammar';
-
-generated_srcs =
-	import(antlr.name).sources
-	+ import(grammar.name).sources
-	;
 
 
 #
@@ -93,10 +83,33 @@ binary_options = record
 #
 # Object files, shared libraries and fab binary:
 #
-objects = clang.compile(cxx_srcs, cxx_options)
-	+ clang.compile(generated_srcs, cxx_options, extra_flags=['-Wno-everything']);
 
-fab = clang.binary(objects, binary=file('fab', subdir = 'bin'), options=binary_options);
+generated_sources =
+	import(antlr.name).sources
+	+ import(grammar.name).sources
+	;
+
+library_objects =
+	clang.compile(import('lib').sources, cxx_options)
+	+ clang.compile(generated_sources, cxx_options, extra_flags=['-Wno-everything'])
+	;
+
+library = clang.library(library_objects, 'fabrique',
+	subdir = file('lib'),
+	options = record { shared_library = true; });
+
+binary_objects = clang.compile(import('bin').sources, cxx_options);
+
+# Link library objects into `fab` binary statically for three reasons:
+#
+# 1. it makes for simpler bootstrapping when we don't have to find libraries
+#    or require them to be installed in particular places,
+# 2. this provides us with the opportunity for link-time optimization and
+# 3. the binary is so small as to be almost trivial.
+fab = clang.binary(
+	objects = binary_objects + library_objects,
+	binary = file('fab', subdir = 'bin'),
+	options = binary_options);
 
 plugins = import('base-plugins',
 	cxx_options=cxx_options,
