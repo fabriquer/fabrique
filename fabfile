@@ -15,14 +15,14 @@ else   # TODO: maybe we should allow else-less `if` expressions?
 	[]
 };
 
-debug = args.debug ? false;
-release = args.release ? not debug;
-lto = release or (args.lto ? false);
+debug:bool = args.debug ? false;
+release:bool = args.release ? not debug;
+lto:bool = release or (args.lto ? false);
 
 which = import('which');
 filecheck:file = args.filecheck ? which.executable('FileCheck');
 lit:file = args.lit ? which.executable('lit');
-verbose_tests = args.verbose_tests ? false;
+verbose_tests:bool = args.verbose_tests ? false;
 
 
 #
