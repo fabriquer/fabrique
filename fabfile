@@ -110,7 +110,7 @@ plugins = import('base-plugins',
 # This is useful for building all the things and double-checking that all of the test
 # sources exist without actually running the tests.
 #
-everything = [ fab ] + plugins.libs + import('tests/manifest.fab').all_files;
+everything = fab :: plugins.libs + import('tests/manifest.fab').all_files;
 
 
 #
