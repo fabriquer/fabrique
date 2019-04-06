@@ -31,7 +31,6 @@ verbose_tests:bool = args.verbose_tests ? false;
 cxx_srcs =
 	import('bin').sources
 	+ import('lib').sources
-	+ import('Support').sources
 	;
 
 vendor = file('vendor');

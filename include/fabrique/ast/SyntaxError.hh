@@ -1,4 +1,4 @@
-/** @file Support/exceptions.h    Declaration of basic Fabrique exceptions. */
+//! @file ast/SyntaxError.hh    Declaration of @ref fabrique::ast::SyntaxError
 /*
  * Copyright (c) 2013, 2018-2019 Jonathan Anderson
  * All rights reserved.
@@ -30,16 +30,14 @@
  * SUCH DAMAGE.
  */
 
-#ifndef EXCEPTIONS_H
-#define EXCEPTIONS_H
+#ifndef FAB_AST_SYNTAX_ERROR
+#define FAB_AST_SYNTAX_ERROR
 
 #include <fabrique/SourceCodeException.hh>
 
-#include <exception>
-#include <memory>
-#include <string>
 
 namespace fabrique {
+namespace ast {
 
 //! A syntactic error is present in the Fabrique description.
 class SyntaxError : public SourceCodeException
@@ -50,6 +48,7 @@ public:
 	virtual ~SyntaxError() override;
 };
 
-}
+} // namespace ast
+} // namespace fabrique
 
 #endif

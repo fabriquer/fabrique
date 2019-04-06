@@ -38,7 +38,6 @@
 #include <fabrique/dag/List.hh>
 #include <fabrique/dag/Primitive.hh>
 #include <fabrique/platform/files.hh>
-#include "Support/exceptions.h"
 
 #include <cassert>
 

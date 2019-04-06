@@ -37,7 +37,6 @@
 #include <fabrique/ast/TypeDeclaration.hh>
 #include <fabrique/ast/Visitor.hh>
 #include <fabrique/dag/TypeReference.hh>
-#include "Support/exceptions.h"
 
 using namespace fabrique;
 using namespace fabrique::ast;

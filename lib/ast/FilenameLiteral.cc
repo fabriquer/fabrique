@@ -31,12 +31,12 @@
 
 #include <fabrique/names.hh>
 #include <fabrique/Bytestream.hh>
+#include <fabrique/SemanticException.hh>
 #include <fabrique/ast/Argument.hh>
 #include <fabrique/ast/EvalContext.hh>
 #include <fabrique/ast/FilenameLiteral.hh>
 #include <fabrique/ast/Visitor.hh>
 #include <fabrique/dag/File.hh>
-#include "Support/exceptions.h"
 
 #include <cassert>
 #include <set>

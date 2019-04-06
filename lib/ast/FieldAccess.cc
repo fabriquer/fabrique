@@ -34,7 +34,6 @@
 #include <fabrique/ast/Identifier.hh>
 #include <fabrique/ast/Visitor.hh>
 #include <fabrique/types/Type.hh>
-#include "Support/exceptions.h"
 
 #include <cassert>
 

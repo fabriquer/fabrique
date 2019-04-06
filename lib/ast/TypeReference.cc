@@ -36,7 +36,6 @@
 #include <fabrique/ast/Visitor.hh>
 #include <fabrique/dag/TypeReference.hh>
 #include <fabrique/platform/ABI.hh>
-#include "Support/exceptions.h"
 #include <fabrique/types/FunctionType.hh>
 #include <fabrique/types/RecordType.hh>
 #include <fabrique/types/TypeContext.hh>

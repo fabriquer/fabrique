@@ -1,4 +1,4 @@
-/** @file Support/exceptions.cc    Definition of basic Fabrique exceptions. */
+//! @file ast/SyntaxError.cc    Definition of @ref fabrique::ast::SyntaxError
 /*
  * Copyright (c) 2013, 2018-2019 Jonathan Anderson
  * All rights reserved.
@@ -30,12 +30,9 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/Bytestream.hh>
-#include <fabrique/SemanticException.hh>
-#include <fabrique/ErrorReport.hh>
-#include "Support/exceptions.h"
+#include <fabrique/ast/SyntaxError.hh>
 
-using namespace fabrique;
+using namespace fabrique::ast;
 using std::string;
 
 

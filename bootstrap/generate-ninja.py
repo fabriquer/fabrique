@@ -44,8 +44,9 @@ cxx_srcs = {
 		'CompoundExpr', 'Conditional', 'DebugTracePoint', 'EvalContext',
 		'Expression', 'FieldAccess', 'FieldQuery', 'FileList', 'FilenameLiteral',
 		'Foreach', 'Function', 'HasParameters', 'Identifier', 'List',
-		'NameReference', 'Node', 'Parameter', 'Record', 'TypeDeclaration',
-		'TypeReference', 'UnaryOperation', 'Value', 'Visitor', 'literals',
+		'NameReference', 'Node', 'Parameter', 'Record', 'SyntaxError',
+		'TypeDeclaration', 'TypeReference',
+		'UnaryOperation', 'Value', 'Visitor', 'literals',
 	),
 	'lib/backend/': (
 		'Backend', 'Dot', 'Make', 'Ninja', 'Null',
@@ -71,9 +72,6 @@ cxx_srcs = {
 	'lib/types/': (
 		'BooleanType', 'FileType', 'FunctionType', 'IntegerType', 'RecordType',
 		'SequenceType', 'StringType', 'Type', 'TypeContext', 'TypeError', 'Typed',
-	),
-	'Support/': (
-		'exceptions',
 	),
 	'vendor/antlr-cxx-runtime/': (
 		'ANTLRErrorListener', 'ANTLRErrorStrategy', 'ANTLRFileStream',

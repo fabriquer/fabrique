@@ -35,7 +35,7 @@
 #include <fabrique/Bytestream.hh>
 #include <fabrique/ast/Argument.hh>
 #include <fabrique/ast/HasParameters.hh>
-#include "Support/exceptions.h"
+#include <fabrique/ast/SyntaxError.hh>
 
 using namespace fabrique;
 using namespace fabrique::ast;

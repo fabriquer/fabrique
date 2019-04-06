@@ -37,7 +37,6 @@
 #include <fabrique/ast/NameReference.hh>
 #include <fabrique/ast/Visitor.hh>
 #include <fabrique/dag/Callable.hh>
-#include "Support/exceptions.h"
 #include <fabrique/types/FunctionType.hh>
 
 #include <cassert>

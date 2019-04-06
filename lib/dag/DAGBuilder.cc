@@ -43,8 +43,6 @@
 #include <fabrique/dag/Primitive.hh>
 #include <fabrique/dag/Rule.hh>
 
-#include "Support/exceptions.h"
-
 #include <fabrique/platform/files.hh>
 
 #include <fabrique/types/FunctionType.hh>

@@ -41,8 +41,6 @@
 #include <fabrique/dag/Rule.hh>
 #include <fabrique/dag/Visitor.hh>
 
-#include "Support/exceptions.h"
-
 #include <fabrique/types/FileType.hh>
 #include <fabrique/types/FunctionType.hh>
 #include <fabrique/types/TypeError.hh>

@@ -41,8 +41,6 @@
 #include <fabrique/dag/DAGBuilder.hh>
 #include <fabrique/dag/TypeReference.hh>
 
-#include "Support/exceptions.h"
-
 #include <fabrique/types/FileType.hh>
 #include <fabrique/types/FunctionType.hh>
 #include <fabrique/types/TypeContext.hh>

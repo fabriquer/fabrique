@@ -34,7 +34,6 @@
 #include <fabrique/types/SequenceType.hh>
 #include <fabrique/types/TypeContext.hh>
 #include <fabrique/types/TypeError.hh>
-#include "Support/exceptions.h"
 
 #include <cassert>
 

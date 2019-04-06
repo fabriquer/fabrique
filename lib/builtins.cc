@@ -44,8 +44,6 @@
 #include <fabrique/types/FileType.hh>
 #include <fabrique/types/TypeContext.hh>
 
-#include "Support/exceptions.h"
-
 #include <fstream>
 
 using namespace fabrique;

@@ -32,9 +32,9 @@
 #include <fabrique/Bytestream.hh>
 #include <fabrique/ast/Parameter.hh>
 #include <fabrique/ast/Visitor.hh>
+#include <fabrique/ast/SyntaxError.hh>
 #include <fabrique/dag/Parameter.hh>
 #include <fabrique/dag/TypeReference.hh>
-#include "Support/exceptions.h"
 
 #include <memory>
 

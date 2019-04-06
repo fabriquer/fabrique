@@ -38,7 +38,6 @@
 #include <fabrique/dag/Parameter.hh>
 #include <fabrique/dag/Rule.hh>
 #include <fabrique/dag/Visitor.hh>
-#include "Support/exceptions.h"
 
 #include <cassert>
 

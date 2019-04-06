@@ -29,8 +29,6 @@
 
 #include <fabrique/platform/PosixError.hh>
 
-#include "Support/exceptions.h"
-
 #include <string>
 
 #include <dlfcn.h>

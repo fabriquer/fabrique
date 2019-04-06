@@ -36,7 +36,6 @@
 #include <fabrique/dag/Primitive.hh>
 #include <fabrique/dag/Visitor.hh>
 #include <fabrique/platform/files.hh>
-#include "Support/exceptions.h"
 #include <fabrique/types/TypeContext.hh>
 #include <fabrique/types/TypeError.hh>
 

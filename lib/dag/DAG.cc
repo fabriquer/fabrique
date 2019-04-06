@@ -39,8 +39,6 @@
 #include <fabrique/dag/Rule.hh>
 #include <fabrique/dag/TypeReference.hh>
 
-#include "Support/exceptions.h"
-
 #include <cassert>
 
 using namespace fabrique;

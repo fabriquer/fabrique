@@ -41,7 +41,6 @@
 #include <fabrique/dag/Function.hh>
 #include <fabrique/dag/Parameter.hh>
 #include <fabrique/dag/TypeReference.hh>
-#include "Support/exceptions.h"
 #include <fabrique/types/FunctionType.hh>
 #include <fabrique/types/TypeContext.hh>
 
