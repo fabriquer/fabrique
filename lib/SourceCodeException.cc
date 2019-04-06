@@ -1,4 +1,4 @@
-/** @file Support/exceptions.cc    Definition of basic Fabrique exceptions. */
+//! @file SourceCodeException.cc    Definition of fabrique::SourceCodeException
 /*
  * Copyright (c) 2013, 2018-2019 Jonathan Anderson
  * All rights reserved.
@@ -30,60 +30,33 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/Bytestream.hh>
-#include <fabrique/ErrorReport.hh>
-#include "Support/exceptions.h"
+#include <fabrique/SourceCodeException.hh>
 
 using namespace fabrique;
 using std::string;
 
 
-UserError::UserError(const string& message)
-	: message_(message)
+SourceCodeException::SourceCodeException(string m, SourceRange l, string detail)
+	: HasSource(l), err_(m, l, ErrorReport::Severity::Error, detail)
 {
 }
 
-UserError::UserError(const UserError& orig)
-	: message_(orig.message_)
+const string& SourceCodeException::message() const
 {
+	return err_.getMessage();
 }
 
-UserError::~UserError() {}
-
-void UserError::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
+const string& SourceCodeException::detail() const
 {
-	out << Bytestream::ErrorMessage << message_ << Bytestream::Reset;
+	return err_.getDetails();
 }
 
-
-ParserError::ParserError(string message, SourceRange loc, string detail)
-	: SourceCodeException(message, loc, detail)
+const char* SourceCodeException::what() const noexcept
 {
+	return message().c_str();
 }
 
-ParserError::ParserError(const ParserError& orig)
-	: SourceCodeException(orig.message(), orig.source(), orig.detail())
+void SourceCodeException::PrettyPrint(Bytestream& out, unsigned int indent) const
 {
+	err_.PrettyPrint(out, indent);
 }
-
-ParserError::~ParserError() {}
-
-
-SyntaxError::SyntaxError(string message, SourceRange loc, string detail)
-	: SourceCodeException(message, loc, detail)
-{
-}
-
-SyntaxError::SyntaxError(const SyntaxError& orig)
-	: SourceCodeException(orig.message(), orig.source(), orig.detail())
-{
-}
-
-SyntaxError::~SyntaxError() {}
-
-SemanticException::SemanticException(string m, SourceRange loc, string detail)
-	: SourceCodeException(m, loc, detail)
-{
-}
-
-SemanticException::~SemanticException() {}

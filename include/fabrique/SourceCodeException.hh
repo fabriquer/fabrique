@@ -1,4 +1,4 @@
-/** @file Support/exceptions.cc    Definition of basic Fabrique exceptions. */
+//! @file SourceCodeException.hh    Declaration of fabrique::SourceCodeException
 /*
  * Copyright (c) 2013, 2018-2019 Jonathan Anderson
  * All rights reserved.
@@ -30,60 +30,32 @@
  * SUCH DAMAGE.
  */
 
-#include <fabrique/Bytestream.hh>
+#ifndef FAB_SOURCE_CODE_EXCEPTION_H_
+#define FAB_SOURCE_CODE_EXCEPTION_H_
+
 #include <fabrique/ErrorReport.hh>
-#include "Support/exceptions.h"
-
-using namespace fabrique;
-using std::string;
 
 
-UserError::UserError(const string& message)
-	: message_(message)
+namespace fabrique {
+
+//! Base class for exceptions related to invalid source code.
+class SourceCodeException : public std::exception, public HasSource, public Printable
 {
-}
+public:
+	const std::string& message() const;
+	const std::string& detail() const;
+	virtual const char* what() const noexcept override;
+	const ErrorReport& err() const { return err_; }
 
-UserError::UserError(const UserError& orig)
-	: message_(orig.message_)
-{
-}
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
 
-UserError::~UserError() {}
+protected:
+	SourceCodeException(std::string message, SourceRange, std::string detail);
 
-void UserError::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
-{
-	out << Bytestream::ErrorMessage << message_ << Bytestream::Reset;
-}
+private:
+	ErrorReport err_;
+};
 
+} // namespace fabrique
 
-ParserError::ParserError(string message, SourceRange loc, string detail)
-	: SourceCodeException(message, loc, detail)
-{
-}
-
-ParserError::ParserError(const ParserError& orig)
-	: SourceCodeException(orig.message(), orig.source(), orig.detail())
-{
-}
-
-ParserError::~ParserError() {}
-
-
-SyntaxError::SyntaxError(string message, SourceRange loc, string detail)
-	: SourceCodeException(message, loc, detail)
-{
-}
-
-SyntaxError::SyntaxError(const SyntaxError& orig)
-	: SourceCodeException(orig.message(), orig.source(), orig.detail())
-{
-}
-
-SyntaxError::~SyntaxError() {}
-
-SemanticException::SemanticException(string m, SourceRange loc, string detail)
-	: SourceCodeException(m, loc, detail)
-{
-}
-
-SemanticException::~SemanticException() {}
+#endif // FAB_SOURCE_CODE_EXCEPTION_H_

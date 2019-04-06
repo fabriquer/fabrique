@@ -33,7 +33,7 @@
 #ifndef EXCEPTIONS_H
 #define EXCEPTIONS_H
 
-#include <fabrique/ErrorReport.hh>
+#include <fabrique/SourceCodeException.hh>
 
 #include <exception>
 #include <memory>
@@ -57,25 +57,6 @@ public:
 
 private:
 	const std::string message_;
-};
-
-
-//! Base class for exceptions related to invalid source code.
-class SourceCodeException : public std::exception, public HasSource, public Printable
-{
-public:
-	const std::string& message() const;
-	const std::string& detail() const;
-	virtual const char* what() const noexcept override;
-	ErrorReport err() const { return err_; }
-
-	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
-
-protected:
-	SourceCodeException(std::string message, SourceRange, std::string detail);
-
-private:
-	ErrorReport err_;
 };
 
 

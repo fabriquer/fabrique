@@ -35,7 +35,7 @@ cxx_srcs = {
 	),
 	'lib/': (
 		'AssertionFailure', 'Bytestream', 'ErrorReport', 'Fabrique', 'FabBuilder',
-                'Printable', 'SourceLocation', 'SourceRange',
+                'Printable', 'SourceCodeException', 'SourceLocation', 'SourceRange',
                 'builtins', 'names', 'strings',
 	),
 	'lib/ast/': (
