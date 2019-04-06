@@ -1,7 +1,4 @@
-/**
- * @file AST/DebugTracePoint.h
- * Definition of @ref fabrique::ast::DebugTracePoint.
- */
+//! @file ast/DebugTracePoint.h    Definition of @ref fabrique::ast::DebugTracePoint
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

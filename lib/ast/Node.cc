@@ -1,4 +1,4 @@
-/** @file AST/Node.cc    Definition of @ref fabrique::ast::Node. */
+//! @file ast/Node.cc    Definition of @ref fabrique::ast::Node
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

@@ -1,4 +1,7 @@
-/** @file Support/PosixSharedLibrary.cc Definition of @ref fabrique::PosixSharedLibrary. */
+/**
+ * @file platform/posix/PosixSharedLibrary.cc
+ * Definition of @ref fabrique::platform::PosixSharedLibrary
+ */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

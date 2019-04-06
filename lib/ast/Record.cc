@@ -1,7 +1,4 @@
-/**
- * @file AST/Record.cc
- * Definition of @ref fabrique::ast::Record.
- */
+//! @file ast/Record.cc    Definition of @ref fabrique::ast::Record
 /*
  * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.

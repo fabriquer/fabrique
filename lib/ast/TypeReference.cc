@@ -1,4 +1,4 @@
-/** @file AST/TypeReference.cc    Definition of @ref fabrique::ast::TypeReference. */
+//! @file ast/TypeReference.cc    Definition of @ref fabrique::ast::TypeReference
 /*
  * Copyright (c) 2015-2018 Jonathan Anderson
  * All rights reserved.

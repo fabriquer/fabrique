@@ -1,4 +1,4 @@
-/** @file Support/SharedLibrary.cc      Definition of @ref fabrique::SharedLibrary. */
+//! @file platform/SharedLibrary.cc   Definition of @ref fabrique::platform::SharedLibrary
 /*
  * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.

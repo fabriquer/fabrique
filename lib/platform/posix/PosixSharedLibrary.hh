@@ -1,4 +1,7 @@
-/** @file Support/PosixSharedLibrary.h Declaration of @ref fabrique::PosixSharedLibrary. */
+/**
+ * @file platform/posix/PosixSharedLibrary.h
+ * Declaration of @ref fabrique::platform::PosixSharedLibrary
+ */
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

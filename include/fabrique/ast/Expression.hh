@@ -1,4 +1,4 @@
-/** @file AST/Expression.h    Declaration of @ref fabrique::ast::Expression. */
+//! @file ast/Expression.hh    Declaration of @ref fabrique::ast::Expression
 /*
  * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.

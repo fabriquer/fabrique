@@ -1,4 +1,4 @@
-/** @file AST/CompoundExpr.cc    Definition of @ref fabrique::ast::CompoundExpression. */
+//! @file ast/CompoundExpr.cc    Definition of @ref fabrique::ast::CompoundExpression
 /*
  * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.

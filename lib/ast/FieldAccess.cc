@@ -1,4 +1,4 @@
-/** @file AST/FieldAccess.cc    Definition of @ref fabrique::ast::FieldAccess. */
+//! @file ast/FieldAccess.cc    Definition of @ref fabrique::ast::FieldAccess
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

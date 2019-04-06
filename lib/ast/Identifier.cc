@@ -1,4 +1,4 @@
-/** @file AST/Identifier.cc    Definition of @ref fabrique::ast::Identifier. */
+//! @file ast/Identifier.cc    Definition of @ref fabrique::ast::Identifier
 /*
  * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.

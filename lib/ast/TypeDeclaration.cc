@@ -1,7 +1,4 @@
-/**
- * @file AST/TypeDeclaration.cc
- * Definition of @ref fabrique::ast::TypeDeclaration.
- */
+//! @file ast/TypeDeclaration.cc    Definition of @ref fabrique::ast::TypeDeclaration
 /*
  * Copyright (c) 2015, 2018 Jonathan Anderson
  * All rights reserved.

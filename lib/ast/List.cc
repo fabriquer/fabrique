@@ -1,4 +1,4 @@
-/** @file AST/List.cc    Definition of @ref fabrique::ast::List. */
+//! @file ast/List.cc    Definition of @ref fabrique::ast::List
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.

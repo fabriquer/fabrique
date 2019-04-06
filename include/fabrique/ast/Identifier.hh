@@ -1,4 +1,4 @@
-/** @file AST/Identifier.h    Declaration of @ref fabrique::ast::Identifier. */
+//! @file ast/Identifier.hh    Declaration of @ref fabrique::ast::Identifier
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.

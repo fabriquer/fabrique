@@ -1,4 +1,4 @@
-/** @file AST/ASTDump.cc    Definition of @ref fabrique::ast::ASTDump. */
+//! @file ast/ASTDump.cc    Definition of @ref fabrique::ast::ASTDump
 /*
  * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.

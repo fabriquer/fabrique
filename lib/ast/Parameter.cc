@@ -1,4 +1,4 @@
-/** @file AST/Parameter.cc    Definition of @ref fabrique::ast::Parameter. */
+//! @file ast/Parameter.cc    Definition of @ref fabrique::ast::Parameter
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.

@@ -1,4 +1,4 @@
-/** @file Support/Printable.cc    Definition of the @ref fabrique::Printable class. */
+//! @file Printable.cc    Definition of @ref fabrique::Printable
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

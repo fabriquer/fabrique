@@ -1,4 +1,4 @@
-/** @file AST/FieldQuery.h    Declaration of @ref fabrique::ast::FieldQuery. */
+//! @file ast/FieldQuery.hh    Declaration of @ref fabrique::ast::FieldQuery
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

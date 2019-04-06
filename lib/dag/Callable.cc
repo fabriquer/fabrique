@@ -1,4 +1,4 @@
-/** @file AST/Callable.cc    Definition of @ref fabrique::ast::Callable. */
+//! @file dag/Callable.cc    Definition of @ref fabrique::dag::Callable
 /*
  * Copyright (c) 2014, 2019 Jonathan Anderson
  * All rights reserved.

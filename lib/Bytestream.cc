@@ -1,4 +1,4 @@
-/** @file Support/Bytestream.cc    Definition of @ref fabrique::Bytestream. */
+//! @file Bytestream.cc    Definition of @ref fabrique::Bytestream
 /*
  * Copyright (c) 2013, 2016 Jonathan Anderson
  * All rights reserved.

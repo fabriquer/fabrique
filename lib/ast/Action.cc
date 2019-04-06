@@ -1,4 +1,4 @@
-/** @file AST/Action.cc    Definition of @ref fabrique::ast::Action. */
+//! @file ast/Action.cc    Definition of @ref fabrique::ast::Action
 /*
  * Copyright (c) 2013-2014, 2018 Jonathan Anderson
  * All rights reserved.

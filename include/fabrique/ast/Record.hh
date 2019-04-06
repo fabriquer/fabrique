@@ -1,7 +1,4 @@
-/**
- * @file AST/Record.h
- * Declaration of @ref fabrique::ast::Record.
- */
+//! @file ast/Record.h    Declaration of @ref fabrique::ast::Record
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

@@ -1,7 +1,4 @@
-/**
- * @file AST/HasParameters.cc
- * Definition of @ref fabrique::ast::HasParameters.
- */
+//! @file ast/HasParameters.cc    Definition of @ref fabrique::ast::HasParameters
 /*
  * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.

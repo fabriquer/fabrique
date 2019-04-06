@@ -1,4 +1,4 @@
-/** @file AST/Visitor.cc    Declaration of @ref fabrique::ast::Visitor. */
+//! @file ast/Visitor.cc    Declaration of @ref fabrique::ast::Visitor
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

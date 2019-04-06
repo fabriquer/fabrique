@@ -1,4 +1,4 @@
-/** @file AST/Value.h    Declaration of @ref fabrique::ast::Value. */
+//! @file ast/Value.hh    Declaration of @ref fabrique::ast::Value
 /*
  * Copyright (c) 2013, 2016, 2018 Jonathan Anderson
  * All rights reserved.

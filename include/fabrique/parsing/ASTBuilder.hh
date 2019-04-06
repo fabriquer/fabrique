@@ -1,4 +1,4 @@
-/** @file parsing/ASTBuilder.hh    Declaration of @ref fabrique::parsing::ASTBuilder. */
+//! @file parsing/ASTBuilder.hh    Declaration of @ref fabrique::parsing::ASTBuilder
 /*
  * Copyright (c) 2018-2019 Jonathan Anderson
  * All rights reserved.

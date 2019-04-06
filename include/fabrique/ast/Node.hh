@@ -1,4 +1,4 @@
-/** @file AST/Node.h    Declaration of @ref fabrique::ast::Node. */
+//! @file ast/Node.hh    Declaration of @ref fabrique::ast::Node
 /*
  * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.

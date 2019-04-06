@@ -1,4 +1,4 @@
-/** @file AST/FieldAccess.h    Declaration of @ref fabrique::ast::FieldAccess. */
+//! @file ast/FieldAccess.hh    Declaration of @ref fabrique::ast::FieldAccess
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

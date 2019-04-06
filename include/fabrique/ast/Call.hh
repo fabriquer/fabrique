@@ -1,4 +1,4 @@
-/** @file AST/Call.h    Declaration of @ref fabrique::ast::Call. */
+//! @file ast/Call.hh    Declaration of @ref fabrique::ast::Call
 /*
  * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.

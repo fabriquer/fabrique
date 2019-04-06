@@ -1,4 +1,4 @@
-/** @file AST/ast.h    Meta-include file for all AST node types. */
+//! @file ast/ast.hh    Meta-include file for all AST node types
 /*
  * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.

@@ -1,4 +1,4 @@
-/** @file AST/TypeReference.h    Declaration of @ref fabrique::ast::TypeReference. */
+//! @file ast/TypeReference.hh    Declaration of @ref fabrique::ast::TypeReference
 /*
  * Copyright (c) 2015-2017 Jonathan Anderson
  * All rights reserved.

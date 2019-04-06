@@ -1,4 +1,4 @@
-/** @file AST/Parameter.h    Declaration of @ref fabrique::ast::Parameter. */
+//! @file ast/Parameter.hh    Declaration of @ref fabrique::ast::Parameter
 /*
  * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.

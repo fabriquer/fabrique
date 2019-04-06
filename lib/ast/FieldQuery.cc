@@ -1,4 +1,4 @@
-/** @file AST/FieldQuery.cc    Definition of @ref fabrique::ast::FieldQuery. */
+//! @file ast/FieldQuery.cc    Definition of @ref fabrique::ast::FieldQuery
 /*
  * Copyright (c) 2014, 2018 Jonathan Anderson
  * All rights reserved.

@@ -1,4 +1,4 @@
-/** @file AST/Arguments.h    Declaration of @ref fabrique::ast::Arguments. */
+//! @file ast/Arguments.hh    Declaration of @ref fabrique::ast::Arguments
 /*
  * Copyright (c) 2018 Jonathan Anderson
  * All rights reserved.

@@ -1,4 +1,4 @@
-/** @file AST/Function.cc    Definition of @ref fabrique::ast::Function. */
+//! @file ast/Function.cc    Definition of @ref fabrique::ast::Function
 /*
  * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.

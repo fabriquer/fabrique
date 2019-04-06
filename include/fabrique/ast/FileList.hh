@@ -1,4 +1,4 @@
-/** @file AST/FileList.h    Declaration of @ref fabrique::ast::FileList. */
+//! @file ast/FileList.hh    Declaration of @ref fabrique::ast::FileList
 /*
  * Copyright (c) 2013, 2018 Jonathan Anderson
  * All rights reserved.

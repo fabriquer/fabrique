@@ -1,4 +1,4 @@
-/** @file AST/literals.h    Declaration of several literal expression types. */
+//! @file ast/literals.hh    Declaration of several literal expression types
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.

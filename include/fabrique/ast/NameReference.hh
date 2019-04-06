@@ -1,4 +1,4 @@
-/** @file AST/NameReference.h    Declaration of @ref fabrique::ast::NameReference. */
+//! @file ast/NameReference.hh    Declaration of @ref fabrique::ast::NameReference
 /*
  * Copyright (c) 2018 Jonathan Anderson
  * All rights reserved.

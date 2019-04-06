@@ -1,4 +1,4 @@
-/** @file AST/Value.cc    Definition of @ref fabrique::ast::Value. */
+//! @file ast/Value.cc    Definition of @ref fabrique::ast::Value
 /*
  * Copyright (c) 2013-2015, 2018 Jonathan Anderson
  * All rights reserved.

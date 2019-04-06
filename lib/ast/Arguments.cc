@@ -1,4 +1,4 @@
-/** @file AST/Arguments.cc    Definition of @ref fabrique::ast::Arguments. */
+//! @file ast/Arguments.cc    Definition of @ref fabrique::ast::Arguments
 /*
  * Copyright (c) 2018 Jonathan Anderson
  * All rights reserved.

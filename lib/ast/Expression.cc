@@ -1,4 +1,4 @@
-/** @file AST/Expression.cc    Definition of @ref fabrique::ast::Expression. */
+//! @file ast/Expression.cc    Definition of @ref fabrique::ast::Expression
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

@@ -1,7 +1,4 @@
-/**
- * @file AST/HasParameters.h
- * Declaration of @ref fabrique::ast::HasParameters.
- */
+//! @file ast/HasParameters.hh    Declaration of @ref fabrique::ast::HasParameters
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

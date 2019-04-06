@@ -1,4 +1,4 @@
-/** @file AST/List.h    Declaration of @ref fabrique::ast::List. */
+//! @file ast/List.hh    Declaration of @ref fabrique::ast::List
 /*
  * Copyright (c) 2013 Jonathan Anderson
  * All rights reserved.

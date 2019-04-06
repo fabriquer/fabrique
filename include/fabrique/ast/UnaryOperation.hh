@@ -1,4 +1,4 @@
-/** @file AST/UnaryOperation.h    Declaration of @ref fabrique::ast::UnaryOperation. */
+//! @file ast/UnaryOperation.hh    Declaration of @ref fabrique::ast::UnaryOperation
 /*
  * Copyright (c) 2014 Jonathan Anderson
  * All rights reserved.

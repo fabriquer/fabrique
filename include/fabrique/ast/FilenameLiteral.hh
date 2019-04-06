@@ -1,4 +1,4 @@
-/** @file AST/FilenameLiteral.h    Declaration of @ref fabrique::ast::FilenameLiteral. */
+//! @file ast/FilenameLiteral.hh    Declaration of @ref fabrique::ast::FilenameLiteral
 /*
  * Copyright (c) 2018 Jonathan Anderson
  * All rights reserved.

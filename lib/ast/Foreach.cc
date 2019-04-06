@@ -1,4 +1,4 @@
-/** @file AST/ForeachExpr.cc    Declaration of @ref fabrique::ast::ForeachExpr. */
+//! @file ast/ForeachExpr.cc    Declaration of @ref fabrique::ast::ForeachExpr
 /*
  * Copyright (c) 2013-2014, 2018 Jonathan Anderson
  * All rights reserved.

@@ -1,4 +1,4 @@
-/** @file AST/Function.h    Declaration of @ref fabrique::ast::Function. */
+//! @file ast/Function.hh    Declaration of @ref fabrique::ast::Function
 /*
  * Copyright (c) 2013-2014, 2018 Jonathan Anderson
  * All rights reserved.
