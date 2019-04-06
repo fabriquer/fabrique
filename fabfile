@@ -15,14 +15,13 @@ else   # TODO: maybe we should allow else-less `if` expressions?
 	[]
 };
 
+# Default to "release" build behaviour, which includes link-time optimization.
+# LTO is, however, separable from the debug and release parts: it's possible to
+# compile with debug information, release levels of optimization and still choose
+# to use or ignore LTO.
 debug:bool = args.debug ? false;
 release:bool = args.release ? not debug;
 lto:bool = release or (args.lto ? false);
-
-which = import('which');
-filecheck:file = args.filecheck ? which.executable('FileCheck');
-lit:file = args.lit ? which.executable('lit');
-verbose_tests:bool = args.verbose_tests ? false;
 
 
 #
@@ -121,9 +120,14 @@ everything = [ fab ] + plugins.libs + import('tests/manifest.fab').all_files;
 # Allow `-D verbose_tests=true` to enable lit's verbose ("show failure details") mode.
 #
 test = if (args.tests ? true) {
+	which = import('which');
+
+	filecheck:file = args.filecheck ? which.executable('FileCheck');
+	verbose_tests:bool = args.verbose_tests ? false;
+
 	lit = import('share/lit.fab',
 		filecheck = filecheck,
-		lit = lit,
+		lit = args.lit ? which.executable('lit'),
 		show_failure_details = verbose_tests
 	);
 
