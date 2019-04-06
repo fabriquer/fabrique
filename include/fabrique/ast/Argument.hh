@@ -38,9 +38,9 @@
 
 #include <memory>
 
+
 namespace fabrique {
 namespace ast {
-
 
 /**
  * An argument being passed to an action or function (caller-side).

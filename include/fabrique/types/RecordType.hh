@@ -36,6 +36,7 @@
 #include <fabrique/types/Type.hh>
 #include <vector>
 
+
 namespace fabrique {
 
 /**
