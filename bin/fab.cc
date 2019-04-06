@@ -35,6 +35,7 @@
 #include <fabrique/builtins.hh>
 #include <fabrique/Bytestream.hh>
 #include <fabrique/FabBuilder.hh>
+#include <fabrique/UserError.hh>
 
 #include <fabrique/ast/ASTDump.hh>
 #include <fabrique/ast/EvalContext.hh>
@@ -49,8 +50,6 @@
 #include <fabrique/platform/files.hh>
 
 #include <fabrique/plugin/Loader.hh>
-
-#include "Support/exceptions.h"
 
 #include <fabrique/types/TypeContext.hh>
 

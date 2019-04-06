@@ -39,24 +39,6 @@ using namespace fabrique;
 using std::string;
 
 
-UserError::UserError(const string& message)
-	: message_(message)
-{
-}
-
-UserError::UserError(const UserError& orig)
-	: message_(orig.message_)
-{
-}
-
-UserError::~UserError() {}
-
-void UserError::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
-{
-	out << Bytestream::ErrorMessage << message_ << Bytestream::Reset;
-}
-
-
 SyntaxError::SyntaxError(string message, SourceRange loc, string detail)
 	: SourceCodeException(message, loc, detail)
 {

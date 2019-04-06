@@ -31,11 +31,11 @@
  */
 
 #include <fabrique/Bytestream.hh>
+#include <fabrique/UserError.hh>
 #include <fabrique/ast/ASTDump.hh>
 #include <fabrique/parsing/ASTBuilder.hh>
 #include <fabrique/parsing/ErrorListener.hh>
 #include <fabrique/parsing/Parser.hh>
-#include "Support/exceptions.h"
 #include <fabrique/types/TypeContext.hh>
 
 #include <generated-grammar/FabLexer.h>

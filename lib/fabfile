@@ -15,6 +15,7 @@ sources =
 		SourceCodeException.cc
 		SourceLocation.cc
 		SourceRange.cc
+		UserError.cc
 		builtins.cc
 		names.cc
 		strings.cc

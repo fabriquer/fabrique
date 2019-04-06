@@ -1,4 +1,4 @@
-/** @file Support/exceptions.h    Declaration of basic Fabrique exceptions. */
+//! @file UserError.hh    Declaration of @ref UserError
 /*
  * Copyright (c) 2013, 2018-2019 Jonathan Anderson
  * All rights reserved.
@@ -30,26 +30,34 @@
  * SUCH DAMAGE.
  */
 
-#ifndef EXCEPTIONS_H
-#define EXCEPTIONS_H
+#ifndef FAB_USER_ERROR_H_
+#define FAB_USER_ERROR_H_
 
-#include <fabrique/SourceCodeException.hh>
+#include <fabrique/Printable.hh>
 
 #include <exception>
-#include <memory>
 #include <string>
+
 
 namespace fabrique {
 
-//! A syntactic error is present in the Fabrique description.
-class SyntaxError : public SourceCodeException
+//! An error in user input.
+class UserError : public std::exception, public Printable
 {
 public:
-	SyntaxError(std::string message, SourceRange, std::string detail = "");
-	SyntaxError(const SyntaxError&);
-	virtual ~SyntaxError() override;
+	UserError(const std::string& message);
+	UserError(const UserError&);
+	virtual ~UserError() override;
+
+	virtual const std::string& message() const { return message_; }
+	const char* what() const noexcept override { return message_.c_str(); }
+
+	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
+
+private:
+	const std::string message_;
 };
 
-}
+} // namespace fabrique
 
 #endif
