@@ -1,4 +1,4 @@
-/** @file Support/exceptions.h    Declaration of basic Fabrique exceptions. */
+//! @file parsing/ParserError.cc    Definition of @ref fabrique::parsing::ParserError
 /*
  * Copyright (c) 2013, 2018-2019 Jonathan Anderson
  * All rights reserved.
@@ -30,63 +30,20 @@
  * SUCH DAMAGE.
  */
 
-#ifndef EXCEPTIONS_H
-#define EXCEPTIONS_H
+#include <fabrique/parsing/ParserError.hh>
 
-#include <fabrique/SourceCodeException.hh>
-
-#include <exception>
-#include <memory>
-#include <string>
-
-namespace fabrique {
+using namespace fabrique::parsing;
+using std::string;
 
 
-//! An error in user input.
-class UserError : public std::exception, public Printable
+ParserError::ParserError(string message, SourceRange loc, string detail)
+	: SourceCodeException(message, loc, detail)
 {
-public:
-	UserError(const std::string& message);
-	UserError(const UserError&);
-	virtual ~UserError() override;
-
-	virtual const std::string& message() const { return message_; }
-	const char* what() const noexcept override { return message_.c_str(); }
-
-	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
-
-private:
-	const std::string message_;
-};
-
-
-//! A syntactic error is present in the Fabrique description.
-class SyntaxError : public SourceCodeException
-{
-public:
-	SyntaxError(std::string message, SourceRange, std::string detail = "");
-	SyntaxError(const SyntaxError&);
-	virtual ~SyntaxError() override;
-};
-
-//! A semantic error is present in the Fabrique description.
-class SemanticException : public SourceCodeException
-{
-public:
-	SemanticException(std::string message, SourceRange, std::string detail = "");
-	SemanticException(const SemanticException&);
-	virtual ~SemanticException() override;
-};
-
-template<typename T>
-void SemaCheck(const T &condition, SourceRange src, std::string message)
-{
-	if (not condition)
-	{
-		throw SemanticException(message, src);
-	}
 }
 
+ParserError::ParserError(const ParserError& orig)
+	: SourceCodeException(orig.message(), orig.source(), orig.detail())
+{
 }
 
-#endif
+ParserError::~ParserError() {}

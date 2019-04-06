@@ -58,7 +58,8 @@ cxx_srcs = {
 		'Value', 'Visitor',
 	),
 	'lib/parsing/': (
-		'ASTBuilder', 'ErrorListener', 'ErrorReporter', 'Parser', 'Token',
+		'ASTBuilder', 'ErrorListener', 'ErrorReporter',
+                'Parser', 'ParserError', 'Token',
 	),
 	'lib/platform/': (
 		'ABI', 'OSError', 'SharedLibrary',

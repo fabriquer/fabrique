@@ -35,8 +35,8 @@
 
 #include <fabrique/AssertionFailure.hh>
 #include <fabrique/ast/ast.hh>
+#include <fabrique/parsing/ParserError.hh>
 #include <fabrique/platform/ABI.hh>
-#include "Support/exceptions.h"
 
 #include <generated-grammar/FabParserBaseVisitor.h>
 

@@ -3,5 +3,6 @@ sources = files(
 	ErrorListener.cc
 	ErrorReporter.cc
 	Parser.cc
+	ParserError.cc
 	Token.cc
 );

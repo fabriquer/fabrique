@@ -1,6 +1,6 @@
-/** @file Support/exceptions.h    Declaration of basic Fabrique exceptions. */
+//! @file parsing/ParserError.hh    Declaration of @ref fabrique::parsing::ParserError
 /*
- * Copyright (c) 2013, 2018-2019 Jonathan Anderson
+ * Copyright (c) 2018-2019 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -30,63 +30,25 @@
  * SUCH DAMAGE.
  */
 
-#ifndef EXCEPTIONS_H
-#define EXCEPTIONS_H
+#ifndef FAB_PARSING_PARSER_ERROR_H_
+#define FAB_PARSING_PARSER_ERROR_H_
 
 #include <fabrique/SourceCodeException.hh>
 
-#include <exception>
-#include <memory>
-#include <string>
 
 namespace fabrique {
+namespace parsing {
 
-
-//! An error in user input.
-class UserError : public std::exception, public Printable
+//! A parser assertion failed.
+class ParserError : public SourceCodeException
 {
 public:
-	UserError(const std::string& message);
-	UserError(const UserError&);
-	virtual ~UserError() override;
-
-	virtual const std::string& message() const { return message_; }
-	const char* what() const noexcept override { return message_.c_str(); }
-
-	virtual void PrettyPrint(Bytestream&, unsigned int indent = 0) const override;
-
-private:
-	const std::string message_;
+	ParserError(std::string message, SourceRange, std::string detail = "");
+	ParserError(const ParserError&);
+	virtual ~ParserError() override;
 };
 
+} // namespace parsing
+} // namespace fabrique
 
-//! A syntactic error is present in the Fabrique description.
-class SyntaxError : public SourceCodeException
-{
-public:
-	SyntaxError(std::string message, SourceRange, std::string detail = "");
-	SyntaxError(const SyntaxError&);
-	virtual ~SyntaxError() override;
-};
-
-//! A semantic error is present in the Fabrique description.
-class SemanticException : public SourceCodeException
-{
-public:
-	SemanticException(std::string message, SourceRange, std::string detail = "");
-	SemanticException(const SemanticException&);
-	virtual ~SemanticException() override;
-};
-
-template<typename T>
-void SemaCheck(const T &condition, SourceRange src, std::string message)
-{
-	if (not condition)
-	{
-		throw SemanticException(message, src);
-	}
-}
-
-}
-
-#endif
+#endif // FAB_PARSING_PARSER_ERROR_H_

@@ -56,19 +56,6 @@ void UserError::PrettyPrint(Bytestream& out, unsigned int /*indent*/) const
 }
 
 
-ParserError::ParserError(string message, SourceRange loc, string detail)
-	: SourceCodeException(message, loc, detail)
-{
-}
-
-ParserError::ParserError(const ParserError& orig)
-	: SourceCodeException(orig.message(), orig.source(), orig.detail())
-{
-}
-
-ParserError::~ParserError() {}
-
-
 SyntaxError::SyntaxError(string message, SourceRange loc, string detail)
 	: SourceCodeException(message, loc, detail)
 {
