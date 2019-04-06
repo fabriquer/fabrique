@@ -1,11 +1,12 @@
 /** @file DAG/Value.cc    Definition of @ref fabrique::dag::Value. */
 /*
- * Copyright (c) 2013-2014, 2018 Jonathan Anderson
+ * Copyright (c) 2013-2014, 2018-2019 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,10 +30,10 @@
  * SUCH DAMAGE.
  */
 
+#include <fabrique/SemanticException.hh>
 #include <fabrique/dag/Value.hh>
 #include <fabrique/dag/File.hh>
 #include <fabrique/dag/Rule.hh>
-#include "Support/exceptions.h"
 
 using namespace fabrique::dag;
 using std::string;

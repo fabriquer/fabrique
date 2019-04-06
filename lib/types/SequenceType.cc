@@ -31,9 +31,9 @@
  */
 
 #include <fabrique/AssertionFailure.hh>
+#include <fabrique/SemanticException.hh>
 #include <fabrique/types/SequenceType.hh>
 #include <fabrique/types/TypeContext.hh>
-#include "Support/exceptions.h"
 
 #include <cassert>
 

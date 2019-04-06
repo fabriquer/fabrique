@@ -69,24 +69,6 @@ public:
 	virtual ~SyntaxError() override;
 };
 
-//! A semantic error is present in the Fabrique description.
-class SemanticException : public SourceCodeException
-{
-public:
-	SemanticException(std::string message, SourceRange, std::string detail = "");
-	SemanticException(const SemanticException&);
-	virtual ~SemanticException() override;
-};
-
-template<typename T>
-void SemaCheck(const T &condition, SourceRange src, std::string message)
-{
-	if (not condition)
-	{
-		throw SemanticException(message, src);
-	}
-}
-
 }
 
 #endif

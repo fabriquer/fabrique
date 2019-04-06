@@ -11,6 +11,7 @@ sources =
 		FabBuilder.cc
 		ErrorReport.cc
 		Printable.cc
+		SemanticException.cc
 		SourceCodeException.cc
 		SourceLocation.cc
 		SourceRange.cc

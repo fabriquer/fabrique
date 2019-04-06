@@ -29,9 +29,9 @@
  */
 
 #include <fabrique/AssertionFailure.hh>
+#include <fabrique/SemanticException.hh>
 #include <fabrique/parsing/ErrorListener.hh>
 #include <fabrique/platform/ABI.hh>
-#include "Support/exceptions.h"
 
 #include <antlr-cxx-runtime/antlr4-runtime.h>
 

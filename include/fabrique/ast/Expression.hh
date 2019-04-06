@@ -33,10 +33,10 @@
 #define EXPRESSION_H
 
 #include <fabrique/PtrVec.h>
+#include <fabrique/SemanticException.hh>
 #include <fabrique/ast/Node.hh>
 #include <fabrique/dag/Value.hh>
 #include <fabrique/platform/ABI.hh>
-#include "Support/exceptions.h"
 
 namespace fabrique {
 

@@ -1,6 +1,6 @@
 /** @file plugins/SysctlPlugin.cc   Definition of @ref fabrique::plugins::SysctlPlugin. */
 /*
- * Copyright (c) 2014, 2018 Jonathan Anderson
+ * Copyright (c) 2014, 2018-2019 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -33,12 +33,12 @@
 #include <sys/types.h>
 #include <sys/sysctl.h>
 
+#include <fabrique/SemanticException.hh>
 #include <fabrique/dag/DAGBuilder.hh>
 #include <fabrique/dag/Parameter.hh>
 #include <fabrique/platform/PosixError.hh>
 #include <fabrique/plugin/Registry.hh>
 #include <fabrique/types/TypeContext.hh>
-#include "Support/exceptions.h"
 
 #include <cassert>
 

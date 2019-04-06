@@ -1,11 +1,12 @@
-/** @file DAG/UndefinedValueException.h    Declaration of @ref fabrique::dag::UndefinedValueException. */
+//! @file SemanticException.hh    Declaration of @ref fabrique::SemanticException
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2018-2019 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,28 +30,32 @@
  * SUCH DAMAGE.
  */
 
-#ifndef UNDEFINED_VALUE_EXCEPTION_H
-#define UNDEFINED_VALUE_EXCEPTION_H
+#ifndef FAB_SEMANTIC_EXCEPTION_H_
+#define FAB_SEMANTIC_EXCEPTION_H_
 
-#include <fabrique/SemanticException.hh>
-
+#include <fabrique/SourceCodeException.hh>
 
 namespace fabrique {
-namespace dag {
 
-//! An unexpected duplicate was encountered.
-class UndefinedValueException : public SemanticException
+
+//! A semantic error is present in the Fabrique description.
+class SemanticException : public SourceCodeException
 {
 public:
-	UndefinedValueException(const std::string& name, const SourceRange&);
-	UndefinedValueException(const UndefinedValueException&);
-	virtual ~UndefinedValueException();
-
-private:
-	const std::string name_;
+	SemanticException(std::string message, SourceRange, std::string detail = "");
+	SemanticException(const SemanticException&);
+	virtual ~SemanticException() override;
 };
 
-}
+template<typename T>
+void SemaCheck(const T &condition, SourceRange src, std::string message)
+{
+	if (not condition)
+	{
+		throw SemanticException(message, src);
+	}
 }
 
-#endif
+} // namespace fabrique
+
+#endif // FAB_SEMANTIC_EXCEPTION_H_

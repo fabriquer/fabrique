@@ -31,6 +31,7 @@
  */
 
 #include <fabrique/Bytestream.hh>
+#include <fabrique/SemanticException.hh>
 #include <fabrique/ErrorReport.hh>
 #include "Support/exceptions.h"
 
@@ -67,10 +68,3 @@ SyntaxError::SyntaxError(const SyntaxError& orig)
 }
 
 SyntaxError::~SyntaxError() {}
-
-SemanticException::SemanticException(string m, SourceRange loc, string detail)
-	: SourceCodeException(m, loc, detail)
-{
-}
-
-SemanticException::~SemanticException() {}

@@ -31,6 +31,7 @@
  */
 
 #include <fabrique/AssertionFailure.hh>
+#include <fabrique/SemanticException.hh>
 #include <fabrique/strings.hh>
 #include <fabrique/dag/DAGBuilder.hh>
 #include <fabrique/dag/File.hh>
@@ -42,7 +43,6 @@
 #include <fabrique/types/FunctionType.hh>
 #include <fabrique/types/RecordType.hh>
 #include <fabrique/types/TypeContext.hh>
-#include "Support/exceptions.h"
 
 #include <cassert>
 #include <sstream>

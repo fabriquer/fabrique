@@ -1,6 +1,6 @@
 //! @file plugins/LogPlugin.cc   Definition of @ref LogPlugin
 /*
- * Copyright (c) 2018 Jonathan Anderson
+ * Copyright (c) 2018-2019 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -33,12 +33,12 @@
 #include <sys/types.h>
 
 #include <fabrique/Bytestream.hh>
+#include <fabrique/SemanticException.hh>
 #include <fabrique/dag/DAGBuilder.hh>
 #include <fabrique/dag/List.hh>
 #include <fabrique/dag/Parameter.hh>
 #include <fabrique/plugin/Registry.hh>
 #include <fabrique/types/TypeContext.hh>
-#include "Support/exceptions.h"
 
 using namespace fabrique;
 using namespace fabrique::dag;

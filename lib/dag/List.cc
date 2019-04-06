@@ -32,10 +32,10 @@
 
 #include <fabrique/AssertionFailure.hh>
 #include <fabrique/Bytestream.hh>
+#include <fabrique/SemanticException.hh>
 #include <fabrique/strings.hh>
 #include <fabrique/dag/List.hh>
 #include <fabrique/dag/Visitor.hh>
-#include "Support/exceptions.h"
 #include <fabrique/types/TypeContext.hh>
 
 #include <algorithm>

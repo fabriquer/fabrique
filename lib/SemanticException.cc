@@ -1,11 +1,12 @@
-/** @file DAG/UndefinedValueException.h    Declaration of @ref fabrique::dag::UndefinedValueException. */
+//! @file SemanticException.cc    Definition of @ref fabrique::SemanticException
 /*
- * Copyright (c) 2013 Jonathan Anderson
+ * Copyright (c) 2013, 2018-2019 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)
- * ("CTSRD"), as part of the DARPA CRASH research programme.
+ * ("CTSRD"), as part of the DARPA CRASH research programme and at Memorial University
+ * of Newfoundland under the NSERC Discovery program (RGPIN-2015-06048).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,28 +30,15 @@
  * SUCH DAMAGE.
  */
 
-#ifndef UNDEFINED_VALUE_EXCEPTION_H
-#define UNDEFINED_VALUE_EXCEPTION_H
-
 #include <fabrique/SemanticException.hh>
 
+using namespace fabrique;
+using std::string;
 
-namespace fabrique {
-namespace dag {
 
-//! An unexpected duplicate was encountered.
-class UndefinedValueException : public SemanticException
+SemanticException::SemanticException(string m, SourceRange loc, string detail)
+	: SourceCodeException(m, loc, detail)
 {
-public:
-	UndefinedValueException(const std::string& name, const SourceRange&);
-	UndefinedValueException(const UndefinedValueException&);
-	virtual ~UndefinedValueException();
-
-private:
-	const std::string name_;
-};
-
-}
 }
 
-#endif
+SemanticException::~SemanticException() {}
