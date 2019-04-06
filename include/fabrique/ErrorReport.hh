@@ -30,8 +30,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef ERROR_REPORT_H_
-#define ERROR_REPORT_H_
+#ifndef FAB_ERROR_REPORT_H_
+#define FAB_ERROR_REPORT_H_
 
 #include <fabrique/HasSource.hh>
 #include <fabrique/Printable.hh>
@@ -74,4 +74,4 @@ private:
 
 } // namespace fabrique
 
-#endif // ERROR_REPORT_H_
+#endif // FAB_ERROR_REPORT_H_

@@ -29,8 +29,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef PRINTABLE_H
-#define PRINTABLE_H
+#ifndef FAB_PRINTABLE_H_
+#define FAB_PRINTABLE_H_
 
 #include <fabrique/PtrVec.h>
 #include <string>
@@ -64,4 +64,4 @@ protected:
 
 } // namespace fabrique
 
-#endif
+#endif // FAB_PRINTABLE_H_
