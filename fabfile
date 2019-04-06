@@ -2,8 +2,18 @@
 # Fabrique build description for Fabrique.
 #
 
-print('Configuring Fabrique with arguments:');
-print(args);
+# The `pretty` argument controls coloured compiler output and other aesthetic niceness
+pretty:bool = args.pretty ? true;
+
+if pretty
+{
+	print('Configuring Fabrique with arguments:');
+	print(args)
+}
+else   # TODO: maybe we should allow else-less `if` expressions?
+{
+	[]
+};
 
 debug = args.debug ? false;
 release = args.release ? not debug;
@@ -37,7 +47,7 @@ generated_srcs =
 #
 # C++ toolchain and compilation flags:
 #
-clang = import('share/toolchains/c/clang.fab', lto=lto);
+clang = import('share/toolchains/c/clang.fab', colour_diagnostics=pretty, lto=lto);
 
 cxx_options = record
 {
