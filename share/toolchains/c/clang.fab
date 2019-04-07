@@ -45,14 +45,16 @@ binary = function(objects:list[file[in]], binary:file[out],
 };
 
 compile_options = gcc.compiler_options;
-compile = function(srcs:list[file], options:compile_options, extra_flags:list[string] = [],
-                   position_independent:bool = true, deps:list[file[in]] = []): list[file]
+compile = function(srcs:list[file],
+                   options:compile_options,
+                   extra_flags:list[string]=[],
+                   extra_header_dirs:list[file]=[],
+                   dependencies:list[file[in]]=[]
+	): list[file]
 {
-	flags = gcc.compile_flags(options);
-
 	# TODO: cc or cxx?
-	gcc.compile(cxx, srcs, clang_compile_flags + flags + extra_flags,
-	            position_independent, deps)
+	gcc.compile(cxx, srcs, options, clang_compile_flags + extra_flags,
+	            extra_header_dirs, dependencies)
 };
 
 library_options = gcc.library_options;

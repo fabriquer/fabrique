@@ -17,8 +17,11 @@ compiler_options = type record
 	warnings:list[string]
 ];
 
-compile_flags = function(opts:compiler_options): list[string]
+compile_flags = function(opts:compiler_options,
+                         extra_header_dirs:list[file]=[]): list[string]
 {
+	include_dirs = opts.include_dirs + extra_header_dirs;
+
 	(if opts.debug '-g' else '')
 	::
 	('-O' + string(opts.optlevel))
@@ -27,7 +30,7 @@ compile_flags = function(opts:compiler_options): list[string]
 	::
 	(if opts.standard != '' ['-std=' + opts.standard] else [])
 	+
-	(foreach dir <- opts.include_dirs '-I ' + dir.fullname)
+	(foreach dir <- include_dirs '-I ' + dir.fullname)
 	+
 	(foreach dir <- opts.system_include_dirs '-isystem ' + dir.fullname)
 	+
@@ -66,19 +69,23 @@ platform = import('platform');
 #
 # Compile some number of source files into their corresponding object files.
 #
-compile = function(compiler:file, srcs:list[file], flags:list[string] = [],
-                   position_independent:bool=true, deps:list[file[in]] = []): list[file]
+compile = function(compiler:file,
+                   srcs:list[file],
+                   options:compiler_options,
+                   extra_flags:list[string]=[],
+                   extra_header_dirs:list[file]=[],
+                   dependencies:list[file[in]]=[]
+	): list[file]
 {
+	flags = compile_flags(options, extra_header_dirs);
+
 	# Compile each source file into a corresponding object file and accumulate
 	# all of the object files into a list.
 	foreach src <- srcs {
 		obj = src + '.o';
-		flags = flags
-			+ (src.cxxflags ? [])
-			+ if position_independent ['-fPIC'] else []
-			;
+		flags = flags + extra_flags + (src.cxxflags ? []);
 
-		compile_one(compiler, src, obj, flags, deps);
+		compile_one(compiler, src, obj, flags, dependencies);
 		obj
 	}
 };
@@ -134,7 +141,7 @@ system_headers = function(dirs:list[file]): list[string]
 compile_one = action('${compiler} -c ${flags} -MMD -MF ${obj}.d ${src} -o ${obj}',
 	     description = 'Compiling ${obj}', depfile = '${obj}.d'
 	     <- compiler:file[in], src:file[in], obj:file[out], flags:list[string],
-	        otherDeps:list[file[in]] = [], deps:string = 'gcc');
+	        otherDeps:list[file[in]] = [], dependencies:string = '');
 
 # Link object files into an executable binary.
 link_binary = action(
