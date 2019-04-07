@@ -16,7 +16,6 @@ cxx = which.executable('clang++');
 
 # Most of this functionality is just a wrapper around generic "GCC-like" functionality.
 gcc = import('gcc-like.fab');
-system_headers = gcc.system_headers;
 
 #
 # Clang specializations:
