@@ -66,30 +66,30 @@ using fabrique::backend::Backend;
 
 
 int main(int argc, char *argv[]) {
-	//
-	// Parse command-line arguments.
-	//
-	CLIArguments args = CLIArguments::Parse(argc, argv);
-	if (not args or args.help)
-	{
-		CLIArguments::PrintUsage(cerr);
-		return (args ? 0 : 1);
-	}
-
-	//
-	// Set up debug streams.
-	//
-	Bytestream::SetDebugPattern(args.debugPattern);
-	Bytestream::SetDebugStream(Bytestream::Stdout());
-
-	Bytestream& argDebug = Bytestream::Debug("cli.args");
-	args.Print(argDebug);
-	argDebug << Bytestream::Reset << "\n";
-
 	Bytestream& err = Bytestream::Stderr();
 
 	try
 	{
+		//
+		// Parse command-line arguments.
+		//
+		CLIArguments args = CLIArguments::Parse(argc, argv);
+		if (not args or args.help)
+		{
+			CLIArguments::PrintUsage(cerr);
+			return (args ? 0 : 1);
+		}
+
+		//
+		// Set up debug streams.
+		//
+		Bytestream::SetDebugPattern(args.debugPattern);
+		Bytestream::SetDebugStream(Bytestream::Stdout());
+
+		Bytestream& argDebug = Bytestream::Debug("cli.args");
+		args.Print(argDebug);
+		argDebug << Bytestream::Reset << "\n";
+
 		//
 		// Translate command-line arguments into values for the
 		// Fabrique instance using a FabBuilder:
