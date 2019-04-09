@@ -36,6 +36,7 @@
 #include "optionparser.h"
 
 #include <fabrique/Bytestream.hh>
+#include <fabrique/UserError.hh>
 #include <fabrique/strings.hh>
 #include <fabrique/platform/files.hh>
 
@@ -193,6 +194,12 @@ CLIArguments CLIArguments::Parse(int argc, char *argv[])
 	const string input = opts.nonOptionsCount() == 1
 	                      ? opts.nonOption(0)
 	                      : "fabfile";
+
+	const bool haveOutputDir = options[OutputDirectory];
+	if (haveOutputDir and not options[OutputDirectory].arg)
+	{
+		throw UserError("no output directory specified (missing '='?)");
+	}
 
 	const string output = options[OutputDirectory]
 	                       ? options[OutputDirectory].arg
