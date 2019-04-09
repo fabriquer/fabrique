@@ -123,11 +123,12 @@ test = if (args.tests ? true) {
 	which = import('which');
 
 	filecheck:file = args.filecheck ? which.executable('FileCheck');
+	lit_binary:file = args.lit ? which.executable('lit');
 	verbose_tests:bool = args.verbose_tests ? false;
 
 	lit = import('share/lit.fab',
 		filecheck = filecheck,
-		lit = args.lit ? which.executable('lit'),
+		lit = lit_binary,
 		show_failure_details = verbose_tests
 	);
 
