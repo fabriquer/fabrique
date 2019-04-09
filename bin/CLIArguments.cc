@@ -181,7 +181,9 @@ CLIArguments CLIArguments::Parse(int argc, char *argv[])
 	                    options.data(), buffer.data());
 
 	if (opts.nonOptionsCount() > 1)
+	{
 		return {};
+	}
 
 	const string executable =
 		platform::PathIsFile(argv[0])
