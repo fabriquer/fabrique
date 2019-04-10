@@ -1,0 +1,7 @@
+toolchains = import('toolchains');
+
+cp = toolchains.shell.copy;
+
+# TODO: add a `self` keyword or some such?
+cp(subdir::'fabfile', destination=subdir::'fabfile', recursive=true);
+cp(subdir::'toolchains', destination=subdir::'toolchains', recursive=true);

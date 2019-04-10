@@ -1,0 +1,21 @@
+raw = record
+{
+	cp = action('cp ${flags} ${source} ${destination}'
+		<- source:file[in], destination:file[out],
+		   flags:list[string] = []);
+
+	mkdir = action('mkdir ${flags} ${dir}'
+		<- dir:file[out], flags:list[string] = []);
+};
+
+copy = function(source:file, destination:file, recursive:bool = false): file
+{
+	flags = if recursive [ '-r' ] else [];
+	raw.cp(source, destination, flags)
+};
+
+mkdir = function(directory:file, make_parents:bool = true): file
+{
+	flags = if make_parents [ '-p' ] else [];
+	raw.mkdir(directory, flags)
+};

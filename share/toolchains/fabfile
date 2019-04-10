@@ -1,0 +1,7 @@
+#
+# Configure the host and target platforms.
+#
+platform = import('platform');
+
+c = import('c', platform=platform);
+shell = import('shell.fab');

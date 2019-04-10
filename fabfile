@@ -66,6 +66,10 @@ binary_options = record
 };
 
 
+# Import `share` directory to ensure that its installation rules run.
+share_dir = import('share');
+
+
 #
 # Object files, shared libraries and fab binary:
 #
