@@ -36,6 +36,7 @@
 #include <fabrique/Printable.hh>
 #include <fabrique/PtrVec.hh>
 
+#include <algorithm>
 #include <functional>
 #include <iterator>
 #include <sstream>
