@@ -20,6 +20,7 @@ bootstrap:make:
 
 bootstrap:ninja:
   stage: bootstrap
+  before_script: apt install ninja-build
   script:
     - cd bootstrap/ninja
     - python ../generate-ninja.py
@@ -48,6 +49,7 @@ build:make:
 build:ninja:
   dependencies: ["bootstrap:ninja"]
   stage: build
+  before_script: apt install ninja-build
   script:
     - mkdir -p build
     - cd build
