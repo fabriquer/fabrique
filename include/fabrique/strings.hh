@@ -37,6 +37,7 @@
 #include <fabrique/PtrVec.hh>
 
 #include <functional>
+#include <iterator>
 #include <sstream>
 #include <string>
 #include <vector>
