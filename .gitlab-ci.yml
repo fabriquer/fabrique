@@ -1,0 +1,60 @@
+# Ensure that we have our vendor and generated submodules checked out.
+before_script:
+  - git submodule update --init --recursive
+
+stages:
+  - bootstrap
+  - build
+
+#
+# The main Fabrique build uses Fabrique. This requires a bootstrapping step.
+#
+bootstrap:make:
+  stage: bootstrap
+  script:
+    - cd bootstrap/make
+    - mkdir -p lib/fabrique   # TODO: remove once gmake backend is fixed
+    - if `which -s gmake` ; then gmake everything ; else make everything; fi
+
+  artifacts: {paths: ["bootstrap/make"]}
+
+bootstrap:ninja:
+  stage: bootstrap
+  script:
+    - cd bootstrap/ninja
+    - python ../generate-ninja.py
+    - ninja
+
+  artifacts: {paths: ["bootstrap/ninja"]}
+
+#
+# Build Fabrique using Fabrique.
+#
+
+build:make:
+  dependencies: ["bootstrap:make"]
+  stage: build
+  script:
+    - mkdir -p build
+    - cd build
+    - ../bootstrap/make/bin/fab --format=gmake -D debug=true ..
+    - if `which -s gmake` ; then gmake everything ; else make everything; fi
+  artifacts:
+    paths:
+      - bin/fab
+      - lib/*.so
+      - lib/fabrique/*.so
+
+build:ninja:
+  dependencies: ["bootstrap:ninja"]
+  stage: build
+  script:
+    - mkdir -p build
+    - cd build
+    - ../bootstrap/ninja/bin/fab --format=ninja -D debug=true ..
+    - ninja everything
+  artifacts:
+    paths:
+      - bin/fab
+      - lib/*.so
+      - lib/fabrique/*.so
