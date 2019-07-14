@@ -259,8 +259,8 @@ variables = {
 	'path': os.pathsep.join([ builddir, os.environ['PATH'] ]),
 
 	# tools
-	'cc': which('clang'),
-	'cxx': which('clang++'),
+	'cc': which('cc'),
+	'cxx': which('c++'),
 
 	# flags
 	'cxxflags': ' '.join(cxxflags),
