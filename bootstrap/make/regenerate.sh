@@ -10,6 +10,10 @@ sed -i '' 's/GNUmakefile//' tmp || exit 1
 # Use the default host compiler rather than assuming Clang.
 # TODO: remove once the main build description stops making this assumption.
 sed -i '' 's#bin/clang++#bin/c++#' tmp || exit 1
+sed -i '' 's#-Weverything##' tmp || exit 1
+sed -i '' 's#-O4#-O3#' tmp || exit 1
+sed -i '' 's#-fcolor-diagnostics##' tmp || exit 1
+sed -i '' 's#-flto##' tmp || exit 1
 
 # Relativize paths to avoid hardcoding /home/jon/fab/foo
 ./strip-make-paths.sh tmp || exit 1
