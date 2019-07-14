@@ -14,7 +14,7 @@ bootstrap:make:
   script:
     - cd bootstrap/make
     - mkdir -p lib/fabrique   # TODO: remove once gmake backend is fixed
-    - if `which -s gmake` ; then gmake everything ; else make everything; fi
+    - if `which gmake` ; then gmake everything ; else make everything; fi
 
   artifacts: {paths: ["bootstrap/make"]}
 
@@ -38,7 +38,7 @@ build:make:
     - mkdir -p build
     - cd build
     - ../bootstrap/make/bin/fab --format=gmake -D debug=true ..
-    - if `which -s gmake` ; then gmake everything ; else make everything; fi
+    - if `which gmake` ; then gmake everything ; else make everything; fi
   artifacts:
     paths:
       - bin/fab
