@@ -36,6 +36,7 @@
 #include <fabrique/dag/Parameter.hh>
 #include <fabrique/types/Type.hh>
 
+#include <algorithm>
 #include <cassert>
 
 using namespace fabrique;

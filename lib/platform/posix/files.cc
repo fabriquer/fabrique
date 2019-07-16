@@ -36,6 +36,7 @@
 #include <fabrique/platform/PosixError.hh>
 #include <fabrique/platform/files.hh>
 
+#include <cstring>
 #include <fstream>
 
 #include <sys/stat.h>

@@ -33,6 +33,7 @@
 #include <fabrique/Bytestream.hh>
 #include <fabrique/strings.hh>
 
+#include <cassert>
 #include <iterator>
 
 using namespace fabrique;

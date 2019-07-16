@@ -34,6 +34,8 @@
 #include <fabrique/ast/HasParameters.hh>
 #include <fabrique/ast/SyntaxError.hh>
 
+#include <algorithm>
+
 using namespace fabrique;
 using namespace fabrique::ast;
 using std::string;

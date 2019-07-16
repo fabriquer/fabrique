@@ -40,6 +40,7 @@
 #include <fabrique/types/TypeError.hh>
 
 #include <cassert>
+#include <cstring>
 
 using namespace fabrique::dag;
 using std::dynamic_pointer_cast;

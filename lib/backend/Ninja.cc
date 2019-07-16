@@ -46,6 +46,7 @@
 #include <fabrique/dag/TypeReference.hh>
 
 #include <cassert>
+#include <cstring>
 
 using namespace fabrique::backend;
 using namespace fabrique::dag;

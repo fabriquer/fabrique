@@ -32,6 +32,8 @@
 
 #include <fabrique/platform/PosixError.hh>
 
+#include <cstring>
+
 #include <errno.h>
 
 using namespace fabrique::platform;
