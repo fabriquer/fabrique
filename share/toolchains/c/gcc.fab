@@ -1,0 +1,65 @@
+#
+# Support for the GCC (and g++) compiler.
+#
+# Arguments:
+#   force_colour    force the compiler to colour diagnostic messages even if not on a TTY
+#   lto             perform link-time optimization
+#
+force_colour = args.colour_diagnostics ? false;
+lto = args.lto ? false;
+
+
+# Find comnpiler binaries:
+which = import('which');
+cc = which.executable('gcc');
+cxx = which.executable('g++');
+
+# Most of this functionality is just a wrapper around generic "GCC-like" functionality.
+gcc = import('gcc-like.fab');
+
+compile_flags =
+	(if force_colour ['-fdiagnostics-color=always'] else [])
+	+
+	(if lto ['-flto'] else [])
+	+
+	['-fpermissive' '-Wno-unknown-pragmas']
+	;
+
+linker_flags =
+	(if lto ['-flto'] else [])
+	;
+
+
+# TODO: let arbitrary name references be types
+binary_options = gcc.binary_options;
+binary = function(objects:list[file[in]], binary:file[out],
+                  options:binary_options, extra_flags:list[string] = []): file
+{
+	flags = gcc.binary_flags(options);
+
+	# TODO: cc or cxx?
+	gcc.link_binary(cxx, objects, binary, linker_flags + flags)
+};
+
+compile_options = gcc.compiler_options;
+compile = function(srcs:list[file],
+                   options:compile_options,
+                   extra_flags:list[string]=[],
+                   extra_header_dirs:list[file]=[],
+                   dependencies:list[file[in]]=[]
+	): list[file]
+{
+	# TODO: cc or cxx?
+	gcc.compile(cxx, srcs, options, compile_flags + extra_flags,
+	            extra_header_dirs, dependencies)
+};
+
+library_options = gcc.library_options;
+library = function(objects:list[file[in]], libname:string, subdir:file,
+                   options:library_options, extra_flags:list[string] = []): file
+{
+	# TODO: cc or cxx?
+	gcc.library(cxx, objects, libname, subdir, options,
+	            extra_flags = linker_flags + extra_flags)
+};
+

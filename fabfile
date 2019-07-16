@@ -3,7 +3,11 @@
 #
 
 # The `pretty` argument controls coloured compiler output and other aesthetic niceness
+# (if supported by the chosen compiler)
 pretty:bool = args.pretty ? true;
+
+# We default to Clang, but can use GCC is explicitly requested.
+use_gcc:bool = args.gcc ? false;
 
 if pretty
 {
@@ -35,7 +39,16 @@ grammar = vendor :: 'generated-grammar';
 #
 # C++ toolchain and compilation flags:
 #
-clang = import('share/toolchains/c/clang.fab', colour_diagnostics=pretty, lto=lto);
+cxx =
+	if (use_gcc)
+	{
+		import('share/toolchains/c/gcc.fab', colour_diagnostics=pretty, lto=lto)
+	}
+	else
+	{
+		import('share/toolchains/c/clang.fab', colour_diagnostics=pretty, lto=lto)
+	}
+	;
 
 cxx_options = record
 {
@@ -50,13 +63,17 @@ cxx_options = record
 	# Use lots and lots of warnings, but ignore things like C++98 compatibility,
 	# problems with C++11 copy elision and warnings that the current compiler
 	# version doesn't understand.
-	warnings = [
-		'everything'
-		'no-c++98-compat' 'no-c++98-compat-pedantic' 'no-padded'
-		'no-vla' 'no-vla-extension'
-		'no-return-std-move-in-c++11'
-		'no-unknown-warning-option'
-	];
+	warnings =
+		if use_gcc ['all']
+		else
+		[
+			'everything'
+			'no-c++98-compat' 'no-c++98-compat-pedantic' 'no-padded'
+			'no-vla' 'no-vla-extension'
+			'no-return-std-move-in-c++11'
+			'no-unknown-warning-option'
+		]
+		;
 };
 
 binary_options = record
@@ -80,15 +97,15 @@ generated_sources =
 	;
 
 library_objects =
-	clang.compile(import('lib').sources, cxx_options)
-	+ clang.compile(generated_sources, cxx_options, extra_flags=['-Wno-everything'])
+	cxx.compile(import('lib').sources, cxx_options)
+	+ cxx.compile(generated_sources, cxx_options, extra_flags=['-Wno-everything'])
 	;
 
-library = clang.library(library_objects, 'fabrique',
+library = cxx.library(library_objects, 'fabrique',
 	subdir = file('lib'),
 	options = record { shared_library = true; });
 
-binary_objects = clang.compile(import('bin').sources, cxx_options);
+binary_objects = cxx.compile(import('bin').sources, cxx_options);
 
 # Link library objects into `fab` binary statically for three reasons:
 #
@@ -96,7 +113,7 @@ binary_objects = clang.compile(import('bin').sources, cxx_options);
 #    or require them to be installed in particular places,
 # 2. this provides us with the opportunity for link-time optimization and
 # 3. the binary is so small as to be almost trivial.
-fab = clang.binary(
+fab = cxx.binary(
 	objects = binary_objects + library_objects,
 	binary = file('fab', subdir = 'bin'),
 	options = binary_options);
@@ -104,7 +121,7 @@ fab = clang.binary(
 plugins = import('base-plugins',
 	cxx_options=cxx_options,
 	target_dir=file('lib') :: 'fabrique',
-	toolchain = record { compile=clang.compile; library=clang.library; },
+	toolchain = record { compile=cxx.compile; library=cxx.library; },
 );
 
 
