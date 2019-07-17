@@ -139,7 +139,4 @@ def which(name):
 
     raise OSError(f'no {name} in paths: {" ".join(paths)}')
 
-
-# Then describe the mechanics of how to generate a build file.
-out = open(os.path.join(builddir, 'build.ninja'), 'w')
-build.write(out)
+build.write(builddir)
