@@ -149,6 +149,7 @@ cxx_srcs = {
     ),
 }
 
+
 def extension(subdir):
     """Does a subdirectory use the .cpp or .cc suffix for its files?"""
     return 'cpp' if subdir.startswith('vendor') else 'cc'

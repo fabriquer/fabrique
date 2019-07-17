@@ -68,7 +68,8 @@ class MakeBuild(BootstrapBuild):
         # TODO: regeneration?
         if self.regen:
             import sys
-            sys.stderr.write("WARNING: 'make' bootstrap does not support regeneration\n")
+            sys.stderr.write(
+                "WARNING: 'make' bootstrap does not support regeneration\n")
 
         # Finally, describe what to build
         objs = [(src, src+'.o') for src in self.sources]
@@ -80,7 +81,7 @@ class MakeBuild(BootstrapBuild):
 
         out.write(self.build('all', all_targets, ''))
         out.write(self.build('fab', binary))
-        out.write(self.build(binary, all_objs, 
+        out.write(self.build(binary, all_objs,
                              f'${{cxx}} ${{cxxflags}} -o {binary} {all_objs}'))
 
         # Object files built as part of the main executable
