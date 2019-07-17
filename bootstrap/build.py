@@ -46,7 +46,6 @@ class BootstrapBuild:
         self.sources = []
         self.suffixes = collections.defaultdict(str)
         self.tools = {
-            'cc': 'cc',
             'cxx': 'c++',
             'python': 'python3',
         }
