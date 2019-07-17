@@ -111,6 +111,9 @@ if system in ['Darwin', 'FreeBSD', 'Linux']:
         build.add_ldflags('-rdynamic')
         build.suffix('lib', '.so')
 
+    if system == 'Linux':
+        build.add_ldflags('-ldl')
+
 elif system == 'Windows':
     build.define('OS_WINDOWS')
     build.suffix('exe', '.exe')
