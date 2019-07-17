@@ -11,7 +11,6 @@ stages:
 #
 bootstrap:make:
   stage: bootstrap
-  before_script: [apt update && apt install -y clang]
   script:
     - cd bootstrap
     - ./gen --format=make build
@@ -21,7 +20,7 @@ bootstrap:make:
 
 bootstrap:ninja:
   stage: bootstrap
-  before_script: [apt update && apt install -y clang ninja-build]
+  before_script: [apt update && apt install -y ninja-build]
   script:
     - cd bootstrap
     - ./gen --format=ninja build
@@ -36,7 +35,6 @@ bootstrap:ninja:
 build:make:
   dependencies: ["bootstrap:make"]
   stage: build
-  before_script: [apt update && apt install -y clang]
   script:
     - mkdir -p build
     - cd build
@@ -51,7 +49,7 @@ build:make:
 build:ninja:
   dependencies: ["bootstrap:ninja"]
   stage: build
-  before_script: [apt update && apt install -y clang ninja-build]
+  before_script: [apt update && apt install -y ninja-build]
   script:
     - mkdir -p build
     - cd build
