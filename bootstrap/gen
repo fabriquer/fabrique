@@ -38,6 +38,7 @@ import sys
 args = argparse.ArgumentParser()
 args.add_argument('builddir', nargs='?', default='.')
 args.add_argument('--debug', action='store_true')
+args.add_argument('-f', '--format', default='ninja')
 args = args.parse_args()
 
 bootstrap_script = os.path.realpath(sys.argv[0])
@@ -52,8 +53,12 @@ if not os.path.isdir(builddir):
     sys.exit(1)
 
 
-from ninja import NinjaBuild
-build = NinjaBuild(src_root)
+if args.format == 'ninja':
+    from ninja import NinjaBuild
+    build = NinjaBuild(src_root)
+else:
+    sys.stderr.write(f'Invalid output format: {args.format}\n')
+    sys.exit(1)
 
 import sources
 build.add_sources(*sources.cxx_srcs)
