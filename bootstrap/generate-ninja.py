@@ -58,7 +58,6 @@ cxx_srcs = sources.cxx_srcs
 
 plugins = {
     'platform': ['PlatformTests'],
-    'sysctl': ['SysctlPlugin'],
     'which': ['Which'],
 }
 
