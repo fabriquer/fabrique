@@ -28,7 +28,21 @@
 #
 import collections
 import itertools
+import os
 import sys
+
+
+def which(name):
+    """Find an executable within the current PATH"""
+
+    paths = os.environ.get('PATH', '').split(os.pathsep)
+
+    for p in paths:
+        fullname = os.path.join(p, name)
+        if os.path.isfile(fullname) and os.access(fullname, os.X_OK):
+            return fullname
+
+    raise OSError(f'no {name} in paths: {" ".join(paths)}')
 
 
 class BootstrapBuild:
@@ -71,6 +85,11 @@ class BootstrapBuild:
 
     def add_regeneration(self, script, args):
         self.regen = (script, args)
+
+    def compiler(self, name):
+        path = which(name)
+        self.tools['cxx'] = path
+        return path
 
     def define(self, flag):
         """Add a preprocessor definition to the build description."""

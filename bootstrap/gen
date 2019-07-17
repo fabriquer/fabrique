@@ -38,6 +38,8 @@ import sys
 args = argparse.ArgumentParser()
 args.add_argument('builddir', nargs='?', default='.')
 args.add_argument('--debug', action='store_true')
+args.add_argument('--force-clang', action='store_true')
+args.add_argument('--force-gcc', action='store_true')
 args.add_argument('-f', '--format', default='ninja')
 args = args.parse_args()
 
@@ -62,6 +64,19 @@ elif args.format == 'ninja':
 else:
     sys.stderr.write(f'Invalid output format: {args.format}\n')
     sys.exit(1)
+
+
+# Choose the compiler:
+if args.force_clang and args.force_gcc:
+    sys.stderr.write('Cannot use --force-clang with --force-gcc\n')
+    sys.exit(1)
+
+if args.force_clang:
+    build.compiler('clang++')
+
+elif args.force_gcc:
+    build.compiler('g++')
+
 
 import sources
 build.add_sources(*sources.cxx_srcs)
@@ -130,16 +145,5 @@ else:
 
 build.add_library('platform', 'base-plugins/PlatformTests.cc')
 build.add_library('which', 'base-plugins/Which.cc')
-
-
-def which(name):
-    paths = os.environ.get('PATH', '').split(os.pathsep)
-
-    for p in paths:
-        fullname = os.path.join(p, name)
-        if os.path.isfile(fullname) and os.access(fullname, os.X_OK):
-            return fullname
-
-    raise OSError(f'no {name} in paths: {" ".join(paths)}')
 
 build.write(builddir)
