@@ -152,9 +152,6 @@ def which(name):
 
 
 variables = {
-    # paths
-    'path': os.pathsep.join([builddir, os.environ['PATH']]),
-
     # tools
     'cc': which('cc'),
     'cxx': which('c++'),
