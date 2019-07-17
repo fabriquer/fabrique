@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3
 
 import argparse
 import itertools
@@ -23,7 +23,7 @@ if not os.path.exists(builddir):
     os.makedirs(builddir)
 
 if not os.path.isdir(builddir):
-    sys.write("Build directory '%s' is not a directory" % args.builddir)
+    sys.write(f'--builddir "{builddir}" is not a directory\n')
     sys.exit(1)
 
 
@@ -153,7 +153,7 @@ def extension(subdir):
 
 
 cxx_srcs = list(itertools.chain(*[
-    ['%s%s.%s' % (subdir, base, extension(subdir)) for base in srcs]
+    [f'{subdir}{base}.{extension(subdir)}' for base in srcs]
     for (subdir, srcs) in cxx_srcs.items()
 ]))
 
@@ -191,17 +191,13 @@ elif system == 'Windows':
     libsuffix = '.dll'
 
 else:
-    raise ValueError('Unknown platform: %s' % system)
+    raise ValueError(f'Unknown platform: {system}')
 
 if system == 'Darwin':
     defines.append('OS_DARWIN')
 
-defines = list(
-    itertools.chain.from_iterable(
-        itertools.izip(itertools.repeat('-D'), defines)
-    )
-)
-cxxflags = defines + [
+defines = itertools.chain(*zip(itertools.repeat('-D'), defines))
+cxxflags = list(defines) + [
     '-I', src_root, '-I', builddir,
 
     # Require C++14.
@@ -213,9 +209,9 @@ cxxflags = defines + [
 
 warnings = [
     # Treat vendor headers as system headers: disable warnings.
-    '-isystem %s/include' % src_root,
-    '-isystem %s/vendor' % src_root,
-    '-isystem %s/vendor/antlr-cxx-runtime' % src_root,
+    f'-isystem {src_root}/include',
+    f'-isystem {src_root}/vendor',
+    f'-isystem {src_root}/vendor/antlr-cxx-runtime',
 ]
 
 plugin_warnings = [
@@ -235,8 +231,8 @@ cxxflags = cxxflags + warnings
 
 plugin_files = dict([
     (
-        ('%s%s%s%s' % (libdir, libprefix, name, libsuffix)),
-        ['base-plugins/%s.cc' % s for s in sources]
+        f'{libdir}{libprefix}{name}{libsuffix}',
+        [f'base-plugins/{src}.cc' for src in sources]
     )
     for (name, sources) in plugins.items()
 ])
@@ -253,8 +249,7 @@ def which(name):
         if os.path.isfile(fullname) and os.access(fullname, os.X_OK):
             return fullname
 
-    raise OSError('no %s in --testpath (%s) or $PATH (%s)' % (
-        name, args.testpath, os.environ.get('PATH')))
+    raise OSError(f'no {name} in paths: {" ".join(paths)}')
 
 
 variables = {
@@ -278,8 +273,8 @@ if args.withtests:
 out = open(os.path.join(builddir, 'build.ninja'), 'w')
 
 
-for var in variables.items():
-    out.write('%s = %s\n' % var)
+for (key, val) in variables.items():
+    out.write(f'{key} = {val}\n')
 
 out.write('\n')
 
@@ -318,7 +313,7 @@ rules = {
     },
 
     'rebuild': {
-        'command': 'python2.7 $in $args',
+        'command': 'python3 $in $args',
         'description': 'Regenerating $out',
         'generator': '',
     },
@@ -331,9 +326,9 @@ if args.withtests:
     }
 
 for (name, variables) in rules.items():
-    out.write('rule %s\n' % name)
-    for var in variables.items():
-        out.write('  %s = %s\n' % var)
+    out.write(f'rule {name}\n')
+    for (key, val) in variables.items():
+        out.write(f'  {key} = {val}\n')
     out.write('\n')
 
 
@@ -344,7 +339,7 @@ for (name, variables) in rules.items():
 # Rebuild the Ninja file:
 bootstrap_args = [pipes.quote(builddir)]
 if args.cxxflags:
-    bootstrap_args += ['--cxxflags="%s"' % args.cxxflags]
+    bootstrap_args += [f'--cxxflags="{args.cxxflags}"']
 if args.debug:
     bootstrap_args.append('--debug')
 if args.testpath:
@@ -352,44 +347,41 @@ if args.testpath:
 if args.withtests:
     bootstrap_args.append('--withtests')
 
-out.write('''build build.ninja: rebuild %s
-  args = %s
+out.write(f'''build build.ninja: rebuild {pipes.quote(bootstrap)}
+  args = {' '.join(bootstrap_args)}
 
-''' % (pipes.quote(bootstrap), ' '.join(bootstrap_args)))
+''')
 
 # Unit tests:
 if args.withtests:
     out.write('build test: phony run-tests\n')
-    out.write('build run-tests: lit %s/tests | %sfab\n' % (
-        src_root, bindir))
+    out.write(f'build run-tests: lit {src_root}/tests | {bindir}fab\n')
 
 
 # Main executable
-objs = ['%s.o' % o for o in cxx_srcs]
+objs = [f'{src}.o' for src in cxx_srcs]
 
-out.write('build %sfab: bin %s\n\n' % (bindir, ' '.join(objs)))
-out.write('build fab: phony %sfab\n\n' % bindir)
+out.write(f'build {bindir}fab: bin {" ".join(objs)}\n\n')
+out.write(f'build fab: phony {bindir}fab\n\n')
 out.write('default fab\n\n')
 
 
 # Plugins:
 for (plugin, srcs) in plugin_files.items():
     flags = ' '.join(cxxflags + plugin_warnings)
-    objs = ['%s.o' % o for o in srcs]
+    objs = [f'{src}.o' for src in srcs]
 
-    out.write('build %s: lib %s\n\n' % (plugin, ' '.join(objs)))
-    out.write('default %s\n\n' % plugin)
+    out.write(f'build {plugin}: lib {" ".join(objs)}\n\n')
+    out.write(f'default {plugin}\n\n')
 
-    for (src, obj) in itertools.izip(srcs, objs):
+    for (src, obj) in zip(srcs, objs):
         src = os.path.join(src_root, src)
-        out.write('build %s: cxx %s\n' % (obj, src))
-        out.write('    cxxflags = %s\n' % flags)
+        out.write(f'build {obj}: cxx {src}\n')
+        out.write(f'    cxxflags = {flags}\n')
 
 
 # C++ -> object files:
 for src in cxx_srcs:
-    obj = '%s.o' % src
-    src = os.path.join(src_root, '%s' % src)
-    out.write('build %s: cxx %s\n' % (obj, src))
+    out.write(f'build {src}.o: cxx {os.path.join(src_root, src)}\n')
 
 out.write('\n')
