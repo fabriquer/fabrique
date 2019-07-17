@@ -37,7 +37,7 @@ build:make:
   script:
     - mkdir -p build
     - cd build
-    - ../bootstrap/build/fab --format=gmake -D debug=true ..
+    - ../bootstrap/build/bin/fab --format=gmake -D debug=true ..
     - make everything
   artifacts:
     paths:
