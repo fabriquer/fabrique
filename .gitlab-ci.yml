@@ -1,6 +1,5 @@
-# Ensure that we have our vendor and generated submodules checked out.
-before_script:
-  - git submodule update --init --recursive
+variables:
+  GIT_SUBMODULE_STRATEGY: normal
 
 stages:
   - bootstrap
