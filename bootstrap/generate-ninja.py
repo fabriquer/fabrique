@@ -40,9 +40,9 @@ args.add_argument('builddir', nargs='?', default='.')
 args.add_argument('--debug', action='store_true')
 args = args.parse_args()
 
-bootstrap = os.path.realpath(sys.argv[0])
-
+bootstrap_script = os.path.realpath(sys.argv[0])
 builddir = os.path.realpath(args.builddir)
+src_root = os.path.dirname(os.path.dirname(bootstrap_script))
 
 if not os.path.exists(builddir):
     os.makedirs(builddir)
@@ -52,92 +52,76 @@ if not os.path.isdir(builddir):
     sys.exit(1)
 
 
-# What source files do we need to build?
+from ninja import NinjaBuild
+build = NinjaBuild(src_root)
+
 import sources
-cxx_srcs = sources.cxx_srcs
+build.add_sources(*sources.cxx_srcs)
 
-plugins = {
-    'platform': ['PlatformTests'],
-    'which': ['Which'],
-}
+# Reconstruct the command used to execute this file, but slightly more
+# explicitly (e.g., with more quotes and absolute paths)
+regen_args = [pipes.quote(builddir)]
+if args.debug:
+    regen_args.append('--debug')
 
-src_root = os.path.dirname(os.path.dirname(bootstrap))
+build.add_regeneration(pipes.quote(bootstrap_script), regen_args)
 
-defines = []
 ldflags = []
 system = platform.system()
 
 if system in ['Darwin', 'FreeBSD', 'Linux']:
-    defines.append('OS_POSIX')
+    build.define('OS_POSIX')
 
-    bindir = 'bin/'
-    libdir = 'lib/fabrique/'
-    libprefix = 'lib'
-    cxx_srcs += [
+    build.dir('bin', 'bin/')
+    build.dir('lib', 'lib/fabrique/')
+    build.prefix('lib', 'lib')
+
+    build.add_sources(
         'lib/platform/posix/PosixError.cc',
         'lib/platform/posix/PosixSharedLibrary.cc',
         'lib/platform/posix/files.cc',
-    ]
+    )
 
     if system == 'Darwin':
-        ldflags += ['-undefined', 'dynamic_lookup']
-        libsuffix = '.dylib'
+        build.add_ldflags('-undefined', 'dynamic_lookup')
+        build.suffix('lib', '.dylib')
     else:
-        ldflags += ['-rdynamic']
-        libsuffix = '.so'
+        build.add_ldflags('-rdynamic')
+        build.suffix('lib', '.so')
 
 elif system == 'Windows':
-    defines.append('OS_WINDOWS')
-
-    bindir = ''
-    libdir = ''
-    libprefix = ''
-    libsuffix = '.dll'
+    build.define('OS_WINDOWS')
+    build.suffix('exe', '.exe')
+    build.suffix('lib', '.dll')
 
 else:
     raise ValueError(f'Unknown platform: {system}')
 
 if system == 'Darwin':
-    defines.append('OS_DARWIN')
+    build.define('OS_DARWIN')
 
-defines = zip(itertools.repeat('-D'), defines)
+build.include(src_root,
+              builddir,
+              f'{src_root}/include',
+              f'{src_root}/vendor',
+              f'{src_root}/vendor/antlr-cxx-runtime',
+              )
 
-include_dirs = zip(itertools.repeat('-I'), [
-    src_root,
-    builddir,
-    f'{src_root}/include',
-    f'{src_root}/vendor',
-    f'{src_root}/vendor/antlr-cxx-runtime',
-])
+build.add_cxxflags('-std=c++14', '-fPIC')
 
-cxxflags = [
-    # Require C++14.
-    '-std=c++14',
-
-    # Use position-independent code.
-    '-fPIC',
-
-    # Disable all warnings in bootstrap (rather than trying to be selective about
-    # warnings in our code vs vendor code, etc.)
-    '-w',
-]
+# Disable all warnings in bootstrap (rather than trying to be selective about
+# warnings in our code vs vendor code, etc.)
+build.add_cxxflags('-w')
 
 if args.debug:
-    cxxflags += ['-g', '-ggdb', '-O0']
-    ldflags += ['-g', '-ggdb']
+    build.add_cxxflags('-g', '-ggdb', '-O0')
+    build.add_ldflags('-g', '-ggdb')
 
 else:
-    cxxflags += ['-D NDEBUG', '-O2']
+    build.add_cxxflags('-D NDEBUG', '-O2')
 
-cxxflags = cxxflags + list(itertools.chain(*defines, *include_dirs))
-
-plugin_files = dict([
-    (
-        f'{libdir}{libprefix}{name}{libsuffix}',
-        [f'base-plugins/{src}.cc' for src in sources]
-    )
-    for (name, sources) in plugins.items()
-])
+build.add_library('platform', 'base-plugins/PlatformTests.cc')
+build.add_library('which', 'base-plugins/Which.cc')
 
 
 def which(name):
@@ -151,104 +135,6 @@ def which(name):
     raise OSError(f'no {name} in paths: {" ".join(paths)}')
 
 
-variables = {
-    # tools
-    'cc': which('cc'),
-    'cxx': which('c++'),
-
-    # flags
-    'cxxflags': ' '.join(cxxflags),
-    'ldflags': ' '.join(ldflags),
-}
-
-
 # Then describe the mechanics of how to generate a build file.
 out = open(os.path.join(builddir, 'build.ninja'), 'w')
-
-
-for (key, val) in variables.items():
-    out.write(f'{key} = {val}\n')
-
-out.write('\n')
-
-
-# Build rules: how we actually build things.
-rules = {
-    'bin': {
-        'command': 'c++ $ldflags -o $out $in',
-        'description': 'Linking $out',
-    },
-
-    'cc': {
-        'command': '$cc -c $cflags -MMD -MT $out -MF $out.d -o $out $in',
-        'description': 'Compiling $in',
-        'depfile': '$out.d',
-    },
-
-    'cxx': {
-        'command': '$cxx -c $cxxflags -MMD -MT $out -MF $out.d -o $out $in',
-        'description': 'Compiling $in',
-        'depfile': '$out.d',
-    },
-
-    'lib': {
-        'command': '$cxx -shared -o $out $ldflags $in',
-        'description': 'Linking library $out',
-    },
-
-    'rebuild': {
-        'command': 'python3 $in $args',
-        'description': 'Regenerating $out',
-        'generator': '',
-    },
-}
-
-for (name, variables) in rules.items():
-    out.write(f'rule {name}\n')
-    for (key, val) in variables.items():
-        out.write(f'  {key} = {val}\n')
-    out.write('\n')
-
-
-#
-# Finally, build statements.
-#
-
-# Rebuild the Ninja file:
-bootstrap_args = [pipes.quote(builddir)]
-if args.debug:
-    bootstrap_args.append('--debug')
-
-out.write(f'''build build.ninja: rebuild {pipes.quote(bootstrap)}
-  args = {' '.join(bootstrap_args)}
-
-''')
-
-
-# Main executable
-objs = [f'{src}.o' for src in cxx_srcs]
-
-out.write(f'build {bindir}fab: bin {" ".join(objs)}\n\n')
-out.write(f'build fab: phony {bindir}fab\n\n')
-out.write('default fab\n\n')
-
-
-# Plugins:
-for (plugin, srcs) in plugin_files.items():
-    flags = ' '.join(cxxflags)
-    objs = [f'{src}.o' for src in srcs]
-
-    out.write(f'build {plugin}: lib {" ".join(objs)}\n\n')
-    out.write(f'default {plugin}\n\n')
-
-    for (src, obj) in zip(srcs, objs):
-        src = os.path.join(src_root, src)
-        out.write(f'build {obj}: cxx {src}\n')
-        out.write(f'    cxxflags = {flags}\n')
-
-
-# C++ -> object files:
-for src in cxx_srcs:
-    out.write(f'build {src}.o: cxx {os.path.join(src_root, src)}\n')
-
-out.write('\n')
+build.write(out)
