@@ -33,6 +33,7 @@
 #ifndef JOIN_H
 #define JOIN_H
 
+#include <fabrique/Bytestream.hh>
 #include <fabrique/Printable.hh>
 #include <fabrique/PtrVec.hh>
 
