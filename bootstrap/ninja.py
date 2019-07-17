@@ -79,7 +79,7 @@ class NinjaBuild(BootstrapBuild):
             out.write(f'{name} = {tool}\n')
 
         out.write(f'cxxflags = {" ".join(self.all_cxxflags())}\n')
-        out.write(f'ldflags = {self.ldflags}\n')
+        out.write(f'ldflags = {" ".join(self.ldflags)}\n')
         out.write('\n')
 
         # Describe how to build things (cc, cxx, etc.)
