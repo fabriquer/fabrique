@@ -52,135 +52,15 @@ if not os.path.isdir(builddir):
     sys.exit(1)
 
 
-# First, let's declare what we actually want to build.
-cxx_srcs = {
-    'bin/': (
-        'CLIArguments',
-        'fab',
-    ),
-    'lib/': (
-        'AssertionFailure', 'Bytestream', 'ErrorReport', 'Fabrique', 'FabBuilder',
-        'Printable', 'SemanticException',
-        'SourceCodeException', 'SourceLocation', 'SourceRange', 'UserError',
-        'builtins', 'names', 'strings',
-    ),
-    'lib/ast/': (
-        'ASTDump', 'Action', 'Argument', 'Arguments', 'BinaryOperation', 'Call',
-        'CompoundExpr', 'Conditional', 'EvalContext', 'Expression',
-        'FieldAccess', 'FieldQuery', 'FileList', 'FilenameLiteral',
-        'Foreach', 'Function', 'HasParameters', 'Identifier', 'List',
-        'NameReference', 'Node', 'Parameter', 'Record', 'SyntaxError',
-        'TypeDeclaration', 'TypeReference',
-        'UnaryOperation', 'Value', 'Visitor', 'literals',
-    ),
-    'lib/backend/': (
-        'Backend', 'Dot', 'Make', 'Ninja', 'Null',
-    ),
-    'lib/dag/': (
-        'Build', 'Callable', 'DAG', 'DAGBuilder',
-        'File', 'Formatter', 'Function',
-                'List', 'Parameter', 'Primitive',
-                'Record', 'Rule', 'TypeReference',
-                'UndefinedValueException',
-                'Value', 'Visitor',
-    ),
-    'lib/parsing/': (
-        'ASTBuilder', 'ErrorListener', 'ErrorReporter',
-        'Parser', 'ParserError', 'Token',
-    ),
-    'lib/platform/': (
-        'ABI', 'OSError', 'SharedLibrary',
-    ),
-    'lib/plugin/': (
-        'Loader', 'Plugin', 'Registry',
-    ),
-    'lib/types/': (
-        'BooleanType', 'FileType', 'FunctionType', 'IntegerType', 'RecordType',
-        'SequenceType', 'StringType', 'Type', 'TypeContext', 'TypeError', 'Typed',
-    ),
-    'vendor/antlr-cxx-runtime/': (
-        'ANTLRErrorListener', 'ANTLRErrorStrategy', 'ANTLRFileStream',
-        'ANTLRInputStream', 'BailErrorStrategy', 'BaseErrorListener',
-        'BufferedTokenStream', 'CharStream', 'CommonToken', 'CommonTokenFactory',
-        'CommonTokenStream', 'ConsoleErrorListener', 'DefaultErrorStrategy',
-        'DiagnosticErrorListener', 'Exceptions', 'FailedPredicateException',
-        'InputMismatchException', 'IntStream', 'InterpreterRuleContext', 'Lexer',
-        'LexerInterpreter', 'LexerNoViableAltException', 'ListTokenSource',
-        'NoViableAltException', 'Parser', 'ParserInterpreter',
-        'ParserRuleContext', 'ProxyErrorListener', 'RecognitionException',
-        'Recognizer', 'RuleContext', 'RuleContextWithAltNum', 'RuntimeMetaData',
-        'Token', 'TokenSource', 'TokenStream', 'TokenStreamRewriter',
-        'UnbufferedCharStream', 'UnbufferedTokenStream', 'Vocabulary',
-        'WritableToken',
-    ),
-    'vendor/antlr-cxx-runtime/atn/': (
-        'ATN', 'ATNConfig', 'ATNConfigSet', 'ATNDeserializationOptions',
-        'ATNDeserializer', 'ATNSerializer', 'ATNSimulator', 'ATNState',
-        'AbstractPredicateTransition', 'ActionTransition', 'AmbiguityInfo',
-        'ArrayPredictionContext', 'AtomTransition', 'BasicBlockStartState',
-        'BasicState', 'BlockEndState', 'BlockStartState',
-        'ContextSensitivityInfo', 'DecisionEventInfo', 'DecisionInfo',
-        'DecisionState', 'EmptyPredictionContext', 'EpsilonTransition',
-        'ErrorInfo', 'LL1Analyzer', 'LexerATNConfig', 'LexerATNSimulator',
-        'LexerAction', 'LexerActionExecutor', 'LexerChannelAction',
-        'LexerCustomAction', 'LexerIndexedCustomAction', 'LexerModeAction',
-        'LexerMoreAction', 'LexerPopModeAction', 'LexerPushModeAction',
-        'LexerSkipAction', 'LexerTypeAction', 'LookaheadEventInfo',
-        'LoopEndState', 'NotSetTransition', 'OrderedATNConfigSet', 'ParseInfo',
-        'ParserATNSimulator', 'PlusBlockStartState', 'PlusLoopbackState',
-        'PrecedencePredicateTransition', 'PredicateEvalInfo',
-        'PredicateTransition', 'PredictionContext', 'PredictionMode',
-        'ProfilingATNSimulator', 'RangeTransition', 'RuleStartState',
-        'RuleStopState', 'RuleTransition', 'SemanticContext', 'SetTransition',
-        'SingletonPredictionContext', 'StarBlockStartState', 'StarLoopEntryState',
-        'StarLoopbackState', 'TokensStartState', 'Transition',
-        'WildcardTransition',
-    ),
-    'vendor/antlr-cxx-runtime/dfa/': (
-        'DFA', 'DFAState', 'DFASerializer', 'LexerDFASerializer',
-    ),
-    'vendor/antlr-cxx-runtime/misc/': (
-        'InterpreterDataReader', 'Interval', 'IntervalSet', 'MurmurHash',
-        'Predicate',
-    ),
-    'vendor/antlr-cxx-runtime/support/': (
-        'Any', 'Arrays', 'CPPUtils', 'StringUtils', 'guid',
-    ),
-    'vendor/antlr-cxx-runtime/tree/': (
-        'ErrorNode', 'ErrorNodeImpl', 'IterativeParseTreeWalker', 'ParseTree',
-        'ParseTreeListener', 'ParseTreeVisitor', 'ParseTreeWalker',
-        'TerminalNode', 'TerminalNodeImpl', 'Trees',
-    ),
-    'vendor/antlr-cxx-runtime/tree/pattern/': (
-        'Chunk', 'ParseTreeMatch', 'ParseTreePattern', 'ParseTreePatternMatcher',
-        'RuleTagToken', 'TagChunk', 'TextChunk', 'TokenTagToken',
-    ),
-    'vendor/antlr-cxx-runtime/tree/xpath/': (
-        'XPath', 'XPathElement', 'XPathLexer', 'XPathLexerErrorListener',
-        'XPathRuleAnywhereElement', 'XPathRuleElement',
-        'XPathTokenAnywhereElement', 'XPathTokenElement',
-        'XPathWildcardAnywhereElement', 'XPathWildcardElement',
-    ),
-    'vendor/generated-grammar/': (
-        'FabLexer', 'FabParser', 'FabParserBaseVisitor', 'FabParserVisitor',
-    ),
-}
+# What source files do we need to build?
+import sources
+cxx_srcs = sources.cxx_srcs
 
 plugins = {
     'platform': ['PlatformTests'],
     'sysctl': ['SysctlPlugin'],
     'which': ['Which'],
 }
-
-
-def extension(subdir):
-    return 'cpp' if subdir.startswith('vendor') else 'cc'
-
-
-cxx_srcs = list(itertools.chain(*[
-    [f'{subdir}{base}.{extension(subdir)}' for base in srcs]
-    for (subdir, srcs) in cxx_srcs.items()
-]))
 
 src_root = os.path.dirname(os.path.dirname(bootstrap))
 
