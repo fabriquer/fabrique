@@ -29,12 +29,8 @@
 # SUCH DAMAGE.
 #
 #
-import argparse
 import itertools
-import pipes
-import platform
 import os
-import sys
 
 from build import BootstrapBuild
 
