@@ -11,8 +11,6 @@ args = argparse.ArgumentParser()
 args.add_argument('builddir', nargs='?', default='.')
 args.add_argument('--cxxflags', default='')
 args.add_argument('--debug', action='store_true')
-args.add_argument('--testpath', help='PATH containing llvm-lit and FileCheck')
-args.add_argument('--withtests', action='store_true')
 args = args.parse_args()
 
 bootstrap = os.path.realpath(sys.argv[0])
@@ -239,10 +237,7 @@ plugin_files = dict([
 
 
 def which(name):
-    paths = []
-    if args.testpath:
-        paths.append(args.testpath)
-    paths += os.environ.get('PATH', '').split(os.pathsep)
+    paths = os.environ.get('PATH', '').split(os.pathsep)
 
     for p in paths:
         fullname = os.path.join(p, name)
@@ -265,9 +260,6 @@ variables = {
     'ldflags': ' '.join(ldflags),
 }
 
-if args.withtests:
-    variables['lit'] = which('llvm-lit')
-
 
 # Then describe the mechanics of how to generate a build file.
 out = open(os.path.join(builddir, 'build.ninja'), 'w')
@@ -277,15 +269,6 @@ for (key, val) in variables.items():
     out.write(f'{key} = {val}\n')
 
 out.write('\n')
-
-if args.withtests:
-    test_output = os.path.join(builddir, 'tests')
-    if not os.path.isdir(builddir):
-        os.mkdir(test_output)
-
-    lit_config = '-sv --param=build-dir=%s --param=output-dir=%s --output=%s' % (
-        builddir, test_output, os.path.join(test_output, 'report.txt'),
-    )
 
 
 # Build rules: how we actually build things.
@@ -319,12 +302,6 @@ rules = {
     },
 }
 
-if args.withtests:
-    rules['lit'] = {
-        'command': 'PATH=$path $lit ' + lit_config + ' $in',
-        'description': 'Running unit tests',
-    }
-
 for (name, variables) in rules.items():
     out.write(f'rule {name}\n')
     for (key, val) in variables.items():
@@ -342,20 +319,11 @@ if args.cxxflags:
     bootstrap_args += [f'--cxxflags="{args.cxxflags}"']
 if args.debug:
     bootstrap_args.append('--debug')
-if args.testpath:
-    bootstrap_args += ['--testpath', args.testpath]
-if args.withtests:
-    bootstrap_args.append('--withtests')
 
 out.write(f'''build build.ninja: rebuild {pipes.quote(bootstrap)}
   args = {' '.join(bootstrap_args)}
 
 ''')
-
-# Unit tests:
-if args.withtests:
-    out.write('build test: phony run-tests\n')
-    out.write(f'build run-tests: lit {src_root}/tests | {bindir}fab\n')
 
 
 # Main executable
