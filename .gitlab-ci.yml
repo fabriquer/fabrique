@@ -13,21 +13,21 @@ bootstrap:make:
   stage: bootstrap
   before_script: [apt update && apt install -y clang]
   script:
-    - cd bootstrap/make
-    - mkdir -p lib/fabrique   # TODO: remove once gmake backend is fixed
-    - if `which gmake` ; then gmake everything ; else make everything; fi
+    - cd bootstrap
+    - ./gen --format=make build
+    - make -C build
 
-  artifacts: {paths: ["bootstrap/make"]}
+  artifacts: {paths: ["bootstrap/build"]}
 
 bootstrap:ninja:
   stage: bootstrap
   before_script: [apt update && apt install -y clang ninja-build]
   script:
-    - cd bootstrap/ninja
-    - python ../generate-ninja.py
-    - ninja
+    - cd bootstrap
+    - ./gen --format=ninja build
+    - ninja -C build
 
-  artifacts: {paths: ["bootstrap/ninja"]}
+  artifacts: {paths: ["bootstrap/build"]}
 
 #
 # Build Fabrique using Fabrique.
@@ -40,8 +40,8 @@ build:make:
   script:
     - mkdir -p build
     - cd build
-    - ../bootstrap/make/bin/fab --format=gmake -D debug=true ..
-    - if `which gmake` ; then gmake everything ; else make everything; fi
+    - ../bootstrap/build/fab --format=gmake -D debug=true ..
+    - make everything
   artifacts:
     paths:
       - bin/fab
@@ -55,7 +55,7 @@ build:ninja:
   script:
     - mkdir -p build
     - cd build
-    - ../bootstrap/ninja/bin/fab --format=ninja -D debug=true ..
+    - ../bootstrap/build/bin/fab --format=ninja -D debug=true ..
     - ninja everything
   artifacts:
     paths:

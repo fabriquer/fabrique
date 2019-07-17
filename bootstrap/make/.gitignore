@@ -1,9 +1,0 @@
-fab
-*.o
-*.o.d
-*.so
-*.dylib
-fab.lex.*
-fab.yacc.*
-lit-test-results
-junit.xml
