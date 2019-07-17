@@ -11,7 +11,7 @@ stages:
 #
 bootstrap:make:
   stage: bootstrap
-  before_script: [apt update && apt install clang]
+  before_script: [apt update && apt install -y clang]
   script:
     - cd bootstrap/make
     - mkdir -p lib/fabrique   # TODO: remove once gmake backend is fixed
@@ -21,7 +21,7 @@ bootstrap:make:
 
 bootstrap:ninja:
   stage: bootstrap
-  before_script: [apt update && apt install clang ninja-build]
+  before_script: [apt update && apt install -y clang ninja-build]
   script:
     - cd bootstrap/ninja
     - python ../generate-ninja.py
@@ -36,7 +36,7 @@ bootstrap:ninja:
 build:make:
   dependencies: ["bootstrap:make"]
   stage: build
-  before_script: [apt update && apt install clang]
+  before_script: [apt update && apt install -y clang]
   script:
     - mkdir -p build
     - cd build
@@ -51,7 +51,7 @@ build:make:
 build:ninja:
   dependencies: ["bootstrap:ninja"]
   stage: build
-  before_script: [apt update && apt install clang ninja-build]
+  before_script: [apt update && apt install -y clang ninja-build]
   script:
     - mkdir -p build
     - cd build
