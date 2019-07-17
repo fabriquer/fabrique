@@ -30,32 +30,41 @@ bootstrap:ninja:
 #
 # Build Fabrique using Fabrique.
 #
-
-build:make:
-  dependencies: ["bootstrap:make"]
+.build_template: &build
   stage: build
-  script:
-    - mkdir -p build
-    - cd build
-    - ../bootstrap/build/bin/fab --format=gmake -D debug=true ..
-    - make everything
   artifacts:
     paths:
       - bin/fab
       - lib/*.so
       - lib/fabrique/*.so
 
-build:ninja:
+build:make:clang:
+  <<: *build
+  dependencies: ["bootstrap:make"]
+  before_script: [apt update && apt install -y clang]
+  script:
+    - ./bootstrap/build/bin/fab --output=build --format=gmake
+    - make -C build everything
+
+build:make:gcc:
+  <<: *build
+  dependencies: ["bootstrap:make"]
+  script:
+    - ./bootstrap/build/bin/fab --output=build --format=gmake -D gcc=true
+    - make -C build everything
+
+build:ninja:clang:
+  <<: *build
   dependencies: ["bootstrap:ninja"]
-  stage: build
+  before_script: [apt update && apt install -y clang ninja-build]
+  script:
+    - ./bootstrap/build/bin/fab --output=build --format=ninja ..
+    - ninja -C build everything
+
+build:ninja:gcc:
+  <<: *build
+  dependencies: ["bootstrap:ninja"]
   before_script: [apt update && apt install -y ninja-build]
   script:
-    - mkdir -p build
-    - cd build
-    - ../bootstrap/build/bin/fab --format=ninja -D debug=true ..
-    - ninja everything
-  artifacts:
-    paths:
-      - bin/fab
-      - lib/*.so
-      - lib/fabrique/*.so
+    - ./bootstrap/build/bin/fab --output=build --format=ninja -D gcc=true ..
+    - ninja -C build everything
