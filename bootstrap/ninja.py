@@ -39,7 +39,7 @@ class NinjaBuild(BootstrapBuild):
     # Build rules: how we actually build things.
     rules = {
         'bin': {
-            'command': '$cxx $ldflags -o $out $in',
+            'command': '$cxx -o $out $in $ldflags',
             'description': 'Linking $out',
         },
 
@@ -56,7 +56,7 @@ class NinjaBuild(BootstrapBuild):
         },
 
         'lib': {
-            'command': '$cxx -shared -o $out $ldflags $in',
+            'command': '$cxx -shared -o $out $in $ldflags',
             'description': 'Linking library $out',
         },
 
@@ -79,6 +79,7 @@ class NinjaBuild(BootstrapBuild):
             out.write(f'{name} = {tool}\n')
 
         out.write(f'cxxflags = {" ".join(self.all_cxxflags())}\n')
+        out.write(f'ldflags = {self.ldflags}\n')
         out.write('\n')
 
         # Describe how to build things (cc, cxx, etc.)

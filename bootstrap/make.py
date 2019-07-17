@@ -63,6 +63,7 @@ class MakeBuild(BootstrapBuild):
             out.write(f'{name} = {tool}\n')
 
         out.write(f'cxxflags = {" ".join(self.all_cxxflags())}\n')
+        out.write(f'ldflags = {" ".join(self.ldflags)}\n')
         out.write('\n')
 
         # TODO: regeneration?
@@ -82,7 +83,7 @@ class MakeBuild(BootstrapBuild):
         out.write(self.build('all', all_targets, ''))
         out.write(self.build('fab', binary))
         out.write(self.build(binary, all_objs,
-                             f'${{cxx}} ${{cxxflags}} -o {binary} {all_objs}'))
+                             f'${{cxx}} -o {binary} {all_objs} ${{ldflags}}'))
 
         # Object files built as part of the main executable
         src_root = self.dirs['src']
@@ -95,7 +96,8 @@ class MakeBuild(BootstrapBuild):
             library_objs = [(src, src+'.o') for src in sources]
             objs = ' '.join((o[1] for o in library_objs))
 
-            out.write(self.build(name, objs, f'${{cxx}} -shared {objs} -o {name}'))
+            out.write(self.build(name, objs,
+                                 f'${{cxx}} -shared {objs} -o {name} ${{ldflags}}'))
 
             for src, obj in library_objs:
                 out.write(self.build_object(src, obj))
