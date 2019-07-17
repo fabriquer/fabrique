@@ -89,7 +89,6 @@ if args.debug:
 
 build.add_regeneration(pipes.quote(bootstrap_script), regen_args)
 
-ldflags = []
 system = platform.system()
 
 if system in ['Darwin', 'FreeBSD', 'Linux']:
