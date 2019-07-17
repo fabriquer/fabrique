@@ -1,6 +1,6 @@
 //! @file platform/posix/files.cc    POSIX definitions of OS file abstractions
 /*
- * Copyright (c) 2014, 2018 Jonathan Anderson
+ * Copyright (c) 2014, 2018-2019 Jonathan Anderson
  * All rights reserved.
  *
  * This software was developed by SRI International and the University of
@@ -29,6 +29,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
+#include "bsd.h"
 
 #include <fabrique/Bytestream.hh>
 #include <fabrique/UserError.hh>
