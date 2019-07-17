@@ -9,7 +9,6 @@ import sys
 
 args = argparse.ArgumentParser()
 args.add_argument('builddir', nargs='?', default='.')
-args.add_argument('--cxxflags', default='')
 args.add_argument('--debug', action='store_true')
 args = args.parse_args()
 
@@ -194,27 +193,26 @@ else:
 if system == 'Darwin':
     defines.append('OS_DARWIN')
 
-defines = itertools.chain(*zip(itertools.repeat('-D'), defines))
-cxxflags = list(defines) + [
-    '-I', src_root, '-I', builddir,
+defines = zip(itertools.repeat('-D'), defines)
 
+include_dirs = zip(itertools.repeat('-I'), [
+    src_root,
+    builddir,
+    f'{src_root}/include',
+    f'{src_root}/vendor',
+    f'{src_root}/vendor/antlr-cxx-runtime',
+])
+
+cxxflags = [
     # Require C++14.
     '-std=c++14',
 
     # Use position-independent code.
     '-fPIC',
-] + args.cxxflags.split()
 
-warnings = [
-    # Treat vendor headers as system headers: disable warnings.
-    f'-isystem {src_root}/include',
-    f'-isystem {src_root}/vendor',
-    f'-isystem {src_root}/vendor/antlr-cxx-runtime',
-]
-
-plugin_warnings = [
-    '-Wno-global-constructors',
-    '-Wno-exit-time-destructors',
+    # Disable all warnings in bootstrap (rather than trying to be selective about
+    # warnings in our code vs vendor code, etc.)
+    '-w',
 ]
 
 if args.debug:
@@ -224,8 +222,7 @@ if args.debug:
 else:
     cxxflags += ['-D NDEBUG', '-O2']
 
-gencxxflags = cxxflags + ['-Wno-deprecated-register']
-cxxflags = cxxflags + warnings
+cxxflags = cxxflags + list(itertools.chain(*defines, *include_dirs))
 
 plugin_files = dict([
     (
@@ -315,8 +312,6 @@ for (name, variables) in rules.items():
 
 # Rebuild the Ninja file:
 bootstrap_args = [pipes.quote(builddir)]
-if args.cxxflags:
-    bootstrap_args += [f'--cxxflags="{args.cxxflags}"']
 if args.debug:
     bootstrap_args.append('--debug')
 
@@ -336,7 +331,7 @@ out.write('default fab\n\n')
 
 # Plugins:
 for (plugin, srcs) in plugin_files.items():
-    flags = ' '.join(cxxflags + plugin_warnings)
+    flags = ' '.join(cxxflags)
     objs = [f'{src}.o' for src in srcs]
 
     out.write(f'build {plugin}: lib {" ".join(objs)}\n\n')
